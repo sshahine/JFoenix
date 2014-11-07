@@ -1,0 +1,25 @@
+# java specific
+*.bak
+*.class
+
+#eclipse specific
+.metadata/*
+.settings
+
+#temp build
+[Bb]uild*/
+[Bb]in/
+[Dd]ebug*/
+[Rr]elease*/
+
+#c3d specific
+*.log
+commit.txt
+servershsql.xml
+hsqldbs/*
+
+
+#windows Junk
+*.ini
+[Tt]humbs.db
+*.DS_Store
