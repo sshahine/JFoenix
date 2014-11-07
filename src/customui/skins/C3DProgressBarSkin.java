@@ -35,8 +35,8 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 		bar.progressProperty().addListener(listener);
 	}
 
-	private void  updateProgress() {
-		ProgressBar control = getSkinnable();
+	protected void updateProgress() {
+		ProgressBar control = (ProgressBar) getSkinnable();
 		barWidth = ((int) (control.getWidth() - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, control.getProgress()))) / 2.0F;
 		getSkinnable().requestLayout();
 	}
