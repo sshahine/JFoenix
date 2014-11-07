@@ -1,0 +1,68 @@
+Java (TM) Binding for the OpenGL (r) API, version 2.1
+-----------------------------------------------------------------------------
+
+This software is licensed as specified in the LICENSE.txt file.  
+You must use this software in accordance with the terms 
+under which the code is licensed.
+
+This is build version 2.1.5, based on:
+              branch  origin/master
+              commit  ba0dc6462a88ee7512a087deaaca760239915548
+
+Instructions for unzipping Java Binding for the OpenGL API, version 2.1
+----------------------------------------------------------------------------------
+
+After downloading and unzipping the zip file containing the 
+JOGL release for your target platform, you will see the 
+following files in the top directory:
+  
+  LICENSE.txt
+  Userguide.html
+  README.txt                  README file (you are reading it now)
+
+and the following subdirectory:
+
+  etc                         contains JOGL shell scripts
+  jar                         contains JOGL implementation, JAR files
+  lib                         contains JOGL implementation, native libraries
+  jnlp-files                  contains JOGL jnlp-file templates
+
+additionally the following Java source zip archives are added,
+allowing convenient IDE integration (javadoc, class/method help, etc).
+Generated Java source code is included as well.
+
+  nativewindow-java-src.zip   contains NativeWindow Java sources, reflecting nativewindow.all.jar
+  jogl-java-src.zip           contains JOGL Java sources, reflecting jogl.all.jar
+  newt-java-src.zip           contains NEWT Java sources, reflecting newt.all.jar
+
+For instructions on how to use these implementation files 
+to build or run a JOGL program look at:
+    http://jogamp.org/
+    http://jogamp.org/jogl/
+    http://jogamp.org/wiki/index.php/Jogl_Tutorial
+    http://jogamp.org/wiki/index.php/Jogl_FAQ
+
+You can verify the version of the build via the JOGL self test:
+    etc/test.sh   (Linux, FreeBSD, MacOSX, ..)
+    etc\test.bat  (Windows)
+
+You may also have a look at the (outdated) enclosed JOGL user guide, Userguide.html
+
+Project source code and getting assistance
+------------------------------------------
+
+JOGL source code can be found at:
+
+  http://jogamp.org/git/
+  http://github.com/sgothel/jogl
+  http://github.com/sgothel/gluegen
+
+
+You can address the JogAmp Community via:
+------------------------------------------
+   Web                http://jogamp.org/
+   Forum/Mailinglist  http://jogamp.762907.n3.nabble.com/
+   JogAmp Channel     server: conference.jabber.org room: jogamp
+   Repository         http://jogamp.org/git/
+   Email              mediastream _at_ jogamp _dot_ org
+
