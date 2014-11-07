@@ -1,0 +1,34 @@
+/** file: slideout.css
+place in same directory as SlideOut.java */
+.root {
+-fx-background-color: cornsilk;
+-fx-font-size: 20;
+-fx-padding: 10;
+}
+ 
+.lyric-text {
+-fx-font-size: 20;
+-fx-fill: darkgreen;
+-fx-font-weight: bold;
+-fx-text-alignment: center;
+}
+ 
+.sidebar {
+-fx-padding: 10 10 10 10;
+-fx-background-insets: 0 10 0 0;
+-fx-border-insets: 0 10 0 0;
+-fx-background-color: linear-gradient(to bottom, derive(lavenderblush, -10%), derive(mistyrose, 10%));
+-fx-border-color: derive(mistyrose, -20%);
+-fx-border-width: 4;
+}
+ 
+/** icons from: http://www.customicondesign.com (free for non-commercial use). */
+.hide-left {
+-fx-graphic: url('http://www.veryicon.com/icon/64/Business/Pretty%20Office%205/Hide%20left.png');
+}
+.show-right {
+-fx-graphic: url('http://www.veryicon.com/icon/64/Business/Pretty%20Office%205/Hide%20right.png');
+}
+.change-lyric {
+-fx-graphic: url('http://www.veryicon.com/icon/64/Business/Pretty%20Office%205/Go%20into.png');
+}

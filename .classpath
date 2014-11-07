@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="libs/controlsfx/controlsfx-8.20.7.jar"/>
+	<classpathentry kind="lib" path="libs/datafx/b8/core-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/datafx/b8/datafx-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/datafx/b8/flow-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/datafx/javassist.jar"/>
+	<classpathentry kind="lib" path="libs/datafx/javax.inject.jar"/>
+	<classpathentry kind="lib" path="libs/FontAwesome/fontawesomefx-8.0.10.jar"/>
+	<classpathentry kind="lib" path="libs/jogl-2.1.5/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libs/jogl-2.1.5/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="libs/jogl-2.1.5/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libs/jogl-2.1.5/jogl-all.jar"/>
+	<classpathentry kind="lib" path="libs/jidefx/jidefx-common-0.9.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_05"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

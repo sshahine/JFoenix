@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.embed.swing.SwingNode?>
+<?import contact.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import customui.components.Hamburger?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
+<VBox fx:id="root" spacing="20" xmlns:fx="http://javafx.com/fxml">
+	<children>
+		<!-- Search Bar -->
+		<HBox spacing="10">
+			<children>
+				<Label text="Search" />
+				<TextField fx:id="searchField" prefColumnCount="20" />
+				<Button fx:id="searchButton" mnemonicParsing="false" text="Search" />
+			</children>
+		</HBox>
+
+		<AnchorPane >
+		<children>
+					<SwingNode fx:id="swingnode" GridPane.rowIndex="0"
+						GridPane.columnIndex="0">
+						<content>
+
+						</content>
+					</SwingNode>
+					<Hamburger fx:id="bicon" GridPane.rowIndex="0"
+						GridPane.columnIndex="0">
+
+					</Hamburger>
+				</children>
+			
+		</AnchorPane>
+
+		<!-- Search Results -->
+		<ListView fx:id="resultsList" VBox.vgrow="ALWAYS" />
+
+
+	</children>
+</VBox>
