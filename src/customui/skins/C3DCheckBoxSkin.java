@@ -52,13 +52,6 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 	public C3DCheckBoxSkin(CheckBox control) {
 		super(control);
 
-		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
-			rippler.setColor(newVal?uncheckedColor:checkedColor);
-			transition.setRate(newVal?1:-1);
-			transition.play();
-		});
-
-
 		box.setMinSize(20, 20);
 		box.setPrefSize(20, 20);
 		box.setMaxSize(20, 20);
@@ -82,8 +75,16 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		container.getChildren().add(rightLine);
 		container.getChildren().add(leftLine);
 		container.getChildren().add(rippler);
-
 		AnchorPane.setRightAnchor(rippler, labelOffset);
+		
+		// add listeners
+		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
+			rippler.setColor(newVal?uncheckedColor:checkedColor);
+			transition.setRate(newVal?1:-1);
+			transition.play();
+		});
+
+		
 		updateChildren();
 
 	}
