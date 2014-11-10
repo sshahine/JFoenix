@@ -74,3 +74,10 @@
     src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
+/* Button */
+.button{
+	-fx-padding: 0.7em 0.57em;
+	-fx-font-family: Roboto;
+    -fx-font-size: 14px;
+    src:"/resources/roboto/Roboto-Regular.ttf";
+}
