@@ -28,14 +28,15 @@ public class Rippler extends StackPane {
 	public static enum RipplerPos{FRONT, BACK};
 	public static enum RipplerMask{CIRCLE, RECT};
 
-	private C3DAnchorPane ripplerPane;
+	protected Pane ripplerPane;
 	private RipplerMask maskType = RipplerMask.RECT ;
-	private RipplerPos pos = RipplerPos.FRONT ;
+	protected RipplerPos pos = RipplerPos.FRONT;
 	private boolean enabled = true;
-	private Node control;
+	protected Node control;
 	private ObjectProperty<Paint> color = new SimpleObjectProperty<Paint>(Color.rgb(0, 200, 255));
 	private double rippleRadius = 150;
-
+	protected final RippleGenerator rippler;
+	
 	public Rippler(Node control){
 		this(control, RipplerMask.RECT, RipplerPos.FRONT);
 	}
@@ -54,7 +55,7 @@ public class Rippler extends StackPane {
 
 		// create rippler panels
 
-		final RippleGenerator rippler = new RippleGenerator();
+		rippler = new RippleGenerator();
 		ripplerPane = new C3DAnchorPane();
 		ripplerPane.getChildren().add(rippler);
 
@@ -71,19 +72,9 @@ public class Rippler extends StackPane {
 		}
 
 		// add listeners
-		ripplerPane.setOnMousePressed((event) -> {
-			rippler.setGeneratorCenterX(event.getX());
-			rippler.setGeneratorCenterY(event.getY());
-			rippler.createRipple();
-			//			this.control.fireEvent(event);
-		});
-
-		ripplerPane.setOnMouseReleased((event) -> {
-			//			this.control.fireEvent(event);
-		});
+		initListeners();
 	}	
-
-
+	
 	public Paint getColor(){
 		return this.color.get();
 	}
@@ -99,12 +90,36 @@ public class Rippler extends StackPane {
 		this.enabled = enable;
 	}
 
-	public Shape getMask(){
+	// methods that can be changed by extending the rippler class
+	protected Shape getMask(){
 		Shape mask = new Rectangle(ripplerPane.getWidth() - 0.1,ripplerPane.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
 		if(maskType.equals(Rippler.RipplerMask.CIRCLE))
 			mask = new Circle(ripplerPane.getWidth()/2 , ripplerPane.getHeight()/2, (ripplerPane.getWidth()/2) - 0.1, Color.BLUE);	
 		return mask;
 	}
+	
+	protected void initListeners(){
+		ripplerPane.setOnMousePressed((event) -> {
+			createRipple(event.getX(),event.getY());
+			if(this.pos == RipplerPos.FRONT)
+				this.control.fireEvent(event);
+		});
+		ripplerPane.setOnMouseReleased((event) -> {
+			if(this.pos == RipplerPos.FRONT)
+				this.control.fireEvent(event);
+		});
+		ripplerPane.setOnMouseClicked((event) -> {
+			if(this.pos == RipplerPos.FRONT )
+				this.control.fireEvent(event);
+		});
+	}
+	
+	protected void createRipple(double x, double y){
+		rippler.setGeneratorCenterX(x);
+		rippler.setGeneratorCenterY(y);
+		rippler.createRipple();
+	}
+	
 
 	/**
 	 * Generates ripples on the screen every 0.3 seconds or whenever
