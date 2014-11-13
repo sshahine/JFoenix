@@ -21,7 +21,7 @@ public class C3DButtonSkin extends ButtonSkin {
 	
 	private boolean invalid = true;
 	private StackPane buttonComponents;
-	private Rippler rippler;
+	private Rippler buttonRippler;
 	
 	private final Color disabledColor = Color.valueOf("#EAEAEA");
 	
@@ -34,15 +34,26 @@ public class C3DButtonSkin extends ButtonSkin {
 		buttonRect.setArcWidth(7);
 		buttonComponents = new StackPane();
 		buttonComponents.getChildren().add(buttonRect);
-		rippler = new Rippler(buttonComponents){
-			public Shape getMask(){
+		buttonRippler = new Rippler(buttonComponents){
+			@Override protected Shape getMask(){
 				Rectangle mask = new Rectangle(buttonRect.getWidth() - 0.1,buttonRect.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
 				mask.setArcHeight(buttonRect.getArcHeight());
 				mask.setArcWidth(buttonRect.getArcWidth());					
 				return mask;
 			}
+			@Override protected void initListeners(){
+				ripplerPane.setOnMousePressed((event) -> {
+					createRipple(event.getX(),event.getY());
+					if(this.pos == RipplerPos.FRONT)
+						this.control.fireEvent(event);
+				});
+				ripplerPane.setOnMouseReleased((event) -> {
+					if(this.pos == RipplerPos.FRONT)
+						this.control.fireEvent(event);
+				});
+			}
 		};
-		main.getChildren().add(rippler);
+		main.getChildren().add(buttonRippler);
 		
 		
 		if(button.isDisabled()) buttonRect.setFill(disabledColor);		
@@ -59,7 +70,7 @@ public class C3DButtonSkin extends ButtonSkin {
 		});
 		
 		if(((C3DButton)getSkinnable()).getType() == ButtonType.RAISED)
-			DepthManager.setDepth(rippler, 2);
+			DepthManager.setDepth(buttonRippler, 2);
 		
 		updateChildren();
 	}
@@ -74,8 +85,8 @@ public class C3DButtonSkin extends ButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			rippler.setColor(((LabeledText)getChildren().get(0)).getFill());
-			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> rippler.setColor(newVal));
+			buttonRippler.setColor(((LabeledText)getChildren().get(0)).getFill());
+			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setColor(newVal));
 			buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}

@@ -15,19 +15,16 @@ import customui.components.Rippler;
 import customui.components.Rippler.RipplerMask;
 import customui.components.Rippler.RipplerPos;
 
-public class MenuButtonDemo extends Application {
+public class PopupDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
 		
 		MenuItem item = new MenuItem("Java 1");
-
 		MenuButton button = new MenuButton("Java Menu");
 		button.getItems().setAll(item);
 
-		
-		
 		Hamburger show = new Hamburger();
 		show.setPadding(new Insets(10,5,10,5));
 		Rippler r = new Rippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);

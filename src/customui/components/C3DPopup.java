@@ -47,7 +47,7 @@ public class C3DPopup extends Popup {
 		content = new StackPane();
 		content.getChildren().add(itemsContainer);
 		content.getTransforms().add(scaleTransform);
-		content.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(5), null)));		
+		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));		
 		DepthManager.setDepth(content, 2);
 		
 		this.getContent().setAll(content);
@@ -83,8 +83,8 @@ public class C3DPopup extends Popup {
 		itemsContainer.widthProperty().addListener((o,oldVal,newVal)->{itemContainer.setPrefWidth((double) newVal);});
 		Rippler rippler = new Rippler(itemContainer);
 		this.items.getChildren().add(rippler);
-		if(this.items.getChildren().size()==1) VBox.setMargin(rippler, new Insets(5,0,0,0));
-		else VBox.setMargin(rippler, new Insets(0,0,5,0));
+//		if(this.items.getChildren().size()==1) VBox.setMargin(rippler, new Insets(5,0,0,0));
+//		else VBox.setMargin(rippler, new Insets(0,0,0,0));
 	}
 
 
@@ -119,7 +119,7 @@ public class C3DPopup extends Popup {
 					)
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
-			setCycleDuration(Duration.seconds(0.4));
+			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}
 

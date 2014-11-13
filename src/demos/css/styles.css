@@ -37,9 +37,7 @@
     src:"/resources/roboto/Roboto-Regular.ttf";
 }
     
-.c3dTextFieldSkin{
-    -fx-skin: "customui.skins.C3DTextFieldSkin";
-}
+
 
 
 /* Progress Bar Demo */
@@ -47,24 +45,11 @@
 	-fx-min-width: 500;
 }
 
-.css-progress-bar > .bar {
-    -fx-background-color: linear-gradient(
-        from 0px .75em to .75em 0px,
-        repeat,
-        -fx-accent 0%,
-        -fx-accent 49%,
-        derive(-fx-accent, 30%) 50%,
-        derive(-fx-accent, 30%) 99%
-    );
-}
-
 /* Icons Demo */
-
 .icon{
 	-fx-text-fill: #FE774D;
 	-fx-padding: 10;
 	-fx-cursor: hand;
-	
 }
 
 /* CheckBox */
