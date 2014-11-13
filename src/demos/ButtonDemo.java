@@ -29,7 +29,7 @@ public class ButtonDemo extends Application {
 		button.setType(ButtonType.RAISED);
 		button.setBackground(new Background(new BackgroundFill(Color.valueOf("#4285F4"), null, null)));
 		button.setTextFill(Color.WHITE);
-		button.setPrefWidth(400);
+		button.setPrefWidth(100);
 		main.getChildren().add(button);
 		
 		C3DButton button1 = new C3DButton("DISABLED");

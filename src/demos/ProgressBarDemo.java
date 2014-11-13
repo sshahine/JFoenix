@@ -30,30 +30,31 @@ public class ProgressBarDemo extends Application {
 		
 		ProgressBar bar = new ProgressBar();
 		ProgressBar cssBar = new ProgressBar();
+		cssBar.setProgress(-1.0f);
 		cssBar.getStyleClass().add("css-progress-bar");
-		
 		C3DProgressBar c3dBar = new C3DProgressBar();
+		C3DProgressBar c3dBarInf = new C3DProgressBar();
+		c3dBarInf.setProgress(-1.0f);
 		
 		Timeline task = new Timeline(
 				new KeyFrame(
 						Duration.ZERO,       
 						new KeyValue(bar.progressProperty(), 0),
-						new KeyValue(cssBar.progressProperty(), 0),
 						new KeyValue(c3dBar.progressProperty(), 0)
 						),
 						new KeyFrame(
 								Duration.seconds(2), 
 								new KeyValue(bar.progressProperty(), 1),
-								new KeyValue(cssBar.progressProperty(), 1),
 								new KeyValue(c3dBar.progressProperty(), 1)
 								)
 				);
 		task.setCycleCount(5);
 		task.playFromStart();
-
+		
 		pane.getChildren().add(bar);
-		pane.getChildren().add(cssBar);
 		pane.getChildren().add(c3dBar);
+		pane.getChildren().add(cssBar);
+		pane.getChildren().add(c3dBarInf);
 		
 		
 		StackPane main = new StackPane();

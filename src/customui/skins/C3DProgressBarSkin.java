@@ -45,6 +45,7 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 
+
 		effectsPane  = new StackPane();
 		line = new Line();
 		startX = getSkinnable().getBoundsInLocal().getMinX();
@@ -59,19 +60,35 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 		effectsPane.getChildren().add(line);
 		this.getChildren().add(effectsPane);
 
-		progressLine = new Line();
-		startX = getSkinnable().getBoundsInLocal().getMinX();
-		endX = barWidth;
-		progressLine.setStartX( startX + offset);
-		progressLine.setEndX(endX);
-		progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
-		progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-		progressLine.setStroke(Color.valueOf("#0F9D58"));
-		progressLine.setStrokeWidth(3);
-		progressLine.setStrokeType(StrokeType.CENTERED);		
-		effectsPane.getChildren().add(progressLine);
-		StackPane.setAlignment(progressLine, Pos.CENTER_LEFT);
-
+		if(!getSkinnable().isIndeterminate()){
+			progressLine = new Line();
+			startX = getSkinnable().getBoundsInLocal().getMinX();
+			endX = barWidth;
+			progressLine.setStartX( startX + offset);
+			progressLine.setEndX(endX);
+			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
+			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
+			progressLine.setStroke(Color.valueOf("#0F9D58"));
+			progressLine.setStrokeWidth(3);
+			progressLine.setStrokeType(StrokeType.CENTERED);		
+			effectsPane.getChildren().add(progressLine);
+			StackPane.setAlignment(progressLine, Pos.CENTER_LEFT);
+		}
+		else{
+			progressLine = new Line();
+			startX = getSkinnable().getBoundsInLocal().getMinX();
+			endX = getSkinnable().getBoundsInLocal().getMaxX()/4;
+			progressLine.setStartX( startX + offset);
+			progressLine.setEndX(endX);
+			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
+			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
+			progressLine.setStroke(Color.valueOf("#0F9D58"));
+			progressLine.setStrokeWidth(3);
+			progressLine.setStrokeType(StrokeType.CENTERED);		
+			effectsPane.getChildren().add(progressLine);
+			progressLine.setScaleX(0);
+			StackPane.setAlignment(progressLine, Pos.CENTER_LEFT);
+		}
 		layoutInArea(effectsPane, x, y, w, h, -1, HPos.CENTER, VPos.BOTTOM);
 	}
 

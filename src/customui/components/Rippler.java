@@ -30,12 +30,13 @@ public class Rippler extends StackPane {
 
 	private C3DAnchorPane ripplerPane;
 	private RipplerMask maskType = RipplerMask.RECT ;
-	private RipplerPos pos = RipplerPos.FRONT ;
+	private RipplerPos pos = RipplerPos.FRONT;
 	private boolean enabled = true;
 	private Node control;
 	private ObjectProperty<Paint> color = new SimpleObjectProperty<Paint>(Color.rgb(0, 200, 255));
 	private double rippleRadius = 150;
-
+	private final RippleGenerator rippler;
+	
 	public Rippler(Node control){
 		this(control, RipplerMask.RECT, RipplerPos.FRONT);
 	}
@@ -54,7 +55,7 @@ public class Rippler extends StackPane {
 
 		// create rippler panels
 
-		final RippleGenerator rippler = new RippleGenerator();
+		rippler = new RippleGenerator();
 		ripplerPane = new C3DAnchorPane();
 		ripplerPane.getChildren().add(rippler);
 
@@ -75,14 +76,20 @@ public class Rippler extends StackPane {
 			rippler.setGeneratorCenterX(event.getX());
 			rippler.setGeneratorCenterY(event.getY());
 			rippler.createRipple();
-			//			this.control.fireEvent(event);
+			if(this.pos == RipplerPos.FRONT)
+				this.control.fireEvent(event);
 		});
 
 		ripplerPane.setOnMouseReleased((event) -> {
-			//			this.control.fireEvent(event);
+			if(this.pos == RipplerPos.FRONT)
+				this.control.fireEvent(event);
+		});
+		
+		ripplerPane.setOnMouseClicked((event) -> {
+			if(this.pos == RipplerPos.FRONT)
+				this.control.fireEvent(event);
 		});
 	}	
-
 
 	public Paint getColor(){
 		return this.color.get();

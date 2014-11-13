@@ -81,3 +81,11 @@
     -fx-font-size: 14px;
     src:"/resources/roboto/Roboto-Regular.ttf";
 }
+
+/* Menu */
+.c3dMenu{
+	-fx-font-family: Roboto;
+    -fx-font-size: 14px;
+    src:"/resources/roboto/Roboto-Regular.ttf";
+}
+
