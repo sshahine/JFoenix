@@ -81,8 +81,16 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 	protected void updateChildren() {
 		super.updateChildren();
 		if (circle != null) {
-			getChildren().remove(1);
+			removeRadio();
 			getChildren().add(container);
+		}
+	}
+
+	private void removeRadio() {
+		for (int i = 0; i < getChildren().size(); i++) {
+			if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
+				getChildren().remove(i);
+			}
 		}
 	}
 

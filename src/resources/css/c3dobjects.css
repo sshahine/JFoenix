@@ -1,0 +1,20 @@
+
+.c3dslider > .trackLine {
+	-fx-stroke: #CCCCCC;
+	-fx-stroke-width: 3.0px;
+}
+
+.c3dslider .valueLine {
+	-fx-stroke: #0F9D58;
+	-fx-stroke-width: 3.0px;
+}
+
+.c3dslider .valueText {
+	-fx-stroke: #FFFFFF;
+	-fx-font-size:10.0;
+}
+
+.c3dslider > .thumbCircle {
+	-fx-stroke-width: 2.0px;
+	-fx-fill: #0F9D58;
+}
