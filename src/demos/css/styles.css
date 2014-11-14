@@ -74,3 +74,62 @@
     src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
+
+
+/* The main scrollbar **track** CSS class  */
+.mylistview .scroll-bar:horizontal .track,
+.mylistview .scroll-bar:vertical .track{
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-border-radius:2em;
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.mylistview .scroll-bar:horizontal .increment-button ,
+.mylistview .scroll-bar:horizontal .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 0 10 0;
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+
+.mylistview .scroll-bar:vertical .increment-button ,
+.mylistview .scroll-bar:vertical .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 10 0 0;
+
+}
+
+.mylistview  .scroll-bar .increment-arrow,
+.mylistview  .scroll-bar .decrement-arrow{
+	-fx-shape: " ";	
+	-fx-padding:0;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.mylistview .scroll-bar:horizontal .thumb,
+.mylistview .scroll-bar:vertical .thumb {
+    -fx-background-color:derive(black,90%);
+	-fx-background-insets: 2, 0, 0;
+	-fx-background-radius: 2em;
+}
+
+
+.c3d-list-cell-holder > .label{
+  	-fx-background-color: WHITE;
+  	-fx-text-fill: BLACK ;
+}
+.c3d-list-view {-fx-background-insets: 0;}
+
+.c3d-list-cell { -fx-text-fill: black; /* 5 */ }
+.c3d-list-cell:odd { -fx-background-color: white; /* 1 */ }
+.c3d-list-cell:even { -fx-background-color: white; /* for information */ }
+.c3d-list-cell:filled:hover { -fx-background-color: white;-fx-text-fill: black;}
+
+
+.scroll-bar {
+    -fx-skin: "customui.skins.C3DScrollBarSkin";
+}

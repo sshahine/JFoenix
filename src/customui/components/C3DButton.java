@@ -13,8 +13,8 @@ public class C3DButton extends Button {
 	
 	public C3DButton() {
 		super();
-	}
-	
+	}	
+		
 	public C3DButton(String text){
 		super(text);
 	}

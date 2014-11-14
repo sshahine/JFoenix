@@ -301,7 +301,7 @@ public class Rippler extends StackPane {
 		}
 
 
-		double computeChildPrefAreaWidth(Node child, double baselineComplement, Insets margin, double height, boolean fillHeight) {
+		private double computeChildPrefAreaWidth(Node child, double baselineComplement, Insets margin, double height, boolean fillHeight) {
 			final boolean snap = isSnapToPixel();
 			double left = margin != null? snapSpace(margin.getLeft(), snap) : 0;
 			double right = margin != null? snapSpace(margin.getRight(), snap) : 0;
@@ -327,7 +327,7 @@ public class Rippler extends StackPane {
 			return left + snapSize(boundedSize(child.minWidth(alt), child.prefWidth(alt), child.maxWidth(alt))) + right;
 		}
 
-		double computeChildPrefAreaHeight(Node child, double prefBaselineComplement, Insets margin, double width) {
+		private double computeChildPrefAreaHeight(Node child, double prefBaselineComplement, Insets margin, double width) {
 			final boolean snap = isSnapToPixel();
 			double top = margin != null? snapSpace(margin.getTop(), snap) : 0;
 			double bottom = margin != null? snapSpace(margin.getBottom(), snap) : 0;
