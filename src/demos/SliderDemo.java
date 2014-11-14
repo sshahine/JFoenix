@@ -2,6 +2,7 @@ package demos;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -15,11 +16,11 @@ public class SliderDemo extends Application {
 		try {
 			C3DSlider slider = new C3DSlider();
 			slider.setMinWidth(700);
-//			slider.setMinHeight(500);
-//			slider.setOrientation(Orientation.VERTICAL);
-//			slider.setMin(0);
-//			slider.setMax(200);
-//			slider.setValue(50);
+			// slider.setMinHeight(500);
+			// slider.setOrientation(Orientation.VERTICAL);
+			// slider.setMin(0);
+			// slider.setMax(200);
+			// slider.setValue(50);
 
 			HBox hbox = new HBox();
 			hbox.getChildren().addAll(slider);

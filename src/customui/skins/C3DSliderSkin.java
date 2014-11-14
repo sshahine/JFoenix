@@ -12,9 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -40,15 +37,14 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	private Point2D dragStart; // in skin coordinates
 
 	private Label animatedThumb;
-	private Circle thumb;
+	private Circle thumbCircle;
 	private double thumbRadius = 5;
-	private double strokeWidth = 2;
 	private Text valueText;
-	private Line line;
-	private Line track;
+	private Line valueLine;
+	private Line trackLine;
 
-	private Color selectedColor = Color.valueOf("#0F9D58");
-	private Color unSelectedColor = Color.valueOf("#CCCCCC");
+	private Color selectedColor;
+	private Color unSelectedColor;
 
 	private Timeline timeline;
 
@@ -56,6 +52,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		super(slider, new SliderBehavior(slider));
 
 		initialize();
+
 		registerChangeListener(slider.minProperty(), "MIN");
 		registerChangeListener(slider.maxProperty(), "MAX");
 		registerChangeListener(slider.valueProperty(), "VALUE");
@@ -65,60 +62,59 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	private void initialize() {
 		isHorizontal = getSkinnable().getOrientation() == Orientation.HORIZONTAL;
 
-		track = new Line();
-		track.setStroke(unSelectedColor);
-		track.setStrokeWidth(strokeWidth);
+		trackLine = new Line();
+		trackLine.getStyleClass().setAll("trackLine");
 
-		thumb = new Circle();
-		thumb.setRadius(thumbRadius);
-		thumb.setVisible(true);
-		thumb.setStroke(selectedColor);
-		thumb.setFill(selectedColor);
-		thumb.setStrokeWidth(strokeWidth);
+		thumbCircle = new Circle();
+		thumbCircle.getStyleClass().setAll("thumbCircle");
+		thumbCircle.setRadius(thumbRadius);
 
 		valueText = new Text();
-		valueText.setStroke(Color.WHITE);
-		valueText.setStyle("-fx-font-size:10;");
+		valueText.getStyleClass().setAll("valueText");
 
-		StackPane bashThumb = new StackPane();
-		bashThumb.setScaleX(0);
-		bashThumb.setScaleY(0);
+		StackPane animationPane = new StackPane();
+		animationPane.setScaleX(0);
+		animationPane.setScaleY(0);
 
 		animatedThumb = new Label();
+		animatedThumb.setRotate(isHorizontal ? -45 : 45);
 		animatedThumb.setPadding(new Insets(5, 13, 4, 13));
 		animatedThumb.setBackground(new Background(new BackgroundFill(selectedColor, new CornerRadii(50, 50, 50, 0, true), null)));
-		animatedThumb.setRotate(isHorizontal ? -45 : 45);
 
-		bashThumb.getChildren().addAll(animatedThumb, valueText);
+		valueLine = new Line();
+		valueLine.getStyleClass().setAll("valueLine");
 
-		timeline = isHorizontal ? new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(bashThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(bashThumb.scaleYProperty(), 0,
-				Interpolator.EASE_BOTH), new KeyValue(bashThumb.layoutYProperty(), thumb.getCenterY(), Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2), new KeyValue(bashThumb.scaleXProperty(), 1,
-				Interpolator.EASE_BOTH), new KeyValue(bashThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(bashThumb.layoutYProperty(), thumb.getCenterY() - 20, Interpolator.EASE_BOTH)))
-				: new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(bashThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(bashThumb.scaleYProperty(), 0, Interpolator.EASE_BOTH),
-						new KeyValue(bashThumb.layoutXProperty(), thumb.getCenterX(), Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2), new KeyValue(bashThumb.scaleXProperty(), 1,
-						Interpolator.EASE_BOTH), new KeyValue(bashThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(bashThumb.layoutXProperty(), thumb.getCenterX() + 35, Interpolator.EASE_BOTH)));
+		animationPane.getChildren().addAll(animatedThumb, valueText);
 
-		line = new Line();
-		line.setStroke(selectedColor);
-		line.setStrokeWidth(strokeWidth);
+		if (isHorizontal) {
+			timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(animationPane.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(animationPane.scaleYProperty(), 0, Interpolator.EASE_BOTH),
+					new KeyValue(animationPane.layoutYProperty(), thumbCircle.getCenterY(), Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2), new KeyValue(animationPane.scaleXProperty(), 1,
+					Interpolator.EASE_BOTH), new KeyValue(animationPane.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(animationPane.layoutYProperty(), thumbCircle.getCenterY() - 25,
+					Interpolator.EASE_BOTH)));
+		} else {
+			timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(animationPane.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(animationPane.scaleYProperty(), 0, Interpolator.EASE_BOTH),
+					new KeyValue(animationPane.layoutXProperty(), thumbCircle.getCenterX(), Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2), new KeyValue(animationPane.scaleXProperty(), 1,
+					Interpolator.EASE_BOTH), new KeyValue(animationPane.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(animationPane.layoutXProperty(), thumbCircle.getCenterX() + 35,
+					Interpolator.EASE_BOTH)));
+		}
 
-		thumb.layoutXProperty().addListener((o, oldVal, newVal) -> {
-			bashThumb.setLayoutX(newVal.doubleValue());
-			line.setEndX(newVal.doubleValue());
+		thumbCircle.layoutXProperty().addListener((o, oldVal, newVal) -> {
+			animationPane.setLayoutX(newVal.doubleValue());
+			valueLine.setEndX(newVal.doubleValue());
 			valueText.setText("" + Math.round(getSkinnable().getValue()));
 		});
 
-		thumb.layoutYProperty().addListener((o, oldVal, newVal) -> {
-			bashThumb.setLayoutY(newVal.doubleValue());
-			line.setEndY(newVal.doubleValue());
+		thumbCircle.layoutYProperty().addListener((o, oldVal, newVal) -> {
+			animationPane.setLayoutY(newVal.doubleValue());
+			valueLine.setEndY(newVal.doubleValue());
 			valueText.setText("" + Math.round(getSkinnable().getValue()));
 		});
 
 		getChildren().clear();
-		getChildren().addAll(track, thumb, bashThumb, line);
+		getChildren().addAll(trackLine, thumbCircle, animationPane, valueLine);
 
 		getSkinnable().setOnMousePressed(me -> {
-			if (!thumb.isPressed()) {
+			if (!thumbCircle.isPressed()) {
 				trackClicked = true;
 				if (isHorizontal) {
 					getBehavior().trackPress(me, (me.getX() / trackLength));
@@ -137,7 +133,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		});
 
 		getSkinnable().setOnMouseDragged(me -> {
-			if (!thumb.isPressed()) {
+			if (!thumbCircle.isPressed()) {
 				if (isHorizontal) {
 					getBehavior().trackPress(me, (me.getX() / trackLength));
 				} else {
@@ -146,18 +142,18 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 			}
 		});
 
-		thumb.setOnMousePressed(me -> {
+		thumbCircle.setOnMousePressed(me -> {
 			getBehavior().thumbPressed(me, 0.0f);
-			dragStart = thumb.localToParent(me.getX(), me.getY());
+			dragStart = thumbCircle.localToParent(me.getX(), me.getY());
 			preDragThumbPos = (getSkinnable().getValue() - getSkinnable().getMin()) / (getSkinnable().getMax() - getSkinnable().getMin());
 		});
 
-		thumb.setOnMouseReleased(me -> {
+		thumbCircle.setOnMouseReleased(me -> {
 			getBehavior().thumbReleased(me);
 		});
 
-		thumb.setOnMouseDragged(me -> {
-			Point2D cur = thumb.localToParent(me.getX(), me.getY());
+		thumbCircle.setOnMouseDragged(me -> {
+			Point2D cur = thumbCircle.localToParent(me.getX(), me.getY());
 			double dragPos = isHorizontal ? cur.getX() - dragStart.getX() : -(cur.getY() - dragStart.getY());
 			getBehavior().thumbDragged(me, preDragThumbPos + dragPos / trackLength);
 		});
@@ -200,13 +196,13 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		if (s.getValue() > s.getMax()) {
 			return; // this can happen if we are bound to something 
 		}
-		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))))) : thumbLeft;
-		final double endY = (isHorizontal) ? thumbTop : trackStart + trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))); //  - thumbHeight/2
+		final double endX = (isHorizontal) ? (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))))) : thumbLeft;
+		final double endY = (isHorizontal) ? thumbTop : trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))); //  - thumbHeight/2
 
 		if (animate) {
 			// lets animate the thumb transition
-			final double startX = thumb.getLayoutX();
-			final double startY = thumb.getLayoutY();
+			final double startX = thumbCircle.getLayoutX();
+			final double startY = thumbCircle.getLayoutY();
 			Transition transition = new Transition() {
 				{
 					setCycleDuration(Duration.millis(20));
@@ -215,44 +211,44 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 				@Override
 				protected void interpolate(double frac) {
 					if (!Double.isNaN(startX)) {
-						thumb.setLayoutX(startX + frac * (endX - startX));
+						thumbCircle.setLayoutX(startX + frac * (endX - startX));
 					}
 					if (!Double.isNaN(startY)) {
-						thumb.setLayoutY(startY + frac * (endY - startY));
+						thumbCircle.setLayoutY(startY + frac * (endY - startY));
 					}
 				}
 			};
 			transition.play();
 		} else {
-			thumb.setLayoutX(endX);
-			thumb.setLayoutY(endY);
+			thumbCircle.setLayoutX(endX);
+			thumbCircle.setLayoutY(endY);
 		}
 		if (isHorizontal) {
-			if (endX == trackStart) {
-				thumb.setStroke(unSelectedColor);
-				thumb.setFill(Color.TRANSPARENT);
-				line.setVisible(false);
-				track.setStartX(trackStart + thumbRadius);
+			if (endX == 0) {
+				thumbCircle.setStroke(unSelectedColor);
+				thumbCircle.setFill(Color.TRANSPARENT);
+				valueLine.setVisible(false);
+				trackLine.setStartX(thumbRadius);
 				animatedThumb.setBackground(new Background(new BackgroundFill(unSelectedColor, new CornerRadii(50, 50, 50, 0, true), null)));
 			} else {
-				thumb.setStroke(selectedColor);
-				thumb.setFill(selectedColor);
-				line.setVisible(true);
-				track.setStartX(trackStart);
+				thumbCircle.setStroke(selectedColor);
+				thumbCircle.setFill(selectedColor);
+				valueLine.setVisible(true);
+				trackLine.setStartX(trackStart);
 				animatedThumb.setBackground(new Background(new BackgroundFill(selectedColor, new CornerRadii(50, 50, 50, 0, true), null)));
 			}
 		} else {
-			if (endY == trackStart + trackLength) {
-				thumb.setStroke(unSelectedColor);
-				thumb.setFill(Color.TRANSPARENT);
-				line.setVisible(false);
-				track.setStartY(trackStart + trackLength - thumbRadius);
+			if (endY == trackLength) {
+				thumbCircle.setStroke(unSelectedColor);
+				thumbCircle.setFill(Color.TRANSPARENT);
+				valueLine.setVisible(false);
+				trackLine.setStartY(trackLength - thumbRadius);
 				animatedThumb.setBackground(new Background(new BackgroundFill(unSelectedColor, new CornerRadii(50, 50, 50, 0, true), null)));
 			} else {
-				thumb.setStroke(selectedColor);
-				thumb.setFill(selectedColor);
-				line.setVisible(true);
-				track.setStartY(trackStart + trackLength);
+				thumbCircle.setStroke(selectedColor);
+				thumbCircle.setFill(selectedColor);
+				valueLine.setVisible(true);
+				trackLine.setStartY(trackStart + trackLength);
 				animatedThumb.setBackground(new Background(new BackgroundFill(selectedColor, new CornerRadii(50, 50, 50, 0, true), null)));
 			}
 		}
@@ -268,64 +264,62 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	}
 
 	private void initializeComponents(final double x, final double y, final double w, final double h) {
+		selectedColor = (Color) thumbCircle.getFill();
+		unSelectedColor = (Color) trackLine.getStroke();
 		if (isHorizontal) {
-			double trackHeight = snapSize(track.prefHeight(-1));
-			double trackAreaHeight = Math.max(trackHeight, thumbRadius);
+			thumbRadius = thumbCircle.getRadius() + thumbCircle.getStrokeWidth();
 			double startY = y + (h / 2);
 			trackLength = snapSize(w - thumbRadius);
 			trackStart = snapPosition(x + (thumbRadius / 2));
 
-			track.setStartX(trackStart);
-			track.setEndX(trackLength);
-			line.setStartX(trackStart);
-			line.setStartY(startY);
-			line.setEndY(startY);
-			track.setStartY(startY);
-			track.setEndY(startY);
-			animatedThumb.setLayoutX(thumb.getLayoutX());
+			trackLine.setStartX(trackStart);
+			trackLine.setEndX(trackLength);
+			valueLine.setStartX(trackStart);
+			valueLine.setStartY(startY);
+			valueLine.setEndY(startY);
+			trackLine.setStartY(startY);
+			trackLine.setEndY(startY);
 
-			thumbTop = (int) (startY + ((trackAreaHeight - thumbRadius) / 2));
+			thumbTop = (int) startY;
 		} else {
-			double trackWidth = snapSize(track.prefWidth(-1));
-			double trackAreaWidth = Math.max(trackWidth, thumbRadius);
+			thumbRadius = thumbCircle.getRadius() + thumbCircle.getStrokeWidth();
 			double startX = x + (w / 2);
 			getSkinnable().getWidth();
 			getSkinnable().getHeight();
 			trackLength = snapSize(h - thumbRadius);
 			trackStart = snapPosition(y + (thumbRadius / 2));
 
-			track.setStartY(trackStart + trackLength);
-			track.setEndY(trackStart);
-			line.setStartY(trackStart + trackLength);
-			line.setStartX(startX);
-			line.setEndX(startX);
-			track.setStartX(startX);
-			track.setEndX(startX);
-			animatedThumb.setLayoutY(thumb.getLayoutY());
+			trackLine.setStartY(trackStart + trackLength);
+			trackLine.setEndY(trackStart);
+			valueLine.setStartY(trackStart + trackLength);
+			valueLine.setStartX(startX);
+			valueLine.setEndX(startX);
+			trackLine.setStartX(startX);
+			trackLine.setEndX(startX);
 
-			thumbLeft = (int) (startX + ((trackAreaWidth - thumbRadius) / 2));
+			thumbLeft = (int) startX;
 		}
 	}
 
 	double minTrackLength() {
-		return 2 * thumb.prefWidth(-1);
+		return 2 * thumbCircle.prefWidth(-1);
 	}
 
 	@Override
 	protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
 		if (isHorizontal) {
-			return (leftInset + minTrackLength() + thumb.minWidth(-1) + rightInset);
+			return (leftInset + minTrackLength() + thumbCircle.minWidth(-1) + rightInset);
 		} else {
-			return (leftInset + thumb.prefWidth(-1) + rightInset);
+			return (leftInset + thumbCircle.prefWidth(-1) + rightInset);
 		}
 	}
 
 	@Override
 	protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 		if (isHorizontal) {
-			return topInset + thumb.prefHeight(-1) + bottomInset;
+			return topInset + thumbCircle.prefHeight(-1) + bottomInset;
 		} else {
-			return topInset + minTrackLength() + thumb.prefHeight(-1) + bottomInset;
+			return topInset + minTrackLength() + thumbCircle.prefHeight(-1) + bottomInset;
 		}
 	}
 
@@ -334,14 +328,14 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		if (isHorizontal) {
 			return 140;
 		} else {
-			return leftInset + Math.max(thumb.prefWidth(-1), track.prefWidth(-1)) + rightInset;
+			return leftInset + Math.max(thumbCircle.prefWidth(-1), trackLine.prefWidth(-1)) + rightInset;
 		}
 	}
 
 	@Override
 	protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 		if (isHorizontal) {
-			return topInset + Math.max(thumb.prefHeight(-1), track.prefHeight(-1)) + bottomInset;
+			return topInset + Math.max(thumbCircle.prefHeight(-1), trackLine.prefHeight(-1)) + bottomInset;
 		} else {
 			return 140;
 		}
