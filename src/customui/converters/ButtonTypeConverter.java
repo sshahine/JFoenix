@@ -6,33 +6,33 @@ import javafx.scene.text.Font;
 
 import com.sun.javafx.css.StyleConverterImpl;
 
-import customui.components.Rippler.RipplerMask;
+import customui.components.C3DButton.ButtonType;
 
-public final class MaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
+public class ButtonTypeConverter  extends StyleConverterImpl<String , ButtonType> {
 
     // lazy, thread-safe instatiation
     private static class Holder {
-        static final MaskTypeConverter INSTANCE = new MaskTypeConverter();
+        static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
     }
-    public static StyleConverter<String, RipplerMask> getInstance() {
+    public static StyleConverter<String, ButtonType> getInstance() {
         return Holder.INSTANCE;
     }
-    private MaskTypeConverter() {
+    private ButtonTypeConverter() {
         super();
     }
 
     @Override
-    public RipplerMask convert(ParsedValue<String,RipplerMask> value, Font not_used) {
+    public ButtonType convert(ParsedValue<String,ButtonType> value, Font not_used) {
         String string = value.getValue();
         try {
-            return RipplerMask.valueOf(string);
+            return ButtonType.valueOf(string);
         } catch (IllegalArgumentException | NullPointerException exception) {
-            return RipplerMask.RECT;
+            return ButtonType.FLAT;
         }
     }
 
     @Override
     public String toString() {
-        return "MaskTypeConverter";
+        return "ButtonTypeConverter";
     }
 }

@@ -4,14 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import customui.components.C3DButton;
-import customui.components.C3DButton.ButtonType;
 
 public class ButtonDemo extends Application {
 
@@ -25,11 +21,8 @@ public class ButtonDemo extends Application {
 		main.getChildren().add(new Button("Java Button"));
 		main.getChildren().add(new C3DButton("C3D Button"));
 		
-		C3DButton button = new C3DButton("Raised Button");
-		button.setType(ButtonType.RAISED);
-		button.setBackground(new Background(new BackgroundFill(Color.valueOf("#4285F4"), null, null)));
-		button.setTextFill(Color.WHITE);
-		button.setPrefWidth(100);
+		C3DButton button = new C3DButton("Raised Button".toUpperCase());
+		button.getStyleClass().add("c3dbutton-raised");
 		main.getChildren().add(button);
 		
 		C3DButton button1 = new C3DButton("DISABLED");

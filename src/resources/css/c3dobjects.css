@@ -39,3 +39,27 @@
 .rippler:hover{
 	-fx-cursor: hand;
 }
+
+
+/*
+ * C3D Button properties 
+ */
+ 
+ .c3d-button{
+	-fx-background-color: transparent ;
+}
+
+.c3d-button .c3d-rippler{
+	-fx-rippler-fill: RED;
+}
+
+.custom-c3d-button-raised{
+	-fx-padding: 0.7em 0.57em;
+    -fx-font-size: 14px;
+    -fx-button-type: RAISED;
+    -fx-background-color: RED;
+    -fx-pref-width: 200;
+    -fx-text-fill: WHITE;
+}
+	 
+ 

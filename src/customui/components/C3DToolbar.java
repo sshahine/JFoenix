@@ -5,12 +5,12 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class Toolbar extends BorderPane {
+public class C3DToolbar extends BorderPane {
 	
 	private HBox leftBox;
 	private HBox rightBox;
 
-	public Toolbar() {
+	public C3DToolbar() {
 		leftBox = new HBox();
 		rightBox = new HBox();
 		rightBox.getStyleClass().add("hboxRight");		

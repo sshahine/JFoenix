@@ -64,7 +64,7 @@ public class Rippler extends StackPane {
 		this.control = control;
 		this.maskType.set(mask);
 		this.position.set(pos);
-		this.getStyleClass().add("rippler");
+		this.getStyleClass().add("c3d-rippler");
 
 		// create rippler panels
 		rippler = new RippleGenerator();

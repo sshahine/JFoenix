@@ -1,6 +1,5 @@
 package customui.skins;
 
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -16,23 +15,27 @@ import customui.components.DepthManager;
 import customui.components.Rippler;
 
 public class C3DButtonSkin extends ButtonSkin {
-	
+
 	private final AnchorPane main = new AnchorPane();
-	
-	private boolean invalid = true;
-	private StackPane buttonComponents;
+	private StackPane buttonComponents = new StackPane();
 	private Rippler buttonRippler;
-	
+
 	private final Color disabledColor = Color.valueOf("#EAEAEA");
-	
-	public C3DButtonSkin(Button button) {
+
+	private boolean invalid = true;
+	private Rectangle buttonRect;
+
+	public C3DButtonSkin(C3DButton button) {
 		super(button);
 
+
 		// create button
-		Rectangle buttonRect = new Rectangle();
+		buttonRect = new Rectangle();
 		buttonRect.setArcHeight(7);
-		buttonRect.setArcWidth(7);
-		buttonComponents = new StackPane();
+		buttonRect.setArcWidth(7);		
+
+		if(button.isDisabled()) buttonRect.setFill(disabledColor);
+
 		buttonComponents.getChildren().add(buttonRect);
 		buttonRippler = new Rippler(buttonComponents){
 			@Override protected Shape getMask(){
@@ -44,52 +47,49 @@ public class C3DButtonSkin extends ButtonSkin {
 			@Override protected void initListeners(){
 				ripplerPane.setOnMousePressed((event) -> {
 					createRipple(event.getX(),event.getY());
-					if(this.position.get() == RipplerPos.FRONT)
-						this.control.fireEvent(event);
-				});
-				ripplerPane.setOnMouseReleased((event) -> {
-					if(this.position.get() == RipplerPos.FRONT)
-						this.control.fireEvent(event);
 				});
 			}
 		};
 		main.getChildren().add(buttonRippler);
-		
-		
-		if(button.isDisabled()) buttonRect.setFill(disabledColor);		
-		else buttonRect.setFill(button.getBackground().getFills().get(0).getFill());
-		button.setStyle("-fx-background-color: TRANSPARENT");
-		
-		
+
+
 		// add listeners to the button
-		button.widthProperty().addListener((o,oldVal,newVal)->{
-			buttonRect.setWidth(newVal.doubleValue());
-		});
-		button.heightProperty().addListener((o,oldVal,newVal)->{
-			buttonRect.setHeight(newVal.doubleValue());
-		});
+		button.widthProperty().addListener((o,oldVal,newVal)->buttonRect.setWidth(newVal.doubleValue()));
+		button.heightProperty().addListener((o,oldVal,newVal)->buttonRect.setHeight(newVal.doubleValue()+1));
+		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
+		button.backgroundProperty().addListener((o,oldVal,newVal)->buttonRect.setFill(newVal.getFills().get(0).getFill()));
 		
-		if(((C3DButton)getSkinnable()).getType() == ButtonType.RAISED)
-			DepthManager.setDepth(buttonRippler, 2);
-		
+		updateButtonType(button.getButtonType());
 		updateChildren();
 	}
-	
+
 	@Override protected void updateChildren() {
 		super.updateChildren();
 		if (main != null) {
 			getChildren().add(main);
 		}
 	}
-	
+
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());
+			buttonRect.setFill(getSkinnable().getBackground().getFills().get(0).getFill());
+			buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
 			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 			buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}
 		layoutLabelInArea(x, y, w, h);
+	}
+
+	private void updateButtonType(ButtonType type){
+		switch (type) {
+		case RAISED:
+			DepthManager.setDepth(buttonRippler, 2);
+			break;
+		default:
+			buttonRippler.setEffect(null);
+			break;
+		}
 	}
 }
