@@ -60,10 +60,17 @@
 	-fx-cursor: hand;
 }
 
-/* CheckBox */
-.check-box{
+
+
+.c3d-check-box{
     -fx-font-weight: BOLD;
 }
+
+.custom-c3d-check-box{
+    -fx-checked-color: RED;
+    -fx-unchecked-color: BLACK;
+}
+
 
 /* Button */
 .button{

@@ -16,13 +16,13 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import com.fxexperience.javafx.animation.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
+import customui.components.C3DCheckBox;
 import customui.components.Rippler;
 import customui.components.Rippler.RipplerMask;
 
@@ -39,9 +39,6 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 	private Line rightLine;
 	private Line leftLine;
 
-	private Color uncheckedColor = Color.valueOf("#5A5A5A");
-	private Color checkedColor = Color.valueOf("#0F9D58");
-	
 	private final AnchorPane container = new AnchorPane();
 	private double labelOffset = 0;
 	
@@ -49,25 +46,28 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 
 	private boolean invalid = true;
 	
-	public C3DCheckBoxSkin(CheckBox control) {
+	public C3DCheckBoxSkin(C3DCheckBox control) {
 		super(control);
 
 		box.setMinSize(20, 20);
 		box.setPrefSize(20, 20);
 		box.setMaxSize(20, 20);
-		box.setBorder(new Border(new BorderStroke(uncheckedColor,BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(lineThick))));
+		
+		box.setBorder(new Border(new BorderStroke(control.getUnCheckedColor(),BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(lineThick))));
+		
+		
 		
 		StackPane boxContainer = new StackPane();
 		boxContainer.getChildren().add(box);
 		boxContainer.setPadding(new Insets(padding));
 		rippler = new Rippler(boxContainer,RipplerMask.CIRCLE);
-		rippler.setRipplerFill(getSkinnable().isSelected()?uncheckedColor:checkedColor);
+		rippler.setRipplerFill(getSkinnable().isSelected()?control.getUnCheckedColor():control.getCheckedColor());
 
 		rightLine = new Line(); 
 		leftLine = new Line(); 
-		rightLine.setStroke(checkedColor);
+		rightLine.setStroke(control.getCheckedColor());
 		rightLine.setStrokeWidth(lineThick);
-		leftLine.setStroke(checkedColor);
+		leftLine.setStroke(control.getCheckedColor());
 		leftLine.setStrokeWidth(lineThick);
 		rightLine.setVisible(false);
 		leftLine.setVisible(false);
@@ -79,7 +79,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		
 		// add listeners
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
-			rippler.setRipplerFill(newVal?uncheckedColor:checkedColor);
+			rippler.setRipplerFill(newVal?control.getUnCheckedColor():control.getCheckedColor());
 			transition.setRate(newVal?1:-1);
 			transition.play();
 		});
@@ -118,7 +118,6 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		maxHeight = Math.max(boxHeight, labelHeight);
 		final double xOffset = computeXOffset(w, labelWidth + boxWidth, checkBox.getAlignment().getHpos()) + x;
 		final double yOffset = computeYOffset(h, maxHeight, checkBox.getAlignment().getVpos()) + x;
-
 
 		if(invalid){
 			rightLine.setStartX((boxWidth+padding-labelOffset)/2 - boxWidth/5.5 );

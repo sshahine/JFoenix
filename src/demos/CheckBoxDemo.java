@@ -22,10 +22,14 @@ public class CheckBoxDemo extends Application {
 		
 		CheckBox cb = new CheckBox("CheckBox");
 		C3DCheckBox c3b = new C3DCheckBox("C3D CheckBox");
+		C3DCheckBox customC3B = new C3DCheckBox("C3D CheckBox");
+		customC3B.getStyleClass().add("custom-c3d-check-box");
 		
 		main.getChildren().add(cb);
 		main.getChildren().add(c3b);
-				
+		main.getChildren().add(customC3B);
+		
+		
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);
 		StackPane.setMargin(main, new Insets(100));
