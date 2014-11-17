@@ -1,65 +1,86 @@
 /*
  *	Apply google Roboto font to all UI components 
  */
-.root{
+.root {
 	-fx-font-family: Roboto;
-    src:"/resources/roboto/Roboto-Regular.ttf";
+	src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
-.c3dslider > .trackLine {
+/*******************************************************************************
+ *                                                                             *
+ * C3D Radio Button                                                            *
+ *                                                                             *
+ ******************************************************************************/
+
+.c3d-radio-button .radio {
+	-fx-stroke-width: 2.0px;
+	-fx-fill: transparent;
+}
+
+.c3d-radio-button .dot {
+	-fx-fill: #0F9D58;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * C3D Slider                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.c3d-slider > .trackLine {
 	-fx-stroke: #CCCCCC;
 	-fx-stroke-width: 3.0px;
 }
 
-.c3dslider .valueLine {
+.c3d-slider .valueLine {
 	-fx-stroke: #0F9D58;
 	-fx-stroke-width: 3.0px;
 }
 
-.c3dslider .valueText {
+.c3d-slider .valueText {
 	-fx-stroke: #FFFFFF;
 	-fx-font-size:10.0;
 }
 
-.c3dslider > .thumbCircle {
+.c3d-slider > .thumbCircle {
 	-fx-stroke-width: 2.0px;
 	-fx-fill: #0F9D58;
 }
 
+/*******************************************************************************
+*                                                                              *
+* C3D Rippler                                                                  *
+*                                                                              *
+*******************************************************************************/
 
-
-/*
- * Ripple Properties
- */
- 
-.rippler{
+.c3d-rippler {
 	-fx-rippler-fill: BLUE;
 	-fx-mask-type: RECT;
 }
-.rippler:hover{
+.c3d-rippler:hover {
 	-fx-cursor: hand;
 }
 
+/*******************************************************************************
+*                                                                              *
+* C3D Button                                                                   *
+*                                                                              *
+*******************************************************************************/
 
-/*
- * C3D Button properties 
- */
- 
- .c3d-button{
+ .c3d-button {
 	-fx-background-color: transparent ;
 }
 
-.c3d-button .c3d-rippler{
+.c3d-button .c3d-rippler {
 	-fx-rippler-fill: RED;
 }
 
-.custom-c3d-button-raised{
+.custom-c3d-button-raised {
 	-fx-padding: 0.7em 0.57em;
-    -fx-font-size: 14px;
-    -fx-button-type: RAISED;
-    -fx-background-color: RED;
-    -fx-pref-width: 200;
-    -fx-text-fill: WHITE;
+	-fx-font-size: 14.0px;
+	-fx-button-type: RAISED;
+	-fx-background-color: RED;
+	-fx-pref-width: 200.0;
+	-fx-text-fill: WHITE;
 }
-	 
- 
+

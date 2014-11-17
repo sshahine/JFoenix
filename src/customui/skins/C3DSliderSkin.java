@@ -28,10 +28,11 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	private double thumbTop;
 	private double thumbLeft;
-
 	private double trackStart;
 	private double trackLength;
 	private boolean trackClicked, compInitialized, isHorizontal;
+
+	private static final String DEFAULT_STYLE_CLASS = "c3d-slider";
 
 	private double preDragThumbPos;
 	private Point2D dragStart; // in skin coordinates
@@ -50,6 +51,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	public C3DSliderSkin(Slider slider) {
 		super(slider, new SliderBehavior(slider));
+		slider.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
 		initialize();
 
