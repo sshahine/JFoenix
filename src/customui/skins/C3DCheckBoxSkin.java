@@ -61,7 +61,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		boxContainer.getChildren().add(box);
 		boxContainer.setPadding(new Insets(padding));
 		rippler = new Rippler(boxContainer,RipplerMask.CIRCLE);
-		rippler.setColor(getSkinnable().isSelected()?uncheckedColor:checkedColor);
+		rippler.setRipplerFill(getSkinnable().isSelected()?uncheckedColor:checkedColor);
 
 		rightLine = new Line(); 
 		leftLine = new Line(); 
@@ -79,7 +79,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		
 		// add listeners
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
-			rippler.setColor(newVal?uncheckedColor:checkedColor);
+			rippler.setRipplerFill(newVal?uncheckedColor:checkedColor);
 			transition.setRate(newVal?1:-1);
 			transition.play();
 		});

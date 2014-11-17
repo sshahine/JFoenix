@@ -1,3 +1,10 @@
+/*
+ *	Apply google Roboto font to all UI components 
+ */
+.root{
+	-fx-font-family: Roboto;
+    src:"/resources/roboto/Roboto-Regular.ttf";
+}
 
 .c3dslider > .trackLine {
 	-fx-stroke: #CCCCCC;
@@ -17,4 +24,18 @@
 .c3dslider > .thumbCircle {
 	-fx-stroke-width: 2.0px;
 	-fx-fill: #0F9D58;
+}
+
+
+
+/*
+ * Ripple Properties
+ */
+ 
+.rippler{
+	-fx-rippler-fill: BLUE;
+	-fx-mask-type: RECT;
+}
+.rippler:hover{
+	-fx-cursor: hand;
 }

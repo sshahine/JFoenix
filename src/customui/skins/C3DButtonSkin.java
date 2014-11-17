@@ -44,11 +44,11 @@ public class C3DButtonSkin extends ButtonSkin {
 			@Override protected void initListeners(){
 				ripplerPane.setOnMousePressed((event) -> {
 					createRipple(event.getX(),event.getY());
-					if(this.pos == RipplerPos.FRONT)
+					if(this.position.get() == RipplerPos.FRONT)
 						this.control.fireEvent(event);
 				});
 				ripplerPane.setOnMouseReleased((event) -> {
-					if(this.pos == RipplerPos.FRONT)
+					if(this.position.get() == RipplerPos.FRONT)
 						this.control.fireEvent(event);
 				});
 			}
@@ -85,8 +85,8 @@ public class C3DButtonSkin extends ButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			buttonRippler.setColor(((LabeledText)getChildren().get(0)).getFill());
-			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setColor(newVal));
+			buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());
+			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 			buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}

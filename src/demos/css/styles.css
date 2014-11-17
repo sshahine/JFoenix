@@ -1,4 +1,7 @@
-
+.root{
+	-fx-font-family: Roboto;
+    src:"/resources/roboto/Roboto-Regular.ttf";
+}
 /* Burgers Demo */
 
 .hamburgerIcon{
@@ -29,12 +32,10 @@
 
 .c3dTextField{
 	-fx-background-color: WHITE;
-    -fx-font-family: Roboto;
     -fx-font-weight: BOLD;
     -fx-prompt-text-fill: rgb(128,128,128);
     -fx-alignment: top-left ;
     -fx-max-width: 300;
-    src:"/resources/roboto/Roboto-Regular.ttf";
 }
     
 
@@ -51,27 +52,28 @@
 	-fx-padding: 10;
 	-fx-cursor: hand;
 }
+.icons-rippler{
+	-fx-rippler-fill: BLUE;
+	-fx-mask-type: CIRCLE;
+}
+.icons-rippler:hover{
+	-fx-cursor: hand;
+}
 
 /* CheckBox */
 .check-box{
-	 -fx-font-family: Roboto;
     -fx-font-weight: BOLD;
-    src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
 /* Button */
 .button{
 	-fx-padding: 0.7em 0.57em;
-	-fx-font-family: Roboto;
     -fx-font-size: 14px;
-    src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
 /* Menu */
 .c3dMenu{
-	-fx-font-family: Roboto;
     -fx-font-size: 14px;
-    src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
 
@@ -105,7 +107,7 @@
 
 .mylistview  .scroll-bar .increment-arrow,
 .mylistview  .scroll-bar .decrement-arrow{
-	-fx-shape: " ";	
+	-fx-shape:" ";	
 	-fx-padding:0;
 }
 
@@ -129,7 +131,3 @@
 .c3d-list-cell:even { -fx-background-color: white; /* for information */ }
 .c3d-list-cell:filled:hover { -fx-background-color: white;-fx-text-fill: black;}
 
-
-.scroll-bar {
-    -fx-skin: "customui.skins.C3DScrollBarSkin";
-}

@@ -32,7 +32,6 @@ Label{
 	-fx-text-fill: linear-gradient( from 0.0% 0.0% to 100.0% 100.0%, rgb(255,255,204) 0.0, rgb(255,255,204) 10.0, rgb(255,255,77) 40.0, rgb(255,255,77) 100.0);	
 }
 
-
 .progress-bar > .bar {
     -fx-background-color: linear-gradient(
         from 0px .75em to .75em 0px,

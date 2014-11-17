@@ -25,12 +25,11 @@ public class C3DListCell<T> extends ListCell<T> {
 	    if(item != null && (item instanceof Region || item instanceof Control)) {
 	    	StackPane cellContainer = new StackPane();
 	    	cellContainer.getChildren().add((Node) item);
-	    	cellContainer.getStyleClass().add("c3d-list-cell-holder");
+	    	cellContainer.getStyleClass().add("c3d-list-cell-holder");	    	
 	    	cellContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));	    	
 	    	DepthManager.setDepth(cellContainer, 1);
 	    	Rippler rippler = new Rippler(cellContainer);
-	    	rippler.setColor(Color.GREEN);
-	    	
+	    	rippler.setRipplerFill(Color.GREEN);
 	    	StackPane mainContainer = new StackPane();
 	    	mainContainer.getChildren().add(rippler);
 	    	StackPane.setMargin(rippler, new Insets(0,5,7,5));

@@ -65,7 +65,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 		circlePane.getChildren().add(innerCircle);
 		circlePane.setPadding(new Insets(15));		
 		rippler = new Rippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK);		
-		rippler.setColor(toggledColor);
+		rippler.setRipplerFill(toggledColor);
 		
 		circles.getChildren().add(rippler);
 		
@@ -76,7 +76,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 		AnchorPane.setLeftAnchor(circles, -15.0);
 		
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
-			rippler.setColor(newVal?unToggledColor:toggledColor);
+			rippler.setRipplerFill(newVal?unToggledColor:toggledColor);
 			transition.setRate(newVal?1:-1);
 			transition.play();
 		});

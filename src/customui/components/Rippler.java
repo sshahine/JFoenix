@@ -1,5 +1,7 @@
 package customui.components;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.animation.Interpolator;
@@ -8,10 +10,16 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -22,44 +30,48 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import com.sun.javafx.css.converters.PaintConverter;
+import customui.converters.MaskTypeConverter;
 
 public class Rippler extends StackPane {
 
 	public static enum RipplerPos{FRONT, BACK};
 	public static enum RipplerMask{CIRCLE, RECT};
 
-	protected Pane ripplerPane;
-	private RipplerMask maskType = RipplerMask.RECT ;
-	protected RipplerPos pos = RipplerPos.FRONT;
-	private boolean enabled = true;
-	protected Node control;
-	private ObjectProperty<Paint> color = new SimpleObjectProperty<Paint>(Color.rgb(0, 200, 255));
-	private double rippleRadius = 150;
 	protected final RippleGenerator rippler;
+	protected Pane ripplerPane;
+	protected Node control;
+	
+	private double rippleRadius = 150;
+	private boolean enabled = true;
+	
+
 	
 	public Rippler(Node control){
 		this(control, RipplerMask.RECT, RipplerPos.FRONT);
 	}
 
-	public Rippler(Node control, RipplerMask mask){
-		this(control, mask, RipplerPos.FRONT);
-		this.maskType = mask;
+	public Rippler(Node control, RipplerPos pos){
+		this(control, RipplerMask.RECT , pos);
 	}
 
+	public Rippler(Node control, RipplerMask mask){
+		this(control, mask , RipplerPos.FRONT);
+	}
+	
 	public Rippler(Node control, RipplerMask mask,  RipplerPos pos){
-		super();
-
+		super();		
 		this.control = control;
-		this.maskType = mask;
-		this.pos = pos;
+		this.maskType.set(mask);
+		this.position.set(pos);
+		this.getStyleClass().add("rippler");
 
 		// create rippler panels
-
 		rippler = new RippleGenerator();
 		ripplerPane = new C3DAnchorPane();
 		ripplerPane.getChildren().add(rippler);
 
-		if(this.pos == RipplerPos.BACK)  ripplerPane.getChildren().add(this.control);
+		if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
 		else this.getChildren().add(this.control);
 		this.getChildren().add(ripplerPane);
 
@@ -75,58 +87,56 @@ public class Rippler extends StackPane {
 		initListeners();
 	}	
 	
-	public Paint getColor(){
-		return this.color.get();
-	}
-
-	public ObjectProperty<Paint> colorProperty(){
-		return this.color;
-	}
-	public void setColor(Paint color){
-		this.color.set(color);
-	}
-
 	public void setEnabled(boolean enable){
 		this.enabled = enable;
 	}
 
 	// methods that can be changed by extending the rippler class
+	/**
+	 *  clipping mask
+	 * @return
+	 */
 	protected Shape getMask(){
 		Shape mask = new Rectangle(ripplerPane.getWidth() - 0.1,ripplerPane.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
-		if(maskType.equals(Rippler.RipplerMask.CIRCLE))
+		if(maskType.get().equals(Rippler.RipplerMask.CIRCLE))
 			mask = new Circle(ripplerPane.getWidth()/2 , ripplerPane.getHeight()/2, (ripplerPane.getWidth()/2) - 0.1, Color.BLUE);	
 		return mask;
 	}
-	
+	/**
+	 *  mouse listeners
+	 * @return
+	 */
 	protected void initListeners(){
 		ripplerPane.setOnMousePressed((event) -> {
 			createRipple(event.getX(),event.getY());
-			if(this.pos == RipplerPos.FRONT)
+			if(this.position.get() == RipplerPos.FRONT)
 				this.control.fireEvent(event);
 		});
 		ripplerPane.setOnMouseReleased((event) -> {
-			if(this.pos == RipplerPos.FRONT)
+			if(this.position.get() == RipplerPos.FRONT)
 				this.control.fireEvent(event);
 		});
 		ripplerPane.setOnMouseClicked((event) -> {
-			if(this.pos == RipplerPos.FRONT )
+			if(this.position.get() == RipplerPos.FRONT )
 				this.control.fireEvent(event);
 		});
 	}
-	
+	/**
+	 *  create Ripple effect
+	 * @return
+	 */
 	protected void createRipple(double x, double y){
 		rippler.setGeneratorCenterX(x);
 		rippler.setGeneratorCenterY(y);
 		rippler.createRipple();
 	}
-	
+
 
 	/**
 	 * Generates ripples on the screen every 0.3 seconds or whenever
 	 * the createRipple method is called. Ripples grow and fade out
 	 * over 0.6 seconds
 	 */
-	// the effect generator
 	class RippleGenerator extends Group {
 
 		private double generatorCenterX = 0;
@@ -141,7 +151,7 @@ public class Rippler extends StackPane {
 					overlayRect.setClip(getMask());
 					getChildren().add(overlayRect);
 				}
-				overlayRect.setFill(new Color(((Color)color.get()).getRed(), ((Color)color.get()).getGreen(), ((Color)color.get()).getBlue(),0.2));
+				overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
 
 				// create the ripple effect
 
@@ -208,13 +218,13 @@ public class Rippler extends StackPane {
 
 			private Ripple(double centerX, double centerY) {
 				super(centerX, centerY, 0, null);	
-				if(color.get() instanceof Color){
-					Color circleColor = new Color(((Color)color.get()).getRed(), ((Color)color.get()).getGreen(), ((Color)color.get()).getBlue(),0.3);
+				if(ripplerFill.get() instanceof Color){
+					Color circleColor = new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.3);
 					setStroke(circleColor);
 					setFill(circleColor);
 				}else{
-					setStroke(color.get());
-					setFill(color.get());
+					setStroke(ripplerFill.get());
+					setFill(ripplerFill.get());
 				}
 			}
 		}
@@ -371,4 +381,88 @@ public class Rippler extends StackPane {
 	}
 
 
+	/**
+	 *  styleable properties 
+	 */
+	private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL, Rippler.this, "ripplerFill", Color.rgb(0, 200, 255));
+
+	public Paint getRipplerFill(){
+		return ripplerFill == null ? Color.rgb(0, 200, 255) : ripplerFill.get();
+	}
+	public StyleableObjectProperty<Paint> ripplerFillProperty(){		
+		return this.ripplerFill;
+	}
+	public void setRipplerFill(Paint color){
+		this.ripplerFill.set(color);
+	}
+
+	private StyleableObjectProperty<RipplerMask> maskType = new SimpleStyleableObjectProperty<RipplerMask>(StyleableProperties.MASK_TYPE, Rippler.this, "maskType", RipplerMask.RECT );
+
+	public RipplerMask getMaskType(){
+		return maskType == null ? RipplerMask.RECT : maskType.get();
+	}
+	public StyleableObjectProperty<RipplerMask> maskTypeProperty(){		
+		return this.maskType;
+	}
+	public void setMaskType(RipplerMask type){
+		this.maskType.set(type);
+	}
+
+	protected ObjectProperty<RipplerPos> position = new SimpleObjectProperty<RipplerPos>();
+
+	public RipplerPos getPosition(){
+		return position == null ? RipplerPos.FRONT : position.get();
+	}
+	public ObjectProperty<RipplerPos> positionProperty(){		
+		return this.position;
+	}
+	
+
+	private static class StyleableProperties {
+		private static final CssMetaData< Rippler, Paint> RIPPLER_FILL =
+				new CssMetaData< Rippler, Paint>("-fx-rippler-fill",
+						PaintConverter.getInstance(), Color.GRAY) {
+			@Override
+			public boolean isSettable(Rippler control) {
+				return control.ripplerFill == null || !control.ripplerFill.isBound();
+			}
+			@Override
+			public StyleableProperty<Paint> getStyleableProperty(Rippler control) {
+				return control.ripplerFillProperty();
+			}
+		};
+		private static final CssMetaData< Rippler, RipplerMask> MASK_TYPE =
+				new CssMetaData< Rippler, RipplerMask>("-fx-mask-type", MaskTypeConverter.getInstance(), RipplerMask.RECT) {
+			@Override
+			public boolean isSettable(Rippler control) {
+				return control.maskType == null || !control.maskType.isBound();
+			}
+			@Override
+			public StyleableProperty<RipplerMask> getStyleableProperty(Rippler control) {
+				return control.maskTypeProperty();
+			}
+		};
+		
+		private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+		static {
+			final List<CssMetaData<? extends Styleable, ?>> styleables =
+					new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+			Collections.addAll(styleables,
+					RIPPLER_FILL,
+					MASK_TYPE
+					);
+			STYLEABLES = Collections.unmodifiableList(styleables);
+		}
+	}
+	
+	
+	@Override
+	public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+		return getClassCssMetaData();
+	}
+	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+		return StyleableProperties.STYLEABLES;
+	}
+	
+	
 }

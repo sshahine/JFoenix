@@ -61,8 +61,8 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 		boxContainer.setPadding(new Insets(padding));
 
 		rippler = new Rippler(boxContainer, RipplerMask.CIRCLE);
-		rippler.setColor(selectedColor);
-		rippler.setColor(getSkinnable().isSelected() ? unSelectedColor : selectedColor);
+		rippler.setRipplerFill(selectedColor);
+		rippler.setRipplerFill(getSkinnable().isSelected() ? unSelectedColor : selectedColor);
 
 		container.getChildren().add(rippler);
 
@@ -70,7 +70,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 		updateChildren();
 
 		getSkinnable().selectedProperty().addListener((o, oldVal, newVal) -> {
-			rippler.setColor(newVal ? unSelectedColor : selectedColor);
+			rippler.setRipplerFill(newVal ? unSelectedColor : selectedColor);
 			transition.setRate(newVal ? 1 : -1);
 			transition.play();
 		});
