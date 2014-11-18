@@ -12,13 +12,13 @@ import com.sun.javafx.scene.control.skin.LabeledText;
 import customui.components.C3DButton;
 import customui.components.C3DButton.ButtonType;
 import customui.components.DepthManager;
-import customui.components.Rippler;
+import customui.components.C3DRippler;
 
 public class C3DButtonSkin extends ButtonSkin {
 
 	private final AnchorPane main = new AnchorPane();
 	private StackPane buttonComponents = new StackPane();
-	private Rippler buttonRippler;
+	private C3DRippler buttonRippler;
 
 	private final Color disabledColor = Color.valueOf("#EAEAEA");
 
@@ -37,7 +37,7 @@ public class C3DButtonSkin extends ButtonSkin {
 		if(button.isDisabled()) buttonRect.setFill(disabledColor);
 
 		buttonComponents.getChildren().add(buttonRect);
-		buttonRippler = new Rippler(buttonComponents){
+		buttonRippler = new C3DRippler(buttonComponents){
 			@Override protected Shape getMask(){
 				Rectangle mask = new Rectangle(buttonRect.getWidth() - 0.1,buttonRect.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
 				mask.setArcHeight(buttonRect.getArcHeight());

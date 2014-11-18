@@ -16,9 +16,9 @@ import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
-import customui.components.Rippler;
-import customui.components.Rippler.RipplerMask;
-import customui.components.Rippler.RipplerPos;
+import customui.components.C3DRippler;
+import customui.components.C3DRippler.RipplerMask;
+import customui.components.C3DRippler.RipplerPos;
 
 public class C3DToggleButtonSkin extends ToggleButtonSkin {
 
@@ -35,7 +35,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 	private final int strokeWidth = 2;
 	private final Color toggledColor = Color.valueOf("#0F9D58");
 	private final Color unToggledColor = Color.valueOf("#5A5A5A");
-	private Rippler rippler;
+	private C3DRippler rippler;
 	
 	private Timeline transition;
 	private boolean invalid = true;
@@ -64,7 +64,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 		circlePane.getChildren().add(circle);
 		circlePane.getChildren().add(innerCircle);
 		circlePane.setPadding(new Insets(15));		
-		rippler = new Rippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK);		
+		rippler = new C3DRippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK);		
 		rippler.setRipplerFill(toggledColor);
 		
 		circles.getChildren().add(rippler);

@@ -79,7 +79,7 @@ public class C3DPopup extends Popup {
 		StackPane itemContainer = new StackPane();
 		itemContainer.getChildren().add(item);
 		itemsContainer.widthProperty().addListener((o,oldVal,newVal)->{itemContainer.setPrefWidth((double) newVal);});
-		Rippler rippler = new Rippler(itemContainer);
+		C3DRippler rippler = new C3DRippler(itemContainer);
 		this.items.getChildren().add(rippler);
 //		if(this.items.getChildren().size()==1) VBox.setMargin(rippler, new Insets(5,0,0,0));
 //		else VBox.setMargin(rippler, new Insets(0,0,0,0));

@@ -10,10 +10,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import customui.components.C3DPopup;
-import customui.components.Hamburger;
-import customui.components.Rippler;
-import customui.components.Rippler.RipplerMask;
-import customui.components.Rippler.RipplerPos;
+import customui.components.C3DHamburger;
+import customui.components.C3DRippler;
+import customui.components.C3DRippler.RipplerMask;
+import customui.components.C3DRippler.RipplerPos;
 
 public class PopupDemo extends Application {
 
@@ -25,9 +25,9 @@ public class PopupDemo extends Application {
 		MenuButton button = new MenuButton("Java Menu");
 		button.getItems().setAll(item);
 
-		Hamburger show = new Hamburger();
+		C3DHamburger show = new C3DHamburger();
 		show.setPadding(new Insets(10,5,10,5));
-		Rippler r = new Rippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);
+		C3DRippler r = new C3DRippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);
 		C3DPopup menu = new C3DPopup(r,primaryStage);
 		Label l1 = new Label("TEST1");
 		l1.setPadding(new Insets(10,30,10,30));

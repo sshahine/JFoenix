@@ -18,18 +18,17 @@ import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.ProgressBarSkin;
 
+import customui.components.C3DProgressBar;
+
 public class C3DProgressBarSkin extends ProgressBarSkin {
 
 	private StackPane effectsPane;
 
 	private Line line;
 	private Line progressLine;
-	private double strokeWidth = 4;
-	private double endX;
-	private double startX;
 	private double barWidth;
 
-	public C3DProgressBarSkin(ProgressBar bar) {
+	public C3DProgressBarSkin(C3DProgressBar bar) {
 		super(bar);
 		InvalidationListener listener = new InvalidationListener() {
 			@Override public void   invalidated(Observable valueModel) {
@@ -52,14 +51,16 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 
 		effectsPane  = new StackPane();
 		line = new Line();
-		startX = getSkinnable().getBoundsInLocal().getMinX();
-		endX = getSkinnable().getBoundsInLocal().getMaxX();
-		line.setStartX( startX + strokeWidth);
+		double startX = getSkinnable().getBoundsInLocal().getMinX();
+		double endX = getSkinnable().getBoundsInLocal().getMaxX();
+		Number strokeWidth = ((C3DProgressBar)getSkinnable()).getStrokeWidth();
+		
+		line.setStartX( startX + strokeWidth.doubleValue());
 		line.setEndX(endX);
 		line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 		line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-		line.setStroke(Color.valueOf("#C8C8C8"));
-		line.setStrokeWidth(strokeWidth);
+		line.setStroke(((C3DProgressBar)getSkinnable()).getTrackColor());
+		line.setStrokeWidth(strokeWidth.doubleValue());
 		line.setStrokeType(StrokeType.CENTERED);		
 		effectsPane.getChildren().add(line);
 		this.getChildren().add(effectsPane);
@@ -68,12 +69,12 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 			progressLine = new Line();
 			startX = getSkinnable().getBoundsInLocal().getMinX();
 			endX = barWidth;
-			progressLine.setStartX( startX + strokeWidth);
+			progressLine.setStartX( startX + strokeWidth.doubleValue());
 			progressLine.setEndX(endX);
 			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			progressLine.setStroke(Color.valueOf("#0F9D58"));
-			progressLine.setStrokeWidth(strokeWidth);
+			progressLine.setStroke(((C3DProgressBar)getSkinnable()).getProgressColor());
+			progressLine.setStrokeWidth(strokeWidth.doubleValue());
 			progressLine.setStrokeType(StrokeType.CENTERED);		
 			effectsPane.getChildren().add(progressLine);
 			StackPane.setAlignment(progressLine, Pos.CENTER_LEFT);
@@ -82,12 +83,12 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 			progressLine = new Line();
 			startX = getSkinnable().getBoundsInLocal().getMinX();
 			endX = getSkinnable().getBoundsInLocal().getMaxX()/4;			
-			progressLine.setStartX( startX + strokeWidth);
+			progressLine.setStartX( startX + strokeWidth.doubleValue());
 			progressLine.setEndX(endX);
 			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
 			progressLine.setStroke(Color.valueOf("#0F9D58"));
-			progressLine.setStrokeWidth(strokeWidth);
+			progressLine.setStrokeWidth(strokeWidth.doubleValue());
 			progressLine.setStrokeType(StrokeType.CENTERED);		
 			effectsPane.getChildren().add(progressLine);
 			progressLine.setTranslateX(barWidth);			

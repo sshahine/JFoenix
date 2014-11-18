@@ -14,8 +14,8 @@ import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.RadioButtonSkin;
 
-import customui.components.Rippler;
-import customui.components.Rippler.RipplerMask;
+import customui.components.C3DRippler;
+import customui.components.C3DRippler.RipplerMask;
 
 public class C3DRadioButtonSkin extends RadioButtonSkin {
 
@@ -23,7 +23,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 	private double padding = 15;
 	private double contWidth, contHeight;
 	private double maxHeight, radioRadius = 8, minRadius = -1;
-	private final Rippler rippler;
+	private final C3DRippler rippler;
 
 	private Circle radio, dot;
 
@@ -48,7 +48,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 		boxContainer.getChildren().addAll(radio, dot);
 		boxContainer.setPadding(new Insets(padding));
 
-		rippler = new Rippler(boxContainer, RipplerMask.CIRCLE);
+		rippler = new C3DRippler(boxContainer, RipplerMask.CIRCLE);
 
 		container.getChildren().add(rippler);
 

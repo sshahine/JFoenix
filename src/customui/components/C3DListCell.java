@@ -28,7 +28,7 @@ public class C3DListCell<T> extends ListCell<T> {
 	    	cellContainer.getStyleClass().add("c3d-list-cell-holder");	    	
 	    	cellContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));	    	
 	    	DepthManager.setDepth(cellContainer, 1);
-	    	Rippler rippler = new Rippler(cellContainer);
+	    	C3DRippler rippler = new C3DRippler(cellContainer);
 	    	rippler.setRipplerFill(Color.GREEN);
 	    	StackPane mainContainer = new StackPane();
 	    	mainContainer.getChildren().add(rippler);

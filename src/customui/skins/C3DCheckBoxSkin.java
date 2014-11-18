@@ -23,8 +23,8 @@ import com.fxexperience.javafx.animation.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
 import customui.components.C3DCheckBox;
-import customui.components.Rippler;
-import customui.components.Rippler.RipplerMask;
+import customui.components.C3DRippler;
+import customui.components.C3DRippler.RipplerMask;
 
 public class C3DCheckBoxSkin extends CheckBoxSkin {
 
@@ -34,7 +34,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 	private double boxWidth;
 	private double maxHeight;
 	private double boxHeight;
-	private final Rippler rippler;
+	private final C3DRippler rippler;
 
 	private Line rightLine;
 	private Line leftLine;
@@ -55,15 +55,13 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		
 		box.setBorder(new Border(new BorderStroke(control.getUnCheckedColor(),BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(lineThick))));
 		
-		
-		
 		StackPane boxContainer = new StackPane();
 		boxContainer.getChildren().add(box);
 		boxContainer.setPadding(new Insets(padding));
-		rippler = new Rippler(boxContainer,RipplerMask.CIRCLE);
+		rippler = new C3DRippler(boxContainer,RipplerMask.CIRCLE);
 		rippler.setRipplerFill(getSkinnable().isSelected()?control.getUnCheckedColor():control.getCheckedColor());
 
-		rightLine = new Line(); 
+		rightLine = new Line();
 		leftLine = new Line(); 
 		rightLine.setStroke(control.getCheckedColor());
 		rightLine.setStrokeWidth(lineThick);

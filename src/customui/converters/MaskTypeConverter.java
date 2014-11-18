@@ -6,7 +6,7 @@ import javafx.scene.text.Font;
 
 import com.sun.javafx.css.StyleConverterImpl;
 
-import customui.components.Rippler.RipplerMask;
+import customui.components.C3DRippler.RipplerMask;
 
 public final class MaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
 

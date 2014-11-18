@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import customui.components.Hamburger;
+import customui.components.C3DHamburger;
 import customui.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import customui.transitions.hamburger.HamburgerBasicCloseTransition;
 import customui.transitions.hamburger.HamburgerNextArrowBasicTransition;
@@ -24,28 +24,28 @@ public class HamburgerDemo extends Application {
 		main.setHgap(20);
 		
 		
-		Hamburger h1 = new Hamburger();
+		C3DHamburger h1 = new C3DHamburger();
 		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(h1);
 		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask.setRate(burgerTask.getRate()*-1);
 			burgerTask.play();
 		});
 		
-		Hamburger h2 = new Hamburger();
+		C3DHamburger h2 = new C3DHamburger();
 		HamburgerBasicCloseTransition burgerTask1 = new HamburgerBasicCloseTransition(h2);
 		h2.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask1.setRate(burgerTask1.getRate()*-1);
 			burgerTask1.play();
 		});
 		
-		Hamburger h3 = new Hamburger();
+		C3DHamburger h3 = new C3DHamburger();
 		HamburgerBackArrowBasicTransition burgerTask2 = new HamburgerBackArrowBasicTransition(h3);
 		h3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask2.setRate(burgerTask2.getRate()*-1);
 			burgerTask2.play();
 		});
 		
-		Hamburger h4 = new Hamburger();
+		C3DHamburger h4 = new C3DHamburger();
 		HamburgerNextArrowBasicTransition burgerTask3 = new HamburgerNextArrowBasicTransition(h4);
 		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask3.setRate(burgerTask3.getRate()*-1);

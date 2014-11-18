@@ -9,18 +9,18 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
+
+import customui.components.C3DTextField;
 
 public class C3DTextFieldSkin extends TextFieldSkin{
 
@@ -37,9 +37,8 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 	private boolean invalid = true;
 
-	public C3DTextFieldSkin(TextField field) {
+	public C3DTextFieldSkin(C3DTextField field) {
 		super(field);
-		field.getStyleClass().add("c3dTextField");
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
 			else focusedLine.setVisible(false);
@@ -72,7 +71,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			line.setStroke(Color.rgb(77,77,77));
+			line.setStroke(((C3DTextField)getSkinnable()).getUnFocusColor());
 			line.setStrokeWidth(1);
 			line.setStrokeType(StrokeType.CENTERED);
 			if(getSkinnable().isDisabled()){
@@ -87,7 +86,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			focusedLine.setEndX(mid);
 			focusedLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			focusedLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			focusedLine.setStroke(Color.valueOf("#4059A9"));
+			focusedLine.setStroke(((C3DTextField)getSkinnable()).getFocusColor());
 			focusedLine.setStrokeWidth(2);
 			focusedLine.setStrokeType(StrokeType.CENTERED);
 			focusedLine.setVisible(false);
@@ -99,7 +98,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			cursorPane = new AnchorPane();
 			//			cursorPane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 			cursorPane.setMaxSize(40, getSkinnable().getHeight());
-			cursorPane.setBackground(new Background(new BackgroundFill(Color.valueOf("#4059A9"), CornerRadii.EMPTY, Insets.EMPTY)));
+			cursorPane.setBackground(new Background(new BackgroundFill(((C3DTextField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
 			cursorPane.setOpacity(0);
 			effectsPane.getChildren().add(cursorPane);
 

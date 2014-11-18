@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import customui.components.Drawer;
-import customui.components.Hamburger;
+import customui.components.C3DHamburger;
 
 public class DrawerDemo extends Application {
 
@@ -16,7 +16,7 @@ public class DrawerDemo extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		FlowPane content = new FlowPane();
-		Hamburger h1 = new Hamburger();
+		C3DHamburger h1 = new C3DHamburger();
 		FlowPane.setMargin(h1, new Insets(300,0,0,400));
 		content.getChildren().add(h1);
 

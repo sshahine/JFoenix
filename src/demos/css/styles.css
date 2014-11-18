@@ -4,14 +4,14 @@
 }
 /* Burgers Demo */
 
-.hamburgerIcon{
+.c3d-hamburger-icon{
 	-fx-spacing: 3;
 	-fx-scale-x:0.7;
 	-fx-scale-y:0.7;
 	-fx-cursor: hand;
 }
 
-.hamburgerIcon SVGPath{
+.c3d-hamburger-icon SVGPath{
 	-fx-stroke-width: 0.0;
 	-fx-stroke: TRANSPARENT;
 	-fx-opacity: 1;
@@ -30,11 +30,14 @@
     -fx-max-width: 300;
 }
 
-.c3dTextField{
+.c3d-text-field{
 	-fx-background-color: WHITE;
     -fx-font-weight: BOLD;
-    -fx-prompt-text-fill: rgb(128,128,128);
+    -fx-prompt-text-fill: #808080;
     -fx-alignment: top-left ;
+    -fx-max-width: 300;
+    -fx-focus-color: #4059A9;
+    -fx-unfocus-color: #4d4d4d;
     -fx-max-width: 300;
 }
     
@@ -42,8 +45,19 @@
 
 
 /* Progress Bar Demo */
+
 .progress-bar > .bar {
 	-fx-min-width: 500;
+}
+
+.c3d-progress-bar > .bar {
+	-fx-min-width: 500;
+}
+
+.c3d-progress-bar{
+	-fx-track-color: #C8C8C8 ;
+	-fx-progress-color: #0F9D58;
+	-fx-stroke-width:3;
 }
 
 /* Icons Demo */
@@ -83,7 +97,7 @@
 }
 
 .c3d-button .c3d-rippler{
-	-fx-rippler-fill: RED;
+	-fx-rippler-fill: BLUE;
 }
 
 .c3dbutton-raised{
@@ -144,6 +158,10 @@
 	-fx-background-insets: 2, 0, 0;
 	-fx-background-radius: 2em;
 }
+
+
+
+
 
 
 .c3d-list-cell-holder > .label{

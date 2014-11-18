@@ -42,7 +42,7 @@ import contact.JOGL2Setup_GLCanvas;
 import contact.service.Contact;
 import contact.service.ContactService;
 import contact.service.SimpleContactService;
-import customui.components.Hamburger;
+import customui.components.C3DHamburger;
 import customui.transitions.hamburger.HamburgerSlideCloseTransition;
 
 @FXMLController("/resources/fxml/ContactSearch.fxml")
@@ -71,7 +71,7 @@ public class ContactSearchPresenter
 	private SwingNode swingnode;
 
 	@FXML
-	private Hamburger bicon;
+	private C3DHamburger bicon;
 	
 
 	private ListProperty<Contact> contacts;

@@ -98,3 +98,64 @@
     -fx-checked-color: RED;
     -fx-unchecked-color: BLACK;
 }
+
+/*******************************************************************************
+*                                                                              *
+* C3D Progress Bar                                                             *
+*                                                                              *
+*******************************************************************************/
+
+.progress-bar > .bar {
+	-fx-min-width: 500;
+}
+
+.c3d-progress-bar > .bar {
+	-fx-min-width: 500;
+}
+
+.c3d-progress-bar{
+	-fx-track-color: #C8C8C8 ;
+	-fx-progress-color: #0F9D58;
+	-fx-stroke-width:3;
+}
+
+/*******************************************************************************
+*                                                                              *
+* C3D Textfield                                                                *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-text-field{
+	-fx-background-color: WHITE;
+    -fx-font-weight: BOLD;
+    -fx-prompt-text-fill: #808080;
+    -fx-alignment: top-left ;
+    -fx-max-width: 300;
+    -fx-focus-color: #4059A9;
+    -fx-unfocus-color: #4d4d4d;
+    -fx-max-width: 300;
+}
+
+/*******************************************************************************
+*                                                                              *
+* C3D Hamburger Icon                                                           *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-hamburger-icon{
+	-fx-spacing: 3;
+	-fx-scale-x:0.7;
+	-fx-scale-y:0.7;
+	-fx-cursor: hand;
+}
+
+.c3d-hamburger-icon SVGPath{
+	-fx-stroke-width: 0.0;
+	-fx-stroke: TRANSPARENT;
+	-fx-opacity: 1;
+	-fx-stroke-miter-limit: 4.0;
+	-fx-stroke-line-join: MITER;
+	-fx-stroke-line-cap: BUTT;
+	-fx-stroke-dash-offset: 0.0;
+	-fx-fill: BLUE;
+}

@@ -73,7 +73,7 @@ public class C3DCheckBox extends CheckBox {
 	private static class StyleableProperties {
 		private static final CssMetaData< C3DCheckBox, Paint> CHECKED_COLOR =
 				new CssMetaData< C3DCheckBox, Paint>("-fx-checked-color",
-						PaintConverter.getInstance(), Color.GRAY) {
+						PaintConverter.getInstance(), Color.valueOf("#0F9D58")) {
 			@Override
 			public boolean isSettable(C3DCheckBox control) {
 				return control.checkedColor == null || !control.checkedColor.isBound();
@@ -85,7 +85,7 @@ public class C3DCheckBox extends CheckBox {
 		};
 		private static final CssMetaData< C3DCheckBox, Paint> UNCHECKED_COLOR =
 				new CssMetaData< C3DCheckBox, Paint>("-fx-unchecked-color",
-						PaintConverter.getInstance(), Color.GRAY) {
+						PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
 			@Override
 			public boolean isSettable(C3DCheckBox control) {
 				return control.unCheckedColor == null || !control.unCheckedColor.isBound();

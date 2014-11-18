@@ -33,7 +33,7 @@ import javafx.util.Duration;
 import com.sun.javafx.css.converters.PaintConverter;
 import customui.converters.MaskTypeConverter;
 
-public class Rippler extends StackPane {
+public class C3DRippler extends StackPane {
 
 	public static enum RipplerPos{FRONT, BACK};
 	public static enum RipplerMask{CIRCLE, RECT};
@@ -47,19 +47,19 @@ public class Rippler extends StackPane {
 	
 
 	
-	public Rippler(Node control){
+	public C3DRippler(Node control){
 		this(control, RipplerMask.RECT, RipplerPos.FRONT);
 	}
 
-	public Rippler(Node control, RipplerPos pos){
+	public C3DRippler(Node control, RipplerPos pos){
 		this(control, RipplerMask.RECT , pos);
 	}
 
-	public Rippler(Node control, RipplerMask mask){
+	public C3DRippler(Node control, RipplerMask mask){
 		this(control, mask , RipplerPos.FRONT);
 	}
 	
-	public Rippler(Node control, RipplerMask mask,  RipplerPos pos){
+	public C3DRippler(Node control, RipplerMask mask,  RipplerPos pos){
 		super();		
 		this.control = control;
 		this.maskType.set(mask);
@@ -98,7 +98,7 @@ public class Rippler extends StackPane {
 	 */
 	protected Shape getMask(){
 		Shape mask = new Rectangle(ripplerPane.getWidth() - 0.1,ripplerPane.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
-		if(maskType.get().equals(Rippler.RipplerMask.CIRCLE))
+		if(maskType.get().equals(C3DRippler.RipplerMask.CIRCLE))
 			mask = new Circle(ripplerPane.getWidth()/2 , ripplerPane.getHeight()/2, (ripplerPane.getWidth()/2) - 0.1, Color.BLUE);	
 		return mask;
 	}
@@ -384,7 +384,7 @@ public class Rippler extends StackPane {
 	/**
 	 *  styleable properties 
 	 */
-	private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL, Rippler.this, "ripplerFill", Color.rgb(0, 200, 255));
+	private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL, C3DRippler.this, "ripplerFill", Color.rgb(0, 200, 255));
 
 	public Paint getRipplerFill(){
 		return ripplerFill == null ? Color.rgb(0, 200, 255) : ripplerFill.get();
@@ -396,7 +396,7 @@ public class Rippler extends StackPane {
 		this.ripplerFill.set(color);
 	}
 
-	private StyleableObjectProperty<RipplerMask> maskType = new SimpleStyleableObjectProperty<RipplerMask>(StyleableProperties.MASK_TYPE, Rippler.this, "maskType", RipplerMask.RECT );
+	private StyleableObjectProperty<RipplerMask> maskType = new SimpleStyleableObjectProperty<RipplerMask>(StyleableProperties.MASK_TYPE, C3DRippler.this, "maskType", RipplerMask.RECT );
 
 	public RipplerMask getMaskType(){
 		return maskType == null ? RipplerMask.RECT : maskType.get();
@@ -419,26 +419,26 @@ public class Rippler extends StackPane {
 	
 
 	private static class StyleableProperties {
-		private static final CssMetaData< Rippler, Paint> RIPPLER_FILL =
-				new CssMetaData< Rippler, Paint>("-fx-rippler-fill",
-						PaintConverter.getInstance(), Color.GRAY) {
+		private static final CssMetaData< C3DRippler, Paint> RIPPLER_FILL =
+				new CssMetaData< C3DRippler, Paint>("-fx-rippler-fill",
+						PaintConverter.getInstance(), Color.rgb(0, 200, 255)) {
 			@Override
-			public boolean isSettable(Rippler control) {
+			public boolean isSettable(C3DRippler control) {
 				return control.ripplerFill == null || !control.ripplerFill.isBound();
 			}
 			@Override
-			public StyleableProperty<Paint> getStyleableProperty(Rippler control) {
+			public StyleableProperty<Paint> getStyleableProperty(C3DRippler control) {
 				return control.ripplerFillProperty();
 			}
 		};
-		private static final CssMetaData< Rippler, RipplerMask> MASK_TYPE =
-				new CssMetaData< Rippler, RipplerMask>("-fx-mask-type", MaskTypeConverter.getInstance(), RipplerMask.RECT) {
+		private static final CssMetaData< C3DRippler, RipplerMask> MASK_TYPE =
+				new CssMetaData< C3DRippler, RipplerMask>("-fx-mask-type", MaskTypeConverter.getInstance(), RipplerMask.RECT) {
 			@Override
-			public boolean isSettable(Rippler control) {
+			public boolean isSettable(C3DRippler control) {
 				return control.maskType == null || !control.maskType.isBound();
 			}
 			@Override
-			public StyleableProperty<RipplerMask> getStyleableProperty(Rippler control) {
+			public StyleableProperty<RipplerMask> getStyleableProperty(C3DRippler control) {
 				return control.maskTypeProperty();
 			}
 		};
