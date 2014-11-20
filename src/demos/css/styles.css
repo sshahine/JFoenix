@@ -163,15 +163,37 @@
 
 
 
-
-.c3d-list-cell-holder > .label{
-  	-fx-background-color: WHITE;
+.c3d-list-cell-container{
+	-fx-alignment: center-left;
+}
+.c3d-list-cell-container > .label{
   	-fx-text-fill: BLACK ;
 }
-.c3d-list-view {-fx-background-insets: 0;}
 
-.c3d-list-cell { -fx-text-fill: black; /* 5 */ }
-.c3d-list-cell:odd { -fx-background-color: white; /* 1 */ }
-.c3d-list-cell:even { -fx-background-color: white; /* for information */ }
-.c3d-list-cell:filled:hover { -fx-background-color: white;-fx-text-fill: black;}
+
+.c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.c3d-list-cell:odd { -fx-background-color: WHITE; }
+.c3d-list-cell:even { -fx-background-color: WHITE; }
+.c3d-list-cell:filled:hover { -fx-text-fill: black;}
+
+.c3d-list-cell .c3d-rippler{
+	-fx-rippler-fill:BLUE;
+}
+
+
+.c3d-list-view {
+	-fx-background-insets: 0;
+  	-fx-cell-horizontal-margin: 0.0;
+  	-fx-cell-vertical-margin: 5.0;
+  	-fx-vertical-gap : 10;
+  	-fx-expanded : false;  	
+}
+.c3d-list-view .scroll-bar{
+	-fx-min-height: 700px;
+}
+
+
 
