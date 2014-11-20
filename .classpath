@@ -13,7 +13,7 @@
 	<classpathentry kind="lib" path="libs/jogl-2.1.5/jogl-all-natives-windows-i586.jar"/>
 	<classpathentry kind="lib" path="libs/jogl-2.1.5/jogl-all.jar"/>
 	<classpathentry kind="lib" path="libs/jidefx/jidefx-common-0.9.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_25"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
