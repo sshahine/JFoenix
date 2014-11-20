@@ -114,11 +114,11 @@ public class C3DListCell<T> extends ListCell<T> {
 						
 						if(oldVal.doubleValue()<newVal.doubleValue()){
 							C3DListView<T> listview = ((C3DListView<T>)getListView());
-							listview.setPrefHeight((this.getHeight()+ listview.getCellVerticalMargin() + listview.currentVerticalGapProperty().get()) * listview.getItems().size());
+							listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
 						}else{
 							animateGap.setOnFinished((e)->{
 								C3DListView<T> listview = ((C3DListView<T>)getListView());
-								listview.setPrefHeight((this.getHeight()+ listview.getCellVerticalMargin() + listview.currentVerticalGapProperty().get()) * listview.getItems().size());
+								listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
 							});
 						}
 						
