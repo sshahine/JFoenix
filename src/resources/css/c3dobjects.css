@@ -27,24 +27,32 @@
  *                                                                             *
  ******************************************************************************/
 
-.c3d-slider > .trackLine {
-	-fx-stroke: #CCCCCC;
-	-fx-stroke-width: 3.0px;
+.c3d-slider > .thumb {
+	-fx-background-color: #0F9D58;
+	-fx-background-radius: 16.0;
+	-fx-padding: 7.0;
 }
 
-.c3d-slider .valueLine {
-	-fx-stroke: #0F9D58;
-	-fx-stroke-width: 3.0px;
+.c3d-slider .thumb:hover {
+	-fx-opacity: 0.8;
 }
 
-.c3d-slider .valueText {
+.c3d-slider .thumb:pressed {
+	-fx-background-color: #0F7D38;
+}
+
+.c3d-slider > .track {
+	-fx-background-color: #CCCCCC;
+    -fx-padding: 2;
+}
+
+.c3d-slider .sliderValue {
 	-fx-stroke: #FFFFFF;
-	-fx-font-size:10.0;
+	-fx-font-size: 10.0;
 }
 
-.c3d-slider > .thumbCircle {
-	-fx-stroke-width: 2.0px;
-	-fx-fill: #0F9D58;
+.c3d-slider:disabled {
+	-fx-opacity: 0.4;
 }
 
 /*******************************************************************************
@@ -106,17 +114,17 @@
 *******************************************************************************/
 
 .progress-bar > .bar {
-	-fx-min-width: 500;
+	-fx-min-width: 500.0;
 }
 
 .c3d-progress-bar > .bar {
-	-fx-min-width: 500;
+	-fx-min-width: 500.0;
 }
 
 .c3d-progress-bar{
 	-fx-track-color: #C8C8C8 ;
 	-fx-progress-color: #0F9D58;
-	-fx-stroke-width:3;
+	-fx-stroke-width:3.0;
 }
 
 /*******************************************************************************
@@ -130,10 +138,10 @@
     -fx-font-weight: BOLD;
     -fx-prompt-text-fill: #808080;
     -fx-alignment: top-left ;
-    -fx-max-width: 300;
+    -fx-max-width: 300.0;
     -fx-focus-color: #4059A9;
     -fx-unfocus-color: #4d4d4d;
-    -fx-max-width: 300;
+    -fx-max-width: 300.0;
 }
 
 /*******************************************************************************
@@ -143,7 +151,7 @@
 *******************************************************************************/
 
 .c3d-hamburger-icon{
-	-fx-spacing: 3;
+	-fx-spacing: 3.0;
 	-fx-scale-x:0.7;
 	-fx-scale-y:0.7;
 	-fx-cursor: hand;
@@ -152,7 +160,7 @@
 .c3d-hamburger-icon SVGPath{
 	-fx-stroke-width: 0.0;
 	-fx-stroke: TRANSPARENT;
-	-fx-opacity: 1;
+	-fx-opacity: 1.0;
 	-fx-stroke-miter-limit: 4.0;
 	-fx-stroke-line-join: MITER;
 	-fx-stroke-line-cap: BUTT;
