@@ -167,3 +167,50 @@
 	-fx-stroke-dash-offset: 0.0;
 	-fx-fill: BLUE;
 }
+
+/*******************************************************************************
+*                                                                              *
+* C3D List View                                                                *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-list-cell-container{
+	-fx-alignment: center-left;
+}
+.c3d-list-cell-container > .label{
+  	-fx-text-fill: BLACK ;
+}
+
+
+.c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.c3d-list-cell:odd { -fx-background-color: WHITE; }
+.c3d-list-cell:even { -fx-background-color: WHITE; }
+.c3d-list-cell:filled:hover { -fx-text-fill: black;}
+
+.c3d-list-cell .c3d-rippler{
+	-fx-rippler-fill:BLUE;
+}
+
+
+.c3d-list-view {
+	-fx-background-insets: 0;
+  	-fx-cell-horizontal-margin: 0.0;
+  	-fx-cell-vertical-margin: 5.0;
+  	-fx-vertical-gap : 10;
+  	-fx-expanded : false;
+}
+
+
+/*******************************************************************************
+*                                                                              *
+* C3D Toggle Button                                                            *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-toggle-button{
+	-fx-toggle-color:RED;
+}
+

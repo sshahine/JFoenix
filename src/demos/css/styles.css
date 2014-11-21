@@ -193,5 +193,7 @@
 }
 
 
-
+.c3d-toggle-button{
+	-fx-toggle-color:RED;
+}
 
