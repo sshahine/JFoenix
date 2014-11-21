@@ -30,7 +30,7 @@ public class RipplerDemo extends Application {
 		lrippler.setEnabled(false);
 		main.getChildren().add(lrippler);
 		
-		lrippler.setOnMousePressed((e) -> {
+		l.setOnMousePressed((e) -> {
 			if(i == 5) step = -1;	
 			else if (i == 0) step = 1;
 			DepthManager.setDepth(l, i+=step % DepthManager.getLevels());

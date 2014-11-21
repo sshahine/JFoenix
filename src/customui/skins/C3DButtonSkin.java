@@ -1,10 +1,16 @@
 package customui.skins;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
@@ -20,6 +26,8 @@ public class C3DButtonSkin extends ButtonSkin {
 	private StackPane buttonComponents = new StackPane();
 	private C3DRippler buttonRippler;
 
+	private Timeline clickedAnimation ;
+	
 	private final Color disabledColor = Color.valueOf("#EAEAEA");
 
 	private boolean invalid = true;
@@ -59,6 +67,19 @@ public class C3DButtonSkin extends ButtonSkin {
 		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
 		button.backgroundProperty().addListener((o,oldVal,newVal)->buttonRect.setFill(newVal.getFills().get(0).getFill()));
 		
+		button.setOnMousePressed((e)->{
+			if(clickedAnimation!=null){
+				clickedAnimation.setRate(1);
+				clickedAnimation.play();	
+			}
+		});
+		button.setOnMouseReleased((e)->{
+			if(clickedAnimation!=null){
+				clickedAnimation.setRate(-1);
+				clickedAnimation.play();
+			}
+		});
+		
 		updateButtonType(button.getButtonType());
 		updateChildren();
 	}
@@ -86,6 +107,19 @@ public class C3DButtonSkin extends ButtonSkin {
 		switch (type) {
 		case RAISED:
 			DepthManager.setDepth(buttonRippler, 2);
+			clickedAnimation = new Timeline(
+					new KeyFrame(Duration.ZERO,
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).radiusProperty(), DepthManager.getShadowAt(2).radiusProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).spreadProperty(), DepthManager.getShadowAt(2).spreadProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetXProperty(), DepthManager.getShadowAt(2).offsetXProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetYProperty(), DepthManager.getShadowAt(2).offsetYProperty().get(), Interpolator.EASE_BOTH)
+							),
+					new KeyFrame(Duration.millis(200),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).radiusProperty(), DepthManager.getShadowAt(4).radiusProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).spreadProperty(), DepthManager.getShadowAt(4).spreadProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetXProperty(), DepthManager.getShadowAt(4).offsetXProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetYProperty(), DepthManager.getShadowAt(4).offsetYProperty().get(), Interpolator.EASE_BOTH)
+					)); 
 			break;
 		default:
 			buttonRippler.setEffect(null);
