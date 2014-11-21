@@ -290,7 +290,8 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             }
         } else {
             flow.resizeRelocate(x, y, w, h);
-            getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get());
+            if(flow.getCellCount() > 0)
+            	getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get());
         }
     }
     
