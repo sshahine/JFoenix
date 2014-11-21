@@ -56,12 +56,12 @@ public class C3DListView<T> extends ListView<T> {
 	}
 
 
-	public void expand(){
+	private void expand(){
 		currentVerticalGap.set(verticalGap.get());
 		expanded.set(true);
 	}
 
-	public void collapse(){	
+	private void collapse(){	
 		currentVerticalGap.set(0);
 		expanded.set(false);
 	}
@@ -75,9 +75,10 @@ public class C3DListView<T> extends ListView<T> {
 	private static final String DEFAULT_STYLE_CLASS = "c3d-list-view";
 
 	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);		
-		verticalGap.addListener((o,oldVal,newVal)->{
-			if(isExpanded()) currentVerticalGap.set(newVal.doubleValue());
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+		expanded.addListener((o,oldVal,newVal)->{
+			if(newVal) expand();
+			else collapse();
 		});
 	}
 
