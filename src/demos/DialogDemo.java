@@ -5,9 +5,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -39,7 +43,8 @@ public class DialogDemo extends Application {
 		list.getItems().add(new Label("SSS6"));
 		list.getItems().add(new Label("SSS7"));
 		list.getStyleClass().add("mylistview");
-		// FIXME : we need to find the size of the list
+		list.setMaxHeight(200);
+		list.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, null, null)));
 		
 		
 		ListView<String> javaList = new ListView<String>();

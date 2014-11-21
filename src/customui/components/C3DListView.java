@@ -58,10 +58,12 @@ public class C3DListView<T> extends ListView<T> {
 
 	public void expand(){
 		currentVerticalGap.set(verticalGap.get());
+		expanded.set(true);
 	}
 
 	public void collapse(){	
 		currentVerticalGap.set(0);
+		expanded.set(false);
 	}
 
 	/***************************************************************************
@@ -183,7 +185,8 @@ public class C3DListView<T> extends ListView<T> {
 			Collections.addAll(styleables,
 					CELL_HORIZONTAL_MARGIN,
 					CELL_VERTICAL_MARGIN,
-					VERTICAL_GAP
+					VERTICAL_GAP,
+					EXPANDED
 					);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}

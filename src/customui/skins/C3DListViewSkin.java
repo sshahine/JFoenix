@@ -83,7 +83,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
         };
         flow.getVbar().addEventFilter(MouseEvent.MOUSE_PRESSED, ml);
         flow.getHbar().addEventFilter(MouseEvent.MOUSE_PRESSED, ml);
-
+        
         updateRowCount();
 
         // init the behavior 'closures'
@@ -103,7 +103,6 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
         registerChangeListener(listView.parentProperty(), "PARENT");
         registerChangeListener(listView.placeholderProperty(), "PLACEHOLDER");
         registerChangeListener(listView.fixedCellSizeProperty(), "FIXED_CELL_SIZE");
-        
     }
     
     @Override protected void handleControlPropertyChanged(String p) {
@@ -291,6 +290,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             }
         } else {
             flow.resizeRelocate(x, y, w, h);
+            getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get());
         }
     }
     

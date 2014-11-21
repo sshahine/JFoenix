@@ -189,11 +189,9 @@
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
   	-fx-vertical-gap : 10;
-  	-fx-expanded : false;  	
+  	-fx-expanded : false;
 }
-.c3d-list-view .scroll-bar{
-	-fx-min-height: 700px;
-}
+
 
 
 

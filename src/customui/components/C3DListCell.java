@@ -28,14 +28,12 @@ public class C3DListCell<T> extends ListCell<T> {
 	double ripplerIncScale = 0.1;
 	private boolean fitRippler = true;
 
-	private boolean invalid = true;
 
 	private Timeline animateGap;
 
 	public C3DListCell() {
 		super();
 		initialize();
-		this.setCache(true);
 	}
 
 	@Override
@@ -51,13 +49,18 @@ public class C3DListCell<T> extends ListCell<T> {
 			setGraphic(null);
 		}else{
 			if(item != null && (item instanceof Region || item instanceof Control)) {
-				if(invalid){
+
+
+				Node currentNode = getGraphic();
+				Node newNode = (Node) item;
+				if (currentNode == null || ! currentNode.equals(newNode)) {
+
 					cellContainer.getChildren().clear();
 					cellContainer.getChildren().add((Node) item);
 					cellContainer.getStyleClass().add("c3d-list-cell-container");
 					cellContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));				
 					cellRippler = new C3DListCellRippler(cellContainer);
-					
+
 					double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 					double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
 
@@ -68,70 +71,67 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler.ripplerPane.setScaleX(getRipplerScale(cellInsetHgap));
 						cellRippler.ripplerPane.setScaleY(getRipplerScale(cellInsetVgap));
 					}
-					
+
 					if(this.getIndex() > 0 && ((C3DListView<T>)getListView()).isExpanded())
 						this.translateYProperty().set(((C3DListView<T>)getListView()).getVerticalGap()*this.getIndex());
-					
 					setGraphic(mainContainer);
 					setText(null);
-					invalid = false;
-				}
 
-				((C3DListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
-					// fit the rippler into the cell bounds
-					double newCellInsetHgap = newVal.doubleValue();
-					double oldCellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
-					if(fitRippler) cellRippler.ripplerPane.setScaleX(getRipplerScale(newCellInsetHgap));
-					StackPane.setMargin(cellRippler, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
-					// change the padding of the cell container
-					cellContainer.setPadding(new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
-				});
+					// add listeners
+					((C3DListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
+						// fit the rippler into the cell bounds
+						double newCellInsetHgap = newVal.doubleValue();
+						double oldCellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
+						if(fitRippler) cellRippler.ripplerPane.setScaleX(getRipplerScale(newCellInsetHgap));
+						StackPane.setMargin(cellRippler, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
+						// change the padding of the cell container
+						cellContainer.setPadding(new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
+					});
 
-				((C3DListView<T>)getListView()).cellVerticalMarginProperty().addListener((o,oldVal,newVal)-> {
-					// fit the rippler into the cell bounds
-					double oldCellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
-					double newCellInsetVgap = newVal.doubleValue();
-					if(fitRippler) cellRippler.ripplerPane.setScaleY(getRipplerScale(newCellInsetVgap));
-					StackPane.setMargin(cellRippler, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
-					// change the padding of the cell container
-					cellContainer.setPadding(new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));	
-				});
+					((C3DListView<T>)getListView()).cellVerticalMarginProperty().addListener((o,oldVal,newVal)-> {
+						// fit the rippler into the cell bounds
+						double oldCellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
+						double newCellInsetVgap = newVal.doubleValue();
+						if(fitRippler) cellRippler.ripplerPane.setScaleY(getRipplerScale(newCellInsetVgap));
+						StackPane.setMargin(cellRippler, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
+						// change the padding of the cell container
+						cellContainer.setPadding(new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));	
+					});
 
-				((C3DListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{		
-					if(this.getIndex() > 0){
-												
-						
-						if(animateGap!=null) animateGap.stop();
-						animateGap = new Timeline(
-								new KeyFrame(
-										Duration.ZERO,       
-										new KeyValue( this.translateYProperty(), this.translateYProperty().get() ,Interpolator.EASE_BOTH)
-										),
-										new KeyFrame(Duration.millis(500),
-												new KeyValue( this.translateYProperty(), newVal.doubleValue()*this.getIndex()  ,Interpolator.EASE_BOTH)
-												)
-								);	
-						
-						if(oldVal.doubleValue()<newVal.doubleValue()){
-							C3DListView<T> listview = ((C3DListView<T>)getListView());
-							listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
-						}else{
-							animateGap.setOnFinished((e)->{
-								C3DListView<T> listview = ((C3DListView<T>)getListView());
-								listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
-							});
+					((C3DListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
+						// validate changing gap operation
+						C3DListView<T> listview = ((C3DListView<T>)getListView());
+						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get();
+						if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
+							if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
+								// stop the previous animation 
+								if(animateGap!=null) animateGap.stop();
+								// create new animation
+								animateGap = new Timeline(
+										new KeyFrame( Duration.ZERO, new KeyValue( this.translateYProperty(), this.translateYProperty().get() ,Interpolator.EASE_BOTH)),
+										new KeyFrame(Duration.millis(500), new KeyValue( this.translateYProperty(), newVal.doubleValue()*this.getIndex()  ,Interpolator.EASE_BOTH))
+										);	
+								// change the height of the list view
+								if(oldVal.doubleValue()<newVal.doubleValue())
+									listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+								else
+									animateGap.setOnFinished((e)->{
+										listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+									});
+
+								animateGap.play();	
+							}
 						}
-						
-						animateGap.play();	
-					}
-				});
+					});
+				}
 			}
 		}
 	}
 
 
+	// FIXME : need to be changed according to the gap 
 	private double getRipplerScale(double gap){
-		return ripplerInitScale  + ripplerInitIncScale + (gap / 5) * ripplerIncScale;
+		return ripplerInitScale  + ripplerInitIncScale + (gap / 4) * ripplerIncScale;
 	}
 
 
