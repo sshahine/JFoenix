@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import customui.components.C3DTextField;
+import customui.validation.RequiredFieldValidator;
 
 public class InputDemo extends Application {
 
@@ -35,6 +36,13 @@ public class InputDemo extends Application {
 		disabledField.setPromptText("I'm disabled..");
 		disabledField.setDisable(true);
 		pane.getChildren().add(disabledField);
+		
+		
+		C3DTextField validationField = new C3DTextField();
+		validationField.setPromptText("With Validation..");
+		RequiredFieldValidator validator = new RequiredFieldValidator();
+		validationField.getValidators().add(validator);
+		pane.getChildren().add(validationField);
 		
 		
 		StackPane main = new StackPane();

@@ -40,7 +40,17 @@
     -fx-unfocus-color: #4d4d4d;
     -fx-max-width: 300;
 }
-    
+
+.c3d-text-field.error{
+	-fx-focus-color: #D34336;
+	-fx-unfocus-color: #D34336;
+}
+
+.c3d-text-field .errorLabel{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 0.75em;
+}
+
 
 
 

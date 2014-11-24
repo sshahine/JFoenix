@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -12,12 +16,14 @@ import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import com.sun.javafx.css.converters.PaintConverter;
 
 import customui.skins.C3DTextFieldSkin;
+import customui.validation.base.ValidatorBase;
 
 public class C3DTextField extends TextField {
 
@@ -37,12 +43,62 @@ public class C3DTextField extends TextField {
 	}
 	
 	private void initialize() {
-		this.getStyleClass().add("c3d-text-field");        
+		this.getStyleClass().add("c3d-text-field");  
+		this.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(!newVal) validate();
+		});
+	}
+
+
+    /***************************************************************************
+     *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+	
+	private StringProperty errorMessage = new SimpleStringProperty();
+	
+	public String getErrorMessage(){
+		return errorMessage == null ? "" : errorMessage.get();
+	}
+	public StringProperty errorMessageProperty(){		
+		return this.errorMessage;
+	}
+	public void setErrorMessage(String msg){
+		this.errorMessage.set(msg);
 	}
 	
-	/**
-	 *  styleable properties 
-	 */
+	private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
+	
+    public ObservableList<ValidatorBase> getValidators() {
+		return validators;
+	}
+
+	public void setValidators(ObservableList<ValidatorBase> validators) {
+		this.validators = validators;
+	}
+	
+	public boolean validate(){
+		for(ValidatorBase validator : validators){
+			if(validator.getSrcControl() == null)
+				validator.setSrcControl(this);
+			
+			validator.validate();
+			if(validator.getHasErrors()){
+				this.setErrorMessage(validator.getMessage());
+				return false;
+			}
+		}
+		this.setErrorMessage(null);
+		return true;
+	}
+	
+
+	/***************************************************************************
+     *                                                                         *
+     * styleable Properties                                                    *
+     *                                                                         *
+     **************************************************************************/
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, C3DTextField.this, "unFocusColor", Color.rgb(77,77,77));
 
 	public Paint getUnFocusColor(){

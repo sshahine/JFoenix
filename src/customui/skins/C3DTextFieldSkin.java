@@ -9,11 +9,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
@@ -24,24 +27,46 @@ import customui.components.C3DTextField;
 
 public class C3DTextFieldSkin extends TextFieldSkin{
 
-	private StackPane effectsPane;
+	private StackPane effectsPane  = new StackPane();
+	private AnchorPane cursorPane = new AnchorPane();
 	
-	private Line line;
-	private Line focusedLine;
+	private Line line = new Line();
+	private Line focusedLine = new Line();
+	private Label errorLabel = new Label();
+	
 	private double offset = 1;
 	private double endX;
 	private double startX;
 	private double mid ;
 
-	private AnchorPane cursorPane;
-
 	private boolean invalid = true;
 
 	public C3DTextFieldSkin(C3DTextField field) {
 		super(field);
+		
+		
+		effectsPane.getChildren().add(line);
+		effectsPane.getChildren().add(focusedLine);
+		effectsPane.setAlignment(Pos.BOTTOM_CENTER);
+		StackPane.setMargin(line, new Insets(0,0,1,0));
+		
+		effectsPane.getChildren().add(cursorPane);
+		StackPane.setAlignment(cursorPane, Pos.CENTER_LEFT);
+		StackPane.setMargin(cursorPane, new Insets(0,0,5,40));
+		
+		errorLabel.getStyleClass().add("errorLabel");
+		effectsPane.getChildren().add(errorLabel);
+		StackPane.setAlignment(errorLabel, Pos.BOTTOM_LEFT);
+		StackPane.setMargin(errorLabel, new Insets(0,0,-13,1));
+		
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
 			else focusedLine.setVisible(false);
+		});
+		
+		field.errorMessageProperty().addListener((o,oldVal,newVal)->{
+			errorLabel.setText(newVal);
+			invalid = true;
 		});
 	}
 
@@ -61,9 +86,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
 			super.layoutChildren(x, y, w, h);
-			effectsPane  = new StackPane();
-
-			line = new Line();
+			
 			startX = getSkinnable().getBoundsInLocal().getMinX();
 			endX = getSkinnable().getBoundsInLocal().getMaxX();
 			endX -= endX/20;
@@ -74,13 +97,8 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			line.setStroke(((C3DTextField)getSkinnable()).getUnFocusColor());
 			line.setStrokeWidth(1);
 			line.setStrokeType(StrokeType.CENTERED);
-			if(getSkinnable().isDisabled()){
-				line.getStrokeDashArray().addAll(2d);
-			}
-			effectsPane.getChildren().add(line);
-
-
-			focusedLine = new Line();
+			if(getSkinnable().isDisabled()) line.getStrokeDashArray().addAll(2d);
+			
 			mid = (endX - startX  + offset)/2;			
 			focusedLine.setStartX(mid);
 			focusedLine.setEndX(mid);
@@ -91,21 +109,14 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			focusedLine.setStrokeType(StrokeType.CENTERED);
 			focusedLine.setVisible(false);
 
-			effectsPane.getChildren().add(focusedLine);
-			effectsPane.setAlignment(Pos.BOTTOM_CENTER);
-			StackPane.setMargin(line, new Insets(0,0,1,0));
-
-			cursorPane = new AnchorPane();
 			//			cursorPane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 			cursorPane.setMaxSize(40, getSkinnable().getHeight());
 			cursorPane.setBackground(new Background(new BackgroundFill(((C3DTextField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
 			cursorPane.setOpacity(0);
-			effectsPane.getChildren().add(cursorPane);
-
-			StackPane.setAlignment(cursorPane, Pos.CENTER_LEFT);
-			StackPane.setMargin(cursorPane, new Insets(0,0,5,40));
+			
+			this.getChildren().remove(effectsPane);
 			this.getChildren().add(effectsPane);
-
+			
 			invalid = false;
 		}		
 		
