@@ -172,7 +172,8 @@ public class C3DListView<T> extends ListView<T> {
 						BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(C3DListView<?> control) {
-				return control.expanded == null || !control.expanded.isBound();
+				// it's only settable if the List is not shown yet
+				return control.getHeight() == 0 && ( control.expanded == null || !control.expanded.isBound() );
 			}
 			@Override
 			public StyleableBooleanProperty getStyleableProperty(C3DListView<?> control) {

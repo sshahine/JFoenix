@@ -57,10 +57,9 @@ public class C3DListCell<T> extends ListCell<T> {
 
 					cellContainer.getChildren().clear();
 					cellContainer.getChildren().add((Node) item);
-					cellContainer.getStyleClass().add("c3d-list-cell-container");
-					cellContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));				
+					cellContainer.getStyleClass().add("c3d-list-cell-container");	
 					cellRippler = new C3DListCellRippler(cellContainer);
-
+					
 					double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 					double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
 
@@ -71,7 +70,13 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler.ripplerPane.setScaleX(getRipplerScale(cellInsetHgap));
 						cellRippler.ripplerPane.setScaleY(getRipplerScale(cellInsetVgap));
 					}
-
+					
+					cellContainer.backgroundProperty().addListener((o,oldVal,newVal)->{
+						cellContainer.setBackground(Background.EMPTY);
+						cellRippler.ripplerPane.setBackground(newVal);
+					});
+					
+					
 					if(this.getIndex() > 0 && ((C3DListView<T>)getListView()).isExpanded())
 						this.translateYProperty().set(((C3DListView<T>)getListView()).getVerticalGap()*this.getIndex());
 					setGraphic(mainContainer);

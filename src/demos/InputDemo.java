@@ -42,6 +42,9 @@ public class InputDemo extends Application {
 		validationField.setPromptText("With Validation..");
 		RequiredFieldValidator validator = new RequiredFieldValidator();
 		validationField.getValidators().add(validator);
+		validationField.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(!newVal) validationField.validate();
+		});
 		pane.getChildren().add(validationField);
 		
 		

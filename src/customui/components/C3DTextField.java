@@ -49,9 +49,6 @@ public class C3DTextField extends TextField {
 	
 	private void initialize() {
 		this.getStyleClass().add("c3d-text-field");  
-		this.focusedProperty().addListener((o,oldVal,newVal)->{
-			if(!newVal) validate();
-		});
 	}
 
 

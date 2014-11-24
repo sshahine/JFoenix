@@ -185,13 +185,20 @@
 }
 
 
+.c3d-list-cell:odd:selected .c3d-list-cell-container  , .c3d-list-cell:even:selected .c3d-list-cell-container{ 
+	-fx-background-color: rgba(0,0,255,0.2);
+}
+
 .c3d-list-cell {
 	-fx-background-insets: 0.0 ; 
 	-fx-text-fill: BLACK; 
 }
-.c3d-list-cell:odd { -fx-background-color: WHITE; }
-.c3d-list-cell:even { -fx-background-color: WHITE; }
-.c3d-list-cell:filled:hover { -fx-text-fill: black;}
+.c3d-list-cell:odd, .c3d-list-cell:even {
+	-fx-background-color:  WHITE;
+}
+.c3d-list-cell:filled:hover { 
+	-fx-text-fill: black;
+}
 
 .c3d-list-cell .c3d-rippler{
 	-fx-rippler-fill:BLUE;
