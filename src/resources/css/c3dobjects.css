@@ -144,6 +144,21 @@
     -fx-max-width: 300.0;
 }
 
+.c3d-text-field.error{
+	-fx-focus-color: #D34336;
+	-fx-unfocus-color: #D34336;
+}
+
+.c3d-text-field .errorLabel{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 0.75em;
+}
+.c3d-text-field .errorIcon{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 1em;
+}
+
+
 /*******************************************************************************
 *                                                                              *
 * C3D Hamburger Icon                                                           *

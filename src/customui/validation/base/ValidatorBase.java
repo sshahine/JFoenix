@@ -1,5 +1,6 @@
 package customui.validation.base;
 
+import de.jensd.fx.fontawesome.Icon;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -125,6 +126,27 @@ public abstract class ValidatorBase extends Parent {
 		return this.message;
 	}
 
+	/***** Awsome Icon *****/
+	protected SimpleObjectProperty<Icon> awsomeIcon = new SimpleObjectProperty<Icon>(){
+		@Override
+		protected void invalidated() {
+			updateSrcControl();
+		}
+	};
+	public void setAwsomeIcon(Icon icon){
+		icon.setStyle("-fx-font-family: FontAwesome;");
+		icon.getStyleClass().add("errorIcon");
+		this.awsomeIcon.set(icon);
+	}
+	public Icon getAwsomeIcon(){
+		return this.awsomeIcon.get();
+	}
+	public SimpleObjectProperty<Icon> awsomeIconProperty(){
+		return this.awsomeIcon;
+	}
+
+	
+	
 	/***** error style class *****/
 	protected SimpleStringProperty errorStyleClass = new SimpleStringProperty(DEFAULT_ERROR_STYLE_CLASS);
 

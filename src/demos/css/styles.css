@@ -50,6 +50,10 @@
 	-fx-text-fill : #D34336;
 	-fx-font-size: 0.75em;
 }
+.c3d-text-field .errorIcon{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 1em;
+}
 
 
 

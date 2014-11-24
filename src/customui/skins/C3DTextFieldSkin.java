@@ -15,8 +15,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
@@ -24,6 +22,7 @@ import javafx.util.Duration;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
 import customui.components.C3DTextField;
+import de.jensd.fx.fontawesome.Icon;
 
 public class C3DTextFieldSkin extends TextFieldSkin{
 
@@ -33,6 +32,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private Line line = new Line();
 	private Line focusedLine = new Line();
 	private Label errorLabel = new Label();
+	private StackPane errorIcon = new StackPane();
+	
+	
 	
 	private double offset = 1;
 	private double endX;
@@ -57,15 +59,26 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorLabel.getStyleClass().add("errorLabel");
 		effectsPane.getChildren().add(errorLabel);
 		StackPane.setAlignment(errorLabel, Pos.BOTTOM_LEFT);
-		StackPane.setMargin(errorLabel, new Insets(0,0,-13,1));
+		StackPane.setMargin(errorLabel, new Insets(0,0,-14,1));
+		
+		effectsPane.getChildren().add(errorIcon);
 		
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
 			else focusedLine.setVisible(false);
 		});
 		
-		field.errorMessageProperty().addListener((o,oldVal,newVal)->{
-			errorLabel.setText(newVal);
+		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
+			if(newVal!=null){
+				errorLabel.setText(newVal.getMessage());
+				Icon awsomeIcon = newVal.getAwsomeIcon();
+				errorIcon.getChildren().add(awsomeIcon);
+				StackPane.setAlignment(awsomeIcon, Pos.BOTTOM_RIGHT);
+				StackPane.setMargin(awsomeIcon, new Insets(0,1,-14,0));
+			}else{
+				errorLabel.setText(null);
+				errorIcon.getChildren().clear();
+			}
 			invalid = true;
 		});
 	}

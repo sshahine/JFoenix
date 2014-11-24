@@ -1,13 +1,14 @@
 package customui.validation;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TextInputControl;
 import customui.validation.base.ValidatorBase;
+import de.jensd.fx.fontawesome.Icon;
 
 public class RequiredFieldValidator extends ValidatorBase {
 
 	public RequiredFieldValidator() {
-		message = new SimpleStringProperty("Input Required!");
+		setMessage("Input Required!");
+		setAwsomeIcon(new Icon("WARNING"));
 	}
 	
 	@Override

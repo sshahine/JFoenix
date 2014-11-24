@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -56,17 +61,15 @@ public class C3DTextField extends TextField {
      *                                                                         *
      **************************************************************************/
 	
-	private StringProperty errorMessage = new SimpleStringProperty();
+	private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
 	
-	public String getErrorMessage(){
-		return errorMessage == null ? "" : errorMessage.get();
+	public ValidatorBase getActiveValidator(){
+		return activeValidator == null ? null : activeValidator.get();
 	}
-	public StringProperty errorMessageProperty(){		
-		return this.errorMessage;
+	public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty(){		
+		return this.activeValidator.getReadOnlyProperty();
 	}
-	public void setErrorMessage(String msg){
-		this.errorMessage.set(msg);
-	}
+	
 	
 	private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
 	
@@ -82,14 +85,13 @@ public class C3DTextField extends TextField {
 		for(ValidatorBase validator : validators){
 			if(validator.getSrcControl() == null)
 				validator.setSrcControl(this);
-			
 			validator.validate();
 			if(validator.getHasErrors()){
-				this.setErrorMessage(validator.getMessage());
+				activeValidator.set(validator);
 				return false;
 			}
 		}
-		this.setErrorMessage(null);
+		activeValidator.set(null);
 		return true;
 	}
 	
