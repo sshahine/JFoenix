@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import customui.components.Drawer;
+import customui.components.C3DDrawer;
 import customui.components.C3DHamburger;
 
 public class DrawerDemo extends Application {
@@ -20,12 +20,11 @@ public class DrawerDemo extends Application {
 		FlowPane.setMargin(h1, new Insets(300,0,0,400));
 		content.getChildren().add(h1);
 
-		Drawer drawer = new Drawer(content, 250);
+		C3DDrawer drawer = new C3DDrawer(content, 250);
 				
 		// create animation		
 		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			drawer.getTransition().setRate(1);
-			drawer.getTransition().play();			
+			drawer.draw();
 		});
 
 		StackPane pane = new StackPane();
