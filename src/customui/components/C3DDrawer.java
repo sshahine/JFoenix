@@ -46,7 +46,7 @@ public class C3DDrawer extends StackPane {
 		shadowedPane.setVisible(false);
 		shadowedPane.setOpacity(0);
 		shadowedPane.getStyleClass().add("c3d-shadow-pane");
-		
+
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
 		initTranslateX.bind(Bindings.createDoubleBinding(()-> -1 * sidePane.maxWidthProperty().getValue() - initOffset, sidePane.maxWidthProperty()));
 		initTranslateX.addListener((o,oldVal,newVal) ->{ 
@@ -62,17 +62,17 @@ public class C3DDrawer extends StackPane {
 
 		// add listeners
 		shadowedPane.setOnMouseClicked((e) -> {
-			transition.setRate(-1);		
-			transition.play();
+			transition.setRate(-1);			
+			transition.playFrom(transition.getTotalDuration());
 		});
 
 		// mouse drag handler
 		EventHandler<MouseEvent> dragHandler = (mouseEvent)->{
 			if(mouseEvent.getSceneX() >= activeOffset && partialTransition !=null){
 				partialTransition = null;
+			}else if(partialTransition == null){
 				shadowedPane.setVisible(true);
 				shadowedPane.setOpacity(1);
-			}else if(partialTransition == null){
 				double translateX = initTranslateX.doubleValue() + initOffset + mouseEvent.getSceneX();
 				if(translateX <= 0) sidePane.setTranslateX(translateX);
 				else sidePane.setTranslateX(0);
@@ -99,7 +99,7 @@ public class C3DDrawer extends StackPane {
 
 
 		this.sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
-			if(newVal.doubleValue() == 0 || newVal.doubleValue() == initTranslateX.doubleValue() )
+			if(newVal.doubleValue() == 0 || newVal.doubleValue() == initTranslateX.doubleValue())
 				this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 		});
 
@@ -128,7 +128,7 @@ public class C3DDrawer extends StackPane {
 		this.transition.setRate(1);
 		this.transition.play();
 	}
-	
+
 
 	public  ObservableList<Node> getSidePane() {
 		return sidePane.getChildren();
@@ -145,7 +145,7 @@ public class C3DDrawer extends StackPane {
 	public void setContent(Node... content) {
 		this.content.getChildren().addAll(content);
 	}
-	
+
 	public double getDrawerWidth() {
 		return drawerWidth;
 	}
@@ -159,7 +159,7 @@ public class C3DDrawer extends StackPane {
 
 	private class DrawerTransition extends CachedTimelineTransition{
 		public DrawerTransition() {
-			super(shadowedPane, new Timeline(
+			super(sidePane, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
 							new KeyValue(shadowedPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
@@ -173,9 +173,7 @@ public class C3DDrawer extends StackPane {
 											new KeyValue(shadowedPane.opacityProperty(), 1,Interpolator.EASE_BOTH),
 											new KeyValue(sidePane.translateXProperty(), 0 , Interpolator.EASE_BOTH)									
 											)
-					)
-					);
-			// reduce the number to increase the shifting , increase number to reduce shifting
+					));
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}
@@ -193,7 +191,6 @@ public class C3DDrawer extends StackPane {
 									)
 					)
 					);
-			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}

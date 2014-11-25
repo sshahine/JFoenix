@@ -9,24 +9,20 @@ import javafx.stage.Stage;
 
 public class MainDemo extends Application {
 
-	public static void main(String[] args)
-    {
-        launch(args);
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 
-    public void start(Stage stage) throws Exception
-    {
-    	
-    	 Flow flow = new Flow(MainController.class);
-         DefaultFlowContainer container = new DefaultFlowContainer();
-         flow.createHandler().start(container);
-         Scene scene = new Scene(container.getView(),800,800);
-         scene.getStylesheets().add(MainDemo.class.getResource("../resources/css/c3dobjects.css").toExternalForm());
-         stage.setScene(scene);
-//         stage.initStyle(StageStyle.UNDECORATED);
-//         stage.setFullScreen(true);
-         stage.show();
-    	
-    }
+	public void start(Stage stage) throws Exception {
+		Flow flow = new Flow(MainController.class);
+		DefaultFlowContainer container = new DefaultFlowContainer();
+		flow.createHandler().start(container);
+		Scene scene = new Scene(container.getView(), 800, 800);
+		scene.getStylesheets().add(MainDemo.class.getResource("../resources/css/c3dobjects.css").toExternalForm());
+		stage.setScene(scene);
+		//         stage.initStyle(StageStyle.UNDECORATED);
+		//         stage.setFullScreen(true);
+		stage.show();
+	}
 
 }
