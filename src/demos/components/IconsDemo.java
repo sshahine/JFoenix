@@ -1,15 +1,17 @@
-package demos;
+package demos.components;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import customui.components.C3DCheckBox;
+import customui.components.DepthManager;
+import customui.components.C3DRippler;
+import customui.components.C3DRippler.RipplerPos;
+import de.jensd.fx.fontawesome.Icon;
 
-public class CheckBoxDemo extends Application {
+public class IconsDemo extends Application {
 
 	public int i = 0;
 	public int step = 1;
@@ -17,19 +19,26 @@ public class CheckBoxDemo extends Application {
 	@Override public void start(Stage stage) {
 
 		FlowPane main = new FlowPane();
-		main.setVgap(20);
 		main.setHgap(20);
 		
-		CheckBox cb = new CheckBox("CheckBox");
-		C3DCheckBox c3b = new C3DCheckBox("C3D CheckBox");
-		C3DCheckBox customC3B = new C3DCheckBox("C3D CheckBox");
-		customC3B.getStyleClass().add("custom-c3d-check-box");
 		
-		main.getChildren().add(cb);
-		main.getChildren().add(c3b);
-		main.getChildren().add(customC3B);
+		Icon l1 = new Icon("HEART");
+		l1.getStyleClass().add("icon");
+//		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
+		DepthManager.setDepth(l1, 1);
+		
+		C3DRippler r = new C3DRippler(l1,RipplerPos.BACK);
+		r.getStyleClass().add("icons-rippler");
+		main.getChildren().add(r);
 		
 		
+		Icon l2 = new Icon("STAR");
+		l2.getStyleClass().add("icon");
+//		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
+		DepthManager.setDepth(l2, 1);
+		main.getChildren().add(new C3DRippler(l2));
+		
+				
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);
 		StackPane.setMargin(main, new Insets(100));
@@ -45,5 +54,4 @@ public class CheckBoxDemo extends Application {
 	}
 
 	public static void main(String[] args) { launch(args); }
-	
 }

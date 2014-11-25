@@ -1,4 +1,4 @@
-package demos;
+package demos.components;
 
 import customui.components.C3DProgressBar;
 import javafx.animation.KeyFrame;

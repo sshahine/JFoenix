@@ -218,3 +218,21 @@
 	-fx-toggle-color:RED;
 }
 
+
+.c3d-tool-bar{
+	-fx-font-size: 20;
+	-fx-font-weight: BOLD;
+	-fx-background-color: #5264AE;
+	-fx-pref-width: 100%;
+	-fx-pref-height: 64px;
+}
+.c3d-tool-bar HBox {
+	-fx-alignment:center;
+	-fx-spacing: 25;
+	-fx-padding: 0 10;
+}
+.c3d-tool-bar Label{
+-fx-text-fill: WHITE;
+}
+
+

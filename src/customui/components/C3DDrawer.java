@@ -6,6 +6,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,38 +28,39 @@ public class C3DDrawer extends StackPane {
 
 	private StackPane shadowedPane = new StackPane();
 	private StackPane sidePane = new StackPane();
-	private Node content;
+	private StackPane content = new StackPane();
 	private Transition transition;
 	private Transition partialTransition;
 	private Duration holdTime = Duration.seconds(0.2);
 	private PauseTransition holdTimer = new PauseTransition(holdTime);
 
 	private double initOffset = 30;
-	private double initTranslateX = 0;
+	private DoubleProperty initTranslateX = new SimpleDoubleProperty();
+	private double drawerWidth = 0;
 	private double activeOffset = 20;
 
-	public C3DDrawer(Node content, double drawerWidth){
+	public C3DDrawer(){
 		super();
-
-		this.content = content;
 
 		shadowedPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), CornerRadii.EMPTY, Insets.EMPTY)));
 		shadowedPane.setVisible(false);
 		shadowedPane.setOpacity(0);
-
-		sidePane.setMaxWidth(drawerWidth);
+		shadowedPane.getStyleClass().add("c3d-shadow-pane");
+		
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
-		initTranslateX = -1 * sidePane.maxWidthProperty().getValue() - initOffset;
-		sidePane.setTranslateX(initTranslateX);
+		initTranslateX.bind(Bindings.createDoubleBinding(()-> -1 * sidePane.maxWidthProperty().getValue() - initOffset, sidePane.maxWidthProperty()));
+		initTranslateX.addListener((o,oldVal,newVal) ->{ 
+			transition = new DrawerTransition();
+			sidePane.setTranslateX(newVal.doubleValue());
+		});
 		DepthManager.setDepth(sidePane, 2);
 
-		this.getChildren().add(this.content);		
+		this.getChildren().add(content);		
 		this.getChildren().add(shadowedPane);
 		this.getChildren().add(sidePane);
 		StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
 
 		// add listeners
-		transition = new DrawerTransition();	
 		shadowedPane.setOnMouseClicked((e) -> {
 			transition.setRate(-1);		
 			transition.play();
@@ -68,14 +73,14 @@ public class C3DDrawer extends StackPane {
 				shadowedPane.setVisible(true);
 				shadowedPane.setOpacity(1);
 			}else if(partialTransition == null){
-				double translateX = initTranslateX + initOffset + mouseEvent.getSceneX();
-				if(translateX <= 0)
-					sidePane.setTranslateX(translateX);
+				double translateX = initTranslateX.doubleValue() + initOffset + mouseEvent.getSceneX();
+				if(translateX <= 0) sidePane.setTranslateX(translateX);
+				else sidePane.setTranslateX(0);
 			}
 		};
 
 		EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent)->{
-			if(sidePane.getTranslateX() > initTranslateX/2){
+			if(sidePane.getTranslateX() > initTranslateX.doubleValue() /2){
 				partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), 0);
 				partialTransition.play();
 				partialTransition.setOnFinished((event)-> {
@@ -83,9 +88,9 @@ public class C3DDrawer extends StackPane {
 				});
 			}else{
 				// hide the sidePane
-				partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), initTranslateX);
+				partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), initTranslateX.doubleValue() );
 				partialTransition.play();
-				partialTransition.setOnFinished((event)-> sidePane.setTranslateX(initTranslateX));
+				partialTransition.setOnFinished((event)-> sidePane.setTranslateX(initTranslateX.doubleValue() ));
 				shadowedPane.setVisible(false);
 				shadowedPane.setOpacity(0);
 			}	
@@ -94,7 +99,7 @@ public class C3DDrawer extends StackPane {
 
 
 		this.sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
-			if(newVal.doubleValue() == 0 || newVal.doubleValue() == initTranslateX)
+			if(newVal.doubleValue() == 0 || newVal.doubleValue() == initTranslateX.doubleValue() )
 				this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 		});
 
@@ -102,14 +107,13 @@ public class C3DDrawer extends StackPane {
 		this.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedHandler);
 
 		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {if(e.getX() < activeOffset) holdTimer.play();});
-
 		this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> {
 			holdTimer.stop();
 			this.content.removeEventHandler(MouseEvent.MOUSE_DRAGGED,dragHandler);
 		});		
 
 		holdTimer.setOnFinished((e)->{
-			partialTransition = new DrawerPartialTransition(initTranslateX,initTranslateX + initOffset + activeOffset);
+			partialTransition = new DrawerPartialTransition(initTranslateX.doubleValue(), initTranslateX.doubleValue()  + initOffset + activeOffset);
 			partialTransition.play();
 			partialTransition.setOnFinished((event)-> {
 				this.content.addEventHandler(MouseEvent.MOUSE_DRAGGED,dragHandler);
@@ -124,6 +128,34 @@ public class C3DDrawer extends StackPane {
 		this.transition.setRate(1);
 		this.transition.play();
 	}
+	
+
+	public  ObservableList<Node> getSidePane() {
+		return sidePane.getChildren();
+	}
+
+	public void setSidePane(Node... sidePane) {
+		this.sidePane.getChildren().addAll(sidePane);
+	}
+
+	public ObservableList<Node> getContent() {
+		return content.getChildren();
+	}
+
+	public void setContent(Node... content) {
+		this.content.getChildren().addAll(content);
+	}
+	
+	public double getDrawerWidth() {
+		return drawerWidth;
+	}
+
+	public void setDrawerWidth(double drawerWidth) {
+		sidePane.setMaxWidth(drawerWidth);
+		this.drawerWidth = drawerWidth;
+	}
+
+
 
 	private class DrawerTransition extends CachedTimelineTransition{
 		public DrawerTransition() {
@@ -134,7 +166,7 @@ public class C3DDrawer extends StackPane {
 							new KeyValue(shadowedPane.opacityProperty(), 1,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(100),
-									new KeyValue(sidePane.translateXProperty(), initTranslateX ,Interpolator.EASE_BOTH),
+									new KeyValue(sidePane.translateXProperty(), initTranslateX.doubleValue()  ,Interpolator.EASE_BOTH),
 									new KeyValue(shadowedPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
 									),
 									new KeyFrame(Duration.millis(1000),
