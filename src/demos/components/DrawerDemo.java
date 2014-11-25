@@ -1,4 +1,4 @@
-package demos;
+package demos.components;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -20,8 +20,10 @@ public class DrawerDemo extends Application {
 		FlowPane.setMargin(h1, new Insets(300,0,0,400));
 		content.getChildren().add(h1);
 
-		C3DDrawer drawer = new C3DDrawer(content, 250);
-				
+		C3DDrawer drawer = new C3DDrawer();
+		drawer.setDrawerWidth(250);
+		drawer.setContent(content);
+		
 		// create animation		
 		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			drawer.draw();
