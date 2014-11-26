@@ -1,5 +1,6 @@
 package customui.components;
 
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -38,7 +39,9 @@ public class C3DDrawer extends StackPane {
 	private DoubleProperty initTranslateX = new SimpleDoubleProperty();
 	private double drawerWidth = 0;
 	private double activeOffset = 20;
-
+	private double startMouseX = -1;
+	private double startTranslateX = -1;
+	
 	public C3DDrawer(){
 		super();
 
@@ -62,23 +65,38 @@ public class C3DDrawer extends StackPane {
 
 		// add listeners
 		shadowedPane.setOnMouseClicked((e) -> {
-			transition.setRate(-1);			
-			transition.playFrom(transition.getTotalDuration());
+			if(transition.getStatus().equals(Status.STOPPED)){
+				transition.setRate(-1);			
+				transition.playFrom(transition.getTotalDuration());
+			}
 		});
 
+		
+		
 		// mouse drag handler
-		EventHandler<MouseEvent> dragHandler = (mouseEvent)->{
+		EventHandler<MouseEvent> mouseDragHandler = (mouseEvent)->{
 			if(mouseEvent.getSceneX() >= activeOffset && partialTransition !=null){
 				partialTransition = null;
 			}else if(partialTransition == null){
 				shadowedPane.setVisible(true);
 				shadowedPane.setOpacity(1);
-				double translateX = initTranslateX.doubleValue() + initOffset + mouseEvent.getSceneX();
+				double translateX ;
+				if(startMouseX < 0)					
+					translateX = initTranslateX.doubleValue() + initOffset + mouseEvent.getSceneX();
+				else
+					translateX = startTranslateX + (mouseEvent.getSceneX() - startMouseX);
+				
 				if(translateX <= 0) sidePane.setTranslateX(translateX);
 				else sidePane.setTranslateX(0);
 			}
 		};
 
+		EventHandler<MouseEvent> mousePressedHandler = (mouseEvent)->{
+			startMouseX = mouseEvent.getSceneX();
+			startTranslateX = sidePane.getTranslateX();
+		};
+
+		
 		EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent)->{
 			if(sidePane.getTranslateX() > initTranslateX.doubleValue() /2){
 				partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), 0);
@@ -94,6 +112,8 @@ public class C3DDrawer extends StackPane {
 				shadowedPane.setVisible(false);
 				shadowedPane.setOpacity(0);
 			}	
+			startMouseX = -1;
+			startTranslateX = -1;
 			partialTransition = null;
 		};
 
@@ -103,20 +123,25 @@ public class C3DDrawer extends StackPane {
 				this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 		});
 
-		this.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED,dragHandler);
+		this.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 		this.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedHandler);
-
-		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {if(e.getX() < activeOffset) holdTimer.play();});
+		this.sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressedHandler);
+		
+		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
+			if(e.getX() < activeOffset) 
+				holdTimer.play();
+			
+		});
 		this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> {
 			holdTimer.stop();
-			this.content.removeEventHandler(MouseEvent.MOUSE_DRAGGED,dragHandler);
+			this.content.removeEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 		});		
 
 		holdTimer.setOnFinished((e)->{
 			partialTransition = new DrawerPartialTransition(initTranslateX.doubleValue(), initTranslateX.doubleValue()  + initOffset + activeOffset);
 			partialTransition.play();
 			partialTransition.setOnFinished((event)-> {
-				this.content.addEventHandler(MouseEvent.MOUSE_DRAGGED,dragHandler);
+				this.content.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 				this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 			});				
 		});
