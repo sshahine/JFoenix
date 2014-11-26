@@ -20,8 +20,6 @@ public class MainDemo extends Application {
 		Scene scene = new Scene(container.getView(), 800, 800);
 		scene.getStylesheets().add(MainDemo.class.getResource("../resources/css/c3dobjects.css").toExternalForm());
 		stage.setScene(scene);
-		//         stage.initStyle(StageStyle.UNDECORATED);
-		//         stage.setFullScreen(true);
 		stage.show();
 	}
 

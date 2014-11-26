@@ -20,6 +20,9 @@
 <?import javafx.scene.control.Label?>
 <?import customui.components.C3DToolbar?>
 <?import customui.components.C3DDrawer?>
+<?import customui.components.C3DButton?>
+<?import javafx.scene.layout.FlowPane?>
+<?import customui.components.C3DListView?>
 
 <BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
@@ -44,10 +47,12 @@
 				<String fx:value="body" />
 			</styleClass>
 			<sidePane>
-				<Label>Side Stuff</Label>
+				<StackPane fx:id="sideContent">
+				</StackPane>				
 			</sidePane>
 			<content>
-				<Label> Content</Label>
+				<StackPane fx:id="content" >
+				</StackPane>				
 			</content>
 		</C3DDrawer>
 	</center>

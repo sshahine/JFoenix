@@ -6,7 +6,6 @@
 <?import javafx.embed.swing.SwingNode?>
 <?import contact.*?>
 <?import javafx.scene.layout.GridPane?>
-<?import customui.components.Hamburger?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.AnchorPane?>
 <VBox fx:id="root" spacing="20" xmlns:fx="http://javafx.com/fxml">
@@ -28,10 +27,6 @@
 
 						</content>
 					</SwingNode>
-					<Hamburger fx:id="bicon" GridPane.rowIndex="0"
-						GridPane.columnIndex="0">
-
-					</Hamburger>
 				</children>
 			
 		</AnchorPane>

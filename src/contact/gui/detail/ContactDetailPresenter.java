@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct;
 import contact.AnimatedFlowContainer;
 import contact.service.Contact;
 
-@FXMLController("/resources/fxml/ContactDetail.fxml")
+@FXMLController("/resources/fxml2/ContactDetail.fxml")
 public class ContactDetailPresenter
 {
     @FXML private Node root;
