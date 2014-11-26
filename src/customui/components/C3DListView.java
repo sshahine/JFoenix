@@ -18,6 +18,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 import com.sun.javafx.css.converters.BooleanConverter;
@@ -80,8 +81,16 @@ public class C3DListView<T> extends ListView<T> {
 			if(newVal) expand();
 			else collapse();
 		});
+		
 	}
 
+	public void propagateMouseEventsToParent(){
+		this.addEventHandler(MouseEvent.ANY, (e)->{
+			e.consume();
+			this.getParent().fireEvent(e);
+		});
+	}
+	
 	private StyleableDoubleProperty cellHorizontalMargin = new SimpleStyleableDoubleProperty(StyleableProperties.CELL_HORIZONTAL_MARGIN, C3DListView.this, "cellHorizontalMargin",  0.0);
 
 	public Double getCellHorizontalMargin(){

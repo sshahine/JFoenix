@@ -41,12 +41,12 @@ public class C3DRippler extends StackPane {
 	protected final RippleGenerator rippler;
 	protected Pane ripplerPane;
 	protected Node control;
-	
+
 	private double rippleRadius = 150;
 	private boolean enabled = true;
-	
 
-	
+
+
 	public C3DRippler(Node control){
 		this(control, RipplerMask.RECT, RipplerPos.FRONT);
 	}
@@ -58,7 +58,7 @@ public class C3DRippler extends StackPane {
 	public C3DRippler(Node control, RipplerMask mask){
 		this(control, mask , RipplerPos.FRONT);
 	}
-	
+
 	public C3DRippler(Node control, RipplerMask mask,  RipplerPos pos){
 		super();		
 		this.control = control;
@@ -86,7 +86,7 @@ public class C3DRippler extends StackPane {
 		// add listeners
 		initListeners();
 	}	
-	
+
 	public void setEnabled(boolean enable){
 		this.enabled = enable;
 	}
@@ -142,47 +142,50 @@ public class C3DRippler extends StackPane {
 		private double generatorCenterX = 0;
 		private double generatorCenterY = 0;
 		private OverLayRipple overlayRect;
+		private boolean generating = false;
 
 		public void createRipple() {
 			if(enabled){
-				// create overlay once then change its color later 
-				if(overlayRect == null){
-					overlayRect = new OverLayRipple();
-					overlayRect.setClip(getMask());
-					getChildren().add(overlayRect);
-				}
-				overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
+				if(!generating){
+					generating = true;
+					// create overlay once then change its color later 
+					if(overlayRect == null){
+						overlayRect = new OverLayRipple();
+						overlayRect.setClip(getMask());
+						getChildren().add(overlayRect);
+					}
+					overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
 
-				// create the ripple effect
+					// create the ripple effect
+					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);				
+					ripple.setClip(getMask());
+					getChildren().add(ripple);			
 
-				final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);				
-				ripple.setClip(getMask());
-				getChildren().add(ripple);			
-
-				overlayRect.animation.setRate(1);
-				overlayRect.animation.play();
-				ripple.inAnimation.play();
-
-				// create fade out transition for the ripple
-				ripplerPane.setOnMouseReleased((e)->{
-					overlayRect.animation.setRate(-1);
+					overlayRect.animation.setRate(1);
 					overlayRect.animation.play();
-					ripple.inAnimation.pause();
-					double fadeOutRadious = rippleRadius + 20;
-					if(ripple.radiusProperty().get() < rippleRadius*0.5)
-						fadeOutRadious = rippleRadius;
+					ripple.inAnimation.play();
 
-					Timeline outAnimation = new Timeline(
-							new KeyFrame(Duration.seconds(0.3),
-									new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
-									new KeyValue(ripple.opacityProperty(), 0, Interpolator.LINEAR)
-									));
-					outAnimation.play();
-					outAnimation.setOnFinished((event)->{
-						getChildren().remove(ripple);	
+					// create fade out transition for the ripple
+					ripplerPane.setOnMouseReleased((e)->{
+						generating = false;
+						overlayRect.animation.setRate(-1);
+						overlayRect.animation.play();
+						ripple.inAnimation.pause();
+						double fadeOutRadious = rippleRadius + 20;
+						if(ripple.radiusProperty().get() < rippleRadius*0.5)
+							fadeOutRadious = rippleRadius;
+
+						Timeline outAnimation = new Timeline(
+								new KeyFrame(Duration.seconds(0.3),
+										new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
+										new KeyValue(ripple.opacityProperty(), 0, Interpolator.LINEAR)
+										));
+						outAnimation.play();
+						outAnimation.setOnFinished((event)->{
+							getChildren().remove(ripple);	
+						});
 					});
-				});
-
+				}
 			}
 		}
 
@@ -416,7 +419,7 @@ public class C3DRippler extends StackPane {
 	public ObjectProperty<RipplerPos> positionProperty(){		
 		return this.position;
 	}
-	
+
 
 	private static class StyleableProperties {
 		private static final CssMetaData< C3DRippler, Paint> RIPPLER_FILL =
@@ -442,7 +445,7 @@ public class C3DRippler extends StackPane {
 				return control.maskTypeProperty();
 			}
 		};
-		
+
 		private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables =
@@ -454,8 +457,8 @@ public class C3DRippler extends StackPane {
 			STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}
-	
-	
+
+
 	@Override
 	public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
 		return getClassCssMetaData();
@@ -463,6 +466,6 @@ public class C3DRippler extends StackPane {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.STYLEABLES;
 	}
-	
-	
+
+
 }
