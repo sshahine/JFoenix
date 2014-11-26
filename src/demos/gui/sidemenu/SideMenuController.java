@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 
 import javax.annotation.PostConstruct;
 
+import customui.components.C3DListView;
 import demos.gui.uicomponents.ButtonController;
 import demos.gui.uicomponents.CheckboxController;
 import demos.gui.uicomponents.DialogController;
@@ -71,8 +72,12 @@ public class SideMenuController {
 	@ActionTrigger("togglebutton")
 	private Label togglebutton;
 	
+	@FXML
+	private C3DListView<?> sideList;
+	
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
+		sideList.propagateMouseEventsToParent();
 		FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
 		Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
 		bindNodeToController(button, ButtonController.class, contentFlow, contentFlowHandler);
