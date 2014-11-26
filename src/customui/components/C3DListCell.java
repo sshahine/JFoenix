@@ -64,6 +64,12 @@ public class C3DListCell<T> extends ListCell<T> {
 					});
 					
 					cellRippler = new C3DListCellRippler(cellContainer);
+					// propagate mouse events to parent
+					if(getListView().getParent()!=null){
+						cellRippler.addEventHandler(MouseEvent.ANY, (e)->{
+							getListView().getParent().fireEvent(e);
+						});
+					}
 					
 					double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 					double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();

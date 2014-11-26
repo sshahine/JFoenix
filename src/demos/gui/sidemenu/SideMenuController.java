@@ -11,7 +11,9 @@ import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+
 import javax.annotation.PostConstruct;
+
 import demos.gui.uicomponents.ButtonController;
 import demos.gui.uicomponents.CheckboxController;
 import demos.gui.uicomponents.DialogController;
@@ -69,7 +71,6 @@ public class SideMenuController {
 	@ActionTrigger("togglebutton")
 	private Label togglebutton;
 	
-
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 		FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
