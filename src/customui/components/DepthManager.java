@@ -22,4 +22,8 @@ public class DepthManager {
 		return depth.length;
 	}
 	
+	public static DropShadow getShadowAt(int level){
+		return depth[level];
+	}
+	
 }

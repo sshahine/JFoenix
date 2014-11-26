@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.FlowPane?>
+<?import customui.components.C3DCheckBox?>
+
+<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
+	<C3DCheckBox text="Check Box" >
+	</C3DCheckBox>
+</FlowPane>
+

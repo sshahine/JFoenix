@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.StackPane?>
+<?import de.jensd.fx.fontawesome.AwesomeIcon?>
+<?import de.jensd.fx.fontawesome.AwesomeIconsStack?>
+<?import de.jensd.fx.fontawesome.Icon?>
+<?import javafx.scene.shape.SVGPath?>
+<?import java.lang.String?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import customui.components.Hamburger?>
+<?import customui.components.Toolbar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import customui.components.BlurPane?>
+<?import javafx.scene.control.Label?>
+<BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<!-- Header -->
+	<top>
+		<VBox spacing="20">
+
+
+			<Toolbar fx:id="customToolbar">
+				<left>
+					<HBox>
+						<AnchorPane>
+							<Hamburger fx:id="burgerIcon1"></Hamburger>
+						</AnchorPane>
+						<AnchorPane>
+							<Label text="C3D"></Label>
+						</AnchorPane>
+					</HBox>
+				</left>
+				<right>
+					<HBox>
+						<styleClass>
+							<String fx:value="hboxRight" />
+						</styleClass>
+						<Label text="Sign in"></Label>
+					</HBox>
+				</right>
+			</Toolbar>
+			
+			
+
+			<styleClass>
+				<String fx:value="header" />
+			</styleClass>
+			<children>
+				<Label text="First Contact">
+					<styleClass>
+						<String fx:value="label" />
+						<String fx:value="title" />
+					</styleClass>
+				</Label>
+
+
+				<ProgressBar fx:id="c3dProgressBar" minWidth="200"
+					minHeight="20" />
+
+				<HBox spacing="20">
+
+					<Hamburger fx:id="burgerIcon"></Hamburger>
+				</HBox>
+
+				<HBox spacing="20">
+					<Hamburger fx:id="burgerIcon2"></Hamburger>
+					<Hamburger fx:id="burgerIcon3"></Hamburger>
+				</HBox>
+
+
+
+				<!-- <GridPane> <Button visible="false" fx:id="backButton" contentDisplay="GRAPHIC_ONLY" 
+					layoutX="55.0" layoutY="51.0" mnemonicParsing="false" styleClass="circle-button" 
+					GridPane.columnIndex="0" GridPane.rowIndex="0"> <graphic> <SVGPath content="M28,14H8.8l4.62-4.62C13.814,8.986,14,8.516,14,8c0-0.984-0.813-2-2-2c-0.531,0-0.994,0.193-1.38,0.58l-7.958,7.958 
+					C2.334,14.866,2,15.271,2,16s0.279,1.08,0.646,1.447l7.974,7.973C11.006,25.807,11.469,26,12,26c1.188,0,2-1.016,2-2 
+					c0-0.516-0.186-0.986-0.58-1.38L8.8,18H28c1.104,0,2-0.896,2-2S29.104,14,28,14z" 
+					styleClass="button-icon-shape" strokeDashOffset="0.0" strokeLineCap="BUTT" 
+					strokeLineJoin="MITER" strokeMiterLimit="4.0" strokeWidth="1.0" opacity="1" 
+					fx:id="backSVG"> <fill> WHITE </fill> <stroke> TRANSPARENT </stroke> <styleClass> 
+					<String fx:value="svg" /> </styleClass> </SVGPath> </graphic> </Button> <Button 
+					fx:id="linesButton" contentDisplay="GRAPHIC_ONLY" layoutX="55.0" layoutY="51.0" 
+					mnemonicParsing="false" styleClass="circle-button" GridPane.columnIndex="0" 
+					GridPane.rowIndex="0"> <graphic> <SVGPath content="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z 
+					M28,14H4c-1.104,0-2,0.896-2,2 s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z 
+					M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2 S29.104,22,28,22z" 
+					styleClass="button-icon-shape" strokeDashOffset="0.0" strokeLineCap="BUTT" 
+					strokeLineJoin="MITER" strokeMiterLimit="4.0" strokeWidth="0.0" opacity="1" 
+					fx:id="linesSVG"> <fill> WHITE </fill> <stroke> TRANSPARENT </stroke> <styleClass> 
+					<String fx:value="svg" /> </styleClass> </SVGPath> </graphic> </Button> </GridPane> -->
+
+				<Icon awesomeIcon="STAR" size="1em" style=";" styleClass="icon" />
+				<Label text="JavaFX 2.0 Contact Management System">
+					<styleClass>
+						<String fx:value="label" />
+						<String fx:value="tag-line" />
+					</styleClass>
+				</Label>
+			</children>
+		</VBox>
+	</top>
+
+	<!-- Content Area -->
+	<center>
+		<BorderPane fx:id="contentArea">
+			<styleClass>
+				<String fx:value="body" />
+			</styleClass>
+		</BorderPane>
+	</center>
+</BorderPane>

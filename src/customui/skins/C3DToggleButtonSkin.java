@@ -6,7 +6,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,6 +18,7 @@ import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 import customui.components.C3DRippler;
 import customui.components.C3DRippler.RipplerMask;
 import customui.components.C3DRippler.RipplerPos;
+import customui.components.C3DToggleButton;
 
 public class C3DToggleButtonSkin extends ToggleButtonSkin {
 
@@ -33,15 +33,16 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 	private Circle innerCircle ;
 	private StackPane circles = new StackPane();
 	private final int strokeWidth = 2;
-	private final Color toggledColor = Color.valueOf("#0F9D58");
 	private final Color unToggledColor = Color.valueOf("#5A5A5A");
+	
+	private Color toggledColor ;
 	private C3DRippler rippler;
 	
 	private Timeline transition;
 	private boolean invalid = true;
 
 
-	public C3DToggleButtonSkin(ToggleButton toggleButton) {
+	public C3DToggleButtonSkin(C3DToggleButton toggleButton) {
 		super(toggleButton);
 		// hide the togg	le button
 		toggleButton.setStyle("-fx-background-color:TRANSPARENT");
@@ -56,8 +57,6 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 		circle.setStrokeWidth(strokeWidth);
 		
 		innerCircle = new Circle(startX-circleRadius, startY,0);
-		innerCircle.setFill(toggledColor);
-		innerCircle.setStroke(toggledColor);
 		innerCircle.setStrokeWidth(0);
 
 		StackPane circlePane = new StackPane();
@@ -65,7 +64,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 		circlePane.getChildren().add(innerCircle);
 		circlePane.setPadding(new Insets(15));		
 		rippler = new C3DRippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK);		
-		rippler.setRipplerFill(toggledColor);
+		
 		
 		circles.getChildren().add(rippler);
 		
@@ -95,11 +94,15 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
+			toggledColor = (Color) ((C3DToggleButton) getSkinnable()).getToggleColor();
 			transition = getToggleTransition();
+			innerCircle.setFill(toggledColor);
+			innerCircle.setStroke(toggledColor);
+			rippler.setRipplerFill(toggledColor);
 			invalid = false;
 		}
 	}
-
+	
 	private Timeline getToggleTransition(){
 		return  new Timeline(
 				new KeyFrame(

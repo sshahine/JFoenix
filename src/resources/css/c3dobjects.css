@@ -6,6 +6,35 @@
 	src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
+.side-menu{
+	-fx-padding: 20,10;
+	-fx-font-size: 15;
+	-fx-font-weight: NORMAL;
+	-fx-text-fill: #444;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * C3D Tool Bar                                                                *
+ *                                                                             *
+ ******************************************************************************/
+
+.c3d-tool-bar{
+	-fx-font-size: 20;
+	-fx-font-weight: BOLD;
+	-fx-background-color: #5264AE;
+	-fx-pref-width: 100%;
+	-fx-pref-height: 64px;
+}
+.c3d-tool-bar HBox {
+	-fx-alignment:center;
+	-fx-spacing: 25;
+	-fx-padding: 0 10;
+}
+.c3d-tool-bar Label{
+	-fx-text-fill: WHITE;
+}
+
 /*******************************************************************************
  *                                                                             *
  * C3D Radio Button                                                            *
@@ -27,24 +56,32 @@
  *                                                                             *
  ******************************************************************************/
 
-.c3d-slider > .trackLine {
-	-fx-stroke: #CCCCCC;
-	-fx-stroke-width: 3.0px;
+.c3d-slider > .thumb {
+	-fx-background-color: #0F9D58;
+	-fx-background-radius: 16.0;
+	-fx-padding: 7.0;
 }
 
-.c3d-slider .valueLine {
-	-fx-stroke: #0F9D58;
-	-fx-stroke-width: 3.0px;
+.c3d-slider .thumb:hover {
+	-fx-opacity: 0.8;
 }
 
-.c3d-slider .valueText {
+.c3d-slider .thumb:pressed {
+	-fx-background-color: #0F7D38;
+}
+
+.c3d-slider > .track {
+	-fx-background-color: #CCCCCC;
+    -fx-padding: 2;
+}
+
+.c3d-slider .sliderValue {
 	-fx-stroke: #FFFFFF;
-	-fx-font-size:10.0;
+	-fx-font-size: 10.0;
 }
 
-.c3d-slider > .thumbCircle {
-	-fx-stroke-width: 2.0px;
-	-fx-fill: #0F9D58;
+.c3d-slider:disabled {
+	-fx-opacity: 0.4;
 }
 
 /*******************************************************************************
@@ -53,10 +90,10 @@
 *                                                                              *
 *******************************************************************************/
 
-.c3d-rippler {
+/*.c3d-rippler {
 	-fx-rippler-fill: BLUE;
 	-fx-mask-type: RECT;
-}
+}*/
 .c3d-rippler:hover {
 	-fx-cursor: hand;
 }
@@ -106,17 +143,17 @@
 *******************************************************************************/
 
 .progress-bar > .bar {
-	-fx-min-width: 500;
+	-fx-min-width: 500.0;
 }
 
 .c3d-progress-bar > .bar {
-	-fx-min-width: 500;
+	-fx-min-width: 500.0;
 }
 
 .c3d-progress-bar{
 	-fx-track-color: #C8C8C8 ;
 	-fx-progress-color: #0F9D58;
-	-fx-stroke-width:3;
+	-fx-stroke-width:3.0;
 }
 
 /*******************************************************************************
@@ -130,11 +167,26 @@
     -fx-font-weight: BOLD;
     -fx-prompt-text-fill: #808080;
     -fx-alignment: top-left ;
-    -fx-max-width: 300;
+    -fx-max-width: 300.0;
     -fx-focus-color: #4059A9;
     -fx-unfocus-color: #4d4d4d;
-    -fx-max-width: 300;
+    -fx-max-width: 300.0;
 }
+
+.c3d-text-field.error{
+	-fx-focus-color: #D34336;
+	-fx-unfocus-color: #D34336;
+}
+
+.c3d-text-field .errorLabel{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 0.75em;
+}
+.c3d-text-field .errorIcon{
+	-fx-text-fill : #D34336;
+	-fx-font-size: 1em;
+}
+
 
 /*******************************************************************************
 *                                                                              *
@@ -143,7 +195,7 @@
 *******************************************************************************/
 
 .c3d-hamburger-icon{
-	-fx-spacing: 3;
+	-fx-spacing: 3.0;
 	-fx-scale-x:0.7;
 	-fx-scale-y:0.7;
 	-fx-cursor: hand;
@@ -152,10 +204,63 @@
 .c3d-hamburger-icon SVGPath{
 	-fx-stroke-width: 0.0;
 	-fx-stroke: TRANSPARENT;
-	-fx-opacity: 1;
+	-fx-opacity: 1.0;
 	-fx-stroke-miter-limit: 4.0;
 	-fx-stroke-line-join: MITER;
 	-fx-stroke-line-cap: BUTT;
 	-fx-stroke-dash-offset: 0.0;
 	-fx-fill: BLUE;
 }
+
+/*******************************************************************************
+*                                                                              *
+* C3D List View                                                                *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-list-cell-container {
+	-fx-alignment: center-left;
+}
+.c3d-list-cell-container > .label {
+  	-fx-text-fill: BLACK ;
+}
+
+.c3d-list-cell:odd:selected .c3d-list-cell-container,
+.c3d-list-cell:even:selected .c3d-list-cell-container { 
+	-fx-background-color: rgba(0,0,255,0.2);
+}
+
+.c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.c3d-list-cell:odd, 
+.c3d-list-cell:even {
+	-fx-background-color:  WHITE;
+}
+.c3d-list-cell:filled:hover { 
+	-fx-text-fill: black;
+}
+
+.c3d-list-cell .c3d-rippler {
+	-fx-rippler-fill:BLUE;
+}
+
+.c3d-list-view {
+	-fx-background-insets: 0;
+  	-fx-cell-horizontal-margin: 0.0;
+  	-fx-cell-vertical-margin: 5.0;
+  	-fx-vertical-gap : 10;
+  	-fx-expanded : false;
+}
+
+/*******************************************************************************
+*                                                                              *
+* C3D Toggle Button                                                            *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-toggle-button{
+	-fx-toggle-color:RED;
+}
+

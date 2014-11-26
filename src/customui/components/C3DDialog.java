@@ -22,7 +22,6 @@ public class C3DDialog extends StackPane {
 	public static enum C3DDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
 	public static enum C3DDialogAnimation{CENTER, TOP, RIGHT, BOTTOM, LEFT};
 
-	private C3DDialogLayout layout;
 	private C3DDialogAnimation animationType = C3DDialogAnimation.CENTER;
 	private Transition transition;
 	private StackPane contentHolder;
