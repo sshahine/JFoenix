@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import customui.components.C3DButton?>
+<?import javafx.scene.layout.FlowPane?>
+
+<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
+	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
+		prefHeight="50" buttonType="RAISED" text="C3D Button">
+	</C3DButton>
+	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
+	</C3DButton>
+</FlowPane>
+

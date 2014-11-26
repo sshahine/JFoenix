@@ -6,6 +6,13 @@
 	src:"/resources/roboto/Roboto-Regular.ttf";
 }
 
+.side-menu{
+	-fx-padding: 20,10;
+	-fx-font-size: 15;
+	-fx-font-weight: NORMAL;
+	-fx-text-fill: #444;
+}
+
 /*******************************************************************************
  *                                                                             *
  * C3D Tool Bar                                                                *
@@ -83,10 +90,10 @@
 *                                                                              *
 *******************************************************************************/
 
-.c3d-rippler {
+/*.c3d-rippler {
 	-fx-rippler-fill: BLUE;
 	-fx-mask-type: RECT;
-}
+}*/
 .c3d-rippler:hover {
 	-fx-cursor: hand;
 }

@@ -45,7 +45,7 @@ import contact.service.SimpleContactService;
 import customui.components.C3DHamburger;
 import customui.transitions.hamburger.HamburgerSlideCloseTransition;
 
-@FXMLController("/resources/fxml/ContactSearch.fxml")
+@FXMLController("/resources/fxml2/ContactSearch.fxml")
 public class ContactSearchPresenter 
 {
 	@FXMLViewFlowContext
@@ -69,9 +69,6 @@ public class ContactSearchPresenter
 
 	@FXML
 	private SwingNode swingnode;
-
-	@FXML
-	private C3DHamburger bicon;
 	
 
 	private ListProperty<Contact> contacts;
@@ -91,12 +88,6 @@ public class ContactSearchPresenter
         swingnode.setContent(canvas);
         
 		
-        
-		HamburgerSlideCloseTransition btask = new HamburgerSlideCloseTransition(bicon);
-		bicon.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			btask.setRate(btask.getRate()*-1);
-			btask.play();
-		});
         
 		
 		

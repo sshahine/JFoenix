@@ -9,11 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import customui.skins.C3DListCellSkin;
 
@@ -57,7 +56,13 @@ public class C3DListCell<T> extends ListCell<T> {
 
 					cellContainer.getChildren().clear();
 					cellContainer.getChildren().add((Node) item);
-					cellContainer.getStyleClass().add("c3d-list-cell-container");	
+					cellContainer.getStyleClass().add("c3d-list-cell-container");
+					// propagate mouse events to all children
+					cellContainer.addEventHandler(MouseEvent.ANY, (e)->{
+						e.consume();
+						((Node) item).fireEvent(e);
+					});
+					
 					cellRippler = new C3DListCellRippler(cellContainer);
 					
 					double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
