@@ -47,7 +47,7 @@ public class C3DProgressBar extends ProgressBar {
 	private StyleableObjectProperty<Paint> trackColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.TRACK_COLOR, C3DProgressBar.this, "trackColor", Color.valueOf("#C8C8C8"));
 
 	public Paint getTrackColor(){
-		return trackColor == null ? Color.valueOf("#0F9D58") : trackColor.get();
+		return trackColor == null ? Color.valueOf("#C8C8C8") : trackColor.get();
 	}
 	public StyleableObjectProperty<Paint> trackColorProperty(){		
 		return this.trackColor;
@@ -60,7 +60,7 @@ public class C3DProgressBar extends ProgressBar {
 	private StyleableObjectProperty<Paint> progressColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.PROGRESS_COLOR, C3DProgressBar.this, "progressColor", Color.valueOf("#0F9D58"));
 
 	public Paint getProgressColor(){
-		return progressColor == null ? Color.valueOf("#5A5A5A") : progressColor.get();
+		return progressColor == null ? Color.valueOf("#0F9D58") : progressColor.get();
 	}
 	public StyleableObjectProperty<Paint> progressColorProperty(){		
 		return this.progressColor;
