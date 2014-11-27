@@ -43,9 +43,14 @@ public class C3DButton extends Button {
 		return new C3DButtonSkin(this);
 	}
 	
+	public static enum ButtonType{FLAT, RAISED};
 	
-
-	public static enum ButtonType{FLAT, RAISED};	
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
 	
 	private StyleableObjectProperty<ButtonType> buttonType = new SimpleStyleableObjectProperty<ButtonType>(StyleableProperties.BUTTON_TYPE, C3DButton.this, "buttonType", ButtonType.FLAT );
 
