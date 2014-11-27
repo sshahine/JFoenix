@@ -31,21 +31,26 @@ import javafx.util.Duration;
 
 
 
+
+
 import javax.annotation.PostConstruct;
 
 
 
 
 
+
+
+import com.cctintl.c3dfx.controls.BlurPane;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
+
 import contact.AnimatedFlowContainer;
 import contact.WindowManager;
 import contact.gui.detail.ContactDetailPresenter;
 import contact.gui.search.ContactSearchPresenter;
-import customui.components.BlurPane;
-import customui.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import customui.transitions.hamburger.HamburgerBasicCloseTransition;
-import customui.transitions.hamburger.HamburgerNextArrowBasicTransition;
-import customui.transitions.hamburger.HamburgerSlideCloseTransition;
 
 @FXMLController(value = "/resources/fxml/Main.fxml" , title = "MVP Exmaple & DataFX")
 public class MainPresenter
