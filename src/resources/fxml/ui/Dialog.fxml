@@ -2,15 +2,23 @@
 
 <?import javafx.scene.layout.FlowPane?>
 <?import com.cctintl.c3dfx.controls.C3DButton?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import com.cctintl.c3dfx.controls.C3DDialog?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">	
-	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
-		prefHeight="50" buttonType="RAISED" text="C3D Button">
-	</C3DButton>
-	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
-	</C3DButton>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:20,20;-fx-alignment:CENTER;" >
+	<FlowPane>
+		<C3DButton prefWidth="100" prefHeight="30">CENTER</C3DButton>
+		<C3DButton prefWidth="100" prefHeight="30">TOP</C3DButton>
+		<C3DButton prefWidth="100" prefHeight="30">RIGHT</C3DButton>
+		<C3DButton prefWidth="100" prefHeight="30">BOTTOM</C3DButton>
+		<C3DButton prefWidth="100" prefHeight="30">LEFT</C3DButton>
+	</FlowPane>
 	
+	<C3DDialog  fx:id="dialog">
+		<content><Label >SDFSDFSDF</Label></content>
+	</C3DDialog >
 	
-</FlowPane>
+</StackPane>
 

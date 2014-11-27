@@ -77,8 +77,7 @@ public class C3DRippler extends StackPane {
 	public void setControl(Node control){
 		if(control!=null){
 			this.control = control;
-			if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
-			else this.getChildren().add(this.control);
+			
 			if(this.control instanceof Control){
 				((Control)this.control).widthProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxWidth((double) newVal);});
 				((Control)this.control).heightProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxHeight((double) newVal);});
@@ -91,8 +90,13 @@ public class C3DRippler extends StackPane {
 			rippler = new RippleGenerator();
 			ripplerPane = new C3DAnchorPane();
 			ripplerPane.getChildren().add(rippler);
+			
+			if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
+			else this.getChildren().add(this.control);
+			
 			this.getChildren().add(ripplerPane);
-
+			
+			
 			// add listeners
 			initListeners();
 			this.requestLayout();
