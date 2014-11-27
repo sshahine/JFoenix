@@ -18,11 +18,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
-<?import customui.components.C3DToolbar?>
-<?import customui.components.C3DDrawer?>
-<?import customui.components.C3DButton?>
 <?import javafx.scene.layout.FlowPane?>
-<?import customui.components.C3DListView?>
+<?import com.cctintl.c3dfx.controls.C3DToolbar?>
+<?import com.cctintl.c3dfx.controls.C3DDrawer?>
 
 <BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">

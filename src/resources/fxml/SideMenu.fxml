@@ -3,15 +3,15 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import customui.components.C3DListView?>
 <?import javafx.scene.control.Label?>
 <?import java.lang.String?>
+<?import com.cctintl.c3dfx.controls.C3DListView?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
 	<styleClass>	
 		<String fx:value="side-menu" />
 	</styleClass>
-	<C3DListView fx:id="sideList">
+	<C3DListView  fx:id="sideList">
 		<Label fx:id="button"> Buttons </Label>
 		<Label fx:id="checkbox"> Check Box </Label>
 		<Label fx:id="dialogs"> Dialogs </Label>
