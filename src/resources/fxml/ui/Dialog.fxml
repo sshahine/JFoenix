@@ -9,11 +9,11 @@
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:20,20;-fx-alignment:CENTER;" >
 	<FlowPane>
-		<C3DButton prefWidth="100" prefHeight="30">CENTER</C3DButton>
-		<C3DButton prefWidth="100" prefHeight="30">TOP</C3DButton>
-		<C3DButton prefWidth="100" prefHeight="30">RIGHT</C3DButton>
-		<C3DButton prefWidth="100" prefHeight="30">BOTTOM</C3DButton>
-		<C3DButton prefWidth="100" prefHeight="30">LEFT</C3DButton>
+		<C3DButton fx:id="centerButton" prefWidth="100" prefHeight="30">CENTER</C3DButton>
+		<C3DButton fx:id="topButton" prefWidth="100" prefHeight="30">TOP</C3DButton>
+		<C3DButton fx:id="rightButton" prefWidth="100" prefHeight="30">RIGHT</C3DButton>
+		<C3DButton fx:id="bottomButton" prefWidth="100" prefHeight="30">BOTTOM</C3DButton>
+		<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30">LEFT</C3DButton>
 	</FlowPane>
 	
 	<C3DDialog  fx:id="dialog">

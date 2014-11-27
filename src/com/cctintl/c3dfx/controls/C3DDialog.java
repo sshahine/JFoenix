@@ -55,7 +55,7 @@ public class C3DDialog extends StackPane {
 		setDialogContainer(dialogContainer);
 
 		this.transitionType.set(transitionType);		
-		transition = getShowAnimation(transitionType);
+		
 		this.transitionType.addListener((o,oldVal,newVal)->{
 			transition = getShowAnimation(newVal);			
 		});
@@ -109,10 +109,12 @@ public class C3DDialog extends StackPane {
 
 	public void show(Pane dialogContainer){
 		this.setDialogContainer(dialogContainer);
+		if(transition == null) transition = getShowAnimation(transitionType.get());
 		transition.play();
 	}
 
 	public void show(){
+		if(transition == null) transition = getShowAnimation(transitionType.get());
 		transition.play();
 	}
 

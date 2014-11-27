@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import javax.annotation.PostConstruct;
 
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.DialogController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
 
 import contact.AnimatedFlowContainer;
 
@@ -39,11 +39,12 @@ public class MainController {
 		
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(DialogController.class);
+		Flow innerFlow = new Flow(ButtonController.class);
 		
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);
 		context.register("ContentFlow", innerFlow);
+		context.register("ContentPane", content);
 		content.getChildren().add(flowHandler.start(new AnimatedFlowContainer(Duration.millis(320), ContainerAnimations.SWIPE_LEFT)));
 		
 		// side controller will add links to the content flow
