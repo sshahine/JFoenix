@@ -4,16 +4,16 @@ import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
 
-import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogAnimation;
+import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
 import com.sun.javafx.css.StyleConverterImpl;
 
-public class DialogTransitionConverter  extends StyleConverterImpl<String , C3DDialogAnimation> {
+public class DialogTransitionConverter  extends StyleConverterImpl<String , C3DDialogTransition> {
 
     // lazy, thread-safe instatiation
     private static class Holder {
         static final DialogTransitionConverter INSTANCE = new DialogTransitionConverter();
     }
-    public static StyleConverter<String, C3DDialogAnimation> getInstance() {
+    public static StyleConverter<String, C3DDialogTransition> getInstance() {
         return Holder.INSTANCE;
     }
     private DialogTransitionConverter() {
@@ -21,12 +21,12 @@ public class DialogTransitionConverter  extends StyleConverterImpl<String , C3DD
     }
 
     @Override
-    public C3DDialogAnimation convert(ParsedValue<String,C3DDialogAnimation> value, Font not_used) {
+    public C3DDialogTransition convert(ParsedValue<String,C3DDialogTransition> value, Font not_used) {
         String string = value.getValue();
         try {
-            return C3DDialogAnimation.valueOf(string);
+            return C3DDialogTransition.valueOf(string);
         } catch (IllegalArgumentException | NullPointerException exception) {
-            return C3DDialogAnimation.CENTER;
+            return C3DDialogTransition.CENTER;
         }
     }
     @Override

@@ -3,7 +3,7 @@ package com.cctintl.c3dfx.demos.components;
 import com.cctintl.c3dfx.controls.C3DButton;
 import com.cctintl.c3dfx.controls.C3DDialog;
 import com.cctintl.c3dfx.controls.C3DListView;
-import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogAnimation;
+import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -55,19 +55,19 @@ public class DialogDemo extends Application {
 		FlowPane pane = new FlowPane();
 		pane.setStyle("-fx-background-color:WHITE");
 		C3DButton button = new C3DButton("CENTER");
-		button.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogAnimation.CENTER).show());
+		button.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.CENTER).show());
 		
 		C3DButton button1 = new C3DButton("TOP");
-		button1.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), javaList, C3DDialogAnimation.TOP).show());
+		button1.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), javaList, C3DDialogTransition.TOP).show());
 		
 		C3DButton button2 = new C3DButton("BOTTOM");
-		button2.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogAnimation.BOTTOM).show());
+		button2.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.BOTTOM).show());
 		
 		C3DButton button3 = new C3DButton("LEFT");
-		button3.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogAnimation.LEFT).show());
+		button3.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.LEFT).show());
 		
 		C3DButton button4 = new C3DButton("RIGHT");
-		button4.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogAnimation.RIGHT).show());
+		button4.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.RIGHT).show());
 		
 		
 		C3DButton button3D = new C3DButton("3D");
