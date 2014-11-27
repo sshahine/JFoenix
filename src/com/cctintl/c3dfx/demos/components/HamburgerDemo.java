@@ -1,11 +1,5 @@
 package com.cctintl.c3dfx.demos.components;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +7,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
 
 public class HamburgerDemo extends Application {
 

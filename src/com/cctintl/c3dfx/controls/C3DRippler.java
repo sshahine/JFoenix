@@ -74,6 +74,12 @@ public class C3DRippler extends StackPane {
 
 	}	
 
+	/***************************************************************************
+	 *                                                                         *
+	 * Setters / Getters                                                       *
+	 *                                                                         *
+	 **************************************************************************/
+	
 	public void setControl(Node control){
 		if(control!=null){
 			this.control = control;
@@ -91,8 +97,14 @@ public class C3DRippler extends StackPane {
 			ripplerPane = new C3DAnchorPane();
 			ripplerPane.getChildren().add(rippler);
 			
-			if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
-			else this.getChildren().add(this.control);
+			// set the control postion and listen if it's changed
+			if(this.position.get() == RipplerPos.BACK)ripplerPane.getChildren().add(this.control);
+			else this.getChildren().add(this.control);				
+			this.position.addListener((o,oldVal,newVal)->{
+				if(this.position.get() == RipplerPos.BACK)
+					ripplerPane.getChildren().add(this.control);
+				else this.getChildren().add(this.control);	
+			});			
 			
 			this.getChildren().add(ripplerPane);
 			
@@ -105,6 +117,14 @@ public class C3DRippler extends StackPane {
 
 	public Node getControl(){
 		return this.control;
+	}
+	
+	public void setPostion(RipplerPos pos){
+		this.position.set(pos);
+	}
+
+	public RipplerPos getPostion(){
+		return this.position.get();
 	}
 	
 	public void setEnabled(boolean enable){
@@ -404,9 +424,12 @@ public class C3DRippler extends StackPane {
 	}
 
 
-	/**
-	 *  styleable properties 
-	 */
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
+	
 	private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL, C3DRippler.this, "ripplerFill", Color.rgb(0, 200, 255));
 
 	public Paint getRipplerFill(){

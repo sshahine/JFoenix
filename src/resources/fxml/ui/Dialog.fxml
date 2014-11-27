@@ -6,30 +6,48 @@
 <?import javafx.scene.control.Label?>
 <?import com.cctintl.c3dfx.controls.C3DDialog?>
 <?import com.cctintl.c3dfx.controls.C3DDialogLayout?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:20,20;-fx-alignment:CENTER;" >
-	<FlowPane>
-		<C3DButton fx:id="centerButton" prefWidth="100" prefHeight="30">CENTER</C3DButton>
-		<C3DButton fx:id="topButton" prefWidth="100" prefHeight="30">TOP</C3DButton>
-		<C3DButton fx:id="rightButton" prefWidth="100" prefHeight="30">RIGHT</C3DButton>
-		<C3DButton fx:id="bottomButton" prefWidth="100" prefHeight="30">BOTTOM</C3DButton>
-		<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30">LEFT</C3DButton>
-	</FlowPane>
-	
-	<C3DDialog  fx:id="dialog">		
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:-400 0 0 0">
+	<VBox spacing="20" alignment="CENTER">
+		<C3DButton fx:id="centerButton" prefWidth="220" prefHeight="30"
+			styleClass="dialog-trigger">CENTER</C3DButton>
+		<HBox spacing="20" alignment="CENTER">
+			<C3DButton fx:id="topButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">TOP</C3DButton>
+			<C3DButton fx:id="bottomButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">BOTTOM</C3DButton>
+		</HBox>
+
+		<HBox spacing="20" alignment="CENTER">
+			<C3DButton fx:id="rightButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">RIGHT</C3DButton>
+			<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">LEFT</C3DButton>
+		</HBox>
+	</VBox>
+
+
+	<C3DDialog fx:id="dialog">
 		<C3DDialogLayout>
 			<heading>
 				<Label>C3D Dialog</Label>
 			</heading>
 			<body>
-				<Label>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Label>
+				<Label>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+					do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+					enim ad minim veniam, quis nostrud exercitation ullamco laboris
+					nisi ut aliquip ex ea commodo consequat.</Label>
 			</body>
 			<actions>
-				<C3DButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT</C3DButton>
+				<C3DButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT
+				</C3DButton>
 			</actions>
-		</C3DDialogLayout>			
-	</C3DDialog >
-	
+		</C3DDialogLayout>
+	</C3DDialog>
+
 </StackPane>
 

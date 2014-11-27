@@ -12,12 +12,27 @@
 	-fx-font-weight: NORMAL;
 	-fx-text-fill: #444;
 }
+.title-label{
+	-fx-font-size: 16px;
+	-fx-padding	: 14px;
+	-fx-text-fill: rgba(0, 0, 0, 0.87);
+}
+.c3d-button {
+	-fx-background-color: transparent ;
+}
 
 /*******************************************************************************
  *                                                                             *
  * C3D Dialog Layout                                                           *
  *                                                                             *
  ******************************************************************************/
+
+.dialog-trigger{
+	-fx-background-color: WHITE;
+	-fx-button-type:RAISED;
+	-fx-font-size: 16px;
+}
+
 .c3d-dialog-layout {
 	-fx-padding: 24px 24px 16px 24px;
 	-fx-text-fill: rgba(0, 0, 0, 0.87);
@@ -45,7 +60,6 @@
 	-fx-padding: 0.7em 0.8em;
 }
 
-
 /*******************************************************************************
  *                                                                             *
  * C3D Icons                                                                   *
@@ -57,14 +71,44 @@
 	-fx-padding: 10;
 	-fx-cursor: hand;
 }
+
 .icons-rippler{
-	-fx-rippler-fill: BLUE;
+	-fx-rippler-fill: #FE774D;
 	-fx-mask-type: CIRCLE;
 }
+
+.icons-rippler1{
+	-fx-rippler-fill: #4285F4;
+	-fx-mask-type: CIRCLE;
+}
+
 .icons-rippler:hover{
 	-fx-cursor: hand;
 }
 
+/*******************************************************************************
+*                                                                              *
+* C3D Hamburger Icon                                                           *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-hamburger-icon{
+	-fx-spacing: 3.0;
+	-fx-scale-x:0.8;
+	-fx-scale-y:0.8;
+	-fx-cursor: hand;
+}
+
+.c3d-hamburger-icon SVGPath{
+	-fx-stroke-width: 0.0;
+	-fx-stroke: TRANSPARENT;
+	-fx-opacity: 1.0;
+	-fx-stroke-miter-limit: 4.0;
+	-fx-stroke-line-join: MITER;
+	-fx-stroke-line-cap: BUTT;
+	-fx-stroke-dash-offset: 0.0;
+	-fx-fill: BLUE;
+}
 
 /*******************************************************************************
  *                                                                             *
@@ -79,11 +123,13 @@
 	-fx-pref-width: 100%;
 	-fx-pref-height: 64px;
 }
+
 .c3d-tool-bar HBox {
 	-fx-alignment:center;
 	-fx-spacing: 25;
 	-fx-padding: 0 10;
 }
+
 .c3d-tool-bar Label{
 	-fx-text-fill: WHITE;
 }
@@ -157,19 +203,16 @@
 *                                                                              *
 *******************************************************************************/
 
- .c3d-button {
-	-fx-background-color: transparent ;
+
+.custom-c3d-button-raised .c3d-rippler{
+	-fx-rippler-fill: YELLOW;
 }
 
-/* .c3d-button .c3d-rippler {
-	-fx-rippler-fill: RED;
-}*/
-
-.custom-c3d-button-raised {
+.custom-c3d-button-raised  {
 	-fx-padding: 0.7em 0.57em;
 	-fx-font-size: 14.0px;
 	-fx-button-type: RAISED;
-	-fx-background-color: RED;
+	-fx-background-color: rgb(102,153,102);
 	-fx-pref-width: 200.0;
 	-fx-text-fill: WHITE;
 }
@@ -188,6 +231,17 @@
     -fx-checked-color: RED;
     -fx-unchecked-color: BLACK;
 }
+
+.custom-c3d-check-box-all-colored{
+	 -fx-checked-color: BLUE;
+	 -fx-unchecked-color: BLUE;
+	 -fx-text-fill:BLUE;
+}
+
+.custom-c3d-check-box-text-colored{
+	-fx-text-fill:rgb(153,0,0);
+}
+
 
 /*******************************************************************************
 *                                                                              *
@@ -238,31 +292,6 @@
 .c3d-text-field .errorIcon{
 	-fx-text-fill : #D34336;
 	-fx-font-size: 1em;
-}
-
-
-/*******************************************************************************
-*                                                                              *
-* C3D Hamburger Icon                                                           *
-*                                                                              *
-*******************************************************************************/
-
-.c3d-hamburger-icon{
-	-fx-spacing: 3.0;
-	-fx-scale-x:0.7;
-	-fx-scale-y:0.7;
-	-fx-cursor: hand;
-}
-
-.c3d-hamburger-icon SVGPath{
-	-fx-stroke-width: 0.0;
-	-fx-stroke: TRANSPARENT;
-	-fx-opacity: 1.0;
-	-fx-stroke-miter-limit: 4.0;
-	-fx-stroke-line-join: MITER;
-	-fx-stroke-line-cap: BUTT;
-	-fx-stroke-dash-offset: 0.0;
-	-fx-fill: BLUE;
 }
 
 /*******************************************************************************

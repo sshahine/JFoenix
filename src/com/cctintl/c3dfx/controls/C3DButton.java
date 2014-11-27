@@ -35,7 +35,7 @@ public class C3DButton extends Button {
 	}
 
     private void initialize() {
-    	this.getStyleClass().add("c3d-button");        
+    	this.getStyleClass().add("c3d-button");
     }
     
 	@Override

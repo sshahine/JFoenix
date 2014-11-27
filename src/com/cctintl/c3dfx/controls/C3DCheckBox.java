@@ -40,9 +40,12 @@ public class C3DCheckBox extends CheckBox {
 	}
 
 
-	/**
-	 *  styleable properties 
-	 */
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
+	
 	private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.CHECKED_COLOR, C3DCheckBox.this, "checkedColor", Color.valueOf("#0F9D58"));
 
 	public Paint getCheckedColor(){

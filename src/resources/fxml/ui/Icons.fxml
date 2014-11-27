@@ -4,11 +4,54 @@
 <?import com.cctintl.c3dfx.controls.C3DRippler?>
 <?import de.jensd.fx.fontawesome.Icon?>
 <?import javafx.scene.layout.StackPane?>
-<FlowPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DRippler styleClass="icons-rippler">
-		<Icon awesomeIcon="STAR" size="1em" style=";" styleClass="icon" />
-	</C3DRippler>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import com.cctintl.c3dfx.controls.C3DHamburger?>
+<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition?>
+<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition?>
+<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition?>
+<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition?>
 
-</FlowPane>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 200;">
+	<VBox>
+		<children>
+			<Label styleClass="title-label">Font Awesome Icons</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<C3DRippler postion="BACK" styleClass="icons-rippler">
+						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
+					</C3DRippler>
+
+					<C3DRippler postion="BACK" styleClass="icons-rippler1">
+						<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
+					</C3DRippler>
+
+				</children>
+			</HBox>
+
+			<Label styleClass="title-label">Animated Icons</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<C3DHamburger style="-fx-padding:20;">					
+						<HamburgerSlideCloseTransition  />
+					</C3DHamburger>
+					<C3DHamburger style="-fx-padding:20;">
+						<HamburgerBackArrowBasicTransition />
+					</C3DHamburger>
+					<C3DHamburger style="-fx-padding:20;">
+						<HamburgerBasicCloseTransition />
+					</C3DHamburger>
+					<C3DHamburger style="-fx-padding:20;">
+						<HamburgerNextArrowBasicTransition />
+					</C3DHamburger>
+				</children>
+			</HBox>
+		</children>
+	</VBox>
+</StackPane>
+
+
 

@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.DialogController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.IconsController;
 
 import contact.AnimatedFlowContainer;
 
@@ -39,7 +41,7 @@ public class MainController {
 		
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(ButtonController.class);
+		Flow innerFlow = new Flow(IconsController.class);
 		
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);

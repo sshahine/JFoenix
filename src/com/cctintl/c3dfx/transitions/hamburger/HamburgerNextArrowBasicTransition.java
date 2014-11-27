@@ -1,17 +1,22 @@
 package com.cctintl.c3dfx.transitions.hamburger;
 
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 
-public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition{
-	public HamburgerNextArrowBasicTransition(VBox burger) {
+import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.fxexperience.javafx.animation.CachedTimelineTransition;
+
+public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition implements HamburgerTransition{
+	
+	public HamburgerNextArrowBasicTransition(){
+		super(null,null);
+	}
+	
+	public HamburgerNextArrowBasicTransition(C3DHamburger burger) {
 		super(burger, new Timeline(
 				new KeyFrame(
 						Duration.ZERO,       
@@ -44,5 +49,9 @@ public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition{
 		// reduce the number to increase the shifting , increase number to reduce shifting
 		setCycleDuration(Duration.seconds(0.3));
 		setDelay(Duration.seconds(0));
+	}
+	
+	public HamburgerTransition getAnimation(C3DHamburger burger){
+		return new HamburgerNextArrowBasicTransition(burger);
 	}
 }
