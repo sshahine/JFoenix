@@ -11,7 +11,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
@@ -58,7 +57,8 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 		line.setEndX(endX);
 		line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 		line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-		line.setStroke(((C3DProgressBar)getSkinnable()).getTrackColor());
+		line.strokeProperty().bind(((C3DProgressBar)getSkinnable()).trackColorProperty());
+		
 		line.setStrokeWidth(strokeWidth.doubleValue());
 		line.setStrokeType(StrokeType.CENTERED);		
 		effectsPane.getChildren().add(line);
@@ -72,7 +72,7 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 			progressLine.setEndX(endX);
 			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			progressLine.setStroke(((C3DProgressBar)getSkinnable()).getProgressColor());
+			progressLine.strokeProperty().bind(((C3DProgressBar)getSkinnable()).progressColorProperty());
 			progressLine.setStrokeWidth(strokeWidth.doubleValue());
 			progressLine.setStrokeType(StrokeType.CENTERED);		
 			effectsPane.getChildren().add(progressLine);
@@ -86,7 +86,7 @@ public class C3DProgressBarSkin extends ProgressBarSkin {
 			progressLine.setEndX(endX);
 			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			progressLine.setStroke(Color.valueOf("#0F9D58"));
+			progressLine.strokeProperty().bind(((C3DProgressBar)getSkinnable()).progressColorProperty());
 			progressLine.setStrokeWidth(strokeWidth.doubleValue());
 			progressLine.setStrokeType(StrokeType.CENTERED);		
 			effectsPane.getChildren().add(progressLine);

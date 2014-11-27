@@ -32,6 +32,7 @@ public class ProgressBarDemo extends Application {
 		ProgressBar bar = new ProgressBar();
 		ProgressBar cssBar = new ProgressBar();
 		cssBar.setProgress(-1.0f);
+		
 		cssBar.getStyleClass().add("css-progress-bar");
 		C3DProgressBar c3dBar = new C3DProgressBar();
 		C3DProgressBar c3dBarInf = new C3DProgressBar();

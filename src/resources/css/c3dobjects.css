@@ -263,6 +263,18 @@
 	-fx-stroke-width:3.0;
 }
 
+.custom-c3d-progress-bar{
+	-fx-track-color: #C8C8C8 ;
+	-fx-progress-color: RED;
+	-fx-stroke-width:3.0;
+}
+.custom-c3d-progress-bar-stroke{
+	-fx-track-color: #C8C8C8 ;
+	-fx-progress-color: BLUE;
+	-fx-stroke-width:5.0;
+}
+
+
 /*******************************************************************************
 *                                                                              *
 * C3D Textfield                                                                *
