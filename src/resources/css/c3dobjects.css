@@ -15,6 +15,39 @@
 
 /*******************************************************************************
  *                                                                             *
+ * C3D Dialog Layout                                                           *
+ *                                                                             *
+ ******************************************************************************/
+.c3d-dialog-layout {
+	-fx-padding: 24px 24px 16px 24px;
+	-fx-text-fill: rgba(0, 0, 0, 0.87);
+}
+.c3d-layout-title {
+	-fx-font-size: 20px;
+	-fx-font-weight: BOLD;
+	-fx-alignment: center-left;
+	-fx-padding: 5 0 5 0; 	
+}
+
+.c3d-layout-body .label {
+	-fx-font-size: 14px;
+	-fx-pref-width: 400px;
+	-fx-wrap-text: true;
+}
+
+.c3d-layout-actions {
+	-fx-padding: 10px 0 0 0 ;	
+	-fx-alignment: center-right ;
+}
+.dialog-accept{
+	-fx-text-fill: #03A9F4;
+	-fx-font-weight: BOLD; 	
+	-fx-padding: 0.7em 0.8em;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
  * C3D Icons                                                                   *
  *                                                                             *
  ******************************************************************************/
@@ -128,9 +161,9 @@
 	-fx-background-color: transparent ;
 }
 
-.c3d-button .c3d-rippler {
+/* .c3d-button .c3d-rippler {
 	-fx-rippler-fill: RED;
-}
+}*/
 
 .custom-c3d-button-raised {
 	-fx-padding: 0.7em 0.57em;

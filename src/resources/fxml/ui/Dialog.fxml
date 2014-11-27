@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
 <?import com.cctintl.c3dfx.controls.C3DDialog?>
+<?import com.cctintl.c3dfx.controls.C3DDialogLayout?>
 
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:20,20;-fx-alignment:CENTER;" >
@@ -16,8 +17,18 @@
 		<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30">LEFT</C3DButton>
 	</FlowPane>
 	
-	<C3DDialog  fx:id="dialog">
-		<content><Label >SDFSDFSDF</Label></content>
+	<C3DDialog  fx:id="dialog">		
+		<C3DDialogLayout>
+			<heading>
+				<Label>C3D Dialog</Label>
+			</heading>
+			<body>
+				<Label>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Label>
+			</body>
+			<actions>
+				<C3DButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT</C3DButton>
+			</actions>
+		</C3DDialogLayout>			
 	</C3DDialog >
 	
 </StackPane>

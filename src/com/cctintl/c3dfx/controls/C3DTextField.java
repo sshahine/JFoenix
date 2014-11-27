@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
@@ -21,7 +16,6 @@ import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
