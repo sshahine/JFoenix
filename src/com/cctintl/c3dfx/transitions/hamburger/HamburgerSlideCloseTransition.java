@@ -4,14 +4,19 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 
+import com.cctintl.c3dfx.controls.C3DHamburger;
 import com.fxexperience.javafx.animation.CachedTimelineTransition;
 
-public class HamburgerSlideCloseTransition extends CachedTimelineTransition {
-	public HamburgerSlideCloseTransition(VBox burger) {
+public class HamburgerSlideCloseTransition extends CachedTimelineTransition implements HamburgerTransition {
+	
+	public HamburgerSlideCloseTransition(){
+		super(null,null);
+	}
+	
+	public HamburgerSlideCloseTransition(C3DHamburger burger) {
 		super(
 				burger,
 				new Timeline(
@@ -38,5 +43,9 @@ public class HamburgerSlideCloseTransition extends CachedTimelineTransition {
 				);
 		setCycleDuration(Duration.seconds(0.3));
 		setDelay(Duration.seconds(0));
+	}
+	
+	public HamburgerTransition getAnimation(C3DHamburger burger){
+		return new HamburgerSlideCloseTransition(burger);
 	}
 }

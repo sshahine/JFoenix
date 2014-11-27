@@ -1,10 +1,20 @@
 package com.cctintl.c3dfx.controls;
 
 
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerTransition;
+
+
+
+import javafx.animation.Transition;
+import javafx.beans.DefaultProperty;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
+@DefaultProperty(value="animation")
 public class C3DHamburger extends VBox {
+	
+	private HamburgerTransition animation;
+	
 	public C3DHamburger() {
 		SVGPath line1 = new SVGPath();
 		line1.setContent("m 482.73642,457.05289 24,0 c 1.104,0 2,-0.896 2,-2 0,-1.104 -0.896,-2 -2,-2 l -24,0 c -1.104,0 -2,0.896 -2,2 0,1.104 0.896,2 2,2 z");
@@ -17,4 +27,18 @@ public class C3DHamburger extends VBox {
         this.getChildren().add(line3);
         this.getStyleClass().add("c3d-hamburger-icon");
 	}
+
+	public HamburgerTransition getAnimation() {
+		return animation;
+	}
+
+	public void setAnimation(HamburgerTransition animation) {
+		this.animation = animation.getAnimation(this);
+		((Transition)this.animation).setRate(-1);
+		this.setOnMouseClicked((e)->{
+			((Transition)this.animation).setRate(((Transition)this.animation).getRate()*-1);
+			((Transition)this.animation).play();
+		});
+	}
+	
 }
