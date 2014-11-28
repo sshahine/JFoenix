@@ -18,6 +18,8 @@ import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.DialogController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.IconsController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ListViewController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ProgressBarController;
 
 import contact.AnimatedFlowContainer;
 
@@ -41,7 +43,7 @@ public class MainController {
 		
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(IconsController.class);
+		Flow innerFlow = new Flow(ListViewController.class);
 		
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);
