@@ -32,7 +32,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 	private Timeline timeline;
 
 	private final AnchorPane container = new AnchorPane();
-	private double labelOffset = -5;
+	private double labelOffset = -1;
 
 	public C3DRadioButtonSkin(RadioButton control) {
 		super(control);
@@ -112,6 +112,11 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 
 		timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(dot.radiusProperty(), minRadius, Interpolator.EASE_BOTH)), new KeyFrame(Duration.millis(200), new KeyValue(dot.radiusProperty(),
 				radioWidth, Interpolator.EASE_BOTH)));
+
+		rippler.setRipplerFill(getSkinnable().isSelected() ? unSelectedColor : selectedColor);
+
+		timeline.setRate(getSkinnable().isSelected() ? 1 : -1);
+		timeline.play();
 
 		contWidth = snapSize(container.prefWidth(-1));
 		contHeight = snapSize(container.prefHeight(-1));

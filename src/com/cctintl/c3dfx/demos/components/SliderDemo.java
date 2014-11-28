@@ -35,6 +35,7 @@ public class SliderDemo extends Application {
 
 			Scene scene = new Scene(new Group());
 			((Group) scene.getRoot()).getChildren().add(hbox);
+			scene.getStylesheets().add(InputDemo.class.getResource("resources/css/c3dobjects.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setWidth(900);
 			primaryStage.setHeight(700);

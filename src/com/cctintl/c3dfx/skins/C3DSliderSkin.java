@@ -28,15 +28,8 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	/** Track if slider is vertical/horizontal and cause re layout */
 	private boolean isHorizontal;
 
-	private Color thumbColor, trackColor;
-	private double thumbWidth;
-	private double thumbHeight;
-
-	private double trackStart;
-	private double trackLength;
-	private double thumbTop;
-	private double thumbLeft;
-	private double preDragThumbPos;
+	private Color thumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
+	private double thumbWidth, thumbHeight, trackStart, trackLength, thumbTop, thumbLeft, preDragThumbPos;
 	private Point2D dragStart; // in skin coordinates
 
 	private StackPane thumb, track, animatedThumb;
@@ -101,7 +94,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		if (s.getValue() > s.getMax()) {
 			return;// this can happen if we are bound to something 
 		}
-		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))) - thumbWidth)) : thumbLeft;
+		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))) - thumbWidth / 2)) : thumbLeft;
 		final double endY = (isHorizontal) ? thumbTop : snappedTopInset() + trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))); //  - thumbHeight/2
 
 		if (animate) {
@@ -138,7 +131,6 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 			thumbWidth = snapSize(thumb.prefWidth(-1));
 			thumbHeight = snapSize(thumb.prefHeight(-1));
 			thumb.resize(thumbWidth, thumbHeight);
-			thumbColor = (Color) thumb.getBackground().getFills().get(0).getFill();
 
 			double trackRadius = track.getBackground() == null ? 0 : track.getBackground().getFills().size() > 0 ? track.getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius() : 0;
 
@@ -152,7 +144,6 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 				double trackTop = (int) (startY + ((trackAreaHeight - trackHeight) / 2));
 				thumbTop = (int) (startY + ((trackAreaHeight - thumbHeight) / 2));
 				track.resizeRelocate((int) (trackStart - trackRadius), trackTop, (int) (trackLength + trackRadius + trackRadius), trackHeight);
-				trackColor = (Color) track.getBackground().getFills().get(0).getFill();
 				double snap = track.prefHeight(-1);
 				coloredTrack.setStrokeWidth(snap);
 				coloredTrack.setStartX(trackStart - trackRadius + snap / 2);
@@ -168,7 +159,6 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 				double trackLeft = (int) (startX + ((trackAreaWidth - trackWidth) / 2));
 				thumbLeft = (int) (startX + ((trackAreaWidth - thumbWidth) / 2));
 				track.resizeRelocate(trackLeft, (int) (trackStart - trackRadius), trackWidth, (int) (trackLength + trackRadius + trackRadius));
-				trackColor = (Color) track.getBackground().getFills().get(0).getFill();
 				double snap = track.prefWidth(-1);
 				coloredTrack.setStrokeWidth(snap);
 				coloredTrack.setStartY(trackStart + trackLength - trackRadius + snap / 2);
