@@ -21,14 +21,20 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import com.cctintl.c3dfx.controls.C3DToolbar?>
 <?import com.cctintl.c3dfx.controls.C3DDrawer?>
+<?import com.cctintl.c3dfx.controls.C3DHamburger?>
+<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition?>
 
 <BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
 	<!-- Header -->
+	
 	<top>
 		<VBox spacing="20">
 			<C3DToolbar>
 				<leftItems>
+					<C3DHamburger fx:id="titleBurger">
+						<HamburgerBackArrowBasicTransition />
+					</C3DHamburger>
 					<Label>Google</Label>
 				</leftItems>
 				<rightItems>
@@ -40,7 +46,7 @@
 
 	<!-- Content Area -->
 	<center>
-		<C3DDrawer drawerWidth="250">
+		<C3DDrawer fx:id="drawer" drawerWidth="250">
 			<styleClass>
 				<String fx:value="body" />
 			</styleClass>

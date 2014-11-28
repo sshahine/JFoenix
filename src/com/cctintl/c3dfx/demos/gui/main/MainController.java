@@ -14,6 +14,8 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
+import com.cctintl.c3dfx.controls.C3DDrawer;
+import com.cctintl.c3dfx.controls.C3DHamburger;
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.RadioButtonController;
@@ -36,13 +38,36 @@ public class MainController {
 
 	@FXML
 	private StackPane sideContent;
+	
+	@FXML private C3DHamburger titleBurger;
 
+	@FXML private C3DDrawer drawer;
+	
 	private FlowHandler flowHandler;
 	private FlowHandler sideMenuFlowHandler;
 
+	private int counter = 0 ;
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 
+		drawer.setOnDrawingAction((e)->{
+			titleBurger.getAnimation().setRate(1);
+			titleBurger.getAnimation().setOnFinished((event)->counter = 1);
+			titleBurger.getAnimation().play();
+		});
+		drawer.setOnHidingAction((e)->{
+			titleBurger.getAnimation().setRate(-1);
+			titleBurger.getAnimation().setOnFinished((event)->counter = 0);
+			titleBurger.getAnimation().play();
+		});
+				
+		titleBurger.setOnMouseClicked((e)->{
+			if(counter == 0) drawer.draw();
+			else if(counter == 1) drawer.hide();
+			counter = -1;
+		});	
+		
+		
 		context = new ViewFlowContext();
 		// set the default controller 
 		Flow innerFlow = new Flow(ButtonController.class);

@@ -13,7 +13,7 @@ import javafx.scene.shape.SVGPath;
 @DefaultProperty(value="animation")
 public class C3DHamburger extends VBox {
 	
-	private HamburgerTransition animation;
+	private Transition animation;
 	
 	public C3DHamburger() {
 		SVGPath line1 = new SVGPath();
@@ -28,17 +28,13 @@ public class C3DHamburger extends VBox {
         this.getStyleClass().add("c3d-hamburger-icon");
 	}
 
-	public HamburgerTransition getAnimation() {
+	public Transition getAnimation() {
 		return animation;
 	}
 
-	public void setAnimation(HamburgerTransition animation) {
-		this.animation = animation.getAnimation(this);
-		((Transition)this.animation).setRate(-1);
-		this.setOnMouseClicked((e)->{
-			((Transition)this.animation).setRate(((Transition)this.animation).getRate()*-1);
-			((Transition)this.animation).play();
-		});
+	public void setAnimation(Transition animation) {
+		this.animation = ((HamburgerTransition)animation).getAnimation(this);
+		this.animation.setRate(-1);
 	}
 	
 }

@@ -139,6 +139,13 @@
 	-fx-text-fill: WHITE;
 }
 
+.c3d-tool-bar .c3d-hamburger-icon{
+	-fx-translate-y: 18px;
+}
+.c3d-tool-bar .c3d-hamburger-icon SVGPath{
+	-fx-fill: WHITE;
+}
+
 /*******************************************************************************
  *                                                                             *
  * C3D Radio Button                                                            *

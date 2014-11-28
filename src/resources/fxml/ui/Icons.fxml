@@ -35,16 +35,16 @@
 			<Label styleClass="title-label">Animated Icons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DHamburger style="-fx-padding:20;">					
+					<C3DHamburger fx:id="burger1" style="-fx-padding:20;">					
 						<HamburgerSlideCloseTransition  />
 					</C3DHamburger>
-					<C3DHamburger style="-fx-padding:20;">
+					<C3DHamburger fx:id="burger2" style="-fx-padding:20;">
 						<HamburgerBackArrowBasicTransition />
 					</C3DHamburger>
-					<C3DHamburger style="-fx-padding:20;">
+					<C3DHamburger fx:id="burger3" style="-fx-padding:20;">
 						<HamburgerBasicCloseTransition />
 					</C3DHamburger>
-					<C3DHamburger style="-fx-padding:20;">
+					<C3DHamburger fx:id="burger4" style="-fx-padding:20;">
 						<HamburgerNextArrowBasicTransition />
 					</C3DHamburger>
 				</children>

@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 
@@ -51,7 +52,7 @@ public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition 
 		setDelay(Duration.seconds(0));
 	}
 	
-	public HamburgerTransition getAnimation(C3DHamburger burger){
+	public Transition getAnimation(C3DHamburger burger){
 		return new HamburgerNextArrowBasicTransition(burger);
 	}
 }
