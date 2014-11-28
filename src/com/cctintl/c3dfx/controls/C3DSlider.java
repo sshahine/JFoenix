@@ -1,9 +1,9 @@
 package com.cctintl.c3dfx.controls;
 
-import com.cctintl.c3dfx.skins.C3DSliderSkin;
-
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
+
+import com.cctintl.c3dfx.skins.C3DSliderSkin;
 
 public class C3DSlider extends Slider {
 
@@ -26,10 +26,5 @@ public class C3DSlider extends Slider {
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new C3DSliderSkin(this);
-	}
-
-	@Override
-	protected String getUserAgentStylesheet() {
-		return C3DSlider.class.getResource("/resources/css/c3dobjects.css").toExternalForm();
 	}
 }

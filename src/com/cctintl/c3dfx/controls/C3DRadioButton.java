@@ -14,14 +14,14 @@ public class C3DRadioButton extends RadioButton {
 		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 	}
 
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new C3DRadioButtonSkin(this);
+	public C3DRadioButton() {
+		super();
+		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 	}
 
 	@Override
-	protected String getUserAgentStylesheet() {
-		return C3DRadioButton.class.getResource("/resources/css/c3dobjects.css").toExternalForm();
+	protected Skin<?> createDefaultSkin() {
+		return new C3DRadioButtonSkin(this);
 	}
 
 }
