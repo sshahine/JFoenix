@@ -15,9 +15,13 @@ import javafx.util.Duration;
 import javax.annotation.PostConstruct;
 
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.RadioButtonController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.SliderController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ListViewController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ProgressBarController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.TextFieldController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ToggleButtonController;
 
 import contact.AnimatedFlowContainer;
 
@@ -41,7 +45,7 @@ public class MainController {
 
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(SliderController.class);
+		Flow innerFlow = new Flow(ButtonController.class);
 
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);

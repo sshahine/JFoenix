@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import com.cctintl.c3dfx.controls.C3DTextField?>
 <?import javafx.scene.layout.VBox?>
 <?import com.cctintl.c3dfx.validation.RequiredFieldValidator?>
 
-<FlowPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 240">
 	<VBox prefWidth="300" spacing="30">
 		<children>
 			<C3DTextField promptText="Type Something" prefWidth="300">
@@ -20,4 +20,4 @@
 			</C3DTextField>
 		</children>
 	</VBox>
-</FlowPane>
+</StackPane>

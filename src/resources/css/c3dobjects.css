@@ -17,6 +17,11 @@
 	-fx-padding	: 14px;
 	-fx-text-fill: rgba(0, 0, 0, 0.87);
 }
+.radio-button-title-label {
+	-fx-font-size: 16px;
+	-fx-padding	: 14 0 -20 0;	
+	-fx-text-fill: rgba(0, 0, 0, 0.87);
+}
 .c3d-button {
 	-fx-background-color: transparent ;
 }
@@ -147,6 +152,19 @@
 
 .c3d-radio-button .dot {
 	-fx-fill: #0F9D58;
+}
+
+.custom-c3d-radio-button{
+	-fx-font-size: 16px;
+}
+
+.custom-c3d-radio-button .radio {
+	-fx-stroke-width: 2.0px;
+	-fx-fill: transparent;	
+}
+
+.custom-c3d-radio-button .dot {
+	-fx-fill: Blue;
 }
 
 /*******************************************************************************
@@ -282,14 +300,14 @@
 *******************************************************************************/
 
 .c3d-text-field{
-	-fx-background-color: WHITE;
+	-fx-background-color: transparent ;
     -fx-font-weight: BOLD;
     -fx-prompt-text-fill: #808080;
     -fx-alignment: top-left ;
     -fx-max-width: 300.0;
+    -fx-pref-width:300;
     -fx-focus-color: #4059A9;
-    -fx-unfocus-color: #4d4d4d;
-    -fx-max-width: 300.0;
+    -fx-unfocus-color: #4d4d4d;       
 }
 
 .c3d-text-field.error{
@@ -405,6 +423,14 @@
 *******************************************************************************/
 
 .c3d-toggle-button{
-	-fx-toggle-color:RED;
+	-fx-toggle-color:#0F9D58;
+}
+
+.custom-c3d-toggle-button{
+	-fx-toggle-color:#4285F4;
+}
+
+.toggle-label {
+	-fx-font-size: 14px;
 }
 

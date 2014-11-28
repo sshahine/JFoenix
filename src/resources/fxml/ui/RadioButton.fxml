@@ -4,21 +4,50 @@
 <?import com.cctintl.c3dfx.controls.C3DRadioButton?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" 
-		style="-fx-padding:200 300">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 240">
 
-	<VBox spacing="40">
-		<children>
-			<C3DRadioButton fx:id="radio_1" selected="true" text="Radio 1">
-				<toggleGroup>
-					<ToggleGroup fx:id="toggleGroup" />
-				</toggleGroup>
-			</C3DRadioButton>
-			<C3DRadioButton fx:id="radio_2" selected="false" text="Radio 2" toggleGroup="$toggleGroup" />
-			<C3DRadioButton fx:id="radio_3" selected="false" text="Radio 2" toggleGroup="$toggleGroup" />
-		</children>
-	</VBox>
+
+	<HBox spacing="100">
+		<VBox spacing="40">
+			<children>
+			
+				<Label styleClass="radio-button-title-label">Radio Buttons</Label>
+			
+				<C3DRadioButton fx:id="radio_1" selected="true" text="Radio 1">
+					<toggleGroup>
+						<ToggleGroup fx:id="toggleGroup" />
+					</toggleGroup>
+				</C3DRadioButton>
+				<C3DRadioButton fx:id="radio_2" selected="false"
+					text="Radio 2" toggleGroup="$toggleGroup" />
+				<C3DRadioButton fx:id="radio_3" selected="false"
+					text="Radio 2" toggleGroup="$toggleGroup" />
+			</children>
+		</VBox>
+
+
+		<VBox spacing="37">
+			<children>
+				
+				<Label styleClass="radio-button-title-label">Style Options</Label>				
+			
+				<C3DRadioButton fx:id="radio_1" text="Radio 1" styleClass="custom-c3d-radio-button">
+					<toggleGroup>
+						<ToggleGroup fx:id="toggleGroup" />
+					</toggleGroup>
+				</C3DRadioButton>
+				<C3DRadioButton fx:id="radio_2" selected="true" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-c3d-radio-button"/>
+				<C3DRadioButton fx:id="radio_3" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-c3d-radio-button" />
+			</children>
+		</VBox>
+
+	</HBox>
+
+
 
 </StackPane>
 

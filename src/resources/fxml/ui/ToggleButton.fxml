@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import com.cctintl.c3dfx.controls.C3DToggleButton?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.Label?>
 
-<FlowPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DToggleButton>
-	</C3DToggleButton>
-</FlowPane>
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 300">
+
+	<VBox prefWidth="300" spacing="50">
+		<FlowPane hgap="96">
+			<Label styleClass="toggle-label"> Wifi </Label>
+			<C3DToggleButton>
+			</C3DToggleButton>
+		</FlowPane>
+		<FlowPane hgap="60">
+			<Label styleClass="toggle-label"> Bluetooth
+			</Label>
+			<C3DToggleButton styleClass="custom-c3d-toggle-button">
+			</C3DToggleButton>
+		</FlowPane>
+	</VBox>
+
+</StackPane>
+
 
