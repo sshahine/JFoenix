@@ -211,6 +211,8 @@
   	-fx-cell-vertical-margin: 5.0;
   	-fx-vertical-gap : 10;
   	-fx-expanded : false;
+  	-fx-pref-height: 347;
+  	-fx-pref-width:200;
 }
 
 
@@ -235,4 +237,7 @@
 -fx-text-fill: WHITE;
 }
 
+.c3d-popup-holder{
+	-fx-background-color: WHITE;
+}
 

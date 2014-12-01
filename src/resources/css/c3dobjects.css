@@ -32,6 +32,10 @@
  *                                                                             *
  ******************************************************************************/
 
+.c3d-dialog-overlay-pane {
+	-fx-background-color: rgba(0,0,0,0.1); 
+}
+
 .dialog-trigger{
 	-fx-background-color: WHITE;
 	-fx-button-type:RAISED;
@@ -63,6 +67,26 @@
 	-fx-text-fill: #03A9F4;
 	-fx-font-weight: BOLD; 	
 	-fx-padding: 0.7em 0.8em;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * C3D Pop Up                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.c3d-popup-overlay-pane{
+	-fx-background-color: transparent ;
+}
+
+.c3d-popup-holder{
+	-fx-background-color: WHITE;
+	-fx-pref-width:151px;
+}
+
+.popup-list-view {
+	-fx-pref-height: 233px;
+	-fx-pref-width:150px;
 }
 
 /*******************************************************************************

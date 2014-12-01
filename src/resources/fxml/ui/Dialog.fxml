@@ -11,8 +11,8 @@
 
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:-400 0 0 0">
-	<VBox spacing="20" alignment="CENTER">
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:0 0 0 0;">
+	<VBox spacing="20" alignment="CENTER" style="-fx-padding:-300 0 0 0;">
 		<C3DButton fx:id="centerButton" prefWidth="220" prefHeight="30"
 			styleClass="dialog-trigger">CENTER</C3DButton>
 		<HBox spacing="20" alignment="CENTER">

@@ -18,12 +18,6 @@ import com.cctintl.c3dfx.controls.C3DDrawer;
 import com.cctintl.c3dfx.controls.C3DHamburger;
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.RadioButtonController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.SliderController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.ListViewController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.ProgressBarController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.TextFieldController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.ToggleButtonController;
 
 import contact.AnimatedFlowContainer;
 
@@ -33,14 +27,10 @@ public class MainController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
-	@FXML
-	private StackPane content;
-
-	@FXML
-	private StackPane sideContent;
+	@FXML private StackPane content;
+	@FXML private StackPane sideContent;
 	
 	@FXML private C3DHamburger titleBurger;
-
 	@FXML private C3DDrawer drawer;
 	
 	private FlowHandler flowHandler;
@@ -50,6 +40,8 @@ public class MainController {
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 
+		
+		// init the title hamburger icon
 		drawer.setOnDrawingAction((e)->{
 			titleBurger.getAnimation().setRate(1);
 			titleBurger.getAnimation().setOnFinished((event)->counter = 1);
@@ -60,14 +52,15 @@ public class MainController {
 			titleBurger.getAnimation().setOnFinished((event)->counter = 0);
 			titleBurger.getAnimation().play();
 		});
-				
 		titleBurger.setOnMouseClicked((e)->{
 			if(counter == 0) drawer.draw();
 			else if(counter == 1) drawer.hide();
 			counter = -1;
 		});	
+
 		
-		
+
+		// create the inner flow and content
 		context = new ViewFlowContext();
 		// set the default controller 
 		Flow innerFlow = new Flow(ButtonController.class);

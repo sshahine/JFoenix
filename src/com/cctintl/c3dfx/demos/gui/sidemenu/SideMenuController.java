@@ -20,6 +20,7 @@ import com.cctintl.c3dfx.demos.gui.uicomponents.CheckboxController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.DialogController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.IconsController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ListViewController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.PopupController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ProgressBarController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.RadioButtonController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.SliderController;
@@ -73,6 +74,10 @@ public class SideMenuController {
 	private Label togglebutton;
 	
 	@FXML
+	@ActionTrigger("popup")
+	private Label popup;
+	
+	@FXML
 	private C3DListView<?> sideList;
 	
 	@PostConstruct
@@ -90,6 +95,7 @@ public class SideMenuController {
 		bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
 	}
 	
 	private void bindNodeToController(Node node,Class<?> controllerClass, Flow flow, FlowHandler flowHandler){

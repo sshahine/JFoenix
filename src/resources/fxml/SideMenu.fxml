@@ -22,5 +22,6 @@
 		<Label fx:id="slider"> Slider </Label>
 		<Label fx:id="textfield"> Text Field </Label>
 		<Label fx:id="togglebutton"> Toggle Button </Label>
+		<Label fx:id="popup"> Popup </Label>
 	</C3DListView>
 </StackPane>

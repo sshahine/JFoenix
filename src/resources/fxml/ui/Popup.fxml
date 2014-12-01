@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import com.cctintl.c3dfx.controls.C3DPopup?>
+<?import com.cctintl.c3dfx.controls.C3DHamburger?>
+<?import com.cctintl.c3dfx.controls.C3DListView?>
+<?import de.jensd.fx.fontawesome.Icon?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import com.cctintl.c3dfx.controls.C3DRippler?>
+
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+
+	<AnchorPane>
+		<C3DRippler fx:id="rippler1" maskType="CIRCLE" layoutX="90" layoutY="50">
+			<C3DHamburger fx:id="burger1" style="-fx-padding:10;">
+			</C3DHamburger>
+		</C3DRippler>
+		<C3DRippler fx:id="rippler2" maskType="CIRCLE" layoutX="690" layoutY="50">
+			<C3DHamburger fx:id="burger2" style="-fx-padding:10;">
+			</C3DHamburger>
+		</C3DRippler>
+		<C3DRippler fx:id="rippler3" maskType="CIRCLE" layoutX="90" layoutY="650">
+			<C3DHamburger fx:id="burger3" style="-fx-padding:10;">
+			</C3DHamburger>
+		</C3DRippler>
+		<C3DRippler fx:id="rippler4" maskType="CIRCLE" layoutX="690" layoutY="650">
+			<C3DHamburger fx:id="burger4" style="-fx-padding:10;">
+			</C3DHamburger>
+		</C3DRippler>
+	</AnchorPane>
+
+	<C3DPopup fx:id="popup">
+		<content>
+			<C3DListView fx:id="popupList" styleClass="popup-list-view">
+				<Label>
+					Item 1
+					<graphic>
+						<Icon awesomeIcon="STAR" size="1.5em" style=";"
+							styleClass="custome-c3d-list-view-icon" />
+					</graphic>
+				</Label>
+				<Label>
+					Item 2
+					<graphic>
+						<Icon awesomeIcon="HEART" size="1.5em" style=";"
+							styleClass="custome-c3d-list-view-icon" />
+					</graphic>
+				</Label>
+				<Label>
+					Item 3
+					<graphic>
+						<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+							styleClass="custome-c3d-list-view-icon" />
+					</graphic>
+				</Label>
+				<Label>
+					Item 4
+					<graphic>
+						<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+							styleClass="custome-c3d-list-view-icon" />
+					</graphic>
+				</Label>
+				<Label>
+					Item 5
+					<graphic>
+						<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+							styleClass="custome-c3d-list-view-icon" />
+					</graphic>
+				</Label>
+			</C3DListView>
+		</content>
+	</C3DPopup>
+
+</StackPane>
+
