@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import customui.components.C3DButton?>
+<?import com.cctintl.c3dfx.controls.C3DButton?>
 <?import javafx.scene.layout.FlowPane?>
+<?import com.cctintl.c3dfx.controls.C3DListView?>
+<?import javafx.scene.control.Label?>
+<?import de.jensd.fx.fontawesome.Icon?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
-		prefHeight="50" buttonType="RAISED" text="C3D Button">
-	</C3DButton>
-	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
-	</C3DButton>
-</FlowPane>
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 0 0 180;">
 
+	<AnchorPane>
+		<C3DListView fx:id="list1" styleClass="custome-c3d-list-view" layoutX="0" layoutY="0">
+			<Label>Item 1</Label>
+			<Label>Item 2</Label>
+			<Label>Item 3</Label>
+			<Label>Item 4</Label>
+			<Label>Item 5</Label>
+			<Label>Item 6</Label>
+			<Label>Item 7</Label>
+			<Label>Item 8</Label>
+		</C3DListView>
+
+
+		<C3DListView fx:id="list2" styleClass="custome-c3d-list-view1" layoutX="300" layoutY="0">
+			<Label>
+				Item 1
+				<graphic>
+					<Icon awesomeIcon="STAR" size="1.5em" style=";"
+						styleClass="custome-c3d-list-view-icon" />
+				</graphic>
+			</Label>
+			<Label>
+				Item 2
+				<graphic>
+					<Icon awesomeIcon="HEART" size="1.5em" style=";"
+						styleClass="custome-c3d-list-view-icon" />
+				</graphic>
+			</Label>
+			<Label>
+				Item 3
+				<graphic>
+					<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+						styleClass="custome-c3d-list-view-icon" />
+				</graphic>
+			</Label>
+			<Label>
+				Item 4
+				<graphic>
+					<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+						styleClass="custome-c3d-list-view-icon" />
+				</graphic>
+			</Label>
+			<Label>
+				Item 5
+				<graphic>
+					<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+						styleClass="custome-c3d-list-view-icon" />
+				</graphic>
+			</Label>
+		</C3DListView>
+
+		<FlowPane layoutX="80" layoutY="400" >
+			<C3DButton fx:id="button3D" prefWidth="100" buttonType="RAISED" text="3D" style="-fx-background-color:WHITE;"></C3DButton>
+			<C3DButton fx:id="expand" prefWidth="100" buttonType="FLAT" text="EXPAND"></C3DButton>
+			<C3DButton fx:id="collapse" prefWidth="100" buttonType="FLAT" text="COLLAPSE"></C3DButton>
+		</FlowPane>
+	</AnchorPane>
+
+</StackPane>

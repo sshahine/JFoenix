@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import customui.components.C3DButton?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import com.cctintl.c3dfx.controls.C3DSlider?>
+<?import javafx.scene.layout.VBox?>
 
-<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
-		prefHeight="50" buttonType="RAISED" text="C3D Button">
-	</C3DButton>
-	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
-	</C3DButton>
-</FlowPane>
-
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
+	<VBox spacing="50">
+		<children>
+			<C3DSlider orientation="VERTICAL">
+			</C3DSlider>
+			<C3DSlider>
+			</C3DSlider>
+		</children>
+	</VBox>
+</StackPane>

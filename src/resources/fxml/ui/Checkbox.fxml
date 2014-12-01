@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.FlowPane?>
-<?import customui.components.C3DCheckBox?>
+<?import com.cctintl.c3dfx.controls.C3DCheckBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
 
-<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DCheckBox text="Check Box" >
-	</C3DCheckBox>
-</FlowPane>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 200;">
+	<HBox spacing="100">
+		<VBox spacing="20">
+			<children>
+				<Label styleClass="title-label">Check Box</Label>
+				<C3DCheckBox text="Notifications"></C3DCheckBox>
+				<C3DCheckBox text="Auto Updates"></C3DCheckBox>
+				<C3DCheckBox text="Clear History"></C3DCheckBox>
+			</children>
+		</VBox>
+
+
+		<VBox spacing="20">
+			<Label styleClass="title-label">Style Options</Label>
+			<C3DCheckBox text="Notifications" styleClass="custom-c3d-check-box"></C3DCheckBox>
+			<C3DCheckBox text="Auto Updates"  styleClass="custom-c3d-check-box-all-colored"></C3DCheckBox>
+			<C3DCheckBox text="Clear History" styleClass="custom-c3d-check-box-text-colored"></C3DCheckBox>
+		</VBox>
+
+
+	</HBox>
+
+
+
+</StackPane>
+
 

@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import customui.components.C3DButton?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import com.cctintl.c3dfx.controls.C3DButton?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
 
-<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
-		prefHeight="50" buttonType="RAISED" text="C3D Button">
-	</C3DButton>
-	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
-	</C3DButton>
-</FlowPane>
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 200;">
+	<VBox>
+		<children>
+			<Label styleClass="title-label">Flat Buttons</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="BUTTON" style="-fx-font-size:14px;"></C3DButton>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="COLORED" style="-fx-text-fill:#5264AE;-fx-font-size:14px;"></C3DButton>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="DISABLED" style="-fx-font-size:14px;" disable="true"></C3DButton>
+				</children>
+			</HBox>
+			
+			<Label styleClass="title-label">Raised Buttons</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON" style="-fx-font-size:14px;-fx-background-color:WHITE;"></C3DButton>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"></C3DButton>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED" style="-fx-font-size:14px;" disable="true"></C3DButton>
+				</children>
+			</HBox>
+			
+			<Label styleClass="title-label">Styling Options</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-c3d-button-raised"></C3DButton>
+				</children>
+			</HBox>
+			
+			
+		</children>
+	</VBox>
+</StackPane>
 

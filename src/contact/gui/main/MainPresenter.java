@@ -31,21 +31,26 @@ import javafx.util.Duration;
 
 
 
+
+
 import javax.annotation.PostConstruct;
 
 
 
 
 
+
+
+import com.cctintl.c3dfx.controls.BlurPane;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
+
 import contact.AnimatedFlowContainer;
 import contact.WindowManager;
 import contact.gui.detail.ContactDetailPresenter;
 import contact.gui.search.ContactSearchPresenter;
-import customui.components.BlurPane;
-import customui.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import customui.transitions.hamburger.HamburgerBasicCloseTransition;
-import customui.transitions.hamburger.HamburgerNextArrowBasicTransition;
-import customui.transitions.hamburger.HamburgerSlideCloseTransition;
 
 @FXMLController(value = "/resources/fxml/Main.fxml" , title = "MVP Exmaple & DataFX")
 public class MainPresenter
@@ -153,34 +158,34 @@ public class MainPresenter
 		//		burgerIcon.getChildren().get(0).getTransforms().add(new Rotate(45, 0, 0));
 		//		burgerIcon.getChildren().get(2).getTransforms().add(new Rotate(-45, 0, 10));
 
-		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(burgerIcon);
-		burgerIcon.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			WindowManager.getPopup();
-			burgerTask.setRate(burgerTask.getRate()*-1);
-			burgerTask.play();
-		});
-
-		
-		HamburgerBasicCloseTransition burgerTask1 = new HamburgerBasicCloseTransition(burgerIcon1);
-		burgerIcon1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			burgerTask1.setRate(burgerTask1.getRate()*-1);
-			burgerTask1.play();
-			contentArea.getChildren().add(new BlurPane());
-		});
-		
-		HamburgerBackArrowBasicTransition burgerTask2 = new HamburgerBackArrowBasicTransition(burgerIcon2);
-		burgerIcon2.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			burgerTask2.setRate(burgerTask2.getRate()*-1);
-			burgerTask2.play();
-		});
-		
-		HamburgerNextArrowBasicTransition burgerTask3 = new HamburgerNextArrowBasicTransition(burgerIcon3);
-		burgerIcon3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			burgerTask3.setRate(burgerTask3.getRate()*-1);
-			burgerTask3.play();
-		});
-
-		context = new ViewFlowContext();
+//		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(burgerIcon);
+//		burgerIcon.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+//			WindowManager.getPopup();
+//			burgerTask.setRate(burgerTask.getRate()*-1);
+//			burgerTask.play();
+//		});
+//
+//		
+//		HamburgerBasicCloseTransition burgerTask1 = new HamburgerBasicCloseTransition(burgerIcon1);
+//		burgerIcon1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+//			burgerTask1.setRate(burgerTask1.getRate()*-1);
+//			burgerTask1.play();
+//			contentArea.getChildren().add(new BlurPane());
+//		});
+//		
+//		HamburgerBackArrowBasicTransition burgerTask2 = new HamburgerBackArrowBasicTransition(burgerIcon2);
+//		burgerIcon2.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+//			burgerTask2.setRate(burgerTask2.getRate()*-1);
+//			burgerTask2.play();
+//		});
+//		
+//		HamburgerNextArrowBasicTransition burgerTask3 = new HamburgerNextArrowBasicTransition(burgerIcon3);
+//		burgerIcon3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+//			burgerTask3.setRate(burgerTask3.getRate()*-1);
+//			burgerTask3.play();
+//		});
+//
+//		context = new ViewFlowContext();
 		Flow innerFlow = new Flow(ContactSearchPresenter.class);
 		innerFlow.withLink(ContactSearchPresenter.class, "next", ContactDetailPresenter.class);
 		innerFlow.withAction(ContactDetailPresenter.class, "cancel",  new FlowActionChain(new FlowMethodAction("backAction"), new FlowLink<ContactSearchPresenter>(ContactSearchPresenter.class)));

@@ -34,6 +34,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.media.opengl.awt.GLJPanel;
 
+import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
 import com.fxexperience.javafx.animation.FadeInRightTransition;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -42,8 +44,6 @@ import contact.JOGL2Setup_GLCanvas;
 import contact.service.Contact;
 import contact.service.ContactService;
 import contact.service.SimpleContactService;
-import customui.components.C3DHamburger;
-import customui.transitions.hamburger.HamburgerSlideCloseTransition;
 
 @FXMLController("/resources/fxml2/ContactSearch.fxml")
 public class ContactSearchPresenter 

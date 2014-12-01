@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import customui.components.C3DButton?>
 <?import javafx.scene.layout.FlowPane?>
+<?import com.cctintl.c3dfx.controls.C3DButton?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<?import com.cctintl.c3dfx.controls.C3DDialog?>
+<?import com.cctintl.c3dfx.controls.C3DDialogLayout?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
-<FlowPane  fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" hgap="20" vgap="20" alignment="CENTER">
-	<C3DButton prefWidth="100" style="-fx-background-color:WHITE;"
-		prefHeight="50" buttonType="RAISED" text="C3D Button">
-	</C3DButton>
-	<C3DButton prefWidth="100" buttonType="FLAT" text="C3D Button">
-	</C3DButton>
-</FlowPane>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:-400 0 0 0">
+	<VBox spacing="20" alignment="CENTER">
+		<C3DButton fx:id="centerButton" prefWidth="220" prefHeight="30"
+			styleClass="dialog-trigger">CENTER</C3DButton>
+		<HBox spacing="20" alignment="CENTER">
+			<C3DButton fx:id="topButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">TOP</C3DButton>
+			<C3DButton fx:id="bottomButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">BOTTOM</C3DButton>
+		</HBox>
+
+		<HBox spacing="20" alignment="CENTER">
+			<C3DButton fx:id="rightButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">RIGHT</C3DButton>
+			<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">LEFT</C3DButton>
+		</HBox>
+	</VBox>
+
+
+	<C3DDialog fx:id="dialog">
+		<C3DDialogLayout>
+			<heading>
+				<Label>C3D Dialog</Label>
+			</heading>
+			<body>
+				<Label>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+					do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+					enim ad minim veniam, quis nostrud exercitation ullamco laboris
+					nisi ut aliquip ex ea commodo consequat.</Label>
+			</body>
+			<actions>
+				<C3DButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT
+				</C3DButton>
+			</actions>
+		</C3DDialogLayout>
+	</C3DDialog>
+
+</StackPane>
 
