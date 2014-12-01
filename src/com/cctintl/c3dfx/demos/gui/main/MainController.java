@@ -13,19 +13,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
 import javax.annotation.PostConstruct;
-
 import com.cctintl.c3dfx.controls.C3DDrawer;
 import com.cctintl.c3dfx.controls.C3DHamburger;
 import com.cctintl.c3dfx.controls.C3DPopup;
 import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
 import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
 import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.datafx.AnimatedFlowContainer;
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
-
-import contact.AnimatedFlowContainer;
 
 @FXMLController(value = "/resources/fxml/Main.fxml", title = "Material Design Example")
 public class MainController {

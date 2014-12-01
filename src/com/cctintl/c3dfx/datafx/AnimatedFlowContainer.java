@@ -1,4 +1,4 @@
-package contact;
+package com.cctintl.c3dfx.datafx;
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.flow.FlowContainer;
 import io.datafx.controller.flow.container.ContainerAnimations;

@@ -1,6 +1,7 @@
-package com.cctintl.c3dfx.demos;
+package com.cctintl.c3dfx.demos.components;
 
 import com.cctintl.c3dfx.controls.C3DSpinner;
+import com.cctintl.c3dfx.demos.MainDemo;
 
 import javafx.application.Application;
 import javafx.scene.Group;
