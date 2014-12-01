@@ -24,10 +24,11 @@ import com.cctintl.c3dfx.demos.gui.uicomponents.PopupController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ProgressBarController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.RadioButtonController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.SliderController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.SpinnerController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.TextFieldController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ToggleButtonController;
 
-@FXMLController(value = "/resources/fxml/SideMenu.fxml" , title = "Material Design Example")
+@FXMLController(value = "/resources/fxml/SideMenu.fxml", title = "Material Design Example")
 public class SideMenuController {
 
 	@FXMLViewFlowContext
@@ -40,46 +41,50 @@ public class SideMenuController {
 	@FXML
 	@ActionTrigger("checkbox")
 	private Label checkbox;
-	
+
 	@FXML
 	@ActionTrigger("dialogs")
 	private Label dialogs;
-	
+
 	@FXML
 	@ActionTrigger("icons")
 	private Label icons;
-	
+
 	@FXML
 	@ActionTrigger("listview")
 	private Label listview;
-	
+
 	@FXML
 	@ActionTrigger("progressbar")
 	private Label progressbar;
-	
+
 	@FXML
 	@ActionTrigger("radiobutton")
 	private Label radiobutton;
-	
+
 	@FXML
 	@ActionTrigger("slider")
 	private Label slider;
-	
+
+	@FXML
+	@ActionTrigger("spinner")
+	private Label spinner;
+
 	@FXML
 	@ActionTrigger("textfield")
 	private Label textfield;
-	
+
 	@FXML
 	@ActionTrigger("togglebutton")
 	private Label togglebutton;
-	
+
 	@FXML
 	@ActionTrigger("popup")
 	private Label popup;
 	
 	@FXML
 	private C3DListView<?> sideList;
-	
+
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 		sideList.propagateMouseEventsToParent();
@@ -93,20 +98,21 @@ public class SideMenuController {
 		bindNodeToController(progressbar, ProgressBarController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(radiobutton, RadioButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(spinner, SpinnerController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
 	}
-	
-	private void bindNodeToController(Node node,Class<?> controllerClass, Flow flow, FlowHandler flowHandler){
+
+	private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
 		flow.withGlobalLink(node.getId(), controllerClass);
-		node.setOnMouseClicked((e)->{
+		node.setOnMouseClicked((e) -> {
 			try {
 				flowHandler.handle(node.getId());
 			} catch (Exception e1) {
 				e1.printStackTrace();
-			}}
-		);
+			}
+		});
 	}
-	
+
 }

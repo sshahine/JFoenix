@@ -1,16 +1,19 @@
 package com.cctintl.c3dfx.demos.components;
 
-import com.cctintl.c3dfx.controls.C3DSlider;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DSlider;
 
 public class SliderDemo extends Application {
 
@@ -19,8 +22,9 @@ public class SliderDemo extends Application {
 		try {
 			C3DSlider c3dSlider = new C3DSlider();
 			c3dSlider.setMinWidth(700);
-			//c3dSlider.setMinHeight(500);
+			c3dSlider.setMinHeight(500);
 			//c3dSlider.setOrientation(Orientation.VERTICAL);
+			c3dSlider.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, null, null)));
 
 			Slider slider = new Slider();
 
@@ -35,10 +39,10 @@ public class SliderDemo extends Application {
 
 			Scene scene = new Scene(new Group());
 			((Group) scene.getRoot()).getChildren().add(hbox);
-			scene.getStylesheets().add(InputDemo.class.getResource("resources/css/c3dobjects.css").toExternalForm());
+			//scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setWidth(900);
-			primaryStage.setHeight(700);
+			primaryStage.setHeight(900);
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

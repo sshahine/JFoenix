@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.cctintl.c3dfx.controls.C3DSpinner?>
+<?import javafx.scene.layout.HBox?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
+	<HBox>
+		<children>
+			<C3DSpinner styleClass="first-spinner">
+			</C3DSpinner>
+			<C3DSpinner styleClass="second-spinner">
+			</C3DSpinner>
+			<C3DSpinner styleClass="third-spinner">
+			</C3DSpinner>
+			<C3DSpinner styleClass="fourth-spinner">
+			</C3DSpinner>
+			<C3DSpinner>
+			</C3DSpinner>
+		</children>
+	</HBox>
+</StackPane>

@@ -27,4 +27,5 @@ public class C3DSlider extends Slider {
 	protected Skin<?> createDefaultSkin() {
 		return new C3DSliderSkin(this);
 	}
+	
 }

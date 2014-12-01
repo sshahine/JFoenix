@@ -218,9 +218,10 @@
 	-fx-background-color: #0F7D38;
 }
 
-.c3d-slider > .track {
+.c3d-slider .track {
 	-fx-background-color: #CCCCCC;
-    -fx-padding: 2;
+    -fx-stroke-width: 2;
+    -fx-fill: red;
 }
 
 .c3d-slider .sliderValue {
@@ -465,3 +466,37 @@
 	-fx-font-size: 14px;
 }
 
+/*******************************************************************************
+*                                                                              *
+* C3D Spinner                                                                  *
+*                                                                              *
+*******************************************************************************/
+
+.c3d-spinner > .arc {
+	-fx-stroke-width: 3;
+	-fx-fill: transparent;
+}
+
+.first-spinner > .arc {
+	-fx-stroke-width: 3;
+	-fx-fill: transparent;
+	-fx-stroke: #4285f4;
+}
+
+.second-spinner > .arc {
+	-fx-stroke-width: 3;
+	-fx-fill: transparent;
+	-fx-stroke: #db4437;
+}
+
+.third-spinner > .arc {
+	-fx-stroke-width: 3;
+	-fx-fill: transparent;
+	-fx-stroke: #f4b400;
+}
+
+.fourth-spinner > .arc {
+	-fx-stroke-width: 3;
+	-fx-fill: transparent;
+	-fx-stroke: #0F9D58;
+}
