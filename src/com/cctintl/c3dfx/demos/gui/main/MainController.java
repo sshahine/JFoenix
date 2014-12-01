@@ -8,7 +8,9 @@ import io.datafx.controller.flow.container.ContainerAnimations;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -16,6 +18,10 @@ import javax.annotation.PostConstruct;
 
 import com.cctintl.c3dfx.controls.C3DDrawer;
 import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.c3dfx.controls.C3DPopup;
+import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
+import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
+import com.cctintl.c3dfx.controls.C3DRippler;
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
 import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
 
@@ -27,11 +33,16 @@ public class MainController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
+	@FXML private StackPane root;
 	@FXML private StackPane content;
 	@FXML private StackPane sideContent;
 	
 	@FXML private C3DHamburger titleBurger;
+	@FXML private C3DHamburger optionsBurger;
+	@FXML private C3DRippler optionsRippler;
 	@FXML private C3DDrawer drawer;
+	@FXML private C3DPopup toolbarPopup;
+	@FXML private Label exit;
 	
 	private FlowHandler flowHandler;
 	private FlowHandler sideMenuFlowHandler;
@@ -39,7 +50,6 @@ public class MainController {
 	private int counter = 0 ;
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-
 		
 		// init the title hamburger icon
 		drawer.setOnDrawingAction((e)->{
@@ -58,8 +68,18 @@ public class MainController {
 			counter = -1;
 		});	
 
-		
+		// init Popup 
+		toolbarPopup.setPopupContainer(root);
+		toolbarPopup.setSource(optionsRippler);
+		optionsBurger.setOnMouseClicked((e)->{
+			toolbarPopup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.RIGHT, -20, 18);
+		});
 
+		// close application
+		exit.setOnMouseClicked((e)->{
+			Platform.exit();
+		});
+		
 		// create the inner flow and content
 		context = new ViewFlowContext();
 		// set the default controller 

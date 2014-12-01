@@ -170,6 +170,30 @@
 	-fx-fill: WHITE;
 }
 
+.c3d-tool-bar .c3d-options-burger {
+	-fx-scale-x: 0.1;
+	-fx-padding:10;
+	-fx-translate-y: 10px;
+}
+
+.c3d-tool-bar .c3d-rippler {
+	-fx-rippler-fill: WHITE;
+}
+
+.option-list-view {
+  	-fx-pref-height: 95px;
+  	-fx-pref-width: 160px;
+  	-fx-background-color: WHITE ;
+}
+
+.option-c3d-list-view-icon {
+	-fx-text-fill: #5264AE;
+	-fx-padding: 0 10 0 5 ;
+	-fx-cursor: hand;
+}
+
+
+
 /*******************************************************************************
  *                                                                             *
  * C3D Radio Button                                                            *
@@ -399,31 +423,31 @@
 }
 
 
-.custome-c3d-list-view .c3d-list-cell-container {
+.custom-c3d-list-view .c3d-list-cell-container {
 	-fx-alignment: center;
 }
-.custome-c3d-list-view .c3d-list-cell-container > .label {
+.custom-c3d-list-view .c3d-list-cell-container > .label {
   	-fx-text-fill: BLACK ;
 }
 
-.custome-c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
-.custome-c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
+.custom-c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
+.custom-c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
 	-fx-background-color: transparent ;
 }
 
-.custome-c3d-list-view .c3d-list-cell {
+.custom-c3d-list-view .c3d-list-cell {
 	-fx-background-insets: 0.0 ; 
 	-fx-text-fill: BLACK; 
 }
-.custome-c3d-list-view .c3d-list-cell:odd, 
-.custome-c3d-list-view .c3d-list-cell:even {
+.custom-c3d-list-view .c3d-list-cell:odd, 
+.custom-c3d-list-view .c3d-list-cell:even {
 	-fx-background-color:  WHITE;
 }
-.custome-c3d-list-view .c3d-list-cell:filled:hover { 
+.custom-c3d-list-view .c3d-list-cell:filled:hover { 
 	-fx-text-fill: black;
 }
 
-.custome-c3d-list-view{
+.custom-c3d-list-view{
 	-fx-background-insets: 0;
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
@@ -431,19 +455,19 @@
   	-fx-expanded : false;
   	-fx-max-width: 200px;
 }
-.custome-c3d-list-view .c3d-rippler {
+.custom-c3d-list-view .c3d-rippler {
 	-fx-rippler-fill:RED;
 }
 
-.custome-c3d-list-view1{
+.custom-c3d-list-view1{
 	-fx-vertical-gap : 15;
   	-fx-max-width: 150px;
   	-fx-background-color: transparent ;
 }
 
-.custome-c3d-list-view-icon {
+.custom-c3d-list-view-icon {
 	-fx-text-fill: BLUE;
-	-fx-padding: 0 5 0 0 ;
+	-fx-padding: 0 10 0 5  ;
 	-fx-cursor: hand;
 }
 

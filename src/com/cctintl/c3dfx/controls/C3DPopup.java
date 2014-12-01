@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.beans.DefaultProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +18,7 @@ import javafx.util.Duration;
 
 import com.fxexperience.javafx.animation.CachedTimelineTransition;
 
+@DefaultProperty(value="content")
 public class C3DPopup extends StackPane {
 
 	public static enum C3DPopupHPosition{ RIGHT, LEFT};
@@ -38,6 +40,7 @@ public class C3DPopup extends StackPane {
 
 	public C3DPopup(Pane popupContainer, Region content) {
 		this.setVisible(false);
+		this.getStyleClass().add("c3d-popup");
 		setContent(content);
 		setPopupContainer(popupContainer);
 	}
@@ -105,12 +108,23 @@ public class C3DPopup extends StackPane {
 		this.show(vAlign, hAlign);
 	}
 	
-	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign){
+	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign ){
+		this.show(vAlign, hAlign, 0, 0);
+	}
+
+	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign, double initOffsetX, double initOffsetY ){
 		
-		Bounds bound = source.localToParent(source.getBoundsInLocal());
-		double offsetX = bound.getMinX();
-		double offsetY = bound.getMinY();
+		Node tempSource = this.source;
+		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal()); 
+		while(!tempSource.getParent().equals(popupContainer)){
+			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
+			tempSource = tempSource.getParent();
+		}
 		
+		double offsetX = bound.getMinX() + initOffsetX;
+		double offsetY = bound.getMinY() + initOffsetY;
+		
+	
 		if(hAlign.equals(C3DPopupHPosition.RIGHT)){
 			scaleTransform.setPivotX(content.getPrefWidth());
 			contentHolder.setTranslateX(-content.getPrefWidth() + bound.getWidth() + offsetX);
@@ -132,6 +146,8 @@ public class C3DPopup extends StackPane {
 		animation.play();
 	}
 
+	
+	
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
