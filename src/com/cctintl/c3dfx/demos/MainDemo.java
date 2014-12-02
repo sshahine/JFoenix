@@ -7,6 +7,7 @@ import io.datafx.controller.flow.container.DefaultFlowContainer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainDemo extends Application {
 
@@ -20,6 +21,8 @@ public class MainDemo extends Application {
 		flow.createHandler().start(container);
 		Scene scene = new Scene(container.getView(), 800, 800);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
+//		stage.initStyle(StageStyle.UNDECORATED);
+//		stage.setFullScreen(true);
 		stage.setScene(scene);
 		stage.show();
 	}
