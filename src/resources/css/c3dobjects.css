@@ -228,7 +228,7 @@
  ******************************************************************************/
 
 .c3d-slider > .thumb {
-	-fx-stroke: red;
+	-fx-stroke: #0F9D58;
 	-fx-stroke-width: 2;
 }
 
@@ -246,35 +246,28 @@
 	-fx-opacity: 0.4;
 }
 
-/****************************
-*                           *
-* For the main demo sliders *
-*                           *
-****************************/
+/*******************************************************
+*                           						   *
+* For the main demo sliders 						   *
+*                          							   *
+*******************************************************/
 
-.c3d-v1-slider > .thumb {
-	-fx-stroke: #4285f4;
+.c3d-slider-style > .thumb {
+	-fx-stroke: blue;
+	-fx-stroke-width: 1;
 }
 
-.c3d-v2-slider > .thumb {
-	-fx-stroke: #db4437;
+.c3d-slider-style .track {
+	-fx-stroke: rgb(128,0,0);
+    -fx-stroke-width: 5;
 }
 
-.c3d-v3-slider > .thumb {
-	-fx-stroke: #f4b400;
+.c3d-slider-style .sliderValue {
+	-fx-stroke: rgb(0,255,64);
+	-fx-font-size: 10.0;
 }
 
-.c3d-h1-slider > .thumb {
-	-fx-stroke: #4285f4;
-}
-
-.c3d-h2-slider > .thumb {
-	-fx-stroke: #db4437;
-}
-
-.c3d-h3-slider > .thumb {
-	-fx-stroke: #f4b400;
-}
+/******************************************************/
 
 
 /*******************************************************************************

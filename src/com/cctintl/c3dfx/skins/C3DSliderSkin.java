@@ -98,7 +98,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 			return;// this can happen if we are bound to something 
 		}
 		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))))) : thumbLeft;
-		final double endY = (isHorizontal) ? thumbTop : snappedTopInset() + trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin())));
+		final double endY = (isHorizontal) ? thumbTop : snappedTopInset() + thumbRadius + trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin())));
 
 		if (animate) {
 			// lets animate the thumb transition
@@ -185,15 +185,15 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	}
 
 	private void initializeStyles() {
-		if (track.getFill() != null) {
-			Color temp = (Color) track.getFill();
-			if (temp != null) {
+		if (track.getStroke() != null) {
+			Color temp = (Color) track.getStroke();
+			if (temp != Color.BLACK) {
 				trackColor = temp;
 			}
 		}
 		track.setStroke(trackColor);
 		if (track.getStrokeWidth() == 1) {
-			track.setStrokeWidth(2);
+			track.setStrokeWidth(3);
 		}
 
 		if (thumb.getRadius() == 0) {
