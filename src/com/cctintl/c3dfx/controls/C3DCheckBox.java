@@ -31,7 +31,7 @@ public class C3DCheckBox extends CheckBox {
 	}
 
 	private void initialize() {
-		this.getStyleClass().add("c3d-check-box");        
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
 
 	@Override
@@ -45,6 +45,9 @@ public class C3DCheckBox extends CheckBox {
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	private static final String DEFAULT_STYLE_CLASS = "c3d-check-box";
+	
 	
 	private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.CHECKED_COLOR, C3DCheckBox.this, "checkedColor", Color.valueOf("#0F9D58"));
 

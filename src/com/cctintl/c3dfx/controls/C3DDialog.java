@@ -49,13 +49,17 @@ public class C3DDialog extends StackPane {
 		this(null,null,C3DDialogTransition.CENTER);
 	}
 
-	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {
-		this.setVisible(false);
+	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {		
+		initialize();
 		setContent(content);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
 	}
 
+	private void initialize() {
+		this.setVisible(false);
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
 
 	/***************************************************************************
 	 *                                                                         *
@@ -274,6 +278,9 @@ public class C3DDialog extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	private static final String DEFAULT_STYLE_CLASS = "c3d-dialog";
+	
+	
 	private StyleableObjectProperty<C3DDialogTransition> transitionType = new SimpleStyleableObjectProperty<C3DDialogTransition>(StyleableProperties.DIALOG_TRANSITION, C3DDialog.this, "dialogTransition", C3DDialogTransition.CENTER );
 
 	public C3DDialogTransition getTransitionType(){

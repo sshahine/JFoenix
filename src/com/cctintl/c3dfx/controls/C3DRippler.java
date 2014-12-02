@@ -63,11 +63,10 @@ public class C3DRippler extends StackPane {
 
 	public C3DRippler(Node control, RipplerMask mask,  RipplerPos pos){
 		super();		
+		initialize();
 		this.maskType.set(mask);
 		this.position.set(pos);
 		setControl(control);
-		this.getStyleClass().add("c3d-rippler");
-
 	}	
 
 	/***************************************************************************
@@ -287,6 +286,13 @@ public class C3DRippler extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+
+	private static final String DEFAULT_STYLE_CLASS = "c3d-rippler";
+
+	private void initialize() {
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
+
 	private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL, C3DRippler.this, "ripplerFill", Color.rgb(0, 200, 255));
 
 	public Paint getRipplerFill(){
@@ -367,5 +373,6 @@ public class C3DRippler extends StackPane {
 		return StyleableProperties.STYLEABLES;
 	}
 
+	
 
 }

@@ -35,7 +35,7 @@ public class C3DButton extends Button {
 	}
 
     private void initialize() {
-    	this.getStyleClass().add("c3d-button");
+    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
     
 	@Override
@@ -43,14 +43,16 @@ public class C3DButton extends Button {
 		return new C3DButtonSkin(this);
 	}
 	
-	public static enum ButtonType{FLAT, RAISED};
-	
-	
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	private static final String DEFAULT_STYLE_CLASS = "c3d-button";
+	
+	
+	public static enum ButtonType{FLAT, RAISED};
 	
 	private StyleableObjectProperty<ButtonType> buttonType = new SimpleStyleableObjectProperty<ButtonType>(StyleableProperties.BUTTON_TYPE, C3DButton.this, "buttonType", ButtonType.FLAT );
 

@@ -39,8 +39,7 @@ public class C3DPopup extends StackPane {
 	}
 
 	public C3DPopup(Pane popupContainer, Region content) {
-		this.setVisible(false);
-		this.getStyleClass().add("c3d-popup");
+		initialize();
 		setContent(content);
 		setPopupContainer(popupContainer);
 	}
@@ -159,7 +158,7 @@ public class C3DPopup extends StackPane {
 
 	/***************************************************************************
 	 *                                                                         *
-	 * Transitions                                                             *
+	 * Animations                                                             *
 	 *                                                                         *
 	 **************************************************************************/
 
@@ -170,7 +169,6 @@ public class C3DPopup extends StackPane {
 		scaleTransform.setY(0);
 
 	}
-
 
 
 	private class PopupTransition extends CachedTimelineTransition {
@@ -206,7 +204,18 @@ public class C3DPopup extends StackPane {
 
 	}
 
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
 
+	private static final String DEFAULT_STYLE_CLASS = "c3d-popup";
+
+	private void initialize() {
+		this.setVisible(false);
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
 
 
 }
