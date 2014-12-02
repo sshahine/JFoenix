@@ -2,6 +2,7 @@ package com.cctintl.c3dfx.demos.components;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
@@ -17,9 +18,9 @@ public class SliderDemo extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			C3DSlider c3dSlider = new C3DSlider();
-			c3dSlider.setMinWidth(700);
-			//c3dSlider.setMinHeight(500);
-			//c3dSlider.setOrientation(Orientation.VERTICAL);
+			//c3dSlider.setMinWidth(700);
+			c3dSlider.setMinHeight(500);
+			c3dSlider.setOrientation(Orientation.VERTICAL);
 			//c3dSlider.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, null, null)));
 
 			Slider slider = new Slider();

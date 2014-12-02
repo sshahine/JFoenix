@@ -227,6 +227,11 @@
  *                                                                             *
  ******************************************************************************/
 
+.c3d-slider {
+	-fx-indicator-position: left;
+}
+
+
 .c3d-slider > .thumb {
 	-fx-stroke: #0F9D58;
 	-fx-stroke-width: 2;
@@ -251,6 +256,10 @@
 * For the main demo sliders 						   *
 *                          							   *
 *******************************************************/
+
+.c3d-slider-style {
+	-fx-indicator-position: right;
+}
 
 .c3d-slider-style > .thumb {
 	-fx-stroke: blue;

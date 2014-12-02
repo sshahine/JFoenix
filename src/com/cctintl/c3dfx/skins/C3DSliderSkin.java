@@ -19,19 +19,21 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import com.cctintl.c3dfx.controls.C3DSlider;
+import com.cctintl.c3dfx.controls.C3DSlider.IndicatorPosition;
 import com.sun.javafx.scene.control.behavior.SliderBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
 /**
- * Region/css based skin for Slider
+ * Region/css based skin for C3DSlider
 */
 public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	/** Track if slider is vertical/horizontal and cause re layout */
-	private boolean isHorizontal;
+	private boolean isHorizontal, isIndicatorLeft;
 
 	private Color thumbColor, initialThumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
-	private double thumbRadius, trackStart, trackLength, thumbTop, thumbLeft, preDragThumbPos;
+	private double thumbRadius, trackStart, trackLength, thumbTop, thumbLeft, preDragThumbPos, indicatorRotation, horizontalRotation, rotationAngle = 45, shifting;
 	private Point2D dragStart; // in skin coordinates
 
 	private Circle thumb;
@@ -42,9 +44,10 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	private Timeline timeline;
 
-	public C3DSliderSkin(Slider slider) {
+	public C3DSliderSkin(C3DSlider slider) {
 		super(slider, new SliderBehavior(slider));
 
+		isIndicatorLeft = slider.getIndicatorPosition() == IndicatorPosition.LEFT ? true : false;
 		initialize();
 
 		slider.requestLayout();
@@ -69,6 +72,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		sliderValue.getStyleClass().setAll("sliderValue");
 
 		animatedThumb = new StackPane();
+		animatedThumb.getChildren().add(sliderValue);
 
 		getChildren().clear();
 		getChildren().addAll(track, coloredTrack, animatedThumb, thumb);
@@ -211,15 +215,26 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		double stroke = thumb.getStrokeWidth();
 		double radius = thumb.getRadius();
 		thumbRadius = stroke > radius ? stroke : radius;
+		shifting = 30 + thumbRadius;
+
+		if (!isHorizontal) {
+			horizontalRotation = -90;
+		}
+		
+		System.out.println(isIndicatorLeft);
+
+		if (!isIndicatorLeft) {
+			indicatorRotation = 180;
+			shifting = -shifting;
+		}
 	}
 
 	private void initializeComponents() {
-		sliderValue.setRotate(isHorizontal ? 45 : -45);
+		sliderValue.setRotate(rotationAngle + indicatorRotation + 3 * horizontalRotation);
 
 		animatedThumb.resize(30, 30);
-		animatedThumb.setRotate(isHorizontal ? -45 : 45);
+		animatedThumb.setRotate(-rotationAngle + indicatorRotation + horizontalRotation);
 		animatedThumb.backgroundProperty().bind(Bindings.createObjectBinding(() -> new Background(new BackgroundFill(thumb.getStroke(), new CornerRadii(50, 50, 50, 0, true), null)), thumb.strokeProperty()));
-		animatedThumb.getChildren().add(sliderValue);
 		animatedThumb.setScaleX(0);
 		animatedThumb.setScaleY(0);
 
@@ -274,7 +289,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 		thumb.layoutXProperty().addListener((o, oldVal, newVal) -> {
 			if (isHorizontal) {
-				animatedThumb.setLayoutX(newVal.doubleValue() - 2 * thumb.getRadius());
+				animatedThumb.setLayoutX(newVal.doubleValue() - 2 * thumbRadius - 1);
 				long value = Math.round(getSkinnable().getValue());
 				sliderValue.setText("" + value);
 				if (coloredTrack.getStartX() < newVal.doubleValue()) {
@@ -295,7 +310,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 		thumb.layoutYProperty().addListener((o, oldVal, newVal) -> {
 			if (!isHorizontal) {
-				animatedThumb.setLayoutY(newVal.doubleValue() - 2 * thumb.getRadius());
+				animatedThumb.setLayoutY(newVal.doubleValue() - 2 * thumbRadius - 1);
 				long value = Math.round(getSkinnable().getValue());
 				sliderValue.setText("" + value);
 				if (coloredTrack.getStartY() > newVal.doubleValue()) {
@@ -317,16 +332,31 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	private void initializeTimeline() {
 		if (isHorizontal) {
-			double thumbPosY = thumb.getLayoutY() - 2 * thumb.getRadius();
-			timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(animatedThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(animatedThumb.scaleYProperty(), 0, Interpolator.EASE_BOTH),
-					new KeyValue(animatedThumb.layoutYProperty(), thumbPosY, Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2),
-					new KeyValue(animatedThumb.scaleXProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(animatedThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(
-							animatedThumb.layoutYProperty(), thumbPosY - 30, Interpolator.EASE_BOTH)));
+			double thumbPosY = thumb.getLayoutY() - thumbRadius;
+			timeline = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,
+							new KeyValue(animatedThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.scaleYProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.layoutYProperty(), thumbPosY, Interpolator.EASE_BOTH)),
+					new KeyFrame(
+							Duration.seconds(0.2),
+							new KeyValue(animatedThumb.scaleXProperty(), 1, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH),
+							new KeyValue( animatedThumb.layoutYProperty(), thumbPosY - shifting, Interpolator.EASE_BOTH)));
 		} else {
-			timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(animatedThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH), new KeyValue(animatedThumb.scaleYProperty(), 0, Interpolator.EASE_BOTH),
-					new KeyValue(animatedThumb.layoutXProperty(), thumb.getLayoutX(), Interpolator.EASE_BOTH)), new KeyFrame(Duration.seconds(0.2), new KeyValue(animatedThumb.scaleXProperty(), 1,
-					Interpolator.EASE_BOTH), new KeyValue(animatedThumb.scaleXProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(animatedThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH), new KeyValue(
-					animatedThumb.layoutXProperty(), thumb.getLayoutX() + 30, Interpolator.EASE_BOTH)));
+			double thumbPosX = thumb.getLayoutX() - thumbRadius;
+			timeline = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,
+							new KeyValue(animatedThumb.scaleXProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.scaleYProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.layoutXProperty(), thumbPosX, Interpolator.EASE_BOTH)),
+					new KeyFrame(
+							Duration.seconds(0.2),
+							new KeyValue(animatedThumb.scaleXProperty(), 1, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.scaleYProperty(), 1, Interpolator.EASE_BOTH),
+							new KeyValue(animatedThumb.layoutXProperty(), thumbPosX - shifting, Interpolator.EASE_BOTH)));
 		}
 	}
 
