@@ -185,9 +185,9 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	}
 
 	private void initializeStyles() {
-		if (track.getFill() != null) {
-			Color temp = (Color) track.getFill();
-			if (temp != null) {
+		if (track.getStroke() != null) {
+			Color temp = (Color) track.getStroke();
+			if (temp != Color.BLACK) {
 				trackColor = temp;
 			}
 		}
