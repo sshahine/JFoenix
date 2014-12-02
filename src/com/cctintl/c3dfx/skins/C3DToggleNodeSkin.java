@@ -4,7 +4,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
 import com.cctintl.c3dfx.controls.C3DToggleNode;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
@@ -25,7 +24,7 @@ public class C3DToggleNodeSkin extends ToggleButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {			
 		if(invalid){
-			rippler = new C3DRippler(getSkinnable().getGraphic(),RipplerMask.CIRCLE,RipplerPos.BACK);
+			rippler = new C3DRippler(getSkinnable().getGraphic(),RipplerPos.BACK);
 			getSkinnable().selectedProperty().addListener((o,oldVal,newVal)->{
 				rippler.toggle();
 			});

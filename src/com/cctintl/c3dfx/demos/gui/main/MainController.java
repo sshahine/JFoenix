@@ -24,7 +24,7 @@ import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
 import com.cctintl.c3dfx.controls.C3DRippler;
 import com.cctintl.c3dfx.datafx.AnimatedFlowContainer;
 import com.cctintl.c3dfx.demos.gui.sidemenu.SideMenuController;
-import com.cctintl.c3dfx.demos.gui.uicomponents.SliderController;
+import com.cctintl.c3dfx.demos.gui.uicomponents.ButtonController;
 
 @FXMLController(value = "/resources/fxml/Main.fxml", title = "Material Design Example")
 public class MainController {
@@ -32,25 +32,19 @@ public class MainController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
-	@FXML
-	private StackPane root;
-	@FXML
-	private StackPane content;
-	@FXML
-	private StackPane sideContent;
-
-	@FXML
+	@FXML private StackPane root;
+	@FXML private StackPane content;
+	@FXML private StackPane sideContent;
+	
 	@FXML private StackPane titleBurgerContainer;
-	@FXML private StackPane optionsBurger;
-	private C3DHamburger optionsBurger;
-	@FXML
-	private C3DRippler optionsRippler;
-	@FXML
-	private C3DDrawer drawer;
-	@FXML
-	private C3DPopup toolbarPopup;
-	@FXML
-	private Label exit;
+	@FXML private C3DHamburger titleBurger;
+	
+	@FXML private StackPane optionsBurger;	
+	@FXML private C3DRippler optionsRippler;
+	
+	@FXML private C3DDrawer drawer;
+	@FXML private C3DPopup toolbarPopup;
+	@FXML private Label exit;
 
 	private FlowHandler flowHandler;
 	private FlowHandler sideMenuFlowHandler;
@@ -94,7 +88,7 @@ public class MainController {
 		// create the inner flow and content
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(SliderController.class);
+		Flow innerFlow = new Flow(ButtonController.class);
 
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);
