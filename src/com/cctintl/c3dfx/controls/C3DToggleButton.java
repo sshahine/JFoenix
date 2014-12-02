@@ -34,7 +34,6 @@ public class C3DToggleButton extends ToggleButton {
 		this.getStyleClass().add("c3d-toggle-button");        
 	}
 	
-	
 
 	/**
 	 *  styleable properties 

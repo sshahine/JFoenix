@@ -510,6 +510,27 @@
 	-fx-font-size: 14px;
 }
 
+.toggle-icon1 .icon{
+	-fx-text-fill: #4285F4;
+	-fx-padding:20;
+}
+.toggle-icon1 .c3d-rippler{
+	-fx-rippler-fill: rgba(66,133,244,0.29885056614875793);
+}
+.toggle-icon2 .icon{
+	-fx-text-fill: RED;
+}
+.toggle-icon2 .c3d-rippler{
+	-fx-rippler-fill: RED;
+}
+.toggle-icon3 .icon{
+	-fx-text-fill: rgb(204,204,51);
+	-fx-padding:10;
+}
+.toggle-icon3 .c3d-rippler{
+	-fx-rippler-fill: #0F9D58;
+}
+
 /*******************************************************************************
 *                                                                              *
 * C3D Spinner                                                                  *

@@ -38,17 +38,21 @@
 				<C3DToolbar>
 					<leftItems>
 						<C3DRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
-							<C3DHamburger fx:id="titleBurger"> 
-								<HamburgerBackArrowBasicTransition />
-							</C3DHamburger>
+							<StackPane fx:id="titleBurgerContainer">
+								<C3DHamburger fx:id="titleBurger">
+									<HamburgerBackArrowBasicTransition />
+								</C3DHamburger>
+							</StackPane>
 						</C3DRippler>
 						<Label>Google</Label>
 					</leftItems>
 					<rightItems>
 						<C3DRippler fx:id="optionsRippler" maskType="CIRCLE"
 							style="-fx-ripple-color:WHITE;">
-							<C3DHamburger fx:id="optionsBurger" styleClass="c3d-options-burger">
-							</C3DHamburger>
+							<StackPane fx:id="optionsBurger">
+								<C3DHamburger styleClass="c3d-options-burger">
+								</C3DHamburger>
+							</StackPane>
 						</C3DRippler>
 					</rightItems>
 				</C3DToolbar>
