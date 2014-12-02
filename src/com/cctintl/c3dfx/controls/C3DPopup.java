@@ -184,6 +184,7 @@ public class C3DPopup extends StackPane {
 							),
 							new KeyFrame(Duration.millis(10),
 									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH),
 									new KeyValue(scaleTransform.xProperty(), 0,Interpolator.EASE_BOTH),
 									new KeyValue(scaleTransform.yProperty(), 0,Interpolator.EASE_BOTH)
 									),
@@ -193,12 +194,13 @@ public class C3DPopup extends StackPane {
 											),		
 											new KeyFrame(Duration.millis(1000),
 													new KeyValue(content.opacityProperty(), 1 ,Interpolator.EASE_BOTH),
+													new KeyValue(overlayPane.opacityProperty(), 1 ,Interpolator.EASE_BOTH),
 													new KeyValue(scaleTransform.yProperty(), 1  ,Interpolator.EASE_BOTH)
 
 													)
 					)
 					);
-			setCycleDuration(Duration.seconds(0.5));
+			setCycleDuration(Duration.seconds(0.4));
 			setDelay(Duration.seconds(0));
 		}
 

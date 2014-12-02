@@ -34,8 +34,6 @@
 					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-c3d-button-raised"></C3DButton>
 				</children>
 			</HBox>
-			
-			
 		</children>
 	</VBox>
 </StackPane>
