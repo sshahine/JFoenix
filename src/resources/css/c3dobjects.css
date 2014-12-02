@@ -164,7 +164,8 @@
 }
 
 .c3d-tool-bar .c3d-hamburger-icon{
-	-fx-translate-y: 18px;
+	-fx-translate-y: 10px;
+	-fx-padding:10;
 }
 .c3d-tool-bar .c3d-hamburger-icon SVGPath{
 	-fx-fill: WHITE;
@@ -172,8 +173,6 @@
 
 .c3d-tool-bar .c3d-options-burger {
 	-fx-scale-x: 0.1;
-	-fx-padding:10;
-	-fx-translate-y: 10px;
 }
 
 .c3d-tool-bar .c3d-rippler {

@@ -37,9 +37,11 @@
 			<VBox spacing="20">
 				<C3DToolbar>
 					<leftItems>
-						<C3DHamburger fx:id="titleBurger">
-							<HamburgerBackArrowBasicTransition />
-						</C3DHamburger>
+						<C3DRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
+							<C3DHamburger fx:id="titleBurger"> 
+								<HamburgerBackArrowBasicTransition />
+							</C3DHamburger>
+						</C3DRippler>
 						<Label>Google</Label>
 					</leftItems>
 					<rightItems>
@@ -70,7 +72,7 @@
 			</C3DDrawer>
 		</center>
 	</BorderPane>
-	
+
 	<C3DPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
 		<C3DListView styleClass="option-list-view">
 			<Label>
