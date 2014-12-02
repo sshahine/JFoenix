@@ -136,7 +136,7 @@
 	-fx-stroke-line-join: MITER;
 	-fx-stroke-line-cap: BUTT;
 	-fx-stroke-dash-offset: 0.0;
-	-fx-fill: BLUE;
+	-fx-fill: #5264AE;
 }
 
 /*******************************************************************************
@@ -164,7 +164,8 @@
 }
 
 .c3d-tool-bar .c3d-hamburger-icon{
-	-fx-translate-y: 18px;
+	-fx-translate-y: 10px;
+	-fx-padding:10;
 }
 .c3d-tool-bar .c3d-hamburger-icon SVGPath{
 	-fx-fill: WHITE;
@@ -172,8 +173,6 @@
 
 .c3d-tool-bar .c3d-options-burger {
 	-fx-scale-x: 0.1;
-	-fx-padding:10;
-	-fx-translate-y: 10px;
 }
 
 .c3d-tool-bar .c3d-rippler {
@@ -219,7 +218,7 @@
 }
 
 .custom-c3d-radio-button .dot {
-	-fx-fill: Blue;
+	-fx-fill: #5264AE;
 }
 
 /*******************************************************************************
@@ -278,7 +277,7 @@
 *******************************************************************************/
 
 /*.c3d-rippler {
-	-fx-rippler-fill: BLUE;
+	-fx-rippler-fill: #5264AE;
 	-fx-mask-type: RECT;
 }*/
 .c3d-rippler:hover {
@@ -321,9 +320,9 @@
 }
 
 .custom-c3d-check-box-all-colored{
-	 -fx-checked-color: BLUE;
-	 -fx-unchecked-color: BLUE;
-	 -fx-text-fill:BLUE;
+	 -fx-checked-color: #5264AE;
+	 -fx-unchecked-color: #5264AE;
+	 -fx-text-fill:#5264AE;
 }
 
 .custom-c3d-check-box-text-colored{
@@ -358,7 +357,7 @@
 }
 .custom-c3d-progress-bar-stroke{
 	-fx-track-color: #C8C8C8 ;
-	-fx-progress-color: BLUE;
+	-fx-progress-color: #5264AE;
 	-fx-stroke-width:5.0;
 }
 
@@ -425,7 +424,7 @@
 }
 
 .c3d-list-cell .c3d-rippler {
-	-fx-rippler-fill:BLUE;
+	-fx-rippler-fill:#5264AE;
 }
 
 .c3d-list-view {
@@ -480,7 +479,7 @@
 }
 
 .custom-c3d-list-view-icon {
-	-fx-text-fill: BLUE;
+	-fx-text-fill: #5264AE;
 	-fx-padding: 0 10 0 5  ;
 	-fx-cursor: hand;
 }
