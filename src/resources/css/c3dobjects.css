@@ -281,7 +281,7 @@
 }
 
 .c3d-slider-style .track {
-	-fx-stroke: rgb(128,0,0);
+	-fx-stroke: rgb(230,230,153);
     -fx-stroke-width: 5;
 }
 

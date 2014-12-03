@@ -221,8 +221,6 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 			horizontalRotation = -90;
 		}
 		
-		System.out.println(isIndicatorLeft);
-
 		if (!isIndicatorLeft) {
 			indicatorRotation = 180;
 			shifting = -shifting;
