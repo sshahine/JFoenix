@@ -1,7 +1,5 @@
 package com.cctintl.c3dfx.demos.components;
 
-import com.cctintl.c3dfx.controls.C3DToggleButton;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +11,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DToggleButton;
+import com.cctintl.c3dfx.controls.C3DToggleNode;
+
+import de.jensd.fx.fontawesome.Icon;
 
 public class ToggleButtonDemo extends Application {
 
@@ -29,6 +32,14 @@ public class ToggleButtonDemo extends Application {
 		pane.getChildren().add(button);
 		
 		pane.getChildren().add(new C3DToggleButton());
+		
+		C3DToggleNode node = new C3DToggleNode();
+		Icon value = new Icon("HEART");
+		value.setPadding(new Insets(10));
+		node.setGraphic(value);
+		node.setText("AA");
+		
+		pane.getChildren().add(node);
 		
 		StackPane main = new StackPane();
 		main.getChildren().add(pane);

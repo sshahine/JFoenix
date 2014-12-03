@@ -31,19 +31,24 @@ public class C3DProgressBar extends ProgressBar {
 		initialize();
 	}
 	
-	private void initialize() {
-		this.getStyleClass().add("c3d-progress-bar");        
-	}
-	
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new C3DProgressBarSkin(this);		
 	}
 	
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
 
-	/**
-	 *  styleable properties 
-	 */
+	private static final String DEFAULT_STYLE_CLASS = "c3d-progress-bar";
+	
+	private void initialize() {
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
+	
+	
 	private StyleableObjectProperty<Paint> trackColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.TRACK_COLOR, C3DProgressBar.this, "trackColor", Color.valueOf("#C8C8C8"));
 
 	public Paint getTrackColor(){

@@ -89,6 +89,7 @@ public class C3DTextField extends TextField {
 	 * styleable Properties                                                    *
 	 *                                                                         *
 	 **************************************************************************/
+	
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, C3DTextField.this, "unFocusColor", Color.rgb(77, 77, 77));
 
 	public Paint getUnFocusColor() {

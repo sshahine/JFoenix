@@ -1,6 +1,7 @@
-package com.cctintl.c3dfx.demos;
+package com.cctintl.c3dfx.demos.components;
 
 import com.cctintl.c3dfx.controls.C3DSpinner;
+import com.cctintl.c3dfx.demos.MainDemo;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,6 +15,7 @@ public class SpinnerDemo extends Application {
 
 		final Group group = new Group();
 		final Scene scene = new Scene(group, 800, 800);
+		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("C3D Spinner");
 		stage.show();

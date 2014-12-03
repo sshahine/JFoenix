@@ -34,11 +34,13 @@ public class C3DToggleButton extends ToggleButton {
 		this.getStyleClass().add("c3d-toggle-button");        
 	}
 	
-	
 
-	/**
-	 *  styleable properties 
-	 */
+	/***************************************************************************
+	 *                                                                         *
+	 * styleable Properties                                                    *
+	 *                                                                         *
+	 **************************************************************************/
+	
 	private StyleableObjectProperty<Paint> toggleColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.TOGGLE_COLOR, C3DToggleButton.this, "toggleColor", Color.valueOf("#0F9D58"));
 
 	public Paint getToggleColor(){

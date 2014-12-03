@@ -59,10 +59,9 @@ public class C3DListCell<T> extends ListCell<T> {
 					cellContainer.getChildren().add((Node) item);
 					cellContainer.getStyleClass().add("c3d-list-cell-container");
 					// propagate mouse events to all children
-					cellContainer.addEventHandler(MouseEvent.ANY, (e)->{
-						e.consume();
-						((Node) item).fireEvent(e);
-					});
+					cellContainer.addEventHandler(MouseEvent.ANY, (e)-> ((Node) item).fireEvent(e));
+					((Node) item).addEventHandler(MouseEvent.ANY, (e)-> e.consume());
+					
 					
 					cellRippler = new C3DListCellRippler(cellContainer);
 					// propagate mouse events to parent

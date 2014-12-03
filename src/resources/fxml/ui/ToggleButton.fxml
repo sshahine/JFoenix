@@ -5,22 +5,41 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.Label?>
+<?import com.cctintl.c3dfx.controls.C3DToggleNode?>
+<?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 300">
+	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 0 0 200">
 
 	<VBox prefWidth="300" spacing="50">
-		<FlowPane hgap="96">
+		<Label styleClass="title-label">Toggle Buttons</Label>
+		<FlowPane hgap="96" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Wifi </Label>
 			<C3DToggleButton>
 			</C3DToggleButton>
 		</FlowPane>
-		<FlowPane hgap="60">
+		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Bluetooth
 			</Label>
 			<C3DToggleButton styleClass="custom-c3d-toggle-button">
 			</C3DToggleButton>
 		</FlowPane>
+
+		<Label styleClass="title-label">Toggle Icons</Label>
+
+		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
+			<C3DToggleNode styleClass="toggle-icon1">
+				<Icon awesomeIcon="PHONE" size="2em" style=";" styleClass="icon" />
+			</C3DToggleNode>
+			<C3DToggleNode styleClass="toggle-icon2">
+				<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
+			</C3DToggleNode>
+			<C3DToggleNode styleClass="toggle-icon3">
+				<Icon awesomeIcon="KEY" size="2em" style=";" styleClass="icon" />
+			</C3DToggleNode>
+
+		</FlowPane>
+
 	</VBox>
 
 </StackPane>

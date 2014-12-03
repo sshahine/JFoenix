@@ -24,6 +24,12 @@ public class C3DDialogLayout extends StackPane {
 		this.getChildren().add(layout);
 	}
 
+	/***************************************************************************
+	 *                                                                         *
+	 * Setters / Getters                                                       *
+	 *                                                                         *
+	 **************************************************************************/
+	
 	public ObservableList<Node> getHeading() {
 		return heading.getChildren();
 	}

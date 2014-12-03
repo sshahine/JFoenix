@@ -11,18 +11,23 @@ public class C3DToolbar extends StackPane {
 	
 	private BorderPane toolBar = new  BorderPane();
 	private BorderPane container = new BorderPane();
-	
 	private HBox leftBox = new HBox();
 	private HBox rightBox = new HBox();
 
 	public C3DToolbar() {
+		initialize();
 		toolBar.setLeft(leftBox);
 		toolBar.setRight(rightBox);
-		toolBar.getStyleClass().add("c3d-tool-bar");
 		DepthManager.setDepth(toolBar, 1);
 		container.setTop(toolBar);
 		this.getChildren().add(container);
 	}
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * Setters / Getters                                                       *
+	 *                                                                         *
+	 **************************************************************************/
 	
 	public void setLeftItems(Node... nodes){
 		this.leftBox.getChildren().addAll(nodes);
@@ -47,5 +52,18 @@ public class C3DToolbar extends StackPane {
 	public Node getContent(){
 		return this.container;
 	}
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * Stylesheet Handling                                                     *
+	 *                                                                         *
+	 **************************************************************************/
+
+	private static final String DEFAULT_STYLE_CLASS = "c3d-tool-bar";
+
+	private void initialize() {
+		toolBar.getStyleClass().add(DEFAULT_STYLE_CLASS);
+	}
+	
 
 }

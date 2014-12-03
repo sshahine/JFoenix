@@ -3,15 +3,39 @@
 <?import javafx.scene.layout.StackPane?>
 <?import com.cctintl.c3dfx.controls.C3DSlider?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
 	<VBox spacing="50">
 		<children>
-			<C3DSlider orientation="VERTICAL">
-			</C3DSlider>
-			<C3DSlider>
-			</C3DSlider>
+			<HBox spacing="100">
+				<children>
+					<C3DSlider orientation="VERTICAL" prefHeight="300">
+					</C3DSlider>
+					<C3DSlider orientation="VERTICAL" styleClass="c3d-slider-style" prefHeight="200">
+					</C3DSlider>
+					<C3DSlider orientation="VERTICAL" prefHeight="200" disable="true">
+					</C3DSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50">
+				<children>
+					<C3DSlider prefWidth="400">
+					</C3DSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50">
+				<children>
+					<C3DSlider styleClass="c3d-slider-style" prefWidth="300">
+					</C3DSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50">
+				<children>
+					<C3DSlider prefWidth="400" disable="true">
+					</C3DSlider>
+				</children>
+			</HBox>
 		</children>
 	</VBox>
 </StackPane>

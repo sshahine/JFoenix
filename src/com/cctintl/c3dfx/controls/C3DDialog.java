@@ -37,7 +37,7 @@ public class C3DDialog extends StackPane {
 
 	private StackPane contentHolder;
 	private StackPane overlayPane;
-	
+
 	private double offsetX = 0;
 	private double offsetY = 0;
 
@@ -49,13 +49,17 @@ public class C3DDialog extends StackPane {
 		this(null,null,C3DDialogTransition.CENTER);
 	}
 
-	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {
-		this.setVisible(false);
+	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {		
+		initialize();
 		setContent(content);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
 	}
 
+	private void initialize() {
+		this.setVisible(false);
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
 
 	/***************************************************************************
 	 *                                                                         *
@@ -72,10 +76,12 @@ public class C3DDialog extends StackPane {
 			this.dialogContainer = dialogContainer;
 			// close the dialog if clicked on the overlay pane
 			overlayPane.setOnMouseClicked((e)->close());
+			this.dialogContainer.getChildren().remove(overlayPane);
 			this.dialogContainer.getChildren().add(overlayPane);
 			// FIXME: need to be improved to consider only the parent boundary
 			offsetX = (overlayPane.getParent().getBoundsInLocal().getWidth());
 			offsetY = (overlayPane.getParent().getBoundsInLocal().getHeight());
+			animation = getShowAnimation(transitionType.get());
 		}
 	}
 
@@ -94,7 +100,9 @@ public class C3DDialog extends StackPane {
 			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 			overlayPane = new StackPane();
 			overlayPane.getChildren().add(contentHolder);
+			overlayPane.getStyleClass().add("c3d-dialog-overlay-pane");
 			StackPane.setAlignment(contentHolder, Pos.CENTER);
+			overlayPane.setVisible(false);
 			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
@@ -106,24 +114,23 @@ public class C3DDialog extends StackPane {
 	 * Public API                                                              *
 	 *                                                                         *
 	 **************************************************************************/
-	
+
 	public void show(Pane dialogContainer){
 		this.setDialogContainer(dialogContainer);
-		getShowAnimation(transitionType.get()).play();
+		animation.play();
 	}
 
 	public void show(){
-		getShowAnimation(transitionType.get()).play();
+		animation.play();
 	}
 
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
 		animation.setOnFinished((e)->{
-			this.dialogContainer.getChildren().remove(overlayPane);
 			resetProperties();
 		});
-		
+
 	}
 
 	/***************************************************************************
@@ -131,9 +138,9 @@ public class C3DDialog extends StackPane {
 	 * Transitions                                                             *
 	 *                                                                         *
 	 **************************************************************************/
-	
+
 	private Transition getShowAnimation(C3DDialogTransition transitionType){
-		animation = null;
+		Transition animation = null;
 		if(contentHolder!=null){
 			switch (transitionType) {		
 			case LEFT:	
@@ -163,17 +170,24 @@ public class C3DDialog extends StackPane {
 	}
 
 	private void resetProperties(){
+		overlayPane.setVisible(false);	
 		contentHolder.setTranslateX(0);
 		contentHolder.setTranslateY(0);
 		contentHolder.setScaleX(1);
 		contentHolder.setScaleY(1);
 	}
-	
+
 	private class LeftTransition extends CachedTimelineTransition {
 		public LeftTransition() {
 			super(contentHolder, new Timeline(
-					new KeyFrame(Duration.ZERO, new KeyValue(contentHolder.translateXProperty(), -offsetX ,Interpolator.EASE_BOTH)),
-					new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
+					new KeyFrame(Duration.ZERO, 
+							new KeyValue(contentHolder.translateXProperty(), -offsetX ,Interpolator.EASE_BOTH),
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(Duration.millis(10), 
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -184,8 +198,14 @@ public class C3DDialog extends StackPane {
 	private class RightTransition extends CachedTimelineTransition {
 		public RightTransition() {
 			super(contentHolder, new Timeline(
-					new KeyFrame(Duration.ZERO, new KeyValue(contentHolder.translateXProperty(), offsetX ,Interpolator.EASE_BOTH)),
-					new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
+					new KeyFrame(Duration.ZERO, 
+							new KeyValue(contentHolder.translateXProperty(), offsetX ,Interpolator.EASE_BOTH),
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(Duration.millis(10), 
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -196,8 +216,14 @@ public class C3DDialog extends StackPane {
 	private class TopTransition extends CachedTimelineTransition {
 		public TopTransition() {
 			super(contentHolder, new Timeline(
-					new KeyFrame(Duration.ZERO, new KeyValue(contentHolder.translateYProperty(), -offsetY ,Interpolator.EASE_BOTH)),
-					new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
+					new KeyFrame(Duration.ZERO, 
+							new KeyValue(contentHolder.translateYProperty(), -offsetY ,Interpolator.EASE_BOTH),
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(Duration.millis(10), 
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -208,8 +234,14 @@ public class C3DDialog extends StackPane {
 	private class BottomTransition extends CachedTimelineTransition {
 		public BottomTransition() {
 			super(contentHolder, new Timeline(
-					new KeyFrame(Duration.ZERO, new KeyValue(contentHolder.translateYProperty(), offsetY ,Interpolator.EASE_BOTH)),
-					new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
+					new KeyFrame(Duration.ZERO, 
+							new KeyValue(contentHolder.translateYProperty(), offsetY ,Interpolator.EASE_BOTH),
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(Duration.millis(10), 
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -222,12 +254,16 @@ public class C3DDialog extends StackPane {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 
 							new KeyValue(contentHolder.scaleXProperty(), 0 ,Interpolator.EASE_BOTH),
-							new KeyValue(contentHolder.scaleYProperty(), 0 ,Interpolator.EASE_BOTH)							
+							new KeyValue(contentHolder.scaleYProperty(), 0 ,Interpolator.EASE_BOTH),
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
-							new KeyFrame(Duration.millis(1000), 							
-									new KeyValue(contentHolder.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-									new KeyValue(contentHolder.scaleYProperty(), 1 ,Interpolator.EASE_BOTH)
-									))
+							new KeyFrame(Duration.millis(10), 
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),							
+									new KeyFrame(Duration.millis(1000), 							
+											new KeyValue(contentHolder.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
+											new KeyValue(contentHolder.scaleYProperty(), 1 ,Interpolator.EASE_BOTH)
+											))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -242,6 +278,9 @@ public class C3DDialog extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	private static final String DEFAULT_STYLE_CLASS = "c3d-dialog";
+	
+	
 	private StyleableObjectProperty<C3DDialogTransition> transitionType = new SimpleStyleableObjectProperty<C3DDialogTransition>(StyleableProperties.DIALOG_TRANSITION, C3DDialog.this, "dialogTransition", C3DDialogTransition.CENTER );
 
 	public C3DDialogTransition getTransitionType(){
