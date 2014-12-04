@@ -99,7 +99,6 @@
 }
 
 .popup-list-view {
-	-fx-pref-height: 233px;
 	-fx-pref-width:150px;
 }
 
@@ -194,7 +193,6 @@
 }
 
 .option-list-view {
-  	-fx-pref-height: 95px;
   	-fx-pref-width: 160px;
   	-fx-background-color: WHITE ;
 }

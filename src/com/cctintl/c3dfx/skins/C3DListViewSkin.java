@@ -291,7 +291,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             flow.resizeRelocate(x, y, w, h);
             // FIXME, CHANGE THE HEIGHT if 3D is active or not
             if(flow.getCellCount() > 0)
-            	getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get());
+            	getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2);
         }
     }
     
@@ -311,7 +311,8 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
     }
 
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        return 400;
+    	if (getSkinnable().getItems().size() <= 0) return 200;
+        return (flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2;
     }
     
     private void onFocusPreviousCell() {
