@@ -20,6 +20,7 @@ public class C3DSpinner extends Region {
 
 	public C3DSpinner() {
 		super();
+
 		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 		initialize();
 	}
@@ -33,6 +34,8 @@ public class C3DSpinner extends Region {
 		greenColor = Color.valueOf("#0F9D58");
 
 		arc = new Arc(20, 20, 12, 12, 0, 5);
+		arc.setFill(Color.TRANSPARENT);
+		arc.setStrokeWidth(3);
 		arc.getStyleClass().addAll("arc");
 
 		getChildren().add(arc);

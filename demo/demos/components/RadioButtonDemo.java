@@ -16,6 +16,7 @@ public class RadioButtonDemo extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			final ToggleGroup group = new ToggleGroup();
+
 			C3DRadioButton c3dRadio = new C3DRadioButton("C3D Radio");
 			c3dRadio.setId("c3d_radio");
 			c3dRadio.setPadding(new Insets(10));
@@ -39,6 +40,9 @@ public class RadioButtonDemo extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setWidth(500);
 			primaryStage.setHeight(400);
+
+			scene.getStylesheets().add(InputDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
+
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
