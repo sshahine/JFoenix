@@ -1,4 +1,4 @@
-package com.cctintl.c3dfx.datafx;
+package demos.datafx;
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.flow.FlowContainer;
 import io.datafx.controller.flow.container.ContainerAnimations;

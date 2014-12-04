@@ -41,7 +41,6 @@ import javafx.util.Duration;
 import com.sun.javafx.scene.control.skin.Utils;
 import com.sun.javafx.scene.traversal.Algorithm;
 import com.sun.javafx.scene.traversal.Direction;
-import com.sun.javafx.scene.traversal.ParentTraversalEngine;
 import com.sun.javafx.scene.traversal.TraversalContext;
 
 /**
@@ -764,98 +763,98 @@ public class VirtualFlow<T extends IndexedCell<?>> extends Region {
             startSBReleasedAnimation();
         });
 
-        setImpl_traversalEngine(new ParentTraversalEngine(this, new Algorithm() {
-
-            Node selectNextAfterIndex(int index, TraversalContext context) {
-                T nextCell;
-                while ((nextCell = getVisibleCell(++index)) != null) {
-                    if (nextCell.isFocusTraversable()) {
-                        return nextCell;
-                    }
-                    Node n = context.selectFirstInParent(nextCell);
-                    if (n != null) {
-                        return n;
-                    }
-                }
-                return null;
-            }
-
-            Node selectPreviousBeforeIndex(int index, TraversalContext context) {
-                T prevCell;
-                while ((prevCell = getVisibleCell(--index)) != null) {
-                    Node prev = context.selectLastInParent(prevCell);
-                    if (prev != null) {
-                        return prev;
-                    }
-                    if (prevCell.isFocusTraversable()) {
-                        return prevCell;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public Node select(Node owner, Direction dir, TraversalContext context) {
-                T cell;
-                if (cells.isEmpty()) return null;
-                if (cells.contains(owner)) {
-                    cell = (T) owner;
-                } else {
-                    cell = findOwnerCell(owner);
-                    Node next = context.selectInSubtree(cell, owner, dir);
-                    if (next != null) {
-                        return next;
-                    }
-                    if (dir == Direction.NEXT) dir = Direction.NEXT_IN_LINE;
-                }
-                int cellIndex = cell.getIndex();
-                switch(dir) {
-                    case PREVIOUS:
-                        return selectPreviousBeforeIndex(cellIndex, context);
-                    case NEXT:
-                        Node n = context.selectFirstInParent(cell);
-                        if (n != null) {
-                            return n;
-                        }
-                        // Intentional fall-through
-                    case NEXT_IN_LINE:
-                        return selectNextAfterIndex(cellIndex, context);
-                }
-                return null;
-            }
-
-            private T findOwnerCell(Node owner) {
-                Parent p = owner.getParent();
-                while (!cells.contains(p)) {
-                    p = p.getParent();
-                }
-                return (T)p;
-            }
-
-            @Override
-            public Node selectFirst(TraversalContext context) {
-                T firstCell = cells.getFirst();
-                if (firstCell == null) return null;
-                if (firstCell.isFocusTraversable()) return firstCell;
-                Node n = context.selectFirstInParent(firstCell);
-                if (n != null) {
-                    return n;
-                }
-                return selectNextAfterIndex(firstCell.getIndex(), context);
-            }
-
-            @Override
-            public Node selectLast(TraversalContext context) {
-                T lastCell = cells.getLast();
-                if (lastCell == null) return null;
-                Node p = context.selectLastInParent(lastCell);
-                if (p != null) {
-                    return p;
-                }
-                if (lastCell.isFocusTraversable()) return lastCell;
-                return selectPreviousBeforeIndex(lastCell.getIndex(), context);
-            }
-        }));
+//        setImpl_traversalEngine(new ParentTraversalEngine(this, new Algorithm() {
+//
+//            Node selectNextAfterIndex(int index, TraversalContext context) {
+//                T nextCell;
+//                while ((nextCell = getVisibleCell(++index)) != null) {
+//                    if (nextCell.isFocusTraversable()) {
+//                        return nextCell;
+//                    }
+//                    Node n = context.selectFirstInParent(nextCell);
+//                    if (n != null) {
+//                        return n;
+//                    }
+//                }
+//                return null;
+//            }
+//
+//            Node selectPreviousBeforeIndex(int index, TraversalContext context) {
+//                T prevCell;
+//                while ((prevCell = getVisibleCell(--index)) != null) {
+//                    Node prev = context.selectLastInParent(prevCell);
+//                    if (prev != null) {
+//                        return prev;
+//                    }
+//                    if (prevCell.isFocusTraversable()) {
+//                        return prevCell;
+//                    }
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            public Node select(Node owner, Direction dir, TraversalContext context) {
+//                T cell;
+//                if (cells.isEmpty()) return null;
+//                if (cells.contains(owner)) {
+//                    cell = (T) owner;
+//                } else {
+//                    cell = findOwnerCell(owner);
+//                    Node next = context.selectInSubtree(cell, owner, dir);
+//                    if (next != null) {
+//                        return next;
+//                    }
+//                    if (dir == Direction.NEXT) dir = Direction.NEXT_IN_LINE;
+//                }
+//                int cellIndex = cell.getIndex();
+//                switch(dir) {
+//                    case PREVIOUS:
+//                        return selectPreviousBeforeIndex(cellIndex, context);
+//                    case NEXT:
+//                        Node n = context.selectFirstInParent(cell);
+//                        if (n != null) {
+//                            return n;
+//                        }
+//                        // Intentional fall-through
+//                    case NEXT_IN_LINE:
+//                        return selectNextAfterIndex(cellIndex, context);
+//                }
+//                return null;
+//            }
+//
+//            private T findOwnerCell(Node owner) {
+//                Parent p = owner.getParent();
+//                while (!cells.contains(p)) {
+//                    p = p.getParent();
+//                }
+//                return (T)p;
+//            }
+//
+//            @Override
+//            public Node selectFirst(TraversalContext context) {
+//                T firstCell = cells.getFirst();
+//                if (firstCell == null) return null;
+//                if (firstCell.isFocusTraversable()) return firstCell;
+//                Node n = context.selectFirstInParent(firstCell);
+//                if (n != null) {
+//                    return n;
+//                }
+//                return selectNextAfterIndex(firstCell.getIndex(), context);
+//            }
+//
+//            @Override
+//            public Node selectLast(TraversalContext context) {
+//                T lastCell = cells.getLast();
+//                if (lastCell == null) return null;
+//                Node p = context.selectLastInParent(lastCell);
+//                if (p != null) {
+//                    return p;
+//                }
+//                if (lastCell.isFocusTraversable()) return lastCell;
+//                return selectPreviousBeforeIndex(lastCell.getIndex(), context);
+//            }
+//        }));
 
     }
 

@@ -60,7 +60,7 @@
 	-fx-padding: 24px 24px 16px 24px;
 	-fx-text-fill: rgba(0, 0, 0, 0.87);
 }
-.c3d-layout-title {
+.c3d-layout-heading {
 	-fx-font-size: 20px;
 	-fx-font-weight: BOLD;
 	-fx-alignment: center-left;

@@ -22,8 +22,8 @@ import com.cctintl.c3dfx.controls.C3DPopup;
 import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
 import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
 import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.datafx.AnimatedFlowContainer;
 
+import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
 import demos.gui.uicomponents.ButtonController;
 
