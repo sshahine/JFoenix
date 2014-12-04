@@ -27,7 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.converters.DialogTransitionConverter;
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 @DefaultProperty(value="content")
 public class C3DDialog extends StackPane {

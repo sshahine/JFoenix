@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -21,6 +22,7 @@ import javafx.util.Duration;
 import com.cctintl.c3dfx.controls.C3DCheckBox;
 import com.cctintl.c3dfx.controls.C3DRippler;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
 public class C3DCheckBoxSkin extends CheckBoxSkin {
@@ -39,7 +41,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 	private final AnchorPane container = new AnchorPane();
 	private double labelOffset = 0;
 
-	private Timeline transition;
+	private Transition transition;
 
 	private boolean invalid = true;
 
@@ -120,7 +122,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 			leftLine.setStartY(maxHeight-padding-lineThick);
 			leftLine.setEndX((boxWidth+padding-labelOffset)/2 - boxWidth/5.5 );
 			leftLine.setEndY(maxHeight-padding-lineThick);
-			transition = getCheckBoxTransition();
+			transition = new CheckBoxTransition();
 			invalid = false;
 		}
 
@@ -157,98 +159,55 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		}
 	}
 
+	private class CheckBoxTransition extends CachedTimelineTransition {
 
-	private Timeline getCheckBoxTransition(){
-		return new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(rightLine.visibleProperty(), false,Interpolator.EASE_BOTH),
-						new KeyValue(leftLine.visibleProperty(), false,Interpolator.EASE_BOTH),
-						new KeyValue(box.rotateProperty(), 0 ,Interpolator.EASE_BOTH),
-						new KeyValue(box.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-						new KeyValue(box.scaleYProperty(), 1 ,Interpolator.EASE_BOTH),
-						new KeyValue(box.translateYProperty(), 0 ,Interpolator.EASE_BOTH),
-						new KeyValue(box.translateXProperty(), 0 ,Interpolator.EASE_BOTH),
-						new KeyValue(box.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
-						),
-						new KeyFrame(Duration.millis(160),
-								new KeyValue(rightLine.visibleProperty(), true,Interpolator.EASE_BOTH),
-								new KeyValue(leftLine.visibleProperty(), true,Interpolator.EASE_BOTH),
-								new KeyValue(rightLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-								new KeyValue(rightLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH),
-								new KeyValue(leftLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-								new KeyValue(leftLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(Duration.millis(200),
-										new KeyValue(box.rotateProperty(), 44 ,Interpolator.EASE_BOTH),
-										new KeyValue(box.scaleXProperty(), 0.3 ,Interpolator.EASE_BOTH),
-										new KeyValue(box.scaleYProperty(), 0.4 ,Interpolator.EASE_BOTH),
-										new KeyValue(box.translateYProperty(), boxHeight/12  ,Interpolator.EASE_BOTH),
-										new KeyValue(box.translateXProperty(), - boxWidth/12 ,Interpolator.EASE_BOTH)										
-										),											
-										new KeyFrame(Duration.millis(280),
-												new KeyValue(box.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-												),
-												new KeyFrame(
-														Duration.millis(400),
-														new KeyValue(rightLine.endXProperty(), boxWidth-padding-labelOffset + lineThick/2 ,Interpolator.EASE_BOTH),
-														new KeyValue(rightLine.endYProperty(), (maxHeight-padding)/2.4 ,Interpolator.EASE_BOTH),
-														new KeyValue(leftLine.endXProperty(), padding + lineThick/4 ,Interpolator.EASE_BOTH),
-														new KeyValue(leftLine.endYProperty(), (maxHeight-padding)/1.4 ,Interpolator.EASE_BOTH)
-														)
+		public CheckBoxTransition() {
+			super(box, new Timeline(
+					new KeyFrame(
+							Duration.ZERO,       
+							new KeyValue(rightLine.visibleProperty(), false,Interpolator.EASE_BOTH),
+							new KeyValue(leftLine.visibleProperty(), false,Interpolator.EASE_BOTH),
+							new KeyValue(box.rotateProperty(), 0 ,Interpolator.EASE_BOTH),
+							new KeyValue(box.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
+							new KeyValue(box.scaleYProperty(), 1 ,Interpolator.EASE_BOTH),
+							new KeyValue(box.translateYProperty(), 0 ,Interpolator.EASE_BOTH),
+							new KeyValue(box.translateXProperty(), 0 ,Interpolator.EASE_BOTH),
+							new KeyValue(box.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(Duration.millis(400),
+									new KeyValue(rightLine.visibleProperty(), true,Interpolator.EASE_BOTH),
+									new KeyValue(leftLine.visibleProperty(), true,Interpolator.EASE_BOTH),
+									new KeyValue(rightLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
+									new KeyValue(rightLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH),
+									new KeyValue(leftLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
+									new KeyValue(leftLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(500),
+											new KeyValue(box.rotateProperty(), 44 ,Interpolator.EASE_BOTH),
+											new KeyValue(box.scaleXProperty(), 0.3 ,Interpolator.EASE_BOTH),
+											new KeyValue(box.scaleYProperty(), 0.4 ,Interpolator.EASE_BOTH),
+											new KeyValue(box.translateYProperty(), boxHeight/12  ,Interpolator.EASE_BOTH),
+											new KeyValue(box.translateXProperty(), - boxWidth/12 ,Interpolator.EASE_BOTH)										
+											),											
+											new KeyFrame(Duration.millis(700),
+													new KeyValue(box.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
+													),
+													new KeyFrame(
+															Duration.millis(800),
+															new KeyValue(rightLine.endXProperty(), boxWidth-padding-labelOffset + lineThick/2 ,Interpolator.EASE_BOTH),
+															new KeyValue(rightLine.endYProperty(), (maxHeight-padding)/2.4 ,Interpolator.EASE_BOTH),
+															new KeyValue(leftLine.endXProperty(), padding + lineThick/4 ,Interpolator.EASE_BOTH),
+															new KeyValue(leftLine.endYProperty(), (maxHeight-padding)/1.4 ,Interpolator.EASE_BOTH)
+															)
 
-				);
+					)
+					);
+			// reduce the number to increase the shifting , increase number to reduce shifting
+			setCycleDuration(Duration.seconds(0.4));
+			setDelay(Duration.seconds(0));
+		}
+
 	}
-
-	//	private class CheckBoxTransition extends CachedTimelineTransition {
-	//
-	//		public CheckBoxTransition() {
-	//			super(box, new Timeline(
-	//					new KeyFrame(
-	//							Duration.ZERO,       
-	//							new KeyValue(rightLine.visibleProperty(), false,Interpolator.EASE_BOTH),
-	//							new KeyValue(leftLine.visibleProperty(), false,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.rotateProperty(), 0 ,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.scaleYProperty(), 1 ,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.translateYProperty(), 0 ,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.translateXProperty(), 0 ,Interpolator.EASE_BOTH),
-	//							new KeyValue(box.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
-	//							),
-	//							new KeyFrame(Duration.millis(400),
-	//									new KeyValue(rightLine.visibleProperty(), true,Interpolator.EASE_BOTH),
-	//									new KeyValue(leftLine.visibleProperty(), true,Interpolator.EASE_BOTH),
-	//									new KeyValue(rightLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-	//									new KeyValue(rightLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH),
-	//									new KeyValue(leftLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-	//									new KeyValue(leftLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH)
-	//									),
-	//									new KeyFrame(Duration.millis(500),
-	//											new KeyValue(box.rotateProperty(), 44 ,Interpolator.EASE_BOTH),
-	//											new KeyValue(box.scaleXProperty(), 0.3 ,Interpolator.EASE_BOTH),
-	//											new KeyValue(box.scaleYProperty(), 0.4 ,Interpolator.EASE_BOTH),
-	//											new KeyValue(box.translateYProperty(), boxHeight/12  ,Interpolator.EASE_BOTH),
-	//											new KeyValue(box.translateXProperty(), - boxWidth/12 ,Interpolator.EASE_BOTH)										
-	//											),											
-	//											new KeyFrame(Duration.millis(700),
-	//													new KeyValue(box.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-	//													),
-	//													new KeyFrame(
-	//															Duration.millis(800),
-	//															new KeyValue(rightLine.endXProperty(), boxWidth-padding-labelOffset + lineThick/2 ,Interpolator.EASE_BOTH),
-	//															new KeyValue(rightLine.endYProperty(), (maxHeight-padding)/2.4 ,Interpolator.EASE_BOTH),
-	//															new KeyValue(leftLine.endXProperty(), padding + lineThick/4 ,Interpolator.EASE_BOTH),
-	//															new KeyValue(leftLine.endYProperty(), (maxHeight-padding)/1.4 ,Interpolator.EASE_BOTH)
-	//															)
-	//
-	//					)
-	//					);
-	//			// reduce the number to increase the shifting , increase number to reduce shifting
-	//			setCycleDuration(Duration.seconds(0.4));
-	//			setDelay(Duration.seconds(0));
-	//		}
-	//
-	//	}
 
 
 }

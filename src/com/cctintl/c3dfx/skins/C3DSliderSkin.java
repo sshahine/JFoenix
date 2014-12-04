@@ -70,7 +70,8 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 		sliderValue = new Text();
 		sliderValue.getStyleClass().setAll("sliderValue");
-
+		sliderValue.setStyle("-fx-text-fill:WHITE;");
+		
 		animatedThumb = new StackPane();
 		animatedThumb.getChildren().add(sliderValue);
 
