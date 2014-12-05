@@ -1,114 +1,111 @@
 package com.cctintl.c3dfx.skins;
 
+import java.util.Collections;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DProgressBar;
-import com.sun.javafx.scene.control.skin.ProgressBarSkin;
+import com.sun.javafx.scene.control.behavior.BehaviorBase;
+import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
-public class C3DProgressBarSkin extends ProgressBarSkin {
+public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, BehaviorBase<ProgressIndicator>> {
 
-	private StackPane effectsPane;
+	private Color indicatorColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
+	private double trackStart, trackLength;
 
-	private Line line;
-	private Line progressLine;
-	private double barWidth;
-	private boolean invalid = true;
+	private Line track, bar;
+	private boolean initialization, isIndeterminate;
+
+	private Timeline timeline;
 
 	public C3DProgressBarSkin(C3DProgressBar bar) {
-		super(bar);
-		InvalidationListener listener = new InvalidationListener() {
-			@Override public void   invalidated(Observable valueModel) {
-				updateProgress();
-			}
-		};
-		bar.widthProperty().addListener(listener);		
-		bar.progressProperty().addListener(listener);
+		super(bar, new BehaviorBase<ProgressIndicator>(bar, Collections.emptyList()));
 
-		effectsPane  = new StackPane();
-		line = new Line();
-		progressLine = new Line();
-		effectsPane.getChildren().add(line);
-		effectsPane.getChildren().add(progressLine);
-		StackPane.setAlignment(progressLine, Pos.CENTER_LEFT);
+		initialize();
+		bar.requestLayout();
+	}
 
-		this.getChildren().add(effectsPane);
+	private void initialize() {
+		track = new Line();
+		track.setStroke(trackColor);
+		track.setStrokeWidth(3);
+		track.getStyleClass().setAll("track");
+
+		bar = new Line();
+		bar.setStroke(indicatorColor);
+		bar.strokeWidthProperty().bind(track.strokeWidthProperty());
+		bar.getStyleClass().setAll("bar");
+
+		getChildren().clear();
+		getChildren().addAll(track, bar);
+		
+		getSkinnable().indeterminateProperty().addListener((o, oldVal, newVal) -> {
+			timeline.stop();
+			initialization = false;
+		});
 	}
 
 	@Override
-	protected void updateProgress() {
-		ProgressBar control = (ProgressBar) getSkinnable();
-		barWidth = ((int) (control.getWidth() - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, control.getProgress()))) / 2.0F;
-		getSkinnable().requestLayout();
-	}
-
-	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 
-		double startX = getSkinnable().getBoundsInLocal().getMinX();
-		double endX = getSkinnable().getBoundsInLocal().getMaxX();
-		Number strokeWidth = ((C3DProgressBar)getSkinnable()).getStrokeWidth();
+		if (!initialization) {
+			isIndeterminate = getSkinnable().isIndeterminate();
+			double trackHeight = snapSize(track.getStrokeWidth());
+			trackLength = snapSize(getSkinnable().getPrefWidth());
+			trackStart = snapPosition(x);
 
-		if(invalid){
-			line.setStartX( startX + strokeWidth.doubleValue());
-			line.setEndX(endX);
-			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY());
-			line.setEndY(getSkinnable().getBoundsInLocal().getMaxY());
-			line.strokeProperty().bind(((C3DProgressBar)getSkinnable()).trackColorProperty());
-			line.strokeWidthProperty().bind(((C3DProgressBar)getSkinnable()).strokeWidthProperty());
-			line.setStrokeType(StrokeType.CENTERED);	
+			track.setStartX(trackStart);
+			track.setEndX(trackStart + trackLength);
+			track.setStartY(y + trackHeight / 2);
+			track.setEndY(y + trackHeight / 2);
 
-			progressLine.setStartX( startX + strokeWidth.doubleValue());
-			progressLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY());
-			progressLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY());
-			progressLine.strokeProperty().bind(((C3DProgressBar)getSkinnable()).progressColorProperty());
-			progressLine.strokeWidthProperty().bind(((C3DProgressBar)getSkinnable()).strokeWidthProperty());
-			progressLine.setStrokeType(StrokeType.CENTERED);
-			
-			if(!getSkinnable().isIndeterminate()){
-				progressLine.setEndX(barWidth);
+			bar.setStartX(trackStart);
+			bar.setStartY(y + trackHeight / 2);
+			bar.setEndY(y + trackHeight / 2);
+			initializeListeners();
+
+			if (isIndeterminate) {
+				initializeTimeline();
+				timeline.setCycleCount(Timeline.INDEFINITE);
+				timeline.setRate(1);
+				timeline.play();
 			}
-			else{
-				endX = getSkinnable().getBoundsInLocal().getMaxX()/4;		
-				double width =  (endX - startX) * progressLine.scaleXProperty().get();
-				progressLine.setEndX(endX);
-				
-				Timeline indeterminateAnimation = new Timeline(
-						new KeyFrame(Duration.millis(0),
-								new KeyValue(progressLine.scaleXProperty(), 0.0 ,Interpolator.EASE_BOTH),
-								new KeyValue(progressLine.translateXProperty(),  0 ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(Duration.millis(500),
-										new KeyValue(progressLine.scaleXProperty(), 1.0 ,Interpolator.EASE_BOTH)
-										),
-										new KeyFrame(Duration.millis(1000),
-												new KeyValue(progressLine.scaleXProperty(), 0.0 ,Interpolator.EASE_BOTH),
-												new KeyValue(progressLine.translateXProperty(), getSkinnable().getBoundsInLocal().getMaxX(),Interpolator.EASE_BOTH)
-												)
-						);
-				indeterminateAnimation.setCycleCount(Timeline.INDEFINITE);				
-				indeterminateAnimation.play();
-			}
-		}
 
-		if(!getSkinnable().isIndeterminate()){
-			progressLine.setEndX(barWidth);
+			initialization = true;
 		}
-
-		layoutInArea(effectsPane, x, y, w, h, -1, HPos.CENTER, VPos.BOTTOM);
 	}
 
+	private void initializeListeners() {
+		getSkinnable().progressProperty().addListener((o, oldVal, newVal) -> {
+			if (!isIndeterminate) {
+				double barWidth = ((int) (trackLength - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, newVal.doubleValue()))) / 2.0F;
+				bar.setEndX(barWidth);
+			}
+		});
+	}
+
+	private void initializeTimeline() {
+		double first = trackLength / 3;
+		double second = 2 * trackLength / 3;
+		timeline = new Timeline(
+						new KeyFrame(
+								Duration.ZERO,
+								new KeyValue(bar.startXProperty(), 0, Interpolator.LINEAR),
+								new KeyValue(bar.endXProperty(), 0, Interpolator.LINEAR)),
+						new KeyFrame(
+								Duration.seconds(0.5),
+								new KeyValue(bar.startXProperty(), first, Interpolator.LINEAR),
+								new KeyValue(bar.endXProperty(), second, Interpolator.LINEAR)),
+						new KeyFrame(
+								Duration.seconds(1),
+								new KeyValue(bar.startXProperty(), trackLength, Interpolator.LINEAR),
+								new KeyValue(bar.endXProperty(), trackLength, Interpolator.LINEAR)));
+	}
 }
