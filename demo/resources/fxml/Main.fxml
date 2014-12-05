@@ -61,7 +61,7 @@
 
 		<!-- Content Area -->
 		<center>
-			<C3DDrawer fx:id="drawer" drawerWidth="250">
+			<C3DDrawer fx:id="drawer" drawerWidth="250" direction="LEFT">
 				<styleClass>
 					<String fx:value="body" />
 				</styleClass>

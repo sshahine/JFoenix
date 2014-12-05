@@ -10,6 +10,7 @@ import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -28,6 +29,18 @@ import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 public class C3DDrawer extends StackPane {
 
+
+	public static enum DrawerDirection{
+		LEFT(1), RIGHT(-1); 
+		private double numVal;
+		DrawerDirection(double numVal) {
+			this.numVal = numVal;
+		}
+		public double doubleValue() {
+			return numVal;
+		}
+	};
+
 	private StackPane overlayPane = new StackPane();
 	private StackPane sidePane = new StackPane();
 	private StackPane content = new StackPane();
@@ -43,11 +56,12 @@ public class C3DDrawer extends StackPane {
 	private double startMouseX = -1;
 	private double startTranslateX = -1;
 
+	private SimpleObjectProperty<DrawerDirection> directionProperty = new SimpleObjectProperty<DrawerDirection>(DrawerDirection.LEFT);
 
 	public C3DDrawer(){
 		super();
 		initialize();
-
+		
 		overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), CornerRadii.EMPTY, Insets.EMPTY)));
 		overlayPane.setVisible(false);
 		overlayPane.setOpacity(0);
@@ -57,19 +71,45 @@ public class C3DDrawer extends StackPane {
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
 		DepthManager.setDepth(sidePane, 2);
 
-		initTranslateX.bind(Bindings.createDoubleBinding(()-> -1 * sidePane.maxWidthProperty().getValue() - initOffset, sidePane.maxWidthProperty()));
-		initTranslateX.addListener((o,oldVal,newVal) ->{ 
-			transition = new DrawerTransition();
-			sidePane.setTranslateX(newVal.doubleValue());
-		});
-
 		this.getChildren().add(content);		
 		this.getChildren().add(overlayPane);
 		this.getChildren().add(sidePane);
-		StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
 
 		// add listeners
 		overlayPane.setOnMouseClicked((e) -> hide());
+		initListeners();
+
+	}
+
+
+	private void initListeners(){
+		
+		if(directionProperty.get().equals(DrawerDirection.LEFT)){
+			StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
+		}else if(directionProperty.get().equals(DrawerDirection.RIGHT)){
+			StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
+		}
+		
+		directionProperty.addListener((o,oldVal,newVal)->{
+			if(newVal.equals(DrawerDirection.LEFT)){
+				StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
+			}else if(newVal.equals(DrawerDirection.RIGHT)){
+				StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
+			}
+		});
+		
+		initTranslateX.bind(Bindings.createDoubleBinding(()-> -1 * directionProperty.get().doubleValue() * sidePane.maxWidthProperty().getValue() - initOffset * directionProperty.get().doubleValue(), sidePane.maxWidthProperty(), directionProperty));
+		initTranslateX.addListener((o,oldVal,newVal) ->{ 
+			transition = new DrawerTransition(initTranslateX.doubleValue(), 0);
+			sidePane.setTranslateX(newVal.doubleValue());
+		});
+		
+		// content listener for mouse hold on a side
+		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { 
+			double width = 0 ;
+			if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
+			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset) holdTimer.play(); 
+		});
 
 		// mouse drag handler
 		this.sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
@@ -81,22 +121,21 @@ public class C3DDrawer extends StackPane {
 		this.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedHandler);
 		this.sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressedHandler);
 
-		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { if(e.getX() < activeOffset) holdTimer.play(); });
 		this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> {
 			holdTimer.stop();
 			this.content.removeEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 		});		
 
 		holdTimer.setOnFinished((e)->{
-			partialTransition = new DrawerPartialTransition(initTranslateX.doubleValue(), initTranslateX.doubleValue()  + initOffset + activeOffset);
+			partialTransition = new DrawerPartialTransition(initTranslateX.doubleValue(), initTranslateX.doubleValue()  + initOffset * directionProperty.get().doubleValue() + activeOffset * directionProperty.get().doubleValue());
 			partialTransition.play();
 			partialTransition.setOnFinished((event)-> {
 				this.content.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 				this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 			});				
-		});
-	}
+		});	
 
+	}
 
 	/***************************************************************************
 	 *                                                                         *
@@ -151,6 +190,19 @@ public class C3DDrawer extends StackPane {
 		this.drawerWidth = drawerWidth;
 	}
 
+	public DrawerDirection getDirection() {
+		return directionProperty.get();
+	}
+
+	public SimpleObjectProperty<DrawerDirection> directionProperty(){
+		return directionProperty;
+	}
+	
+	public void setDirection(DrawerDirection direction) {
+		this.directionProperty.set(direction);
+	}
+
+
 	/***************************************************************************
 	 *                                                                         *
 	 * Action Handlers                                                         *
@@ -158,18 +210,19 @@ public class C3DDrawer extends StackPane {
 	 **************************************************************************/
 
 	private EventHandler<MouseEvent> mouseDragHandler = (mouseEvent)->{
-		if(mouseEvent.getSceneX() >= activeOffset && partialTransition !=null){
+		double width = 0 ;
+		if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
+		
+		if(width + directionProperty.get().doubleValue() * mouseEvent.getSceneX() >= activeOffset && partialTransition !=null){
 			partialTransition = null;
 		}else if(partialTransition == null){
 			overlayPane.setVisible(true);
 			overlayPane.setOpacity(1);
 			double translateX ;
-			if(startMouseX < 0)					
-				translateX = initTranslateX.doubleValue() + initOffset + mouseEvent.getSceneX();
-			else
-				translateX = startTranslateX + (mouseEvent.getSceneX() - startMouseX);
-
-			if(translateX <= 0) sidePane.setTranslateX(translateX);
+			if(startMouseX < 0) translateX = initTranslateX.doubleValue() + directionProperty.get().doubleValue() * initOffset + directionProperty.get().doubleValue() * (width + directionProperty.get().doubleValue() * mouseEvent.getSceneX());
+			else translateX = directionProperty.get().doubleValue() * (startTranslateX + directionProperty.get().doubleValue() * ( mouseEvent.getSceneX() - startMouseX ));			
+			
+			if(directionProperty.get().doubleValue() * translateX <= 0) sidePane.setTranslateX(translateX);
 			else sidePane.setTranslateX(0);
 		}
 	};
@@ -181,7 +234,7 @@ public class C3DDrawer extends StackPane {
 
 
 	private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent)->{
-		if(sidePane.getTranslateX() > initTranslateX.doubleValue() /2){
+		if(directionProperty.get().doubleValue() * sidePane.getTranslateX() > directionProperty.get().doubleValue() * initTranslateX.doubleValue() /2){
 			partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), 0);
 			partialTransition.play();
 			partialTransition.setOnFinished((event)-> sidePane.setTranslateX(0));
@@ -203,7 +256,7 @@ public class C3DDrawer extends StackPane {
 
 	public void setOnDrawingAction(EventHandler<Event> handler){
 		sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
-			if(!drawCalled && hideCalled && newVal.doubleValue() > initTranslateX.doubleValue() /2){
+			if(!drawCalled && hideCalled && directionProperty.get().doubleValue() * newVal.doubleValue() > directionProperty.get().doubleValue() * initTranslateX.doubleValue() /2){
 				drawCalled = true;
 				hideCalled = false;
 				handler.handle(null);
@@ -212,7 +265,7 @@ public class C3DDrawer extends StackPane {
 	}
 	public void setOnHidingAction(EventHandler<Event> handler){
 		sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
-			if(drawCalled && !hideCalled && newVal.doubleValue() < initTranslateX.doubleValue() /2){
+			if(drawCalled && !hideCalled && directionProperty.get().doubleValue() * newVal.doubleValue() < directionProperty.get().doubleValue() * initTranslateX.doubleValue() /2){
 				hideCalled = true;
 				drawCalled = false;
 				handler.handle(null);
@@ -228,7 +281,7 @@ public class C3DDrawer extends StackPane {
 	 **************************************************************************/
 
 	private class DrawerTransition extends CachedTimelineTransition{
-		public DrawerTransition() {
+		public DrawerTransition(double start, double end) {
 			super(sidePane, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
@@ -236,12 +289,12 @@ public class C3DDrawer extends StackPane {
 							new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(100),
-									new KeyValue(sidePane.translateXProperty(), initTranslateX.doubleValue()  ,Interpolator.EASE_BOTH),
+									new KeyValue(sidePane.translateXProperty(), start  ,Interpolator.EASE_BOTH),
 									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
 									),
 									new KeyFrame(Duration.millis(1000),
 											new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH),
-											new KeyValue(sidePane.translateXProperty(), 0 , Interpolator.EASE_BOTH)									
+											new KeyValue(sidePane.translateXProperty(), end , Interpolator.EASE_BOTH)									
 											)
 					));
 			setCycleDuration(Duration.seconds(0.5));
