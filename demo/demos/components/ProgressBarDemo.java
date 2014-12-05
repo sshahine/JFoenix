@@ -21,57 +21,59 @@ import javafx.util.Duration;
 public class ProgressBarDemo extends Application {
 
 	private VBox pane;
-	
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		
+
 		pane = new VBox();
 		pane.setSpacing(30);
 		pane.setStyle("-fx-background-color:WHITE");
-		
+
 		ProgressBar bar = new ProgressBar();
+		bar.setPrefWidth(500);
+
 		ProgressBar cssBar = new ProgressBar();
+		cssBar.setPrefWidth(500);
 		cssBar.setProgress(-1.0f);
-		
-		cssBar.getStyleClass().add("css-progress-bar");
+
 		C3DProgressBar c3dBar = new C3DProgressBar();
+		c3dBar.setPrefWidth(500);
+
 		C3DProgressBar c3dBarInf = new C3DProgressBar();
+		c3dBarInf.setPrefWidth(500);
 		c3dBarInf.setProgress(-1.0f);
-		
-		Timeline task = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(bar.progressProperty(), 0),
-						new KeyValue(c3dBar.progressProperty(), 0)
-						),
-						new KeyFrame(
-								Duration.seconds(2), 
-								new KeyValue(bar.progressProperty(), 1),
-								new KeyValue(c3dBar.progressProperty(), 1)
-								)
-				);
-		task.setCycleCount(5);
-		task.playFromStart();
-		
-		pane.getChildren().add(bar);
-		pane.getChildren().add(c3dBar);
-		pane.getChildren().add(cssBar);
-		pane.getChildren().add(c3dBarInf);
-		
-		
+
+		Timeline timeline = new Timeline(
+									new KeyFrame(
+											Duration.ZERO,
+											new KeyValue(bar.progressProperty(), 0),
+											new KeyValue(c3dBar.progressProperty(), 0)),
+									new KeyFrame(
+											Duration.seconds(2),
+											new KeyValue(bar.progressProperty(), 1),
+											new KeyValue(c3dBar.progressProperty(), 1)));
+
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.play();
+
+		pane.getChildren().addAll(bar, c3dBar, cssBar, c3dBarInf);
+
 		StackPane main = new StackPane();
 		main.getChildren().add(pane);
 		main.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		StackPane.setMargin(pane, new Insets(20,0,0,20));
+		StackPane.setMargin(pane, new Insets(20, 0, 0, 20));
 
 		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
 		stage.setTitle("JavaFX TextField ;) ");
-		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+		scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();
 
 	}
-	public static void main(String[] args) { launch(args); }
+
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 }

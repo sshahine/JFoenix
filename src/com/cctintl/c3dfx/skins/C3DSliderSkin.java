@@ -61,8 +61,6 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	private void initialize() {
 		isHorizontal = getSkinnable().getOrientation() == Orientation.HORIZONTAL;
 
-		coloredTrack = new Line();
-
 		thumb = new Circle();
 		thumb.setStrokeWidth(2);
 		thumb.setRadius(7);
@@ -75,6 +73,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		track.setStrokeWidth(3);
 		track.getStyleClass().setAll("track");
 
+		coloredTrack = new Line();
 		coloredTrack.strokeProperty().bind(thumb.strokeProperty());
 		coloredTrack.strokeWidthProperty().bind(track.strokeWidthProperty());
 

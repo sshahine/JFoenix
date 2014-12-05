@@ -14,31 +14,28 @@ import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 
-@FXMLController(value = "/resources/fxml/ui/ProgressBar.fxml" , title = "Material Design Example")
+@FXMLController(value = "/resources/fxml/ui/ProgressBar.fxml", title = "Material Design Example")
 public class ProgressBarController {
 
-	@FXML private C3DProgressBar progress1;
-	@FXML private C3DProgressBar progress2;
-	
+	@FXML
+	private C3DProgressBar progress1;
+	@FXML
+	private C3DProgressBar progress2;
+
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-		
+
 		Timeline task = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(progress1.progressProperty(), 0),
-						new KeyValue(progress2.progressProperty(), 0)
-						),
-						new KeyFrame(
-								Duration.seconds(2), 
-								new KeyValue(progress1.progressProperty(), 1),
-								new KeyValue(progress2.progressProperty(), 1)
-								)
-				);
-		task.setCycleCount(5);
-		task.playFromStart();
+							new KeyFrame(
+									Duration.ZERO,
+									new KeyValue(progress1.progressProperty(), 0),
+									new KeyValue(progress2.progressProperty(), 0)),
+							new KeyFrame(
+									Duration.seconds(2),
+									new KeyValue(progress1.progressProperty(), 1),
+									new KeyValue(progress2.progressProperty(), 1)));
+		task.setCycleCount(Timeline.INDEFINITE);
+		task.play();
 	}
-	
-	
-	
+
 }

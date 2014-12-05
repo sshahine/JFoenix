@@ -7,20 +7,20 @@
 }
 
 .side-menu{
-	-fx-padding: 20,10;
-	-fx-font-size: 15;
+	-fx-padding: 20.0,10.0;
+	-fx-font-size: 15.0;
 	-fx-font-weight: NORMAL;
 	-fx-text-fill: #444;
 }
 .title-label{
-	-fx-font-size: 16px;
-	-fx-padding	: 14px;
-	-fx-text-fill: rgba(0, 0, 0, 0.87);
+	-fx-font-size: 16.0px;
+	-fx-padding	: 14.0px;
+	-fx-text-fill: rgba(0.0, 0.0, 0.0, 0.87);
 }
 .radio-button-title-label {
-	-fx-font-size: 16px;
-	-fx-padding	: 14 0 -20 0;	
-	-fx-text-fill: rgba(0, 0, 0, 0.87);
+	-fx-font-size: 16.0px;
+	-fx-padding	: 14.0 0.0 -20.0 0.0;	
+	-fx-text-fill: rgba(0.0, 0.0, 0.0, 0.87);
 }
 .c3d-button {
 	-fx-background-color: transparent ;
@@ -33,7 +33,7 @@
  ******************************************************************************/
 
 .c3d-drawer-overlay-pane {
-	-fx-background-color: rgba(0,0,0,0.1)	
+	-fx-background-color: rgba(0.0,0.0,0.0,0.1)	
 }
 
 .c3d-drawer-side-pane {
@@ -47,34 +47,34 @@
  ******************************************************************************/
 
 .c3d-dialog-overlay-pane {
-	-fx-background-color: rgba(0,0,0,0.1); 
+	-fx-background-color: rgba(0.0,0.0,0.0,0.1); 
 }
 
 .dialog-trigger{
 	-fx-background-color: WHITE;
 	-fx-button-type:RAISED;
-	-fx-font-size: 16px;
+	-fx-font-size: 16.0px;
 }
 
 .c3d-dialog-layout {
-	-fx-padding: 24px 24px 16px 24px;
-	-fx-text-fill: rgba(0, 0, 0, 0.87);
+	-fx-padding: 24.0px 24.0px 16.0px 24.0px;
+	-fx-text-fill: rgba(0.0, 0.0, 0.0, 0.87);
 }
 .c3d-layout-heading {
-	-fx-font-size: 20px;
+	-fx-font-size: 20.0px;
 	-fx-font-weight: BOLD;
 	-fx-alignment: center-left;
-	-fx-padding: 5 0 5 0; 	
+	-fx-padding: 5.0 0.0 5.0 0.0; 	
 }
 
 .c3d-layout-body .label {
-	-fx-font-size: 14px;
-	-fx-pref-width: 400px;
+	-fx-font-size: 14.0px;
+	-fx-pref-width: 400.0px;
 	-fx-wrap-text: true;
 }
 
 .c3d-layout-actions {
-	-fx-padding: 10px 0 0 0 ;	
+	-fx-padding: 10.0px 0.0 0.0 0.0 ;	
 	-fx-alignment: center-right ;
 }
 .dialog-accept{
@@ -95,11 +95,11 @@
 
 .c3d-popup-holder{
 	-fx-background-color: WHITE;
-	-fx-pref-width:151px;
+	-fx-pref-width:151.0px;
 }
 
 .popup-list-view {
-	-fx-pref-width:150px;
+	-fx-pref-width:150.0px;
 }
 
 /*******************************************************************************
@@ -110,7 +110,7 @@
 
 .icon{
 	-fx-text-fill: #FE774D;
-	-fx-padding: 10;
+	-fx-padding: 10.0;
 	-fx-cursor: hand;
 }
 
@@ -159,17 +159,17 @@
  ******************************************************************************/
 
 .c3d-tool-bar{
-	-fx-font-size: 20;
+	-fx-font-size: 20.0;
 	-fx-font-weight: BOLD;
 	-fx-background-color: #5264AE;
-	-fx-pref-width: 100%;
-	-fx-pref-height: 64px;
+	-fx-pref-width: 100.0%;
+	-fx-pref-height: 64.0px;
 }
 
 .c3d-tool-bar HBox {
 	-fx-alignment:center;
-	-fx-spacing: 25;
-	-fx-padding: 0 10;
+	-fx-spacing: 25.0;
+	-fx-padding: 0.0 10.0;
 }
 
 .c3d-tool-bar Label{
@@ -177,8 +177,8 @@
 }
 
 .c3d-tool-bar .c3d-hamburger-icon{
-	-fx-translate-y: 10px;
-	-fx-padding:10;
+	-fx-translate-y: 10.0px;
+	-fx-padding:10.0;
 }
 .c3d-tool-bar .c3d-hamburger-icon SVGPath{
 	-fx-fill: WHITE;
@@ -193,13 +193,13 @@
 }
 
 .option-list-view {
-  	-fx-pref-width: 160px;
+  	-fx-pref-width: 160.0px;
   	-fx-background-color: WHITE ;
 }
 
 .option-c3d-list-view-icon {
 	-fx-text-fill: #5264AE;
-	-fx-padding: 0 10 0 5 ;
+	-fx-padding: 0.0 10.0 0.0 5.0 ;
 	-fx-cursor: hand;
 }
 
@@ -221,7 +221,7 @@
 }
 
 .custom-c3d-radio-button{
-	-fx-font-size: 16px;
+	-fx-font-size: 16.0px;
 }
 
 .custom-c3d-radio-button .radio {
@@ -246,12 +246,12 @@
 
 .c3d-slider > .thumb {
 	-fx-stroke: #0F9D58;
-	-fx-stroke-width: 2;
+	-fx-stroke-width: 2.0;
 }
 
 .c3d-slider .track {
 	-fx-background-color: #CCCCCC;
-    -fx-stroke-width: 3;
+    -fx-stroke-width: 3.0;
 }
 
 .c3d-slider .sliderValue {
@@ -275,16 +275,16 @@
 
 .c3d-slider-style > .thumb {
 	-fx-stroke: #5264AE;
-	-fx-stroke-width: 1;
+	-fx-stroke-width: 1.0;
 }
 
 .c3d-slider-style .track {
-	-fx-stroke: rgb(230,230,153);
-    -fx-stroke-width: 5;
+	-fx-stroke: rgb(230.0,230.0,153.0);
+    -fx-stroke-width: 5.0;
 }
 
 .c3d-slider-style .sliderValue {
-	-fx-stroke: rgb(0,255,64);
+	-fx-stroke: rgb(0.0,255.0,64.0);
 	-fx-font-size: 10.0;
 }
 
@@ -320,7 +320,7 @@
 	-fx-padding: 0.7em 0.57em;
 	-fx-font-size: 14.0px;
 	-fx-button-type: RAISED;
-	-fx-background-color: rgb(102,153,102);
+	-fx-background-color: rgb(102.0,153.0,102.0);
 	-fx-pref-width: 200.0;
 	-fx-text-fill: WHITE;
 }
@@ -357,29 +357,26 @@
 *                                                                              *
 *******************************************************************************/
 
-.progress-bar > .bar {
+.c3d-progress-bar > .track {
 	-fx-min-width: 500.0;
 }
 
-.c3d-progress-bar > .bar {
-	-fx-min-width: 500.0;
+.custom-c3d-progress-bar .track {
+	-fx-stroke: rgb(128,128,255);
+	-fx-stroke-width: 5.0;
 }
 
-.c3d-progress-bar{
-	-fx-track-color: #C8C8C8 ;
-	-fx-progress-color: #0F9D58;
-	-fx-stroke-width:3.0;
+.custom-c3d-progress-bar .bar {
+	-fx-stroke: rgb(255,128,0);
 }
 
-.custom-c3d-progress-bar{
-	-fx-track-color: #C8C8C8 ;
-	-fx-progress-color: RED;
-	-fx-stroke-width:3.0;
+.custom-c3d-progress-bar-stroke .track {
+	-fx-stroke: #C8C8C8 ;
+	-fx-stroke-width: 7.0;
 }
-.custom-c3d-progress-bar-stroke{
-	-fx-track-color: #C8C8C8 ;
-	-fx-progress-color: #5264AE;
-	-fx-stroke-width:5.0;
+
+.custom-c3d-progress-bar-stroke .bar {
+	-fx-stroke: #5264AE ;
 }
 
 
@@ -395,7 +392,7 @@
     -fx-prompt-text-fill: #808080;
     -fx-alignment: top-left ;
     -fx-max-width: 300.0;
-    -fx-pref-width:300;
+    -fx-pref-width:300.0;
     -fx-focus-color: #4059A9;
     -fx-unfocus-color: #4d4d4d;       
 }
@@ -411,7 +408,7 @@
 }
 .c3d-text-field .errorIcon{
 	-fx-text-fill : #D34336;
-	-fx-font-size: 1em;
+	-fx-font-size: 1.0em;
 }
 
 /*******************************************************************************
@@ -429,7 +426,7 @@
 
 .c3d-list-cell:odd:selected .c3d-list-cell-container,
 .c3d-list-cell:even:selected .c3d-list-cell-container { 
-	-fx-background-color: rgba(0,0,255,0.2);
+	-fx-background-color: rgba(0.0,0.0,255.0,0.2);
 }
 
 .c3d-list-cell {
@@ -449,10 +446,10 @@
 }
 
 .c3d-list-view {
-	-fx-background-insets: 0;
+	-fx-background-insets: 0.0;
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
-  	-fx-vertical-gap : 10;
+  	-fx-vertical-gap : 10.0;
   	-fx-expanded : false;
 }
 
@@ -482,26 +479,26 @@
 }
 
 .custom-c3d-list-view{
-	-fx-background-insets: 0;
+	-fx-background-insets: 0.0;
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
-  	-fx-vertical-gap : 10;
+  	-fx-vertical-gap : 10.0;
   	-fx-expanded : false;
-  	-fx-max-width: 200px;
+  	-fx-max-width: 200.0px;
 }
 .custom-c3d-list-view .c3d-rippler {
 	-fx-rippler-fill:RED;
 }
 
 .custom-c3d-list-view1{
-	-fx-vertical-gap : 15;
-  	-fx-max-width: 150px;
+	-fx-vertical-gap : 15.0;
+  	-fx-max-width: 150.0px;
   	-fx-background-color: transparent ;
 }
 
 .custom-c3d-list-view-icon {
 	-fx-text-fill: #5264AE;
-	-fx-padding: 0 10 0 5  ;
+	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
 }
 
@@ -521,15 +518,15 @@
 }
 
 .toggle-label {
-	-fx-font-size: 14px;
+	-fx-font-size: 14.0px;
 }
 
 .toggle-icon1 .icon{
 	-fx-text-fill: #4285F4;
-	-fx-padding:20;
+	-fx-padding:20.0;
 }
 .toggle-icon1 .c3d-rippler{
-	-fx-rippler-fill: rgba(66,133,244,0.29885056614875793);
+	-fx-rippler-fill: rgba(66.0,133.0,244.0,0.29885056614875793);
 	-fx-mask-type: CIRCLE;
 }
 .toggle-icon2 .icon{
@@ -540,8 +537,8 @@
 	-fx-mask-type: CIRCLE;
 }
 .toggle-icon3 .icon{
-	-fx-text-fill: rgb(204,204,51);
-	-fx-padding:10;
+	-fx-text-fill: rgb(204.0,204.0,51.0);
+	-fx-padding:10.0;
 }
 .toggle-icon3 .c3d-rippler{
 	-fx-rippler-fill: #0F9D58;
@@ -555,30 +552,30 @@
 *******************************************************************************/
 
 .c3d-spinner > .arc {
-	-fx-stroke-width: 3;
+	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 }
 
 .first-spinner > .arc {
-	-fx-stroke-width: 3;
+	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 	-fx-stroke: #4285f4;
 }
 
 .second-spinner > .arc {
-	-fx-stroke-width: 3;
+	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 	-fx-stroke: #db4437;
 }
 
 .third-spinner > .arc {
-	-fx-stroke-width: 3;
+	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 	-fx-stroke: #f4b400;
 }
 
 .fourth-spinner > .arc {
-	-fx-stroke-width: 3;
+	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 	-fx-stroke: #0F9D58;
 }
