@@ -330,7 +330,7 @@
 * C3D Check Box                                                                *
 *                                                                              *
 *******************************************************************************/
-/* 
+
 .c3d-check-box{
     -fx-font-weight: BOLD;
 }
@@ -349,7 +349,6 @@
 .custom-c3d-check-box-text-colored{
 	-fx-text-fill:rgb(153,0,0);
 }
-*/
 
 /*******************************************************************************
 *                                                                              *
@@ -357,12 +356,16 @@
 *                                                                              *
 *******************************************************************************/
 
+.c3d-progress-bar{
+	-fx-pref-width: 500;
+}
+
 .c3d-progress-bar > .track {
 	-fx-min-width: 500.0;
 }
 
 .custom-c3d-progress-bar .track {
-	-fx-stroke: rgb(128,128,255);
+	-fx-stroke: #C8C8C8;
 	-fx-stroke-width: 5.0;
 }
 

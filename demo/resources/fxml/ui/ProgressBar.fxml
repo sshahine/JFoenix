@@ -5,8 +5,8 @@
 <?import com.cctintl.c3dfx.controls.C3DProgressBar?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:150 300;">
-	<VBox spacing="50">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" >
+	<VBox spacing="50" style="-fx-padding:150 0 0 150;">
 		<C3DProgressBar fx:id="progress1" progress="100"></C3DProgressBar>
 		<C3DProgressBar></C3DProgressBar>
 
