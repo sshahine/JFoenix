@@ -27,7 +27,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 	private Circle radio, dot;
 
 	private Color unSelectedColor = Color.valueOf("#5A5A5A");
-	private Color selectedColor;
+	private Color selectedColor = Color.valueOf("#0F9D58");
 
 	private Timeline timeline;
 
@@ -38,9 +38,13 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 		super(control);
 
 		radio = new Circle();
+		radio.setStrokeWidth(2);
+		radio.setFill(Color.TRANSPARENT);
 		radio.getStyleClass().setAll("radio");
 
 		dot = new Circle();
+		dot.setRadius(minRadius);
+		dot.setFill(selectedColor);
 		dot.getStyleClass().setAll("dot");
 
 		StackPane boxContainer = new StackPane();
@@ -53,13 +57,6 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 
 		AnchorPane.setRightAnchor(rippler, labelOffset);
 		updateChildren();
-
-		getSkinnable().selectedProperty().addListener((o, oldVal, newVal) -> {
-			rippler.setRipplerFill(newVal ? unSelectedColor : selectedColor);
-			timeline.setRate(newVal ? 1 : -1);
-			timeline.play();
-		});
-
 	}
 
 	@Override
@@ -69,24 +66,6 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 			removeRadio();
 			getChildren().add(container);
 		}
-	}
-
-	private void removeRadio() {
-		for (int i = 0; i < getChildren().size(); i++) {
-			if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
-				getChildren().remove(i);
-			}
-		}
-	}
-
-	@Override
-	protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-		return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset) + snapSize(radio.minWidth(-1)) + labelOffset + 2 * padding;
-	}
-
-	@Override
-	protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-		return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset) + snapSize(radio.prefWidth(-1)) + labelOffset + 2 * padding;
 	}
 
 	@Override
@@ -103,9 +82,14 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 
 		radio.setRadius(radioRadius);
 		radio.setStroke(unSelectedColor);
-		dot.setRadius(minRadius);
 
 		selectedColor = (Color) dot.getFill();
+
+		getSkinnable().selectedProperty().addListener((o, oldVal, newVal) -> {
+			rippler.setRipplerFill(newVal ? unSelectedColor : selectedColor);
+			timeline.setRate(newVal ? 1 : -1);
+			timeline.play();
+		});
 
 		rippler.setRipplerFill(getSkinnable().isSelected() ? unSelectedColor : selectedColor);
 		double radioWidth = radioRadius + radio.getStrokeWidth() / 2;
@@ -128,6 +112,24 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 		layoutLabelInArea(contWidth, 0, labelWidth, maxHeight, radioButton.getAlignment());
 		container.resize(contWidth, contHeight);
 		positionInArea(container, 0, 0, contWidth, maxHeight, 0, radioButton.getAlignment().getHpos(), radioButton.getAlignment().getVpos());
+	}
+
+	private void removeRadio() {
+		for (int i = 0; i < getChildren().size(); i++) {
+			if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
+				getChildren().remove(i);
+			}
+		}
+	}
+
+	@Override
+	protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+		return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset) + snapSize(radio.minWidth(-1)) + labelOffset + 2 * padding;
+	}
+
+	@Override
+	protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+		return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset) + snapSize(radio.prefWidth(-1)) + labelOffset + 2 * padding;
 	}
 
 }

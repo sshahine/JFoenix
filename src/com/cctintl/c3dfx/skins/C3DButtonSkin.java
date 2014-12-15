@@ -7,6 +7,8 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -14,10 +16,10 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DButton;
+import com.cctintl.c3dfx.controls.C3DButton.ButtonType;
 import com.cctintl.c3dfx.controls.C3DRippler;
 import com.cctintl.c3dfx.controls.DepthManager;
-import com.cctintl.c3dfx.controls.C3DButton.ButtonType;
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 
@@ -36,12 +38,14 @@ public class C3DButtonSkin extends ButtonSkin {
 
 	public C3DButtonSkin(C3DButton button) {
 		super(button);
-
+		button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+		
 		// create button
 		buttonRect = new Rectangle();
 		buttonRect.setArcHeight(7);
 		buttonRect.setArcWidth(7);		
-
+		buttonRect.setFill(Color.WHITE);
+		
 		if(button.isDisabled()) buttonRect.setFill(disabledColor);
 
 		buttonComponents.getChildren().add(buttonRect);

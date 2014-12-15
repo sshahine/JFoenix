@@ -22,7 +22,7 @@ import javafx.util.Duration;
 import com.cctintl.c3dfx.controls.C3DCheckBox;
 import com.cctintl.c3dfx.controls.C3DRippler;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
 public class C3DCheckBoxSkin extends CheckBoxSkin {
@@ -40,20 +40,19 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 
 	private final AnchorPane container = new AnchorPane();
 	private double labelOffset = 0;
-	
+
 	private Transition transition;
 
 	private boolean invalid = true;
-	
+
 	public C3DCheckBoxSkin(C3DCheckBox control) {
 		super(control);
 
 		box.setMinSize(20, 20);
 		box.setPrefSize(20, 20);
 		box.setMaxSize(20, 20);
-		
 		box.setBorder(new Border(new BorderStroke(control.getUnCheckedColor(),BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(lineThick))));
-		
+		//		
 		StackPane boxContainer = new StackPane();
 		boxContainer.getChildren().add(box);
 		boxContainer.setPadding(new Insets(padding));
@@ -73,7 +72,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 		container.getChildren().add(leftLine);
 		container.getChildren().add(rippler);
 		AnchorPane.setRightAnchor(rippler, labelOffset);
-		
+
 		// add listeners
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
 			rippler.setRipplerFill(newVal?control.getUnCheckedColor():control.getCheckedColor());
@@ -81,14 +80,13 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 			transition.play();
 		});
 
-		
 		updateChildren();
 
 	}
 
 	@Override protected void updateChildren() {
 		super.updateChildren();
-		if (box != null) {
+		if (container != null) {
 			getChildren().remove(1);			
 			getChildren().add(container);
 		}
@@ -101,7 +99,6 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 	@Override protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
 		return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset) + snapSize(box.prefWidth(-1))+labelOffset+2*padding;
 	}
-
 
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
@@ -161,7 +158,6 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 			return 0;
 		}
 	}
-
 
 	private class CheckBoxTransition extends CachedTimelineTransition {
 

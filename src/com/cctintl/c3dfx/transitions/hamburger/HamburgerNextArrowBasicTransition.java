@@ -9,7 +9,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition implements HamburgerTransition{
 	

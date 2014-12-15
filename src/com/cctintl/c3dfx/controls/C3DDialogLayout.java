@@ -16,7 +16,7 @@ public class C3DDialogLayout extends StackPane {
 		super();
 		initialize();
 		layout.getChildren().add(heading);
-		heading.getStyleClass().add("c3d-layout-title");
+		heading.getStyleClass().add("c3d-layout-heading");
 		layout.getChildren().add(body);
 		body.getStyleClass().add("c3d-layout-body");
 		layout.getChildren().add(actions);
@@ -64,6 +64,10 @@ public class C3DDialogLayout extends StackPane {
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+		this.setStyle("-fx-padding: 24px 24px 16px 24px;-fx-text-fill: rgba(0, 0, 0, 0.87);");
+		heading.setStyle("-fx-font-size: 20px;-fx-font-weight: BOLD;-fx-alignment: center-left;-fx-padding: 5 0 5 0;");
+		body.setStyle("	-fx-font-size: 14px;-fx-pref-width: 400px;-fx-wrap-text: true;");
+		actions.setStyle("-fx-padding: 10px 0 0 0 ;-fx-alignment: center-right ;");
 	}
 	
 }

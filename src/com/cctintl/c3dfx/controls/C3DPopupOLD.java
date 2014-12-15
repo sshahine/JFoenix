@@ -19,7 +19,7 @@ import javafx.stage.Popup;
 import javafx.stage.Window;
 import javafx.util.Duration;
 
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 
 public class C3DPopupOLD extends Popup {

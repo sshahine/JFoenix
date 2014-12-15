@@ -9,6 +9,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -22,8 +23,6 @@ import javafx.util.Duration;
 import com.cctintl.c3dfx.controls.C3DTextField;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
-import de.jensd.fx.fontawesome.Icon;
-
 public class C3DTextFieldSkin extends TextFieldSkin{
 
 	private StackPane effectsPane  = new StackPane();
@@ -33,8 +32,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private Line focusedLine = new Line();
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
-	
-	
 	
 	private double offset = 1;
 	private double endX;
@@ -46,6 +43,8 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	public C3DTextFieldSkin(C3DTextField field) {
 		super(field);
 		
+		// initial styles
+		field.setStyle("-fx-background-color: transparent ;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080;-fx-alignment: top-left ;");
 		
 		effectsPane.getChildren().add(line);
 		effectsPane.getChildren().add(focusedLine);
@@ -57,7 +56,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		StackPane.setMargin(cursorPane, new Insets(0,0,5,40));
 		
 		errorLabel.getStyleClass().add("errorLabel");
+		errorLabel.setStyle("-fx-text-fill : #D34336;-fx-font-size: 0.75em;");
 		effectsPane.getChildren().add(errorLabel);
+		
 		StackPane.setAlignment(errorLabel, Pos.BOTTOM_LEFT);
 		StackPane.setMargin(errorLabel, new Insets(0,0,-14,1));
 		
@@ -71,7 +72,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
 			if(newVal!=null){
 				errorLabel.setText(newVal.getMessage());
-				Icon awsomeIcon = newVal.getAwsomeIcon();
+				Node awsomeIcon = newVal.getAwsomeIcon();
 				errorIcon.getChildren().add(awsomeIcon);
 				StackPane.setAlignment(awsomeIcon, Pos.BOTTOM_RIGHT);
 				StackPane.setMargin(awsomeIcon, new Insets(0,1,-14,0));
@@ -97,8 +98,8 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
+		super.layoutChildren(x, y, w, h);
 		if(invalid){
-			super.layoutChildren(x, y, w, h);
 			
 			startX = getSkinnable().getBoundsInLocal().getMinX();
 			endX = getSkinnable().getBoundsInLocal().getMaxX();
@@ -176,8 +177,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 										)
 
 				);
-//		cursorAnimation.setDelay(Duration.millis(20));
-		
 		ParallelTransition transition = new ParallelTransition();
 		transition.getChildren().add(linesAnimation);
 		if(getSkinnable().getText().length() == 0)

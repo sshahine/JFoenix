@@ -1,17 +1,13 @@
 package com.cctintl.c3dfx.validation;
 
+import javafx.beans.DefaultProperty;
+import javafx.scene.control.TextInputControl;
+
 import com.cctintl.c3dfx.validation.base.ValidatorBase;
 
-import javafx.scene.control.TextInputControl;
-import de.jensd.fx.fontawesome.Icon;
-
+@DefaultProperty(value="awsomeIcon")
 public class RequiredFieldValidator extends ValidatorBase {
 
-	public RequiredFieldValidator() {
-		setMessage("Input Required!");
-		setAwsomeIcon(new Icon("WARNING"));
-	}
-	
 	@Override
 	protected void eval() {
 		if(srcControl.get() instanceof TextInputControl)

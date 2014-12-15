@@ -1,6 +1,5 @@
 package com.cctintl.c3dfx.validation.base;
 
-import de.jensd.fx.fontawesome.Icon;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -127,21 +126,21 @@ public abstract class ValidatorBase extends Parent {
 	}
 
 	/***** Awsome Icon *****/
-	protected SimpleObjectProperty<Icon> awsomeIcon = new SimpleObjectProperty<Icon>(){
+	protected SimpleObjectProperty<Node> awsomeIcon = new SimpleObjectProperty<Node>(){
 		@Override
 		protected void invalidated() {
 			updateSrcControl();
 		}
 	};
-	public void setAwsomeIcon(Icon icon){
+	public void setAwsomeIcon(Node icon){
 		icon.setStyle("-fx-font-family: FontAwesome;");
 		icon.getStyleClass().add("errorIcon");
 		this.awsomeIcon.set(icon);
 	}
-	public Icon getAwsomeIcon(){
+	public Node getAwsomeIcon(){
 		return this.awsomeIcon.get();
 	}
-	public SimpleObjectProperty<Icon> awsomeIconProperty(){
+	public SimpleObjectProperty<Node> awsomeIconProperty(){
 		return this.awsomeIcon;
 	}
 

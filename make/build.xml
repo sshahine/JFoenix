@@ -36,5 +36,7 @@
       <!-- Put everything in ${build} into the C3DFX.jar file -->
       <jar jarfile="${dist}/C3DFX.jar" basedir="${build}" />
    </target>
-   <target name="build.c3dfx" depends="clean,dist" />
+   <target name="build.c3dfx" depends="clean,dist">
+   		<delete dir="${build}" />
+   </target>
 </project>

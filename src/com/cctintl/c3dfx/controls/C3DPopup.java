@@ -16,7 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import com.fxexperience.javafx.animation.CachedTimelineTransition;
+import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 @DefaultProperty(value="content")
 public class C3DPopup extends StackPane {
