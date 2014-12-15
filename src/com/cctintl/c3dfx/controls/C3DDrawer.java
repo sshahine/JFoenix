@@ -44,7 +44,8 @@ public class C3DDrawer extends StackPane {
 	private StackPane overlayPane = new StackPane();
 	private StackPane sidePane = new StackPane();
 	private StackPane content = new StackPane();
-	private Transition transition;
+	private Transition inTransition;
+	private Transition outTransition;
 	private Transition partialTransition;
 	private Duration holdTime = Duration.seconds(0.2);
 	private PauseTransition holdTimer = new PauseTransition(holdTime);
@@ -100,7 +101,8 @@ public class C3DDrawer extends StackPane {
 		
 		initTranslateX.bind(Bindings.createDoubleBinding(()-> -1 * directionProperty.get().doubleValue() * sidePane.maxWidthProperty().getValue() - initOffset * directionProperty.get().doubleValue(), sidePane.maxWidthProperty(), directionProperty));
 		initTranslateX.addListener((o,oldVal,newVal) ->{ 
-			transition = new DrawerTransition(initTranslateX.doubleValue(), 0);
+			inTransition = new DrawerTransition(initTranslateX.doubleValue(), 0);
+			outTransition = new OutDrawerTransition(initTranslateX.doubleValue(),0);
 			sidePane.setTranslateX(newVal.doubleValue());
 		});
 		
@@ -144,18 +146,14 @@ public class C3DDrawer extends StackPane {
 	 **************************************************************************/
 
 	public void draw() {
-		if(this.transition.getStatus().equals(Status.STOPPED)){
-			this.transition.setRate(1);
-			transition.setOnFinished((e)->sidePane.setTranslateX(0));
-			this.transition.play();
+		if(this.inTransition.getStatus().equals(Status.STOPPED)){
+			this.inTransition.play();
 		}
 	}
 
 	public void hide(){
-		if(transition.getStatus().equals(Status.STOPPED)){
-			transition.setRate(-1);
-			transition.setOnFinished((e)->sidePane.setTranslateX(initTranslateX.doubleValue()));
-			transition.playFrom(transition.getTotalDuration());
+		if(outTransition.getStatus().equals(Status.STOPPED)){
+			outTransition.play();
 		}
 	}
 
@@ -301,6 +299,29 @@ public class C3DDrawer extends StackPane {
 			setDelay(Duration.seconds(0));
 		}
 	}
+	
+	private class OutDrawerTransition extends CachedTimelineTransition{
+		public OutDrawerTransition(double start, double end) {
+			super(sidePane, new Timeline(
+					new KeyFrame(
+							Duration.ZERO,       
+							new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH),
+							new KeyValue(sidePane.translateXProperty(), end , Interpolator.EASE_BOTH)				
+							),
+							new KeyFrame(Duration.millis(900),
+									new KeyValue(sidePane.translateXProperty(), start  ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(Duration.millis(1000),
+											new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH)																
+											)
+					));
+			setCycleDuration(Duration.seconds(0.5));
+			setDelay(Duration.seconds(0));
+		}
+	}
+	
 
 	private class DrawerPartialTransition extends CachedTimelineTransition{
 		public DrawerPartialTransition(double start, double end) {

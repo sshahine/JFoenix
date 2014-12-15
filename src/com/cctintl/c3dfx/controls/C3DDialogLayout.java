@@ -2,6 +2,7 @@ package com.cctintl.c3dfx.controls;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -10,7 +11,7 @@ public class C3DDialogLayout extends StackPane {
 	private VBox layout = new VBox();
 	private StackPane heading = new StackPane();
 	private StackPane body = new StackPane();
-	private StackPane actions = new StackPane();
+	private FlowPane actions = new FlowPane();
 	
 	public C3DDialogLayout() {
 		super();
@@ -35,7 +36,7 @@ public class C3DDialogLayout extends StackPane {
 	}
 
 	public void setHeading(Node... titleContent) {
-		this.heading.getChildren().addAll(heading);
+		this.heading.getChildren().addAll(titleContent);
 	}
 
 	public ObservableList<Node> getBody() {
