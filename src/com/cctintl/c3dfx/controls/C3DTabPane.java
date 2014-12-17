@@ -20,6 +20,6 @@ public class C3DTabPane extends TabPane {
 	}
 
 	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 	}
 }

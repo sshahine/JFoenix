@@ -1,5 +1,8 @@
 package demos.components;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -57,5 +60,11 @@ public class TabsDemo extends Application {
 		root.getChildren().addAll(hbox);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+
+	private SecureRandom random = new SecureRandom();
+
+	public String nextSessionId() {
+		return new BigInteger(50, random).toString(16);
 	}
 }

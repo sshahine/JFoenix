@@ -28,6 +28,7 @@ import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.geometry.VPos;
@@ -49,22 +50,31 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import com.sun.javafx.Utils;
+import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
+import com.cctintl.c3dfx.controls.DepthManager;
 import com.sun.javafx.css.converters.EnumConverter;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-import com.sun.javafx.scene.traversal.Direction;
-import com.sun.javafx.scene.traversal.TraversalEngine;
 
 public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
+
+	private Color defaultColor = Color.valueOf("#00BCD4"), ripplerColor = Color.valueOf("FFFF8D"), selectedTabText = Color.WHITE, unSelectedTabText = Color.LIGHTGREY;
+
 	private static enum TabAnimation {
 		NONE, GROW
 		// In future we could add FADE, ...
@@ -155,7 +165,8 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		super(tabPane, new TabPaneBehavior(tabPane));
 
 		clipRect = new Rectangle(tabPane.getWidth(), tabPane.getHeight());
-		getSkinnable().setClip(clipRect);
+		//getSkinnable().setClip(clipRect);
+		DepthManager.setDepth(getSkinnable(), 2);
 
 		tabContentRegions = FXCollections.<TabContentRegion> observableArrayList();
 
@@ -226,7 +237,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			if (tabRegion != null) {
 				tabRegion.isClosing = true;
 				if (closeTabAnimation.get() == TabAnimation.GROW) {
-					tabRegion.animating = true;
 					Timeline closedTabTimeline = createTimeline(tabRegion, Duration.millis(ANIMATION_SPEED), 0.0F, event -> {
 						handleClosedTab(tab);
 					});
@@ -258,11 +268,9 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			final TabHeaderSkin tabRegion = tabHeaderArea.getTabHeaderSkin(tab);
 			if (tabRegion != null) {
 				if (openTabAnimation.get() == TabAnimation.GROW) {
-					tabRegion.animating = true;
 					tabRegion.animationTransition.setValue(0.0);
 					tabRegion.setVisible(true);
 					createTimeline(tabRegion, Duration.millis(ANIMATION_SPEED), 1.0, event -> {
-						tabRegion.animating = false;
 						tabRegion.inner.requestLayout();
 					}).play();
 				} else {
@@ -388,9 +396,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 		// end of removing menu item
 
-		if (tabRegion != null) {
-			tabRegion.animating = false;
-		}
 		tabHeaderArea.requestLayout();
 	}
 
@@ -639,10 +644,13 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	 *
 	 **************************************************************************/
 	class TabHeaderArea extends StackPane {
+
 		private Rectangle headerClip;
 		private StackPane headersRegion;
 		private StackPane headerBackground;
 		private TabControlButtons controlButtons;
+		private Line selectedTabLine;
+		private boolean initialized;
 
 		private boolean measureClosingTabs = false;
 
@@ -702,9 +710,12 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 								}
 								offset += tabHeaderPrefWidth;
 							}
-							//                        } else {
-							//                            isSelectingTab = true;
 						}
+					}
+
+					if (!initialized) {
+						selectedTabLine.setEndX(getWidth());
+						initialized = true;
 					}
 
 					if (isSelectingTab) {
@@ -747,7 +758,15 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			headersRegion.setClip(headerClip);
 
 			headerBackground = new StackPane();
+			headerBackground.setBackground(new Background(new BackgroundFill(defaultColor, CornerRadii.EMPTY, Insets.EMPTY)));
 			headerBackground.getStyleClass().setAll("tab-header-background");
+
+			selectedTabLine = new Line();
+			selectedTabLine.setStrokeWidth(2);
+			selectedTabLine.setStroke(ripplerColor);
+
+			headerBackground.getChildren().add(selectedTabLine);
+			StackPane.setAlignment(selectedTabLine, Pos.BOTTOM_LEFT);
 
 			int i = 0;
 			for (Tab tab : tabPane.getTabs()) {
@@ -898,11 +917,53 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			final double visibleAreaEndX = visibleWidth;
 
+			runTimeline(selectedTabStartX, selectedTabWidth);
+
 			if (selectedTabStartX < -scrollOffset) {
 				setScrollOffset(-selectedTabStartX);
 			} else if (selectedTabEndX > (visibleAreaEndX - scrollOffset)) {
 				setScrollOffset(visibleAreaEndX - selectedTabEndX);
 			}
+
+		}
+
+		private void runTimeline(double newTransX, double newWidth) {
+			double oldWidth = selectedTabLine.getEndX();
+			double oldTransX = selectedTabLine.getTranslateX();
+			double transDiff = newTransX - oldTransX;
+			Timeline timeline;
+			if(transDiff > 0) {
+				timeline = new Timeline(
+						new KeyFrame(
+								Duration.ZERO,
+								new KeyValue(selectedTabLine.endXProperty(), oldWidth, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), oldTransX, Interpolator.EASE_BOTH)),
+						new KeyFrame(
+								Duration.seconds(0.15),
+								new KeyValue(selectedTabLine.endXProperty(), transDiff, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), oldTransX, Interpolator.EASE_BOTH)),
+						new KeyFrame(
+								Duration.seconds(0.33),
+								new KeyValue(selectedTabLine.endXProperty(), newWidth, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), newTransX, Interpolator.EASE_BOTH))
+						);
+			} else {
+				timeline = new Timeline(
+						new KeyFrame(
+								Duration.ZERO,
+								new KeyValue(selectedTabLine.endXProperty(), oldWidth, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), oldTransX, Interpolator.EASE_BOTH)),
+						new KeyFrame(
+								Duration.seconds(0.15),
+								new KeyValue(selectedTabLine.endXProperty(), -transDiff, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), newTransX, Interpolator.EASE_BOTH)),
+						new KeyFrame(
+								Duration.seconds(0.33),
+								new KeyValue(selectedTabLine.endXProperty(), newWidth, Interpolator.EASE_BOTH),
+								new KeyValue(selectedTabLine.translateXProperty(), newTransX, Interpolator.EASE_BOTH))
+						);
+			}
+			timeline.play();
 		}
 
 		public double getScrollOffset() {
@@ -1050,7 +1111,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 	} /* End TabHeaderArea */
 
-	static int CLOSE_BTN_SIZE = 16;
+	private static int CLOSE_LBL_SIZE = 12;
 
 	/**************************************************************************
 	 *
@@ -1065,12 +1126,12 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			return tab;
 		}
 
-		private Label label;
-		private StackPane closeBtn;
-		private StackPane inner;
+		private Label tabText;
+		private Label closeLabel;
+		private BorderPane inner;
 		private Tooltip oldTooltip;
 		private Tooltip tooltip;
-		private Rectangle clip;
+		private C3DRippler rippler;
 
 		private boolean isClosing = false;
 
@@ -1094,32 +1155,19 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			setStyle(tab.getStyle());
 
 			this.tab = tab;
-			clip = new Rectangle();
-			setClip(clip);
 
-			label = new Label(tab.getText(), tab.getGraphic());
-			label.getStyleClass().setAll("tab-label");
+			tabText = new Label(tab.getText(), tab.getGraphic());
+			tabText.setFont(new Font(16));
+			tabText.setStyle("-fx-font-weight: BOLD");
+			tabText.setPadding(new Insets(5, 10, 5, 10));
+			tabText.getStyleClass().setAll("tab-label");
 
-			closeBtn = new StackPane() {
-				@Override
-				protected double computePrefWidth(double h) {
-					return CLOSE_BTN_SIZE;
-				}
-
-				@Override
-				protected double computePrefHeight(double w) {
-					return CLOSE_BTN_SIZE;
-				}
-				//                @Override public Object accGetAttribute(Attribute attribute, Object... parameters) {
-				//                    switch (attribute) {
-				//                        case ROLE: return Role.BUTTON;
-				//                        case TITLE: return getString("Accessibility.title.TabPane.CloseButton");
-				//                        default: return super.accGetAttribute(attribute, parameters);
-				//                    }
-				//                }
-			};
-			closeBtn.getStyleClass().setAll("tab-close-button");
-			closeBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			closeLabel = new Label();
+			closeLabel.setPrefSize(CLOSE_LBL_SIZE, CLOSE_LBL_SIZE);
+			closeLabel.setText("X");
+			closeLabel.setTextFill(Color.WHITE);
+			closeLabel.getStyleClass().setAll("tab-close-button");
+			closeLabel.setOnMousePressed(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent me) {
 					Tab tab = getTab();
@@ -1133,102 +1181,39 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			updateGraphicRotation();
 
-			final Region focusIndicator = new Region();
-			focusIndicator.setMouseTransparent(true);
-			focusIndicator.getStyleClass().add("focus-indicator");
-
-			inner = new StackPane() {
-				@Override
-				protected void layoutChildren() {
-					final TabPane skinnable = getSkinnable();
-
-					final double paddingTop = snappedTopInset();
-					final double paddingRight = snappedRightInset();
-					final double paddingBottom = snappedBottomInset();
-					final double paddingLeft = snappedLeftInset();
-					final double w = getWidth() - (paddingLeft + paddingRight);
-					final double h = getHeight() - (paddingTop + paddingBottom);
-
-					final double prefLabelWidth = snapSize(label.prefWidth(-1));
-					final double prefLabelHeight = snapSize(label.prefHeight(-1));
-
-					final double closeBtnWidth = showCloseButton() ? snapSize(closeBtn.prefWidth(-1)) : 0;
-					final double closeBtnHeight = showCloseButton() ? snapSize(closeBtn.prefHeight(-1)) : 0;
-					final double minWidth = snapSize(skinnable.getTabMinWidth());
-					final double maxWidth = snapSize(skinnable.getTabMaxWidth());
-					final double maxHeight = snapSize(skinnable.getTabMaxHeight());
-
-					double labelAreaWidth = prefLabelWidth;
-					double labelWidth = prefLabelWidth;
-					double labelHeight = prefLabelHeight;
-
-					final double childrenWidth = labelAreaWidth + closeBtnWidth;
-					final double childrenHeight = Math.max(labelHeight, closeBtnHeight);
-
-					if (childrenWidth > maxWidth && maxWidth != Double.MAX_VALUE) {
-						labelAreaWidth = maxWidth - closeBtnWidth;
-						labelWidth = maxWidth - closeBtnWidth;
-					} else if (childrenWidth < minWidth) {
-						labelAreaWidth = minWidth - closeBtnWidth;
-					}
-
-					if (childrenHeight > maxHeight && maxHeight != Double.MAX_VALUE) {
-						labelHeight = maxHeight;
-					}
-
-					if (animating) {
-						//                        if (prefWidth.getValue() < labelAreaWidth) {
-						//                            labelAreaWidth = prefWidth.getValue();
-						//                        }
-						labelAreaWidth *= animationTransition.get();
-						closeBtn.setVisible(false);
-					} else {
-						closeBtn.setVisible(showCloseButton());
-					}
-
-					label.resize(labelWidth, labelHeight);
-
-					double labelStartX = paddingLeft;
-
-					// If maxWidth is less than Double.MAX_VALUE, the user has 
-					// clamped the max width, but we should
-					// position the close button at the end of the tab, 
-					// which may not necessarily be the entire width of the
-					// provided max width.
-					double closeBtnStartX = (maxWidth < Double.MAX_VALUE ? Math.min(w, maxWidth) : w) - paddingRight - closeBtnWidth;
-
-					positionInArea(label, labelStartX, paddingTop, labelAreaWidth, h,
-					/*baseline ignored*/0, HPos.CENTER, VPos.CENTER);
-
-					if (closeBtn.isVisible()) {
-						closeBtn.resize(closeBtnWidth, closeBtnHeight);
-						positionInArea(closeBtn, closeBtnStartX, paddingTop, closeBtnWidth, h,
-						/*baseline ignored*/0, HPos.CENTER, VPos.CENTER);
-					}
-
-					// Magic numbers regretfully introduced for RT-28944 (so that
-					// the focus rect appears as expected on Windows and Mac).
-					// In short we use the vPadding to shift the focus rect down
-					// into the content area (whereas previously it was being clipped
-					// on Windows, whilst it still looked fine on Mac). In the
-					// future we may want to improve this code to remove the
-					// magic number. Similarly, the hPadding differs on Mac.
-					final int vPadding = Utils.isMac() ? 2 : 3;
-					final int hPadding = Utils.isMac() ? 2 : 1;
-					focusIndicator.resizeRelocate(paddingLeft - hPadding, paddingTop + vPadding, w + 2 * hPadding, h - 2 * vPadding);
-				}
-			};
+			inner = new BorderPane();
+			inner.setCenter(tabText);
 			inner.getStyleClass().add("tab-container");
 			inner.setRotate(getSkinnable().getSide().equals(Side.BOTTOM) ? 180.0F : 0.0F);
-			inner.getChildren().addAll(label, closeBtn, focusIndicator);
 
-			getChildren().addAll(inner);
+			rippler = new C3DRippler(inner, RipplerPos.FRONT);
+			rippler.setRipplerFill(ripplerColor);
+			rippler.getChildren().add(closeLabel);
+			StackPane.setAlignment(closeLabel, Pos.TOP_RIGHT);
+
+			getChildren().addAll(rippler);
 
 			tooltip = tab.getTooltip();
 			if (tooltip != null) {
 				Tooltip.install(this, tooltip);
 				oldTooltip = tooltip;
 			}
+
+			if (tab.isSelected()) {
+				tabText.setTextFill(selectedTabText);
+			} else {
+				tabText.setTextFill(unSelectedTabText);
+			}
+			closeLabel.setVisible(tab.isSelected());
+
+			tab.selectedProperty().addListener((o, oldVal, newVal) -> {
+				if (newVal) {
+					tabText.setTextFill(selectedTabText);
+				} else {
+					tabText.setTextFill(unSelectedTabText);
+				}
+				closeLabel.setVisible(newVal);
+			});
 
 			listener.registerChangeListener(tab.closableProperty(), "CLOSABLE");
 			listener.registerChangeListener(tab.selectedProperty(), "SELECTED");
@@ -1274,9 +1259,24 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 							}
 						}
 					} else if (me.getButton().equals(MouseButton.PRIMARY)) {
+						setOpacity(1);
 						getBehavior().selectTab(getTab());
 					}
 				}
+			});
+
+			setOnMouseEntered((o) -> {
+				closeLabel.setVisible(true);
+				if (!tab.isSelected()) {
+					setOpacity(0.7);
+				}
+			});
+
+			setOnMouseExited((o) -> {
+				if (!tab.isSelected()) {
+					closeLabel.setVisible(false);
+				}
+				setOpacity(1);
 			});
 
 			// initialize pseudo-class state
@@ -1302,9 +1302,9 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				inner.requestLayout();
 				requestLayout();
 			} else if ("TEXT".equals(p)) {
-				label.setText(getTab().getText());
+				tabText.setText(getTab().getText());
 			} else if ("GRAPHIC".equals(p)) {
-				label.setGraphic(getTab().getGraphic());
+				tabText.setGraphic(getTab().getGraphic());
 			} else if ("CONTEXT_MENU".equals(p)) {
 				// todo
 			} else if ("TOOLTIP".equals(p)) {
@@ -1358,13 +1358,13 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 
 		private void updateGraphicRotation() {
-			if (label.getGraphic() != null) {
-				label.getGraphic().setRotate(getSkinnable().isRotateGraphic() ? 0.0F : (getSkinnable().getSide().equals(Side.RIGHT) ? -90.0F : (getSkinnable().getSide().equals(Side.LEFT) ? 90.0F : 0.0F)));
+			if (tabText.getGraphic() != null) {
+				tabText.getGraphic().setRotate(getSkinnable().isRotateGraphic() ? 0.0F : (getSkinnable().getSide().equals(Side.RIGHT) ? -90.0F : (getSkinnable().getSide().equals(Side.LEFT) ? 90.0F : 0.0F)));
 			}
 		}
 
 		private boolean showCloseButton() {
-			return tab.isClosable() && (getSkinnable().getTabClosingPolicy().equals(TabClosingPolicy.ALL_TABS) || getSkinnable().getTabClosingPolicy().equals(TabClosingPolicy.SELECTED_TAB) && tab.isSelected());
+			return tab.isClosable() && (getSkinnable().getTabClosingPolicy().equals(TabClosingPolicy.ALL_TABS) || getSkinnable().getTabClosingPolicy().equals(TabClosingPolicy.SELECTED_TAB));
 		}
 
 		private final DoubleProperty animationTransition = new SimpleDoubleProperty(this, "animationTransition", 1.0) {
@@ -1384,22 +1384,17 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			getChildren().clear();
 		}
 
-		private boolean animating = false;
-
 		@Override
 		protected double computePrefWidth(double height) {
-			//            if (animating) {
-			//                return prefWidth.getValue();
-			//            }
 			double minWidth = snapSize(getSkinnable().getTabMinWidth());
 			double maxWidth = snapSize(getSkinnable().getTabMaxWidth());
 			double paddingRight = snappedRightInset();
 			double paddingLeft = snappedLeftInset();
-			double tmpPrefWidth = snapSize(label.prefWidth(-1));
+			double tmpPrefWidth = snapSize(tabText.prefWidth(-1));
 
 			// only include the close button width if it is relevant
 			if (showCloseButton()) {
-				tmpPrefWidth += snapSize(closeBtn.prefWidth(-1));
+				tmpPrefWidth += snapSize(closeLabel.prefWidth(-1));
 			}
 
 			if (tmpPrefWidth > maxWidth) {
@@ -1408,7 +1403,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				tmpPrefWidth = minWidth;
 			}
 			tmpPrefWidth += paddingRight + paddingLeft;
-			//            prefWidth.setValue(tmpPrefWidth);
 			return tmpPrefWidth;
 		}
 
@@ -1418,7 +1412,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			double maxHeight = snapSize(getSkinnable().getTabMaxHeight());
 			double paddingTop = snappedTopInset();
 			double paddingBottom = snappedBottomInset();
-			double tmpPrefHeight = snapSize(label.prefHeight(width));
+			double tmpPrefHeight = snapSize(tabText.prefHeight(width));
 
 			if (tmpPrefHeight > maxHeight) {
 				tmpPrefHeight = maxHeight;
@@ -1432,30 +1426,20 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		@Override
 		protected void layoutChildren() {
 			double w = (snapSize(getWidth()) - snappedRightInset() - snappedLeftInset()) * animationTransition.getValue();
-			inner.resize(w, snapSize(getHeight()) - snappedTopInset() - snappedBottomInset());
-			inner.relocate(snappedLeftInset(), snappedTopInset());
+			rippler.resize(w, snapSize(getHeight()) - snappedTopInset() - snappedBottomInset());
+			rippler.relocate(snappedLeftInset(), snappedTopInset());
 		}
 
 		@Override
 		protected void setWidth(double value) {
 			super.setWidth(value);
-			clip.setWidth(value);
 		}
 
 		@Override
 		protected void setHeight(double value) {
 			super.setHeight(value);
-			clip.setHeight(value);
 		}
 
-		//        @Override public Object accGetAttribute(Attribute attribute, Object... parameters) {
-		//            switch (attribute) {
-		//                case ROLE: return Role.TAB_ITEM;
-		//                case TITLE: return getTab().getText();
-		//                case SELECTED: return selectedTab == getTab();
-		//                default: return super.accGetAttribute(attribute, parameters);
-		//            }
-		//        }
 	} /* End TabHeaderSkin */
 
 	private static final PseudoClass SELECTED_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("selected");
@@ -1472,8 +1456,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	 **************************************************************************/
 	class TabContentRegion extends StackPane {
 
-		private TraversalEngine engine;
-		private Direction direction = Direction.NEXT;
 		private Tab tab;
 
 		private InvalidationListener tabContentListener = valueModel -> {
@@ -1748,13 +1730,4 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 	}
 
-	//    @Override
-	//    public Object accGetAttribute(Attribute attribute, Object... parameters) {
-	//        switch (attribute) {
-	//            case FOCUS_ITEM: return tabHeaderArea.getTabHeaderSkin(selectedTab);
-	//            case SELECTED_TAB: return tabHeaderArea.getTabHeaderSkin(selectedTab);
-	//            case TABS: return tabHeaderArea.headersRegion.getChildren();
-	//            default: return super.accGetAttribute(attribute, parameters);
-	//        }
-	//    }
 }
