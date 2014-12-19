@@ -40,7 +40,8 @@ public class C3DRippler extends StackPane {
 	protected RippleGenerator rippler;
 	protected Pane ripplerPane;
 	protected Node control;
-
+	private double defaultRadius = 200;
+	private double minRadius = 100;
 	private double rippleRadius = 150;
 	private boolean enabled = true;
 	private boolean toggled = false;
@@ -101,7 +102,14 @@ public class C3DRippler extends StackPane {
 				else this.getChildren().add(this.control);	
 			});			
 
-
+			control.boundsInParentProperty().addListener((o,oldVal,newVal)->{
+				rippleRadius = newVal.getWidth();
+				if(rippleRadius > defaultRadius)
+					rippleRadius = defaultRadius;
+				if(rippleRadius < minRadius)
+					rippleRadius = minRadius;
+			});
+			
 			this.getChildren().add(ripplerPane);
 
 			// add listeners
@@ -215,8 +223,7 @@ public class C3DRippler extends StackPane {
 					// create fade out transition for the ripple
 					ripplerPane.setOnMouseReleased((e)->{
 						generating = false;
-						overlayRect.animation.setRate(-1);
-						overlayRect.animation.play();
+						overlayRect.animation.setRate(-1);						
 						ripple.inAnimation.pause();
 						double fadeOutRadious = rippleRadius + 20;
 						if(ripple.radiusProperty().get() < rippleRadius*0.5)
@@ -225,9 +232,10 @@ public class C3DRippler extends StackPane {
 						Timeline outAnimation = new Timeline(
 								new KeyFrame(Duration.seconds(0.3),
 										new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
-										new KeyValue(ripple.opacityProperty(), 0, Interpolator.LINEAR)
+										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
 										));
 						outAnimation.play();
+						overlayRect.animation.play();
 						outAnimation.setOnFinished((event)->{
 							getChildren().remove(ripple);	
 						});
@@ -261,7 +269,7 @@ public class C3DRippler extends StackPane {
 			Timeline inAnimation = new Timeline(
 					new KeyFrame(Duration.ZERO,
 							new KeyValue(radiusProperty(),  0,Interpolator.LINEAR),
-							new KeyValue(opacityProperty(), 1,Interpolator.LINEAR)
+							new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)
 							),new KeyFrame(Duration.seconds(0.3), 
 									new KeyValue(radiusProperty(),  rippleRadius ,Interpolator.LINEAR)					
 									));
