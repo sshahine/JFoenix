@@ -256,11 +256,12 @@ public class C3DRippler extends StackPane {
 			Timeline animation = new Timeline(
 					new KeyFrame(Duration.ZERO,
 							new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)
-							),new KeyFrame(Duration.seconds(0.2),
+							),new KeyFrame(Duration.seconds(0.3),
 									new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)
 									));
 			public OverLayRipple() {
 				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
+				this.setOpacity(0);
 			}
 		}
 
