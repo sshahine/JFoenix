@@ -1,9 +1,9 @@
 /*
  *	Apply google Roboto font to all UI components 
  */
+
 .root {
-	-fx-font-family: Roboto;
-	src:"/resources/roboto/Roboto-Regular.ttf";
+	-fx-font-family: "Roboto";	
 }
 
 .side-menu{
@@ -583,3 +583,7 @@
 	-fx-stroke: #0F9D58;
 }
 
+ @font-face {
+  font-family: "Roboto";
+  src: url("../roboto/Roboto-Regular.ttf");
+}
