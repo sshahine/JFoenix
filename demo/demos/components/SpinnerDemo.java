@@ -1,12 +1,13 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DSpinner;
-
-import demos.MainDemo;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DSpinner;
+
+import demos.MainDemo;
 
 public class SpinnerDemo extends Application {
 

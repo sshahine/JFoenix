@@ -1,10 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DDialog;
-import com.cctintl.c3dfx.controls.C3DListView;
-import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -20,6 +15,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DButton;
+import com.cctintl.c3dfx.controls.C3DDialog;
+import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
+import com.cctintl.c3dfx.controls.C3DListView;
 
 public class DialogDemo extends Application {
 

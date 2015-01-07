@@ -14,9 +14,9 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.C3DToggleButton;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
+import com.cctintl.c3dfx.controls.C3DToggleButton;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
 public class C3DToggleButtonSkin extends ToggleButtonSkin {

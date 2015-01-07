@@ -1,13 +1,6 @@
 package com.cctintl.c3dfx.controls;
 
 
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerTransition;
-
-
-
-
-
-
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
 import javafx.scene.layout.VBox;
@@ -15,6 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+
+import com.cctintl.c3dfx.transitions.hamburger.HamburgerTransition;
 
 @DefaultProperty(value="animation")
 public class C3DHamburger extends VBox {
