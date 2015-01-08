@@ -1,8 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DDrawer;
-import com.cctintl.c3dfx.controls.C3DHamburger;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -10,6 +7,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DDrawer;
+import com.cctintl.c3dfx.controls.C3DHamburger;
 
 public class DrawerDemo extends Application {
 

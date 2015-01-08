@@ -1,15 +1,16 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.DepthManager;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
+import com.cctintl.c3dfx.controls.DepthManager;
+
 import de.jensd.fx.fontawesome.Icon;
 
 public class IconsDemo extends Application {

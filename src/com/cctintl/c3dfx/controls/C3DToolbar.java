@@ -53,6 +53,14 @@ public class C3DToolbar extends StackPane {
 		return this.container;
 	}
 	
+	public void setBottom(Node node){
+		this.toolBar.setBottom(node);
+	}
+	
+	public Node getBottom(){
+		return this.toolBar.getBottom();
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *

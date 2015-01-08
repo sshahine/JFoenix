@@ -1,9 +1,9 @@
 package com.cctintl.c3dfx.controls;
 
-import com.cctintl.c3dfx.skins.C3DRadioButtonSkin;
-
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Skin;
+
+import com.cctintl.c3dfx.skins.C3DRadioButtonSkin;
 
 public class C3DRadioButton extends RadioButton {
 

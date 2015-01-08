@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.cctintl.c3dfx.skins.C3DToggleButtonSkin;
-import com.sun.javafx.css.converters.PaintConverter;
-
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -17,6 +14,9 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
+import com.cctintl.c3dfx.skins.C3DToggleButtonSkin;
+import com.sun.javafx.css.converters.PaintConverter;
 
 public class C3DToggleButton extends ToggleButton {
 

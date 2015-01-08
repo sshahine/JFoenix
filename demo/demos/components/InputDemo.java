@@ -1,8 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DTextField;
-import com.cctintl.c3dfx.validation.RequiredFieldValidator;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,6 +11,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DTextField;
+import com.cctintl.c3dfx.validation.RequiredFieldValidator;
 
 public class InputDemo extends Application {
 

@@ -1,5 +1,8 @@
 package demos.gui.uicomponents;
 
+import io.datafx.controller.FXMLController;
+import io.datafx.controller.flow.FlowException;
+import io.datafx.controller.util.VetoException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -9,10 +12,6 @@ import javafx.util.Duration;
 import javax.annotation.PostConstruct;
 
 import com.cctintl.c3dfx.controls.C3DProgressBar;
-
-import io.datafx.controller.FXMLController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 
 @FXMLController(value = "/resources/fxml/ui/ProgressBar.fxml", title = "Material Design Example")
 public class ProgressBarController {

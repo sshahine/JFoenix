@@ -1,7 +1,5 @@
 package com.cctintl.c3dfx.controls;
 
-import com.cctintl.c3dfx.skins.C3DListCellSkin;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -16,6 +14,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+
+import com.cctintl.c3dfx.skins.C3DListCellSkin;
 
 public class C3DListCell<T> extends ListCell<T> {
 
