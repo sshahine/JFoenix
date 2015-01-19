@@ -32,7 +32,7 @@ import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 @DefaultProperty(value="content")
 public class C3DDialog extends StackPane {
 
-	public static enum C3DDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
+//	public static enum C3DDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
 	public static enum C3DDialogTransition{CENTER, TOP, RIGHT, BOTTOM, LEFT};
 
 	private StackPane contentHolder;
@@ -185,9 +185,13 @@ public class C3DDialog extends StackPane {
 							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10), 
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0,Interpolator.EASE_BOTH)
 									),
-									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
+									new KeyFrame(Duration.millis(1000), 
+											new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH)
+											))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -203,9 +207,12 @@ public class C3DDialog extends StackPane {
 							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10), 
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0, Interpolator.EASE_BOTH)
 									),
-									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH)))
+									new KeyFrame(Duration.millis(1000), 
+											new KeyValue(contentHolder.translateXProperty(), 0,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1, Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -221,9 +228,12 @@ public class C3DDialog extends StackPane {
 							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10), 
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0, Interpolator.EASE_BOTH)
 									),
-									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
+									new KeyFrame(Duration.millis(1000),
+											new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1, Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -239,9 +249,12 @@ public class C3DDialog extends StackPane {
 							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10), 
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0, Interpolator.EASE_BOTH)
 									),
-									new KeyFrame(Duration.millis(1000), new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH)))
+									new KeyFrame(Duration.millis(1000), 
+											new KeyValue(contentHolder.translateYProperty(), 0,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1, Interpolator.EASE_BOTH)))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
 			setCycleDuration(Duration.seconds(0.4));
@@ -258,11 +271,13 @@ public class C3DDialog extends StackPane {
 							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10), 
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(overlayPane.opacityProperty(), 0,Interpolator.EASE_BOTH)
 									),							
 									new KeyFrame(Duration.millis(1000), 							
 											new KeyValue(contentHolder.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-											new KeyValue(contentHolder.scaleYProperty(), 1 ,Interpolator.EASE_BOTH)
+											new KeyValue(contentHolder.scaleYProperty(), 1 ,Interpolator.EASE_BOTH),
+											new KeyValue(overlayPane.opacityProperty(), 1, Interpolator.EASE_BOTH)
 											))
 					);
 			// reduce the number to increase the shifting , increase number to reduce shifting
