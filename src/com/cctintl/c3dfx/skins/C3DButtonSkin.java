@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -107,8 +108,13 @@ public class C3DButtonSkin extends ButtonSkin {
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
 			buttonRect.setFill(getSkinnable().getBackground().getFills().get(0).getFill());
-			buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
-			((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+			if(getChildren().get(0) instanceof LabeledText){
+				buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
+				((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+			}else if(getChildren().get(0) instanceof Label){
+				buttonRippler.setRipplerFill(((Label)getChildren().get(0)).getTextFill());			
+				((Label)getChildren().get(0)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+			}
 			buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}
