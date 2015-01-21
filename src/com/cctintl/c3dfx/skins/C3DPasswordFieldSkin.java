@@ -21,10 +21,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
-import com.cctintl.c3dfx.controls.C3DTextField;
+import com.cctintl.c3dfx.controls.C3DPasswordField;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
-public class C3DTextFieldSkin extends TextFieldSkin{
+public class C3DPasswordFieldSkin extends TextFieldSkin{
 
 	private StackPane effectsPane  = new StackPane();
 	private AnchorPane cursorPane = new AnchorPane();
@@ -41,7 +41,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 	private boolean invalid = true;
 
-	public C3DTextFieldSkin(C3DTextField field) {
+	public C3DPasswordFieldSkin(C3DPasswordField field) {
 		super(field);
 		
 		// initial styles
@@ -111,7 +111,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			line.strokeProperty().bind(((C3DTextField)getSkinnable()).unFocusColorProperty());			
+			line.setStroke(((C3DPasswordField)getSkinnable()).getUnFocusColor());
 			line.setStrokeWidth(1);
 			line.setStrokeType(StrokeType.CENTERED);
 			if(getSkinnable().isDisabled()) line.getStrokeDashArray().addAll(2d);
@@ -121,14 +121,14 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			focusedLine.setEndX(mid);
 			focusedLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			focusedLine.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
-			focusedLine.strokeProperty().bind(((C3DTextField)getSkinnable()).focusColorProperty());
+			focusedLine.setStroke(((C3DPasswordField)getSkinnable()).getFocusColor());
 			focusedLine.setStrokeWidth(2);
 			focusedLine.setStrokeType(StrokeType.CENTERED);
 			focusedLine.setVisible(false);
 
 			//			cursorPane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
 			cursorPane.setMaxSize(40, getSkinnable().getHeight());
-			cursorPane.setBackground(new Background(new BackgroundFill(((C3DTextField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+			cursorPane.setBackground(new Background(new BackgroundFill(((C3DPasswordField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
 			cursorPane.setOpacity(0);
 			
 			this.getChildren().remove(effectsPane);
