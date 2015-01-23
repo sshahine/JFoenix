@@ -39,9 +39,6 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import com.sun.javafx.scene.control.skin.Utils;
-import com.sun.javafx.scene.traversal.Algorithm;
-import com.sun.javafx.scene.traversal.Direction;
-import com.sun.javafx.scene.traversal.TraversalContext;
 
 /**
  * Implementation of a virtualized container using a cell based mechanism.

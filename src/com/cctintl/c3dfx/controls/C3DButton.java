@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.cctintl.c3dfx.converters.ButtonTypeConverter;
-import com.cctintl.c3dfx.skins.C3DButtonSkin;
-
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -16,6 +13,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+
+import com.cctintl.c3dfx.converters.ButtonTypeConverter;
+import com.cctintl.c3dfx.skins.C3DButtonSkin;
 
 public class C3DButton extends Button {
 	

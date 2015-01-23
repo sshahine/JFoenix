@@ -117,6 +117,10 @@ public class C3DDrawer extends StackPane {
 		this.sidePane.translateXProperty().addListener((o,oldVal,newVal)->{
 			if(newVal.doubleValue() == 0 || newVal.doubleValue() == initTranslateX.doubleValue())
 				this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+			double opValue = 1-newVal.doubleValue()/initTranslateX.doubleValue();
+			overlayPane.setOpacity(opValue);
+			if(opValue == 0) overlayPane.setVisible(false);
+			else overlayPane.setVisible(true);
 		});
 
 		this.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
@@ -214,8 +218,6 @@ public class C3DDrawer extends StackPane {
 		if(width + directionProperty.get().doubleValue() * mouseEvent.getSceneX() >= activeOffset && partialTransition !=null){
 			partialTransition = null;
 		}else if(partialTransition == null){
-			overlayPane.setVisible(true);
-			overlayPane.setOpacity(1);
 			double translateX ;
 			if(startMouseX < 0) translateX = initTranslateX.doubleValue() + directionProperty.get().doubleValue() * initOffset + directionProperty.get().doubleValue() * (width + directionProperty.get().doubleValue() * mouseEvent.getSceneX());
 			else translateX = directionProperty.get().doubleValue() * (startTranslateX + directionProperty.get().doubleValue() * ( mouseEvent.getSceneX() - startMouseX ));			
@@ -240,9 +242,7 @@ public class C3DDrawer extends StackPane {
 			// hide the sidePane
 			partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), initTranslateX.doubleValue() );
 			partialTransition.play();
-			partialTransition.setOnFinished((event)-> sidePane.setTranslateX(initTranslateX.doubleValue() ));
-			overlayPane.setVisible(false);
-			overlayPane.setOpacity(0);
+			partialTransition.setOnFinished((event)-> sidePane.setTranslateX(initTranslateX.doubleValue()));
 		}	
 		startMouseX = -1;
 		startTranslateX = -1;
@@ -283,8 +283,7 @@ public class C3DDrawer extends StackPane {
 			super(sidePane, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
-							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
-							new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH)
+							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(100),
 									new KeyValue(sidePane.translateXProperty(), start  ,Interpolator.EASE_BOTH),
@@ -305,7 +304,6 @@ public class C3DDrawer extends StackPane {
 			super(sidePane, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
-							new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH),
 							new KeyValue(sidePane.translateXProperty(), end , Interpolator.EASE_BOTH)				
 							),
 							new KeyFrame(Duration.millis(900),
@@ -314,7 +312,7 @@ public class C3DDrawer extends StackPane {
 									),
 									new KeyFrame(Duration.millis(1000),
 											new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
-											new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH)																
+											new KeyValue(overlayPane.opacityProperty(), 0,Interpolator.EASE_BOTH)																
 											)
 					));
 			setCycleDuration(Duration.seconds(0.5));

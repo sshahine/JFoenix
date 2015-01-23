@@ -1,11 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.controls.C3DPopupOLD;
-import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,6 +9,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.c3dfx.controls.C3DPopupOLD;
+import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
+import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
 
 public class PopupDemoOLD extends Application {
 

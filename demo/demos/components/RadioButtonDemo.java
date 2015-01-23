@@ -1,7 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DRadioButton;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -10,6 +8,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import com.cctintl.c3dfx.controls.C3DRadioButton;
 
 public class RadioButtonDemo extends Application {
 	@Override

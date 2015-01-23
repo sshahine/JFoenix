@@ -1,7 +1,5 @@
 package demos.components;
 
-import com.cctintl.c3dfx.controls.C3DProgressBar;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -17,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import com.cctintl.c3dfx.controls.C3DProgressBar;
 
 public class ProgressBarDemo extends Application {
 
