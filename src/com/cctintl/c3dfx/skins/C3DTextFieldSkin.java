@@ -86,6 +86,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			}
 			invalid = true;
 		});
+		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
+			field.setMaxWidth(newVal.doubleValue());
+			invalid = true;	
+		});
 	}
 
 	@Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
@@ -104,9 +108,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 		if(invalid){
-			startX = getSkinnable().getBoundsInLocal().getMinX();
-			endX = getSkinnable().getBoundsInLocal().getMaxX();
-			endX -= endX/20;
+			startX = getSkinnable().getBoundsInLocal().getMinX() ;
+			endX = getSkinnable().getWidth() - getSkinnable().getBaselineOffset();
+			
 			line.setStartX( startX + offset);
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
@@ -134,7 +138,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			this.getChildren().remove(effectsPane);
 			this.getChildren().add(effectsPane);
 		
-			layoutInArea(effectsPane, x, y, w, h, -1, HPos.CENTER, VPos.BOTTOM);
+			layoutInArea(effectsPane, x, y, w , h, -1, HPos.CENTER, VPos.BOTTOM);
 			
 			invalid = false;
 		}		
