@@ -34,7 +34,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
 	
-	private double offset = 1;
 	private double endX;
 	private double startX;
 	private double mid ;
@@ -111,7 +110,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			startX = getSkinnable().getBoundsInLocal().getMinX() ;
 			endX = getSkinnable().getWidth() - getSkinnable().getBaselineOffset();
 			
-			line.setStartX( startX + offset);
+			line.setStartX( startX );
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
@@ -120,7 +119,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			line.setStrokeType(StrokeType.CENTERED);
 			if(getSkinnable().isDisabled()) line.getStrokeDashArray().addAll(2d);
 			
-			mid = (endX - startX  + offset)/2;			
+			mid = (endX - startX )/2;			
 			focusedLine.setStartX(mid);
 			focusedLine.setEndX(mid);
 			focusedLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
@@ -159,7 +158,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 								),
 								new KeyFrame(
 										Duration.millis(150),
-										new KeyValue(focusedLine.startXProperty(), startX + offset ,Interpolator.EASE_BOTH),
+										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
 										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
 										)
 

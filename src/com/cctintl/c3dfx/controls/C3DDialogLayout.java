@@ -18,6 +18,7 @@ public class C3DDialogLayout extends StackPane {
 		initialize();
 		layout.getChildren().add(heading);
 		heading.getStyleClass().add("c3d-layout-heading");
+		heading.getStyleClass().add("title");
 		layout.getChildren().add(body);
 		body.getStyleClass().add("c3d-layout-body");
 		layout.getChildren().add(actions);

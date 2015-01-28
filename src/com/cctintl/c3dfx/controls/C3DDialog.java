@@ -51,11 +51,18 @@ public class C3DDialog extends StackPane {
 
 	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {		
 		initialize();
-		setContent(content);
+		setContent(content,true);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
 	}
 
+	public C3DDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType, boolean overlayClose) {		
+		initialize();
+		setContent(content, overlayClose);
+		setDialogContainer(dialogContainer);
+		this.transitionType.set(transitionType);
+	}
+	
 	private void initialize() {
 		this.setVisible(false);
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
@@ -74,8 +81,6 @@ public class C3DDialog extends StackPane {
 	public void setDialogContainer(Pane dialogContainer) {
 		if(dialogContainer!=null){
 			this.dialogContainer = dialogContainer;
-			// close the dialog if clicked on the overlay pane
-			overlayPane.setOnMouseClicked((e)->close());
 			this.dialogContainer.getChildren().remove(overlayPane);
 			this.dialogContainer.getChildren().add(overlayPane);
 			// FIXME: need to be improved to consider only the parent boundary
@@ -104,6 +109,30 @@ public class C3DDialog extends StackPane {
 			StackPane.setAlignment(contentHolder, Pos.CENTER);
 			overlayPane.setVisible(false);
 			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
+			// close the dialog if clicked on the overlay pane
+			overlayPane.setOnMouseClicked((e)->close());
+			// prevent propagating the events to overlay pane
+			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
+		}
+	}
+	
+	public void setContent(Region content, boolean overlayClose) {
+		if(content!=null){
+			this.content = content;	
+			contentHolder = new StackPane();
+			contentHolder.getChildren().add(content);
+			contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+			DepthManager.setDepth(contentHolder, 4);
+			// ensure stackpane is never resized beyond it's preferred size
+			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+			overlayPane = new StackPane();
+			overlayPane.getChildren().add(contentHolder);
+			overlayPane.getStyleClass().add("c3d-dialog-overlay-pane");
+			StackPane.setAlignment(contentHolder, Pos.CENTER);
+			overlayPane.setVisible(false);
+			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
+			// close the dialog if clicked on the overlay pane
+			if(overlayClose) overlayPane.setOnMouseClicked((e)->close());
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
