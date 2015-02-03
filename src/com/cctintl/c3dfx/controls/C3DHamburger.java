@@ -3,6 +3,7 @@ package com.cctintl.c3dfx.controls;
 
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
@@ -33,6 +34,8 @@ public class C3DHamburger extends VBox {
 		this.setScaleX(0.8);
 		this.setScaleY(0.8);
 		this.getStyleClass().add("c3d-hamburger-icon");
+		// must be specified 
+		this.setAlignment(Pos.CENTER);
 	}
 
 	public Transition getAnimation() {
