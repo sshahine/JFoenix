@@ -18,6 +18,7 @@ public class MainDemo extends Application {
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		flow.createHandler().start(container);
 		Scene scene = new Scene(container.getView(), 800, 800);
+//		Font.loadFont(MainDemo.class.getResource("/resources/roboto/Roboto-Medium.ttf").toExternalForm(), 10);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
 //		stage.initStyle(StageStyle.UNDECORATED);
 //		stage.setFullScreen(true);

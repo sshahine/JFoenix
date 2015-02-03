@@ -34,7 +34,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
 	
-	private double offset = 1;
 	private double endX;
 	private double startX;
 	private double mid ;
@@ -86,6 +85,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			}
 			invalid = true;
 		});
+		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
+			field.setMaxWidth(newVal.doubleValue());
+			invalid = true;	
+		});
 	}
 
 	@Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
@@ -104,10 +107,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 		if(invalid){
-			startX = getSkinnable().getBoundsInLocal().getMinX();
-			endX = getSkinnable().getBoundsInLocal().getMaxX();
-			endX -= endX/20;
-			line.setStartX( startX + offset);
+			startX = getSkinnable().getBoundsInLocal().getMinX() ;
+			endX = getSkinnable().getWidth() - getSkinnable().getBaselineOffset();
+			
+			line.setStartX( startX );
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
 			line.setEndY(getSkinnable().getBoundsInLocal().getMaxY() );
@@ -116,7 +119,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			line.setStrokeType(StrokeType.CENTERED);
 			if(getSkinnable().isDisabled()) line.getStrokeDashArray().addAll(2d);
 			
-			mid = (endX - startX  + offset)/2;			
+			mid = (endX - startX )/2;			
 			focusedLine.setStartX(mid);
 			focusedLine.setEndX(mid);
 			focusedLine.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
@@ -134,7 +137,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			this.getChildren().remove(effectsPane);
 			this.getChildren().add(effectsPane);
 		
-			layoutInArea(effectsPane, x, y, w, h, -1, HPos.CENTER, VPos.BOTTOM);
+			layoutInArea(effectsPane, x, y, w , h, -1, HPos.CENTER, VPos.BOTTOM);
 			
 			invalid = false;
 		}		
@@ -155,7 +158,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 								),
 								new KeyFrame(
 										Duration.millis(150),
-										new KeyValue(focusedLine.startXProperty(), startX + offset ,Interpolator.EASE_BOTH),
+										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
 										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
 										)
 

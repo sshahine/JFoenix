@@ -79,7 +79,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 			transition.setRate(newVal?1:-1);
 			transition.play();
 		});
-
+		
 		updateChildren();
 
 	}
@@ -123,6 +123,8 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 			leftLine.setEndX((boxWidth+padding-labelOffset)/2 - boxWidth/5.5 );
 			leftLine.setEndY(maxHeight-padding-lineThick);
 			transition = new CheckBoxTransition();
+			if(getSkinnable().isSelected())
+				transition.play();
 			invalid = false;
 		}
 
