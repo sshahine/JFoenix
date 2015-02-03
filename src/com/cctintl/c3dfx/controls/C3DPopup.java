@@ -6,6 +6,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -23,17 +24,19 @@ public class C3DPopup extends StackPane {
 
 	public static enum C3DPopupHPosition{ RIGHT, LEFT};
 	public static enum C3DPopupVPosition{ TOP, BOTTOM};
-	
+
 	private AnchorPane contentHolder;
 	private AnchorPane overlayPane;
 
 	private Scale scaleTransform = new Scale(0,0,0,0);
+	private double offsetX = -1;
+	private double offsetY = -1;
 
 	private Pane popupContainer;
 	private Region content;
 	private Transition animation;
 	private Node source;
-	
+
 	public C3DPopup(){
 		this(null,null);
 	}
@@ -106,47 +109,57 @@ public class C3DPopup extends StackPane {
 		this.setPopupContainer(popupContainer);
 		this.show(vAlign, hAlign);
 	}
-	
+
 	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign ){
 		this.show(vAlign, hAlign, 0, 0);
 	}
 
 	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign, double initOffsetX, double initOffsetY ){
-		
+
+		offsetX = 0;
+		offsetY = 0;
+
+		// compute the position of the popup
 		Node tempSource = this.source;
-		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal()); 
+		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());			
+		offsetX = bound.getMinX() + initOffsetX;
+		offsetY = bound.getMinY() + initOffsetY;
+
 		while(!tempSource.getParent().equals(popupContainer)){
-			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
 			tempSource = tempSource.getParent();
+			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
+			if(bound.getMinX() > 0) offsetX += bound.getMinX();
+			if(bound.getMinY() > 0) offsetY += bound.getMinY();
 		}
-		
-		double offsetX = bound.getMinX() + initOffsetX;
-		double offsetY = bound.getMinY() + initOffsetY;
-		
-	
+
+		// postion the popup according to its animation
 		if(hAlign.equals(C3DPopupHPosition.RIGHT)){
-			scaleTransform.setPivotX(content.getPrefWidth());
-			contentHolder.setTranslateX(-content.getPrefWidth() + bound.getWidth() + offsetX);
+			scaleTransform.pivotXProperty().bind(content.widthProperty());
+			contentHolder.translateXProperty().bind(Bindings.createDoubleBinding(()-> -content.getWidth() + source.getBoundsInLocal().getWidth()  + offsetX , content.widthProperty(),source.boundsInLocalProperty()));
 		}else {
+			scaleTransform.pivotXProperty().unbind();
+			contentHolder.translateXProperty().unbind();
 			scaleTransform.setPivotX(0);
 			contentHolder.setTranslateX(offsetX);
 		}
-		
+
 		if(vAlign.equals(C3DPopupVPosition.BOTTOM)){
-			scaleTransform.setPivotY(content.getPrefHeight());
-			contentHolder.setTranslateY(-content.getPrefHeight() + bound.getHeight() + offsetY);
+			scaleTransform.pivotYProperty().bind(content.heightProperty());
+			contentHolder.translateYProperty().bind(Bindings.createDoubleBinding(()-> -content.getHeight() + source.getBoundsInLocal().getHeight()  + offsetY , content.heightProperty(),source.boundsInLocalProperty()));
 		}else {
+			scaleTransform.pivotYProperty().unbind();
+			contentHolder.translateYProperty().unbind();
 			scaleTransform.setPivotY(0);
 			contentHolder.setTranslateY(offsetY);
 		}
-		
+
 		animation.setRate(1);
 		animation.setOnFinished((e)->{});
 		animation.play();
 	}
 
-	
-	
+
+
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
