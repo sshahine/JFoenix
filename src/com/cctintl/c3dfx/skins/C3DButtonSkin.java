@@ -72,12 +72,14 @@ public class C3DButtonSkin extends ButtonSkin {
 		button.heightProperty().addListener((o,oldVal,newVal)->buttonRect.setHeight(newVal.doubleValue()+1));
 		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
 		button.backgroundProperty().addListener((o,oldVal,newVal)->{
-			buttonRect.setFill(newVal.getFills().get(0).getFill());
-			double radius = 7;
-			if(newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
-				radius = newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius();
-			buttonRect.setArcHeight(radius);
-			buttonRect.setArcWidth(radius);
+			if(newVal!=null){
+				buttonRect.setFill(newVal.getFills().get(0).getFill());
+				double radius = 7;
+				if(newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
+					radius = newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius();
+				buttonRect.setArcHeight(radius);
+				buttonRect.setArcWidth(radius);
+			}
 		});
 
 		button.setOnMousePressed((e)->{

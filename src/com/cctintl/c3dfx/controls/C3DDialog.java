@@ -10,11 +10,14 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +29,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import com.cctintl.c3dfx.controls.events.C3DDialogEvent;
 import com.cctintl.c3dfx.converters.DialogTransitionConverter;
 import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
@@ -150,16 +154,16 @@ public class C3DDialog extends StackPane {
 	}
 
 	public void show(){
-		animation.play();
+		animation.play();		
 	}
-
+	
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
 		animation.setOnFinished((e)->{
 			resetProperties();
 		});
-
+		onDialogClosedProperty.get().handle(new C3DDialogEvent(C3DDialogEvent.CLOSED));
 	}
 
 	/***************************************************************************
@@ -382,6 +386,23 @@ public class C3DDialog extends StackPane {
 	}
 
 
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * Custom Events                                                           *
+	 *                                                                         *
+	 **************************************************************************/
+	
+	public void setOnDialogClosed(EventHandler<? super C3DDialogEvent> handler){
+		onDialogClosedProperty.set(handler);
+	}
+	
+	public void getOnDialogClosed(EventHandler<? super C3DDialogEvent> handler){
+		onDialogClosedProperty.get();
+	}
+		
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
+	
 
 }
 

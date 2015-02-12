@@ -1,5 +1,7 @@
 package com.cctintl.c3dfx.controls;
 
+import java.util.List;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
@@ -21,6 +23,8 @@ public class C3DDialogLayout extends StackPane {
 		heading.getStyleClass().add("title");
 		layout.getChildren().add(body);
 		body.getStyleClass().add("c3d-layout-body");
+		body.prefHeightProperty().bind(this.prefHeightProperty());
+		body.prefWidthProperty().bind(this.prefWidthProperty());
 		layout.getChildren().add(actions);
 		actions.getStyleClass().add("c3d-layout-actions");
 		this.getChildren().add(layout);
@@ -53,6 +57,10 @@ public class C3DDialogLayout extends StackPane {
 	}
 
 	public void setActions(Node... actions) {
+		this.actions.getChildren().addAll(actions);
+	}
+	
+	public void setActions(List<? extends Node> actions) {
 		this.actions.getChildren().addAll(actions);
 	}
 	
