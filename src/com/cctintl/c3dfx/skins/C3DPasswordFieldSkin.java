@@ -118,6 +118,11 @@ public class C3DPasswordFieldSkin extends TextFieldSkin{
 			line.setStrokeWidth(1);
 			line.setStrokeType(StrokeType.CENTERED);
 			if(getSkinnable().isDisabled()) line.getStrokeDashArray().addAll(2d);
+			getSkinnable().disabledProperty().addListener((o,oldVal,newVal) -> {
+				line.getStrokeDashArray().clear();
+				if(newVal)
+					line.getStrokeDashArray().addAll(2d);
+			});
 			
 			mid = (endX - startX )/2;			
 			focusedLine.setStartX(mid);

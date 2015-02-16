@@ -156,9 +156,9 @@ public class C3DDrawer extends StackPane {
 	}
 
 	public void hide(){
-		if(outTransition.getStatus().equals(Status.STOPPED)){
+		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
+		if(outTransition.getStatus().equals(Status.STOPPED) && sidePane.getTranslateX() == 0)
 			outTransition.play();
-		}
 	}
 
 	/***************************************************************************
