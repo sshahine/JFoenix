@@ -241,3 +241,15 @@
 	-fx-background-color: WHITE;
 }
 
+
+
+/*
+ * TABS
+ *  
+ */
+
+.tab-down-button {
+	-fx-text-fill: WHITE;
+}
+
+ 

@@ -37,7 +37,7 @@ public class TabsDemo extends Application {
 		tab.setContent(new Label("Tab 0123"));
 
 		tabPane.getTabs().add(tab);
-
+		tabPane.setPrefSize(300, 200);
 		Tab tab1 = new Tab();
 		tab1.setText("Tab 01");
 		tab1.setContent(new Label("Tab 1234"));
@@ -64,6 +64,7 @@ public class TabsDemo extends Application {
 		hbox.setAlignment(Pos.CENTER);
 
 		root.getChildren().addAll(hbox);
+		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

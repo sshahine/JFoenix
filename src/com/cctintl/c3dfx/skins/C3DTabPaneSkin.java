@@ -53,7 +53,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -63,6 +62,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
 import com.cctintl.c3dfx.controls.DepthManager;
 import com.sun.javafx.css.converters.EnumConverter;
@@ -214,13 +214,13 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 		initializeSwipeHandlers();
 
-		getSkinnable().setOnMouseDragged(me -> {
+		tabHeaderArea.headersRegion.setOnMouseDragged(me -> {
 			isDragged = true;
-			tabHeaderArea.setScrollOffset(offsetStart + me.getX() - dragStart);
+			tabHeaderArea.setScrollOffset(offsetStart + me.getSceneX() - dragStart);
 		});
 
 		getSkinnable().setOnMousePressed(me -> {
-			dragStart = me.getX();
+			dragStart = me.getSceneX();
 			offsetStart = tabHeaderArea.getScrollOffset();
 		});
 
@@ -777,7 +777,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			};
 			headersRegion.getStyleClass().setAll("headers-region");
 			headersRegion.setClip(headerClip);
-
+			
 			headerBackground = new StackPane();
 			headerBackground.setBackground(new Background(new BackgroundFill(defaultColor, CornerRadii.EMPTY, Insets.EMPTY)));
 			headerBackground.getStyleClass().setAll("tab-header-background");
@@ -785,8 +785,8 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			selectedTabLine = new Line();
 			selectedTabLine.setStrokeWidth(2);
 			selectedTabLine.setStroke(ripplerColor);
-
 			headerBackground.getChildren().add(selectedTabLine);
+			
 			StackPane.setAlignment(selectedTabLine, Pos.BOTTOM_LEFT);
 
 			int i = 0;
@@ -796,10 +796,15 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			rightControlButtons = new TabControlButtons(ArrowPosition.RIGHT);
 			leftControlButtons = new TabControlButtons(ArrowPosition.LEFT);
+			
 			//controlButtons.setVisible(false);
 			if (rightControlButtons.isVisible()) {
 				rightControlButtons.setVisible(true);
 			}
+			
+			rightControlButtons.inner.prefHeightProperty().bind(headersRegion.heightProperty());
+			leftControlButtons.inner.prefHeightProperty().bind(headersRegion.heightProperty());
+			
 			getChildren().addAll(headerBackground, headersRegion, leftControlButtons, rightControlButtons);
 
 			// support for mouse scroll of header area (for when the tabs exceed
@@ -868,7 +873,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			headerClip.setX(x);
 			headerClip.setY(y);
-			headerClip.setWidth(clipWidth);
+			headerClip.setWidth(clipWidth + 10);
 			headerClip.setHeight(clipHeight);
 		}
 
@@ -924,12 +929,15 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				}
 				offset += tabHeaderPrefWidth;
 			}
-			runTimeline(selectedTabOffset, selectedTabWidth);
+			runTimeline(selectedTabOffset, selectedTabWidth-2); // -2 offset 
 		}
 
 		private void runTimeline(double newTransX, double newWidth) {
 			double oldWidth = selectedTabLine.getEndX();
 			double oldTransX = selectedTabLineOffset;
+			
+			newTransX += headersRegion.getLayoutX();
+			
 			selectedTabLineOffset = newTransX;
 			double transDiff = newTransX - oldTransX;
 			Timeline timeline;
@@ -1071,7 +1079,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			// POSITION TABS
 			headersRegion.resize(headersPrefWidth, headersPrefHeight);
-
+			
 			if (isFloatingStyleClass()) {
 				headerBackground.setVisible(false);
 			} else {
@@ -1127,7 +1135,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 					offset += tabHeaderPrefWidth;
 				}
 				final double selectedTabStartX = selectedTabOffset;
-				runTimeline(selectedTabStartX, selectedTabWidth);
+				runTimeline(selectedTabStartX, selectedTabWidth - 2);
 				initialized = true;
 			}
 
@@ -1548,23 +1556,30 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		private boolean showControlButtons, isLeftArrow;
 
 		public TabControlButtons(ArrowPosition pos) {
-			getStyleClass().setAll("control-buttons-tab");
+			
+			getStyleClass().setAll("control-buttons-tab");			
 
 			isLeftArrow = pos == ArrowPosition.LEFT;
 
-			downArrowBtn = new Icon(isLeftArrow ? "ARROW_LEFT" : "ARROW_RIGHT");
+			downArrowBtn = new Icon(isLeftArrow ? "CHEVRON_LEFT" : "CHEVRON_RIGHT","1.5em");
+			downArrowBtn.setPadding(new Insets(7));
 			downArrowBtn.getStyleClass().setAll("tab-down-button");
 			downArrowBtn.setVisible(isShowTabsMenu());
-
+			
 			downArrowBtn.setOnMouseClicked(me -> {
 
 			});
+			
+			C3DRippler arrowRippler = new C3DRippler(downArrowBtn,RipplerMask.CIRCLE,RipplerPos.BACK);
+			arrowRippler.ripplerFillProperty().bind(downArrowBtn.textFillProperty());
+			StackPane.setMargin(downArrowBtn, new Insets(0,0,0,isLeftArrow?-4:4));
 
+			
 			inner = new StackPane() {
 				@Override
 				protected double computePrefWidth(double height) {
 					double pw;
-					double maxArrowWidth = !isShowTabsMenu() ? 0 : snapSize(downArrowBtn.prefWidth(getHeight()));
+					double maxArrowWidth = !isShowTabsMenu() ? 0 : snapSize(arrowRippler.prefWidth(getHeight()));
 					pw = 0.0F;
 					if (isShowTabsMenu()) {
 						pw += maxArrowWidth;
@@ -1579,7 +1594,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				protected double computePrefHeight(double width) {
 					double height = 0.0F;
 					if (isShowTabsMenu()) {
-						height = Math.max(height, snapSize(downArrowBtn.prefHeight(width)));
+						height = Math.max(height, snapSize(arrowRippler.prefHeight(width)));
 					}
 					if (height > 0) {
 						height += snappedTopInset() + snappedBottomInset();
@@ -1594,18 +1609,18 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 						double y = snappedTopInset();
 						double w = snapSize(getWidth()) - x + snappedLeftInset();
 						double h = snapSize(getHeight()) - y + snappedBottomInset();
-						positionArrow(downArrowBtn, x, y, w, h);
+						positionArrow(arrowRippler, x, y, w, h);
 					}
 				}
 
-				private void positionArrow(Label btn, double x, double y, double width, double height) {
+				private void positionArrow(C3DRippler btn, double x, double y, double width, double height) {
 					btn.resize(width, height);
 					positionInArea(btn, x, y, width, height, 0, HPos.CENTER, VPos.CENTER);
 				}
 			};
 			inner.getStyleClass().add("container");
-			inner.getChildren().add(downArrowBtn);
-
+			inner.getChildren().add(arrowRippler);
+			StackPane.setMargin(arrowRippler, new Insets(0,5,0,5));
 			getChildren().add(inner);
 
 			showControlButtons = false;
