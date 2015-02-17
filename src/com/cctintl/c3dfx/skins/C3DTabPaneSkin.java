@@ -33,6 +33,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -1577,21 +1578,33 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		private StackPane inner;
 		private Icon downArrowBtn;
 		private boolean showControlButtons, isLeftArrow;
-
+		private Timeline arrowAnimation;
+		
 		public TabControlButtons(ArrowPosition pos) {
 
 			getStyleClass().setAll("control-buttons-tab");			
 
 			isLeftArrow = pos == ArrowPosition.LEFT;
 
-			downArrowBtn = new Icon(isLeftArrow ? "CHEVRON_LEFT" : "CHEVRON_RIGHT","1.5em");
+			downArrowBtn = new Icon(isLeftArrow ? "CHEVRON_LEFT" : "CHEVRON_RIGHT","1.5em",";","");
 			downArrowBtn.setPadding(new Insets(7));
 			downArrowBtn.getStyleClass().setAll("tab-down-button");
 			downArrowBtn.setVisible(isShowTabsMenu());
-
-			downArrowBtn.setOnMouseClicked(me -> {
-
+			downArrowBtn.setCursor(Cursor.HAND);
+			downArrowBtn.setTextFill(selectedTabText);
+			
+			DoubleProperty offsetProperty = new SimpleDoubleProperty(0);
+			offsetProperty.addListener((o,oldVal,newVal)-> tabHeaderArea.setScrollOffset(newVal.doubleValue()));
+			
+			downArrowBtn.setOnMousePressed(press ->{
+				offsetProperty.set(tabHeaderArea.getScrollOffset());	
+				double offset = isLeftArrow ? tabHeaderArea.getScrollOffset() + tabHeaderArea.headersRegion.getWidth() : tabHeaderArea.getScrollOffset() - tabHeaderArea.headersRegion.getWidth();
+				arrowAnimation = new Timeline(new KeyFrame(Duration.seconds(1), new KeyValue(offsetProperty, offset , Interpolator.LINEAR)));
+				arrowAnimation.play();
 			});
+			
+			downArrowBtn.setOnMouseReleased(release -> arrowAnimation.stop());
+			
 
 			C3DRippler arrowRippler = new C3DRippler(downArrowBtn,RipplerMask.CIRCLE,RipplerPos.BACK);
 			arrowRippler.ripplerFillProperty().bind(downArrowBtn.textFillProperty());
