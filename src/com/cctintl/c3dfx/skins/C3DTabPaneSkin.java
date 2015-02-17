@@ -50,10 +50,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -178,6 +180,14 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		tabHeaderArea = new TabHeaderArea();
 		tabHeaderArea.setClip(tabHeaderAreaClipRect);
 		getChildren().add(tabHeaderArea);
+		
+		
+		tabsContainer = new AnchorPane();
+		tabsContainer.setStyle("-fx-border-color:RED;");
+		tabsContainerHolder = new AnchorPane();
+		tabsContainerHolder.getChildren().add(tabsContainer);
+		getChildren().add(tabsContainerHolder);
+		
 		if (getSkinnable().getTabs().size() == 0) {
 			tabHeaderArea.setVisible(false);
 		}
@@ -559,19 +569,39 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		double contentWidth = w - (isHorizontal() ? 0 : headerHeight);
 		double contentHeight = h - (isHorizontal() ? headerHeight : 0);
 
+		Rectangle clip = new Rectangle(contentWidth,contentHeight);
+		tabsContainerHolder.setClip(clip);
+		tabsContainerHolder.resize(contentWidth, contentHeight);
+		tabsContainerHolder.relocate(contentStartX, contentStartY);
+		
+		tabsContainer.getChildren().clear();
+		
+		tabsContainer.setStyle("-fx-border-color:RED;");
+		tabsContainer.resize(contentWidth * tabContentRegions.size(), contentHeight);
+		
 		for (int i = 0, max = tabContentRegions.size(); i < max; i++) {
 			TabContentRegion tabContent = tabContentRegions.get(i);
-
-			tabContent.setAlignment(Pos.TOP_LEFT);
+			tabContent.setVisible(true);
+			tabsContainer.getChildren().add(tabContent);
+			
+			tabContent.setTranslateX(contentWidth*i);
+			
 			if (tabContent.getClip() != null) {
 				((Rectangle) tabContent.getClip()).setWidth(contentWidth);
 				((Rectangle) tabContent.getClip()).setHeight(contentHeight);
+				
 			}
-
+			
+			if(tabContent.getTab() == selectedTab){
+				Timeline animateTimeline = new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*i, Interpolator.EASE_BOTH)));				
+				animateTimeline.play();
+			}
+			
+			tabContent.setStyle("-fx-border-color:BLUE;");
 			// we need to size all tabs, even if they aren't visible. For example,
 			// see RT-29167
 			tabContent.resize(contentWidth, contentHeight);
-			tabContent.relocate(contentStartX, contentStartY);
+//			tabContent.relocate(contentStartX, contentStartY);
 		}
 	}
 
@@ -1448,6 +1478,10 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	private static final PseudoClass LEFT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("left");
 	private static final PseudoClass RIGHT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("right");
 	private static final PseudoClass DISABLED_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("disabled");
+
+	private AnchorPane tabsContainer;
+
+	private AnchorPane tabsContainerHolder;
 
 	/**************************************************************************
 	 *

@@ -42,6 +42,7 @@ public class TabsDemo extends Application {
 			Tab temp = new Tab();
 			int count = tabPane.getTabs().size();
 			temp.setText(msg + count);
+			temp.setContent(new Label("Tab" + count));
 			tabPane.getTabs().add(temp);
 		});
 
