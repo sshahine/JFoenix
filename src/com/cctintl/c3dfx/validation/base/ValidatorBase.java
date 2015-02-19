@@ -44,7 +44,7 @@ public abstract class ValidatorBase extends Parent {
 	protected void onEval(){
 		Node control = getSrcControl();
 		if (hasErrors.get()) {
-			if (control.getStyleClass().indexOf(errorStyleClass) == -1)
+			if (!control.getStyleClass().contains(errorStyleClass.get()))
 				control.getStyleClass().add(errorStyleClass.get());
 		} else{
 			control.getStyleClass().remove(errorStyleClass.get());
