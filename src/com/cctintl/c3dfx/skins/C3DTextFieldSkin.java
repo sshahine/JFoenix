@@ -5,6 +5,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -53,40 +57,57 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		effectsPane.getChildren().add(focusedLine);
 		effectsPane.setAlignment(Pos.BOTTOM_CENTER);
 		StackPane.setMargin(line, new Insets(0,0,1,0));
-		
 		effectsPane.getChildren().add(cursorPane);
 		StackPane.setAlignment(cursorPane, Pos.CENTER_LEFT);
 		StackPane.setMargin(cursorPane, new Insets(0,0,5,40));
 		
 		errorLabel.getStyleClass().add("errorLabel");
-		errorLabel.setStyle("-fx-text-fill : #D34336;-fx-font-size: 0.75em;");
-		effectsPane.getChildren().add(errorLabel);
+		errorLabel.setWrapText(true);
+		errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
+		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
 		
-		StackPane.setAlignment(errorLabel, Pos.BOTTOM_LEFT);
-		StackPane.setMargin(errorLabel, new Insets(0,0,-14,1));
+		StackPane errorLabelContainer = new StackPane();
+		errorLabelContainer.getChildren().add(errorLabel);
 		
-		effectsPane.getChildren().add(errorIcon);
+		HBox errorContainer = new HBox();
+		errorContainer.getChildren().add(errorLabelContainer);
+		errorContainer.getChildren().add(errorIcon);
+		errorIcon.setTranslateY(5);
+		
+		errorContainer.setSpacing(10);
+		errorContainer.setTranslateY(20);
+		
+		effectsPane.getChildren().add(errorContainer);
 		
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
-			if (newVal) focus();
-			else focusedLine.setVisible(false);
+			Platform.runLater(()->{
+				if (newVal) focus();
+				else focusedLine.setVisible(false);	
+			});
 		});
 		
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
 			if(newVal!=null){
 				errorLabel.setText(newVal.getMessage());
 				Node awsomeIcon = newVal.getAwsomeIcon();
+				errorIcon.getChildren().clear();
 				errorIcon.getChildren().add(awsomeIcon);
-				StackPane.setAlignment(awsomeIcon, Pos.BOTTOM_RIGHT);
-				StackPane.setMargin(awsomeIcon, new Insets(0,1,-14,0));
+				StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);	
 			}else{
+//				field.setPadding(new Insets(0,0,0,0));
+//				HBox.setMargin(errorLabel, new Insets(0,0,0,0));
 				errorLabel.setText(null);
 				errorIcon.getChildren().clear();
+				
 			}
 			invalid = true;
+			Platform.runLater(()->field.requestLayout());
 		});
+		
+		
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
 			field.setMaxWidth(newVal.doubleValue());
+			field.setMinWidth(newVal.doubleValue());
 			invalid = true;	
 		});
 	}
@@ -109,7 +130,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		if(invalid){
 			startX = getSkinnable().getBoundsInLocal().getMinX() ;
 			endX = getSkinnable().getWidth() - getSkinnable().getBaselineOffset();
-			
+
 			line.setStartX( startX );
 			line.setEndX(endX);
 			line.setStartY(getSkinnable().getBoundsInLocal().getMaxY() );
