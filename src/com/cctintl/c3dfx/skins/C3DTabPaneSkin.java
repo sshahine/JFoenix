@@ -30,7 +30,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -60,13 +59,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.DepthManager;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
-import com.cctintl.c3dfx.controls.DepthManager;
 import com.sun.javafx.css.converters.EnumConverter;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
@@ -170,7 +170,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 		clipRect = new Rectangle(tabPane.getWidth(), tabPane.getHeight());
 		//getSkinnable().setClip(clipRect);
-		DepthManager.setDepth(getSkinnable(), 2);
+//		DepthManager.setDepth(getSkinnable(), 2);
 
 		tabContentRegions = FXCollections.<TabContentRegion> observableArrayList();
 
@@ -182,10 +182,10 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		tabHeaderArea = new TabHeaderArea();
 		tabHeaderArea.setClip(tabHeaderAreaClipRect);
 		getChildren().add(tabHeaderArea);
-
+		DepthManager.setDepth(tabHeaderArea, 1);
 
 		tabsContainer = new AnchorPane();
-		tabsContainer.setStyle("-fx-border-color:RED;");
+//		tabsContainer.setStyle("-fx-border-color:RED;");
 		tabsContainerHolder = new AnchorPane();
 		tabsContainerHolder.getChildren().add(tabsContainer);
 		getChildren().add(tabsContainerHolder);
@@ -524,7 +524,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		} else {
 			tabHeaderAreaClipRect.setWidth(h);
 		}
-		tabHeaderAreaClipRect.setHeight(headerHeight);
+		tabHeaderAreaClipRect.setHeight(headerHeight + 7); // 7 is the height of effect
 
 		// ==================================
 		// position the tab content for the selected tab only
@@ -573,7 +573,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 		tabsContainer.getChildren().clear();
 
-		tabsContainer.setStyle("-fx-border-color:RED;");
 		tabsContainer.resize(contentWidth * tabContentRegions.size(), contentHeight);
 
 		for (int i = 0, max = tabContentRegions.size(); i < max; i++) {
@@ -594,7 +593,6 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				animateTimeline.play();
 			}
 
-			tabContent.setStyle("-fx-border-color:BLUE;");
 			// we need to size all tabs, even if they aren't visible. For example,
 			// see RT-29167
 			tabContent.resize(contentWidth, contentHeight);
@@ -795,8 +793,8 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			headerBackground.setBackground(new Background(new BackgroundFill(defaultColor, CornerRadii.EMPTY, Insets.EMPTY)));
 			headerBackground.getStyleClass().setAll("tab-header-background");
 
-
 			selectedTabLine = new Line();
+			selectedTabLine.getStyleClass().add("tab-selected-line");
 			selectedTabLine.setStrokeWidth(2);
 			selectedTabLine.setStroke(ripplerColor);
 			headersRegion.getChildren().add(selectedTabLine);
@@ -1211,8 +1209,8 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			this.tab = tab;
 
 			tabText = new Label(tab.getText(), tab.getGraphic());
-			tabText.setFont(new Font(16));
-			tabText.setStyle("-fx-font-weight: BOLD");
+			tabText.setFont(Font.font("", FontWeight.BOLD, 16));			
+//			tabText.setStyle("-fx-font-weight: BOLD");
 			tabText.setPadding(new Insets(5, 10, 5, 10));
 			tabText.getStyleClass().setAll("tab-label");
 

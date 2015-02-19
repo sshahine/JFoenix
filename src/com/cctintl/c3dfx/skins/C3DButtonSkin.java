@@ -41,13 +41,13 @@ public class C3DButtonSkin extends ButtonSkin {
 		super(button);
 		if(button.getBackground()==null)
 			button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-		
+
 		// create button
 		buttonRect = new Rectangle();
 		buttonRect.setArcHeight(7);
 		buttonRect.setArcWidth(7);		
 		buttonRect.setFill(Color.WHITE);
-		
+
 		if(button.isDisabled()) buttonRect.setFill(disabledColor);
 
 		buttonComponents.getChildren().add(buttonRect);
@@ -110,12 +110,14 @@ public class C3DButtonSkin extends ButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			buttonRect.setFill(getSkinnable().getBackground().getFills().get(0).getFill());
-			double radius = 7;
-			if(getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
-				radius = getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius();
-			buttonRect.setArcHeight(radius);
-			buttonRect.setArcWidth(radius);
+			if(getSkinnable().getBackground()!=null){
+				buttonRect.setFill(getSkinnable().getBackground().getFills().get(0).getFill());
+				double radius = 7;
+				if(getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
+					radius = getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius();
+				buttonRect.setArcHeight(radius);
+				buttonRect.setArcWidth(radius);
+			}
 			if(getChildren().get(0) instanceof LabeledText){
 				buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
 				((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
