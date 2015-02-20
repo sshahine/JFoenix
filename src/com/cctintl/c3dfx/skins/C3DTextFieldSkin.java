@@ -8,8 +8,6 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -69,7 +67,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorLabel.setWrapText(true);		
 		errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
 		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
-//		errorLabel.setStyle("-fx-border-color:BLUE;");
+		//		errorLabel.setStyle("-fx-border-color:BLUE;");
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
 
@@ -81,7 +79,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
-//		errorContainer.setStyle("-fx-border-color:GREEN;");
+		//		errorContainer.setStyle("-fx-border-color:GREEN;");
 
 		this.getChildren().add(errorContainer);
 
@@ -115,33 +113,16 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
+			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+				hideErrorAnimation.stop();
 			if(newVal!=null){
-				if(errorContainer.getOpacity() == 0){
+				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+				hideErrorAnimation.setOnFinished(finish->{
 					showError(newVal);
-				}else{
-					hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-					hideErrorAnimation.setOnFinished(finish->{
-						showError(newVal);
-					});
-					hideErrorAnimation.play();
-				}
+				});
+				hideErrorAnimation.play();
 			}else{				
-				if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING)){
-					Platform.runLater(()->{
-						ChangeListener<Status> listener = new ChangeListener<Status>() {
-							@Override
-							public void changed(ObservableValue<? extends Status> status,Status oldStatus, Status newStatus) {
-								if(newStatus.equals(Status.STOPPED)){
-									hideError();
-									hideErrorAnimation.statusProperty().removeListener(this);
-								}
-							}
-						};			
-						hideErrorAnimation.statusProperty().addListener(listener);					
-					});					
-				}else{
-					hideError();
-				}
+				hideError();
 			}
 		});
 
@@ -176,16 +157,18 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorContainer.setVisible(true);
 		errorShowen = true;
 	}
-	
+
 	private void hideError(){		
 		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
 		// rest the height of text field
 		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
 		// clear error label text
 		errorLabel.setText(null);
-		oldErrorLabelHeight = errorLabelInitHeight;
+		oldErrorLabelHeight = errorLabelInitHeight;		
 		// clear error icon
 		errorIcon.getChildren().clear();
+		// reset the height of the text field
+		currentFieldHeight = initHeight;
 		// hide error container
 		errorContainer.setVisible(false);
 		errorShowen = false;	
@@ -208,10 +191,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		super.layoutChildren(x, y, w, h);
 
 		if(invalid){
-			
+
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
-			
+
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
