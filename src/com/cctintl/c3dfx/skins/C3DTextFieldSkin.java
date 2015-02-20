@@ -137,43 +137,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		});
 	}
 
-	private void showError(ValidatorBase validator){
-		// set text in error label
-		errorLabel.setText(validator.getMessage());
-		// show error icon
-		Node awsomeIcon = validator.getAwsomeIcon();
-		errorIcon.getChildren().clear();
-		if(awsomeIcon!=null){
-			errorIcon.getChildren().add(awsomeIcon);
-			StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);	
-		}
-		// init only once, to fix the text pane from resizing
-		if(initYlayout == -1){
-			textPane.setMaxHeight(textPane.getHeight());
-			initYlayout = textPane.getBoundsInParent().getMinY(); 
-			initHeight = getSkinnable().getHeight();
-			currentFieldHeight = initHeight;
-		}
-		errorContainer.setVisible(true);
-		errorShowen = true;
-	}
-
-	private void hideError(){		
-		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
-		// rest the height of text field
-		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
-		// clear error label text
-		errorLabel.setText(null);
-		oldErrorLabelHeight = errorLabelInitHeight;		
-		// clear error icon
-		errorIcon.getChildren().clear();
-		// reset the height of the text field
-		currentFieldHeight = initHeight;
-		// hide error container
-		errorContainer.setVisible(false);
-		errorShowen = false;	
-	}
-
+	
 	@Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 		return super.computePrefHeight(width, topInset, rightInset, bottomInset + 5, leftInset);
 	}
@@ -194,7 +158,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
-
+			
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
@@ -250,7 +214,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
-
 			invalid = false;
 		}		
 
@@ -269,7 +232,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 								new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
 								),
 								new KeyFrame(
-										Duration.millis(150),
+										Duration.millis(160),
 										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
 										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
 										)
@@ -289,7 +252,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 								new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
 								),
 								new KeyFrame(
-										Duration.millis(150),
+										Duration.millis(160),
 										new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
 										new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
 										new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
@@ -303,4 +266,42 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		transition.play();
 	}
 
+	private void showError(ValidatorBase validator){
+		// set text in error label
+		errorLabel.setText(validator.getMessage());
+		// show error icon
+		Node awsomeIcon = validator.getAwsomeIcon();
+		errorIcon.getChildren().clear();
+		if(awsomeIcon!=null){
+			errorIcon.getChildren().add(awsomeIcon);
+			StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);	
+		}
+		// init only once, to fix the text pane from resizing
+		if(initYlayout == -1){
+			textPane.setMaxHeight(textPane.getHeight());
+			initYlayout = textPane.getBoundsInParent().getMinY(); 
+			initHeight = getSkinnable().getHeight();
+			currentFieldHeight = initHeight;
+		}
+		errorContainer.setVisible(true);
+		errorShowen = true;
+	}
+
+	private void hideError(){		
+		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+		// rest the height of text field
+		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
+		// clear error label text
+		errorLabel.setText(null);
+		oldErrorLabelHeight = errorLabelInitHeight;		
+		// clear error icon
+		errorIcon.getChildren().clear();
+		// reset the height of the text field
+		currentFieldHeight = initHeight;
+		// hide error container
+		errorContainer.setVisible(false);
+		errorShowen = false;	
+	}
+
+	
 }
