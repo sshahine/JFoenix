@@ -208,9 +208,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		super.layoutChildren(x, y, w, h);
 
 		if(invalid){
-
+			
 			textPane = ((Pane)this.getChildren().get(0));
-
+			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
+			
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
@@ -232,7 +233,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				mid = (endX - startX )/2;
 				focusedLine.setStartX(mid);
 				focusedLine.setEndX(mid);
-				System.out.println(startX);
 			});
 
 			startX = 0;
