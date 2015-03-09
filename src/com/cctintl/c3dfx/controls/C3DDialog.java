@@ -151,8 +151,6 @@ public class C3DDialog extends StackPane {
 		}
 	}
 
-	private boolean stopClick = false;
-
 	/***************************************************************************
 	 *                                                                         *
 	 * Public API                                                              *
@@ -210,6 +208,7 @@ public class C3DDialog extends StackPane {
 				break;
 			}
 		}
+		animation.setOnFinished((finish)->onDialogOpenedProperty.get().handle(new C3DDialogEvent(C3DDialogEvent.OPENED)));
 		return animation;
 	}
 
@@ -415,5 +414,18 @@ public class C3DDialog extends StackPane {
 	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
 
+	
+	public void setOnDialogOpened(EventHandler<? super C3DDialogEvent> handler){
+		onDialogOpenedProperty.set(handler);
+	}
+
+	public void getOnDialogOpened(EventHandler<? super C3DDialogEvent> handler){
+		onDialogOpenedProperty.get();
+	}
+
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
+
+	
+	
 }
 

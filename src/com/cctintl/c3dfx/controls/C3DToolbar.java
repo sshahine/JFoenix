@@ -16,7 +16,9 @@ public class C3DToolbar extends StackPane {
 	public C3DToolbar() {
 		initialize();
 		toolBar.setLeft(leftBox);
+		leftBox.getStyleClass().add("tool-bar-left-box");
 		toolBar.setRight(rightBox);
+		rightBox.getStyleClass().add("tool-bar-right-box");
 		this.getChildren().add(toolBar);
 		DepthManager.setDepth(this, 1);
 	}
