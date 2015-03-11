@@ -10,17 +10,17 @@ import javafx.scene.layout.StackPane;
 public class C3DToolbar extends StackPane {
 	
 	private BorderPane toolBar = new  BorderPane();
-	private BorderPane container = new BorderPane();
 	private HBox leftBox = new HBox();
 	private HBox rightBox = new HBox();
 
 	public C3DToolbar() {
 		initialize();
 		toolBar.setLeft(leftBox);
+		leftBox.getStyleClass().add("tool-bar-left-box");
 		toolBar.setRight(rightBox);
-		DepthManager.setDepth(toolBar, 1);
-		container.setTop(toolBar);
-		this.getChildren().add(container);
+		rightBox.getStyleClass().add("tool-bar-right-box");
+		this.getChildren().add(toolBar);
+		DepthManager.setDepth(this, 1);
 	}
 	
 	/***************************************************************************
@@ -43,14 +43,6 @@ public class C3DToolbar extends StackPane {
 	
 	public ObservableList<Node> getRightItems(){
 		return this.rightBox.getChildren();
-	}
-	
-	public void setContent(Node node){
-		this.container.setCenter(node);
-	}
-
-	public Node getContent(){
-		return this.container;
 	}
 	
 	public void setBottom(Node node){

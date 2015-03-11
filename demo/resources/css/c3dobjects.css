@@ -347,7 +347,7 @@
 }
 
 .custom-c3d-check-box-text-colored{
-	-fx-text-fill:rgb(153,0,0);
+	-fx-text-fill:rgb(153.0,0.0,0.0);
 }
 
 /*******************************************************************************
@@ -357,7 +357,7 @@
 *******************************************************************************/
 
 .c3d-progress-bar{
-	-fx-pref-width: 500;
+	-fx-pref-width: 500.0;
 }
 
 .c3d-progress-bar > .track {
@@ -370,7 +370,7 @@
 }
 
 .custom-c3d-progress-bar .bar {
-	-fx-stroke: rgb(255,128,0);
+	-fx-stroke: rgb(255.0,128.0,0.0);
 }
 
 .custom-c3d-progress-bar-stroke .track {

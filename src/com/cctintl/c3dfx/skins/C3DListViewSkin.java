@@ -289,9 +289,13 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             }
         } else {
             flow.resizeRelocate(x, y, w, h);
+            double borderWidth = 0;
+            if(getSkinnable().getBorder()!=null)
+            	borderWidth = getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
+            
             // FIXME, CHANGE THE HEIGHT if 3D is active or not
             if(flow.getCellCount() > 0)
-            	getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2);
+            	getSkinnable().setPrefHeight((flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2 + borderWidth);
         }
     }
     
@@ -312,7 +316,11 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
 
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
     	if (getSkinnable().getItems().size() <= 0) return 200;
-        return (flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2;
+    	// handel if the list has border
+    	double borderWidth = 0;
+        if(getSkinnable().getBorder()!=null)
+        	borderWidth = getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
+        return (flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * ( getSkinnable().getItems().size()  )+ ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() - 2 + borderWidth;
     }
     
     private void onFocusPreviousCell() {

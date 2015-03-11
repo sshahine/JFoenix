@@ -17,7 +17,6 @@ public class ToolBarDemo extends Application {
 			C3DToolbar c3dToolbar = new C3DToolbar();
 			c3dToolbar.setLeftItems(new Label("Left"));
 			c3dToolbar.setRightItems(new Label("Right"));
-			c3dToolbar.setContent(new Label("Content"));
 			StackPane main = new StackPane();
 			
 			main.getChildren().add(c3dToolbar);

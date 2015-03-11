@@ -52,6 +52,7 @@ public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 		});
 		
 		getSkinnable().prefWidthProperty().addListener((o,oldVal,newVal)-> initialization = false);
+		getSkinnable().maxHeightProperty().bind(track.strokeWidthProperty());
 	}
 
 	@Override
@@ -60,7 +61,11 @@ public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 		if (!initialization) {
 			isIndeterminate = getSkinnable().isIndeterminate();
 			double trackHeight = snapSize(track.getStrokeWidth());
-			trackLength = snapSize(getSkinnable().getPrefWidth());			
+			double borderWidth = 0;
+			if(getSkinnable().getBorder()!=null)
+				borderWidth = getSkinnable().getBorder().getStrokes().get(0).getWidths().getLeft() + getSkinnable().getBorder().getStrokes().get(0).getWidths().getRight();
+			
+			trackLength = snapSize(getSkinnable().getPrefWidth() - track.getStrokeWidth() - borderWidth);			
 			trackStart = snapPosition(x);
 
 			track.setStartX(trackStart);
@@ -71,6 +76,7 @@ public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 			bar.setStartX(trackStart);
 			bar.setStartY(y + trackHeight / 2);
 			bar.setEndY(y + trackHeight / 2);
+			
 			initializeListeners();
 
 			if (isIndeterminate) {

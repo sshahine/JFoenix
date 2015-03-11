@@ -92,7 +92,7 @@ public class C3DRippler extends StackPane {
 			rippler = new RippleGenerator();
 			ripplerPane = new StackPane();
 			ripplerPane.getChildren().add(rippler);
-
+			
 			// set the control postion and listen if it's changed
 			if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
 			else this.getChildren().add(this.control);
@@ -230,7 +230,7 @@ public class C3DRippler extends StackPane {
 							fadeOutRadious = rippleRadius;
 
 						Timeline outAnimation = new Timeline(
-								new KeyFrame(Duration.seconds(0.3),
+								new KeyFrame(Duration.seconds(0.4),
 										new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
 										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
 										));

@@ -16,6 +16,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -110,7 +111,7 @@ public class C3DDrawer extends StackPane {
 		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { 
 			double width = 0 ;
 			if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
-			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset) holdTimer.play(); 
+			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && content.getCursor() == Cursor.DEFAULT) holdTimer.play(); 
 		});
 
 		// mouse drag handler
@@ -156,9 +157,9 @@ public class C3DDrawer extends StackPane {
 	}
 
 	public void hide(){
-		if(outTransition.getStatus().equals(Status.STOPPED)){
+		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
+		if(outTransition.getStatus().equals(Status.STOPPED) && sidePane.getTranslateX() == 0)
 			outTransition.play();
-		}
 	}
 
 	/***************************************************************************

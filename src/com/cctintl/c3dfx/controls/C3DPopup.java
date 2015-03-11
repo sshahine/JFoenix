@@ -78,6 +78,9 @@ public class C3DPopup extends StackPane {
 			this.content = content;
 			contentHolder = new AnchorPane();
 			contentHolder.getChildren().add(this.content);
+			// bind the content holder size to its content
+			contentHolder.prefWidthProperty().bind(this.content.prefWidthProperty());
+			contentHolder.prefHeightProperty().bind(this.content.prefHeightProperty());
 			contentHolder.getStyleClass().add("c3d-popup-holder");
 			contentHolder.getTransforms().add(scaleTransform);			
 			DepthManager.setDepth(contentHolder, 4);
@@ -180,7 +183,6 @@ public class C3DPopup extends StackPane {
 		overlayPane.setVisible(false);
 		scaleTransform.setX(0);
 		scaleTransform.setY(0);
-
 	}
 
 
