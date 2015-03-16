@@ -124,15 +124,21 @@ public class C3DPopup extends StackPane {
 
 		// compute the position of the popup
 		Node tempSource = this.source;
-		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());			
+		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());
 		offsetX = bound.getMinX() + initOffsetX;
 		offsetY = bound.getMinY() + initOffsetY;
 
 		while(!tempSource.getParent().equals(popupContainer)){
 			tempSource = tempSource.getParent();
 			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
-			if(bound.getMinX() > 0) offsetX += bound.getMinX();
-			if(bound.getMinY() > 0) offsetY += bound.getMinY();
+			// handle scroll pane case 
+			if(tempSource.getClass().getName().contains("ScrollPaneSkin")){
+				offsetX += bound.getMinX();
+				offsetY += bound.getMinY();
+			}else{				
+				if(bound.getMinX() > 0) offsetX += bound.getMinX();
+				if(bound.getMinY() > 0) offsetY += bound.getMinY();	
+			}
 		}
 
 		// postion the popup according to its animation
