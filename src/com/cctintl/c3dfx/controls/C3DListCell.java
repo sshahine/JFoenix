@@ -53,24 +53,42 @@ public class C3DListCell<T> extends ListCell<T> {
 
 				Node currentNode = getGraphic();
 				Node newNode = (Node) item;
-				if (currentNode == null || ! currentNode.equals(newNode)) {
-
+				if (currentNode == null || !currentNode.equals(newNode)) {
+					
+					
 					cellContainer.getChildren().clear();
-					cellContainer.getChildren().add((Node) item);
-					cellContainer.getStyleClass().add("c3d-list-cell-container");
-					// propagate mouse events to all children
-					cellContainer.addEventHandler(MouseEvent.ANY, (e)-> ((Node) item).fireEvent(e));
-					((Node) item).addEventHandler(MouseEvent.ANY, (e)-> e.consume());
 					
-					
-					cellRippler = new C3DListCellRippler(cellContainer);
+					if(item instanceof C3DRippler){
+						// build cell container from exisiting rippler
+						Node content = ((C3DRippler)item).getControl();						
+						cellContainer.getChildren().add(content);
+						cellContainer.getStyleClass().add("c3d-list-cell-container");
+						// propagate mouse events to all children
+						cellContainer.addEventHandler(MouseEvent.ANY, (e)-> content.fireEvent(e));
+						content.addEventHandler(MouseEvent.ANY, (e)-> e.consume());
+						cellRippler = new C3DRippler(cellContainer);
+						cellRippler.ripplerFillProperty().bind(((C3DRippler)item).ripplerFillProperty());
+						cellRippler.maskTypeProperty().bind(((C3DRippler)item).maskTypeProperty());
+						cellRippler.positionProperty().bind(((C3DRippler)item).positionProperty());
+					}else{
+						// build cell container and rippler if the cell has no rippler
+						cellContainer.getChildren().clear();
+						cellContainer.getChildren().add((Node) item);
+						cellContainer.getStyleClass().add("c3d-list-cell-container");
+						// propagate mouse events to all children
+						cellContainer.addEventHandler(MouseEvent.ANY, (e)-> ((Node) item).fireEvent(e));
+						((Node) item).addEventHandler(MouseEvent.ANY, (e)-> e.consume());
+						cellRippler = new C3DRippler(cellContainer);
+					}
+
 					// propagate mouse events to parent
 					if(getListView().getParent()!=null){
 						cellRippler.addEventHandler(MouseEvent.ANY, (e)->{
 							getListView().getParent().fireEvent(e);
 						});
 					}
-					
+
+
 					double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 					double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
 
@@ -81,13 +99,13 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler.ripplerPane.setScaleX(getRipplerScale(cellInsetHgap));
 						cellRippler.ripplerPane.setScaleY(getRipplerScale(cellInsetVgap));
 					}
-					
+
 					cellContainer.backgroundProperty().addListener((o,oldVal,newVal)->{
 						cellContainer.setBackground(Background.EMPTY);
 						cellRippler.ripplerPane.setBackground(newVal);
 					});
-					
-					
+
+
 					if(this.getIndex() > 0 && ((C3DListView<T>)getListView()).isExpanded())
 						this.translateYProperty().set(((C3DListView<T>)getListView()).getVerticalGap()*this.getIndex());
 					setGraphic(mainContainer);
@@ -163,10 +181,10 @@ public class C3DListCell<T> extends ListCell<T> {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 	}
 
-	private class C3DListCellRippler extends C3DRippler{
-		public C3DListCellRippler(Node control) {
-			super(control);
-		}
-	}
+	//	private class C3DListCellRippler extends C3DRippler{
+	//		public C3DListCellRippler(Node control) {
+	//			super(control);
+	//		}
+	//	}
 
 }
