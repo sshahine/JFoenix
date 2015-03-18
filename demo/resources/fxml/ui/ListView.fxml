@@ -13,8 +13,15 @@
 	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 0 0 180;">
 
 	<AnchorPane>
-		<C3DListView fx:id="list1" styleClass="custom-c3d-list-view" layoutX="0" layoutY="0">
+		<C3DListView fx:id="list1" styleClass="custom-c3d-list-view" layoutX="0" layoutY="0">		
 			<Label>Item 1</Label>
+			
+			<C3DListView  fx:id="subList">
+				<Label> Buttons </Label>
+				<Label> Check Box </Label>
+				<Label> Dialogs </Label>
+			</C3DListView>
+			
 			<Label>Item 2</Label>
 			<Label>Item 3</Label>
 			<Label>Item 4</Label>

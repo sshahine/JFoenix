@@ -43,7 +43,7 @@ public class C3DListView<T> extends ListView<T> {
 		return new C3DListViewSkin<T>(this);
 	}
 
-	private ObjectProperty<Integer> depth = new SimpleObjectProperty<Integer>();
+	private ObjectProperty<Integer> depth = new SimpleObjectProperty<Integer>(0);
 
 	public ObjectProperty<Integer> depthProperty(){
 		return depth;
