@@ -111,7 +111,8 @@ public class C3DDrawer extends StackPane {
 		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { 
 			double width = 0 ;
 			if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
-			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && content.getCursor() == Cursor.DEFAULT) holdTimer.play(); 
+			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null))
+				holdTimer.play(); 
 		});
 
 		// mouse drag handler

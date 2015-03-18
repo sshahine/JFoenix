@@ -44,7 +44,7 @@
 								</C3DHamburger>
 							</StackPane>
 						</C3DRippler>
-						<Label>Google</Label>
+						<Label>Material Design</Label>
 					</leftItems>
 					<rightItems>
 						<C3DRippler fx:id="optionsRippler" maskType="CIRCLE"

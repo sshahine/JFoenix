@@ -177,7 +177,6 @@
 }
 
 .c3d-tool-bar .c3d-hamburger-icon{
-	-fx-translate-y: 10.0px;
 	-fx-padding:10.0;
 }
 .c3d-tool-bar .c3d-hamburger-icon SVGPath{
