@@ -214,10 +214,6 @@ public class C3DRippler extends StackPane {
 					ripple.setClip(getMask());
 					getChildren().add(ripple);			
 
-//					if(overlayRect.getOpacity()!=1){
-//						overlayRect.animation.setRate(1);
-//						overlayRect.animation.play();
-//					}
 					overlayRect.outAnimation.stop();
 					overlayRect.inAnimation.play();
 					ripple.inAnimation.play();
@@ -226,7 +222,6 @@ public class C3DRippler extends StackPane {
 					ripplerPane.setOnMouseReleased((e)->{
 						generating = false;
 						overlayRect.inAnimation.stop();
-//						overlayRect.animation.setRate(-1);						
 						ripple.inAnimation.pause();
 						double fadeOutRadious = rippleRadius + 20;
 						if(ripple.radiusProperty().get() < rippleRadius*0.5)
@@ -238,7 +233,6 @@ public class C3DRippler extends StackPane {
 										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
 										));
 						outAnimation.play();
-//						overlayRect.animation.play();
 						overlayRect.outAnimation.play();
 						outAnimation.setOnFinished((event)->{
 							getChildren().remove(ripple);	
