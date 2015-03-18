@@ -111,9 +111,6 @@ public class C3DListCell<T> extends ListCell<T> {
 					
 					// scale rippler to fit the cell content
 					cellContainer.heightProperty().addListener((o,oldVal,newVal)->{
-						if(cellContainer.getChildren().get(0) instanceof C3DListView<?>){
-							System.out.println(this.getHeight() +  "container height" + newVal.doubleValue());
-						}
 						if(fitRippler){							
 							double newScale = this.getHeight()/newVal.doubleValue();
 							newScale = newScale > 1? newScale : 1;
@@ -122,9 +119,6 @@ public class C3DListCell<T> extends ListCell<T> {
 						}
 					});					
 					cellContainer.widthProperty().addListener((o,oldVal,newVal)->{
-						if(cellContainer.getChildren().get(0) instanceof C3DListView<?>){
-							System.out.println(this.getWidth() +  "container width" + newVal.doubleValue());
-						}
 						if(fitRippler){
 							double newScale = this.getWidth()/newVal.doubleValue();
 							newScale = newScale > 1? newScale : 1;
