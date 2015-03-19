@@ -34,7 +34,6 @@ public class ListViewController {
 		
 		expand.setOnMouseClicked((e)->list2.expandedProperty().set(true));
 		collapse.setOnMouseClicked((e)->list2.expandedProperty().set(false));
-		subList.setStyle("-fx-border-color:GREEN");
 		list1.depthProperty().set(3);
 	}
 	

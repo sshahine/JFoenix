@@ -3,6 +3,7 @@ package com.cctintl.c3dfx.skins;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.stream.IntStream;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -301,7 +302,9 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
     }
     
     private double estimateHeight(double borderWidth ){
-    	return (flow.getCell(0).getHeight() + ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get()) * getSkinnable().getItems().size() + ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() -3 + borderWidth;
+    	double gap = ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() * getSkinnable().getItems().size();
+    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index ->flow.getCell(index).getHeight()).sum();    	
+    	return cellsHeight + gap + ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() -3 + borderWidth;
     }
     
     @Override protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {

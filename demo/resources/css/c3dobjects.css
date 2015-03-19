@@ -455,11 +455,10 @@
   	-fx-expanded : false;
 }
 
-
 .custom-c3d-list-view .c3d-list-cell-container {
 	-fx-alignment: center;
 }
-.custom-c3d-list-view .c3d-list-cell-container > .label {
+.custom-c3d-list-view .c3d-list-cell-container .label {
   	-fx-text-fill: BLACK ;
 }
 
@@ -502,6 +501,13 @@
 	-fx-text-fill: #5264AE;
 	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
+}
+
+.custom-c3d-list-view .c3d-list-cell .sublist-header > .drop-icon{
+	-fx-text-fill: GRAY;
+}
+.custom-c3d-list-view .c3d-list-cell:filled:hover .sublist-header > .drop-icon{
+	-fx-text-fill: BLACK;
 }
 
 
