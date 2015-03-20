@@ -34,7 +34,7 @@ public class ListViewController {
 		
 		expand.setOnMouseClicked((e)->list2.expandedProperty().set(true));
 		collapse.setOnMouseClicked((e)->list2.expandedProperty().set(false));
-		list1.depthProperty().set(3);
+		list1.depthProperty().set(1);
 	}
 	
 	
