@@ -504,6 +504,13 @@
 	-fx-cursor: hand;
 }
 
+
+
+.custom-c3d-list-view .sublist-item {
+	-fx-border-color: #e0e0e0;
+	-fx-border-width: 1 0 1 0;
+}
+
 .custom-c3d-list-view .c3d-list-cell .sublist-header > .drop-icon{
 	-fx-text-fill: GRAY;
 }
@@ -528,8 +535,13 @@
 .sublist .scroll-bar:vertical .decrement-button {
     -fx-padding:0;
 }
-
-
+.sublist .c3d-list-cell:odd, 
+.sublist .c3d-list-cell:even {
+	-fx-background-color:  TRANSPARENT;
+}
+.sublist {
+	-fx-background-color:TRANSPARENT
+}
 
 
 /*******************************************************************************

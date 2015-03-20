@@ -38,6 +38,7 @@ public class C3DListCell<T> extends ListCell<T> {
 
 	private Timeline animateGap;
 	private Timeline expandAnimation;
+	private double animatedHeight = 0;
 
 	public C3DListCell() {
 		super();
@@ -81,6 +82,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler.positionProperty().bind(((C3DRippler)item).positionProperty());
 					}else if(item instanceof C3DListView<?>){
 
+						this.getStyleClass().add("sublist-item");
 						StackPane group = new StackPane();
 						group.getStyleClass().add("sublist-header");
 						group.getChildren().clear();
@@ -91,9 +93,35 @@ public class C3DListCell<T> extends ListCell<T> {
 						StackPane.setMargin(dropIcon, new Insets(0,7,0,0));
 						StackPane.setAlignment(dropIcon, Pos.CENTER_RIGHT);
 
+						group.paddingProperty().bind(Bindings.createObjectBinding(()->{
+							double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
+							double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
+							return new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap);
+						}, ((C3DListView<T>)getListView()).cellHorizontalMarginProperty(), ((C3DListView<T>)getListView()).cellVerticalMarginProperty()));
+
+						C3DRippler groupRippler = new C3DRippler(group);
+						// scale rippler to fit the cell content
+						group.heightProperty().addListener((o,oldVal,newVal)->{
+							if(fitRippler){							
+								double newScale = (this.getHeight()-subListHeight)/newVal.doubleValue();
+								newScale = newScale > 1 ? newScale : 1;
+								groupRippler.ripplerPane.setScaleY(newScale);
+								groupRippler.ripplerPane.setScaleX(newScale);
+							}
+						});
+						group.widthProperty().addListener((o,oldVal,newVal)->{
+							if(fitRippler){
+								double newScale = this.getWidth()/newVal.doubleValue();
+								newScale = newScale > 1? newScale : 1;
+								groupRippler.ripplerPane.setScaleY(newScale);
+								groupRippler.ripplerPane.setScaleX(newScale);
+							}
+						});
+
+
 						StackPane content = new StackPane();
-						content.getChildren().add((Node)item);						
-						//						content.setVisible(false);
+						content.getChildren().add((Node)item);
+						content.setOpacity(0);						
 						content.heightProperty().addListener((o,oldVal,newVal)->{
 							// store the hieght of the sublist and resize it to 0 to make it hidden
 							if(subListHeight == -1){
@@ -106,41 +134,11 @@ public class C3DListCell<T> extends ListCell<T> {
 								});	
 							}
 						});
-
-						group.paddingProperty().bind(Bindings.createObjectBinding(()->{
-							double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
-							double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
-							return new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap);
-						}, ((C3DListView<T>)getListView()).cellHorizontalMarginProperty(), ((C3DListView<T>)getListView()).cellVerticalMarginProperty()));
-
-
-						C3DRippler groupRippler = new C3DRippler(group);
-
-						// scale rippler to fit the cell content
-						group.heightProperty().addListener((o,oldVal,newVal)->{
-							if(fitRippler){							
-								double newScale = (this.getHeight()-subListHeight)/newVal.doubleValue();
-								newScale = newScale > 1 ? newScale : 1;
-								groupRippler.ripplerPane.setScaleY(newScale);
-								groupRippler.ripplerPane.setScaleX(newScale);
-							}
-						});
-
-						group.widthProperty().addListener((o,oldVal,newVal)->{
-							if(fitRippler){
-								double newScale = this.getWidth()/newVal.doubleValue();
-								newScale = newScale > 1? newScale : 1;
-								groupRippler.ripplerPane.setScaleY(newScale);
-								groupRippler.ripplerPane.setScaleX(newScale);
-							}
-						});
-
-
+						
 						// create container of group title and the sublist
 						VBox contentHolder = new VBox();						
 						contentHolder.getChildren().add(groupRippler);
-						contentHolder.getChildren().add(content);						
-
+						contentHolder.getChildren().add(content);
 						cellContainer.getChildren().add(contentHolder);
 						cellContainer.getStyleClass().add("c3d-list-cell-container");
 						cellContainer.addEventHandler(MouseEvent.ANY, (e)-> content.fireEvent(e));
@@ -153,9 +151,10 @@ public class C3DListCell<T> extends ListCell<T> {
 						this.heightProperty().addListener((o,oldVal,newVal)->{
 							if(!this.isExpanded() && (expandAnimation == null || expandAnimation.getStatus().equals(Status.STOPPED))){
 								double borderWidth = 0;
-								if(this.getBorder()!=null) borderWidth += this.getBorder().getStrokes().get(0).getWidths().getLeft();
-								if(group.getBorder()!=null) borderWidth += group.getBorder().getStrokes().get(0).getWidths().getLeft();
-								if(contentHolder.getBorder()!=null) borderWidth += contentHolder.getBorder().getStrokes().get(0).getWidths().getLeft();
+								if(this.getBorder()!=null) borderWidth += this.getBorder().getStrokes().get(0).getWidths().getTop();
+								if(content.getBorder()!=null) borderWidth += content.getBorder().getStrokes().get(0).getWidths().getTop();
+								if(group.getBorder()!=null) borderWidth += group.getBorder().getStrokes().get(0).getWidths().getTop();
+								if(contentHolder.getBorder()!=null) borderWidth += contentHolder.getBorder().getStrokes().get(0).getWidths().getTop();
 								content.setTranslateY((this.getHeight() - group.getHeight())/2 + borderWidth + 1);
 							}
 						});
@@ -165,23 +164,23 @@ public class C3DListCell<T> extends ListCell<T> {
 							// invert the expand property 
 							expandedProperty.set(!expandedProperty.get());
 
-							// change the list height 
-							if(expandedProperty.get()) listview.animatedHeight.set(subListHeight);
-							else listview.animatedHeight.set(-subListHeight);
-							
+							// change the list height
+							animatedHeight = subListHeight;
+							if(!expandedProperty.get()) animatedHeight = -subListHeight;
+ 
 							// stop the animation or change the list height
 							if(expandAnimation!=null && expandAnimation.getStatus().equals(Status.RUNNING)) expandAnimation.stop();								
-							else if(expandedProperty.get()) listview.setPrefHeight(listview.getHeight() + listview.animatedHeight.get());
+							else if(expandedProperty.get()) listview.setPrefHeight(listview.getHeight() + animatedHeight);
 							
 							// animate showing/hiding the sublist
-							listview.animatedIndex.set(listview.getItems().size());
-							listview.animatedIndex.set(this.getIndex());
 							double initMin,initMax;
 							initMin = initMax = !expandedProperty.get()? subListHeight : 0.0;
+							int opacity = !expandedProperty.get()? 0 : 1;
 							expandAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-											new KeyValue( content.minHeightProperty(), initMin + listview.animatedHeight.get() ,Interpolator.EASE_BOTH),																
-											new KeyValue( content.maxHeightProperty(), initMax + listview.animatedHeight.get() ,Interpolator.EASE_BOTH)));							
-							if(!expandedProperty.get()) expandAnimation.setOnFinished((finish)->listview.setPrefHeight(listview.getHeight() + listview.animatedHeight.get()));
+											new KeyValue( content.minHeightProperty(), initMin + animatedHeight ,Interpolator.EASE_BOTH),																
+											new KeyValue( content.maxHeightProperty(), initMax + animatedHeight ,Interpolator.EASE_BOTH),
+											new KeyValue( content.opacityProperty(), opacity ,Interpolator.EASE_BOTH)));							
+							if(!expandedProperty.get()) expandAnimation.setOnFinished((finish)->listview.setPrefHeight(listview.getHeight() + animatedHeight));
 							expandAnimation.play();
 						});
 						
