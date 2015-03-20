@@ -14,7 +14,9 @@ import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
@@ -43,6 +45,16 @@ public class C3DListView<T> extends ListView<T> {
 		return new C3DListViewSkin<T>(this);
 	}
 
+	private ObjectProperty<Node> groupnode = new SimpleObjectProperty<Node>(new Label("GROUP"));
+	
+	public Node getGroupnode(){
+		return groupnode.get();
+	}
+	public void setGroupnode(Node node){
+		this.groupnode.set(node);
+	}
+	
+	
 	private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);
 	public ObjectProperty<Integer> depthProperty(){
 		return depthProperty;

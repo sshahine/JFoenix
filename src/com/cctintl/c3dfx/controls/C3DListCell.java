@@ -85,8 +85,8 @@ public class C3DListCell<T> extends ListCell<T> {
 						this.getStyleClass().add("sublist-item");
 						StackPane group = new StackPane();
 						group.getStyleClass().add("sublist-header");
-						group.getChildren().clear();
-						group.getChildren().add(new Label("Title"));
+						group.getChildren().clear();						
+						group.getChildren().add(((C3DListView<?>)item).getGroupnode());
 						Icon dropIcon = new Icon(AwesomeIcon.ANGLE_RIGHT, "1.2em", ";", "drop-icon");
 						group.getChildren().add(dropIcon);
 						// the margin is needed when rotating the angle
