@@ -13,7 +13,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
@@ -40,6 +39,7 @@ public class C3DListCell<T> extends ListCell<T> {
 	private Timeline expandAnimation;
 	private double animatedHeight = 0;
 
+	
 	public C3DListCell() {
 		super();
 		initialize();
@@ -81,7 +81,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler.maskTypeProperty().bind(((C3DRippler)item).maskTypeProperty());
 						cellRippler.positionProperty().bind(((C3DRippler)item).positionProperty());
 					}else if(item instanceof C3DListView<?>){
-
+						// build the sublist
 						this.getStyleClass().add("sublist-item");
 						StackPane group = new StackPane();
 						group.getStyleClass().add("sublist-header");
@@ -120,23 +120,27 @@ public class C3DListCell<T> extends ListCell<T> {
 
 
 						StackPane content = new StackPane();
+						content.getStyleClass().add("sublist-container");
 						content.getChildren().add((Node)item);
-						content.setOpacity(0);						
+						content.setOpacity(0);							
 						content.heightProperty().addListener((o,oldVal,newVal)->{
 							// store the hieght of the sublist and resize it to 0 to make it hidden
 							if(subListHeight == -1){
 								subListHeight = newVal.doubleValue();
+								totalSubListsHeight += subListHeight;
+								// set the parent list 
 								Platform.runLater(()->{
 									content.setMinHeight(0);
 									content.setPrefHeight(0);
-									content.setMaxHeight(0);	
-									((C3DListView<T>)getListView()).setPrefHeight(((C3DListView<T>)getListView()).getHeight()-subListHeight);
+									content.setMaxHeight(0);									
+									((C3DListView<T>)getListView()).setPrefHeight(((C3DListView<T>)getListView()).getHeight()-totalSubListsHeight);
 								});	
 							}
 						});
 						
 						// create container of group title and the sublist
-						VBox contentHolder = new VBox();						
+						VBox contentHolder = new VBox();
+						
 						contentHolder.getChildren().add(groupRippler);
 						contentHolder.getChildren().add(content);
 						cellContainer.getChildren().add(contentHolder);
@@ -155,7 +159,7 @@ public class C3DListCell<T> extends ListCell<T> {
 								if(content.getBorder()!=null) borderWidth += content.getBorder().getStrokes().get(0).getWidths().getTop();
 								if(group.getBorder()!=null) borderWidth += group.getBorder().getStrokes().get(0).getWidths().getTop();
 								if(contentHolder.getBorder()!=null) borderWidth += contentHolder.getBorder().getStrokes().get(0).getWidths().getTop();
-								content.setTranslateY((this.getHeight() - group.getHeight())/2 + borderWidth + 1);
+								content.setTranslateY((this.getHeight() - group.getHeight())/2 + 1);
 							}
 						});
 												
@@ -166,11 +170,12 @@ public class C3DListCell<T> extends ListCell<T> {
 
 							// change the list height
 							animatedHeight = subListHeight;
-							if(!expandedProperty.get()) animatedHeight = -subListHeight;
+							if(!expandedProperty.get()) animatedHeight = -animatedHeight;
  
-							// stop the animation or change the list height
+							// stop the animation or change the list height 
 							if(expandAnimation!=null && expandAnimation.getStatus().equals(Status.RUNNING)) expandAnimation.stop();								
 							else if(expandedProperty.get()) listview.setPrefHeight(listview.getHeight() + animatedHeight);
+							
 							
 							// animate showing/hiding the sublist
 							double initMin,initMax;
@@ -210,6 +215,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						return new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap);
 					}, ((C3DListView<T>)getListView()).cellHorizontalMarginProperty(), ((C3DListView<T>)getListView()).cellVerticalMarginProperty()));
 
+					
 					if(cellRippler!=null){
 						// propagate mouse events to parent
 						if(getListView().getParent()!=null){
@@ -218,17 +224,18 @@ public class C3DListCell<T> extends ListCell<T> {
 							});					
 						}
 
-						// TODO: it's deprecated, however to need to test first
+						// set the background color to the rippler instead of the cell when the cell is selected
 						cellContainer.backgroundProperty().addListener((o,oldVal,newVal)->{
 							if(!Background.EMPTY.equals(newVal)){
 								cellContainer.setBackground(Background.EMPTY);
-								cellRippler.ripplerPane.setBackground(newVal);
+								if(cellRippler!=null)
+									cellRippler.ripplerPane.setBackground(newVal);
 							}
 						});
 
 						// scale rippler to fit the cell content
 						cellContainer.heightProperty().addListener((o,oldVal,newVal)->{
-							if(fitRippler){							
+							if(fitRippler && cellRippler!=null){							
 								double newScale = this.getHeight()/newVal.doubleValue();
 								newScale = newScale > 1? newScale : 1;
 								cellRippler.ripplerPane.setScaleY(newScale);
@@ -237,7 +244,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						});
 
 						cellContainer.widthProperty().addListener((o,oldVal,newVal)->{
-							if(fitRippler){
+							if(fitRippler && cellRippler!=null){
 								double newScale = this.getWidth()/newVal.doubleValue();
 								newScale = newScale > 1? newScale : 1;
 								cellRippler.ripplerPane.setScaleY(newScale);
@@ -331,12 +338,12 @@ public class C3DListCell<T> extends ListCell<T> {
 	}
 
 
-	// hold the heightof the sub list if existed
+	// hold the height of the sub list if existed
 	private double subListHeight = -1;
 
-	public double getSubListHeight(){
-		return subListHeight==-1? 0:subListHeight;
-	}
+	// FIXME : this value must be computed instead of fixed
+	private static double totalSubListsHeight = 15;
+
 
 
 	/***************************************************************************
