@@ -31,6 +31,8 @@ public class C3DListView<T> extends ListView<T> {
 
 	public C3DListView() {
 		super();
+		// bug : to prevent selection when focusing the list
+		this.setFocusTraversable(false);
 		this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
 			@Override
 			public ListCell<T> call(ListView<T> listView) {

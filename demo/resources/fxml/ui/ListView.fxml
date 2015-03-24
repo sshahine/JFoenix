@@ -14,7 +14,6 @@
 	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:50 0 0 180;">
 
 	<AnchorPane>
-	<ScrollPane prefHeight="500" prefWidth="220">
 	<C3DListView fx:id="list1" styleClass="custom-c3d-list-view"
 			layoutX="0" layoutY="0">
 			<Label>Item 1</Label>
@@ -28,14 +27,14 @@
 			<Label>Item 2</Label>
 			<Label>Item 3</Label>
 			<Label>Item 4</Label>
-			<C3DListView fx:id="subList" styleClass="sublist">
+			<C3DListView fx:id="subList1" styleClass="sublist">
 				<groupnode>
 					<Label> My Sub List </Label>
 				</groupnode>
 				<Label> Buttons </Label>
 				<Label> Check Box </Label>
 			</C3DListView>
-			<C3DListView fx:id="subList" styleClass="sublist">
+			<C3DListView fx:id="subList2" styleClass="sublist">
 				<groupnode>
 					<Label> My Sub List </Label>
 				</groupnode>
@@ -46,7 +45,6 @@
 			<Label>Item 7</Label>
 			<Label>Item 8</Label>
 		</C3DListView>
-	</ScrollPane>
 		
 
 
