@@ -71,7 +71,7 @@ public class C3DListCell<T> extends ListCell<T> {
 					cellContent = (Node) item;
 
 
-					// build the Cell node and its rippler
+					// build the Cell node and its rippler					
 					// RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
 					if(item instanceof C3DRippler){
 						bindRippler = true;
@@ -79,8 +79,11 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellContent = ((C3DRippler)item).getControl();						
 						cellContainer.getChildren().add(cellContent);
 					}
+					
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
-					else if(item instanceof C3DListView<?>){						
+					else if(item instanceof C3DListView<?>){
+						// add the sublist to the parent and style the cell as sublist item
+						((C3DListView<?>)getListView()).addSublist((C3DListView<?>) item);						
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
@@ -123,7 +126,7 @@ public class C3DListCell<T> extends ListCell<T> {
 									sublistContainer.setMaxHeight(0);
 									double currentHeight = ((C3DListView<T>)getListView()).getHeight();
 									// FIXME : THIS SHOULD ONLY CALLED ONCE ( NOW ITS BEING CALLED FOR EVERY SUBLIST)
-									updateListViewHeight(currentHeight - totalSubListsHeight + subListHeight);
+									updateListViewHeight(currentHeight - totalSubListsHeight);
 								});	
 							}
 						});
@@ -310,7 +313,7 @@ public class C3DListCell<T> extends ListCell<T> {
 	private double subListHeight = -1;
 
 	// FIXME : this value must be computed instead of fixed
-	private static double totalSubListsHeight = 17;
+	private static double totalSubListsHeight = -34;
 
 
 

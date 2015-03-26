@@ -8,6 +8,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableDoubleProperty;
@@ -57,6 +60,16 @@ public class C3DListView<T> extends ListView<T> {
 	}
 	
 	
+	private ObjectProperty<ObservableList<C3DListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<C3DListView<?>>>(FXCollections.observableArrayList());
+	
+	
+	public void addSublist(C3DListView<?> subList){
+		if(!sublistsProperty.get().contains(subList))
+			sublistsProperty.get().add(subList);
+	}
+	
+	
+	
 	private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);
 	public ObjectProperty<Integer> depthProperty(){
 		return depthProperty;
@@ -97,7 +110,7 @@ public class C3DListView<T> extends ListView<T> {
 	 **************************************************************************/
 
 	private static final String DEFAULT_STYLE_CLASS = "c3d-list-view";
-
+	
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		expanded.addListener((o,oldVal,newVal)->{
@@ -105,8 +118,30 @@ public class C3DListView<T> extends ListView<T> {
 			else collapse();
 		});
 		
+		// handle selection model on the list ( FOR NOW : we only support single selection on the list if it contains sublists)
+		sublistsProperty.get().addListener( (ListChangeListener.Change<? extends C3DListView<?>> c)->{ 
+			while (c.next()) {
+				if(c.wasAdded() || c.wasUpdated() || c.wasReplaced()){
+					if( sublistsProperty.get().size() == 1) this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));					
+					c.getAddedSubList().forEach(item -> item.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(item)));
+				}
+            }
+		});		
 	}
-
+	
+	
+	// allow single selection across the list and all sublits
+	private boolean allowClear = true;
+	private void clearSelection(C3DListView<?> selectedList){
+		if(allowClear){
+			allowClear = false;
+			if(this != selectedList) this.getSelectionModel().clearSelection();
+			sublistsProperty.get().parallelStream().filter(list-> list!=selectedList).forEach(list->list.getSelectionModel().clearSelection());
+			allowClear = true;
+		}
+	}
+	
+	// propagate mouse events to the parent node ( e.g. to allow dragging while clicking on the list)
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
 			e.consume();

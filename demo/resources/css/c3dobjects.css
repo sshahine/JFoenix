@@ -464,7 +464,7 @@
 
 .custom-c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
 .custom-c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
-	-fx-background-color: transparent ;
+	-fx-background-color: rgba(255,0,0,0.2) ;
 }
 
 .custom-c3d-list-view .c3d-list-cell {
@@ -514,7 +514,6 @@
 	-fx-border-color: #e0e0e0;
 	-fx-border-width: 1 0 1 0;
 }
-
 .custom-c3d-list-view .c3d-list-cell .sublist-header > .drop-icon{
 	-fx-text-fill: GRAY;
 }
@@ -549,7 +548,7 @@
 
 .sublist .c3d-list-cell:odd:selected .c3d-list-cell-container,
 .sublist .c3d-list-cell:even:selected .c3d-list-cell-container { 
-	-fx-background-color: transparent ;
+	-fx-background-color: rgba(255,0,0,0.2) ;
 }
 
 .sublist .c3d-list-cell {
@@ -560,6 +559,11 @@
 .sublist .c3d-list-cell:even {
 	-fx-background-color:  WHITE;
 }
+
+.sublist-item:selected {
+	-fx-background-color: TRANSPARENT;	
+}
+
 
 
 /*.custom-c3d-list-view .sublist-container {
