@@ -490,7 +490,7 @@
   	
 }
 .custom-c3d-list-view .c3d-rippler {
-	-fx-rippler-fill:RED;
+	-fx-rippler-fill : RED;
 }
 
 .custom-c3d-list-view1{

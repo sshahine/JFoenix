@@ -303,7 +303,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
     
     private double estimateHeight(double borderWidth ){
     	double gap = ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() * getSkinnable().getItems().size();
-    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index ->flow.getCell(index).getHeight()).sum();    	
+    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index ->flow.getCell(index).getHeight()).sum();
     	return cellsHeight + gap + ((C3DListView<T>) getSkinnable()).getCellVerticalMargin() - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() + borderWidth;
     }
     
