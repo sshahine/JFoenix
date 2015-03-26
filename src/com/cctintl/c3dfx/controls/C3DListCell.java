@@ -9,12 +9,14 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -79,7 +81,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellContent = ((C3DRippler)item).getControl();						
 						cellContainer.getChildren().add(cellContent);
 					}
-					
+
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
 					else if(item instanceof C3DListView<?>){
 						// add the sublist to the parent and style the cell as sublist item
@@ -87,6 +89,9 @@ public class C3DListCell<T> extends ListCell<T> {
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
+						// prevent selecting the sublist item by clicking the right mouse button						
+						((C3DListView<?>)getListView()).addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+						
 						// First build the group item used to expand / hide the sublist
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
@@ -140,7 +145,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellContainer.addEventHandler(MouseEvent.ANY, (e)-> contentHolder.fireEvent(e));
 						contentHolder.addEventHandler(MouseEvent.ANY, (e)-> e.consume());
 
-						
+
 						// Finally, add sublist animation						
 						group.setOnMouseClicked((click)->{
 							C3DListView<T> listview = ((C3DListView<T>)getListView());
@@ -203,14 +208,14 @@ public class C3DListCell<T> extends ListCell<T> {
 					//						});
 					//
 					//					
-																
+
 
 					if(addCellRippler){
 						// initialize the gaps between cells
 						double cellInsetHgap = ((C3DListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 						double cellInsetVgap = ((C3DListView<T>)getListView()).getCellVerticalMargin().doubleValue();
 						if(cellContainer!=null) StackPane.setMargin(cellContainer, new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap));
-						
+
 						// add listeners to gaps properties 
 						((C3DListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
 							// fit the rippler into the cell bounds
@@ -272,7 +277,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						setGraphic(mainContainer);	
 					}
 					setText(null);
-					
+
 					// propagate mouse events to all children
 					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> cellContent.fireEvent(e));
 					cellContent.addEventHandler(MouseEvent.ANY, (e)->e.consume());

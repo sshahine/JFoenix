@@ -560,12 +560,6 @@
 	-fx-background-color:  WHITE;
 }
 
-.sublist-item:selected {
-	-fx-background-color: TRANSPARENT;	
-}
-
-
-
 /*.custom-c3d-list-view .sublist-container {
 	-fx-padding : 0 0 5 0;
 }*/
