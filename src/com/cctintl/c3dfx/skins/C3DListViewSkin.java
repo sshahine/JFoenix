@@ -302,8 +302,8 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
     	// compute the border/padding for the list
     	double borderWidth = 0;
         if(getSkinnable().getBorder()!=null) {
-        	borderWidth += getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
-        	borderWidth += getSkinnable().getBorder().getStrokes().get(0).getWidths().getBottom();
+        	borderWidth += Math.ceil(getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop());
+        	borderWidth += Math.ceil(getSkinnable().getBorder().getStrokes().get(0).getWidths().getBottom());
         }
         if(getSkinnable().getPadding()!=null){
         	borderWidth += getSkinnable().getPadding().getTop();
