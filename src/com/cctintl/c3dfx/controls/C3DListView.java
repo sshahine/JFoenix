@@ -20,12 +20,14 @@ import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableDoubleProperty;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
@@ -161,7 +163,11 @@ public class C3DListView<T> extends ListView<T> {
 		sublistsProperty.get().addListener( (ListChangeListener.Change<? extends C3DListView<?>> c)->{ 
 			while (c.next()) {
 				if(c.wasAdded() || c.wasUpdated() || c.wasReplaced()){
-					if( sublistsProperty.get().size() == 1) this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));					
+					if( sublistsProperty.get().size() == 1) {
+						this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));
+						// prevent selecting the sublist item by clicking the right mouse button						
+						this.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+					}
 					c.getAddedSubList().forEach(item -> item.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(item)));
 				}
 			}

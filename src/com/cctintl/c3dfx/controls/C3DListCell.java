@@ -9,14 +9,12 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -89,9 +87,6 @@ public class C3DListCell<T> extends ListCell<T> {
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
-						// prevent selecting the sublist item by clicking the right mouse button						
-						((C3DListView<?>)getListView()).addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-						
 						// First build the group item used to expand / hide the sublist
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
@@ -251,10 +246,10 @@ public class C3DListCell<T> extends ListCell<T> {
 										);	
 								// change the height of the list view
 								if(oldVal.doubleValue()<newVal.doubleValue())
-									listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+									listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getItems().size()/2 - listview.currentVerticalGapProperty().get());
 								else
 									animateGap.setOnFinished((e)->{
-										listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+										listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getItems().size()/2 - listview.currentVerticalGapProperty().get());
 									});
 
 								animateGap.play();	
