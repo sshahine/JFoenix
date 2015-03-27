@@ -2,10 +2,13 @@ package com.cctintl.c3dfx.controls;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -50,26 +53,6 @@ public class C3DListView<T> extends ListView<T> {
 		return new C3DListViewSkin<T>(this);
 	}
 
-	private ObjectProperty<Node> groupnode = new SimpleObjectProperty<Node>(new Label("GROUP"));
-	
-	public Node getGroupnode(){
-		return groupnode.get();
-	}
-	public void setGroupnode(Node node){
-		this.groupnode.set(node);
-	}
-	
-	
-	private ObjectProperty<ObservableList<C3DListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<C3DListView<?>>>(FXCollections.observableArrayList());
-	
-	
-	public void addSublist(C3DListView<?> subList){
-		if(!sublistsProperty.get().contains(subList))
-			sublistsProperty.get().add(subList);
-	}
-	
-	
-	
 	private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);
 	public ObjectProperty<Integer> depthProperty(){
 		return depthProperty;
@@ -102,6 +85,62 @@ public class C3DListView<T> extends ListView<T> {
 		currentVerticalGapProperty.set(0);
 		expanded.set(false);
 	}
+	
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * SubList Properties                                                      *
+	 *                                                                         *
+	 **************************************************************************/
+	
+	private ObjectProperty<Node> groupnode = new SimpleObjectProperty<Node>(new Label("GROUP"));
+
+	public Node getGroupnode(){
+		return groupnode.get();
+	}
+	public void setGroupnode(Node node){
+		this.groupnode.set(node);
+	}
+
+	// sublists property
+	private ObjectProperty<ObservableList<C3DListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<C3DListView<?>>>(FXCollections.observableArrayList());	
+	private LinkedHashMap<Integer, C3DListView<?>> sublistsIndices = new LinkedHashMap<Integer, C3DListView<?>>();
+	public void addSublist(C3DListView<?> subList, int index){
+		if(!sublistsProperty.get().contains(subList)){
+			sublistsProperty.get().add(subList);
+			sublistsIndices.put(index, subList);
+			subList.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+				if(newVal.intValue() != -1){
+					getOverAllSelectedIndex();
+				}
+			});
+		}
+	}
+
+	// selection property across list and its sublists
+	private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<Integer>(-1);
+
+	public ReadOnlyObjectProperty<Integer> overAllIndexProperty(){
+		return overAllIndexProperty.getReadOnlyProperty();
+	}
+
+	private void getOverAllSelectedIndex(){
+		// if item from the list is selected
+		if(this.getSelectionModel().getSelectedIndex() != -1 ){
+			int selectedIndex = this.getSelectionModel().getSelectedIndex();
+			int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
+			overAllIndexProperty.set(selectedIndex + preItemsSize);
+		}else{
+			Object[] selectedList = sublistsIndices.keySet().parallelStream().filter(key-> sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1).toArray();
+			if(selectedList.length > 0){			
+				int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < ((Integer)selectedList[0])).mapToInt(key-> sublistsIndices.get(key).getItems().size()-1).sum();
+				overAllIndexProperty.set(preItemsSize + (Integer)selectedList[0] + sublistsIndices.get(selectedList[0]).getSelectionModel().getSelectedIndex());
+			}else{ 
+				overAllIndexProperty.set(-1);
+			}
+		}		
+	}
+	
 
 	/***************************************************************************
 	 *                                                                         *
@@ -110,14 +149,14 @@ public class C3DListView<T> extends ListView<T> {
 	 **************************************************************************/
 
 	private static final String DEFAULT_STYLE_CLASS = "c3d-list-view";
-	
+
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		expanded.addListener((o,oldVal,newVal)->{
 			if(newVal) expand();
 			else collapse();
 		});
-		
+
 		// handle selection model on the list ( FOR NOW : we only support single selection on the list if it contains sublists)
 		sublistsProperty.get().addListener( (ListChangeListener.Change<? extends C3DListView<?>> c)->{ 
 			while (c.next()) {
@@ -125,11 +164,18 @@ public class C3DListView<T> extends ListView<T> {
 					if( sublistsProperty.get().size() == 1) this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));					
 					c.getAddedSubList().forEach(item -> item.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(item)));
 				}
-            }
+			}
 		});		
+
+		// listen to index changes
+		this.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+			if(newVal.intValue() != -1){
+				getOverAllSelectedIndex();	
+			}
+		});
 	}
-	
-	
+
+
 	// allow single selection across the list and all sublits
 	private boolean allowClear = true;
 	private void clearSelection(C3DListView<?> selectedList){
@@ -140,7 +186,7 @@ public class C3DListView<T> extends ListView<T> {
 			allowClear = true;
 		}
 	}
-	
+
 	// propagate mouse events to the parent node ( e.g. to allow dragging while clicking on the list)
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
@@ -148,7 +194,7 @@ public class C3DListView<T> extends ListView<T> {
 			this.getParent().fireEvent(e);
 		});
 	}
-	
+
 	private StyleableDoubleProperty cellHorizontalMargin = new SimpleStyleableDoubleProperty(StyleableProperties.CELL_HORIZONTAL_MARGIN, C3DListView.this, "cellHorizontalMargin",  0.0);
 
 	public Double getCellHorizontalMargin(){

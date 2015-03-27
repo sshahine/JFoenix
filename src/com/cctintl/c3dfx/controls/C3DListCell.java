@@ -85,7 +85,7 @@ public class C3DListCell<T> extends ListCell<T> {
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
 					else if(item instanceof C3DListView<?>){
 						// add the sublist to the parent and style the cell as sublist item
-						((C3DListView<?>)getListView()).addSublist((C3DListView<?>) item);						
+						((C3DListView<?>)getListView()).addSublist((C3DListView<?>) item, this.getIndex());						
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
