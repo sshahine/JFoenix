@@ -291,20 +291,36 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             }
         } else {
             flow.resizeRelocate(x, y, w, h);
-            double borderWidth = 0;
-            if(getSkinnable().getBorder()!=null)
-            	borderWidth = getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
-            
+
             // FIXME, CHANGE THE HEIGHT if 3D is active or not
             if(flow.getCellCount() > 0)
-            	getSkinnable().setPrefHeight(estimateHeight(borderWidth));
+            	getSkinnable().setPrefHeight(estimateHeight());
         }
     }
     
-    private double estimateHeight(double borderWidth ){
-    	double gap = ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() * getSkinnable().getItems().size();
-    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index ->flow.getCell(index).getHeight()).sum();
-    	return cellsHeight + gap - ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() + borderWidth + getSkinnable().getItems().size()/2;
+    private double estimateHeight(){
+    	// compute the border/padding for the list
+    	double borderWidth = 0;
+        if(getSkinnable().getBorder()!=null) {
+        	borderWidth += getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
+        	borderWidth += getSkinnable().getBorder().getStrokes().get(0).getWidths().getBottom();
+        }
+        if(getSkinnable().getPadding()!=null){
+        	borderWidth += getSkinnable().getPadding().getTop();
+        	borderWidth += getSkinnable().getPadding().getBottom();
+        }
+        // compute the gap between list cells
+    	double gap = ((C3DListView<T>) getSkinnable()).currentVerticalGapProperty().get() * (getSkinnable().getItems().size() - 1);
+        // compute the height of each list cell
+    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index->{
+    		double cellBorderWidth = 0;
+    		if(flow.getCell(index).getBorder()!=null){
+    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getTop();
+    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getBottom();
+    		}
+    		return flow.getCell(index).getHeight() + cellBorderWidth;
+    	}).sum();
+    	return cellsHeight + gap + borderWidth;
     }
     
     @Override protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
@@ -325,10 +341,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
     	if (getSkinnable().getItems().size() <= 0) return 200;
     	// handel if the list has border
-    	double borderWidth = 0;
-        if(getSkinnable().getBorder()!=null)
-        	borderWidth = getSkinnable().getBorder().getStrokes().get(0).getWidths().getTop();
-        return estimateHeight(borderWidth);
+        return estimateHeight();
     }
     
     private void onFocusPreviousCell() {

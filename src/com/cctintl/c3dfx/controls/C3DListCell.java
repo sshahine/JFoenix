@@ -234,7 +234,12 @@ public class C3DListCell<T> extends ListCell<T> {
 					((C3DListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
 						// validate changing gap operation
 						C3DListView<T> listview = ((C3DListView<T>)getListView());
-						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get();
+						double borderWidth = 0;
+						if(listview.getPadding()!=null){
+							borderWidth += listview.getPadding().getTop();
+							borderWidth += listview.getPadding().getBottom();
+						}
+						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + borderWidth - listview.currentVerticalGapProperty().get();
 						if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
 							if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
 								// stop the previous animation 
@@ -246,10 +251,10 @@ public class C3DListCell<T> extends ListCell<T> {
 										);	
 								// change the height of the list view
 								if(oldVal.doubleValue()<newVal.doubleValue())
-									listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getItems().size()/2 - listview.currentVerticalGapProperty().get());
+									listview.setPrefHeight(newHeight);
 								else
 									animateGap.setOnFinished((e)->{
-										listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getItems().size()/2 - listview.currentVerticalGapProperty().get());
+										listview.setPrefHeight(newHeight);
 									});
 
 								animateGap.play();	

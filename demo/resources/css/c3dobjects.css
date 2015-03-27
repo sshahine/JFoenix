@@ -495,7 +495,7 @@
 
 .custom-c3d-list-view1{
 	-fx-vertical-gap : 15.0;
-  	-fx-max-width: 150.0px;
+  	-fx-pref-width: 150px;
   	-fx-background-color: transparent ;
 }
 
