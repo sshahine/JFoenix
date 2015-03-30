@@ -131,16 +131,18 @@ public class C3DPopup extends StackPane {
 		while(!tempSource.getParent().equals(popupContainer)){
 			tempSource = tempSource.getParent();
 			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
-			// handle scroll pane case 
+			// handle scroll pane case
 			if(tempSource.getClass().getName().contains("ScrollPaneSkin")){
 				offsetX += bound.getMinX();
 				offsetY += bound.getMinY();
+			}if(tempSource instanceof C3DTabPane){
+				offsetX -= bound.getWidth() * ((C3DTabPane)tempSource).getSelectionModel().getSelectedIndex();				
 			}else{				
 				if(bound.getMinX() > 0) offsetX += bound.getMinX();
 				if(bound.getMinY() > 0) offsetY += bound.getMinY();	
 			}
 		}
-
+	
 		// postion the popup according to its animation
 		if(hAlign.equals(C3DPopupHPosition.RIGHT)){
 			scaleTransform.pivotXProperty().bind(content.widthProperty());

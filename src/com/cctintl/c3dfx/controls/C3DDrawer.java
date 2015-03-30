@@ -1,5 +1,7 @@
 package com.cctintl.c3dfx.controls;
 
+import java.util.ArrayList;
+
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -24,6 +26,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
@@ -110,8 +113,9 @@ public class C3DDrawer extends StackPane {
 		// content listener for mouse hold on a side
 		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { 
 			double width = 0 ;
+			long valid = callBacks.parallelStream().filter(callback->!callback.call(null)).count();
 			if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
-			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null))
+			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null) && valid == 0)
 				holdTimer.play(); 
 		});
 
@@ -151,6 +155,16 @@ public class C3DDrawer extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	private ArrayList<Callback<Void, Boolean>> callBacks = new ArrayList<>();
+	
+	/*
+	 *  the callbacks are used to add conditions to allow 
+	 *  starting the drawer when holding on the side part of the content
+	 */
+	public void addInitDrawerCallback(Callback<Void, Boolean> callBack){
+		callBacks.add(callBack);
+	}
+	
 	public void draw() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED)){
 			this.inTransition.play();
