@@ -154,17 +154,14 @@ public class C3DRippler extends StackPane {
 			createRipple(event.getX(),event.getY());
 			if(this.position.get() == RipplerPos.FRONT)
 				this.control.fireEvent(event);
-			event.consume();
 		});
 		ripplerPane.setOnMouseReleased((event) -> {
 			if(this.position.get() == RipplerPos.FRONT)
 				this.control.fireEvent(event);
-			event.consume();
 		});
 		ripplerPane.setOnMouseClicked((event) -> {
 			if(this.position.get() == RipplerPos.FRONT )
 				this.control.fireEvent(event);
-			event.consume();
 		});
 	}
 	/**
@@ -217,16 +214,14 @@ public class C3DRippler extends StackPane {
 					ripple.setClip(getMask());
 					getChildren().add(ripple);			
 
-					if(overlayRect.getOpacity()!=1){
-						overlayRect.animation.setRate(1);
-						overlayRect.animation.play();
-					}
+					overlayRect.outAnimation.stop();
+					overlayRect.inAnimation.play();
 					ripple.inAnimation.play();
 
 					// create fade out transition for the ripple
 					ripplerPane.setOnMouseReleased((e)->{
 						generating = false;
-						overlayRect.animation.setRate(-1);						
+						overlayRect.inAnimation.stop();
 						ripple.inAnimation.pause();
 						double fadeOutRadious = rippleRadius + 20;
 						if(ripple.radiusProperty().get() < rippleRadius*0.5)
@@ -238,7 +233,7 @@ public class C3DRippler extends StackPane {
 										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
 										));
 						outAnimation.play();
-						overlayRect.animation.play();
+						overlayRect.outAnimation.play();
 						outAnimation.setOnFinished((event)->{
 							getChildren().remove(ripple);	
 						});
@@ -256,12 +251,12 @@ public class C3DRippler extends StackPane {
 		}
 
 		private class OverLayRipple extends Rectangle{
-			Timeline animation = new Timeline(
-					new KeyFrame(Duration.ZERO,
-							new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)
-							),new KeyFrame(Duration.seconds(0.3),
-									new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)
-									));
+			// better animation while clicking 
+			Timeline inAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
+			Timeline outAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)));
+			// used in toggle button
+			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
+											  new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			public OverLayRipple() {
 				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
 				this.setOpacity(0);

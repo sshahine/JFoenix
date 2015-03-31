@@ -177,7 +177,6 @@
 }
 
 .c3d-tool-bar .c3d-hamburger-icon{
-	-fx-translate-y: 10.0px;
 	-fx-padding:10.0;
 }
 .c3d-tool-bar .c3d-hamburger-icon SVGPath{
@@ -420,7 +419,7 @@
 *                                                                              *
 *******************************************************************************/
 
-.c3d-list-cell-container {
+.c3d-list-cell-content-container {
 	-fx-alignment: center-left;
 }
 .c3d-list-cell-container > .label {
@@ -445,7 +444,7 @@
 }
 
 .c3d-list-cell .c3d-rippler {
-	-fx-rippler-fill:#5264AE;
+	-fx-rippler-fill: #5264AE;
 }
 
 .c3d-list-view {
@@ -456,17 +455,16 @@
   	-fx-expanded : false;
 }
 
-
-.custom-c3d-list-view .c3d-list-cell-container {
+.custom-c3d-list-view .c3d-list-cell-content-container {
 	-fx-alignment: center;
 }
-.custom-c3d-list-view .c3d-list-cell-container > .label {
+.custom-c3d-list-view .c3d-list-cell-container .label {
   	-fx-text-fill: BLACK ;
 }
 
 .custom-c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
 .custom-c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
-	-fx-background-color: transparent ;
+	-fx-background-color: rgba(255,0,0,0.2) ;
 }
 
 .custom-c3d-list-view .c3d-list-cell {
@@ -485,12 +483,14 @@
 	-fx-background-insets: 0.0;
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
-  	-fx-vertical-gap : 10.0;
   	-fx-expanded : false;
-  	-fx-max-width: 200.0px;
+  	-fx-max-width : 200.0px;   	
+  	/* important to hide the list change of height */
+  	-fx-background-color:TRANSPARENT;
+  	
 }
 .custom-c3d-list-view .c3d-rippler {
-	-fx-rippler-fill:RED;
+	-fx-rippler-fill : RED;
 }
 
 .custom-c3d-list-view1{
@@ -499,12 +499,70 @@
   	-fx-background-color: transparent ;
 }
 
+.custom-c3d-list-view1 .c3d-list-cell .c3d-list-cell-container{
+}
+
 .custom-c3d-list-view-icon {
 	-fx-text-fill: #5264AE;
 	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
 }
 
+
+
+.custom-c3d-list-view .sublist-item {
+	-fx-border-color: #e0e0e0;
+	-fx-border-width: 1 0 1 0;
+}
+.custom-c3d-list-view .c3d-list-cell .sublist-header > .drop-icon{
+	-fx-text-fill: GRAY;
+}
+.custom-c3d-list-view .c3d-list-cell:filled:hover .sublist-header > .drop-icon{
+	-fx-text-fill: BLACK;
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************
+*                                                                              *
+* C3D SUBLIST IMPORTANT                                                        *
+*                                                                              *
+*******************************************************************************/
+.sublist .scroll-bar:vertical .increment-arrow,
+.sublist .scroll-bar:vertical .decrement-arrow,
+.sublist .scroll-bar:vertical .increment-button,
+.sublist .scroll-bar:vertical .decrement-button {
+    -fx-padding:0;
+}
+.sublist .c3d-list-cell:odd, 
+.sublist .c3d-list-cell:even {
+	-fx-background-color:  TRANSPARENT;
+}
+.sublist {
+	-fx-background-color: TRANSPARENT;
+}
+
+.sublist .c3d-list-cell:odd:selected .c3d-list-cell-container,
+.sublist .c3d-list-cell:even:selected .c3d-list-cell-container { 
+	-fx-background-color: rgba(255,0,0,0.2) ;
+}
+
+.sublist .c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.sublist .c3d-list-cell:odd, 
+.sublist .c3d-list-cell:even {
+	-fx-background-color:  WHITE;
+}
+
+/*.custom-c3d-list-view .sublist-container {
+	-fx-padding : 0 0 5 0;
+}*/
 
 /*******************************************************************************
 *                                                                              *

@@ -2,19 +2,27 @@ package com.cctintl.c3dfx.controls;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
@@ -29,6 +37,8 @@ public class C3DListView<T> extends ListView<T> {
 
 	public C3DListView() {
 		super();
+		// bug : to prevent selection when focusing the list
+		this.setFocusTraversable(false);
 		this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
 			@Override
 			public ListCell<T> call(ListView<T> listView) {
@@ -43,28 +53,94 @@ public class C3DListView<T> extends ListView<T> {
 		return new C3DListViewSkin<T>(this);
 	}
 
-	private ObjectProperty<Integer> depth = new SimpleObjectProperty<Integer>();
-
+	private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);
 	public ObjectProperty<Integer> depthProperty(){
-		return depth;
+		return depthProperty;
 	}
+	public int getDepthProperty(){
+		return depthProperty.get();
+	}
+	public void setDepthProperty(int depth){
+		depthProperty.set(depth);
+	}	
 
-	private DoubleProperty currentVerticalGap = new SimpleDoubleProperty();
+	private DoubleProperty currentVerticalGapProperty = new SimpleDoubleProperty();
 
 	public DoubleProperty currentVerticalGapProperty(){
-		return currentVerticalGap;
+		return currentVerticalGapProperty;
+	}
+	public double getCurrentVerticalGap(){
+		return currentVerticalGapProperty.get();
+	}
+	public void setCurrentVerticalGap(double gap){
+		currentVerticalGapProperty.set(gap);
 	}
 
-
 	private void expand(){
-		currentVerticalGap.set(verticalGap.get());
+		currentVerticalGapProperty.set(verticalGap.get());
 		expanded.set(true);
 	}
 
 	private void collapse(){	
-		currentVerticalGap.set(0);
+		currentVerticalGapProperty.set(0);
 		expanded.set(false);
 	}
+	
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * SubList Properties                                                      *
+	 *                                                                         *
+	 **************************************************************************/
+	
+	private ObjectProperty<Node> groupnode = new SimpleObjectProperty<Node>(new Label("GROUP"));
+
+	public Node getGroupnode(){
+		return groupnode.get();
+	}
+	public void setGroupnode(Node node){
+		this.groupnode.set(node);
+	}
+
+	// sublists property
+	private ObjectProperty<ObservableList<C3DListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<C3DListView<?>>>(FXCollections.observableArrayList());	
+	private LinkedHashMap<Integer, C3DListView<?>> sublistsIndices = new LinkedHashMap<Integer, C3DListView<?>>();
+	public void addSublist(C3DListView<?> subList, int index){
+		if(!sublistsProperty.get().contains(subList)){
+			sublistsProperty.get().add(subList);
+			sublistsIndices.put(index, subList);
+			subList.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+				if(newVal.intValue() != -1){
+					getOverAllSelectedIndex();
+				}
+			});
+		}
+	}
+
+	// selection property across list and its sublists
+	private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<Integer>(-1);
+
+	public ReadOnlyObjectProperty<Integer> overAllIndexProperty(){
+		return overAllIndexProperty.getReadOnlyProperty();
+	}
+
+	private void getOverAllSelectedIndex(){
+		// if item from the list is selected
+		if(this.getSelectionModel().getSelectedIndex() != -1 ){
+			int selectedIndex = this.getSelectionModel().getSelectedIndex();
+			int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
+			overAllIndexProperty.set(selectedIndex + preItemsSize);
+		}else{
+			Object[] selectedList = sublistsIndices.keySet().parallelStream().filter(key-> sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1).toArray();
+			if(selectedList.length > 0){			
+				int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < ((Integer)selectedList[0])).mapToInt(key-> sublistsIndices.get(key).getItems().size()-1).sum();
+				overAllIndexProperty.set(preItemsSize + (Integer)selectedList[0] + sublistsIndices.get(selectedList[0]).getSelectionModel().getSelectedIndex());
+			}else{ 
+				overAllIndexProperty.set(-1);
+			}
+		}		
+	}
+	
 
 	/***************************************************************************
 	 *                                                                         *
@@ -80,16 +156,45 @@ public class C3DListView<T> extends ListView<T> {
 			if(newVal) expand();
 			else collapse();
 		});
-		
+
+		// handle selection model on the list ( FOR NOW : we only support single selection on the list if it contains sublists)
+		sublistsProperty.get().addListener( (ListChangeListener.Change<? extends C3DListView<?>> c)->{ 
+			while (c.next()) {
+				if(c.wasAdded() || c.wasUpdated() || c.wasReplaced()){
+					if( sublistsProperty.get().size() == 1) this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));					
+					c.getAddedSubList().forEach(item -> item.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(item)));
+				}
+			}
+		});		
+
+		// listen to index changes
+		this.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+			if(newVal.intValue() != -1){
+				getOverAllSelectedIndex();	
+			}
+		});
 	}
 
+
+	// allow single selection across the list and all sublits
+	private boolean allowClear = true;
+	private void clearSelection(C3DListView<?> selectedList){
+		if(allowClear){
+			allowClear = false;
+			if(this != selectedList) this.getSelectionModel().clearSelection();
+			sublistsProperty.get().parallelStream().filter(list-> list!=selectedList).forEach(list->list.getSelectionModel().clearSelection());
+			allowClear = true;
+		}
+	}
+
+	// propagate mouse events to the parent node ( e.g. to allow dragging while clicking on the list)
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
 			e.consume();
 			this.getParent().fireEvent(e);
 		});
 	}
-	
+
 	private StyleableDoubleProperty cellHorizontalMargin = new SimpleStyleableDoubleProperty(StyleableProperties.CELL_HORIZONTAL_MARGIN, C3DListView.this, "cellHorizontalMargin",  0.0);
 
 	public Double getCellHorizontalMargin(){

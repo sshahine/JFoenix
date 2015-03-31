@@ -15,6 +15,7 @@ public class ListViewController {
 
 	@FXML private C3DListView<?> list1;
 	@FXML private C3DListView<?> list2;
+	@FXML private C3DListView<?> subList;
 	
 	@FXML private C3DButton button3D;
 	@FXML private C3DButton collapse;
@@ -30,8 +31,10 @@ public class ListViewController {
 			list1.depthProperty().set(val);
 			list2.depthProperty().set(val);
 		});
+		
 		expand.setOnMouseClicked((e)->list2.expandedProperty().set(true));
 		collapse.setOnMouseClicked((e)->list2.expandedProperty().set(false));
+		list1.depthProperty().set(1);
 	}
 	
 	
