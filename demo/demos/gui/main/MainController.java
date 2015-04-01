@@ -25,7 +25,7 @@ import com.cctintl.c3dfx.controls.C3DRippler;
 
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
-import demos.gui.uicomponents.ListViewController;
+import demos.gui.uicomponents.ButtonController;
 
 @FXMLController(value = "/resources/fxml/Main.fxml", title = "Material Design Example")
 public class MainController {
@@ -89,7 +89,7 @@ public class MainController {
 		// create the inner flow and content
 		context = new ViewFlowContext();
 		// set the default controller 
-		Flow innerFlow = new Flow(ListViewController.class);
+		Flow innerFlow = new Flow(ButtonController.class);
 
 		flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);

@@ -113,7 +113,8 @@ public class C3DListCell<T> extends ListCell<T> {
 						sublistContainer.getStyleClass().add("sublist-container");
 						sublistContainer.getChildren().add(cellContent);
 						sublistContainer.setTranslateY(1);
-						sublistContainer.setOpacity(0);							
+						sublistContainer.setOpacity(0);	
+						
 						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
 							// store the hieght of the sublist and resize it to 0 to make it hidden
 							if(subListHeight == -1){
@@ -337,6 +338,7 @@ public class C3DListCell<T> extends ListCell<T> {
 		cellContainer.getStyleClass().add("c3d-list-cell-content-container");
 		cellContainer.setPadding(new Insets(4,8,4,8));
 		this.setPadding(new Insets(0));
+		totalSubListsHeight = -34;
 	}
 
 }

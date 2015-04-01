@@ -34,13 +34,6 @@
 				<Label> Buttons </Label>
 				<Label> Check Box </Label>
 			</C3DListView>
-			<C3DListView fx:id="subList2" styleClass="sublist">
-				<groupnode>
-					<Label> My Sub List </Label>
-				</groupnode>
-				<Label> Buttons </Label>
-				<Label> Check Box </Label>
-			</C3DListView>
 			<Label>Item 6</Label>
 			<Label>Item 7</Label>
 			<Label>Item 8</Label>
