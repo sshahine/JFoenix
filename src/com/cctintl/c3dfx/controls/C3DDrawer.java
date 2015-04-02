@@ -113,7 +113,10 @@ public class C3DDrawer extends StackPane {
 		// content listener for mouse hold on a side
 		this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> { 
 			double width = 0 ;
-			long valid = callBacks.stream().filter(callback->!callback.call(null)).count();
+			long valid = 0;
+			for (int i =0 ; i < callBacks.size(); i++)
+				if(!callBacks.get(i).call(null)) valid++;			
+//			long valid = callBacks.stream().filter(callback->!callback.call(null)).count();
 			if(directionProperty.get().equals(DrawerDirection.RIGHT)) width = content.getWidth();
 			if(width + directionProperty.get().doubleValue() * e.getX() < activeOffset && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null) && valid == 0)
 				holdTimer.play(); 
