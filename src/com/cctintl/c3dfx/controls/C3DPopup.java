@@ -62,7 +62,7 @@ public class C3DPopup extends StackPane {
 		if(popupContainer!=null){
 			this.popupContainer = popupContainer;
 			// close the popup if clicked on the overlay pane
-			overlayPane.setOnMouseClicked((e)->close());
+			overlayPane.setOnMouseClicked((e)->{ if(e.isStillSincePress())close(); });
 			this.popupContainer.getChildren().remove(overlayPane);
 			this.popupContainer.getChildren().add(overlayPane);
 			animation = new PopupTransition();
