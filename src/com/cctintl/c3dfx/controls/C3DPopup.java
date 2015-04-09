@@ -130,7 +130,10 @@ public class C3DPopup extends StackPane {
 		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());
 		offsetX = bound.getMinX() + initOffsetX;
 		offsetY = bound.getMinY() + initOffsetY;
-
+		
+		// set the scene root as popup container if it's not set by the user
+		if(popupContainer == null) this.setPopupContainer((Pane) this.source.getScene().getRoot());
+		
 		while(!tempSource.getParent().equals(popupContainer)){
 			tempSource = tempSource.getParent();
 			bound = tempSource.localToParent(tempSource.getBoundsInLocal());

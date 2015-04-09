@@ -78,7 +78,7 @@ public class MainController {
 		toolbarPopup.setPopupContainer(root);
 		toolbarPopup.setSource(optionsRippler);
 		optionsBurger.setOnMouseClicked((e) -> {
-			toolbarPopup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.RIGHT, -20, 18);
+			toolbarPopup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.RIGHT, -12, 15);
 		});
 
 		// close application
