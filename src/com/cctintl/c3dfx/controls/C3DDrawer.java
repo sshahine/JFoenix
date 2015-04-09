@@ -75,6 +75,7 @@ public class C3DDrawer extends StackPane {
 		sidePane.getStyleClass().add("c3d-drawer-side-pane");
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
 		DepthManager.setDepth(sidePane, 2);
+		sidePane.setPickOnBounds(false);
 
 		this.getChildren().add(content);		
 		this.getChildren().add(overlayPane);

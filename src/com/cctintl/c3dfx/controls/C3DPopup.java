@@ -84,11 +84,14 @@ public class C3DPopup extends StackPane {
 			contentHolder.getStyleClass().add("c3d-popup-holder");
 			contentHolder.getTransforms().add(scaleTransform);			
 			DepthManager.setDepth(contentHolder, 4);
+			// to allow closing he popup when clicking on the shadowed area
+			contentHolder.setPickOnBounds(false);
+			
 			// ensure stackpane is never resized beyond it's preferred size
 			overlayPane = new AnchorPane();
 			overlayPane.getChildren().add(contentHolder);
 			overlayPane.getStyleClass().add("c3d-popup-overlay-pane");
-			overlayPane.setVisible(false);
+			overlayPane.setVisible(false);			
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
