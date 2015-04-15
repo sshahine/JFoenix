@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import com.cctintl.c3dfx.controls.C3DButton;
 import com.cctintl.c3dfx.controls.C3DComboBox;
 
-public class MenuButtonDemo extends Application {
+public class ComboBoxDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
