@@ -1,4 +1,4 @@
-package com.cctintl.c3dfx.javacomponents;
+package com.cctintl.c3dfx.skins;
 
 /*
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates. All rights reserved.

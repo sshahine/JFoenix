@@ -1,4 +1,4 @@
-package com.cctintl.c3dfx.javacomponents;
+package com.cctintl.c3dfx.skins;
 
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ScrollBar;

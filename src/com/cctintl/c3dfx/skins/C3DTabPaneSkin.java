@@ -64,9 +64,9 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.DepthManager;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
 import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
+import com.cctintl.c3dfx.controls.DepthManager;
 import com.sun.javafx.css.converters.EnumConverter;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;

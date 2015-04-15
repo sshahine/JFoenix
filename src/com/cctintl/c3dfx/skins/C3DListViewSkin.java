@@ -22,7 +22,6 @@ import javafx.scene.layout.StackPane;
 
 import com.cctintl.c3dfx.controls.C3DListView;
 import com.cctintl.c3dfx.controls.DepthManager;
-import com.cctintl.c3dfx.javacomponents.VirtualContainerBase;
 import com.sun.javafx.scene.control.behavior.ListViewBehavior;
 import com.sun.javafx.scene.control.skin.resources.ControlResources;
 

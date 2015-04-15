@@ -210,8 +210,7 @@
   	-fx-cell-horizontal-margin: 0.0;
   	-fx-cell-vertical-margin: 5.0;
   	-fx-vertical-gap : 10;
-  	-fx-expanded : false;
-  	-fx-pref-height: 347;
+  	-fx-expanded : false;  	
   	-fx-pref-width:200;
 }
 
@@ -240,5 +239,51 @@
 .c3d-popup-holder{
 	-fx-background-color: WHITE;
 }
+
+
+
+ 
+.c3d-list-cell-content-container {
+	-fx-alignment: center-left;
+}
+.c3d-list-cell-container .label {
+  	-fx-text-fill: BLACK ;
+}
+
+.combo-box-popup .c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
+.combo-box-popup .c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
+	-fx-background-color: rgba(0.0,0.0,255.0,0.2);
+}
+
+.combo-box-popup .c3d-list-view .c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell:odd, 
+.combo-box-popup .c3d-list-view .c3d-list-cell:even {
+	-fx-background-color:  WHITE;
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell:filled:hover { 
+	-fx-text-fill: black;
+}
+
+.combo-box-popup .c3d-list-view .c3d-list-cell .c3d-rippler {
+	-fx-rippler-fill: #5264AE;
+}
+
+.combo-box-popup .c3d-list-view {
+	-fx-background-insets: 0.0;
+  	-fx-cell-horizontal-margin: 0.0;
+  	-fx-cell-vertical-margin: 5.0;
+  	-fx-vertical-gap : 10.0;
+  	-fx-expanded : false;
+}
+ 
+/*.combo-box .combo-box-button-holder{
+ 	-fx-border-color:BLACK;-fx-border-width: 0 0 1 0;
+}
+.combo-box .combo-box-selected-value-holder{
+	-fx-border-color:BLACK;
+} */
 
  
