@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -29,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
+import com.cctintl.c3dfx.controls.events.C3DDrawerEvent;
 import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 
 public class C3DDrawer extends StackPane {
@@ -179,6 +181,7 @@ public class C3DDrawer extends StackPane {
 		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
 		if(outTransition.getStatus().equals(Status.STOPPED) && sidePane.getTranslateX() == 0)
 			outTransition.play();
+		onDrawerClosedProperty.get().handle(new C3DDrawerEvent(C3DDrawerEvent.CLOSED));
 	}
 
 	/***************************************************************************
@@ -224,6 +227,32 @@ public class C3DDrawer extends StackPane {
 		this.directionProperty.set(direction);
 	}
 
+	/***************************************************************************
+	 *                                                                         *
+	 * Custom Events                                                           *
+	 *                                                                         *
+	 **************************************************************************/
+	private ObjectProperty<EventHandler<? super C3DDrawerEvent>> onDrawerClosedProperty = new SimpleObjectProperty<>((closed)->{});
+
+	public void setOnDrawerClosed(EventHandler<? super C3DDrawerEvent> handler){
+		onDrawerClosedProperty.set(handler);
+	}
+
+	public void getOnDrawerClosed(EventHandler<? super C3DDrawerEvent> handler){
+		onDrawerClosedProperty.get();
+	}
+
+
+	private ObjectProperty<EventHandler<? super C3DDrawerEvent>> onDrawerOpenedProperty = new SimpleObjectProperty<>((opened)->{});
+	
+	public void setOnDrawerOpened(EventHandler<? super C3DDrawerEvent> handler){
+		onDrawerOpenedProperty.set(handler);
+	}
+
+	public void getOnDrawerOpened(EventHandler<? super C3DDrawerEvent> handler){
+		onDrawerOpenedProperty.get();
+	}
+	
 
 	/***************************************************************************
 	 *                                                                         *
@@ -263,6 +292,7 @@ public class C3DDrawer extends StackPane {
 			partialTransition = new DrawerPartialTransition(sidePane.getTranslateX(), initTranslateX.doubleValue() );
 			partialTransition.play();
 			partialTransition.setOnFinished((event)-> sidePane.setTranslateX(initTranslateX.doubleValue()));
+			onDrawerClosedProperty.get().handle(new C3DDrawerEvent(C3DDrawerEvent.CLOSED));
 		}	
 		startMouseX = -1;
 		startTranslateX = -1;
@@ -370,5 +400,6 @@ public class C3DDrawer extends StackPane {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
 
+	
 }
 

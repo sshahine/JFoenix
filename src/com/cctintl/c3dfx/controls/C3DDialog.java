@@ -381,6 +381,8 @@ public class C3DDialog extends StackPane {
 	 * Custom Events                                                           *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
 	public void setOnDialogClosed(EventHandler<? super C3DDialogEvent> handler){
 		onDialogClosedProperty.set(handler);
@@ -390,9 +392,8 @@ public class C3DDialog extends StackPane {
 		onDialogClosedProperty.get();
 	}
 
-	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
-
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
 	
 	public void setOnDialogOpened(EventHandler<? super C3DDialogEvent> handler){
 		onDialogOpenedProperty.set(handler);
@@ -402,7 +403,6 @@ public class C3DDialog extends StackPane {
 		onDialogOpenedProperty.get();
 	}
 
-	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
 
 	
 	
