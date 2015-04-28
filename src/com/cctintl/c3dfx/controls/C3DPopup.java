@@ -62,7 +62,7 @@ public class C3DPopup extends StackPane {
 		if(popupContainer!=null){
 			this.popupContainer = popupContainer;
 			// close the popup if clicked on the overlay pane
-			overlayPane.setOnMouseClicked((e)->close());
+			overlayPane.setOnMouseClicked((e)->{ if(e.isStillSincePress())close(); });
 			this.popupContainer.getChildren().remove(overlayPane);
 			this.popupContainer.getChildren().add(overlayPane);
 			animation = new PopupTransition();
@@ -84,11 +84,14 @@ public class C3DPopup extends StackPane {
 			contentHolder.getStyleClass().add("c3d-popup-holder");
 			contentHolder.getTransforms().add(scaleTransform);			
 			DepthManager.setDepth(contentHolder, 4);
+			// to allow closing he popup when clicking on the shadowed area
+			contentHolder.setPickOnBounds(false);
+			
 			// ensure stackpane is never resized beyond it's preferred size
 			overlayPane = new AnchorPane();
 			overlayPane.getChildren().add(contentHolder);
 			overlayPane.getStyleClass().add("c3d-popup-overlay-pane");
-			overlayPane.setVisible(false);
+			overlayPane.setVisible(false);			
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
@@ -127,20 +130,25 @@ public class C3DPopup extends StackPane {
 		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());
 		offsetX = bound.getMinX() + initOffsetX;
 		offsetY = bound.getMinY() + initOffsetY;
-
+		
+		// set the scene root as popup container if it's not set by the user
+		if(popupContainer == null) this.setPopupContainer((Pane) this.source.getScene().getRoot());
+		
 		while(!tempSource.getParent().equals(popupContainer)){
 			tempSource = tempSource.getParent();
 			bound = tempSource.localToParent(tempSource.getBoundsInLocal());
-			// handle scroll pane case 
+			// handle scroll pane case
 			if(tempSource.getClass().getName().contains("ScrollPaneSkin")){
 				offsetX += bound.getMinX();
 				offsetY += bound.getMinY();
+			}if(tempSource instanceof C3DTabPane){
+				offsetX -= bound.getWidth() * ((C3DTabPane)tempSource).getSelectionModel().getSelectedIndex();				
 			}else{				
 				if(bound.getMinX() > 0) offsetX += bound.getMinX();
 				if(bound.getMinY() > 0) offsetY += bound.getMinY();	
 			}
 		}
-
+	
 		// postion the popup according to its animation
 		if(hAlign.equals(C3DPopupHPosition.RIGHT)){
 			scaleTransform.pivotXProperty().bind(content.widthProperty());

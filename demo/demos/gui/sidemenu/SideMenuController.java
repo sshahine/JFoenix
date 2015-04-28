@@ -18,6 +18,7 @@ import com.cctintl.c3dfx.controls.C3DListView;
 
 import demos.gui.uicomponents.ButtonController;
 import demos.gui.uicomponents.CheckboxController;
+import demos.gui.uicomponents.ComboBoxController;
 import demos.gui.uicomponents.DialogController;
 import demos.gui.uicomponents.IconsController;
 import demos.gui.uicomponents.ListViewController;
@@ -42,6 +43,10 @@ public class SideMenuController {
 	@FXML
 	@ActionTrigger("checkbox")
 	private Label checkbox;
+	
+	@FXML
+	@ActionTrigger("combobox")
+	private Label combobox;
 
 	@FXML
 	@ActionTrigger("dialogs")
@@ -93,6 +98,7 @@ public class SideMenuController {
 		Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
 		bindNodeToController(button, ButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(checkbox, CheckboxController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(combobox, ComboBoxController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(dialogs, DialogController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(icons, IconsController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(listview, ListViewController.class, contentFlow, contentFlowHandler);

@@ -9,14 +9,12 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -89,9 +87,6 @@ public class C3DListCell<T> extends ListCell<T> {
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
-						// prevent selecting the sublist item by clicking the right mouse button						
-						((C3DListView<?>)getListView()).addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-						
 						// First build the group item used to expand / hide the sublist
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
@@ -118,7 +113,8 @@ public class C3DListCell<T> extends ListCell<T> {
 						sublistContainer.getStyleClass().add("sublist-container");
 						sublistContainer.getChildren().add(cellContent);
 						sublistContainer.setTranslateY(1);
-						sublistContainer.setOpacity(0);							
+						sublistContainer.setOpacity(0);	
+						
 						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
 							// store the hieght of the sublist and resize it to 0 to make it hidden
 							if(subListHeight == -1){
@@ -239,7 +235,12 @@ public class C3DListCell<T> extends ListCell<T> {
 					((C3DListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
 						// validate changing gap operation
 						C3DListView<T> listview = ((C3DListView<T>)getListView());
-						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * ( listview.getItems().size()  )+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get();
+						double borderWidth = 0;
+						if(listview.getPadding()!=null){
+							borderWidth += listview.getPadding().getTop();
+							borderWidth += listview.getPadding().getBottom();
+						}
+						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + borderWidth - listview.currentVerticalGapProperty().get();
 						if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
 							if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
 								// stop the previous animation 
@@ -251,10 +252,10 @@ public class C3DListCell<T> extends ListCell<T> {
 										);	
 								// change the height of the list view
 								if(oldVal.doubleValue()<newVal.doubleValue())
-									listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+									listview.setPrefHeight(newHeight);
 								else
 									animateGap.setOnFinished((e)->{
-										listview.setPrefHeight((this.getHeight() + listview.currentVerticalGapProperty().get()) * (listview.getItems().size())+ listview.getCellVerticalMargin() - listview.currentVerticalGapProperty().get());
+										listview.setPrefHeight(newHeight);
 									});
 
 								animateGap.play();	
@@ -337,6 +338,7 @@ public class C3DListCell<T> extends ListCell<T> {
 		cellContainer.getStyleClass().add("c3d-list-cell-content-container");
 		cellContainer.setPadding(new Insets(4,8,4,8));
 		this.setPadding(new Insets(0));
+		totalSubListsHeight = -34;
 	}
 
 }

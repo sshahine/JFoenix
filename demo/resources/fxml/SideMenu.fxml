@@ -14,6 +14,7 @@
 	<C3DListView  fx:id="sideList">
 		<Label fx:id="button"> Buttons </Label>
 		<Label fx:id="checkbox"> Check Box </Label>
+		<Label fx:id="combobox"> Combo Box </Label>
 		<Label fx:id="dialogs"> Dialogs </Label>
 		<Label fx:id="icons"> Icons </Label>
 		<Label fx:id="listview"> List View </Label>

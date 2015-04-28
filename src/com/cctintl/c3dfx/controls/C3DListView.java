@@ -2,6 +2,7 @@ package com.cctintl.c3dfx.controls;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -20,12 +21,14 @@ import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableDoubleProperty;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
@@ -128,16 +131,43 @@ public class C3DListView<T> extends ListView<T> {
 		// if item from the list is selected
 		if(this.getSelectionModel().getSelectedIndex() != -1 ){
 			int selectedIndex = this.getSelectionModel().getSelectedIndex();
-			int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
+			Iterator<Integer> itr = sublistsIndices.keySet().iterator();
+			int preItemsSize = 0;
+			while(itr.hasNext()){
+				Integer key = itr.next();
+				if(key < selectedIndex) preItemsSize += sublistsIndices.get(key).getItems().size()-1;
+			}
+//			int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
 			overAllIndexProperty.set(selectedIndex + preItemsSize);
 		}else{
-			Object[] selectedList = sublistsIndices.keySet().parallelStream().filter(key-> sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1).toArray();
-			if(selectedList.length > 0){			
-				int preItemsSize = sublistsIndices.keySet().parallelStream().filter(key-> key < ((Integer)selectedList[0])).mapToInt(key-> sublistsIndices.get(key).getItems().size()-1).sum();
-				overAllIndexProperty.set(preItemsSize + (Integer)selectedList[0] + sublistsIndices.get(selectedList[0]).getSelectionModel().getSelectedIndex());
-			}else{ 
+			Iterator<Integer> itr = sublistsIndices.keySet().iterator();
+			ArrayList<Object> selectedList = new ArrayList<>();
+			while(itr.hasNext()){
+				Integer key = itr.next();
+				if(sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1){
+					selectedList.add(key);
+				}
+			}
+			if(selectedList.size() > 0){
+				itr = sublistsIndices.keySet().iterator();
+				int preItemsSize = 0;
+				while(itr.hasNext()){
+					Integer key = itr.next();
+					if(key < ((Integer)selectedList.get(0))){
+						preItemsSize += sublistsIndices.get(key).getItems().size()-1;
+					}
+				}
+				overAllIndexProperty.set(preItemsSize + (Integer)selectedList.get(0)+ sublistsIndices.get(selectedList.get(0)).getSelectionModel().getSelectedIndex());
+			}else{
 				overAllIndexProperty.set(-1);
 			}
+//			Object[] selectedList = sublistsIndices.keySet().stream().filter(key-> sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1).toArray();
+//			if(selectedList.length > 0){			
+//				int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < ((Integer)selectedList[0])).mapToInt(key-> sublistsIndices.get(key).getItems().size()-1).sum();
+//				overAllIndexProperty.set(preItemsSize + (Integer)selectedList[0] + sublistsIndices.get(selectedList[0]).getSelectionModel().getSelectedIndex());
+//			}else{ 
+//				overAllIndexProperty.set(-1);
+//			}
 		}		
 	}
 	
@@ -161,7 +191,11 @@ public class C3DListView<T> extends ListView<T> {
 		sublistsProperty.get().addListener( (ListChangeListener.Change<? extends C3DListView<?>> c)->{ 
 			while (c.next()) {
 				if(c.wasAdded() || c.wasUpdated() || c.wasReplaced()){
-					if( sublistsProperty.get().size() == 1) this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));					
+					if( sublistsProperty.get().size() == 1) {
+						this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(this));
+						// prevent selecting the sublist item by clicking the right mouse button						
+						this.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+					}
 					c.getAddedSubList().forEach(item -> item.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->clearSelection(item)));
 				}
 			}
@@ -182,7 +216,10 @@ public class C3DListView<T> extends ListView<T> {
 		if(allowClear){
 			allowClear = false;
 			if(this != selectedList) this.getSelectionModel().clearSelection();
-			sublistsProperty.get().parallelStream().filter(list-> list!=selectedList).forEach(list->list.getSelectionModel().clearSelection());
+			for(int i =0 ; i < sublistsProperty.get().size();i++)
+				if(sublistsProperty.get().get(i) != selectedList)
+					sublistsProperty.get().get(i).getSelectionModel().clearSelection();
+//			sublistsProperty.get().stream().filter(list-> list!=selectedList).forEach(list->list.getSelectionModel().clearSelection());
 			allowClear = true;
 		}
 	}

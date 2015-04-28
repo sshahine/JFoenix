@@ -104,25 +104,7 @@ public class C3DDialog extends StackPane {
 	}
 
 	public void setContent(Region content) {
-		if(content!=null){
-			this.content = content;	
-			contentHolder = new StackPane();
-			contentHolder.getChildren().add(content);
-			contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
-			DepthManager.setDepth(contentHolder, 4);
-			// ensure stackpane is never resized beyond it's preferred size
-			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-			overlayPane = new StackPane();
-			overlayPane.getChildren().add(contentHolder);
-			overlayPane.getStyleClass().add("c3d-dialog-overlay-pane");
-			StackPane.setAlignment(contentHolder, Pos.CENTER);
-			overlayPane.setVisible(false);
-			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
-			// close the dialog if clicked on the overlay pane
-			overlayPane.setOnMousePressed((e)->close());
-			// prevent propagating the events to overlay pane
-			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
-		}
+		if(content!=null) this.setContent(content,true);
 	}
 
 	public void setContent(Region content, boolean overlayClose) {
@@ -132,6 +114,7 @@ public class C3DDialog extends StackPane {
 			contentHolder.getChildren().add(content);
 			contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
 			DepthManager.setDepth(contentHolder, 4);
+			contentHolder.setPickOnBounds(false);
 			// ensure stackpane is never resized beyond it's preferred size
 			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 			overlayPane = new StackPane();
@@ -141,13 +124,9 @@ public class C3DDialog extends StackPane {
 			overlayPane.setVisible(false);
 			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
 			// close the dialog if clicked on the overlay pane
-			if(overlayClose) overlayPane.setOnMousePressed((e)->{
-				close();	
-			});
+			if(overlayClose) overlayPane.setOnMousePressed((e)->close());
 			// prevent propagating the events to overlay pane
-			contentHolder.addEventHandler(MouseEvent.ANY, (e)->{
-				e.consume();
-			});
+			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
 	}
 
@@ -402,6 +381,8 @@ public class C3DDialog extends StackPane {
 	 * Custom Events                                                           *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
 	public void setOnDialogClosed(EventHandler<? super C3DDialogEvent> handler){
 		onDialogClosedProperty.set(handler);
@@ -411,9 +392,8 @@ public class C3DDialog extends StackPane {
 		onDialogClosedProperty.get();
 	}
 
-	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
-
+	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
 	
 	public void setOnDialogOpened(EventHandler<? super C3DDialogEvent> handler){
 		onDialogOpenedProperty.set(handler);
@@ -423,7 +403,6 @@ public class C3DDialog extends StackPane {
 		onDialogOpenedProperty.get();
 	}
 
-	private ObjectProperty<EventHandler<? super C3DDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
 
 	
 	

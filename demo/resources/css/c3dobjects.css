@@ -495,7 +495,7 @@
 
 .custom-c3d-list-view1{
 	-fx-vertical-gap : 15.0;
-  	-fx-max-width: 150.0px;
+  	-fx-pref-width: 150px;
   	-fx-background-color: transparent ;
 }
 
@@ -639,6 +639,39 @@
 	-fx-stroke-width: 3.0;
 	-fx-fill: transparent;
 	-fx-stroke: #0F9D58;
+}
+
+/*******************************************************************************
+*                                                                              *
+* C3D Combo Box                                                                *
+*                                                                              *
+*******************************************************************************/
+.combo-box-popup .c3d-list-view .c3d-list-cell .c3d-list-cell-container .label {
+  	-fx-text-fill: BLACK ;
+}
+
+.combo-box-popup .c3d-list-view .c3d-list-cell .c3d-list-cell-container .custom-c3d-list-view-icon {
+	-fx-text-fill: #5264AE;
+	-fx-padding: 0.0 10.0 0.0 5.0  ;
+	-fx-cursor: hand;
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell:odd:selected .c3d-list-cell-container,
+.combo-box-popup .c3d-list-view .c3d-list-cell:even:selected .c3d-list-cell-container { 
+	-fx-background-color: rgba(0.0,0.0,255.0,0.2);
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell {
+	-fx-background-insets: 0.0 ; 
+	-fx-text-fill: BLACK; 
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell:odd, 
+.combo-box-popup .c3d-list-view .c3d-list-cell:even {
+	-fx-background-color:  WHITE;
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell:filled:hover { 
+	-fx-text-fill: black;
+}
+.combo-box-popup .c3d-list-view .c3d-list-cell .c3d-rippler {
+	-fx-rippler-fill: #5264AE;
 }
 
  @font-face {
