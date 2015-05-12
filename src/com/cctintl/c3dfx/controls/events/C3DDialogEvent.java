@@ -13,10 +13,10 @@ public class C3DDialogEvent extends Event{
 	}
 	
 	public static final EventType<C3DDialogEvent> CLOSED =
-			new EventType<C3DDialogEvent> (Event.ANY, "CLOSED");
+			new EventType<C3DDialogEvent> (Event.ANY, "DIALOG_CLOSED");
 	
 	public static final EventType<C3DDialogEvent> OPENED =
-			new EventType<C3DDialogEvent> (Event.ANY, "OPENED");
+			new EventType<C3DDialogEvent> (Event.ANY, "DIALOG_OPENED");
 	
 	
 }

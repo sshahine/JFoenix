@@ -12,10 +12,10 @@ public class C3DDrawerEvent extends Event {
 	}
 	
 	public static final EventType<C3DDrawerEvent> CLOSED =
-			new EventType<C3DDrawerEvent> (Event.ANY, "CLOSED");
+			new EventType<C3DDrawerEvent> (Event.ANY, "DRAWER_CLOSED");
 	
 	public static final EventType<C3DDrawerEvent> OPENED =
-			new EventType<C3DDrawerEvent> (Event.ANY, "OPENED");
+			new EventType<C3DDrawerEvent> (Event.ANY, "DRAWER_OPENED");
 	
 	
 }
