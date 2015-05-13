@@ -4,11 +4,12 @@
 <?import com.cctintl.c3dfx.controls.C3DSlider?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
-	<VBox spacing="50">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+	<VBox spacing="50" maxWidth="450" maxHeight="600">
 		<children>
-			<HBox spacing="100">
+			<HBox spacing="100" alignment="BASELINE_CENTER">
 				<children>
 					<C3DSlider orientation="VERTICAL" prefHeight="300">
 					</C3DSlider>
@@ -18,19 +19,19 @@
 					</C3DSlider>
 				</children>
 			</HBox>
-			<HBox spacing="50">
+			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
 					<C3DSlider prefWidth="400">
 					</C3DSlider>
 				</children>
 			</HBox>
-			<HBox spacing="50">
+			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
 					<C3DSlider styleClass="c3d-slider-style" prefWidth="300">
 					</C3DSlider>
 				</children>
 			</HBox>
-			<HBox spacing="50">
+			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
 					<C3DSlider prefWidth="400" disable="true">
 					</C3DSlider>

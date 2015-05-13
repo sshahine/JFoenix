@@ -9,9 +9,9 @@
 <?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 0 0 200">
+	xmlns="http://javafx.com/javafx/2.2">
 
-	<VBox prefWidth="300" spacing="50">
+	<VBox prefWidth="300" spacing="50" maxWidth="400" maxHeight="300">
 		<Label styleClass="title-label">Toggle Buttons</Label>
 		<FlowPane hgap="96" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Wifi </Label>

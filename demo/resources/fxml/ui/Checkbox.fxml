@@ -8,8 +8,8 @@
 
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 200;">
-	<HBox spacing="100">
+	xmlns="http://javafx.com/javafx/2.2">
+	<HBox spacing="100" maxWidth="400" maxHeight="300">
 		<VBox spacing="20">
 			<children>
 				<Label styleClass="title-label">Check Box</Label>

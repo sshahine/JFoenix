@@ -70,7 +70,7 @@
 					</StackPane>
 				</sidePane>
 				<content>
-					<StackPane fx:id="content">
+					<StackPane fx:id="content" >
 					</StackPane>
 				</content>
 			</C3DDrawer>

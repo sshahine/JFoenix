@@ -11,11 +11,11 @@
 <?import javafx.scene.control.ScrollPane?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:50 0 0 180;">
+	xmlns="http://javafx.com/javafx/2.2">
 
-	<AnchorPane>
+	<AnchorPane maxWidth="500">
 	<C3DListView fx:id="list1" styleClass="custom-c3d-list-view"
-			layoutX="0" layoutY="0">
+			layoutX="0" layoutY="50">
 			<Label>Item 1</Label>
 			<C3DListView fx:id="subList" styleClass="sublist">
 				<groupnode>
@@ -42,7 +42,7 @@
 
 
 		<C3DListView fx:id="list2" styleClass="custom-c3d-list-view1"
-			layoutX="300" layoutY="0">
+			layoutX="300" layoutY="50">
 			<Label>
 				Item 1
 				<graphic>

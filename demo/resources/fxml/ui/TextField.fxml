@@ -7,8 +7,8 @@
 <?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 240">
-	<VBox prefWidth="300" spacing="30">
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox prefWidth="300" spacing="30" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER">
 		<children>
 			<C3DTextField promptText="Type Something" prefWidth="300">
 			</C3DTextField>

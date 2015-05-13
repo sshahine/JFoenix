@@ -10,9 +10,9 @@
 <?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 200;">
-	<HBox spacing="100">
-		<VBox spacing="20" >
+	xmlns="http://javafx.com/javafx/2.2">
+	<HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
+		<VBox spacing="20">
 			<children>
 				<Label styleClass="title-label">Combo Box</Label>
 				<C3DComboBox prefWidth="170" promptText="Select Item">

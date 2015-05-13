@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.HBox?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 200;">
-	<VBox>
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox maxWidth="400" maxHeight="400" >
 		<children>
 			<Label styleClass="title-label">Flat Buttons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">

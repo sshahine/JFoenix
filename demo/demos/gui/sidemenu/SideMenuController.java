@@ -114,8 +114,8 @@ public class SideMenuController {
 	private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
 		flow.withGlobalLink(node.getId(), controllerClass);
 		node.setOnMouseClicked((e) -> {
-			try {
-				flowHandler.handle(node.getId());
+			try {				
+				flowHandler.handle(node.getId());				
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

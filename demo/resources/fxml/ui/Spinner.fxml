@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.HBox?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:100 100 0 300">
-	<HBox>
+	xmlns="http://javafx.com/javafx/2.2">
+	<HBox maxWidth="300" maxHeight="400" alignment="BASELINE_CENTER">
 		<children>
 			<C3DSpinner styleClass="first-spinner">
 			</C3DSpinner>

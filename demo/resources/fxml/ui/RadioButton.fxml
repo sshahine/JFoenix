@@ -8,10 +8,10 @@
 <?import javafx.scene.control.Label?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2" style="-fx-padding:200 0 0 240">
+	xmlns="http://javafx.com/javafx/2.2" >
 
 
-	<HBox spacing="100">
+	<HBox spacing="100" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER" >
 		<VBox spacing="40">
 			<children>
 			
