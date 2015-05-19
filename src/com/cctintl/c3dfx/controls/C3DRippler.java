@@ -41,6 +41,7 @@ import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
+import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -55,6 +56,11 @@ import javafx.util.Duration;
 
 import com.cctintl.c3dfx.converters.MaskTypeConverter;
 import com.sun.javafx.css.converters.PaintConverter;
+
+/**
+ * @author sshahine
+ *
+ */
 
 @DefaultProperty(value="control")
 public class C3DRippler extends StackPane {
@@ -199,6 +205,10 @@ public class C3DRippler extends StackPane {
 		rippler.createRipple();
 	}
 
+	public void fireEventProgrammatically(Event event){
+		ripplerPane.fireEvent(event);
+	}
+	
 	public void toggle(){
 		if(!toggled){
 			rippler.overlayRect.animation.setRate(1);
@@ -209,7 +219,8 @@ public class C3DRippler extends StackPane {
 		}
 		toggled = !toggled;
 	}
-
+	
+	
 	/**
 	 * Generates ripples on the screen every 0.3 seconds or whenever
 	 * the createRipple method is called. Ripples grow and fade out
