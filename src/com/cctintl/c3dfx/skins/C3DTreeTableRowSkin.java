@@ -46,7 +46,6 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 		StackPane container = new StackPane();	
 		rippler = new C3DRippler(container);
 		getChildren().add(0,rippler);
-
 	}
 
 

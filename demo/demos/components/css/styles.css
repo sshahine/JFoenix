@@ -325,6 +325,10 @@
 	-fx-padding : 16 0 16 0 ;
 }
 
+.tree-table-view .column-header .arrow {
+	-fx-background-color : #949494;
+}
+
 .tree-table-view .column-header:last-visible {
 	-fx-border-width: 0 2 0 1;
 }

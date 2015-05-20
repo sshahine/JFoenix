@@ -9,8 +9,6 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import org.scenicview.ScenicView;
-
 import com.cctintl.c3dfx.controls.C3DTreeTableView;
 
 public class TreeTableDemo extends Application {
