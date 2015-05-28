@@ -1,6 +1,7 @@
 package demos.components;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,6 +9,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import org.scenicview.ScenicView;
 
 import com.cctintl.c3dfx.controls.C3DTreeTableView;
 

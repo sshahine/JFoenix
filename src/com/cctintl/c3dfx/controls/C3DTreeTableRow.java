@@ -17,12 +17,12 @@ public class C3DTreeTableRow<T> extends TreeTableRow<T> {
 	}
 	
     @Override protected Skin<?> createDefaultSkin() {
-        return new C3DTreeTableRowSkin<T>(this);
+    	return new C3DTreeTableRowSkin<T>(this);
     }
 	
-	 @Override
-     protected void updateItem(T item, boolean empty){
-         super.updateItem(item, empty);
-     }
+//	 @Override
+//     protected void updateItem(T item, boolean empty){
+//         super.updateItem(item, empty);
+//     }
 
 }
