@@ -20,9 +20,4 @@ public class C3DTreeTableRow<T> extends TreeTableRow<T> {
     	return new C3DTreeTableRowSkin<T>(this);
     }
 	
-//	 @Override
-//     protected void updateItem(T item, boolean empty){
-//         super.updateItem(item, empty);
-//     }
-
 }

@@ -325,7 +325,7 @@
 	-fx-padding : 16 0 16 0 ;
 }
 
-.tree-table-view .column-header .arrow {
+.tree-table-view .column-header .arrow, .tree-table-view .column-header .sort-order-dot{ 
 	-fx-background-color : #949494;
 }
 
