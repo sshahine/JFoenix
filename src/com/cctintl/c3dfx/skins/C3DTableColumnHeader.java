@@ -6,9 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.layout.GridPane;
@@ -92,7 +90,7 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 			arrowAnimation.play();
 
 		}
-		//
+
 		if(arrowContainer!=null && container.getChildren().size() == 1 && !arrowPane.isVisible()){			
 			if(arrowAnimation!=null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
 			arrowContainer.setVisible(true);
@@ -103,7 +101,6 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 			arrowAnimation.setOnFinished((finish)->{arrowContainer.setVisible(false); currentArrowRotation = -1;});
 			arrowAnimation.play();
 		}
-
 
 		getChildren().add(container);
 	}

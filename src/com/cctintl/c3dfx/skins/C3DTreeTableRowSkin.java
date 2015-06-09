@@ -67,15 +67,15 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 			if(oldSkin != this){
 				if( (!(expandedIndex == getSkinnable().getIndex() || expandTriggered) || rippler == null)
 						|| !getSkinnable().isSelected()){
-					StackPane container = new StackPane();	
-					rippler = new C3DRippler(container);
+					rippler = new C3DRippler(new StackPane());
 				}else{
 					this.rippler = oldSkin.rippler;
 				}	
 			}else{
 				if(!expandTriggered){
-					StackPane container = new StackPane();	
-					rippler = new C3DRippler(container);
+					rippler = new C3DRippler(new StackPane());
+				}else if(!getSkinnable().isSelected()){
+					rippler = new C3DRippler(new StackPane());
 				}
 			}
 			getChildren().add(0,rippler);
