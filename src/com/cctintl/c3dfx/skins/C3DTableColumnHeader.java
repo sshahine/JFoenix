@@ -6,8 +6,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,11 +29,11 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 
 	private StackPane container = new StackPane();
 	private StackPane arrowContainer = new StackPane();
+	private GridPane arrowPane;
 	private Region arrow;
 	private HBox dotsContainer;
 	private Timeline arrowAnimation;
 	private double currentArrowRotation = -1;
-	private GridPane arrowPane;
 	private boolean invalid = true;
 	
 	public C3DTableColumnHeader(TableViewSkinBase skin, TableColumnBase tc) {
@@ -48,7 +50,7 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 		if(!getChildren().contains(container)){
 			invalid = true;
 			container.getChildren().remove(arrowContainer);
-			for(int i = 0 ; i < getChildren().size();){
+			for(int i = 0 ; i < getChildren().size();){				
 				Node child = getChildren().get(i);
 				container.getChildren().add(child);
 			}
@@ -61,7 +63,6 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 				// setup children
 				arrowPane = (GridPane) container.getChildren().get(1);
 				arrow = (Region) arrowPane.getChildren().get(0);
-				
 				arrowContainer.getChildren().clear();
 				container.getChildren().remove(1);
 				container.getChildren().add(arrowContainer);
@@ -80,10 +81,19 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 
 				arrowContainer.maxWidthProperty().bind(arrow.widthProperty());
 				StackPane.setAlignment(arrowContainer, Pos.CENTER_RIGHT);
-				arrowContainer.setTranslateX(-10);
 
+				
+				// set padding to the label to replace it with ... if it's too close to the sorting arrow
+				Label label = (Label) container.getChildren().get(0);
+				label.setPadding(new Insets(0,30,0,30));
+				// fixed the issue of arrow translate X while resizing the column header
+				arrowContainer.translateXProperty().bind(Bindings.createDoubleBinding(()->{
+					if(arrowContainer.getLayoutX() <= 8) return -arrowContainer.getLayoutX()-2;
+					return -10.0;
+				}, arrowContainer.layoutXProperty()));
+
+				
 				if(arrowAnimation!=null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
-
 				if(arrow.getRotate() == 180 && arrow.getRotate() != currentArrowRotation){				
 					arrowContainer.setOpacity(0);
 					arrowContainer.setTranslateY(getHeight()/4);	
