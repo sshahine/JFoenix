@@ -31,7 +31,6 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 	private StackPane arrowContainer = new StackPane();
 	private GridPane arrowPane;
 	private Region arrow;
-	private HBox dotsContainer;
 	private Timeline arrowAnimation;
 	private double currentArrowRotation = -1;
 	private boolean invalid = true;
@@ -71,10 +70,16 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 					Node child = arrowPane.getChildren().get(i);
 					arrowContainer.getChildren().add(child);
 					if(child instanceof HBox){
-						dotsContainer = (HBox) child;
+						HBox dotsContainer = (HBox) child;
 						dotsContainer.setMaxHeight(5);
 						dotsContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
 							return arrow.getHeight() + 2;
+						}, arrow.heightProperty()));
+					}else if(child instanceof Label){
+						Label labelContainer = (Label) child;
+						labelContainer.setMaxHeight(5);
+						labelContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
+							return arrow.getHeight() + 3;
 						}, arrow.heightProperty()));
 					}
 				}
