@@ -106,13 +106,6 @@
     -fx-font-size: 14px;
 }
 
-.c3d-button{
-	-fx-background-color: transparent ;
-}
-
-.c3d-button .c3d-rippler{
-	-fx-rippler-fill: BLUE;
-}
 
 .c3dbutton-raised{
 	-fx-padding: 0.7em 0.57em;
@@ -365,3 +358,5 @@
     -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
 }
 
+
+ 
