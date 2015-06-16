@@ -95,7 +95,6 @@ public class C3DListCell<T> extends ListCell<T> {
 					cellContainer.getChildren().clear();
 					cellContent = (Node) item;
 
-
 					// build the Cell node and its rippler					
 					// RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
 					if(item instanceof C3DRippler){
@@ -198,10 +197,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						expandedProperty.addListener((o,oldVal,newVal)->{
 							if(newVal) new Timeline(new KeyFrame(Duration.millis(160),new KeyValue( dropIcon.rotateProperty(),90 ,Interpolator.EASE_BOTH))).play();
 							else new Timeline(new KeyFrame(Duration.millis(160),new KeyValue( dropIcon.rotateProperty(), 0 ,Interpolator.EASE_BOTH))).play();
-
 						});
-
-
 					}
 
 					// DEFAULT BUILD  : build cell container and rippler if the cell has no rippler
@@ -209,27 +205,6 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellContainer.getChildren().clear();
 						cellContainer.getChildren().add((Node) item);						
 					}
-
-
-					//					if(cellRippler!=null){
-					//						// propagate mouse events to parent
-					//						if(getListView().getParent()!=null){
-					//							cellRippler.addEventHandler(MouseEvent.ANY, (e)->{
-					//								getListView().getParent().fireEvent(e);
-					//							});					
-					//						}
-					//
-					//						// set the background color to the rippler instead of the cell when the cell is selected
-					//						cellContainer.backgroundProperty().addListener((o,oldVal,newVal)->{
-					//							if(!Background.EMPTY.equals(newVal)){
-					//								cellContainer.setBackground(Background.EMPTY);
-					//								if(cellRippler!=null)
-					//									cellRippler.ripplerPane.setBackground(newVal);
-					//							}
-					//						});
-					//
-					//					
-
 
 					if(addCellRippler){
 						// initialize the gaps between cells
@@ -255,7 +230,6 @@ public class C3DListCell<T> extends ListCell<T> {
 					// check if the list is in expanded mode 
 					if(this.getIndex() > 0 && ((C3DListView<T>)getListView()).isExpanded()) 
 						this.translateYProperty().set(((C3DListView<T>)getListView()).getVerticalGap()*this.getIndex());
-
 
 					((C3DListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
 						// validate changing gap operation

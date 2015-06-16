@@ -8,6 +8,7 @@ import javafx.util.Callback;
 
 import com.cctintl.c3dfx.skins.C3DTreeTableViewSkin;
 
+
 /**
  * @author sshahine
  *
@@ -15,6 +16,16 @@ import com.cctintl.c3dfx.skins.C3DTreeTableViewSkin;
  */
 
 public class C3DTreeTableView<S> extends TreeTableView<S> {
+
+	public C3DTreeTableView() {
+		super();
+		this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
+			@Override
+			public TreeTableRow<S> call(TreeTableView<S> param) {
+				return new C3DTreeTableRow<S>();
+			}
+		});			
+	}
 
 	public C3DTreeTableView(TreeItem<S> root) {
 		super(root);
@@ -25,14 +36,10 @@ public class C3DTreeTableView<S> extends TreeTableView<S> {
 			}
 		});				
 	}
-	
-    /** {@inheritDoc} */
-    @Override protected Skin<?> createDefaultSkin() {
-        return new C3DTreeTableViewSkin<S>(this);
-    }
-	
-	public C3DTreeTableView() {
-		super();
+
+	/** {@inheritDoc} */
+	@Override protected Skin<?> createDefaultSkin() {
+		return new C3DTreeTableViewSkin<S>(this);
 	}
 	
 }
