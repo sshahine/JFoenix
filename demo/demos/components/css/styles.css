@@ -359,4 +359,20 @@
 }
 
 
+.animated-option-button {
+	-fx-pref-width:50px;
+	-fx-background-color:#44B449;
+	-fx-background-radius:50px;
+	-fx-pref-height:50px;
+	-fx-text-fill:white;
+}
+
+.animated-option-sub-button {
+	-fx-background-color:#43609C; 
+}
+.animated-option-sub-button2 {
+	-fx-background-color: rgb(203,104,96); 
+}
+
+
  
