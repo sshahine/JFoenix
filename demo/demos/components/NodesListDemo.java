@@ -15,8 +15,8 @@ import javafx.stage.Stage;
 
 import com.cctintl.c3dfx.controls.C3DButton;
 import com.cctintl.c3dfx.controls.C3DButton.ButtonType;
-import com.cctintl.c3dfx.controls.C3DFitContainer;
 import com.cctintl.c3dfx.controls.C3DNodesList;
+import com.cctintl.c3dfx.controls.C3DNodesListContainer;
 
 
 public class NodesListDemo extends Application {
@@ -49,8 +49,7 @@ public class NodesListDemo extends Application {
 			nodesList3.addAnimatedNode(ssbutton1, (expanded)->{ return new ArrayList<KeyValue>(){{ add(new KeyValue(sslabel.rotateProperty(), expanded? 360:0 , Interpolator.EASE_BOTH));}};});
 			nodesList3.addAnimatedNode(ssbutton2);
 			nodesList3.addAnimatedNode(ssbutton3);
-			C3DFitContainer container3 = new C3DFitContainer();
-			container3.getChildren().add(nodesList3);			
+			
 			
 			
 			C3DButton sbutton1 = new C3DButton();			
@@ -74,13 +73,10 @@ public class NodesListDemo extends Application {
 			nodesList2.setSpacing(10);
 			// init nodes
 			nodesList2.addAnimatedNode(sbutton1, (expanded)->{ return new ArrayList<KeyValue>(){{ add(new KeyValue(slabel.rotateProperty(), expanded? 360:0 , Interpolator.EASE_BOTH));}};});
-			nodesList2.addAnimatedNode(container3);
+			nodesList2.addAnimatedNode(new C3DNodesListContainer(nodesList3));
 			nodesList2.addAnimatedNode(sbutton2);
 			nodesList2.addAnimatedNode(sbutton3);
 			nodesList2.setRotate(90);
-			
-			C3DFitContainer container2 = new C3DFitContainer();
-			container2.getChildren().add(nodesList2);			
 			
 			
 			C3DButton button1 = new C3DButton();			
@@ -104,12 +100,9 @@ public class NodesListDemo extends Application {
 			nodesList.setSpacing(10);
 			nodesList.addAnimatedNode(button1, (expanded)->{ return new ArrayList<KeyValue>(){{ add(new KeyValue(label.rotateProperty(), expanded? 360:0 , Interpolator.EASE_BOTH));}};});
 			nodesList.addAnimatedNode(button2);
-			nodesList.addAnimatedNode(container2);
+			nodesList.addAnimatedNode(new C3DNodesListContainer(nodesList2));
 			nodesList.addAnimatedNode(button3);
 			nodesList.setRotate(180);
-			
-			C3DFitContainer container = new C3DFitContainer();
-			container.getChildren().add(nodesList);
 			
 			
 			StackPane main = new StackPane();
@@ -119,7 +112,7 @@ public class NodesListDemo extends Application {
 			e.setTranslateY(-50);
 			e.setTranslateX(-100);
 			main.getChildren().add(e);
-			main.getChildren().add(container);
+			main.getChildren().add(nodesList);
 			
 			Scene scene = new Scene(main, 600, 600);
 			scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());

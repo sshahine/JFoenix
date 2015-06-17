@@ -49,6 +49,11 @@ import com.cctintl.c3dfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 
+/**
+ * @author sshahine
+ * TODO: C3D Button doesn't support borders yet
+ */
+
 public class C3DButtonSkin extends ButtonSkin {
 
 	private final AnchorPane main = new AnchorPane();
@@ -64,7 +69,8 @@ public class C3DButtonSkin extends ButtonSkin {
 
 	public C3DButtonSkin(C3DButton button) {
 		super(button);
-		if(button.getBackground()==null)
+
+		if(button.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
 			button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
 		// create button

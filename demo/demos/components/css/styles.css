@@ -23,7 +23,6 @@
 }
 
 
-
 /* Input Demo */
 
 .text-field {
@@ -365,6 +364,9 @@
 	-fx-background-radius:50px;
 	-fx-pref-height:50px;
 	-fx-text-fill:white;
+	-fx-border-color:WHITE;
+	-fx-border-radius: 50px; 
+	-fx-border-width: 4px;
 }
 
 .animated-option-sub-button {
