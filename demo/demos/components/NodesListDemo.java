@@ -73,7 +73,7 @@ public class NodesListDemo extends Application {
 			nodesList2.setSpacing(10);
 			// init nodes
 			nodesList2.addAnimatedNode(sbutton1, (expanded)->{ return new ArrayList<KeyValue>(){{ add(new KeyValue(slabel.rotateProperty(), expanded? 360:0 , Interpolator.EASE_BOTH));}};});
-			nodesList2.addAnimatedNode(new C3DNodesListContainer(nodesList3));
+			nodesList2.addAnimatedNode(nodesList3);
 			nodesList2.addAnimatedNode(sbutton2);
 			nodesList2.addAnimatedNode(sbutton3);
 			nodesList2.setRotate(90);
@@ -100,7 +100,7 @@ public class NodesListDemo extends Application {
 			nodesList.setSpacing(10);
 			nodesList.addAnimatedNode(button1, (expanded)->{ return new ArrayList<KeyValue>(){{ add(new KeyValue(label.rotateProperty(), expanded? 360:0 , Interpolator.EASE_BOTH));}};});
 			nodesList.addAnimatedNode(button2);
-			nodesList.addAnimatedNode(new C3DNodesListContainer(nodesList2));
+			nodesList.addAnimatedNode(nodesList2);
 			nodesList.addAnimatedNode(button3);
 			nodesList.setRotate(180);
 			

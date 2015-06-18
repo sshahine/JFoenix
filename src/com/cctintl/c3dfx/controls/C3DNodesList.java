@@ -28,6 +28,7 @@ public class C3DNodesList extends VBox {
 	
 	public C3DNodesList() {
 		this.setPickOnBounds(false);
+		this.getStyleClass().add("c3d-nodes-list");
 	}
 	
 	public void addAnimatedNode(Region node){
@@ -35,6 +36,12 @@ public class C3DNodesList extends VBox {
 	}
 	
 	public void addAnimatedNode(Region node, Callback<Boolean, ArrayList<KeyValue>> animationCallBack ){
+		// create container for the node if it's a sub nodes list
+		if(node instanceof C3DNodesList){ 
+			addAnimatedNode(new C3DNodesListContainer(node), animationCallBack);
+			return;
+		}
+		
 		// init node property
 		node.setVisible(false);
 		node.minWidthProperty().bind(node.prefWidthProperty());
@@ -54,6 +61,7 @@ public class C3DNodesList extends VBox {
 			this.maxWidthProperty().bind(node.prefHeightProperty());
 		}				
 		
+		// add the node and its listeners
 		this.getChildren().add(node);
 		this.rotateProperty().addListener((o,oldVal,newVal)-> node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal.doubleValue()));	
 		if(animationCallBack == null) animationCallBack = (expanded)-> {return initDefaultAnimation(node, expanded);};

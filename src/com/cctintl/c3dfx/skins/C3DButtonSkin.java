@@ -156,7 +156,8 @@ public class C3DButtonSkin extends ButtonSkin {
 				buttonRippler.setRipplerFill(((Label)getChildren().get(0)).getTextFill());			
 				((Label)getChildren().get(0)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 			}
-			buttonComponents.getChildren().add(getChildren().get(0));
+			if(getChildren().get(0)!=main)
+				buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}
 		layoutLabelInArea(x, y, w, h);
