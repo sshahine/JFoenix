@@ -156,7 +156,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		});
 
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
-			System.out.println(getSkinnable() + " : " + newVal);
 			if (newVal) focus();
 			else {
 				if(transition!=null) transition.stop();
