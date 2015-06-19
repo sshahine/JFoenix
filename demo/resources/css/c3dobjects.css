@@ -399,7 +399,7 @@
     -fx-unfocus-color: #4d4d4d;       
 }
 
-.c3d-text-field.error{
+.c3d-text-field:error {
 	-fx-focus-color: #D34336;
 	-fx-unfocus-color: #D34336;
 }

@@ -43,6 +43,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -75,7 +76,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private boolean errorShowen = false;
 	private double currentFieldHeight = -1;
 	private double errorLabelInitHeight = 0;
-
+	
+	private boolean heightChanged = false;
+	
 	private Timeline hideErrorAnimation;
 
 
@@ -87,11 +90,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 		field.setAlignment(Pos.TOP_LEFT);
 
-
 		errorLabel.getStyleClass().add("errorLabel");
 		errorLabel.setWrapText(true);		
-		errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
-		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
+		
+//		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
 		//		errorLabel.setStyle("-fx-border-color:BLUE;");
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
@@ -99,12 +101,12 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorContainer = new HBox();
 		errorContainer.getChildren().add(errorLabelContainer);
 		errorContainer.getChildren().add(errorIcon);
+		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
 		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
 		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
-		//		errorContainer.setStyle("-fx-border-color:GREEN;");
 
 		this.getChildren().add(errorContainer);
 
@@ -115,6 +117,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				if(oldErrorLabelHeight == -1)
 					oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
 
+				heightChanged = true;
 				double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight +  newVal.doubleValue();
 				// show the error
 				Timeline errorAnimation = new Timeline(
@@ -183,7 +186,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
+			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
 			
+			// draw lines
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
@@ -312,10 +317,13 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorShowen = true;
 	}
 
-	private void hideError(){		
-		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
-		// rest the height of text field
-		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
+	private void hideError(){	
+		if(heightChanged){
+			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+			// reset the height of text field
+			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();	
+			heightChanged = false;
+		}
 		// clear error label text
 		errorLabel.setText(null);
 		oldErrorLabelHeight = errorLabelInitHeight;		

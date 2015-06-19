@@ -34,6 +34,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
@@ -102,10 +103,12 @@ public class C3DTextField extends TextField {
 			validator.validate();
 			if (validator.getHasErrors()) {
 				activeValidator.set(validator);
+				pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 				return false;
 			}
 		}
 		activeValidator.set(null);
+		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
 		return true;
 	}
 
@@ -192,5 +195,8 @@ public class C3DTextField extends TextField {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-
+	
+	
+	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
+	
 }
