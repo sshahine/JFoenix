@@ -80,6 +80,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private boolean heightChanged = false;
 	
 	private Timeline hideErrorAnimation;
+	private ParallelTransition transition;
 
 
 	public C3DTextFieldSkin(C3DTextField field) {
@@ -155,8 +156,12 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		});
 
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
+			System.out.println(getSkinnable() + " : " + newVal);
 			if (newVal) focus();
-			else focusedLine.setOpacity(0);	
+			else {
+				if(transition!=null) transition.stop();
+				focusedLine.setOpacity(0);	
+			}
 		});
 
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
@@ -289,7 +294,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 										)
 
 				);
-		ParallelTransition transition = new ParallelTransition();
+		transition = new ParallelTransition();
 		transition.getChildren().add(linesAnimation);
 		if(getSkinnable().getText().length() == 0)
 			transition.getChildren().add(cursorAnimation);
