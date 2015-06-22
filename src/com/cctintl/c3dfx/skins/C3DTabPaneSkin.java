@@ -834,10 +834,13 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			rightControlButtons = new TabControlButtons(ArrowPosition.RIGHT);
 			leftControlButtons = new TabControlButtons(ArrowPosition.LEFT);
 
+			rightControlButtons.setVisible(false);
+			leftControlButtons.setVisible(false);
+			
 			//controlButtons.setVisible(false);
-			if (rightControlButtons.isVisible()) {
-				rightControlButtons.setVisible(true);
-			}
+//			if (rightControlButtons.isVisible()) {
+//				rightControlButtons.setVisible(true);
+//			}
 
 			rightControlButtons.inner.prefHeightProperty().bind(headersRegion.heightProperty());
 			leftControlButtons.inner.prefHeightProperty().bind(headersRegion.heightProperty());
