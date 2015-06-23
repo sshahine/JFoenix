@@ -87,7 +87,6 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 				arrowContainer.maxWidthProperty().bind(arrow.widthProperty());
 				StackPane.setAlignment(arrowContainer, Pos.CENTER_RIGHT);
 
-				
 				// set padding to the label to replace it with ... if it's too close to the sorting arrow
 				Label label = (Label) container.getChildren().get(0);
 				label.setPadding(new Insets(0,30,0,30));
@@ -119,11 +118,13 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 
 			if(arrowContainer!=null && arrowPane!=null && container.getChildren().size() == 1 && !arrowPane.isVisible()){			
 				if(arrowAnimation!=null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
+				Label label = (Label) container.getChildren().get(0);
+				label.setPadding(new Insets(0,30,0,30));
 				container.getChildren().add(arrowContainer);
 				arrowAnimation = new Timeline(new KeyFrame(Duration.millis(320),
 						new KeyValue(arrowContainer.opacityProperty(), 0, Interpolator.EASE_BOTH),
 						new KeyValue(arrowContainer.translateYProperty(), getHeight()/4, Interpolator.EASE_BOTH)));
-				arrowAnimation.setOnFinished((finish)->{currentArrowRotation = -1;});
+				arrowAnimation.setOnFinished((finish)->{currentArrowRotation = -1;label.setPadding(new Insets(0));});
 				arrowAnimation.play();
 			}
 		}
