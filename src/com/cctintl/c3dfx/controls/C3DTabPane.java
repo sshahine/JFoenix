@@ -27,6 +27,7 @@ package com.cctintl.c3dfx.controls;
 
 import javafx.scene.control.Skin;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 
 import com.cctintl.c3dfx.skins.C3DTabPaneSkin;
 
@@ -46,5 +47,12 @@ public class C3DTabPane extends TabPane {
 
 	private void initialize() {
 		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+	}
+	
+	public void propagateMouseEventsToParent(){
+		this.addEventHandler(MouseEvent.ANY, (e)->{
+			e.consume();
+			this.getParent().fireEvent(e);
+		});
 	}
 }

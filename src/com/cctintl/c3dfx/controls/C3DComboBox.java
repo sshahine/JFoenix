@@ -50,8 +50,11 @@ import com.cctintl.c3dfx.skins.C3DComboBoxListViewSkin;
 public class C3DComboBox<T> extends ComboBox<T> {
 
 	
+	private static final String DEFAULT_STYLE_CLASS = "c3d-combo-box";
+	
 	public C3DComboBox() {
 		super();
+		getStyleClass().add(DEFAULT_STYLE_CLASS);
 		this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
 			@Override
 			public ListCell<T> call(ListView<T> listView) {
