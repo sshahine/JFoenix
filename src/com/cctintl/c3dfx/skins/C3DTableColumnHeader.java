@@ -34,6 +34,7 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 	private Timeline arrowAnimation;
 	private double currentArrowRotation = -1;
 	private boolean invalid = true;
+	private Insets oldMargin = null;
 	
 	public C3DTableColumnHeader(TableViewSkinBase skin, TableColumnBase tc) {
 		super(skin, tc);		
@@ -87,9 +88,12 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 				arrowContainer.maxWidthProperty().bind(arrow.widthProperty());
 				StackPane.setAlignment(arrowContainer, Pos.CENTER_RIGHT);
 
+				
 				// set padding to the label to replace it with ... if it's too close to the sorting arrow
 				Label label = (Label) container.getChildren().get(0);
-				label.setPadding(new Insets(0,30,0,30));
+				oldMargin = StackPane.getMargin(label);				
+				StackPane.setMargin(label, new Insets(oldMargin==null?0:oldMargin.getTop(), oldMargin==null || oldMargin.getRight()<30?30:oldMargin.getRight(), oldMargin==null?0:oldMargin.getBottom(), oldMargin==null || oldMargin.getLeft()<30?30:oldMargin.getLeft()));
+				
 				// fixed the issue of arrow translate X while resizing the column header
 				arrowContainer.translateXProperty().bind(Bindings.createDoubleBinding(()->{
 					if(arrowContainer.getLayoutX() <= 8) return -arrowContainer.getLayoutX()-2;
@@ -119,12 +123,17 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 			if(arrowContainer!=null && arrowPane!=null && container.getChildren().size() == 1 && !arrowPane.isVisible()){			
 				if(arrowAnimation!=null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
 				Label label = (Label) container.getChildren().get(0);
-				label.setPadding(new Insets(0,30,0,30));
+				// dont change the padding if arrow is not showing
+				if(currentArrowRotation == 0) StackPane.setMargin(label, new Insets(oldMargin==null?0:oldMargin.getTop(), oldMargin==null || oldMargin.getRight()<30?30:oldMargin.getRight(), oldMargin==null?0:oldMargin.getBottom(), oldMargin==null || oldMargin.getLeft()<30?30:oldMargin.getLeft()));
+				
 				container.getChildren().add(arrowContainer);
 				arrowAnimation = new Timeline(new KeyFrame(Duration.millis(320),
 						new KeyValue(arrowContainer.opacityProperty(), 0, Interpolator.EASE_BOTH),
 						new KeyValue(arrowContainer.translateYProperty(), getHeight()/4, Interpolator.EASE_BOTH)));
-				arrowAnimation.setOnFinished((finish)->{currentArrowRotation = -1;label.setPadding(new Insets(0));});
+				arrowAnimation.setOnFinished((finish)->{
+					currentArrowRotation = -1;
+					StackPane.setMargin(label, null);
+				});
 				arrowAnimation.play();
 			}
 		}
