@@ -41,6 +41,8 @@ public class DepthManager {
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 30, 0.30, 0, 10)};
 
 	public static void setDepth(Node control, int level){
+		level = level < 0 ? 0 : level;
+		level = level > 5 ? 5 : level;
 		control.setEffect(new DropShadow(BlurType.GAUSSIAN, depth[level].getColor() ,depth[level].getRadius(),depth[level].getSpread(),depth[level].getOffsetX(),depth[level].getOffsetY()));
 	}
 
