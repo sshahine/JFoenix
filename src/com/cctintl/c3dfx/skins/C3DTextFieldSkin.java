@@ -254,50 +254,59 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	}
 
 	private void focus(){
-		Timeline linesAnimation = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
-						new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
-						new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
-						),
-						new KeyFrame(
-								Duration.millis(5),
-								new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(
-										Duration.millis(160),
-										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
-										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
-										)
+		/*
+		 * in case the method request layout is not called before focused
+		 * this is bug is reported while editing treetableview cells
+		 */
+		if(textPane == null){
+			Platform.runLater(()->focus());
+		}else{
+			// create the focus animations
+			Timeline linesAnimation = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,       
+							new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
+							new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
+							new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(
+									Duration.millis(5),
+									new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(
+											Duration.millis(160),
+											new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
+											new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
+											)
 
-				);
+					);
 
-		Timeline cursorAnimation = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
-						),
-						new KeyFrame(
-								Duration.millis(5),
-								new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(
-										Duration.millis(160),
-										new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
-										new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
-										new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-										)
+			Timeline cursorAnimation = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,       
+							new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
+							new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
+							new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
+							new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
+							),
+							new KeyFrame(
+									Duration.millis(5),
+									new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+									new KeyFrame(
+											Duration.millis(160),
+											new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
+											new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
+											new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
+											)
 
-				);
-		transition = new ParallelTransition();
-		transition.getChildren().add(linesAnimation);
-		if(getSkinnable().getText().length() == 0)
-			transition.getChildren().add(cursorAnimation);
-		transition.play();
+					);
+			transition = new ParallelTransition();
+			transition.getChildren().add(linesAnimation);
+			if(getSkinnable().getText().length() == 0)
+				transition.getChildren().add(cursorAnimation);
+			transition.play();
+		}
 	}
 
 	private void showError(ValidatorBase validator){
