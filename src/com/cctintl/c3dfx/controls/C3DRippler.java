@@ -34,6 +34,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.DefaultProperty;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
@@ -46,6 +47,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -142,7 +144,7 @@ public class C3DRippler extends StackPane {
 			});
 			
 			this.getChildren().add(ripplerPane);
-
+			
 			// add listeners
 			initListeners();
 			this.requestLayout();
@@ -194,6 +196,25 @@ public class C3DRippler extends StackPane {
 			if(this.position.get() == RipplerPos.FRONT )
 				this.control.fireEvent(event);
 		});
+		
+		// if the control got resized the overlay rect must be rest
+		((Region)this.control).widthProperty().addListener((o,oldVal,newVal)->{
+//			if(rippler.overlayRect != null) rippler.getChildren().remove(rippler.overlayRect);
+			if(rippler.overlayRect!=null){
+				rippler.overlayRect.inAnimation.stop();
+				rippler.overlayRect.outAnimation.play();
+				rippler.overlayRect = null;
+			}
+		});
+		((Region)this.control).heightProperty().addListener((o,oldVal,newVal)->{
+//			if(rippler.overlayRect != null) rippler.getChildren().remove(rippler.overlayRect);
+			if(rippler.overlayRect!=null){
+				rippler.overlayRect.inAnimation.stop();
+				rippler.overlayRect.outAnimation.play();
+				rippler.overlayRect = null;
+			}
+		});
+		
 	}
 	/**
 	 *  create Ripple effect
@@ -242,13 +263,13 @@ public class C3DRippler extends StackPane {
 						overlayRect = new OverLayRipple();
 						overlayRect.setClip(getMask());
 						getChildren().add(overlayRect);
-					}
+					}					
 					overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
 
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);				
-					ripple.setClip(getMask());
-					getChildren().add(ripple);			
+					ripple.setClip(getMask());			
+					getChildren().add(ripple);	
 
 					overlayRect.outAnimation.stop();
 					overlayRect.inAnimation.play();
@@ -257,7 +278,7 @@ public class C3DRippler extends StackPane {
 					// create fade out transition for the ripple
 					ripplerPane.setOnMouseReleased((e)->{
 						generating = false;
-						overlayRect.inAnimation.stop();
+						if(overlayRect!=null)overlayRect.inAnimation.stop();
 						ripple.inAnimation.pause();
 						double fadeOutRadious = rippleRadius + 20;
 						if(ripple.radiusProperty().get() < rippleRadius*0.5)
@@ -269,7 +290,7 @@ public class C3DRippler extends StackPane {
 										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
 										));
 						outAnimation.play();
-						overlayRect.outAnimation.play();
+						if(overlayRect!=null)overlayRect.outAnimation.play();
 						outAnimation.setOnFinished((event)->{
 							getChildren().remove(ripple);	
 						});
@@ -295,6 +316,8 @@ public class C3DRippler extends StackPane {
 											  new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			public OverLayRipple() {
 				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
+				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getWidth() - 0.1, control.boundsInParentProperty()));
+				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getHeight() - 0.1, control.boundsInParentProperty()));
 				this.setOpacity(0);
 			}
 		}
