@@ -23,6 +23,8 @@ public class IconsDemo extends Application {
 		FlowPane main = new FlowPane();
 		main.setHgap(20);
 		
+//		Label l1 = GlyphsDude.createIconLabel(FontAwesomeIcon.HEART, "", "2em", "0", ContentDisplay.CENTER);
+//		l1.getStyleClass().add("icon"); 
 		
 		Icon l1 = new Icon("HEART");
 		l1.getStyleClass().add("icon");

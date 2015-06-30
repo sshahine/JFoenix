@@ -125,7 +125,7 @@ public class C3DRippler extends StackPane {
 			rippler = new RippleGenerator();
 			ripplerPane = new StackPane();
 			ripplerPane.getChildren().add(rippler);
-			
+
 			// set the control postion and listen if it's changed
 			if(this.position.get() == RipplerPos.BACK) ripplerPane.getChildren().add(this.control);
 			else this.getChildren().add(this.control);
@@ -142,9 +142,9 @@ public class C3DRippler extends StackPane {
 				if(rippleRadius < minRadius)
 					rippleRadius = minRadius;
 			});
-			
+
 			this.getChildren().add(ripplerPane);
-			
+
 			// add listeners
 			initListeners();
 			this.requestLayout();
@@ -196,25 +196,26 @@ public class C3DRippler extends StackPane {
 			if(this.position.get() == RipplerPos.FRONT )
 				this.control.fireEvent(event);
 		});
-		
+
 		// if the control got resized the overlay rect must be rest
-		((Region)this.control).widthProperty().addListener((o,oldVal,newVal)->{
-//			if(rippler.overlayRect != null) rippler.getChildren().remove(rippler.overlayRect);
-			if(rippler.overlayRect!=null){
-				rippler.overlayRect.inAnimation.stop();
-				rippler.overlayRect.outAnimation.play();
-				rippler.overlayRect = null;
-			}
-		});
-		((Region)this.control).heightProperty().addListener((o,oldVal,newVal)->{
-//			if(rippler.overlayRect != null) rippler.getChildren().remove(rippler.overlayRect);
-			if(rippler.overlayRect!=null){
-				rippler.overlayRect.inAnimation.stop();
-				rippler.overlayRect.outAnimation.play();
-				rippler.overlayRect = null;
-			}
-		});
-		
+		if(this.control instanceof Region){
+			((Region)this.control).widthProperty().addListener((o,oldVal,newVal)->{
+				if(rippler.overlayRect!=null){
+					rippler.overlayRect.inAnimation.stop();
+					rippler.overlayRect.outAnimation.play();
+					rippler.overlayRect = null;
+				}
+			});
+			((Region)this.control).heightProperty().addListener((o,oldVal,newVal)->{
+				if(rippler.overlayRect!=null){
+					rippler.overlayRect.inAnimation.stop();
+					rippler.overlayRect.outAnimation.play();
+					rippler.overlayRect = null;
+				}
+			});	
+		}
+
+
 	}
 	/**
 	 *  create Ripple effect
@@ -229,7 +230,7 @@ public class C3DRippler extends StackPane {
 	public void fireEventProgrammatically(Event event){
 		ripplerPane.fireEvent(event);
 	}
-	
+
 	public void toggle(){
 		if(!toggled){
 			rippler.overlayRect.animation.setRate(1);
@@ -240,8 +241,8 @@ public class C3DRippler extends StackPane {
 		}
 		toggled = !toggled;
 	}
-	
-	
+
+
 	/**
 	 * Generates ripples on the screen every 0.3 seconds or whenever
 	 * the createRipple method is called. Ripples grow and fade out
@@ -313,7 +314,7 @@ public class C3DRippler extends StackPane {
 			Timeline outAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)));
 			// used in toggle button
 			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
-											  new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
+					new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			public OverLayRipple() {
 				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getWidth() - 0.1, control.boundsInParentProperty()));
@@ -439,6 +440,6 @@ public class C3DRippler extends StackPane {
 		return StyleableProperties.STYLEABLES;
 	}
 
-	
+
 
 }
