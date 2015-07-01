@@ -228,7 +228,8 @@ public class C3DRippler extends StackPane {
 	}
 
 	public void fireEventProgrammatically(Event event){
-		ripplerPane.fireEvent(event);
+		if(!event.isConsumed())
+			ripplerPane.fireEvent(event);
 	}
 
 	public void toggle(){

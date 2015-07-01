@@ -1,13 +1,14 @@
 package com.cctintl.c3dfx.skins;
 
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.animation.Animation.Status;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -25,21 +26,36 @@ import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
 public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
 	private C3DRippler rippler;
-	EventHandler<MouseEvent> ripplerEventPropagator = (event)-> rippler.fireEventProgrammatically(event);
-	
+	private int oldselectedIndex = -1;
+	private int maxChildIndex = -1;
+	private EventHandler<MouseEvent> ripplerEventPropagator = (event)-> {
+		/*
+		 * fixed the issue of rippler is being stuck at the pressed state while collapsing
+		 * a group that has one of its items selected
+		 */
+		if(getSkinnable().getTreeItem()!=null && !getSkinnable().getTreeItem().isLeaf()){
+			if(!(oldselectedIndex > getSkinnable().getIndex() && oldselectedIndex  < maxChildIndex))
+				rippler.fireEventProgrammatically(event);	
+			oldselectedIndex = getSkinnable().getTreeTableView().getSelectionModel().getSelectedIndex();
+		}else{
+			rippler.fireEventProgrammatically(event);
+		}
+	};
+
 	// this vairable is used to hold the expanded/collapsed row index
 	private static int expandedIndex = -1; 
 	// this variable is used to hold the rippler while expanding/collapsing a row
 	private static C3DTreeTableRowSkin<?> oldSkin = null;
 	// this variable indicates whether an expand/collapse operation is triggered
 	private boolean expandTriggered = false;
+	
 
 	private ChangeListener<Boolean> expandedListener = (o,oldVal,newVal)->{
 		if(getSkinnable().getTreeItem()!=null && !getSkinnable().getTreeItem().isLeaf()){
 			expandedIndex = getSkinnable().getIndex();
 			oldSkin = this;
 			expandTriggered = true;
-//			System.out.println("TRIGGER -> " + getSkinnable().getIndex() + " : " + this + "OF ROW " + getSkinnable());
+			//			System.out.println("TRIGGER -> " + getSkinnable().getIndex() + " : " + this + "OF ROW " + getSkinnable());
 		}
 	};
 	private Timeline collapsedAnimation;
@@ -49,7 +65,7 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 		super(control);
 		getSkinnable().indexProperty().addListener((o,oldVal,newVal)->{
 			if(newVal.intValue() != -1){
-//				System.out.println("WTF "  +  getSkinnable() + " NOW IS "+ oldVal + " -> " + newVal);
+				//				System.out.println("WTF "  +  getSkinnable() + " NOW IS "+ oldVal + " -> " + newVal);
 				if(newVal.intValue() == expandedIndex){
 					expandTriggered = true;
 					expandedIndex = -1;
@@ -57,6 +73,20 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 					expandTriggered = false;
 				}
 			}
+		});
+		
+		
+		/*
+		 * fixed the issue of rippler is being stuck at the pressed state while collapsing
+		 * a group that has one of its items selected
+		 */
+		getSkinnable().getTreeTableView().getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+			oldselectedIndex = oldVal.intValue();		
+		});
+		getSkinnable().addEventFilter(MouseEvent.MOUSE_PRESSED, (press)->{
+			TreeItem<T> temp = getSkinnable().getTreeItem();
+			while(temp!=null && temp.nextSibling()==null) temp = temp.getParent();		
+			maxChildIndex = temp != null ? getSkinnable().getTreeTableView().getRow(temp.nextSibling()) : getSkinnable().getTreeTableView().getExpandedItemCount();
 		});
 	}
 

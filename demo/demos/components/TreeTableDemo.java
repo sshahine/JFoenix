@@ -26,7 +26,7 @@ public class TreeTableDemo extends Application {
 		try {
 
 			TreeTableColumn<User, String> empColumn = 
-					new TreeTableColumn<>("User");
+					new TreeTableColumn<>("Department");
 			empColumn.setPrefWidth(150);
 			empColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) -> 
 			new ReadOnlyStringWrapper(param.getValue().getValue().userName));
@@ -54,22 +54,32 @@ public class TreeTableDemo extends Application {
 			
 			
 			User rootUser = new User("Sales Department", "23");
-			rootUser.getChildren().add(new User("Sales Department1", "23"));
-			User user1 = new User("Sales Department2", "24");
+			rootUser.getChildren().add(new User("Computer Department", ""));
+			User user1 = new User("Sales Department", "");
 			rootUser.getChildren().add(user1);
-			user1.getChildren().add(new User("Sales Department3", "25"));
-			rootUser.getChildren().add(new User("Sales Department4", "22"));
-			User user2 = new User("Sales Department5", "20");
+			
+			User user12 = new User("22", "");
+			user12.getChildren().add(new User("Employee 1", "22"));
+			user12.getChildren().add(new User("Employee 2", "22"));
+			
+			User user13 = new User("25", "");
+			user13.getChildren().add(new User("Employee 4", "25"));
+			user13.getChildren().add(new User("Employee 5", "25"));
+			
+			user1.getChildren().add(user12);
+			user1.getChildren().add(user13);
+			
+			rootUser.getChildren().add(new User("IT Department", ""));
+			User user2 = new User("HR Department", "");
 			rootUser.getChildren().add(user2);
-			user2.getChildren().add(new User("Sales Department6", "21"));
+			User hr22 = new User("22", "");
+			user2.getChildren().add(hr22);
+			hr22.getChildren().add(new User("HR 1", "22"));
+			hr22.getChildren().add(new User("HR 2", "22"));
 
 			
 			final TreeItem<User> root = new RecursiveTreeItem<User>(rootUser, User::getChildren);
 
-			Platform.runLater(()->{
-				user2.getChildren().add(new User("sdlfjaskldfjasdf","2323"));
-			});
-			
 			
 			C3DTreeTableView<User> treeView = new C3DTreeTableView<User>(root);
 			treeView.setShowRoot(false);
