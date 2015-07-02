@@ -1,7 +1,6 @@
 package demos.components;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,7 +14,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import com.cctintl.c3dfx.controls.C3DTreeTableView;
-import com.cctintl.c3dfx.controls.cells.editors.EditableTreeTableCell;
+import com.cctintl.c3dfx.controls.cells.editors.TextFieldEditorBuilder;
+import com.cctintl.c3dfx.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeItem;
 import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeObject;
 
@@ -39,8 +39,8 @@ public class TreeTableDemo extends Application {
 
 			ageColumn.setCellFactory(new Callback<TreeTableColumn<User,String>, TreeTableCell<User,String>>() {
 				@Override
-				public TreeTableCell<User, String> call(TreeTableColumn<User, String> param) {
-					return new EditableTreeTableCell<User, String>();
+				public TreeTableCell<User, String> call(TreeTableColumn<User, String> param) {						
+					return new GenericEditableTreeTableCell<User, String>(new TextFieldEditorBuilder());
 				}
 			});
 			ageColumn.setOnEditCommit(
@@ -51,6 +51,23 @@ public class TreeTableDemo extends Application {
 			        }
 			    }
 			);
+			
+			
+			empColumn.setCellFactory(new Callback<TreeTableColumn<User,String>, TreeTableCell<User,String>>() {
+				@Override
+				public TreeTableCell<User, String> call(TreeTableColumn<User, String> param) {						
+					return new GenericEditableTreeTableCell<User, String>(new TextFieldEditorBuilder());
+				}
+			});
+			empColumn.setOnEditCommit(
+			    new EventHandler<CellEditEvent<User, String>>() {
+			        @Override
+			        public void handle(CellEditEvent<User, String> t) {			        	
+			            ((User) t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue()).userName = t.getNewValue();
+			        }
+			    }
+			);
+
 			
 			
 			User rootUser = new User("Sales Department", "23");

@@ -3,28 +3,36 @@ package com.cctintl.c3dfx.controls.cells.editors.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 
-import com.cctintl.c3dfx.controls.C3DTextField;
+import com.cctintl.c3dfx.controls.cells.editors.TextFieldEditorBuilder;
 /**
  * Provides the basis for an editable table cell using a text field. Sub-classes can provide formatters for display and a
  * commitHelper to control when editing is committed.
  *
  * @author Shadi Shaheen
  */
-public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
-	protected C3DTextField textField;
-	public AbstractEditableTreeTableCell() {
+public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
+	protected EditorNodeBuilder builder;
+	protected Region editorNode;
+	
+	public GenericEditableTreeTableCell(EditorNodeBuilder builder) {
+		this.builder = builder;
+	}
+	
+	public GenericEditableTreeTableCell() {
+		builder = new TextFieldEditorBuilder();
 	}
 	/**
 	 * Any action attempting to commit an edit should call this method rather than commit the edit directly itself. This
@@ -36,40 +44,65 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 	 *
 	 * @param losingFocus true if the reason for the call was because the field is losing focus.
 	 */
-	protected abstract void commitHelper(boolean losingFocus);
+	protected void commitHelper( boolean losingFocus ) {
+		if( editorNode == null ) return;
+		try {
+			builder.validateValue();
+			commitEdit(((T) builder.getValue()));
+		} catch (Exception ex) {
+			//Most of the time we don't mind if there is a parse exception as it
+			//indicates duff user data but in the case where we are losing focus
+			//it means the user has clicked away with bad data in the cell. In that
+			//situation we want to just cancel the editing and show them the old
+			//value.
+			if( losingFocus ) {
+				cancelEdit();
+			}
+		}
+		
+	}
 	/**
 	 * Provides the string representation of the value of this cell when the cell is not being edited.
 	 */
-	protected abstract String getString();
+	protected Object getValue(){
+		return getItem() == null ? "" : getItem();
+	}
+	
 	@Override
 	public void startEdit() {
 		super.startEdit();
-		if (textField == null) {
-			createTextField();
+		if (editorNode == null) {
+			createEditorNode();
 		}
-		StackPane pane = new StackPane();
-		pane.setStyle("-fx-padding:-10 -8 -10 -8");
-		pane.getChildren().add(textField);
-		setGraphic(pane);
+		
+		builder.startEdit();
+//		StackPane pane = new StackPane();
+//		pane.setStyle("-fx-padding:-10 -8 -10 -8");
+//		pane.getChildren().add(textField);
+//		Platform.runLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				textField.selectAll();
+//				textField.requestFocus();
+//			}
+//		});
+		
+		setGraphic(editorNode);
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				textField.selectAll();
-				textField.requestFocus();
-			}
-		});
 	}
+	
+	
 	@Override
 	public void cancelEdit() {
 		super.cancelEdit();
-		setText(getString());
+		builder.cancelEdit();
+		builder.setValue(getValue());
 		setContentDisplay(ContentDisplay.TEXT_ONLY);
-		//Once the edit has been cancelled we no longer need the text field
+		//Once the edit has been cancelled we no longer need the editor
 		//so we mark it for cleanup here. Note though that you have to handle
 		//this situation in the focus listener which gets fired at the end
 		//of the editing.
-		textField = null;
+		editorNode = null;
 	}
 	@Override
 	public void updateItem(T item, boolean empty) {
@@ -79,29 +112,35 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 			setGraphic(null);
 		} else {
 			if (isEditing()) {
-				if (textField != null) {
-					textField.setText(getString());
+				if (editorNode != null) {
+					builder.setValue(getValue());
 				}
-				setGraphic(textField);
+				setGraphic(editorNode);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						textField.selectAll();
-						textField.requestFocus();
-					}
-				});
+				builder.updateItem(item, empty);
+//				Platform.runLater(new Runnable() {
+//					@Override
+//					public void run() {
+//						textField.selectAll();
+//						textField.requestFocus();
+//					}
+//				});
 			} else {
-				setText(getString());
-				setContentDisplay(ContentDisplay.TEXT_ONLY);
+				Object value = getValue();
+				if(value instanceof Node) {
+					setGraphic((Node) value);
+					setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+				} else {
+					setText(value.toString());
+					setContentDisplay(ContentDisplay.TEXT_ONLY);
+				}
 			}
 		}
 	}
-	private void createTextField() {
-		textField = new C3DTextField(getString());
-		textField.setStyle("-fx-background-color:TRANSPARENT;");
-		textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-		textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	
+	private void createEditorNode() {	
+		
+		EventHandler<KeyEvent> keyEventsHandler = new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
 				if (t.getCode() == KeyCode.ENTER) {
@@ -113,12 +152,13 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 					
 					TreeTableColumn nextColumn = getNextColumn(!t.isShiftDown());
 					if (nextColumn != null) {
-						getTreeTableView().edit(getTreeTableView().getRow((TreeItem<S>) getItem()), nextColumn);
+						getTreeTableView().edit(getIndex(), nextColumn);
 					}
 				}
 			}
-		});
-		textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+		};
+		
+		ChangeListener<Boolean> focusChangeListener = new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				//This focus listener fires at the end of cell editing when focus is lost
@@ -127,11 +167,14 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 				//listener runs and therefore the text field has been cleaned up. If the
 				//text field is null we don't commit the edit. This has the useful side effect
 				//of stopping the double commit.
-				if (!newValue && textField != null) {
+				if (!newValue && editorNode != null) {
 					commitHelper(true);
 				}
 			}
-		});
+		};
+		DoubleBinding minWidthBinding = Bindings.createDoubleBinding(()->{return this.getWidth() - this.getGraphicTextGap()*2;}, this.widthProperty(), this.graphicTextGapProperty());
+		editorNode = builder.createNode(getValue(), minWidthBinding, keyEventsHandler, focusChangeListener);
+		
 	}
 	/**
 	 *
@@ -162,6 +205,8 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 		}
 		return columns.get(nextIndex);
 	}
+	
+	
 	private List<TreeTableColumn<S, ?>> getLeaves(TreeTableColumn<S, ?> root) {
 		List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
 		if (root.getColumns().isEmpty()) {
@@ -177,4 +222,5 @@ public abstract class AbstractEditableTreeTableCell<S, T> extends TreeTableCell<
 			return columns;
 		}
 	}
+	
 }

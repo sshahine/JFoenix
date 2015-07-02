@@ -356,6 +356,9 @@
     -fx-padding: 0.333333em 0.229em 0.333333em 0.229em; /* 4 */
     -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
 }
+.tree-table-row-cell .c3d-text-field{
+    -fx-focus-color: rgba(240,40,40);
+}
 
 
 .animated-option-button {
