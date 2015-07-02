@@ -172,9 +172,10 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 				}
 			}
 		};
-		DoubleBinding minWidthBinding = Bindings.createDoubleBinding(()->{return this.getWidth() - this.getGraphicTextGap()*2;}, this.widthProperty(), this.graphicTextGapProperty());
+		DoubleBinding minWidthBinding = Bindings.createDoubleBinding(()->{
+			return this.getWidth() - this.getGraphicTextGap()*2 - this.getBaselineOffset() ;
+		}, this.widthProperty(), this.graphicTextGapProperty());
 		editorNode = builder.createNode(getValue(), minWidthBinding, keyEventsHandler, focusChangeListener);
-		
 	}
 	/**
 	 *

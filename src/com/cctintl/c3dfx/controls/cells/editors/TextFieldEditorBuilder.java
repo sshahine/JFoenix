@@ -39,7 +39,7 @@ public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 	@Override
 	public Region createNode(String value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
 		StackPane pane = new StackPane();
-		pane.setStyle("-fx-padding:-10 -8 -10 -8");
+		pane.setStyle("-fx-padding:-10 0 -10 0");
 		textField = new C3DTextField(value);
 		textField.setStyle("-fx-background-color:TRANSPARENT;");
 		textField.minWidthProperty().bind(minWidthBinding);

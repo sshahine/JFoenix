@@ -212,8 +212,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				startX = 0;
 				endX = newVal.doubleValue();
 				mid = (endX - startX )/2;
-				focusedLine.setStartX(mid);
-				focusedLine.setEndX(mid);
+				// resize the focused line to fit the new size
+				focusedLine.setStartX(startX);
+				focusedLine.setEndX(endX);
 			});
 
 			startX = 0;
@@ -221,6 +222,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			mid = (endX - startX )/2;
 			focusedLine.setStartX(mid);
 			focusedLine.setEndX(mid);
+			
 			focusedLine.startYProperty().bind(line.startYProperty());
 			focusedLine.endYProperty().bind(line.startYProperty());
 			focusedLine.strokeProperty().bind(((C3DTextField)getSkinnable()).focusColorProperty());
