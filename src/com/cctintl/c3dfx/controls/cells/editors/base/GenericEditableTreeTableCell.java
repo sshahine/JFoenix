@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Skin;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.KeyCode;
@@ -17,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
 import com.cctintl.c3dfx.controls.cells.editors.TextFieldEditorBuilder;
+import com.cctintl.c3dfx.skins.C3DTreeTableCellSkin;
 /**
  * Provides the basis for an editable table cell using a text field. Sub-classes can provide formatters for display and a
  * commitHelper to control when editing is committed.
@@ -224,4 +226,8 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 		}
 	}
 	
+	
+    @Override protected Skin<?> createDefaultSkin() {
+        return new C3DTreeTableCellSkin<S,T>(this);
+    }
 }

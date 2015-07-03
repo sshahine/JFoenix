@@ -8,6 +8,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.input.MouseEvent;
@@ -141,7 +143,16 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 					}
 				}
 				StackPane arrow = (StackPane) ((StackPane) getChildren().get(arrowIndex)).lookup(".arrow");
-
+				/*
+				 * relocating the disclosure node according to the grouping level
+				 */
+				Node col = getChildren().get((getSkinnable().getTreeTableView().getNodeLevel(getSkinnable().getTreeItem())+1));
+				arrow.getParent().setTranslateX(col.getBoundsInParent().getMinX());
+				arrow.getParent().setLayoutX(0);
+				if(getSkinnable().getTreeTableView().getNodeLevel(getSkinnable().getTreeItem())> 1)
+					((Parent)col).getChildrenUnmodifiable().get(0).translateXProperty().bind(((StackPane)arrow.getParent()).widthProperty());
+				
+				
 				if(expandedAnimation == null || !expandedAnimation.getStatus().equals(Status.RUNNING)){
 					expandedAnimation = new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(arrow.rotateProperty(), 90, Interpolator.EASE_BOTH)));
 					expandedAnimation.setOnFinished((finish)->arrow.setRotate(90));
