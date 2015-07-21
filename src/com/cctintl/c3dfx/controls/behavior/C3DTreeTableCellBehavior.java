@@ -17,11 +17,12 @@ public class C3DTreeTableCellBehavior<S,T> extends TreeTableCellBehavior<S,T>{
 	@Override protected boolean handleDisclosureNode(double x, double y) {
         final TreeItem<S> treeItem = getControl().getTreeTableRow().getTreeItem();
 
-        final TreeTableView<S> treeTableView = getControl().getTreeTableView();
-        final TreeTableColumn<S,T> column = getTableColumn();
-        final TreeTableColumn<S,?> treeColumn = treeTableView.getTreeColumn() == null ?
-                treeTableView.getVisibleLeafColumn(0) : treeTableView.getTreeColumn();
+//        final TreeTableView<S> treeTableView = getControl().getTreeTableView();
+//        final TreeTableColumn<S,T> column = getTableColumn();
+//        final TreeTableColumn<S,?> treeColumn = treeTableView.getTreeColumn() == null ?
+//                treeTableView.getVisibleLeafColumn(0) : treeTableView.getTreeColumn();
 
+         if(!treeItem.isLeaf()){
 //        if (column == treeColumn) {
             final Node disclosureNode = getControl().getTreeTableRow().getDisclosureNode();
             if (disclosureNode != null) {  
@@ -32,7 +33,8 @@ public class C3DTreeTableCellBehavior<S,T> extends TreeTableCellBehavior<S,T>{
                     return true;
                 }
             }
-//        }
+        }
+            
         return false;
     }
 	

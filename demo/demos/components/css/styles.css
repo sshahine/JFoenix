@@ -360,6 +360,10 @@
     -fx-focus-color: rgba(240,40,40);
 }
 
+.tree-table-row-group{
+	-fx-background-color:rgba(230,230,230);
+}
+
 
 .animated-option-button {
 	-fx-pref-width:50px;

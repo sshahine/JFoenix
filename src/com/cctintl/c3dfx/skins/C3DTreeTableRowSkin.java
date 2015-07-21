@@ -1,5 +1,8 @@
 package com.cctintl.c3dfx.skins;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -10,6 +13,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Control;
+import javafx.scene.control.IndexedCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.input.MouseEvent;
@@ -17,7 +22,9 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 
 /**
  * @author sshahine
@@ -27,6 +34,9 @@ import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
 
 public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
+	
+	static final Map<Control, Double> maxDisclosureWidthMap = new WeakHashMap<Control, Double>();
+	
 	private C3DRippler rippler;
 	private int oldselectedIndex = -1;
 	private int maxChildIndex = -1;
@@ -57,7 +67,6 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 			expandedIndex = getSkinnable().getIndex();
 			oldSkin = this;
 			expandTriggered = true;
-			//			System.out.println("TRIGGER -> " + getSkinnable().getIndex() + " : " + this + "OF ROW " + getSkinnable());
 		}
 	};
 	private Timeline collapsedAnimation;
@@ -67,7 +76,6 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 		super(control);
 		getSkinnable().indexProperty().addListener((o,oldVal,newVal)->{
 			if(newVal.intValue() != -1){
-				//				System.out.println("WTF "  +  getSkinnable() + " NOW IS "+ oldVal + " -> " + newVal);
 				if(newVal.intValue() == expandedIndex){
 					expandTriggered = true;
 					expandedIndex = -1;
@@ -116,13 +124,18 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
 
 	@Override 
-	protected void layoutChildren(final double x, final double y, final double w, final double h) {
-		//		System.out.println(getSkinnable().getIndex() + " : " + this + "OF ROW " + getSkinnable());
+	protected void layoutChildren(final double x, final double y, final double w, final double h) {		
+		// allow custom skin to grouped rows
+		getSkinnable().getStyleClass().remove("tree-table-row-group");
+		if(getSkinnable().getTreeItem() != null && getSkinnable().getTreeItem().getValue() instanceof RecursiveTreeObject && getSkinnable().getTreeItem().getValue().getClass() == RecursiveTreeObject.class)
+			getSkinnable().getStyleClass().add("tree-table-row-group");
+		
 		if(getSkinnable().getIndex() > -1 && getSkinnable().getTreeTableView().getTreeItem(getSkinnable().getIndex()) != null){
 			super.layoutChildren(x, y, w, h);
+			
+	        //add rippler effects to each row in the table
 			rippler.resize(w, h);
 			for (int i = 1; i < getChildren().size(); i++) {
-
 				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_PRESSED, ripplerEventPropagator);
 				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_RELEASED, ripplerEventPropagator);
 				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_CLICKED, ripplerEventPropagator);
@@ -132,27 +145,52 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 				getChildren().get(i).addEventHandler(MouseEvent.MOUSE_CLICKED, ripplerEventPropagator);
 			}
 
-
-			// add arrow animation 	
+			// disclosure row case
 			if(getSkinnable().getTreeItem()!=null && !getSkinnable().getTreeItem().isLeaf()){
-				int arrowIndex = 0;
-				for(int i = 0 ; i < getChildren().size() ; i++){
-					if(getChildren().get(i).getStyleClass().contains("tree-disclosure-node")){
-						arrowIndex = i;
-						break;
+				
+				// register the width of disclosure node
+		        Control c = getVirtualFlowOwner();
+		        final double defaultDisclosureWidth = maxDisclosureWidthMap.containsKey(c) ? maxDisclosureWidthMap.get(c) : 0;
+		        double disclosureWidth =  getDisclosureNode().prefWidth(h);
+		        if (disclosureWidth > defaultDisclosureWidth) {
+		        	maxDisclosureWidthMap.put(c, disclosureWidth);
+		        	// RT-36359: The recorded max width of the disclosure node
+                    // has increased. We need to go back and request all
+                    // earlier rows to update themselves to take into account
+                    // this increased indentation.
+		        	Parent p = getSkinnable();
+		            while (p != null) {
+		                if (p instanceof VirtualFlow)
+		                	break;
+		                p = p.getParent();
+		            }
+		            if(p!=null){
+		            	 final VirtualFlow<?> flow = (VirtualFlow<?>) p;
+		            	 for (int i = 0; i < flow.getCellCount(); i++) {
+		                        IndexedCell<?> cell = flow.getCell(i);
+		                        if (cell == null || cell.isEmpty() || cell.getIndex() >= getSkinnable().getIndex()) continue;
+		                        cell.requestLayout();
+		                        cell.layout();
+		                    }
+		            }
+		        }
+				
+				
+		        // relocating the disclosure node according to the grouping column
+				Node arrow = ((Parent)getDisclosureNode()).getChildrenUnmodifiable().get(0);
+				Node col = getChildren().get((getSkinnable().getTreeTableView().getTreeItemLevel(getSkinnable().getTreeItem())+1));
+				if(getSkinnable().getItem() instanceof RecursiveTreeObject){
+					if(((RecursiveTreeObject<?>)getSkinnable().getItem()).getGroupedColumn()!=null){
+						int index = getSkinnable().getTreeTableView().getColumns().indexOf(((RecursiveTreeObject<?>)getSkinnable().getItem()).getGroupedColumn());
+//						getSkinnable().getTreeTableView().getColumns().get(index).getText();
+						col = getChildren().get(index+2);
 					}
-				}
-				StackPane arrow = (StackPane) ((StackPane) getChildren().get(arrowIndex)).lookup(".arrow");
-				/*
-				 * relocating the disclosure node according to the grouping level
-				 */
-				Node col = getChildren().get((getSkinnable().getTreeTableView().getNodeLevel(getSkinnable().getTreeItem())+1));
+				}								
 				arrow.getParent().setTranslateX(col.getBoundsInParent().getMinX());
 				arrow.getParent().setLayoutX(0);
-				if(getSkinnable().getTreeTableView().getNodeLevel(getSkinnable().getTreeItem())> 1)
-					((Parent)col).getChildrenUnmodifiable().get(0).translateXProperty().bind(((StackPane)arrow.getParent()).widthProperty());
+
 				
-				
+				// add disclosure node animation 	
 				if(expandedAnimation == null || !expandedAnimation.getStatus().equals(Status.RUNNING)){
 					expandedAnimation = new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(arrow.rotateProperty(), 90, Interpolator.EASE_BOTH)));
 					expandedAnimation.setOnFinished((finish)->arrow.setRotate(90));

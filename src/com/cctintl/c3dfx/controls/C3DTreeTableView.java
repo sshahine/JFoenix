@@ -1,14 +1,30 @@
 package com.cctintl.c3dfx.controls;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
+import java.util.function.Predicate;
+
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
+import com.cctintl.c3dfx.concurrency.CFXUtilities;
+import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeObject;
 import com.cctintl.c3dfx.skins.C3DTreeTableViewSkin;
-
 
 /**
  * @author sshahine
@@ -16,26 +32,19 @@ import com.cctintl.c3dfx.skins.C3DTreeTableViewSkin;
  * @param <S>
  */
 
-public class C3DTreeTableView<S> extends TreeTableView<S> {
+public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTableView<S> {
 
+	private TreeItem<S> originalRoot;
+	
 	public C3DTreeTableView() {
 		super();
-		this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
-			@Override
-			public TreeTableRow<S> call(TreeTableView<S> param) {
-				return new C3DTreeTableRow<S>();
-			}
-		});
+		init();
 	}
 
-	public C3DTreeTableView(TreeItem<S> root) {
+	public C3DTreeTableView(TreeItem<S> root, ObservableList<S> items) {
 		super(root);
-		this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
-			@Override
-			public TreeTableRow<S> call(TreeTableView<S> param) {
-				return new C3DTreeTableRow<S>();
-			}
-		});	
+		originalRoot = root;
+		init();
 	}
 
 	public void propagateMouseEventsToParent(){
@@ -44,10 +53,235 @@ public class C3DTreeTableView<S> extends TreeTableView<S> {
 			this.getParent().fireEvent(e);
 		});
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override protected Skin<?> createDefaultSkin() {
 		return new C3DTreeTableViewSkin<S>(this);
 	}
+
+	protected void init(){
+		this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
+			@Override
+			public TreeTableRow<S> call(TreeTableView<S> param) {
+				return new C3DTreeTableRow<S>();
+			}
+		});	
+
+		this.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->{
+			if(newVal != null && newVal.getValue() != null)
+				itemWasSelected = true;
+		});
+		
+		this.predicate.addListener((o,oldVal,newVal)-> filter(newVal));
+		
+		//		getGroupOrder().addListener((Change<? extends TreeTableColumn<S, ?>> c) ->{
+		//			group();
+		//		});
+	}
+
+
+	/*
+	 * clear selection before sorting as its bugged in java
+	 */
+	private boolean itemWasSelected = false;
+	@Override
+	public void sort(){
+		getSelectionModel().clearSelection();
+		super.sort();
+		if(itemWasSelected)
+			getSelectionModel().select(0);
+	}
 	
+	
+	// Allows for multiple column Grouping based on the order of the TreeTableColumns
+	// in this observableArrayList.
+	private ObservableList<TreeTableColumn<S,?>> groupOrder = FXCollections.observableArrayList();
+
+	public final ObservableList<TreeTableColumn<S,?>> getGroupOrder() {
+		return groupOrder;
+	}
+
+	// semaphore is used to force mutual exclusion while group/ungroup operation 
+	private Semaphore groupingSemaphore = new Semaphore(1);
+	
+	// this method will regroup the treetableview according to columns group order
+	public void group(TreeTableColumn<S, ?>... treeTableColumns){
+		if(groupOrder.size() == 0){
+			if(groupingSemaphore.tryAcquire()){
+				try{
+					if(originalRoot == null) originalRoot = getRoot();
+					// group the data
+					Map<Object, Map<Object, ?>> groups = new HashMap<>();
+					for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
+						groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
+					groupOrder.addAll(treeTableColumns);
+					
+					// update table ui
+					buildGroupedRoot(groups, null, 0);
+										
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+
+				groupingSemaphore.release();
+			}
+		}
+	}
+
+	public void unGroup(){
+		if(groupingSemaphore.tryAcquire()){
+			try {
+				if(groupOrder.size() > 0){
+					groupOrder.clear();
+					CFXUtilities.runInFXAndWait(()->{
+						ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
+						sortOrder.addAll(getSortOrder());
+						setRoot(originalRoot);
+						getSelectionModel().select(0);	
+						getSortOrder().addAll(sortOrder);
+					});
+				}		
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			groupingSemaphore.release();
+		}
+	}
+
+	private Map group(TreeTableColumn<S, ?> column, Map parentGroup , Object key, RecursiveTreeItem<S> root){
+		if(parentGroup.isEmpty()){
+			parentGroup = groupByFunction(root.originalItems, column);
+			return parentGroup;
+		}
+		Object value = parentGroup.get(key);
+		if(value instanceof List){
+			Object newGroup = groupByFunction((List) value, column);
+			parentGroup.put(key, newGroup);
+			return parentGroup;
+		}else if(value instanceof Map){
+			for (Object childKey : ((Map)value).keySet()) 
+				value = group(column,(Map)value,childKey, root);
+			parentGroup.put(key, value);
+			return parentGroup;
+		}else if(key == null){
+			for (Object childKey : parentGroup.keySet()) 
+				parentGroup = group(column, parentGroup,childKey, root);
+			return parentGroup;
+		}
+		return parentGroup;
+	}
+
+	/*
+	 * stream implementation is faster regarding the performance 
+	 * however its not compatable when porting to mobile
+	 */
+//	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
+//		return items.stream().collect(Collectors.groupingBy(child-> column.getCellData((TreeItem<S>)child)));
+//	}
+	
+	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
+		Map<Object, List<TreeItem<S>>> map = new HashMap<Object, List<TreeItem<S>>>();
+		for (TreeItem<S> child : items) {
+		    Object key = column.getCellData(child);
+		   if (map.get(key) == null) {
+		      map.put(key, new ArrayList<TreeItem<S>>());
+		   }
+		   map.get(key).add(child);
+		}
+		return map;
+	}
+	
+	/*
+	 * this method is used to update tree items and set the new root 
+	 * after grouping the data model
+	 */
+	private void buildGroupedRoot(Map groupedItems, RecursiveTreeItem parent , int groupIndex){
+		boolean setRoot = false;
+		if(parent == null){
+			parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
+			setRoot = true;
+		}
+				
+		for(Object key : groupedItems.keySet()){
+
+			RecursiveTreeObject groupItem = new RecursiveTreeObject<>();
+			groupItem.setGroupedValue(key);
+			groupItem.setGroupedColumn(groupOrder.get(groupIndex));
+
+			RecursiveTreeItem node = new RecursiveTreeItem<>(groupItem, RecursiveTreeObject::getChildren);
+			parent.originalItems.add(node);
+			parent.getChildren().add(node);			
+			
+			Object children = groupedItems.get(key);
+			if(children instanceof List){
+				for(Object child : (List<?>)children){
+					node.originalItems.add(child);
+					node.getChildren().add(child);
+				}
+			}else if(children instanceof Map){
+				buildGroupedRoot((Map)children, node, groupIndex+1);
+			}
+		}
+
+		// update ui
+		if(setRoot){
+			final RecursiveTreeItem<S> newParent = parent;
+			newParent.setPredicate(getPredicate());
+			CFXUtilities.runInFX(()->{
+				ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
+				sortOrder.addAll(getSortOrder());
+				setRoot(newParent);		
+				getSortOrder().addAll(sortOrder);
+				getSelectionModel().select(0);
+			});
+		}
+	}
+
+	
+	/*
+	 * this method will filter the treetable and it  
+	 */
+	
+	private Timer t;
+
+	private final void filter(Predicate<TreeItem<S>> predicate){
+		if(originalRoot == null) originalRoot = getRoot();
+		if(t!=null){
+			t.cancel();
+			t.purge();
+		}
+		t = new Timer();
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				/*
+				 *  filter both roots the grouped and ungrouped root
+				 */
+				
+				// filter the ungrouped root
+				if(originalRoot != getRoot()) new Thread(()->((RecursiveTreeItem) originalRoot).setPredicate(predicate)).start();
+				
+				// fitlert the grouped root
+				new Thread(()->{
+					((RecursiveTreeItem<S>)getRoot()).setPredicate(predicate);
+					Platform.runLater(()->getSelectionModel().select(0));
+				}).start();
+			}
+		},  500);
+	}
+	
+	private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<S>>>((TreeItem<S> t) -> true);
+	
+	public final ObjectProperty<Predicate<TreeItem<S>>> predicateProperty() {
+		return this.predicate;
+	}
+
+	public final Predicate<TreeItem<S>> getPredicate() {
+		return this.predicateProperty().get();
+	}
+
+	public final void setPredicate(final Predicate<TreeItem<S>> predicate) {
+		this.predicateProperty().set(predicate);
+	}
+
 }

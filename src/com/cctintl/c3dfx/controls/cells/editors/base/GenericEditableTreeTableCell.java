@@ -5,34 +5,35 @@ import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Skin;
-import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
+import com.cctintl.c3dfx.controls.C3DTreeTableView;
+import com.cctintl.c3dfx.controls.RecursiveTreeItem;
 import com.cctintl.c3dfx.controls.cells.editors.TextFieldEditorBuilder;
-import com.cctintl.c3dfx.skins.C3DTreeTableCellSkin;
+import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeObject;
 /**
  * Provides the basis for an editable table cell using a text field. Sub-classes can provide formatters for display and a
  * commitHelper to control when editing is committed.
  *
  * @author Shadi Shaheen
  */
-public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
+public class GenericEditableTreeTableCell<S, T> extends C3DTreeTableCell<S, T> {
 	protected EditorNodeBuilder builder;
 	protected Region editorNode;
-	
+
 	public GenericEditableTreeTableCell(EditorNodeBuilder builder) {
 		this.builder = builder;
 	}
-	
+
 	public GenericEditableTreeTableCell() {
 		builder = new TextFieldEditorBuilder();
 	}
@@ -61,7 +62,7 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 				cancelEdit();
 			}
 		}
-		
+
 	}
 	/**
 	 * Provides the string representation of the value of this cell when the cell is not being edited.
@@ -69,31 +70,32 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 	protected Object getValue(){
 		return getItem() == null ? "" : getItem();
 	}
-	
+
 	@Override
 	public void startEdit() {
-		super.startEdit();
-		if (editorNode == null) {
-			createEditorNode();
+		if(checkGroupedColumn()){
+			super.startEdit();
+			if (editorNode == null) {
+				createEditorNode();
+			}
+			builder.startEdit();
+			setGraphic(editorNode);
+			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);			
 		}
-		
-		builder.startEdit();
-//		StackPane pane = new StackPane();
-//		pane.setStyle("-fx-padding:-10 -8 -10 -8");
-//		pane.getChildren().add(textField);
-//		Platform.runLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				textField.selectAll();
-//				textField.requestFocus();
-//			}
-//		});
-		
-		setGraphic(editorNode);
-		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+		//		StackPane pane = new StackPane();
+		//		pane.setStyle("-fx-padding:-10 -8 -10 -8");
+		//		pane.getChildren().add(textField);
+		//		Platform.runLater(new Runnable() {
+		//			@Override
+		//			public void run() {
+		//				textField.selectAll();
+		//				textField.requestFocus();
+		//			}
+		//		});
 	}
-	
-	
+
+
 	@Override
 	public void cancelEdit() {
 		super.cancelEdit();
@@ -106,6 +108,22 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 		//of the editing.
 		editorNode = null;
 	}
+	
+	private boolean checkGroupedColumn(){
+		boolean allowEdit = true;
+		if(getTreeTableRow().getTreeItem()!=null){
+			Object rowObject = getTreeTableRow().getTreeItem().getValue();
+			if(rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class){
+				allowEdit = false;
+			}else{
+				// check grouped columns in the tableview
+				if(getTreeTableView() instanceof C3DTreeTableView && ((C3DTreeTableView)getTreeTableView()).getGroupOrder().contains(getTableColumn()))
+					allowEdit = false;
+			}
+		}
+		return allowEdit;
+	}
+	
 	@Override
 	public void updateItem(T item, boolean empty) {
 		super.updateItem(item, empty);
@@ -113,20 +131,21 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 			setText(null);
 			setGraphic(null);
 		} else {
-			if (isEditing()) {
+			if (isEditing() && checkGroupedColumn()) {
+
 				if (editorNode != null) {
 					builder.setValue(getValue());
 				}
 				setGraphic(editorNode);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 				builder.updateItem(item, empty);
-//				Platform.runLater(new Runnable() {
-//					@Override
-//					public void run() {
-//						textField.selectAll();
-//						textField.requestFocus();
-//					}
-//				});
+				//				Platform.runLater(new Runnable() {
+				//					@Override
+				//					public void run() {
+				//						textField.selectAll();
+				//						textField.requestFocus();
+				//					}
+				//				});
 			} else {
 				Object value = getValue();
 				if(value instanceof Node) {
@@ -139,9 +158,9 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 			}
 		}
 	}
-	
+
 	private void createEditorNode() {	
-		
+
 		EventHandler<KeyEvent> keyEventsHandler = new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
@@ -151,7 +170,7 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 					cancelEdit();
 				} else if (t.getCode() == KeyCode.TAB) {
 					commitHelper(false);
-					
+
 					TreeTableColumn nextColumn = getNextColumn(!t.isShiftDown());
 					if (nextColumn != null) {
 						getTreeTableView().edit(getIndex(), nextColumn);
@@ -159,7 +178,7 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 				}
 			}
 		};
-		
+
 		ChangeListener<Boolean> focusChangeListener = new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -208,8 +227,8 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 		}
 		return columns.get(nextIndex);
 	}
-	
-	
+
+
 	private List<TreeTableColumn<S, ?>> getLeaves(TreeTableColumn<S, ?> root) {
 		List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
 		if (root.getColumns().isEmpty()) {
@@ -225,9 +244,4 @@ public class GenericEditableTreeTableCell<S, T> extends TreeTableCell<S, T> {
 			return columns;
 		}
 	}
-	
-	
-    @Override protected Skin<?> createDefaultSkin() {
-        return new C3DTreeTableCellSkin<S,T>(this);
-    }
 }
