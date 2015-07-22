@@ -32,7 +32,9 @@ import java.util.List;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
+import javafx.animation.Animation.Status;
 import javafx.beans.DefaultProperty;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -234,11 +236,11 @@ public class C3DRippler extends StackPane {
 
 	public void toggle(){
 		if(!toggled){
-			rippler.overlayRect.animation.setRate(1);
-			rippler.overlayRect.animation.play();
+			rippler.overlayRect.outAnimation.stop();
+			rippler.overlayRect.inAnimation.play();
 		}else{
-			rippler.overlayRect.animation.setRate(-1);
-			rippler.overlayRect.animation.play();
+			rippler.overlayRect.inAnimation.stop();
+			rippler.overlayRect.outAnimation.play();
 		}
 		toggled = !toggled;
 	}
@@ -286,16 +288,13 @@ public class C3DRippler extends StackPane {
 						if(ripple.radiusProperty().get() < rippleRadius*0.5)
 							fadeOutRadious = rippleRadius;
 
-						Timeline outAnimation = new Timeline(
-								new KeyFrame(Duration.seconds(0.4),
+						Timeline outAnimation = new Timeline( new KeyFrame(Duration.seconds(0.4),
 										new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
-										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)
-										));
+										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+						
+						outAnimation.setOnFinished((event)-> getChildren().remove(ripple));
 						outAnimation.play();
-						if(overlayRect!=null)overlayRect.outAnimation.play();
-						outAnimation.setOnFinished((event)->{
-							getChildren().remove(ripple);	
-						});
+						if(overlayRect!=null) overlayRect.outAnimation.play();
 					});
 				}
 			}
@@ -314,8 +313,8 @@ public class C3DRippler extends StackPane {
 			Timeline inAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			Timeline outAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)));
 			// used in toggle button
-			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
-					new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
+//			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
+//					new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			public OverLayRipple() {
 				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getWidth() - 0.1, control.boundsInParentProperty()));

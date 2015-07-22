@@ -25,6 +25,8 @@
 
 package com.cctintl.c3dfx.skins;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -42,14 +44,15 @@ public class C3DToggleNodeSkin extends ToggleButtonSkin {
 
 	public C3DToggleNodeSkin(C3DToggleNode toggleNode) {
 		super(toggleNode);
-		toggleNode.setStyle("-fx-background-color:TRANSPARENT");
+		if(toggleNode.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
+			toggleNode.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 		toggleNode.setText(null);
 	}
 
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {			
 		if(invalid){
-			rippler = new C3DRippler(getSkinnable().getGraphic(),RipplerPos.BACK);
+			rippler = new C3DRippler(getSkinnable().getGraphic(),RipplerPos.FRONT);
 			getSkinnable().selectedProperty().addListener((o,oldVal,newVal)->{
 				rippler.toggle();
 			});
@@ -57,7 +60,6 @@ public class C3DToggleNodeSkin extends ToggleButtonSkin {
 			getSkinnable().layoutBoundsProperty().addListener((o,oldVal,newVal)->{
 				main.resize(newVal.getWidth(), newVal.getHeight());
 			});				
-			rippler.setRipplerFill(Color.RED);
 			getChildren().add(main);
 			main.resize(getSkinnable().layoutBoundsProperty().get().getWidth(), getSkinnable().layoutBoundsProperty().get().getHeight());
 			invalid = false;
