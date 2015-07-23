@@ -181,7 +181,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		return super.computeMinHeight(width, topInset, rightInset, bottomInset + 1, leftInset);
 	}
 
-
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
@@ -212,9 +211,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				startX = 0;
 				endX = newVal.doubleValue();
 				mid = (endX - startX )/2;
-				// resize the focused line to fit the new size
-				focusedLine.setStartX(startX);
-				focusedLine.setEndX(endX);
 			});
 
 			startX = 0;
@@ -264,6 +260,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			Platform.runLater(()->focus());
 		}else{
 			// create the focus animations
+			focusedLine.endXProperty().unbind();
 			Timeline linesAnimation = new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
@@ -282,7 +279,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 											)
 
 					);
-
+			linesAnimation.setOnFinished((finish)->focusedLine.endXProperty().bind(textPane.widthProperty()));
 			Timeline cursorAnimation = new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
