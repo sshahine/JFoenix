@@ -1,6 +1,7 @@
 package demos.components;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -123,6 +124,7 @@ public class TreeTableDemo extends Application {
 				treeView.setPredicate(user -> user.getValue().age.get().contains(newVal) || user.getValue().department.get().contains(newVal) || user.getValue().userName.get().contains(newVal));
 			});
 
+			size.textProperty().bind(Bindings.createStringBinding(()->treeView.getCurrentItemsCount()+"", treeView.currentItemsCountProperty()));
 			main.getChildren().add(size);
 
 			Scene scene = new Scene(main, 475, 500);

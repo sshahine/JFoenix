@@ -10,7 +10,9 @@ import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
 
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +37,7 @@ import com.cctintl.c3dfx.skins.C3DTreeTableViewSkin;
 public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTableView<S> {
 
 	private TreeItem<S> originalRoot;
-	
+
 	public C3DTreeTableView() {
 		super();
 		init();
@@ -71,8 +73,17 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			if(newVal != null && newVal.getValue() != null)
 				itemWasSelected = true;
 		});
-		
+
 		this.predicate.addListener((o,oldVal,newVal)-> filter(newVal));
+
+		this.rootProperty().addListener((o,oldVal,newVal)->{
+			if(newVal != null){
+				setCurrentItemsCount(count(getRoot()));
+			}
+		});
+		
+		// compute the current items count
+		setCurrentItemsCount(count(getRoot()));
 		
 		//		getGroupOrder().addListener((Change<? extends TreeTableColumn<S, ?>> c) ->{
 		//			group();
@@ -91,8 +102,8 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		if(itemWasSelected)
 			getSelectionModel().select(0);
 	}
-	
-	
+
+
 	// Allows for multiple column Grouping based on the order of the TreeTableColumns
 	// in this observableArrayList.
 	private ObservableList<TreeTableColumn<S,?>> groupOrder = FXCollections.observableArrayList();
@@ -103,7 +114,7 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	// semaphore is used to force mutual exclusion while group/ungroup operation 
 	private Semaphore groupingSemaphore = new Semaphore(1);
-	
+
 	// this method will regroup the treetableview according to columns group order
 	public void group(TreeTableColumn<S, ?>... treeTableColumns){
 		if(groupOrder.size() == 0){
@@ -115,10 +126,10 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 					for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
 						groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
 					groupOrder.addAll(treeTableColumns);
-					
+
 					// update table ui
 					buildGroupedRoot(groups, null, 0);
-										
+
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -175,22 +186,22 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	 * stream implementation is faster regarding the performance 
 	 * however its not compatable when porting to mobile
 	 */
-//	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
-//		return items.stream().collect(Collectors.groupingBy(child-> column.getCellData((TreeItem<S>)child)));
-//	}
-	
+	//	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
+	//		return items.stream().collect(Collectors.groupingBy(child-> column.getCellData((TreeItem<S>)child)));
+	//	}
+
 	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
 		Map<Object, List<TreeItem<S>>> map = new HashMap<Object, List<TreeItem<S>>>();
 		for (TreeItem<S> child : items) {
-		    Object key = column.getCellData(child);
-		   if (map.get(key) == null) {
-		      map.put(key, new ArrayList<TreeItem<S>>());
-		   }
-		   map.get(key).add(child);
+			Object key = column.getCellData(child);
+			if (map.get(key) == null) {
+				map.put(key, new ArrayList<TreeItem<S>>());
+			}
+			map.get(key).add(child);
 		}
 		return map;
 	}
-	
+
 	/*
 	 * this method is used to update tree items and set the new root 
 	 * after grouping the data model
@@ -201,7 +212,7 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
 			setRoot = true;
 		}
-				
+
 		for(Object key : groupedItems.keySet()){
 
 			RecursiveTreeObject groupItem = new RecursiveTreeObject<>();
@@ -211,7 +222,7 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			RecursiveTreeItem node = new RecursiveTreeItem<>(groupItem, RecursiveTreeObject::getChildren);
 			parent.originalItems.add(node);
 			parent.getChildren().add(node);			
-			
+
 			Object children = groupedItems.get(key);
 			if(children instanceof List){
 				for(Object child : (List<?>)children){
@@ -237,11 +248,11 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		}
 	}
 
-	
+
 	/*
 	 * this method will filter the treetable and it  
 	 */
-	
+
 	private Timer t;
 
 	private final void filter(Predicate<TreeItem<S>> predicate){
@@ -257,21 +268,25 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 				/*
 				 *  filter both roots the grouped and ungrouped root
 				 */
-				
+
 				// filter the ungrouped root
 				if(originalRoot != getRoot()) new Thread(()->((RecursiveTreeItem) originalRoot).setPredicate(predicate)).start();
-				
+
 				// fitlert the grouped root
 				new Thread(()->{
 					((RecursiveTreeItem<S>)getRoot()).setPredicate(predicate);
-					Platform.runLater(()->getSelectionModel().select(0));
+					Platform.runLater(()->{
+						getSelectionModel().select(0);	
+						setCurrentItemsCount(count(getRoot()));
+					});
 				}).start();
+				
 			}
 		},  500);
 	}
-	
+
 	private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<S>>>((TreeItem<S> t) -> true);
-	
+
 	public final ObjectProperty<Predicate<TreeItem<S>>> predicateProperty() {
 		return this.predicate;
 	}
@@ -284,4 +299,28 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		this.predicateProperty().set(predicate);
 	}
 
+	private IntegerProperty currentItemsCount = new SimpleIntegerProperty(0);
+
+	public final IntegerProperty currentItemsCountProperty() {
+		return this.currentItemsCount;
+	}
+
+	public final int getCurrentItemsCount() {
+		return this.currentItemsCountProperty().get();
+	}
+
+	public final void setCurrentItemsCount(final int currentItemsCount) {
+		this.currentItemsCountProperty().set(currentItemsCount);
+	}
+
+	private int count(TreeItem<?> node){
+		if(node == null ) return 0;
+		
+		int count = 1;
+		if(node.getValue() == null ||  (node.getValue() != null && node.getValue().getClass().equals(RecursiveTreeObject.class))) count = 0;
+		for (TreeItem<?> child : node.getChildren()) {
+			count += count(child);
+		}
+		return count;
+	}
 }

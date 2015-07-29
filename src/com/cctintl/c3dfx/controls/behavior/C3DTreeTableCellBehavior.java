@@ -3,8 +3,6 @@ package com.cctintl.c3dfx.controls.behavior;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
 
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
 

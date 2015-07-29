@@ -315,9 +315,8 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
             }
         } else {
             flow.resizeRelocate(x, y, w, h);
-
             // FIXME, CHANGE THE HEIGHT if 3D is active or not
-            if(flow.getCellCount() > 0)
+            if(flow.getCellCount() > 0 && getSkinnable().getPrefHeight() == -1)
             	getSkinnable().setPrefHeight(estimateHeight());
         }
     }

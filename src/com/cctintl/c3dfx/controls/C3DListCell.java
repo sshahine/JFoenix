@@ -38,6 +38,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
@@ -81,11 +82,15 @@ public class C3DListCell<T> extends ListCell<T> {
 			setText(null);
 			setGraphic(null);
 		}else{
-			if(item != null && (item instanceof Region || item instanceof Control)) {
+			if(item != null) {
 
 
 				Node currentNode = getGraphic();
-				Node newNode = (Node) item;
+				
+				Node newNode;
+				if((item instanceof Region || item instanceof Control))  newNode = (Node) item;
+				else newNode = new Label(item.toString());
+				
 				boolean bindRippler = false;
 				boolean addCellRippler = true;
 
@@ -93,21 +98,21 @@ public class C3DListCell<T> extends ListCell<T> {
 					// clear nodes
 					mainContainer.getChildren().clear();
 					cellContainer.getChildren().clear();
-					cellContent = (Node) item;
+					cellContent = newNode;
 
 					// build the Cell node and its rippler					
 					// RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
-					if(item instanceof C3DRippler){
+					if(newNode instanceof C3DRippler){
 						bindRippler = true;
 						// build cell container from exisiting rippler
-						cellContent = ((C3DRippler)item).getControl();						
+						cellContent = ((C3DRippler)newNode).getControl();						
 						cellContainer.getChildren().add(cellContent);
 					}
 
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
-					else if(item instanceof C3DListView<?>){
+					else if(newNode instanceof C3DListView<?>){
 						// add the sublist to the parent and style the cell as sublist item
-						((C3DListView<?>)getListView()).addSublist((C3DListView<?>) item, this.getIndex());						
+						((C3DListView<?>)getListView()).addSublist((C3DListView<?>) newNode, this.getIndex());						
 						this.getStyleClass().add("sublist-item");
 						addCellRippler = false;
 
@@ -115,7 +120,7 @@ public class C3DListCell<T> extends ListCell<T> {
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
 						group.getChildren().clear();						
-						group.getChildren().add(((C3DListView<?>)item).getGroupnode());
+						group.getChildren().add(((C3DListView<?>)newNode).getGroupnode());
 						Icon dropIcon = new Icon(AwesomeIcon.ANGLE_RIGHT, "1.2em", ";", "drop-icon");
 						group.getChildren().add(dropIcon);
 						// the margin is needed when rotating the angle
@@ -203,7 +208,7 @@ public class C3DListCell<T> extends ListCell<T> {
 					// DEFAULT BUILD  : build cell container and rippler if the cell has no rippler
 					else{
 						cellContainer.getChildren().clear();
-						cellContainer.getChildren().add((Node) item);						
+						cellContainer.getChildren().add(newNode);						
 					}
 
 					if(addCellRippler){
@@ -268,9 +273,9 @@ public class C3DListCell<T> extends ListCell<T> {
 						cellRippler = new C3DRippler(mainContainer);
 						// if the item passed to the list is C3D Rippler then we bind its color mask and position properties to the cell rippler
 						if(bindRippler){
-							cellRippler.ripplerFillProperty().bind(((C3DRippler)item).ripplerFillProperty());
-							cellRippler.maskTypeProperty().bind(((C3DRippler)item).maskTypeProperty());
-							cellRippler.positionProperty().bind(((C3DRippler)item).positionProperty());
+							cellRippler.ripplerFillProperty().bind(((C3DRippler)newNode).ripplerFillProperty());
+							cellRippler.maskTypeProperty().bind(((C3DRippler)newNode).maskTypeProperty());
+							cellRippler.positionProperty().bind(((C3DRippler)newNode).positionProperty());
 						}
 						setGraphic(cellRippler);
 					}else{
