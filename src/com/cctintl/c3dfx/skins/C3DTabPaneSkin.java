@@ -198,6 +198,8 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 //		DepthManager.setDepth(getSkinnable(), 2);
 
 		tabContentRegions = FXCollections.<TabContentRegion> observableArrayList();
+		tabsContainer = new AnchorPane();
+		tabsContainerHolder = new AnchorPane();
 
 		for (Tab tab : getSkinnable().getTabs()) {
 			addTabContent(tab);
@@ -209,9 +211,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		getChildren().add(tabHeaderArea);
 		DepthManager.setDepth(tabHeaderArea, 1);
 
-		tabsContainer = new AnchorPane();
 //		tabsContainer.setStyle("-fx-border-color:RED;");
-		tabsContainerHolder = new AnchorPane();
 		tabsContainerHolder.getChildren().add(tabsContainer);
 		getChildren().add(tabsContainerHolder);
 
@@ -406,7 +406,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		tabContentRegion.setClip(new Rectangle());
 		tabContentRegions.add(tabContentRegion);
 		// We want the tab content to always sit below the tab headers
-		getChildren().add(0, tabContentRegion);
+		tabsContainer.getChildren().add(0, tabContentRegion);
 	}
 
 	private void removeTabContent(Tab tab) {
@@ -596,14 +596,11 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		tabsContainerHolder.resize(contentWidth, contentHeight);
 		tabsContainerHolder.relocate(contentStartX, contentStartY);
 
-		tabsContainer.getChildren().clear();
-
 		tabsContainer.resize(contentWidth * tabContentRegions.size(), contentHeight);
 
 		for (int i = 0, max = tabContentRegions.size(); i < max; i++) {
 			TabContentRegion tabContent = tabContentRegions.get(i);
 			tabContent.setVisible(true);
-			tabsContainer.getChildren().add(tabContent);
 
 			tabContent.setTranslateX(contentWidth*i);
 
