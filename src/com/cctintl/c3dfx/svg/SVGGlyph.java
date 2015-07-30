@@ -9,6 +9,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 
+/**
+ * @author sshahine
+ *
+ */
+
 public class SVGGlyph extends Pane {
 	private final int glyphId;
 	private final String name;

@@ -29,6 +29,11 @@ import javafx.stage.Stage;
 import com.cctintl.c3dfx.svg.SVGGlyph;
 import com.cctintl.c3dfx.svg.SVGGlyphLoader;
 
+/**
+ * @author sshahine
+ *
+ */
+
 public class IcoMoonFontViewer extends Application {
 
 	private GlyphDetailViewer glyphDetailViewer = new GlyphDetailViewer();
