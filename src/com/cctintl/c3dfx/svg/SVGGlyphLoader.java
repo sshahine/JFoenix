@@ -11,7 +11,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
+import javafx.beans.binding.Bindings;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +40,16 @@ public class SVGGlyphLoader {
 		return glyphsMap.get(glyphName).build();
 	}
 	
+	public static SVGGlyph getIcoMoonGlyph(String glyphName){
+		SVGGlyph glyph = glyphsMap.get(glyphName).build();
+		// apply transformation is the svg from icomoon is flipped
+		glyph.getTransforms().add(new Scale(1,-1));
+		Translate height = new Translate();
+		height.yProperty().bind(Bindings.createDoubleBinding(()-> -glyph.getHeight() , glyph.heightProperty()));
+		glyph.getTransforms().add(height);
+		return glyph;
+	}
+	
 	public static Set<String> getAllGlyphsIDs(){
 		return glyphsMap.keySet();
 	}
@@ -55,7 +68,8 @@ public class SVGGlyphLoader {
 	            }
 	        });
 			
-			Document doc = docBuilder.parse(new File(url.toURI()));	
+			File svgFontFile = new File(url.toURI());
+			Document doc = docBuilder.parse(svgFontFile);	
 			doc.getDocumentElement().normalize();
 			
 			NodeList glyphsList = doc.getElementsByTagName("glyph");
@@ -66,7 +80,7 @@ public class SVGGlyphLoader {
 				
 				 String glyphId = glyphName.getNodeValue();
 				 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i, glyphId, (String)glyph.getAttributes().getNamedItem("d").getNodeValue());
-				 glyphsMap.put(glyphId, glyphPane);
+				 glyphsMap.put(svgFontFile.getName() + "." + glyphId, glyphPane);
 				 
 			}
 			

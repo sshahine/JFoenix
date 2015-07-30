@@ -38,10 +38,12 @@ public class IcoMoonFontViewer extends Application {
 
 	private GlyphDetailViewer glyphDetailViewer = new GlyphDetailViewer();
 
+	private static String fileName = "icomoon.svg";
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		SVGGlyphLoader.loadGlyphsFont(IcoMoonFontViewer.class.getResource("/resources/fonts/icomoon.svg"));
+		SVGGlyphLoader.loadGlyphsFont(IcoMoonFontViewer.class.getResource("/resources/fonts/" + fileName));
 		
 		stage.setTitle("IcoMoon SVG Font Viewer");
 
@@ -57,7 +59,7 @@ public class IcoMoonFontViewer extends Application {
 
 	private ScrollPane allGlyphs() throws IOException {
 		
-		List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs().stream().map(item -> SVGGlyphLoader.getGlyph(item)).collect(Collectors.toList());
+		List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs().stream().map(item -> SVGGlyphLoader.getIcoMoonGlyph(item)).collect(Collectors.toList());
 		glyphs.forEach(glyph -> glyph.setSize(16, 16));
 		List<Button> iconButtons = glyphs.stream().map(this::createIconButton).collect(Collectors.toList());
 		iconButtons.get(0).fire();
@@ -83,7 +85,7 @@ public class IcoMoonFontViewer extends Application {
 	}
 
 	private void viewGlyphDetail(SVGGlyph glyph) {
-		glyphDetailViewer.setGlyph(SVGGlyphLoader.getGlyph(glyph.getName()));
+		glyphDetailViewer.setGlyph(SVGGlyphLoader.getIcoMoonGlyph(fileName  + "." + glyph.getName()));
 	}
 
 	public static void main(String[] args) {
