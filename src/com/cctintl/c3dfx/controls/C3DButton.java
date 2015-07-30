@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -38,6 +40,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.paint.Color;
 
 import com.cctintl.c3dfx.converters.ButtonTypeConverter;
 import com.cctintl.c3dfx.skins.C3DButtonSkin;
@@ -47,6 +50,7 @@ public class C3DButton extends Button {
 	
 	public C3DButton() {
 		super();
+		if(this.getText()==null) this.setText("Button");
 		initialize();
 	}	
 		
@@ -61,13 +65,28 @@ public class C3DButton extends Button {
 
     private void initialize() {
     	this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-    	if(this.getText()==null) this.setText("Button");
     }
     
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new C3DButtonSkin(this);
 	}
+	
+	
+	private ObjectProperty<Color> ripplerFill = new SimpleObjectProperty<>(null);
+	
+	public final ObjectProperty<Color> ripplerFillProperty() {
+		return this.ripplerFill;
+	}
+
+	public final Color getRipplerFill() {
+		return this.ripplerFillProperty().get();
+	}
+
+	public final void setRipplerFill(final Color ripplerFill) {
+		this.ripplerFillProperty().set(ripplerFill);
+	}
+	
 	
 	/***************************************************************************
 	 *                                                                         *
@@ -135,6 +154,6 @@ public class C3DButton extends Button {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-	
+
 	
 }

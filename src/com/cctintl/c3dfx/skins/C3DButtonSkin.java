@@ -125,6 +125,8 @@ public class C3DButtonSkin extends ButtonSkin {
 				clickedAnimation.play();
 			}
 		});
+		
+		button.ripplerFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 
 		updateButtonType(button.getButtonType());
 		updateChildren();
@@ -149,13 +151,19 @@ public class C3DButtonSkin extends ButtonSkin {
 				buttonRect.setArcHeight(radius);
 				buttonRect.setArcWidth(radius);
 			}
-			if(getChildren().get(0) instanceof LabeledText){
-				buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
-				((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
-			}else if(getChildren().get(0) instanceof Label){
-				buttonRippler.setRipplerFill(((Label)getChildren().get(0)).getTextFill());			
-				((Label)getChildren().get(0)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+			
+			if(((C3DButton)getSkinnable()).getRipplerFill() == null){
+				if(getChildren().get(0) instanceof LabeledText){
+					buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
+					((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+				}else if(getChildren().get(0) instanceof Label){
+					buttonRippler.setRipplerFill(((Label)getChildren().get(0)).getTextFill());			
+					((Label)getChildren().get(0)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+				}
+			}else{
+				buttonRippler.setRipplerFill(((C3DButton)getSkinnable()).getRipplerFill());
 			}
+						
 			if(getChildren().get(0)!=main)
 				buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
