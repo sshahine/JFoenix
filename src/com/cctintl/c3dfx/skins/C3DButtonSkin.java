@@ -70,7 +70,7 @@ public class C3DButtonSkin extends ButtonSkin {
 	public C3DButtonSkin(C3DButton button) {
 		super(button);
 
-		if(button.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
+		if(button.getBackground() == null || button.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
 			button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
 		// create button

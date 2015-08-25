@@ -174,7 +174,7 @@ public class C3DRippler extends StackPane {
 	 *  clipping mask
 	 * @return
 	 */
-	protected Shape getMask(){
+	protected Node getMask(){
 		Shape mask = new Rectangle(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
 		if(maskType.get().equals(C3DRippler.RipplerMask.CIRCLE))
 			mask = new Circle(control.getBoundsInParent().getWidth()/2 , control.getBoundsInParent().getHeight()/2, (control.getBoundsInParent().getWidth()/2) - 0.1, Color.BLUE);	

@@ -32,7 +32,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 
 	ObservableList<TreeItem<T>> originalItems = FXCollections.observableArrayList();
 	
-	private FilteredList<TreeItem<T>> filteredList ;
+	private FilteredList<TreeItem<T>> filteredItems ;
 	
 	/***************************************************************************
 	 *                                                                         *
@@ -73,7 +73,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 			}
 		});
 		
-		this.filteredList.predicateProperty().bind(Bindings.createObjectBinding(() -> {			
+		this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {			
             return child -> {
                 // Set the predicate of child items to force filtering
                 if (child instanceof RecursiveTreeItem) {
@@ -98,10 +98,10 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
         }, this.predicate));
 		
 		
-		this.filteredList.predicateProperty().addListener((o,oldVal,newVal)->{
+		this.filteredItems.predicateProperty().addListener((o,oldVal,newVal)->{
 			CFXUtilities.runInFXAndWait(()->{
 				getChildren().clear();
-				getChildren().addAll(filteredList);
+				getChildren().addAll(filteredItems);
 			});
 		});
 	}
@@ -112,7 +112,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 		for(T child : children)
 			originalItems.add(new RecursiveTreeItem<>(child, getGraphic(), childrenFactory));
 		
-		filteredList = new FilteredList<>(originalItems, (TreeItem<T> t) -> true);
+		filteredItems = new FilteredList<>(originalItems, (TreeItem<T> t) -> true);
 		
 		this.getChildren().addAll(originalItems);
 		

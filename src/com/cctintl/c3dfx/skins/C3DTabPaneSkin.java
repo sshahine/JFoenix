@@ -415,6 +415,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				contentRegion.removeListeners(tab);
 				getChildren().remove(contentRegion);
 				tabContentRegions.remove(contentRegion);
+				tabsContainer.getChildren().remove(contentRegion);
 				break;
 			}
 		}
@@ -609,10 +610,21 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				((Rectangle) tabContent.getClip()).setHeight(contentHeight);
 
 			}
-
+			
 			if(tabContent.getTab() == selectedTab){
-				Timeline animateTimeline = new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*i, Interpolator.EASE_BOTH)));				
-				animateTimeline.play();
+				int index = getSkinnable().getTabs().indexOf(selectedTab);
+				if(index != i) {
+					tabsContainer.setTranslateX(-contentWidth*i);
+					diffTabsIndices = i - index;
+				}else{
+					// fix X translation after changing the tabs
+					if(diffTabsIndices!=0){
+						tabsContainer.setTranslateX(tabsContainer.getTranslateX() + contentWidth*diffTabsIndices);	
+						diffTabsIndices = 0;
+					}
+					Timeline animateTimeline = new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*index, Interpolator.EASE_BOTH)));				
+					animateTimeline.play();
+				}
 			}
 
 			// we need to size all tabs, even if they aren't visible. For example,
@@ -622,6 +634,12 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 	}
 
+	/*
+	 *  keep track of indecies after changing the tabs, it used to fix 
+	 *  tabs animation after changing the tabs (remove/add)
+	 */
+	private int diffTabsIndices = 0;
+	
 	/**
 	 * Super-lazy instantiation pattern from Bill Pugh.
 	 * @treatAsPrivate implementation detail
