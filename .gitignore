@@ -23,3 +23,5 @@ hsqldbs/*
 *.ini
 [Tt]humbs.db
 *.DS_Store
+
+make/dist/C3DFX.jar
