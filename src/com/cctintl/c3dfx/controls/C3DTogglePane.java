@@ -48,6 +48,9 @@ public class C3DTogglePane extends StackPane {
 			}
 		});
 		
+		this.widthProperty().addListener((o,oldVal,newVal) -> updateToggleAnimation());
+		this.heightProperty().addListener((o,oldVal,newVal) -> updateToggleAnimation());
+		
 		toggleNode.addListener((o,oldVal,newVal)-> {
 			if(newVal != null){
 				if(getClip()!=null){
@@ -67,15 +70,21 @@ public class C3DTogglePane extends StackPane {
 	
 	public void togglePane(){
 		if(toggleAnimation == null) updateToggleAnimation();
+		this.getClip().scaleXProperty().unbind();
+		this.getClip().scaleYProperty().unbind();
 		toggleAnimation.setRate(toggleAnimation.getRate() * -1);
-		toggleAnimation.play();	
+		if(toggleAnimation.getCurrentTime().equals(Duration.millis(0)) && toggleAnimation.getRate() == -1) toggleAnimation.playFrom(Duration.millis(510));
+		else toggleAnimation.play();	
 	}
+	
 	
 	private void updateToggleAnimation(){
 		if(getContentNode() == null) return;
 		double rateX = this.getWidth()/getClip().getLayoutBounds().getWidth();
 		double rateY = this.getHeight()/getClip().getLayoutBounds().getHeight();
 		double newRate = Math.max(rateX, rateY) * getScalingFactor();
+		double animationRate = toggleAnimation == null ? -1 : toggleAnimation.getRate();
+		
 		toggleAnimation = new Timeline(
 				new KeyFrame(Duration.millis(0), new KeyValue(getClip().scaleXProperty(), 1 , Interpolator.EASE_BOTH)),
 				new KeyFrame(Duration.millis(0), new KeyValue(getClip().scaleYProperty(), 1 , Interpolator.EASE_BOTH)),
@@ -84,7 +93,24 @@ public class C3DTogglePane extends StackPane {
 				new KeyFrame(Duration.millis(350), new KeyValue(getClip().scaleYProperty(), newRate , Interpolator.EASE_BOTH)),
 				new KeyFrame(Duration.millis(370), new KeyValue(getContentNode().opacityProperty(), 0 , Interpolator.EASE_BOTH)),
 				new KeyFrame(Duration.millis(510), new KeyValue(getContentNode().opacityProperty(), 1 , Interpolator.EASE_BOTH)));
-		toggleAnimation.setRate(-1);
+		toggleAnimation.setOnFinished((finish)->{
+			if(toggleAnimation.getRate() == 1){
+				this.getClip().scaleXProperty().bind(Bindings.createDoubleBinding(()->{
+					double X = this.getWidth()/getClip().getLayoutBounds().getWidth();
+					double Y = this.getHeight()/getClip().getLayoutBounds().getHeight();
+					double scale = Math.max(X, Y) * getScalingFactor();
+					return scale;
+				}, this.widthProperty(), this.heightProperty()));
+				
+				this.getClip().scaleYProperty().bind(Bindings.createDoubleBinding(()->{
+					double X = this.getWidth()/getClip().getLayoutBounds().getWidth();
+					double Y = this.getHeight()/getClip().getLayoutBounds().getHeight();
+					double scale = Math.max(X, Y) * getScalingFactor();
+					return scale;
+				}, this.widthProperty(), this.heightProperty()));
+			}			
+		});
+		toggleAnimation.setRate(animationRate);
 	}
 	
 	/***************************************************************************
