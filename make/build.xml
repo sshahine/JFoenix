@@ -1,42 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="C3DFX" default="build.c3dfx" basedir=".">
-   <!-- Define the properties used by the build -->
-   <property name="src" location="../src" />
-   <property name="build" location="build" />
-   <property name="dist" location="dist" />
-   <property name="libs" location="../libs" />
-   <path id="path.c3dfx.lib">
-      <fileset dir="${libs}">
-         <include name="**/*.jar" />
-      </fileset>
-   </path>
-   <target name="clean" description="Delete old work and dist directories">
-      <!-- Delete the ${build} and ${dist} directory trees -->
-      <delete dir="${build}" />
-      <delete dir="${dist}" />
-   </target>
-   <target name="init">
-      <!-- Create the time stamp -->
-      <tstamp />
-      <!-- Create the build directory structure used by compile -->
-      <mkdir dir="${build}" />
-   </target>
-   <target name="compile" depends="init" description="compile the source ">
-      <!-- Compile the java code from ${src} into ${build} -->
-      <javac srcdir="${src}" destdir="${build}">
-         <classpath>
-            <path refid="path.c3dfx.lib" />
-         </classpath>
-         <compilerarg value="-Xlint" />
-      </javac>
-   </target>
-   <target name="dist" depends="compile" description="generate the distribution">
-      <!-- Create the distribution directory -->
-      <mkdir dir="${dist}" />
-      <!-- Put everything in ${build} into the C3DFX.jar file -->
-      <jar jarfile="${dist}/C3DFX.jar" basedir="${build}" />
-   </target>
-   <target name="build.c3dfx" depends="clean,dist">
-   		<delete dir="${build}" />
-   </target>
+	<!-- Define the properties used by the build -->
+	<property name="src" location="../src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="libs" location="../libs" />
+
+	
+	<path id="path.c3dfx.lib">
+		<fileset dir="${libs}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="clean" description="Delete old work and dist directories">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+	
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath>
+				<path refid="path.c3dfx.lib" />
+			</classpath>
+		<compilerarg value="-Xlint" />
+		</javac>
+	</target>
+	
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+		<!-- Put everything in ${build} into the C3DFX.jar file -->
+		<jar jarfile="${dist}/C3DFX.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="io.datafx.controller.flow.Flow.MainDemo" />
+				<attribute name="Class-Path" value="${jar.classpath}" />
+				<attribute name="Implementation-Title" value="C3D launcher" />
+				<attribute name="Implementation-Vendor" value="CCT International" />
+				<attribute name="Implementation-URL" value="http://c3d.com" />
+				<attribute name="Trusted-Library" value="true" />
+				<attribute name="Permissions" value="all-permissions" />
+				<attribute name="Codebase" value="*" />
+				<attribute name="Application-Name" value="J-Foenix"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="build.c3dfx" depends="clean,dist">
+		<delete dir="${build}" />
+	</target>
 </project>
