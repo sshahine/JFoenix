@@ -57,7 +57,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-import com.cctintl.jfx.skins.C3DListViewSkin;
+import com.cctintl.jfx.skins.JFXListViewSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.SizeConverter;
 
@@ -78,7 +78,7 @@ public class JFXListView<T> extends ListView<T> {
 
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DListViewSkin<T>(this);
+		return new JFXListViewSkin<T>(this);
 	}
 
 	private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);

@@ -43,7 +43,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 
 import com.cctintl.jfx.converters.ButtonTypeConverter;
-import com.cctintl.jfx.skins.C3DButtonSkin;
+import com.cctintl.jfx.skins.JFXButtonSkin;
 
 public class JFXButton extends Button {
 	
@@ -69,7 +69,7 @@ public class JFXButton extends Button {
     
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DButtonSkin(this);
+		return new JFXButtonSkin(this);
 	}
 	
 	

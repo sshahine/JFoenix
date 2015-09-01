@@ -26,7 +26,7 @@
 package com.cctintl.jfx.controls;
 
 
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -44,7 +44,7 @@ public class JFXToolbar extends BorderPane {
 		leftBox.getStyleClass().add("tool-bar-left-box");
 		this.setRight(rightBox);
 		rightBox.getStyleClass().add("tool-bar-right-box");
-		DepthManager.setDepth(this, 1);
+		JFXDepthManager.setDepth(this, 1);
 	}
 	
 	/***************************************************************************

@@ -28,9 +28,9 @@ package com.cctintl.jfx.skins;
 import com.cctintl.jfx.controls.JFXListCell;
 import com.sun.javafx.scene.control.skin.ListCellSkin;
 
-public class C3DListCellSkin<T> extends ListCellSkin<T> {
+public class JFXListCellSkin<T> extends ListCellSkin<T> {
 
-	public C3DListCellSkin(JFXListCell<T> control) {
+	public JFXListCellSkin(JFXListCell<T> control) {
 		super(control);
 	}
 }

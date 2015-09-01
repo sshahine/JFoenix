@@ -57,7 +57,7 @@ import javafx.util.Duration;
 
 import com.cctintl.jfx.controls.events.JFXDialogEvent;
 import com.cctintl.jfx.converters.DialogTransitionConverter;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 
 @DefaultProperty(value="content")
@@ -139,7 +139,7 @@ public class JFXDialog extends StackPane {
 			contentHolder = new StackPane();
 			contentHolder.getChildren().add(content);
 			contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
-			DepthManager.setDepth(contentHolder, 4);
+			JFXDepthManager.setDepth(contentHolder, 4);
 			contentHolder.setPickOnBounds(false);
 			// ensure stackpane is never resized beyond it's preferred size
 			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);

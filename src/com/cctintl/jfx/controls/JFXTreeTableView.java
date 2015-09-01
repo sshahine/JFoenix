@@ -24,9 +24,9 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-import com.cctintl.jfx.concurrency.CFXUtilities;
+import com.cctintl.jfx.concurrency.JFXUtilities;
 import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
-import com.cctintl.jfx.skins.C3DTreeTableViewSkin;
+import com.cctintl.jfx.skins.JFXTreeTableViewSkin;
 
 /**
  * @author sshahine
@@ -58,7 +58,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	/** {@inheritDoc} */
 	@Override protected Skin<?> createDefaultSkin() {
-		return new C3DTreeTableViewSkin<S>(this);
+		return new JFXTreeTableViewSkin<S>(this);
 	}
 
 	protected void init(){
@@ -145,7 +145,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			try {
 				if(groupOrder.size() > 0){
 					groupOrder.clear();
-					CFXUtilities.runInFXAndWait(()->{
+					JFXUtilities.runInFXAndWait(()->{
 						ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
 						sortOrder.addAll(getSortOrder());
 						setRoot(originalRoot);
@@ -235,7 +235,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		// update ui
 		if(setRoot){
 			final RecursiveTreeItem<S> newParent = parent;
-			CFXUtilities.runInFX(()->{
+			JFXUtilities.runInFX(()->{
 				ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
 				sortOrder.addAll(getSortOrder());
 				setRoot(newParent);		

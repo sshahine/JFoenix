@@ -28,7 +28,7 @@ package com.cctintl.jfx.controls;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Skin;
 
-import com.cctintl.jfx.skins.C3DRadioButtonSkin;
+import com.cctintl.jfx.skins.JFXRadioButtonSkin;
 
 public class JFXRadioButton extends RadioButton {
 
@@ -51,7 +51,7 @@ public class JFXRadioButton extends RadioButton {
 	
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DRadioButtonSkin(this);
+		return new JFXRadioButtonSkin(this);
 	}
 
 }

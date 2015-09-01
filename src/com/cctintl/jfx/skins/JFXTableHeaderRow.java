@@ -4,17 +4,17 @@ import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 
-public class C3DTableHeaderRow {
+public class JFXTableHeaderRow {
 
 	private TableViewSkinBase tableSkin;
 	private TableHeaderRow headerRow;
 	
-	public C3DTableHeaderRow(final TableViewSkinBase skin) {
+	public JFXTableHeaderRow(final TableViewSkinBase skin) {
 		this.tableSkin = skin;
 		headerRow = new TableHeaderRow(skin){
 			 // protected to allow subclasses to provide a custom root header
 		    protected NestedTableColumnHeader createRootHeader() {
-		        return new C3DNestedTableColumnHeader(tableSkin, null);
+		        return new JFXNestedTableColumnHeader(tableSkin, null);
 		    }
 		};
 	}

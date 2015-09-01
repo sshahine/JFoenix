@@ -40,7 +40,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.cctintl.jfx.skins.C3DCheckBoxSkin;
+import com.cctintl.jfx.skins.JFXCheckBoxSkin;
 import com.sun.javafx.css.converters.PaintConverter;
 
 public class JFXCheckBox extends CheckBox {
@@ -62,7 +62,7 @@ public class JFXCheckBox extends CheckBox {
 
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DCheckBoxSkin(this);
+		return new JFXCheckBoxSkin(this);
 	}
 
 

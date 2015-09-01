@@ -7,7 +7,7 @@ import javafx.application.Platform;
 /**
  * @author pmoufarrej
  */
-public class CFXUtilities {
+public class JFXUtilities {
 
 	public static void runInFX(Runnable doRun) {
 		if (Platform.isFxApplicationThread()) {

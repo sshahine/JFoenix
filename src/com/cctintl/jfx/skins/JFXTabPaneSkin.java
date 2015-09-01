@@ -91,7 +91,7 @@ import javafx.util.Duration;
 import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
 import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.sun.javafx.css.converters.EnumConverter;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
@@ -99,7 +99,7 @@ import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
 import de.jensd.fx.fontawesome.Icon;
 
-public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
+public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 	private Color defaultColor = Color.valueOf("#00BCD4"), ripplerColor = Color.valueOf("FFFF8D"), selectedTabText = Color.WHITE, unSelectedTabText = Color.LIGHTGREY;
 
@@ -116,7 +116,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 		@Override
 		public Object getBean() {
-			return C3DTabPaneSkin.this;
+			return JFXTabPaneSkin.this;
 		}
 
 		@Override
@@ -133,7 +133,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 		@Override
 		public Object getBean() {
-			return C3DTabPaneSkin.this;
+			return JFXTabPaneSkin.this;
 		}
 
 		@Override
@@ -190,12 +190,12 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	private boolean isSelectingTab, isDragged;
 	private double dragStart, offsetStart;
 
-	public C3DTabPaneSkin(TabPane tabPane) {
+	public JFXTabPaneSkin(TabPane tabPane) {
 		super(tabPane, new TabPaneBehavior(tabPane));
 
 		clipRect = new Rectangle(tabPane.getWidth(), tabPane.getHeight());
 		//getSkinnable().setClip(clipRect);
-//		DepthManager.setDepth(getSkinnable(), 2);
+//		JFXDepthManager.setDepth(getSkinnable(), 2);
 
 		tabContentRegions = FXCollections.<TabContentRegion> observableArrayList();
 		tabsContainer = new AnchorPane();
@@ -209,7 +209,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		tabHeaderArea = new TabHeaderArea();
 		tabHeaderArea.setClip(tabHeaderAreaClipRect);
 		getChildren().add(tabHeaderArea);
-		DepthManager.setDepth(tabHeaderArea, 1);
+		JFXDepthManager.setDepth(tabHeaderArea, 1);
 
 //		tabsContainer.setStyle("-fx-border-color:RED;");
 		tabsContainerHolder.getChildren().add(tabsContainer);
@@ -647,7 +647,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	private static class StyleableProperties {
 		private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
-		private final static CssMetaData<TabPane, TabAnimation> OPEN_TAB_ANIMATION = new CssMetaData<TabPane, C3DTabPaneSkin.TabAnimation>("-fx-open-tab-animation", new EnumConverter<TabAnimation>(
+		private final static CssMetaData<TabPane, TabAnimation> OPEN_TAB_ANIMATION = new CssMetaData<TabPane, JFXTabPaneSkin.TabAnimation>("-fx-open-tab-animation", new EnumConverter<TabAnimation>(
 				TabAnimation.class), TabAnimation.GROW) {
 
 			@Override
@@ -657,12 +657,12 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			@Override
 			public StyleableProperty<TabAnimation> getStyleableProperty(TabPane node) {
-				C3DTabPaneSkin skin = (C3DTabPaneSkin) node.getSkin();
+				JFXTabPaneSkin skin = (JFXTabPaneSkin) node.getSkin();
 				return (StyleableProperty<TabAnimation>) (WritableValue<TabAnimation>) skin.openTabAnimation;
 			}
 		};
 
-		private final static CssMetaData<TabPane, TabAnimation> CLOSE_TAB_ANIMATION = new CssMetaData<TabPane, C3DTabPaneSkin.TabAnimation>("-fx-close-tab-animation", new EnumConverter<TabAnimation>(
+		private final static CssMetaData<TabPane, TabAnimation> CLOSE_TAB_ANIMATION = new CssMetaData<TabPane, JFXTabPaneSkin.TabAnimation>("-fx-close-tab-animation", new EnumConverter<TabAnimation>(
 				TabAnimation.class), TabAnimation.GROW) {
 
 			@Override
@@ -672,7 +672,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			@Override
 			public StyleableProperty<TabAnimation> getStyleableProperty(TabPane node) {
-				C3DTabPaneSkin skin = (C3DTabPaneSkin) node.getSkin();
+				JFXTabPaneSkin skin = (JFXTabPaneSkin) node.getSkin();
 				return (StyleableProperty<TabAnimation>) (WritableValue<TabAnimation>) skin.closeTabAnimation;
 			}
 		};
@@ -1791,7 +1791,7 @@ public class C3DTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		private WeakInvalidationListener weakDisableListener = new WeakInvalidationListener(disableListener);
 
 		public TabMenuItem(final Tab tab) {
-			super(tab.getText(), C3DTabPaneSkin.clone(tab.getGraphic()));
+			super(tab.getText(), JFXTabPaneSkin.clone(tab.getGraphic()));
 			this.tab = tab;
 			setDisable(tab.isDisable());
 			tab.disableProperty().addListener(weakDisableListener);

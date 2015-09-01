@@ -46,12 +46,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 import com.cctintl.jfx.controls.JFXListView;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.sun.javafx.scene.control.behavior.ListViewBehavior;
 import com.sun.javafx.scene.control.skin.resources.ControlResources;
 
 
-public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListViewBehavior<T>, ListCell<T>> {
+public class JFXListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListViewBehavior<T>, ListCell<T>> {
     
     /**
      * Region placed over the top of the flow (and possibly the header row) if
@@ -73,11 +73,11 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
 
     private ObservableList<T> listViewItems;
 
-    public C3DListViewSkin(final JFXListView<T> listView) {
+    public JFXListViewSkin(final JFXListView<T> listView) {
         super(listView, new ListViewBehavior<T>(listView));
 
-        DepthManager.setDepth(flow, listView.depthProperty().get());
-        listView.depthProperty().addListener((o,oldVal,newVal)->DepthManager.setDepth(flow, newVal));
+        JFXDepthManager.setDepth(flow, listView.depthProperty().get());
+        listView.depthProperty().addListener((o,oldVal,newVal)->JFXDepthManager.setDepth(flow, newVal));
         
         updateListViewItems();
 
@@ -85,7 +85,7 @@ public class C3DListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
         flow.setId("virtual-flow");
         flow.setPannable(IS_PANNABLE);
         flow.setVertical(getSkinnable().getOrientation() == Orientation.VERTICAL);
-        flow.setCreateCell(flow1 -> C3DListViewSkin.this.createCell());
+        flow.setCreateCell(flow1 -> JFXListViewSkin.this.createCell());
         flow.setFixedCellSize(listView.getFixedCellSize());
         getChildren().add(flow);
         

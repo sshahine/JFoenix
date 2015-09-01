@@ -41,7 +41,7 @@ import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
 import com.sun.javafx.scene.control.skin.RadioButtonSkin;
 
-public class C3DRadioButtonSkin extends RadioButtonSkin {
+public class JFXRadioButtonSkin extends RadioButtonSkin {
 
 	private boolean compInitialized;
 	private double padding = 15;
@@ -59,7 +59,7 @@ public class C3DRadioButtonSkin extends RadioButtonSkin {
 	private final AnchorPane container = new AnchorPane();
 	private double labelOffset = -1;
 
-	public C3DRadioButtonSkin(RadioButton control) {
+	public JFXRadioButtonSkin(RadioButton control) {
 		super(control);
 
 		radio = new Circle();

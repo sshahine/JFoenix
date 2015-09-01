@@ -35,14 +35,14 @@ import com.cctintl.jfx.controls.JFXToggleNode;
 import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
-public class C3DToggleNodeSkin extends ToggleButtonSkin {
+public class JFXToggleNodeSkin extends ToggleButtonSkin {
 
 	private final StackPane main = new StackPane();
 	private JFXRippler rippler;
 	private boolean invalid = true;
 
 
-	public C3DToggleNodeSkin(JFXToggleNode toggleNode) {
+	public JFXToggleNodeSkin(JFXToggleNode toggleNode) {
 		super(toggleNode);
 		if(toggleNode.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
 			toggleNode.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));

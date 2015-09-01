@@ -45,7 +45,7 @@ import javafx.util.Duration;
 import com.cctintl.jfx.controls.JFXButton;
 import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.controls.JFXButton.ButtonType;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
@@ -55,7 +55,7 @@ import com.sun.javafx.scene.control.skin.LabeledText;
  * TODO: C3D Button doesn't support borders yet
  */
 
-public class C3DButtonSkin extends ButtonSkin {
+public class JFXButtonSkin extends ButtonSkin {
 
 	private final StackPane buttonContainer = new StackPane();
 	private JFXRippler buttonRippler;
@@ -66,7 +66,7 @@ public class C3DButtonSkin extends ButtonSkin {
 	
 	private boolean invalid = true;
 
-	public C3DButtonSkin(JFXButton button) {
+	public JFXButtonSkin(JFXButton button) {
 		super(button);
 
 		buttonRippler = new JFXRippler(new StackPane()){
@@ -157,7 +157,7 @@ public class C3DButtonSkin extends ButtonSkin {
 	private void updateButtonType(ButtonType type){
 		switch (type) {
 		case RAISED:
-			DepthManager.setDepth(buttonContainer, 2);
+			JFXDepthManager.setDepth(buttonContainer, 2);
 			clickedAnimation = new ButtonClickTransition(); 
 			break;
 		default:
@@ -172,16 +172,16 @@ public class C3DButtonSkin extends ButtonSkin {
 		public ButtonClickTransition() {
 			super(buttonContainer, new Timeline(
 					new KeyFrame(Duration.ZERO,
-							new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), DepthManager.getShadowAt(2).radiusProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), DepthManager.getShadowAt(2).spreadProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), DepthManager.getShadowAt(2).offsetXProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), DepthManager.getShadowAt(2).offsetYProperty().get(), Interpolator.EASE_BOTH)
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), JFXDepthManager.getShadowAt(2).radiusProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), JFXDepthManager.getShadowAt(2).spreadProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), JFXDepthManager.getShadowAt(2).offsetXProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), JFXDepthManager.getShadowAt(2).offsetYProperty().get(), Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(1000),
-									new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), DepthManager.getShadowAt(5).radiusProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), DepthManager.getShadowAt(5).spreadProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), DepthManager.getShadowAt(5).offsetXProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), DepthManager.getShadowAt(5).offsetYProperty().get(), Interpolator.EASE_BOTH)
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), JFXDepthManager.getShadowAt(5).radiusProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), JFXDepthManager.getShadowAt(5).spreadProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), JFXDepthManager.getShadowAt(5).offsetXProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), JFXDepthManager.getShadowAt(5).offsetYProperty().get(), Interpolator.EASE_BOTH)
 									)
 					)
 					);

@@ -26,7 +26,7 @@ import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
  *
  * @author Shadi Shaheen
  */
-public class GenericEditableTreeTableCell<S, T> extends C3DTreeTableCell<S, T> {
+public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 	protected EditorNodeBuilder builder;
 	protected Region editorNode;
 

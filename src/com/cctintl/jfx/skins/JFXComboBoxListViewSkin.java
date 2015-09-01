@@ -68,7 +68,7 @@ import com.sun.javafx.scene.traversal.Direction;
 import com.sun.javafx.scene.traversal.ParentTraversalEngine;
 import com.sun.javafx.scene.traversal.TraversalContext;
 
-public class C3DComboBoxListViewSkin<T> extends ComboBoxPopupControl<T> {
+public class JFXComboBoxListViewSkin<T> extends ComboBoxPopupControl<T> {
 
 	// By default we measure the width of all cells in the ListView. If this
 	// is too burdensome, the developer may set a property in the ComboBox
@@ -141,7 +141,7 @@ public class C3DComboBoxListViewSkin<T> extends ComboBoxPopupControl<T> {
 	 *                                                                         *
 	 **************************************************************************/   
 
-	public C3DComboBoxListViewSkin(final JFXComboBox<T> comboBox) {
+	public JFXComboBoxListViewSkin(final JFXComboBox<T> comboBox) {
 		super(comboBox, new ComboBoxListViewBehavior<T>(comboBox));
 		this.comboBox = comboBox;
 		updateComboBoxItems();
@@ -645,7 +645,7 @@ public class C3DComboBoxListViewSkin<T> extends ComboBoxPopupControl<T> {
 			@Override protected double computePrefWidth(double height) {
 				double pw;
 				if (getSkin() instanceof ListViewSkin) {
-					C3DListViewSkin<?> skin = (C3DListViewSkin<?>)getSkin();
+					JFXListViewSkin<?> skin = (JFXListViewSkin<?>)getSkin();
 					if (itemCountDirty) {
 						skin.updateRowCount();
 						itemCountDirty = false;

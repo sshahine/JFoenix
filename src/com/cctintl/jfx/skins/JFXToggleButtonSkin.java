@@ -44,7 +44,7 @@ import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
 import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
-public class C3DToggleButtonSkin extends ToggleButtonSkin {
+public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
 	private final AnchorPane main = new AnchorPane();
 	private Line line;
@@ -66,7 +66,7 @@ public class C3DToggleButtonSkin extends ToggleButtonSkin {
 	private boolean invalid = true;
 
 
-	public C3DToggleButtonSkin(JFXToggleButton toggleButton) {
+	public JFXToggleButtonSkin(JFXToggleButton toggleButton) {
 		super(toggleButton);
 		// hide the togg	le button
 		toggleButton.setStyle("-fx-background-color:TRANSPARENT");

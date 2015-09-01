@@ -5,14 +5,14 @@ import javafx.scene.control.TreeTableView;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 
-public class C3DTreeTableViewSkin<S> extends TreeTableViewSkin<S> {
+public class JFXTreeTableViewSkin<S> extends TreeTableViewSkin<S> {
 
-	public C3DTreeTableViewSkin(TreeTableView<S> treeTableView) {
+	public JFXTreeTableViewSkin(TreeTableView<S> treeTableView) {
 		super(treeTableView);
 	}
 	
     protected TableHeaderRow createTableHeaderRow() {
-    	C3DTableHeaderRow c3dHeaderRow = new C3DTableHeaderRow(this);
+    	JFXTableHeaderRow c3dHeaderRow = new JFXTableHeaderRow(this);
     	return c3dHeaderRow.getHeaderRow();
     }
 

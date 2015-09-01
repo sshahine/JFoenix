@@ -40,7 +40,7 @@ import com.cctintl.jfx.controls.JFXProgressBar;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
-public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, BehaviorBase<ProgressIndicator>> {
+public class JFXProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, BehaviorBase<ProgressIndicator>> {
 
 	private Color indicatorColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
 	private double trackStart, trackLength;
@@ -50,7 +50,7 @@ public class C3DProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 
 	private Timeline timeline;
 
-	public C3DProgressBarSkin(JFXProgressBar bar) {
+	public JFXProgressBarSkin(JFXProgressBar bar) {
 		super(bar, new BehaviorBase<ProgressIndicator>(bar, Collections.emptyList()));
 
 		initialize();

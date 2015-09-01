@@ -40,7 +40,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.cctintl.jfx.skins.C3DToggleButtonSkin;
+import com.cctintl.jfx.skins.JFXToggleButtonSkin;
 import com.sun.javafx.css.converters.PaintConverter;
 
 public class JFXToggleButton extends ToggleButton {
@@ -52,7 +52,7 @@ public class JFXToggleButton extends ToggleButton {
 	
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DToggleButtonSkin(this);
+		return new JFXToggleButtonSkin(this);
 	}
 	
 	private void initialize() {

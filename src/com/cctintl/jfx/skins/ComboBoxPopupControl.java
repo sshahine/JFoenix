@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 2015, CCT and/or its affiliates. All rights reserved.
- * CCT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
 package com.cctintl.jfx.skins;
 
 import javafx.beans.InvalidationListener;

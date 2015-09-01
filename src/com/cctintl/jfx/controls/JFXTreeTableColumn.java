@@ -7,7 +7,7 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
 
-import com.cctintl.jfx.controls.cells.editors.base.C3DTreeTableCell;
+import com.cctintl.jfx.controls.cells.editors.base.JFXTreeTableCell;
 import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
 
 
@@ -34,7 +34,7 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		this.setCellFactory(new Callback<TreeTableColumn<S,T>, TreeTableCell<S,T>>() {
 			@Override
 			public TreeTableCell<S, T> call(TreeTableColumn<S, T> param) {
-				return new C3DTreeTableCell<S, T>(){
+				return new JFXTreeTableCell<S, T>(){
 					 @Override protected void updateItem(T item, boolean empty) {
 		                    if (item == getItem()) return;
 		                    super.updateItem(item, empty);

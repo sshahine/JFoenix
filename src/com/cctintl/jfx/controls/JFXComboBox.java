@@ -45,7 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 import com.cctintl.jfx.converters.base.NodeConverter;
-import com.cctintl.jfx.skins.C3DComboBoxListViewSkin;
+import com.cctintl.jfx.skins.JFXComboBoxListViewSkin;
 
 public class JFXComboBox<T> extends ComboBox<T> {
 
@@ -63,7 +63,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 		});
 	}
     @Override protected Skin<?> createDefaultSkin() {
-        return new C3DComboBoxListViewSkin<T>(this);
+        return new JFXComboBoxListViewSkin<T>(this);
     }
 
     
@@ -87,7 +87,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
     public final ReadOnlyObjectProperty<JFXTextField> c3dEditorProperty() { 
         if (editor == null) {
             editor = new ReadOnlyObjectWrapper<JFXTextField>(this, "editor");
-            textField = new C3DComboBoxListViewSkin.FakeFocusTextField();
+            textField = new JFXComboBoxListViewSkin.FakeFocusTextField();
             editor.set(textField);
         }
         return editor.getReadOnlyProperty(); 

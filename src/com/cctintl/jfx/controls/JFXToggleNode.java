@@ -29,7 +29,7 @@ import javafx.beans.DefaultProperty;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 
-import com.cctintl.jfx.skins.C3DToggleNodeSkin;
+import com.cctintl.jfx.skins.JFXToggleNodeSkin;
 
 @DefaultProperty(value="graphic")
 public class JFXToggleNode extends ToggleButton {
@@ -41,7 +41,7 @@ public class JFXToggleNode extends ToggleButton {
 	
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DToggleNodeSkin(this);
+		return new JFXToggleNodeSkin(this);
 	}
 	
 	private void initialize() {

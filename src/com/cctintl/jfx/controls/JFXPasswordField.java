@@ -44,7 +44,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.cctintl.jfx.skins.C3DPasswordFieldSkin;
+import com.cctintl.jfx.skins.JFXPasswordFieldSkin;
 import com.cctintl.jfx.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.PaintConverter;
 
@@ -63,7 +63,7 @@ public class JFXPasswordField extends PasswordField {
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DPasswordFieldSkin(this);
+		return new JFXPasswordFieldSkin(this);
 	}
 
 	/***************************************************************************

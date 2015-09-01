@@ -17,12 +17,12 @@ import com.cctintl.jfx.controls.behavior.JFXTreeTableCellBehavior;
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
 import com.sun.javafx.scene.control.skin.TableCellSkinBase;
 
-public class C3DTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S,T>, TreeTableCellBehavior<S,T>> {
+public class JFXTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S,T>, TreeTableCellBehavior<S,T>> {
     
 //    private final TreeTableCellSkinWrapper<S, T> javaSkin;
 	 private final TreeTableColumn<S,T> tableColumn;
     
-    public C3DTreeTableCellSkin(TreeTableCell<S,T> treeTableCell) {
+    public JFXTreeTableCellSkin(TreeTableCell<S,T> treeTableCell) {
         super(treeTableCell, new JFXTreeTableCellBehavior<S,T>(treeTableCell));
 //        javaSkin = new TreeTableCellSkinWrapper<>(treeTableCell);
         tableColumn = treeTableCell.getTableColumn();
@@ -81,7 +81,7 @@ public class C3DTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S
 //        leftPadding += nodeLevel * indentPerLevel;
 
         // add in the width of the disclosure node, if one exists
-        Map<Control, Double> mdwp = C3DTreeTableRowSkin.maxDisclosureWidthMap;
+        Map<Control, Double> mdwp = JFXTreeTableRowSkin.maxDisclosureWidthMap;
         leftPadding += mdwp.containsKey(treeTable) ? mdwp.get(treeTable) : 0;
 
         // adding in the width of the graphic on the tree item

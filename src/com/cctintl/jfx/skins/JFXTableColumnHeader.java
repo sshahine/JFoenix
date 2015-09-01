@@ -25,7 +25,7 @@ import com.sun.javafx.scene.control.skin.TableViewSkinBase;
  *
  */
 
-public class C3DTableColumnHeader extends TableColumnHeader {
+public class JFXTableColumnHeader extends TableColumnHeader {
 
 	private StackPane container = new StackPane();
 	private StackPane arrowContainer = new StackPane();
@@ -36,7 +36,7 @@ public class C3DTableColumnHeader extends TableColumnHeader {
 	private boolean invalid = true;
 	private Insets oldMargin = null;
 	
-	public C3DTableColumnHeader(TableViewSkinBase skin, TableColumnBase tc) {
+	public JFXTableColumnHeader(TableViewSkinBase skin, TableColumnBase tc) {
 		super(skin, tc);		
 	}
 

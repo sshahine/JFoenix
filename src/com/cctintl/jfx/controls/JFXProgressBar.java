@@ -28,7 +28,7 @@ package com.cctintl.jfx.controls;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Skin;
 
-import com.cctintl.jfx.skins.C3DProgressBarSkin;
+import com.cctintl.jfx.skins.JFXProgressBarSkin;
 
 public class JFXProgressBar extends ProgressBar {
 
@@ -46,7 +46,7 @@ public class JFXProgressBar extends ProgressBar {
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DProgressBarSkin(this);
+		return new JFXProgressBarSkin(this);
 	}
 
 	private void initialize() {

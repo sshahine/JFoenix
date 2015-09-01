@@ -32,7 +32,7 @@ import com.sun.javafx.scene.control.skin.VirtualFlow;
  * @param <T>
  */
 
-public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
+public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
 
 	static final Map<Control, Double> maxDisclosureWidthMap = new WeakHashMap<Control, Double>();
@@ -57,7 +57,7 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 	// this vairable is used to hold the expanded/collapsed row index
 	private static int expandedIndex = -1; 
 	// this variable is used to hold the rippler while expanding/collapsing a row
-	private static C3DTreeTableRowSkin<?> oldSkin = null;
+	private static JFXTreeTableRowSkin<?> oldSkin = null;
 	// this variable indicates whether an expand/collapse operation is triggered
 	private boolean expandTriggered = false;
 
@@ -72,7 +72,7 @@ public class C3DTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 	private Timeline collapsedAnimation;
 	private Animation expandedAnimation;
 
-	public C3DTreeTableRowSkin(TreeTableRow<T> control) {
+	public JFXTreeTableRowSkin(TreeTableRow<T> control) {
 		super(control);
 		getSkinnable().indexProperty().addListener((o,oldVal,newVal)->{
 			if(newVal.intValue() != -1){

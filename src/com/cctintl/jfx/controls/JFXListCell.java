@@ -47,7 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import com.cctintl.jfx.skins.C3DListCellSkin;
+import com.cctintl.jfx.skins.JFXListCellSkin;
 
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.jensd.fx.fontawesome.Icon;
@@ -72,7 +72,7 @@ public class JFXListCell<T> extends ListCell<T> {
 
 	@Override
 	protected Skin<?> createDefaultSkin()	{
-		return new C3DListCellSkin<T>(this);
+		return new JFXListCellSkin<T>(this);
 	}
 
 	@Override

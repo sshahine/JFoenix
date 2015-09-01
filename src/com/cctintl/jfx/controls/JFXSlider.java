@@ -39,7 +39,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 
 import com.cctintl.jfx.converters.IndicatorPositionConverter;
-import com.cctintl.jfx.skins.C3DSliderSkin;
+import com.cctintl.jfx.skins.JFXSliderSkin;
 
 public class JFXSlider extends Slider {
 
@@ -61,7 +61,7 @@ public class JFXSlider extends Slider {
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DSliderSkin(this);
+		return new JFXSliderSkin(this);
 	}
 
 	/*

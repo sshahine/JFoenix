@@ -45,7 +45,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.cctintl.jfx.skins.C3DTextFieldSkin;
+import com.cctintl.jfx.skins.JFXTextFieldSkin;
 import com.cctintl.jfx.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.PaintConverter;
 
@@ -63,7 +63,7 @@ public class JFXTextField extends TextField {
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DTextFieldSkin(this);
+		return new JFXTextFieldSkin(this);
 	}
 
 	private void initialize() {

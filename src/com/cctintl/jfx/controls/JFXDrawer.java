@@ -56,7 +56,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import com.cctintl.jfx.controls.events.JFXDrawerEvent;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 
 public class JFXDrawer extends StackPane {
@@ -102,7 +102,7 @@ public class JFXDrawer extends StackPane {
 
 		sidePane.getStyleClass().add("c3d-drawer-side-pane");
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
-		DepthManager.setDepth(sidePane, 2);
+		JFXDepthManager.setDepth(sidePane, 2);
 		sidePane.setPickOnBounds(false);
 
 		this.getChildren().add(content);		

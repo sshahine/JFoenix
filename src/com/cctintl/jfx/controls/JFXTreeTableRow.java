@@ -3,7 +3,7 @@ package com.cctintl.jfx.controls;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TreeTableRow;
 
-import com.cctintl.jfx.skins.C3DTreeTableRowSkin;
+import com.cctintl.jfx.skins.JFXTreeTableRowSkin;
 
 /**
  * @author sshahine
@@ -18,7 +18,7 @@ public class JFXTreeTableRow<T> extends TreeTableRow<T> {
 	}
 	
     @Override protected Skin<?> createDefaultSkin() {
-    	return new C3DTreeTableRowSkin<T>(this);
+    	return new JFXTreeTableRowSkin<T>(this);
     }
 	
 }

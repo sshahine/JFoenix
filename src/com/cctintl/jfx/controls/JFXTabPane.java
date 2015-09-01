@@ -29,7 +29,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 
-import com.cctintl.jfx.skins.C3DTabPaneSkin;
+import com.cctintl.jfx.skins.JFXTabPaneSkin;
 
 public class JFXTabPane extends TabPane {
 
@@ -42,7 +42,7 @@ public class JFXTabPane extends TabPane {
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new C3DTabPaneSkin(this);
+		return new JFXTabPaneSkin(this);
 	}
 
 	private void initialize() {

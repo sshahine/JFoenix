@@ -53,7 +53,7 @@ import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 /**
  * Region/css based skin for JFXSlider
 */
-public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
+public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	/** Track if slider is vertical/horizontal and cause re layout */
 	private boolean isHorizontal, isIndicatorLeft;
@@ -70,7 +70,7 @@ public class C3DSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 	private Timeline timeline;
 
-	public C3DSliderSkin(JFXSlider slider) {
+	public JFXSliderSkin(JFXSlider slider) {
 		super(slider, new SliderBehavior(slider));
 
 		isIndicatorLeft = slider.getIndicatorPosition() == IndicatorPosition.LEFT ? true : false;

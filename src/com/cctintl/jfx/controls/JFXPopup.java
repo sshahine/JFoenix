@@ -42,7 +42,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 
 @DefaultProperty(value="content")
@@ -109,7 +109,7 @@ public class JFXPopup extends StackPane {
 			contentHolder.prefHeightProperty().bind(this.content.prefHeightProperty());
 			contentHolder.getStyleClass().add("c3d-popup-holder");
 			contentHolder.getTransforms().add(scaleTransform);			
-			DepthManager.setDepth(contentHolder, 4);
+			JFXDepthManager.setDepth(contentHolder, 4);
 			// to allow closing he popup when clicking on the shadowed area
 			contentHolder.setPickOnBounds(false);
 			

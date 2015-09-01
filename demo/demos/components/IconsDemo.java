@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
-import com.cctintl.jfx.effects.DepthManager;
+import com.cctintl.jfx.effects.JFXDepthManager;
 
 import de.jensd.fx.fontawesome.Icon;
 
@@ -29,7 +29,7 @@ public class IconsDemo extends Application {
 		Icon l1 = new Icon("HEART");
 		l1.getStyleClass().add("icon");
 //		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
-		DepthManager.setDepth(l1, 1);
+		JFXDepthManager.setDepth(l1, 1);
 		
 		JFXRippler r = new JFXRippler(l1,RipplerPos.BACK);
 		r.getStyleClass().add("icons-rippler");
@@ -39,7 +39,7 @@ public class IconsDemo extends Application {
 		Icon l2 = new Icon("STAR");
 		l2.getStyleClass().add("icon");
 //		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
-		DepthManager.setDepth(l2, 1);
+		JFXDepthManager.setDepth(l2, 1);
 		main.getChildren().add(new JFXRippler(l2));
 		
 				

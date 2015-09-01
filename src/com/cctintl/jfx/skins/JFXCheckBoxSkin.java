@@ -50,7 +50,7 @@ import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
-public class C3DCheckBoxSkin extends CheckBoxSkin {
+public class JFXCheckBoxSkin extends CheckBoxSkin {
 
 	private final StackPane box = new StackPane();
 	private double lineThick = 2;
@@ -70,7 +70,7 @@ public class C3DCheckBoxSkin extends CheckBoxSkin {
 
 	private boolean invalid = true;
 
-	public C3DCheckBoxSkin(JFXCheckBox control) {
+	public JFXCheckBoxSkin(JFXCheckBox control) {
 		super(control);
 
 		box.setMinSize(20, 20);

@@ -43,25 +43,25 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
-import com.cctintl.jfx.controls.JFXTextField;
+import com.cctintl.jfx.controls.JFXPasswordField;
 import com.cctintl.jfx.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
-public class C3DTextFieldSkin extends TextFieldSkin{
+public class JFXPasswordFieldSkin extends TextFieldSkin{
 
 	private AnchorPane cursorPane = new AnchorPane();
+	
 	private Line line = new Line();
 	private Line focusedLine = new Line();
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
-
+	
 	private double endX;
 	private double startX;
 	private double mid ;
@@ -76,25 +76,22 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 	private boolean errorShowen = false;
 	private double currentFieldHeight = -1;
 	private double errorLabelInitHeight = 0;
-	
-	private boolean heightChanged = false;
-	
+
 	private Timeline hideErrorAnimation;
-	private ParallelTransition transition;
 
-
-	public C3DTextFieldSkin(JFXTextField field) {
+	
+	public JFXPasswordFieldSkin(JFXPasswordField field) {
 		super(field);
-
-		// initial styles
+		//initial styles
 		//		field.setStyle("-fx-background-color: transparent ;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080;-fx-alignment: top-left ;");
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 		field.setAlignment(Pos.TOP_LEFT);
 
+
 		errorLabel.getStyleClass().add("errorLabel");
 		errorLabel.setWrapText(true);		
-		
-//		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
+		errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
+		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
 		//		errorLabel.setStyle("-fx-border-color:BLUE;");
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
@@ -102,12 +99,12 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorContainer = new HBox();
 		errorContainer.getChildren().add(errorLabelContainer);
 		errorContainer.getChildren().add(errorIcon);
-		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
 		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
 		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
+		//		errorContainer.setStyle("-fx-border-color:GREEN;");
 
 		this.getChildren().add(errorContainer);
 
@@ -118,7 +115,6 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				if(oldErrorLabelHeight == -1)
 					oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
 
-				heightChanged = true;
 				double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight +  newVal.doubleValue();
 				// show the error
 				Timeline errorAnimation = new Timeline(
@@ -157,19 +153,16 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
-			else {
-				if(transition!=null) transition.stop();
-				focusedLine.setOpacity(0);	
-			}
+			else focusedLine.setOpacity(0);	
 		});
 
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
 			field.setMaxWidth(newVal.doubleValue());
 			field.setMinWidth(newVal.doubleValue());
 		});
+
 	}
 
-	
 	@Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 		return super.computePrefHeight(width, topInset, rightInset, bottomInset + 5, leftInset);
 	}
@@ -181,22 +174,20 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		return super.computeMinHeight(width, topInset, rightInset, bottomInset + 1, leftInset);
 	}
 
+
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
-
+		
 		if(invalid){
-
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
-			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
 			
-			// draw lines
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
 			line.endYProperty().bind(line.startYProperty());
-			line.strokeProperty().bind(((JFXTextField)getSkinnable()).unFocusColorProperty());
+			line.strokeProperty().bind(((JFXPasswordField)getSkinnable()).unFocusColorProperty());
 			line.setStrokeWidth(1);
 			line.setTranslateY(-2);
 			line.setStrokeType(StrokeType.CENTERED);
@@ -211,6 +202,8 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 				startX = 0;
 				endX = newVal.doubleValue();
 				mid = (endX - startX )/2;
+				focusedLine.setStartX(mid);
+				focusedLine.setEndX(mid);
 			});
 
 			startX = 0;
@@ -218,10 +211,9 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			mid = (endX - startX )/2;
 			focusedLine.setStartX(mid);
 			focusedLine.setEndX(mid);
-			
 			focusedLine.startYProperty().bind(line.startYProperty());
 			focusedLine.endYProperty().bind(line.startYProperty());
-			focusedLine.strokeProperty().bind(((JFXTextField)getSkinnable()).focusColorProperty());
+			focusedLine.strokeProperty().bind(((JFXPasswordField)getSkinnable()).focusColorProperty());
 			focusedLine.setStrokeWidth(2);
 			focusedLine.setTranslateY(-1);
 			focusedLine.setStrokeType(StrokeType.CENTERED);
@@ -239,7 +231,7 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 
 			cursorPane.setMaxSize(40, textPane.getHeight() - 5);
 			cursorPane.setMinSize(40, textPane.getHeight() - 5);
-			cursorPane.backgroundProperty().bind(Bindings.createObjectBinding(()-> new Background(new BackgroundFill(((JFXTextField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)), ((JFXTextField)getSkinnable()).focusColorProperty()));
+			cursorPane.backgroundProperty().bind(Bindings.createObjectBinding(()-> new Background(new BackgroundFill(((JFXPasswordField)getSkinnable()).getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)), ((JFXPasswordField)getSkinnable()).focusColorProperty()));
 			cursorPane.setTranslateX(40);
 			cursorPane.setVisible(false);
 
@@ -247,67 +239,58 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 			textPane.getChildren().add(cursorPane);
 
 			invalid = false;
-		}		
-
+		}				
 	}
 
 	private void focus(){
-		/*
-		 * in case the method request layout is not called before focused
-		 * this is bug is reported while editing treetableview cells
-		 */
-		if(textPane == null){
-			Platform.runLater(()->focus());
-		}else{
-			// create the focus animations
-			focusedLine.endXProperty().unbind();
-			Timeline linesAnimation = new Timeline(
-					new KeyFrame(
-							Duration.ZERO,       
-							new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
-							new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
-							new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
-							),
-							new KeyFrame(
-									Duration.millis(5),
-									new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
-									),
-									new KeyFrame(
-											Duration.millis(160),
-											new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
-											new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
-											)
+		Timeline linesAnimation = new Timeline(
+				new KeyFrame(
+						Duration.ZERO,       
+						new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
+						new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
+						new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
+						),
+						new KeyFrame(
+								Duration.millis(5),
+								new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
+								),
+								new KeyFrame(
+										Duration.millis(160),
+										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
+										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
+										)
 
-					);
-			linesAnimation.setOnFinished((finish)->focusedLine.endXProperty().bind(textPane.widthProperty()));
-			Timeline cursorAnimation = new Timeline(
-					new KeyFrame(
-							Duration.ZERO,       
-							new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
-							new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-							new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
-							new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
-							),
-							new KeyFrame(
-									Duration.millis(5),
-									new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
-									),
-									new KeyFrame(
-											Duration.millis(160),
-											new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
-											new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
-											new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-											)
+				);
 
-					);
-			transition = new ParallelTransition();
-			transition.getChildren().add(linesAnimation);
-			if(getSkinnable().getText().length() == 0)
-				transition.getChildren().add(cursorAnimation);
-			transition.play();
-		}
+		Timeline cursorAnimation = new Timeline(
+				new KeyFrame(
+						Duration.ZERO,       
+						new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
+						new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
+						new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
+						new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
+						),
+						new KeyFrame(
+								Duration.millis(5),
+								new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+								),
+								new KeyFrame(
+										Duration.millis(160),
+										new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
+										new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
+										new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
+										)
+
+				);
+		ParallelTransition transition = new ParallelTransition();
+		transition.getChildren().add(linesAnimation);
+		if(getSkinnable().getText().length() == 0)
+			transition.getChildren().add(cursorAnimation);
+		transition.play();
 	}
 
+
+	
 	private void showError(ValidatorBase validator){
 		// set text in error label
 		errorLabel.setText(validator.getMessage());
@@ -329,13 +312,10 @@ public class C3DTextFieldSkin extends TextFieldSkin{
 		errorShowen = true;
 	}
 
-	private void hideError(){	
-		if(heightChanged){
-			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
-			// reset the height of text field
-			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();	
-			heightChanged = false;
-		}
+	private void hideError(){		
+		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+		// rest the height of text field
+		new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(getSkinnable().minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
 		// clear error label text
 		errorLabel.setText(null);
 		oldErrorLabelHeight = errorLabelInitHeight;		

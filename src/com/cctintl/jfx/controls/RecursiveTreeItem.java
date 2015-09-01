@@ -13,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
 
-import com.cctintl.jfx.concurrency.CFXUtilities;
+import com.cctintl.jfx.concurrency.JFXUtilities;
 import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
 
 /**
@@ -101,7 +101,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 		
 		
 		this.filteredItems.predicateProperty().addListener((o,oldVal,newVal)->{
-			CFXUtilities.runInFXAndWait(()->{
+			JFXUtilities.runInFXAndWait(()->{
 				getChildren().clear();
 				getChildren().addAll(filteredItems);
 			});
