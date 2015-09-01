@@ -12,8 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DToggleButton;
-import com.cctintl.c3dfx.controls.C3DToggleNode;
+import com.cctintl.jfx.controls.JFXToggleButton;
+import com.cctintl.jfx.controls.JFXToggleNode;
 
 import de.jensd.fx.fontawesome.Icon;
 
@@ -31,9 +31,9 @@ public class ToggleButtonDemo extends Application {
 		ToggleButton button = new ToggleButton("JavaFx Toggle");
 		pane.getChildren().add(button);
 		
-		pane.getChildren().add(new C3DToggleButton());
+		pane.getChildren().add(new JFXToggleButton());
 		
-		C3DToggleNode node = new C3DToggleNode();
+		JFXToggleNode node = new JFXToggleNode();
 		Icon value = new Icon("HEART");
 		value.setPadding(new Insets(10));
 		node.setGraphic(value);

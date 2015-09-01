@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import java.lang.String?>
-<?import com.cctintl.c3dfx.controls.C3DListView?>
+<?import com.cctintl.jfx.controls.JFXListView?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
 	<styleClass>	

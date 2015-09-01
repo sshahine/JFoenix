@@ -19,13 +19,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.FlowPane?>
-<?import com.cctintl.c3dfx.controls.C3DToolbar?>
-<?import com.cctintl.c3dfx.controls.C3DDrawer?>
-<?import com.cctintl.c3dfx.controls.C3DHamburger?>
-<?import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition?>
-<?import com.cctintl.c3dfx.controls.C3DRippler?>
-<?import com.cctintl.c3dfx.controls.C3DListView?>
-<?import com.cctintl.c3dfx.controls.C3DPopup?>
+<?import com.cctintl.jfx.controls.JFXToolbar?>
+<?import com.cctintl.jfx.controls.JFXDrawer?>
+<?import com.cctintl.jfx.controls.JFXHamburger?>
+<?import com.cctintl.jfx.transitions.hamburger.HamburgerBackArrowBasicTransition?>
+<?import com.cctintl.jfx.controls.JFXRippler?>
+<?import com.cctintl.jfx.controls.JFXListView?>
+<?import com.cctintl.jfx.controls.JFXPopup?>
 <?import javafx.scene.layout.BorderPane?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"

@@ -11,8 +11,8 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DListView;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXListView;
 
 @FXMLController(value = "/resources/fxml/ui/ListView.fxml" , title = "Material Design Example")
 public class ListViewController {
@@ -21,13 +21,13 @@ public class ListViewController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
-	@FXML private C3DListView<?> list1;
-	@FXML private C3DListView<?> list2;
-	@FXML private C3DListView<?> subList;
+	@FXML private JFXListView<?> list1;
+	@FXML private JFXListView<?> list2;
+	@FXML private JFXListView<?> subList;
 	
-	@FXML private C3DButton button3D;
-	@FXML private C3DButton collapse;
-	@FXML private C3DButton expand;
+	@FXML private JFXButton button3D;
+	@FXML private JFXButton collapse;
+	@FXML private JFXButton expand;
 	
 	private int counter = 0;
 	

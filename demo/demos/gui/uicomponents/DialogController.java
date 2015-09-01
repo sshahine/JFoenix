@@ -11,9 +11,9 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DDialog;
-import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXDialog;
+import com.cctintl.jfx.controls.JFXDialog.C3DDialogTransition;
 
 @FXMLController(value = "/resources/fxml/ui/Dialog.fxml" , title = "Material Design Example")
 public class DialogController {
@@ -21,20 +21,20 @@ public class DialogController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
-	@FXML private C3DButton centerButton;
+	@FXML private JFXButton centerButton;
 
-	@FXML private C3DButton topButton;
+	@FXML private JFXButton topButton;
 
-	@FXML private C3DButton rightButton;
+	@FXML private JFXButton rightButton;
 
-	@FXML private C3DButton bottomButton;
+	@FXML private JFXButton bottomButton;
 
-	@FXML private C3DButton leftButton;
+	@FXML private JFXButton leftButton;
 
-	@FXML private C3DButton acceptButton;
+	@FXML private JFXButton acceptButton;
 
 	@FXML
-	private C3DDialog dialog;
+	private JFXDialog dialog;
 
 	@PostConstruct
 	public void init() throws FlowException, VetoException {

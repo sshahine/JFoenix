@@ -16,10 +16,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DDialog;
-import com.cctintl.c3dfx.controls.C3DDialog.C3DDialogTransition;
-import com.cctintl.c3dfx.controls.C3DListView;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXDialog;
+import com.cctintl.jfx.controls.JFXListView;
+import com.cctintl.jfx.controls.JFXDialog.C3DDialogTransition;
 
 public class DialogDemo extends Application {
 
@@ -29,7 +29,7 @@ public class DialogDemo extends Application {
 	public void start(Stage stage) throws Exception {
 
 		
-		C3DListView<Label> list = new C3DListView<Label>();
+		JFXListView<Label> list = new JFXListView<Label>();
 		
 		list.getItems().add(new Label("SSS"));
 		list.getItems().add(new Label("SSS1"));
@@ -54,29 +54,29 @@ public class DialogDemo extends Application {
 				
 		FlowPane pane = new FlowPane();
 		pane.setStyle("-fx-background-color:WHITE");
-		C3DButton button = new C3DButton("CENTER");
-		button.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.CENTER).show());
+		JFXButton button = new JFXButton("CENTER");
+		button.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.CENTER).show());
 		
-		C3DButton button1 = new C3DButton("TOP");
-		button1.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), javaList, C3DDialogTransition.TOP).show());
+		JFXButton button1 = new JFXButton("TOP");
+		button1.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), javaList, C3DDialogTransition.TOP).show());
 		
-		C3DButton button2 = new C3DButton("BOTTOM");
-		button2.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.BOTTOM).show());
+		JFXButton button2 = new JFXButton("BOTTOM");
+		button2.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.BOTTOM).show());
 		
-		C3DButton button3 = new C3DButton("LEFT");
-		button3.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.LEFT).show());
+		JFXButton button3 = new JFXButton("LEFT");
+		button3.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.LEFT).show());
 		
-		C3DButton button4 = new C3DButton("RIGHT");
-		button4.setOnMouseClicked((e)-> new C3DDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.RIGHT).show());
+		JFXButton button4 = new JFXButton("RIGHT");
+		button4.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.RIGHT).show());
 		
 		
-		C3DButton button3D = new C3DButton("3D");
+		JFXButton button3D = new JFXButton("3D");
 		button3D.setOnMouseClicked((e)-> list.depthProperty().set(++counter%2));
 		
-		C3DButton buttonExpand = new C3DButton("EXPAND");
+		JFXButton buttonExpand = new JFXButton("EXPAND");
 		buttonExpand.setOnMouseClicked((e)-> {list.depthProperty().set(1);list.setExpanded(true);});
 		
-		C3DButton buttonCollapse = new C3DButton("COLLAPSE");
+		JFXButton buttonCollapse = new JFXButton("COLLAPSE");
 		buttonCollapse.setOnMouseClicked((e)-> {list.depthProperty().set(1);list.setExpanded(false);});
 		
 		pane.getChildren().add(button);

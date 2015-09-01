@@ -12,8 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DTextField;
-import com.cctintl.c3dfx.validation.RequiredFieldValidator;
+import com.cctintl.jfx.controls.JFXTextField;
+import com.cctintl.jfx.validation.RequiredFieldValidator;
 
 public class InputDemo extends Application {
 
@@ -28,18 +28,18 @@ public class InputDemo extends Application {
 		
 		pane.getChildren().add(new TextField());
 		
-		C3DTextField field = new C3DTextField();
+		JFXTextField field = new JFXTextField();
 		field.setPromptText("Type Something");
 		pane.getChildren().add(field);
 				
 		
-		C3DTextField disabledField = new C3DTextField();
+		JFXTextField disabledField = new JFXTextField();
 		disabledField.setPromptText("I'm disabled..");
 		disabledField.setDisable(true);
 		pane.getChildren().add(disabledField);
 		
 		
-		C3DTextField validationField = new C3DTextField();
+		JFXTextField validationField = new JFXTextField();
 		validationField.setPromptText("With Validation..");
 		RequiredFieldValidator validator = new RequiredFieldValidator();
 		validationField.getValidators().add(validator);

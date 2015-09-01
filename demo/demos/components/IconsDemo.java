@@ -7,9 +7,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
-import com.cctintl.c3dfx.controls.DepthManager;
+import com.cctintl.jfx.controls.JFXRippler;
+import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
+import com.cctintl.jfx.effects.DepthManager;
 
 import de.jensd.fx.fontawesome.Icon;
 
@@ -31,7 +31,7 @@ public class IconsDemo extends Application {
 //		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
 		DepthManager.setDepth(l1, 1);
 		
-		C3DRippler r = new C3DRippler(l1,RipplerPos.BACK);
+		JFXRippler r = new JFXRippler(l1,RipplerPos.BACK);
 		r.getStyleClass().add("icons-rippler");
 		main.getChildren().add(r);
 		
@@ -40,7 +40,7 @@ public class IconsDemo extends Application {
 		l2.getStyleClass().add("icon");
 //		l1.setBorder(new Border(new BorderStroke(Color.BLUE,BorderStrokeStyle.SOLID,new CornerRadii(10), new BorderWidths(1))));
 		DepthManager.setDepth(l2, 1);
-		main.getChildren().add(new C3DRippler(l2));
+		main.getChildren().add(new JFXRippler(l2));
 		
 				
 		StackPane pane = new StackPane();

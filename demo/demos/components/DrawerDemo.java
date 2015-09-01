@@ -8,8 +8,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DDrawer;
-import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.jfx.controls.JFXDrawer;
+import com.cctintl.jfx.controls.JFXHamburger;
 
 public class DrawerDemo extends Application {
 
@@ -17,11 +17,11 @@ public class DrawerDemo extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		FlowPane content = new FlowPane();
-		C3DHamburger h1 = new C3DHamburger();
+		JFXHamburger h1 = new JFXHamburger();
 		FlowPane.setMargin(h1, new Insets(300,0,0,400));
 		content.getChildren().add(h1);
 
-		C3DDrawer drawer = new C3DDrawer();
+		JFXDrawer drawer = new JFXDrawer();
 		drawer.setDrawerWidth(250);
 		drawer.setContent(content);
 		

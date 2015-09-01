@@ -5,7 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DSpinner;
+import com.cctintl.jfx.controls.JFXSpinner;
 
 import demos.MainDemo;
 
@@ -20,7 +20,7 @@ public class SpinnerDemo extends Application {
 		stage.setScene(scene);
 		stage.setTitle("C3D Spinner");
 		stage.show();
-		C3DSpinner spinner = new C3DSpinner();
+		JFXSpinner spinner = new JFXSpinner();
 		group.getChildren().add(spinner);
 	}
 

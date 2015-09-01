@@ -25,11 +25,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DSlider;
-import com.cctintl.c3dfx.controls.C3DSlider.IndicatorPosition;
-import com.cctintl.c3dfx.svg.SVGGlyph;
-import com.cctintl.c3dfx.svg.SVGGlyphLoader;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXSlider;
+import com.cctintl.jfx.controls.JFXSlider.IndicatorPosition;
+import com.cctintl.jfx.svg.SVGGlyph;
+import com.cctintl.jfx.svg.SVGGlyphLoader;
 
 /**
  * @author sshahine
@@ -80,7 +80,7 @@ public class IcoMoonFontViewer extends Application {
 	}
 
 	private Button createIconButton(SVGGlyph glyph) {
-		C3DButton button = new C3DButton(null, glyph);
+		JFXButton button = new JFXButton(null, glyph);
 //		button.setStyle("-fx-background-color:#0F9D58;");
 		button.setRipplerFill(Color.valueOf("#0F9D58"));
 //		glyph.setStyle("-fx-background-color:WHITE;");
@@ -107,7 +107,7 @@ class GlyphDetailViewer extends VBox {
 	private final Label idLabel = new Label();
 	private final Label nameLabel = new Label();
 	private final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
-	private final C3DSlider sizeSlider = new C3DSlider(MIN_ICON_SIZE, MAX_ICON_SIZE, DEFAULT_ICON_SIZE);
+	private final JFXSlider sizeSlider = new JFXSlider(MIN_ICON_SIZE, MAX_ICON_SIZE, DEFAULT_ICON_SIZE);
 	private final Label sizeLabel = new Label();
 	private StackPane centeredGlyph = new StackPane();
 

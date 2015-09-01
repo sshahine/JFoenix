@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.StackPane?>
-<?import com.cctintl.c3dfx.controls.C3DButton?>
-<?import com.cctintl.c3dfx.controls.C3DProgressBar?>
+<?import com.cctintl.jfx.controls.JFXButton?>
+<?import com.cctintl.jfx.controls.JFXProgressBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 

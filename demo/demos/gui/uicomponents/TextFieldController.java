@@ -11,13 +11,13 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DTextField;
+import com.cctintl.jfx.controls.JFXTextField;
 
 @FXMLController(value = "/resources/fxml/ui/TextField.fxml", title = "Material Design Example")
 public class TextFieldController {
 
 	@FXML
-	private C3DTextField validatedText;
+	private JFXTextField validatedText;
 
 	@FXMLViewFlowContext
 	private ViewFlowContext context;

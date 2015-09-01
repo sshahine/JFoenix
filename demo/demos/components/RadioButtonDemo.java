@@ -9,7 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DRadioButton;
+import com.cctintl.jfx.controls.JFXRadioButton;
 
 public class RadioButtonDemo extends Application {
 	@Override
@@ -17,12 +17,12 @@ public class RadioButtonDemo extends Application {
 		try {
 			final ToggleGroup group = new ToggleGroup();
 
-			C3DRadioButton c3dRadio = new C3DRadioButton("C3D Radio");
+			JFXRadioButton c3dRadio = new JFXRadioButton("C3D Radio");
 			c3dRadio.setId("c3d_radio");
 			c3dRadio.setPadding(new Insets(10));
 			c3dRadio.setToggleGroup(group);
 
-			C3DRadioButton fxRadio = new C3DRadioButton("JavaFX Radio");
+			JFXRadioButton fxRadio = new JFXRadioButton("JavaFX Radio");
 			fxRadio.setId("javafx_radio");
 			fxRadio.setPadding(new Insets(10));
 			fxRadio.setToggleGroup(group);

@@ -15,15 +15,15 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DProgressBar;
+import com.cctintl.jfx.controls.JFXProgressBar;
 
 @FXMLController(value = "/resources/fxml/ui/ProgressBar.fxml", title = "Material Design Example")
 public class ProgressBarController {
 
 	@FXML
-	private C3DProgressBar progress1;
+	private JFXProgressBar progress1;
 	@FXML
-	private C3DProgressBar progress2;
+	private JFXProgressBar progress2;
 
 	@FXMLViewFlowContext
 	private ViewFlowContext context;

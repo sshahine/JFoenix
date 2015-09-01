@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
+import com.cctintl.jfx.controls.JFXButton;
 
 public class ButtonDemo extends Application {
 
@@ -20,14 +20,14 @@ public class ButtonDemo extends Application {
 		main.setHgap(20);
 		
 		main.getChildren().add(new Button("Java Button"));
-		C3DButton jfoenixButton = new C3DButton("JFoenix Button");
+		JFXButton jfoenixButton = new JFXButton("JFoenix Button");
 		main.getChildren().add(jfoenixButton);
 		
-		C3DButton button = new C3DButton("Raised Button".toUpperCase());
+		JFXButton button = new JFXButton("Raised Button".toUpperCase());
 		button.getStyleClass().add("c3dbutton-raised");
 		main.getChildren().add(button);
 		
-		C3DButton button1 = new C3DButton("DISABLED");
+		JFXButton button1 = new JFXButton("DISABLED");
 		button1.setDisable(true);
 		main.getChildren().add(button1);
 		

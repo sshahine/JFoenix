@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.FlowPane?>
-<?import com.cctintl.c3dfx.controls.C3DButton?>
+<?import com.cctintl.jfx.controls.JFXButton?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
-<?import com.cctintl.c3dfx.controls.C3DDialog?>
-<?import com.cctintl.c3dfx.controls.C3DDialogLayout?>
+<?import com.cctintl.jfx.controls.JFXDialog?>
+<?import com.cctintl.jfx.controls.JFXDialogLayout?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>

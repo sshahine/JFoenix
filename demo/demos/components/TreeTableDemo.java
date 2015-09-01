@@ -15,14 +15,14 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DTextField;
-import com.cctintl.c3dfx.controls.C3DTreeTableColumn;
-import com.cctintl.c3dfx.controls.C3DTreeTableView;
-import com.cctintl.c3dfx.controls.RecursiveTreeItem;
-import com.cctintl.c3dfx.controls.cells.editors.TextFieldEditorBuilder;
-import com.cctintl.c3dfx.controls.cells.editors.base.GenericEditableTreeTableCell;
-import com.cctintl.c3dfx.controls.datamodels.treetable.RecursiveTreeObject;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXTextField;
+import com.cctintl.jfx.controls.JFXTreeTableColumn;
+import com.cctintl.jfx.controls.JFXTreeTableView;
+import com.cctintl.jfx.controls.RecursiveTreeItem;
+import com.cctintl.jfx.controls.cells.editors.TextFieldEditorBuilder;
+import com.cctintl.jfx.controls.cells.editors.base.GenericEditableTreeTableCell;
+import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
 
 
 public class TreeTableDemo extends Application {
@@ -32,21 +32,21 @@ public class TreeTableDemo extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		try {
 
-			C3DTreeTableColumn<User, String> deptColumn = new C3DTreeTableColumn<>("Department");
+			JFXTreeTableColumn<User, String> deptColumn = new JFXTreeTableColumn<>("Department");
 			deptColumn.setPrefWidth(150);
 			deptColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) ->{
 				if(deptColumn.validateValue(param)) return param.getValue().getValue().department;
 				else return deptColumn.getComputedValue(param);
 			});
 
-			C3DTreeTableColumn<User, String> empColumn = new C3DTreeTableColumn<>("Employee");
+			JFXTreeTableColumn<User, String> empColumn = new JFXTreeTableColumn<>("Employee");
 			empColumn.setPrefWidth(150);
 			empColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) ->{
 				if(empColumn.validateValue(param)) return param.getValue().getValue().userName;
 				else return empColumn.getComputedValue(param);
 			});
 
-			C3DTreeTableColumn<User, String> ageColumn = new C3DTreeTableColumn<>("Age");
+			JFXTreeTableColumn<User, String> ageColumn = new JFXTreeTableColumn<>("Age");
 			ageColumn.setPrefWidth(150);
 			ageColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) ->{
 				if(ageColumn.validateValue(param)) return param.getValue().getValue().age;
@@ -95,7 +95,7 @@ public class TreeTableDemo extends Application {
 			// build tree
 			final TreeItem<User> root = new RecursiveTreeItem<User>(users, RecursiveTreeObject::getChildren);
 			
-			C3DTreeTableView<User> treeView = new C3DTreeTableView<User>(root, users);
+			JFXTreeTableView<User> treeView = new JFXTreeTableView<User>(root, users);
 			treeView.setShowRoot(false);
 			treeView.setEditable(true);
 			treeView.getColumns().setAll(deptColumn, ageColumn, empColumn);
@@ -105,17 +105,17 @@ public class TreeTableDemo extends Application {
 			main.getChildren().add(treeView);
 
 
-			C3DButton groupButton = new C3DButton("Group");
+			JFXButton groupButton = new JFXButton("Group");
 			groupButton.setOnAction((action)->{
 				new Thread(()-> treeView.group(empColumn)).start();
 			});
 			main.getChildren().add(groupButton);
 
-			C3DButton unGroupButton = new C3DButton("unGroup");
+			JFXButton unGroupButton = new JFXButton("unGroup");
 			unGroupButton.setOnAction((action)->treeView.unGroup());
 			main.getChildren().add(unGroupButton);
 
-			C3DTextField filterField = new C3DTextField();
+			JFXTextField filterField = new JFXTextField();
 			main.getChildren().add(filterField);
 
 			Label size = new Label();

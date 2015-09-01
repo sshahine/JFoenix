@@ -8,11 +8,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerBasicCloseTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
-import com.cctintl.c3dfx.transitions.hamburger.HamburgerSlideCloseTransition;
+import com.cctintl.jfx.controls.JFXHamburger;
+import com.cctintl.jfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.cctintl.jfx.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.cctintl.jfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
+import com.cctintl.jfx.transitions.hamburger.HamburgerSlideCloseTransition;
 
 public class HamburgerDemo extends Application {
 
@@ -25,28 +25,28 @@ public class HamburgerDemo extends Application {
 		main.setHgap(20);
 		
 		
-		C3DHamburger h1 = new C3DHamburger();
+		JFXHamburger h1 = new JFXHamburger();
 		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(h1);
 		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask.setRate(burgerTask.getRate()*-1);
 			burgerTask.play();
 		});
 		
-		C3DHamburger h2 = new C3DHamburger();
+		JFXHamburger h2 = new JFXHamburger();
 		HamburgerBasicCloseTransition burgerTask1 = new HamburgerBasicCloseTransition(h2);
 		h2.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask1.setRate(burgerTask1.getRate()*-1);
 			burgerTask1.play();
 		});
 		
-		C3DHamburger h3 = new C3DHamburger();
+		JFXHamburger h3 = new JFXHamburger();
 		HamburgerBackArrowBasicTransition burgerTask2 = new HamburgerBackArrowBasicTransition(h3);
 		h3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask2.setRate(burgerTask2.getRate()*-1);
 			burgerTask2.play();
 		});
 		
-		C3DHamburger h4 = new C3DHamburger();
+		JFXHamburger h4 = new JFXHamburger();
 		HamburgerNextArrowBasicTransition burgerTask3 = new HamburgerNextArrowBasicTransition(h4);
 		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			burgerTask3.setRate(burgerTask3.getRate()*-1);

@@ -7,14 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DToolbar;
+import com.cctintl.jfx.controls.JFXToolbar;
 
 public class ToolBarDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			C3DToolbar c3dToolbar = new C3DToolbar();
+			JFXToolbar c3dToolbar = new JFXToolbar();
 			c3dToolbar.setLeftItems(new Label("Left"));
 			c3dToolbar.setRightItems(new Label("Right"));
 			StackPane main = new StackPane();

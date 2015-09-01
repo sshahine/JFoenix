@@ -8,8 +8,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.DepthManager;
+import com.cctintl.jfx.controls.JFXRippler;
+import com.cctintl.jfx.effects.DepthManager;
 
 public class RipplerDemo extends Application {
 
@@ -27,7 +27,7 @@ public class RipplerDemo extends Application {
 		Label l = new Label("Click Me");
 		l.setStyle("-fx-background-color:WHITE;");
 		l.setPadding(new Insets(20));
-		C3DRippler lrippler = new C3DRippler(l);
+		JFXRippler lrippler = new JFXRippler(l);
 		lrippler.setEnabled(false);
 		main.getChildren().add(lrippler);
 		
@@ -41,32 +41,32 @@ public class RipplerDemo extends Application {
 		l1.setStyle("-fx-background-color:WHITE;");
 		DepthManager.setDepth(l1, 1);
 		l1.setPadding(new Insets(20));
-		main.getChildren().add(new C3DRippler(l1));
+		main.getChildren().add(new JFXRippler(l1));
 		
 		Label l2 = new Label("TEST1");
 		DepthManager.setDepth(l2, 2);
 		l2.setStyle("-fx-background-color:WHITE;");
 		l2.setPadding(new Insets(20));
-		main.getChildren().add(new C3DRippler(l2));
+		main.getChildren().add(new JFXRippler(l2));
 		
 		Label l3 = new Label("TEST2");
 		DepthManager.setDepth(l3, 3);
 		l3.setStyle("-fx-background-color:WHITE;");
 		l3.setPadding(new Insets(20));
-		main.getChildren().add(new C3DRippler(l3));
+		main.getChildren().add(new JFXRippler(l3));
 		
 		
 		Label l4 = new Label("TEST3");
 		DepthManager.setDepth(l4, 4);
 		l4.setStyle("-fx-background-color:WHITE;");
 		l4.setPadding(new Insets(20));
-		main.getChildren().add(new C3DRippler(l4));
+		main.getChildren().add(new JFXRippler(l4));
 		
 		Label l5 = new Label("TEST4");
 		DepthManager.setDepth(l5, 5);
 		l5.setStyle("-fx-background-color:WHITE;");
 		l5.setPadding(new Insets(20));
-		main.getChildren().add(new C3DRippler(l5));
+		main.getChildren().add(new JFXRippler(l5));
 		
 
 		StackPane pane = new StackPane();

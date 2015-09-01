@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DListView;
+import com.cctintl.jfx.controls.JFXListView;
 
 import demos.gui.uicomponents.ButtonController;
 import demos.gui.uicomponents.CheckboxController;
@@ -89,7 +89,7 @@ public class SideMenuController {
 	private Label popup;
 	
 	@FXML
-	private C3DListView<?> sideList;
+	private JFXListView<?> sideList;
 
 	@PostConstruct
 	public void init() throws FlowException, VetoException {

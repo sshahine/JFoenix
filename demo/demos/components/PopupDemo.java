@@ -10,14 +10,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.controls.C3DListView;
-import com.cctintl.c3dfx.controls.C3DPopup;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
-import com.cctintl.c3dfx.controls.C3DRippler;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerMask;
-import com.cctintl.c3dfx.controls.C3DRippler.RipplerPos;
+import com.cctintl.jfx.controls.JFXHamburger;
+import com.cctintl.jfx.controls.JFXListView;
+import com.cctintl.jfx.controls.JFXPopup;
+import com.cctintl.jfx.controls.JFXRippler;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
+import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
+import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
 
 public class PopupDemo extends Application {
 
@@ -29,11 +29,11 @@ public class PopupDemo extends Application {
 		MenuButton button = new MenuButton("Java Menu");
 		button.getItems().setAll(item);
 
-		C3DHamburger show = new C3DHamburger();
+		JFXHamburger show = new JFXHamburger();
 		show.setPadding(new Insets(10,5,10,5));
-		C3DRippler r = new C3DRippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);
+		JFXRippler r = new JFXRippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);
 
-		C3DListView<Label> list = new C3DListView<Label>();
+		JFXListView<Label> list = new JFXListView<Label>();
 		list.getItems().add(new Label("SSS"));
 		list.getItems().add(new Label("SSS1"));
 		list.getItems().add(new Label("SSS2"));
@@ -51,7 +51,7 @@ public class PopupDemo extends Application {
 		StackPane main = new StackPane();
 		main.getChildren().add(container);
 		
-		C3DPopup popup = new C3DPopup();
+		JFXPopup popup = new JFXPopup();
 		popup.setContent(list);
 		popup.setPopupContainer(main);
 		popup.setSource(r);

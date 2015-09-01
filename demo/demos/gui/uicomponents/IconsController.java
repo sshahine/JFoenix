@@ -11,15 +11,15 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
+import com.cctintl.jfx.controls.JFXHamburger;
 
 @FXMLController(value = "/resources/fxml/ui/Icons.fxml" , title = "Material Design Example")
 public class IconsController {
 
-	@FXML private C3DHamburger burger1;
-	@FXML private C3DHamburger burger2;
-	@FXML private C3DHamburger burger3;
-	@FXML private C3DHamburger burger4;
+	@FXML private JFXHamburger burger1;
+	@FXML private JFXHamburger burger2;
+	@FXML private JFXHamburger burger3;
+	@FXML private JFXHamburger burger4;
 
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
@@ -34,7 +34,7 @@ public class IconsController {
 		bindAction(burger4);
 	}
 
-	private void bindAction(C3DHamburger burger){
+	private void bindAction(JFXHamburger burger){
 		burger.setOnMouseClicked((e)->{
 			burger.getAnimation().setRate(burger.getAnimation().getRate()*-1);
 			burger.getAnimation().play();

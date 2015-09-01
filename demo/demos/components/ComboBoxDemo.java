@@ -7,15 +7,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DComboBox;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXComboBox;
 
 public class ComboBoxDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		C3DComboBox<Label> c = new C3DComboBox<>();
+		JFXComboBox<Label> c = new JFXComboBox<>();
 		c.getItems().add(new Label("JAVA1"));
 		c.getItems().add(new Label("JAVA2"));
 		c.getItems().add(new Label("JAVA3"));
@@ -28,7 +28,7 @@ public class ComboBoxDemo extends Application {
 		pane.setStyle("-fx-background-color:WHITE");
 		pane.getChildren().add(c);
 		
-		C3DButton submitButton = new C3DButton("Submit");
+		JFXButton submitButton = new JFXButton("Submit");
 		HBox.setMargin(submitButton, new Insets(20));
 		pane.getChildren().add(submitButton);
 

@@ -16,12 +16,12 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DDrawer;
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.controls.C3DPopup;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
-import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.jfx.controls.JFXDrawer;
+import com.cctintl.jfx.controls.JFXHamburger;
+import com.cctintl.jfx.controls.JFXPopup;
+import com.cctintl.jfx.controls.JFXRippler;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
 
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
@@ -38,13 +38,13 @@ public class MainController {
 	@FXML private StackPane sideContent;
 	
 	@FXML private StackPane titleBurgerContainer;
-	@FXML private C3DHamburger titleBurger;
+	@FXML private JFXHamburger titleBurger;
 	
 	@FXML private StackPane optionsBurger;	
-	@FXML private C3DRippler optionsRippler;
+	@FXML private JFXRippler optionsRippler;
 	
-	@FXML private C3DDrawer drawer;
-	@FXML private C3DPopup toolbarPopup;
+	@FXML private JFXDrawer drawer;
+	@FXML private JFXPopup toolbarPopup;
 	@FXML private Label exit;
 
 	private FlowHandler flowHandler;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.cctintl.c3dfx.controls.C3DCheckBox?>
+<?import com.cctintl.jfx.controls.JFXCheckBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import com.cctintl.c3dfx.controls.C3DComboBox?>
+<?import com.cctintl.jfx.controls.JFXComboBox?>
 <?import javafx.collections.*?>
 <?import de.jensd.fx.fontawesome.Icon?>
 

@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import com.cctintl.c3dfx.controls.C3DProgressBar;
+import com.cctintl.jfx.controls.JFXProgressBar;
 
 public class ProgressBarDemo extends Application {
 
@@ -36,10 +36,10 @@ public class ProgressBarDemo extends Application {
 		cssBar.setPrefWidth(500);
 		cssBar.setProgress(-1.0f);
 
-		C3DProgressBar c3dBar = new C3DProgressBar();
+		JFXProgressBar c3dBar = new JFXProgressBar();
 		c3dBar.setPrefWidth(500);
 
-		C3DProgressBar c3dBarInf = new C3DProgressBar();
+		JFXProgressBar c3dBarInf = new JFXProgressBar();
 		c3dBarInf.setPrefWidth(500);
 		c3dBarInf.setProgress(-1.0f);
 

@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DCheckBox;
+import com.cctintl.jfx.controls.JFXCheckBox;
 
 public class CheckBoxDemo extends Application {
 
@@ -22,8 +22,8 @@ public class CheckBoxDemo extends Application {
 		main.setHgap(20);
 		
 		CheckBox cb = new CheckBox("CheckBox");
-		C3DCheckBox c3b = new C3DCheckBox("C3D CheckBox");
-		C3DCheckBox customC3B = new C3DCheckBox("C3D CheckBox");
+		JFXCheckBox c3b = new JFXCheckBox("C3D CheckBox");
+		JFXCheckBox customC3B = new JFXCheckBox("C3D CheckBox");
 		customC3B.getStyleClass().add("custom-c3d-check-box");
 		
 		main.getChildren().add(cb);

@@ -9,26 +9,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DSlider;
-import com.cctintl.c3dfx.controls.C3DSlider.IndicatorPosition;
+import com.cctintl.jfx.controls.JFXSlider;
+import com.cctintl.jfx.controls.JFXSlider.IndicatorPosition;
 
 public class SliderDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			C3DSlider hor_left = new C3DSlider();
+			JFXSlider hor_left = new JFXSlider();
 			hor_left.setMinWidth(500);
 
-			C3DSlider hor_right = new C3DSlider();
+			JFXSlider hor_right = new JFXSlider();
 			hor_left.setMinWidth(500);
 			hor_left.setIndicatorPosition(IndicatorPosition.RIGHT);
 
-			C3DSlider ver_left = new C3DSlider();
+			JFXSlider ver_left = new JFXSlider();
 			ver_left.setMinHeight(500);
 			ver_left.setOrientation(Orientation.VERTICAL);
 
-			C3DSlider ver_right = new C3DSlider();
+			JFXSlider ver_right = new JFXSlider();
 			ver_right.setMinHeight(500);
 			ver_right.setOrientation(Orientation.VERTICAL);
 			ver_right.setIndicatorPosition(IndicatorPosition.RIGHT);

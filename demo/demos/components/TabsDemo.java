@@ -13,8 +13,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import com.cctintl.c3dfx.controls.C3DButton;
-import com.cctintl.c3dfx.controls.C3DTabPane;
+import com.cctintl.jfx.controls.JFXButton;
+import com.cctintl.jfx.controls.JFXTabPane;
 
 public class TabsDemo extends Application {
 
@@ -30,7 +30,7 @@ public class TabsDemo extends Application {
 		Group root = new Group();
 		Scene scene = new Scene(root, 700, 250);
 
-		C3DTabPane tabPane = new C3DTabPane();
+		JFXTabPane tabPane = new JFXTabPane();
 
 		Tab tab = new Tab();
 		tab.setText(msg);
@@ -47,7 +47,7 @@ public class TabsDemo extends Application {
 		SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(1);
 
-		C3DButton button = new C3DButton("New Tab");
+		JFXButton button = new JFXButton("New Tab");
 		button.setOnMouseClicked((o) -> {
 			Tab temp = new Tab();
 			int count = tabPane.getTabs().size();

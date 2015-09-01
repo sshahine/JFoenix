@@ -12,11 +12,11 @@ import javafx.scene.layout.StackPane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.c3dfx.controls.C3DHamburger;
-import com.cctintl.c3dfx.controls.C3DPopup;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupHPosition;
-import com.cctintl.c3dfx.controls.C3DPopup.C3DPopupVPosition;
-import com.cctintl.c3dfx.controls.C3DRippler;
+import com.cctintl.jfx.controls.JFXHamburger;
+import com.cctintl.jfx.controls.JFXPopup;
+import com.cctintl.jfx.controls.JFXRippler;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {
@@ -25,17 +25,17 @@ public class PopupController {
 	private ViewFlowContext context;
 	@FXML private StackPane root;
 
-	@FXML private C3DRippler rippler1;
-	@FXML private C3DRippler rippler2;
-	@FXML private C3DRippler rippler3;
-	@FXML private C3DRippler rippler4;
+	@FXML private JFXRippler rippler1;
+	@FXML private JFXRippler rippler2;
+	@FXML private JFXRippler rippler3;
+	@FXML private JFXRippler rippler4;
 
-	@FXML private C3DHamburger burger1;
-	@FXML private C3DHamburger burger2;
-	@FXML private C3DHamburger burger3;
-	@FXML private C3DHamburger burger4;
+	@FXML private JFXHamburger burger1;
+	@FXML private JFXHamburger burger2;
+	@FXML private JFXHamburger burger3;
+	@FXML private JFXHamburger burger4;
 
-	@FXML private C3DPopup popup;
+	@FXML private JFXPopup popup;
 
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
