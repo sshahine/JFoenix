@@ -15,8 +15,8 @@ import javax.annotation.PostConstruct;
 import com.cctintl.jfx.controls.JFXHamburger;
 import com.cctintl.jfx.controls.JFXPopup;
 import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {
@@ -47,22 +47,22 @@ public class PopupController {
 
 		burger1.setOnMouseClicked((e)->{
 			popup.setSource(rippler1);
-			popup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.LEFT);
+			popup.show(PopupVPosition.TOP, PopupHPosition.LEFT);
 		});
 
 		burger2.setOnMouseClicked((e)->{
 			popup.setSource(rippler2);
-			popup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.RIGHT);
+			popup.show(PopupVPosition.TOP, PopupHPosition.RIGHT);
 		});
 
 		burger3.setOnMouseClicked((e)->{
 			popup.setSource(rippler3);
-			popup.show(C3DPopupVPosition.BOTTOM, C3DPopupHPosition.LEFT);
+			popup.show(PopupVPosition.BOTTOM, PopupHPosition.LEFT);
 		});
 
 		burger4.setOnMouseClicked((e)->{
 			popup.setSource(rippler4);
-			popup.show(C3DPopupVPosition.BOTTOM, C3DPopupHPosition.RIGHT);
+			popup.show(PopupVPosition.BOTTOM, PopupHPosition.RIGHT);
 		});
 	}
 }

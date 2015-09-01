@@ -29,16 +29,16 @@ import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
 
-import com.cctintl.jfx.controls.JFXDialog.C3DDialogTransition;
+import com.cctintl.jfx.controls.JFXDialog.DialogTransition;
 import com.sun.javafx.css.StyleConverterImpl;
 
-public class DialogTransitionConverter  extends StyleConverterImpl<String , C3DDialogTransition> {
+public class DialogTransitionConverter  extends StyleConverterImpl<String , DialogTransition> {
 
     // lazy, thread-safe instatiation
     private static class Holder {
         static final DialogTransitionConverter INSTANCE = new DialogTransitionConverter();
     }
-    public static StyleConverter<String, C3DDialogTransition> getInstance() {
+    public static StyleConverter<String, DialogTransition> getInstance() {
         return Holder.INSTANCE;
     }
     private DialogTransitionConverter() {
@@ -46,12 +46,12 @@ public class DialogTransitionConverter  extends StyleConverterImpl<String , C3DD
     }
 
     @Override
-    public C3DDialogTransition convert(ParsedValue<String,C3DDialogTransition> value, Font not_used) {
+    public DialogTransition convert(ParsedValue<String,DialogTransition> value, Font not_used) {
         String string = value.getValue();
         try {
-            return C3DDialogTransition.valueOf(string);
+            return DialogTransition.valueOf(string);
         } catch (IllegalArgumentException | NullPointerException exception) {
-            return C3DDialogTransition.CENTER;
+            return DialogTransition.CENTER;
         }
     }
     @Override

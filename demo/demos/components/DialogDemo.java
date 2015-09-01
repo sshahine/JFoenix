@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import com.cctintl.jfx.controls.JFXButton;
 import com.cctintl.jfx.controls.JFXDialog;
 import com.cctintl.jfx.controls.JFXListView;
-import com.cctintl.jfx.controls.JFXDialog.C3DDialogTransition;
+import com.cctintl.jfx.controls.JFXDialog.DialogTransition;
 
 public class DialogDemo extends Application {
 
@@ -55,19 +55,19 @@ public class DialogDemo extends Application {
 		FlowPane pane = new FlowPane();
 		pane.setStyle("-fx-background-color:WHITE");
 		JFXButton button = new JFXButton("CENTER");
-		button.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.CENTER).show());
+		button.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, DialogTransition.CENTER).show());
 		
 		JFXButton button1 = new JFXButton("TOP");
-		button1.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), javaList, C3DDialogTransition.TOP).show());
+		button1.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), javaList, DialogTransition.TOP).show());
 		
 		JFXButton button2 = new JFXButton("BOTTOM");
-		button2.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.BOTTOM).show());
+		button2.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, DialogTransition.BOTTOM).show());
 		
 		JFXButton button3 = new JFXButton("LEFT");
-		button3.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.LEFT).show());
+		button3.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, DialogTransition.LEFT).show());
 		
 		JFXButton button4 = new JFXButton("RIGHT");
-		button4.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, C3DDialogTransition.RIGHT).show());
+		button4.setOnMouseClicked((e)-> new JFXDialog((Pane)stage.getScene().getRoot(), list, DialogTransition.RIGHT).show());
 		
 		
 		JFXButton button3D = new JFXButton("3D");

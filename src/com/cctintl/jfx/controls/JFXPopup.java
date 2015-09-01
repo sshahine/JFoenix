@@ -48,8 +48,8 @@ import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 @DefaultProperty(value="content")
 public class JFXPopup extends StackPane {
 
-	public static enum C3DPopupHPosition{ RIGHT, LEFT};
-	public static enum C3DPopupVPosition{ TOP, BOTTOM};
+	public static enum PopupHPosition{ RIGHT, LEFT };
+	public static enum PopupVPosition{ TOP, BOTTOM };
 
 	private AnchorPane contentHolder;
 	private AnchorPane overlayPane;
@@ -137,16 +137,16 @@ public class JFXPopup extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign, Pane popupContainer){
+	public void show(PopupVPosition vAlign, PopupHPosition hAlign, Pane popupContainer){
 		this.setPopupContainer(popupContainer);
 		this.show(vAlign, hAlign);
 	}
 
-	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign ){
+	public void show(PopupVPosition vAlign, PopupHPosition hAlign ){
 		this.show(vAlign, hAlign, 0, 0);
 	}
 
-	public void show(C3DPopupVPosition vAlign, C3DPopupHPosition hAlign, double initOffsetX, double initOffsetY ){
+	public void show(PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY ){
 
 		offsetX = 0;
 		offsetY = 0;
@@ -176,7 +176,7 @@ public class JFXPopup extends StackPane {
 		}
 	
 		// postion the popup according to its animation
-		if(hAlign.equals(C3DPopupHPosition.RIGHT)){
+		if(hAlign.equals(PopupHPosition.RIGHT)){
 			scaleTransform.pivotXProperty().bind(content.widthProperty());
 			contentHolder.translateXProperty().bind(Bindings.createDoubleBinding(()-> -content.getWidth() + source.getBoundsInLocal().getWidth()  + offsetX , content.widthProperty(),source.boundsInLocalProperty()));
 		}else {
@@ -186,7 +186,7 @@ public class JFXPopup extends StackPane {
 			contentHolder.setTranslateX(offsetX);
 		}
 
-		if(vAlign.equals(C3DPopupVPosition.BOTTOM)){
+		if(vAlign.equals(PopupVPosition.BOTTOM)){
 			scaleTransform.pivotYProperty().bind(content.heightProperty());
 			contentHolder.translateYProperty().bind(Bindings.createDoubleBinding(()-> -content.getHeight() + source.getBoundsInLocal().getHeight()  + offsetY , content.heightProperty(),source.boundsInLocalProperty()));
 		}else {

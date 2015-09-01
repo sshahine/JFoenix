@@ -20,8 +20,8 @@ import com.cctintl.jfx.controls.JFXDrawer;
 import com.cctintl.jfx.controls.JFXHamburger;
 import com.cctintl.jfx.controls.JFXPopup;
 import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
 
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
@@ -78,7 +78,7 @@ public class MainController {
 		toolbarPopup.setPopupContainer(root);
 		toolbarPopup.setSource(optionsRippler);
 		optionsBurger.setOnMouseClicked((e) -> {
-			toolbarPopup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.RIGHT, -12, 15);
+			toolbarPopup.show(PopupVPosition.TOP, PopupHPosition.RIGHT, -12, 15);
 		});
 
 		// close application

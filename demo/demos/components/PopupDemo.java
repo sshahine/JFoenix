@@ -14,8 +14,8 @@ import com.cctintl.jfx.controls.JFXHamburger;
 import com.cctintl.jfx.controls.JFXListView;
 import com.cctintl.jfx.controls.JFXPopup;
 import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.C3DPopupVPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
+import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
 import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
 import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
 
@@ -55,7 +55,7 @@ public class PopupDemo extends Application {
 		popup.setContent(list);
 		popup.setPopupContainer(main);
 		popup.setSource(r);
-		r.setOnMouseClicked((e)-> popup.show(C3DPopupVPosition.TOP, C3DPopupHPosition.LEFT));
+		r.setOnMouseClicked((e)-> popup.show(PopupVPosition.TOP, PopupHPosition.LEFT));
 		
 		final Scene scene = new Scene(main, 800, 800);
 		scene.getStylesheets().add(DrawerDemo.class.getResource("css/styles.css").toExternalForm());

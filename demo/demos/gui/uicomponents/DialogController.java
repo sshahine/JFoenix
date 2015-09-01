@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 
 import com.cctintl.jfx.controls.JFXButton;
 import com.cctintl.jfx.controls.JFXDialog;
-import com.cctintl.jfx.controls.JFXDialog.C3DDialogTransition;
+import com.cctintl.jfx.controls.JFXDialog.DialogTransition;
 
 @FXMLController(value = "/resources/fxml/ui/Dialog.fxml" , title = "Material Design Example")
 public class DialogController {
@@ -42,27 +42,27 @@ public class DialogController {
 			Platform.runLater(()-> ((Pane)((Pane) context.getRegisteredObject("ContentPane")).getChildren().get(0)).getChildren().remove(1));
 
 		centerButton.setOnMouseClicked((e)->{
-			dialog.setTransitionType(C3DDialogTransition.CENTER);
+			dialog.setTransitionType(DialogTransition.CENTER);
 			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
 		});
 
 		topButton.setOnMouseClicked((e)->{
-			dialog.setTransitionType(C3DDialogTransition.TOP);
+			dialog.setTransitionType(DialogTransition.TOP);
 			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
 		});
 
 		rightButton.setOnMouseClicked((e)->{
-			dialog.setTransitionType(C3DDialogTransition.RIGHT);
+			dialog.setTransitionType(DialogTransition.RIGHT);
 			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
 		});
 
 		bottomButton.setOnMouseClicked((e)->{
-			dialog.setTransitionType(C3DDialogTransition.BOTTOM);
+			dialog.setTransitionType(DialogTransition.BOTTOM);
 			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
 		});
 
 		leftButton.setOnMouseClicked((e)->{
-			dialog.setTransitionType(C3DDialogTransition.LEFT);
+			dialog.setTransitionType(DialogTransition.LEFT);
 			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
 		});
 

@@ -64,7 +64,7 @@ import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 public class JFXDialog extends StackPane {
 
 	//	public static enum JFXDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
-	public static enum C3DDialogTransition{CENTER, TOP, RIGHT, BOTTOM, LEFT};
+	public static enum DialogTransition{CENTER, TOP, RIGHT, BOTTOM, LEFT};
 
 	private StackPane contentHolder;
 	private StackPane overlayPane;
@@ -77,17 +77,17 @@ public class JFXDialog extends StackPane {
 	private Transition animation;
 
 	public JFXDialog(){
-		this(null,null,C3DDialogTransition.CENTER);
+		this(null,null,DialogTransition.CENTER);
 	}
 
-	public JFXDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType) {		
+	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType) {		
 		initialize();
 		setContent(content,true);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
 	}
 
-	public JFXDialog(Pane dialogContainer, Region content, C3DDialogTransition transitionType, boolean overlayClose) {		
+	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {		
 		initialize();
 		setContent(content, overlayClose);
 		setDialogContainer(dialogContainer);
@@ -186,7 +186,7 @@ public class JFXDialog extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private Transition getShowAnimation(C3DDialogTransition transitionType){
+	private Transition getShowAnimation(DialogTransition transitionType){
 		Transition animation = null;
 		if(contentHolder!=null){
 			switch (transitionType) {		
@@ -344,29 +344,29 @@ public class JFXDialog extends StackPane {
 	private static final String DEFAULT_STYLE_CLASS = "c3d-dialog";
 
 
-	private StyleableObjectProperty<C3DDialogTransition> transitionType = new SimpleStyleableObjectProperty<C3DDialogTransition>(StyleableProperties.DIALOG_TRANSITION, JFXDialog.this, "dialogTransition", C3DDialogTransition.CENTER );
+	private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<DialogTransition>(StyleableProperties.DIALOG_TRANSITION, JFXDialog.this, "dialogTransition", DialogTransition.CENTER );
 
-	public C3DDialogTransition getTransitionType(){
-		return transitionType == null ? C3DDialogTransition.CENTER : transitionType.get();
+	public DialogTransition getTransitionType(){
+		return transitionType == null ? DialogTransition.CENTER : transitionType.get();
 	}
-	public StyleableObjectProperty<C3DDialogTransition> transitionTypeProperty(){		
+	public StyleableObjectProperty<DialogTransition> transitionTypeProperty(){		
 		return this.transitionType;
 	}
-	public void setTransitionType(C3DDialogTransition transition){
+	public void setTransitionType(DialogTransition transition){
 		this.transitionType.set(transition);
 	}
 
 
 	private static class StyleableProperties {
-		private static final CssMetaData< JFXDialog, C3DDialogTransition> DIALOG_TRANSITION =
-				new CssMetaData< JFXDialog, C3DDialogTransition>("-fx-dialog-transition",
-						DialogTransitionConverter.getInstance(), C3DDialogTransition.CENTER) {
+		private static final CssMetaData< JFXDialog, DialogTransition> DIALOG_TRANSITION =
+				new CssMetaData< JFXDialog, DialogTransition>("-fx-dialog-transition",
+						DialogTransitionConverter.getInstance(), DialogTransition.CENTER) {
 			@Override
 			public boolean isSettable(JFXDialog control) {
 				return control.transitionType == null || !control.transitionType.isBound();
 			}
 			@Override
-			public StyleableProperty<C3DDialogTransition> getStyleableProperty(JFXDialog control) {
+			public StyleableProperty<DialogTransition> getStyleableProperty(JFXDialog control) {
 				return control.transitionTypeProperty();
 			}
 		};
