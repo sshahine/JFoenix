@@ -25,3 +25,4 @@ hsqldbs/*
 *.DS_Store
 
 make/dist/C3DFX.jar
+make/dist/jfoenix.jar
