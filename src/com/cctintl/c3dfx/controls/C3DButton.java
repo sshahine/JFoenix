@@ -50,8 +50,7 @@ public class C3DButton extends Button {
 	
 	public C3DButton() {
 		super();
-		if(this.getText()==null) this.setText("Button");
-		initialize();
+		initialize();		
 	}	
 		
 	public C3DButton(String text){
@@ -65,6 +64,7 @@ public class C3DButton extends Button {
 
     private void initialize() {
     	this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+//    	if(this.getText().isEmpty()) this.setText("Button");
     }
     
 	@Override

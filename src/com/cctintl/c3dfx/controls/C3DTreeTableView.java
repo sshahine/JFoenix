@@ -121,12 +121,13 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			if(groupingSemaphore.tryAcquire()){
 				try{
 					if(originalRoot == null) originalRoot = getRoot();
+					
 					// group the data
 					Map<Object, Map<Object, ?>> groups = new HashMap<>();
 					for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
 						groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
 					groupOrder.addAll(treeTableColumns);
-
+					
 					// update table ui
 					buildGroupedRoot(groups, null, 0);
 
@@ -161,7 +162,7 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	private Map group(TreeTableColumn<S, ?> column, Map parentGroup , Object key, RecursiveTreeItem<S> root){
 		if(parentGroup.isEmpty()){
-			parentGroup = groupByFunction(root.originalItems, column);
+			parentGroup = groupByFunction(root.filteredItems, column);
 			return parentGroup;
 		}
 		Object value = parentGroup.get(key);
@@ -212,9 +213,8 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
 			setRoot = true;
 		}
-
+		
 		for(Object key : groupedItems.keySet()){
-
 			RecursiveTreeObject groupItem = new RecursiveTreeObject<>();
 			groupItem.setGroupedValue(key);
 			groupItem.setGroupedColumn(groupOrder.get(groupIndex));
@@ -225,19 +225,16 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 			Object children = groupedItems.get(key);
 			if(children instanceof List){
-				for(Object child : (List<?>)children){
-					node.originalItems.add(child);
-					node.getChildren().add(child);
-				}
+				node.originalItems.addAll((List)children);
+				node.getChildren().addAll((List)children);
 			}else if(children instanceof Map){
 				buildGroupedRoot((Map)children, node, groupIndex+1);
 			}
 		}
-
+		
 		// update ui
 		if(setRoot){
 			final RecursiveTreeItem<S> newParent = parent;
-			newParent.setPredicate(getPredicate());
 			CFXUtilities.runInFX(()->{
 				ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
 				sortOrder.addAll(getSortOrder());
@@ -266,21 +263,22 @@ public class C3DTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			@Override
 			public void run() {
 				/*
-				 *  filter both roots the grouped and ungrouped root
+				 *  filter the original root and regroup the data
 				 */
-
-				// filter the ungrouped root
-				if(originalRoot != getRoot()) new Thread(()->((RecursiveTreeItem) originalRoot).setPredicate(predicate)).start();
-
-				// fitlert the grouped root
 				new Thread(()->{
-					((RecursiveTreeItem<S>)getRoot()).setPredicate(predicate);
+					// filter the ungrouped root
+					((RecursiveTreeItem) originalRoot).setPredicate(predicate);
+					// regroup the data
+					if(!groupOrder.isEmpty()){
+						ArrayList<TreeTableColumn<S, ?>> tempGroups = new ArrayList<>(groupOrder);
+						groupOrder.clear();
+						group(tempGroups.toArray(new TreeTableColumn[tempGroups.size()]));	
+					}
 					Platform.runLater(()->{
 						getSelectionModel().select(0);	
 						setCurrentItemsCount(count(getRoot()));
 					});
 				}).start();
-				
 			}
 		},  500);
 	}

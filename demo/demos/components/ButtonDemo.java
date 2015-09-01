@@ -20,7 +20,8 @@ public class ButtonDemo extends Application {
 		main.setHgap(20);
 		
 		main.getChildren().add(new Button("Java Button"));
-		main.getChildren().add(new C3DButton("C3D Button"));
+		C3DButton jfoenixButton = new C3DButton("JFoenix Button");
+		main.getChildren().add(jfoenixButton);
 		
 		C3DButton button = new C3DButton("Raised Button".toUpperCase());
 		button.getStyleClass().add("c3dbutton-raised");
@@ -37,7 +38,7 @@ public class ButtonDemo extends Application {
 		
 		final Scene scene = new Scene(pane, 600, 400);
 		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
-		stage.setTitle("JavaFX Ripple effect and shadows ");
+		stage.setTitle("JavaFX Buttons ");
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

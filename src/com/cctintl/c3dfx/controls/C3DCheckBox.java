@@ -45,8 +45,8 @@ import com.sun.javafx.css.converters.PaintConverter;
 
 public class C3DCheckBox extends CheckBox {
 
-	public C3DCheckBox(String label){
-		super(label);
+	public C3DCheckBox(String text){
+		super(text);
 		initialize();
 	}
 
@@ -56,7 +56,8 @@ public class C3DCheckBox extends CheckBox {
 	}
 
 	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);  
+//		if(this.getText().isEmpty()) this.setText("CheckBox");
 	}
 
 	@Override

@@ -36,14 +36,19 @@ public class C3DRadioButton extends RadioButton {
 
 	public C3DRadioButton(String text) {
 		super(text);
-		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		initialize();
 	}
 
 	public C3DRadioButton() {
 		super();
-		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		initialize();
 	}
 
+	private void initialize() {
+    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);    	
+//    	if(this.getText().isEmpty()) this.setText("RadioButton");
+    }
+	
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new C3DRadioButtonSkin(this);

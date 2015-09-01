@@ -32,7 +32,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 
 	ObservableList<TreeItem<T>> originalItems = FXCollections.observableArrayList();
 	
-	private FilteredList<TreeItem<T>> filteredItems ;
+	FilteredList<TreeItem<T>> filteredItems ;
 	
 	/***************************************************************************
 	 *                                                                         *
@@ -74,28 +74,30 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 		});
 		
 		this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {			
-            return child -> {
-                // Set the predicate of child items to force filtering
-                if (child instanceof RecursiveTreeItem) {
-                	RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
-                    filterableChild.setPredicate(this.predicate.get());
-                }
-                // If there is no predicate, keep this tree item
-                if (this.predicate.get() == null)
-                    return true;
-                // If there are children, keep this tree item
-                if (child.getChildren().size() > 0)
-                    return true;
-                // If its a group node keep this item if it has children
-                if (child.getValue() instanceof RecursiveTreeObject && child.getValue().getClass() == RecursiveTreeObject.class){
-                	if(child.getChildren().size() == 0)
-                		return false;
-                	return true;
-                }
-                // Otherwise ask the TreeItemPredicate
-                return this.predicate.get().test(child);
-            };
-        }, this.predicate));
+	        return child -> {
+	            // Set the predicate of child items to force filtering
+	            if (child instanceof RecursiveTreeItem) {
+	            	if(!((RecursiveTreeItem)child).originalItems.isEmpty()){
+	            		RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
+	            		filterableChild.setPredicate(this.predicate.get());
+	            	}
+	            }
+	            // If there is no predicate, keep this tree item
+	            if (this.predicate.get() == null)
+	                return true;
+	            // If there are children, keep this tree item
+	            if (child.getChildren().size() > 0)
+	                return true;
+	            // If its a group node keep this item if it has children
+	            if (child.getValue() instanceof RecursiveTreeObject && child.getValue().getClass() == RecursiveTreeObject.class){
+	            	if(child.getChildren().size() == 0)
+	            		return false;
+	            	return true;
+	            }
+	            // Otherwise ask the TreeItemPredicate
+	            return this.predicate.get().test(child);
+	        };
+	    }, this.predicate));
 		
 		
 		this.filteredItems.predicateProperty().addListener((o,oldVal,newVal)->{
@@ -105,6 +107,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 			});
 		});
 	}
+	
 	
 	private void addChildrenListener(RecursiveTreeObject<T> value) {
 		final ObservableList<T> children = childrenFactory.call(value);

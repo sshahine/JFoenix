@@ -30,15 +30,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import com.cctintl.c3dfx.controls.C3DButton;
@@ -56,37 +57,28 @@ import com.sun.javafx.scene.control.skin.LabeledText;
 
 public class C3DButtonSkin extends ButtonSkin {
 
-	private final AnchorPane main = new AnchorPane();
-	private StackPane buttonComponents = new StackPane();
+	private final StackPane buttonContainer = new StackPane();
 	private C3DRippler buttonRippler;
-
 	private Transition clickedAnimation ;
 
 	private final Color disabledColor = Color.valueOf("#EAEAEA");
-
+	private final CornerRadii defaultRadii = new CornerRadii(3);
+	
 	private boolean invalid = true;
-	private Rectangle buttonRect;
 
 	public C3DButtonSkin(C3DButton button) {
 		super(button);
 
-		if(button.getBackground() == null || button.getBackground().getFills().get(0).getFill().toString().equals("0xffffffba"))
-			button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-
-		// create button
-		buttonRect = new Rectangle();
-		buttonRect.setArcHeight(7);
-		buttonRect.setArcWidth(7);		
-		buttonRect.setFill(Color.WHITE);
-
-		if(button.isDisabled()) buttonRect.setFill(disabledColor);
-
-		buttonComponents.getChildren().add(buttonRect);
-		buttonRippler = new C3DRippler(buttonComponents){
-			@Override protected Shape getMask(){
-				Rectangle mask = new Rectangle(buttonRect.getWidth() - 0.1,buttonRect.getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
-				mask.setArcHeight(buttonRect.getArcHeight());
-				mask.setArcWidth(buttonRect.getArcWidth());					
+		buttonRippler = new C3DRippler(new StackPane()){
+			@Override protected Node getMask(){
+				StackPane mask = new StackPane(); 
+				mask.shapeProperty().bind(buttonContainer.shapeProperty());				
+				mask.backgroundProperty().bind(Bindings.createObjectBinding(()->{					
+					return new Background(new BackgroundFill(Color.WHITE, 
+							buttonContainer.backgroundProperty().get()!=null?buttonContainer.getBackground().getFills().get(0).getRadii() : defaultRadii,
+							buttonContainer.backgroundProperty().get()!=null?buttonContainer.getBackground().getFills().get(0).getInsets() : Insets.EMPTY));
+				}, buttonContainer.backgroundProperty()));				
+				mask.resize(buttonContainer.getWidth(), buttonContainer.getHeight());
 				return mask;
 			}
 			@Override protected void initListeners(){
@@ -95,24 +87,11 @@ public class C3DButtonSkin extends ButtonSkin {
 				});
 			}
 		};
-		main.getChildren().add(buttonRippler);
+		buttonContainer.getChildren().add(buttonRippler);
 
 
 		// add listeners to the button
-		button.widthProperty().addListener((o,oldVal,newVal)->buttonRect.setWidth(newVal.doubleValue()));
-		button.heightProperty().addListener((o,oldVal,newVal)->buttonRect.setHeight(newVal.doubleValue()+1));
 		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
-		button.backgroundProperty().addListener((o,oldVal,newVal)->{
-			if(newVal!=null){
-				buttonRect.setFill(newVal.getFills().get(0).getFill());
-				double radius = 7;
-				if(newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
-					radius = newVal.getFills().get(0).getRadii().getTopLeftHorizontalRadius();
-				buttonRect.setArcHeight(radius);
-				buttonRect.setArcWidth(radius);
-			}
-		});
-
 		button.setOnMousePressed((e)->{
 			if(clickedAnimation!=null){
 				clickedAnimation.setRate(1);
@@ -127,7 +106,7 @@ public class C3DButtonSkin extends ButtonSkin {
 		});
 		
 		button.ripplerFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
-
+		button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));		
 		updateButtonType(button.getButtonType());
 		updateChildren();
 	}
@@ -135,50 +114,54 @@ public class C3DButtonSkin extends ButtonSkin {
 	@Override
 	protected void updateChildren() {
 		super.updateChildren();
-		if (main != null) {
-			getChildren().add(main);
+		if (buttonContainer != null) {		
+			getChildren().get(0).setMouseTransparent(true);
+			getChildren().add(0,buttonContainer);			
 		}
 	}
 
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			if(getSkinnable().getBackground()!=null){
-				buttonRect.setFill(getSkinnable().getBackground().getFills().get(0).getFill());
-				double radius = 7;
-				if(getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius() > radius)
-					radius = getSkinnable().getBackground().getFills().get(0).getRadii().getTopLeftHorizontalRadius();
-				buttonRect.setArcHeight(radius);
-				buttonRect.setArcWidth(radius);
-			}
-			
+			buttonContainer.borderProperty().bind(getSkinnable().borderProperty());
+			buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+				//Insets always Empty
+				if(getSkinnable().backgroundProperty().get()!=null && getSkinnable().backgroundProperty().get().getFills().get(0).getInsets().equals(new Insets(-0.2,-0.2, -0.2,-0.2))){
+					return new Background(new BackgroundFill(getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
+							getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
+							Insets.EMPTY/*new Insets(0,0,-1.0,0)*/));
+				}else{
+					return new Background(new BackgroundFill(getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
+							getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
+							Insets.EMPTY/*getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getInsets() : Insets.EMPTY*/));	
+				}
+			}, getSkinnable().backgroundProperty()));
 			if(((C3DButton)getSkinnable()).getRipplerFill() == null){
-				if(getChildren().get(0) instanceof LabeledText){
-					buttonRippler.setRipplerFill(((LabeledText)getChildren().get(0)).getFill());			
-					((LabeledText)getChildren().get(0)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
-				}else if(getChildren().get(0) instanceof Label){
-					buttonRippler.setRipplerFill(((Label)getChildren().get(0)).getTextFill());			
-					((Label)getChildren().get(0)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+				if(getChildren().get(1) instanceof LabeledText){
+					buttonRippler.setRipplerFill(((LabeledText)getChildren().get(1)).getFill());			
+					((LabeledText)getChildren().get(1)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+				}else if(getChildren().get(1) instanceof Label){
+					buttonRippler.setRipplerFill(((Label)getChildren().get(1)).getTextFill());			
+					((Label)getChildren().get(1)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 				}
 			}else{
 				buttonRippler.setRipplerFill(((C3DButton)getSkinnable()).getRipplerFill());
 			}
-						
-			if(getChildren().get(0)!=main)
-				buttonComponents.getChildren().add(getChildren().get(0));
 			invalid = false;
 		}
+		double shift = 1;
+		buttonContainer.resizeRelocate(getSkinnable().getLayoutBounds().getMinX()-shift, getSkinnable().getLayoutBounds().getMinY()-shift, getSkinnable().getWidth()+(2*shift), getSkinnable().getHeight()+(2*shift));
 		layoutLabelInArea(x, y, w, h);
 	}
 
 	private void updateButtonType(ButtonType type){
 		switch (type) {
 		case RAISED:
-			DepthManager.setDepth(buttonRippler, 2);
+			DepthManager.setDepth(buttonContainer, 2);
 			clickedAnimation = new ButtonClickTransition(); 
 			break;
 		default:
-			buttonRippler.setEffect(null);
+			buttonContainer.setEffect(null);
 			break;
 		}
 	}
@@ -187,18 +170,18 @@ public class C3DButtonSkin extends ButtonSkin {
 	private class ButtonClickTransition extends CachedTimelineTransition {
 
 		public ButtonClickTransition() {
-			super(buttonRippler, new Timeline(
+			super(buttonContainer, new Timeline(
 					new KeyFrame(Duration.ZERO,
-							new KeyValue(((DropShadow)buttonRippler.getEffect()).radiusProperty(), DepthManager.getShadowAt(2).radiusProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonRippler.getEffect()).spreadProperty(), DepthManager.getShadowAt(2).spreadProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetXProperty(), DepthManager.getShadowAt(2).offsetXProperty().get(), Interpolator.EASE_BOTH),
-							new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetYProperty(), DepthManager.getShadowAt(2).offsetYProperty().get(), Interpolator.EASE_BOTH)
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), DepthManager.getShadowAt(2).radiusProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), DepthManager.getShadowAt(2).spreadProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), DepthManager.getShadowAt(2).offsetXProperty().get(), Interpolator.EASE_BOTH),
+							new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), DepthManager.getShadowAt(2).offsetYProperty().get(), Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(1000),
-									new KeyValue(((DropShadow)buttonRippler.getEffect()).radiusProperty(), DepthManager.getShadowAt(5).radiusProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonRippler.getEffect()).spreadProperty(), DepthManager.getShadowAt(5).spreadProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetXProperty(), DepthManager.getShadowAt(5).offsetXProperty().get(), Interpolator.EASE_BOTH),
-									new KeyValue(((DropShadow)buttonRippler.getEffect()).offsetYProperty(), DepthManager.getShadowAt(5).offsetYProperty().get(), Interpolator.EASE_BOTH)
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).radiusProperty(), DepthManager.getShadowAt(5).radiusProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).spreadProperty(), DepthManager.getShadowAt(5).spreadProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetXProperty(), DepthManager.getShadowAt(5).offsetXProperty().get(), Interpolator.EASE_BOTH),
+									new KeyValue(((DropShadow)buttonContainer.getEffect()).offsetYProperty(), DepthManager.getShadowAt(5).offsetYProperty().get(), Interpolator.EASE_BOTH)
 									)
 					)
 					);
