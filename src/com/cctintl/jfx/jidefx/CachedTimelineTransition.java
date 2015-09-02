@@ -3,6 +3,8 @@ package com.cctintl.jfx.jidefx;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.CacheHint;
@@ -13,11 +15,15 @@ import javafx.util.Duration;
  * the animated node during the animation.
  *
  * @author Jasper Potts
+ * 
+ * updated By ssshahine
+ * 
  */
 public class CachedTimelineTransition extends Transition {
 	protected static final Interpolator WEB_EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
 	protected final Node node;
-	protected Timeline timeline;
+	
+	protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
 	private boolean oldCache = false;
 	private CacheHint oldCacheHint = CacheHint.DEFAULT;
 	private final boolean useCache;
@@ -39,7 +45,7 @@ public class CachedTimelineTransition extends Transition {
 	 */
 	public CachedTimelineTransition(final Node node, final Timeline timeline, final boolean useCache) {
 		this.node = node;
-		this.timeline = timeline;
+		this.timeline.set(timeline);
 		this.useCache = useCache;
 		statusProperty().addListener(new ChangeListener<Status>() {
 			@Override public void changed(ObservableValue<? extends Status> ov, Status t, Status newStatus) {
@@ -75,7 +81,7 @@ public class CachedTimelineTransition extends Transition {
 		}
 	}
 	@Override protected void interpolate(double d) {
-		timeline.playFrom(Duration.seconds(d));
-		timeline.stop();
+		timeline.get().playFrom(Duration.seconds(d));
+		timeline.get().stop();
 	}
 }

@@ -5,21 +5,8 @@
 /* Burgers Demo */
 
 .c3d-hamburger-icon{
-	-fx-spacing: 3;
-	-fx-scale-x:0.7;
-	-fx-scale-y:0.7;
+	-fx-spacing: 5;
 	-fx-cursor: hand;
-}
-
-.c3d-hamburger-icon SVGPath{
-	-fx-stroke-width: 0.0;
-	-fx-stroke: TRANSPARENT;
-	-fx-opacity: 1;
-	-fx-stroke-miter-limit: 4.0;
-	-fx-stroke-line-join: MITER;
-	-fx-stroke-line-cap: BUTT;
-	-fx-stroke-dash-offset: 0.0;
-	-fx-fill: BLUE;
 }
 
 

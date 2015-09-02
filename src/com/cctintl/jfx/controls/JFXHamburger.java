@@ -28,12 +28,14 @@ package com.cctintl.jfx.controls;
 
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
 
 import com.cctintl.jfx.transitions.hamburger.HamburgerTransition;
 
@@ -41,26 +43,21 @@ import com.cctintl.jfx.transitions.hamburger.HamburgerTransition;
 public class JFXHamburger extends VBox {
 
 	private Transition animation;
-
+	
 	public JFXHamburger() {
-		SVGPath line1 = new SVGPath();
-		line1.setContent("m 482.73642,457.05289 24,0 c 1.104,0 2,-0.896 2,-2 0,-1.104 -0.896,-2 -2,-2 l -24,0 c -1.104,0 -2,0.896 -2,2 0,1.104 0.896,2 2,2 z");
-		initSVGStyle(line1);
-		SVGPath line2 = new SVGPath();
-		line2.setContent("m 482.73642,457.05289 24,0 c 1.104,0 2,-0.896 2,-2 0,-1.104 -0.896,-2 -2,-2 l -24,0 c -1.104,0 -2,0.896 -2,2 0,1.104 0.896,2 2,2 z");
-		initSVGStyle(line2);
-		SVGPath line3 = new SVGPath();
-		line3.setContent("m 482.73642,457.05289 24,0 c 1.104,0 2,-0.896 2,-2 0,-1.104 -0.896,-2 -2,-2 l -24,0 c -1.104,0 -2,0.896 -2,2 0,1.104 0.896,2 2,2 z");
-		initSVGStyle(line3);
+				
+		StackPane line1 = new StackPane();
+		StackPane line2 = new StackPane();
+		StackPane line3 = new StackPane();
+		
+		initStyle(line1);
+		initStyle(line2);
+		initStyle(line3);
+		
 		this.getChildren().add(line1);
 		this.getChildren().add(line2);
 		this.getChildren().add(line3);
-		this.setSpacing(3);
-		this.setScaleX(0.8);
-		this.setScaleY(0.8);
 		this.getStyleClass().add("c3d-hamburger-icon");
-		// must be specified 
-		this.setAlignment(Pos.CENTER);
 	}
 
 	public Transition getAnimation() {
@@ -72,15 +69,10 @@ public class JFXHamburger extends VBox {
 		this.animation.setRate(-1);
 	}
 
-	private void initSVGStyle(SVGPath path){
-		path.setStrokeWidth(0);
-		path.setStroke(Color.TRANSPARENT);
-		path.setOpacity(1);
-		path.setStrokeMiterLimit(4);
-		path.setStrokeLineJoin(StrokeLineJoin.MITER);
-		path.setStrokeLineCap(StrokeLineCap.BUTT);
-		path.setStrokeDashOffset(0);
-		path.setFill(Color.BLACK);
+	private void initStyle(StackPane pane){
+		pane.setOpacity(1);
+		pane.setPrefSize(50, 8);
+		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(3), Insets.EMPTY)));
 	}
 
 }

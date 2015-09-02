@@ -30,7 +30,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
-import javafx.scene.shape.SVGPath;
+import javafx.beans.binding.Bindings;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 import com.cctintl.jfx.controls.JFXHamburger;
@@ -43,32 +44,38 @@ public class HamburgerSlideCloseTransition extends CachedTimelineTransition impl
 	}
 	
 	public HamburgerSlideCloseTransition(JFXHamburger burger) {
-		super(
-				burger,
-				new Timeline(
-						new KeyFrame(
-								Duration.ZERO,       
-								new KeyValue(burger.rotateProperty(), 0,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(0).rotateProperty(), 0,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(0).translateYProperty(), 0,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(2).rotateProperty(), 0,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(2).translateYProperty(), 0,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(1).opacityProperty(), 1,Interpolator.EASE_BOTH),
-								new KeyValue(burger.getChildren().get(1).translateXProperty(), 0,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(Duration.millis(1000),
-										new KeyValue(burger.rotateProperty(), 0,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(0).rotateProperty(), 135,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(0).translateYProperty(), ((SVGPath)burger.getChildren().get(0)).getBoundsInLocal().getWidth()/3.5,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(2).rotateProperty(), -135,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(2).translateYProperty(), -((SVGPath)burger.getChildren().get(2)).getBoundsInLocal().getWidth()/3.5,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(1).opacityProperty(), 0,Interpolator.EASE_BOTH),
-										new KeyValue(burger.getChildren().get(1).translateXProperty(), -60,Interpolator.EASE_BOTH)
-										)
-						)
-				);
+		super(burger, createTimeline(burger));				
+		timeline.bind(Bindings.createObjectBinding(()->createTimeline(burger),
+				burger.widthProperty(), burger.heightProperty(),
+				((Region) burger.getChildren().get(0)).widthProperty(), ((Region) burger.getChildren().get(0)).heightProperty() ));					
 		setCycleDuration(Duration.seconds(0.3));
 		setDelay(Duration.seconds(0));
+	}
+	
+	private static Timeline createTimeline(JFXHamburger burger){
+		double hypotenuse = Math.sqrt(Math.pow(burger.getHeight(), 2) + Math.pow(burger.getWidth(), 2));
+		double angle = (Math.asin(burger.getWidth()/hypotenuse) * (180/Math.PI) + 90);
+		return new Timeline(
+				new KeyFrame(
+						Duration.ZERO,       
+						new KeyValue(burger.rotateProperty(), 0,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(0).rotateProperty(), 0,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(0).translateYProperty(), 0,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(2).rotateProperty(), 0,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(2).translateYProperty(), 0,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(1).opacityProperty(), 1 ,Interpolator.EASE_BOTH),
+						new KeyValue(burger.getChildren().get(1).translateXProperty(), 0,Interpolator.EASE_BOTH)
+						),
+						new KeyFrame(Duration.millis(1000),
+								new KeyValue(burger.rotateProperty(), 0,Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(0).rotateProperty(), angle,Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(0).translateYProperty(), (burger.getHeight()/2)-burger.getChildren().get(0).getBoundsInLocal().getHeight()/2,Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(2).rotateProperty(), -angle ,Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(2).translateYProperty(), - ((burger.getHeight()/2)-burger.getChildren().get(2).getBoundsInLocal().getHeight()/2),Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(1).opacityProperty(), 0,Interpolator.EASE_BOTH),
+								new KeyValue(burger.getChildren().get(1).translateXProperty(), - burger.getWidth()/1.1,Interpolator.EASE_BOTH)
+								)
+				);
 	}
 	
 	public Transition getAnimation(JFXHamburger burger){

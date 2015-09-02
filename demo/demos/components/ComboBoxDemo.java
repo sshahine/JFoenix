@@ -16,12 +16,12 @@ public class ComboBoxDemo extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		
 		JFXComboBox<Label> c = new JFXComboBox<>();
-		c.getItems().add(new Label("JAVA1"));
-		c.getItems().add(new Label("JAVA2"));
-		c.getItems().add(new Label("JAVA3"));
-		c.getItems().add(new Label("JAVA4"));
+		c.getItems().add(new Label("Java 1.8"));
+		c.getItems().add(new Label("Java 1.7"));
+		c.getItems().add(new Label("Java 1.6"));
+		c.getItems().add(new Label("Java 1.5"));
 		c.setEditable(true);
-		c.setPromptText("Select Java Type");
+		c.setPromptText("Select Java Version");
 		
 		HBox pane = new HBox(100);
 		HBox.setMargin(c, new Insets(20));
