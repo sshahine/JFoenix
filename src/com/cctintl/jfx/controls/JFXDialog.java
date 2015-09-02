@@ -213,7 +213,7 @@ public class JFXDialog extends StackPane {
 				break;
 			}
 		}
-		animation.setOnFinished((finish)->onDialogOpenedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.OPENED)));
+		if(animation!=null)animation.setOnFinished((finish)->onDialogOpenedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.OPENED)));
 		return animation;
 	}
 

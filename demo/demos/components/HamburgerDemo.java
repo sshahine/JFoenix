@@ -24,7 +24,6 @@ public class HamburgerDemo extends Application {
 		main.setVgap(20);
 		main.setHgap(20);
 		
-		
 		JFXHamburger h1 = new JFXHamburger();
 		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(h1);
 		burgerTask.setRate(-1);
@@ -63,15 +62,14 @@ public class HamburgerDemo extends Application {
 		main.getChildren().add(h3);
 		main.getChildren().add(h4);
 		
-
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);
 		StackPane.setMargin(main, new Insets(60));
 		pane.setStyle("-fx-background-color:WHITE");
 		
-		final Scene scene = new Scene(pane, 500, 500);
-		scene.getStylesheets().add(HamburgerDemo.class.getResource("css/styles.css").toExternalForm());
-		stage.setTitle("JavaFX Burgers :) ");
+		final Scene scene = new Scene(pane, 400, 200);
+		scene.getStylesheets().add(HamburgerDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
+		stage.setTitle("JFX Burgers Demo :) ");
 		stage.setScene(scene);
 		stage.setResizable(false);
 

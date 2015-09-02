@@ -19,9 +19,9 @@ import javax.annotation.PostConstruct;
 import com.cctintl.jfx.controls.JFXDrawer;
 import com.cctintl.jfx.controls.JFXHamburger;
 import com.cctintl.jfx.controls.JFXPopup;
-import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
 import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
+import com.cctintl.jfx.controls.JFXRippler;
 
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;

@@ -14,9 +14,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXNodesList;
-import com.cctintl.jfx.controls.JFXNodesListContainer;
 import com.cctintl.jfx.controls.JFXButton.ButtonType;
+import com.cctintl.jfx.controls.JFXNodesList;
 
 
 public class NodesListDemo extends Application {
@@ -115,7 +114,7 @@ public class NodesListDemo extends Application {
 			main.getChildren().add(nodesList);
 			
 			Scene scene = new Scene(main, 600, 600);
-			scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+			scene.getStylesheets().add(NodesListDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

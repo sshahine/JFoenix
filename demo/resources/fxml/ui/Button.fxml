@@ -8,7 +8,7 @@
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
-	<VBox maxWidth="400" maxHeight="400" >
+	<VBox maxWidth="400" maxHeight="400" spacing="10">
 		<children>
 			<Label styleClass="title-label">Flat Buttons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
@@ -20,7 +20,7 @@
 			</HBox>
 			
 			<Label styleClass="title-label">Raised Buttons</Label>
-			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
 				<children>
 					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON" style="-fx-font-size:14px;-fx-background-color:WHITE;"></JFXButton>
 					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"></JFXButton>
@@ -31,7 +31,7 @@
 			<Label styleClass="title-label">Styling Options</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-c3d-button-raised"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-jfx-button-raised"></JFXButton>
 				</children>
 			</HBox>
 		</children>

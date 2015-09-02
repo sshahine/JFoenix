@@ -21,7 +21,7 @@
 		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Bluetooth
 			</Label>
-			<JFXToggleButton styleClass="custom-c3d-toggle-button">
+			<JFXToggleButton styleClass="custom-jfx-toggle-button">
 			</JFXToggleButton>
 		</FlowPane>
 

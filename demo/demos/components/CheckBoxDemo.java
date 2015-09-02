@@ -22,23 +22,22 @@ public class CheckBoxDemo extends Application {
 		main.setHgap(20);
 		
 		CheckBox cb = new CheckBox("CheckBox");
-		JFXCheckBox c3b = new JFXCheckBox("C3D CheckBox");
-		JFXCheckBox customC3B = new JFXCheckBox("C3D CheckBox");
-		customC3B.getStyleClass().add("custom-c3d-check-box");
+		JFXCheckBox jfxCheckBox = new JFXCheckBox("JFX CheckBox");
+		JFXCheckBox customJFXCheckBox = new JFXCheckBox("JFX CheckBox");
+		customJFXCheckBox.getStyleClass().add("custom-jfx-check-box");
 		
 		main.getChildren().add(cb);
-		main.getChildren().add(c3b);
-		main.getChildren().add(customC3B);
-		
-		
+		main.getChildren().add(jfxCheckBox);
+		main.getChildren().add(customJFXCheckBox);
+				
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);
 		StackPane.setMargin(main, new Insets(100));
 		pane.setStyle("-fx-background-color:WHITE");
 		
-		final Scene scene = new Scene(pane, 600, 400);
-		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
-		stage.setTitle("JavaFX Ripple effect and shadows ");
+		final Scene scene = new Scene(pane, 600, 200);
+		scene.getStylesheets().add(CheckBoxDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
+		stage.setTitle("JFX CheckBox Demo ");
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

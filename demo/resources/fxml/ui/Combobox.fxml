@@ -22,35 +22,35 @@
 								Item 1
 								<graphic>
 									<Icon awesomeIcon="STAR" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 2
 								<graphic>
 									<Icon awesomeIcon="HEART" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 3
 								<graphic>
 									<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 4
 								<graphic>
 									<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 5
 								<graphic>
 									<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 						</FXCollections>
@@ -69,35 +69,35 @@
 								Item 1
 								<graphic>
 									<Icon awesomeIcon="STAR" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 2
 								<graphic>
 									<Icon awesomeIcon="HEART" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 3
 								<graphic>
 									<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 4
 								<graphic>
 									<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 							<Label>
 								Item 5
 								<graphic>
 									<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-										styleClass="custom-c3d-list-view-icon" />
+										styleClass="custom-jfx-list-view-icon" />
 								</graphic>
 							</Label>
 						</FXCollections>

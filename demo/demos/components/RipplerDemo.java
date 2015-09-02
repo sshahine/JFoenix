@@ -39,35 +39,39 @@ public class RipplerDemo extends Application {
 		
 		Label l1 = new Label("TEST");
 		l1.setStyle("-fx-background-color:WHITE;");
-		JFXDepthManager.setDepth(l1, 1);
 		l1.setPadding(new Insets(20));
-		main.getChildren().add(new JFXRippler(l1));
+		JFXRippler rippler1 = new JFXRippler(l1);
+		main.getChildren().add(rippler1);		
+		JFXDepthManager.setDepth(rippler1, 1);
 		
 		Label l2 = new Label("TEST1");
-		JFXDepthManager.setDepth(l2, 2);
 		l2.setStyle("-fx-background-color:WHITE;");
 		l2.setPadding(new Insets(20));
-		main.getChildren().add(new JFXRippler(l2));
+		JFXRippler rippler2 = new JFXRippler(l2);
+		main.getChildren().add(rippler2);		
+		JFXDepthManager.setDepth(rippler2, 2);
+
 		
 		Label l3 = new Label("TEST2");
-		JFXDepthManager.setDepth(l3, 3);
 		l3.setStyle("-fx-background-color:WHITE;");
 		l3.setPadding(new Insets(20));
-		main.getChildren().add(new JFXRippler(l3));
-		
+		JFXRippler rippler3 = new JFXRippler(l3);
+		main.getChildren().add(rippler3);
+		JFXDepthManager.setDepth(rippler3, 3);
 		
 		Label l4 = new Label("TEST3");
-		JFXDepthManager.setDepth(l4, 4);
 		l4.setStyle("-fx-background-color:WHITE;");
 		l4.setPadding(new Insets(20));
-		main.getChildren().add(new JFXRippler(l4));
+		JFXRippler rippler4 = new JFXRippler(l4);
+		main.getChildren().add(rippler4);
+		JFXDepthManager.setDepth(rippler4, 4);
 		
 		Label l5 = new Label("TEST4");
-		JFXDepthManager.setDepth(l5, 5);
 		l5.setStyle("-fx-background-color:WHITE;");
 		l5.setPadding(new Insets(20));
-		main.getChildren().add(new JFXRippler(l5));
-		
+		JFXRippler rippler5 = new JFXRippler(l5);
+		main.getChildren().add(rippler5);
+		JFXDepthManager.setDepth(rippler5, 5);
 
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);

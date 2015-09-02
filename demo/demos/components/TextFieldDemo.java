@@ -15,7 +15,10 @@ import javafx.stage.Stage;
 import com.cctintl.jfx.controls.JFXTextField;
 import com.cctintl.jfx.validation.RequiredFieldValidator;
 
-public class InputDemo extends Application {
+import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.jensd.fx.fontawesome.Icon;
+
+public class TextFieldDemo extends Application {
 
 	private VBox pane;
 	
@@ -42,6 +45,9 @@ public class InputDemo extends Application {
 		JFXTextField validationField = new JFXTextField();
 		validationField.setPromptText("With Validation..");
 		RequiredFieldValidator validator = new RequiredFieldValidator();
+		validator.setMessage("Input Required");
+		validator.setAwsomeIcon(new Icon(AwesomeIcon.WARNING,"2em",";","error"));
+		
 		validationField.getValidators().add(validator);
 		validationField.focusedProperty().addListener((o,oldVal,newVal)->{
 			if(!newVal) validationField.validate();
@@ -55,8 +61,8 @@ public class InputDemo extends Application {
 		StackPane.setMargin(pane, new Insets(20,0,0,20));
 
 		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
-		stage.setTitle("JavaFX TextField ;) ");
-		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+		scene.getStylesheets().add(TextFieldDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
+		stage.setTitle("JFX TextField Demo ");
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

@@ -28,14 +28,10 @@ public class ComboBoxDemo extends Application {
 		pane.setStyle("-fx-background-color:WHITE");
 		pane.getChildren().add(c);
 		
-		JFXButton submitButton = new JFXButton("Submit");
-		HBox.setMargin(submitButton, new Insets(20));
-		pane.getChildren().add(submitButton);
+		final Scene scene = new Scene(pane, 300, 300);
+		scene.getStylesheets().add(ComboBoxDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 
-		final Scene scene = new Scene(pane, 800, 800);
-		scene.getStylesheets().add(DrawerDemo.class.getResource("css/styles.css").toExternalForm());
-
-		primaryStage.setTitle("JavaFX MenuButton Demo");
+		primaryStage.setTitle("JFX ComboBox Demo");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();		

@@ -45,8 +45,7 @@ public class JFXSpinner extends Region {
 
 	public JFXSpinner() {
 		super();
-
-		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		getStyleClass().add(DEFAULT_STYLE_CLASS);
 		initialize();
 	}
 

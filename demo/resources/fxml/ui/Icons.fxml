@@ -33,7 +33,7 @@
 			</HBox>
 
 			<Label styleClass="title-label">Animated Icons</Label>
-			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;" styleClass="animated-burgers">
 				<children>
 					<JFXHamburger fx:id="burger1" style="-fx-padding:20;">					
 						<HamburgerSlideCloseTransition  />

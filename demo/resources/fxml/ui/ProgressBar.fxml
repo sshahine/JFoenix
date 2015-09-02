@@ -11,10 +11,10 @@
 		<JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>
 		<JFXProgressBar></JFXProgressBar>
 
-		<JFXProgressBar fx:id="progress2" styleClass="custom-c3d-progress-bar" progress="100"></JFXProgressBar>
-		<JFXProgressBar styleClass="custom-c3d-progress-bar"></JFXProgressBar>
+		<JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="100"></JFXProgressBar>
+		<JFXProgressBar styleClass="custom-jfx-progress-bar"></JFXProgressBar>
 
-		<JFXProgressBar styleClass="custom-c3d-progress-bar-stroke"></JFXProgressBar>
+		<JFXProgressBar styleClass="custom-jfx-progress-bar-stroke"></JFXProgressBar>
 		<StackPane.margin>	
 			<Insets>
 				<left>50</left>

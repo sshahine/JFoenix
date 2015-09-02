@@ -9,14 +9,14 @@ import javafx.scene.layout.StackPane;
  *
  */
 
-public class JFXNodesListContainer extends StackPane {
+public class TODELETE_JFXNodesListContainer extends StackPane {
 	
-	public JFXNodesListContainer(Node... nodes){
+	public TODELETE_JFXNodesListContainer(Node... nodes){
 		super(nodes);
 		this.setPickOnBounds(false);
 	}
 	
-	public JFXNodesListContainer() {
+	public TODELETE_JFXNodesListContainer() {
 		this.setPickOnBounds(false);
 	}
 	
@@ -38,6 +38,4 @@ public class JFXNodesListContainer extends StackPane {
 //		vContainer.maxHeightProperty().bind(stackContainer.heightProperty());
 //		this.maxHeightProperty().bind(stackContainer.heightProperty());
 //	}
-//	
-//	
 //}

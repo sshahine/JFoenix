@@ -45,6 +45,8 @@ import com.sun.javafx.css.converters.PaintConverter;
 
 public class JFXToggleButton extends ToggleButton {
 
+	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-button";
+	
 	public JFXToggleButton() {
 		super();
 		initialize();
@@ -56,7 +58,7 @@ public class JFXToggleButton extends ToggleButton {
 	}
 	
 	private void initialize() {
-		this.getStyleClass().add("jfx-toggle-button");        
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
 	
 

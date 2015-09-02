@@ -128,7 +128,7 @@ public class TreeTableDemo extends Application {
 			main.getChildren().add(size);
 
 			Scene scene = new Scene(main, 475, 500);
-			scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+			scene.getStylesheets().add(TreeTableDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

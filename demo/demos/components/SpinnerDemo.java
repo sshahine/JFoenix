@@ -16,9 +16,9 @@ public class SpinnerDemo extends Application {
 
 		final Group group = new Group();
 		final Scene scene = new Scene(group, 800, 800);
-		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfx-components.css").toExternalForm());
+		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setScene(scene);
-		stage.setTitle("C3D Spinner");
+		stage.setTitle("JFX Spinner Demo");
 		stage.show();
 		JFXSpinner spinner = new JFXSpinner();
 		group.getChildren().add(spinner);

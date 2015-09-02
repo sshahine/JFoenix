@@ -22,9 +22,9 @@
 
 		<VBox spacing="20">
 			<Label styleClass="title-label">Style Options</Label>
-			<JFXCheckBox text="Notifications" styleClass="custom-c3d-check-box"></JFXCheckBox>
-			<JFXCheckBox text="Auto Updates"  styleClass="custom-c3d-check-box-all-colored"></JFXCheckBox>
-			<JFXCheckBox text="Clear History" styleClass="custom-c3d-check-box-text-colored"></JFXCheckBox>
+			<JFXCheckBox text="Notifications" styleClass="custom-jfx-check-box"></JFXCheckBox>
+			<JFXCheckBox text="Auto Updates"  styleClass="custom-jfx-check-box-all-colored"></JFXCheckBox>
+			<JFXCheckBox text="Clear History" styleClass="custom-jfx-check-box-text-colored"></JFXCheckBox>
 		</VBox>
 
 

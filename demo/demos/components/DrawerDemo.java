@@ -34,9 +34,9 @@ public class DrawerDemo extends Application {
 		pane.getChildren().add(drawer);
 		pane.setStyle("-fx-background-color:WHITE");		
 		final Scene scene = new Scene(pane, 800, 800);
-		scene.getStylesheets().add(DrawerDemo.class.getResource("css/styles.css").toExternalForm());
+		scene.getStylesheets().add(DrawerDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 
-		primaryStage.setTitle("JavaFX Drawer");
+		primaryStage.setTitle("JFX Drawer Demo");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();		

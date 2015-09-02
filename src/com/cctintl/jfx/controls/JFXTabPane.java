@@ -46,7 +46,7 @@ public class JFXTabPane extends TabPane {
 	}
 
 	private void initialize() {
-		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 	}
 	
 	public void propagateMouseEventsToParent(){

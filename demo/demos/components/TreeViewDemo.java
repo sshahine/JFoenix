@@ -40,7 +40,7 @@ public class TreeViewDemo extends Application {
 			main.setPadding(new Insets(10));
 			main.getChildren().add(treeView	);
 			Scene scene = new Scene(main, 600, 400);
-			scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+			scene.getStylesheets().add(TreeViewDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

@@ -14,7 +14,7 @@
 	xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane maxWidth="500">
-	<JFXListView fx:id="list1" styleClass="custom-c3d-list-view"
+	<JFXListView fx:id="list1" styleClass="custom-jfx-list-view"
 			layoutX="0" layoutY="50">
 			<Label>Item 1</Label>
 			<JFXListView fx:id="subList" styleClass="sublist">
@@ -41,41 +41,41 @@
 		
 
 
-		<JFXListView fx:id="list2" styleClass="custom-c3d-list-view1"
+		<JFXListView fx:id="list2" styleClass="custom-jfx-list-view1"
 			layoutX="300" layoutY="50">
 			<Label>
 				Item 1
 				<graphic>
 					<Icon awesomeIcon="STAR" size="1.5em" style=";"
-						styleClass="custom-c3d-list-view-icon" />
+						styleClass="custom-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 			<Label>
 				Item 2
 				<graphic>
 					<Icon awesomeIcon="HEART" size="1.5em" style=";"
-						styleClass="custom-c3d-list-view-icon" />
+						styleClass="custom-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 			<Label>
 				Item 3
 				<graphic>
 					<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-						styleClass="custom-c3d-list-view-icon" />
+						styleClass="custom-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 			<Label>
 				Item 4
 				<graphic>
 					<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-						styleClass="custom-c3d-list-view-icon" />
+						styleClass="custom-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 			<Label>
 				Item 5
 				<graphic>
 					<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-						styleClass="custom-c3d-list-view-icon" />
+						styleClass="custom-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 		</JFXListView>

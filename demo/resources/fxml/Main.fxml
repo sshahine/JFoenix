@@ -50,7 +50,7 @@
 						<JFXRippler fx:id="optionsRippler" maskType="CIRCLE"
 							style="-fx-ripple-color:WHITE;">
 							<StackPane fx:id="optionsBurger">
-								<JFXHamburger styleClass="c3d-options-burger">
+								<JFXHamburger styleClass="jfx-options-burger">
 								</JFXHamburger>
 							</StackPane>
 						</JFXRippler>
@@ -83,14 +83,14 @@
 				Contact Us
 				<graphic>
 					<Icon awesomeIcon="USER" size="1.5em" style=";"
-						styleClass="option-c3d-list-view-icon" />
+						styleClass="option-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 			<Label fx:id="exit">
 				Exit
 				<graphic>
 					<Icon awesomeIcon="REPLY" size="1.5em" style=";"
-						styleClass="option-c3d-list-view-icon" />
+						styleClass="option-jfx-list-view-icon" />
 				</graphic>
 			</Label>
 		</JFXListView>

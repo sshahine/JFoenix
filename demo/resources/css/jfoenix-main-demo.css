@@ -128,18 +128,29 @@
 	-fx-cursor: hand;
 }
 
+.animated-burgers .jfx-hamburger StackPane{
+	-fx-background-color:#5264AE;
+	-fx-background-radius:4px;
+}
+
+
 /*******************************************************************************
 *                                                                              *
 * JFX Hamburger Icon                                                           *
 *                                                                              *
 *******************************************************************************/
 
-.jfx-hamburger-icon{
+.jfx-hamburger{
+	-fx-padding: 10.0;
+	-fx-spacing: 4px;
 	-fx-cursor: hand;
 }
 
-.jfx-hamburger-icon StackPane{
-	-fx-background-color: #5264AE;	
+.jfx-hamburger StackPane{
+	-fx-pref-width: 30px;
+	-fx-pref-height: 4px;
+	-fx-background-color: #FFF ;
+	-fx-background-radius: 5px;	
 }
 
 /*******************************************************************************
@@ -166,15 +177,11 @@
 	-fx-text-fill: WHITE;
 }
 
-.jfx-tool-bar .jfx-hamburger-icon{
-	-fx-padding:10.0;
+.jfx-tool-bar .jfx-options-burger{
+	-fx-padding: 22px;
 }
-.jfx-tool-bar .jfx-hamburger-icon SVGPath{
-	-fx-fill: WHITE;
-}
-
-.jfx-tool-bar .jfx-options-burger {
-	-fx-scale-x: 0.1;
+.jfx-tool-bar .jfx-options-burger StackPane{
+	-fx-pref-width:4px;
 }
 
 .jfx-tool-bar .jfx-rippler {

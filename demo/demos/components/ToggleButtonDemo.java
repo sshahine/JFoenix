@@ -31,13 +31,13 @@ public class ToggleButtonDemo extends Application {
 		ToggleButton button = new ToggleButton("JavaFx Toggle");
 		pane.getChildren().add(button);
 		
-		pane.getChildren().add(new JFXToggleButton());
+		JFXToggleButton toggleButton = new JFXToggleButton();
+		pane.getChildren().add(toggleButton);		
 		
-		JFXToggleNode node = new JFXToggleNode();
+		JFXToggleNode node = new JFXToggleNode();		
 		Icon value = new Icon("HEART");
 		value.setPadding(new Insets(10));
 		node.setGraphic(value);
-		node.setText("AA");
 		
 		pane.getChildren().add(node);
 		
@@ -47,8 +47,8 @@ public class ToggleButtonDemo extends Application {
 		StackPane.setMargin(pane, new Insets(20,0,0,20));
 
 		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
-		stage.setTitle("JavaFX TextField ;) ");
-		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+		stage.setTitle("JFX Toggle Button Demo ");
+		scene.getStylesheets().add(ToggleButtonDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

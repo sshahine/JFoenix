@@ -21,7 +21,7 @@ public class ToolBarDemo extends Application {
 			
 			main.getChildren().add(c3dToolbar);
 			Scene scene = new Scene(main, 600, 400);
-			scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+			scene.getStylesheets().add(ToolBarDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {

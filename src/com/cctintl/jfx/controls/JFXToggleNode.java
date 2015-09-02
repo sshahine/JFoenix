@@ -34,6 +34,8 @@ import com.cctintl.jfx.skins.JFXToggleNodeSkin;
 @DefaultProperty(value="graphic")
 public class JFXToggleNode extends ToggleButton {
 
+	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-node";
+	
 	public JFXToggleNode() {
 		super();
 		initialize();
@@ -45,7 +47,7 @@ public class JFXToggleNode extends ToggleButton {
 	}
 	
 	private void initialize() {
-		this.getStyleClass().add("jfx-toggle-node");        
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
 	
 	

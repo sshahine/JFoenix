@@ -29,6 +29,7 @@ package com.cctintl.jfx.controls;
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -41,7 +42,7 @@ import com.cctintl.jfx.transitions.hamburger.HamburgerTransition;
 @DefaultProperty(value="animation")
 public class JFXHamburger extends VBox {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-hamburger-icon";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-hamburger";
 	
 	private Transition animation;
 	
@@ -60,6 +61,9 @@ public class JFXHamburger extends VBox {
 		this.getChildren().add(line3);
 		
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+		this.setAlignment(Pos.CENTER);
+		this.setFillWidth(false);
+		this.setSpacing(4);
 	}
 
 	public Transition getAnimation() {
@@ -73,8 +77,8 @@ public class JFXHamburger extends VBox {
 
 	private void initStyle(StackPane pane){
 		pane.setOpacity(1);
-		pane.setPrefSize(50, 8);
-		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(3), Insets.EMPTY)));
+		pane.setPrefSize(30, 4);
+		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(5), Insets.EMPTY)));
 	}
 
 }

@@ -173,9 +173,12 @@ public class JFXRippler extends StackPane {
 	 * @return
 	 */
 	protected Node getMask(){
-		Shape mask = new Rectangle(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1); // -0.1 to prevent resizing the anchor pane
-		if(maskType.get().equals(JFXRippler.RipplerMask.CIRCLE))
-			mask = new Circle(control.getBoundsInParent().getWidth()/2 , control.getBoundsInParent().getHeight()/2, (control.getBoundsInParent().getWidth()/2) - 0.1, Color.BLUE);	
+		double borderWidth = ripplerPane.getBorder()!=null? ripplerPane.getBorder().getInsets().getTop() : 0;
+		Shape mask = new Rectangle(control.getBoundsInParent().getWidth() - 0.1 -2*borderWidth ,control.getBoundsInParent().getHeight() - 0.1 - 2*borderWidth); // -0.1 to prevent resizing the anchor pane
+		if(maskType.get().equals(JFXRippler.RipplerMask.CIRCLE)){
+			double radius = Math.min((control.getBoundsInParent().getWidth()/2) - 0.1 - 2*borderWidth, (control.getBoundsInParent().getHeight()/2) - 0.1 - 2*borderWidth);
+			mask = new Circle(control.getBoundsInParent().getWidth()/2 , control.getBoundsInParent().getHeight()/2, radius, Color.BLUE);
+		}
 		return mask;
 	}
 	/**
@@ -202,6 +205,8 @@ public class JFXRippler extends StackPane {
 			((Region)this.control).widthProperty().addListener((o,oldVal,newVal)->{
 				if(rippler.overlayRect!=null){
 					rippler.overlayRect.inAnimation.stop();
+					final RippleGenerator.OverLayRipple oldOverlay = rippler.overlayRect;
+					rippler.overlayRect.outAnimation.setOnFinished((finish)-> rippler.getChildren().remove(oldOverlay));
 					rippler.overlayRect.outAnimation.play();
 					rippler.overlayRect = null;
 				}
@@ -209,6 +214,8 @@ public class JFXRippler extends StackPane {
 			((Region)this.control).heightProperty().addListener((o,oldVal,newVal)->{
 				if(rippler.overlayRect!=null){
 					rippler.overlayRect.inAnimation.stop();
+					final RippleGenerator.OverLayRipple oldOverlay = rippler.overlayRect;
+					rippler.overlayRect.outAnimation.setOnFinished((finish)-> rippler.getChildren().remove(oldOverlay));
 					rippler.overlayRect.outAnimation.play();
 					rippler.overlayRect = null;
 				}

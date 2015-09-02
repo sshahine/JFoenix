@@ -215,20 +215,20 @@ public class JFXListCell<T> extends ListCell<T> {
 						// initialize the gaps between cells
 						double cellInsetHgap = ((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 						double cellInsetVgap = ((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue();
-						if(cellContainer!=null) StackPane.setMargin(cellContainer, new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap));
+						StackPane.setMargin(cellContainer, new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap));
 
 						// add listeners to gaps properties 
 						((JFXListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
 							// fit the rippler into the cell bounds
 							double newCellInsetHgap = newVal.doubleValue();
 							double oldCellInsetVgap = ((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue();
-							if(cellContainer!=null) StackPane.setMargin(cellContainer, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
+							StackPane.setMargin(cellContainer, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
 						});
 						((JFXListView<T>)getListView()).cellVerticalMarginProperty().addListener((o,oldVal,newVal)-> {
 							// fit the rippler into the cell bounds
 							double oldCellInsetHgap = ((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
 							double newCellInsetVgap = newVal.doubleValue();						
-							if(cellContainer!=null) StackPane.setMargin(cellContainer, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
+							StackPane.setMargin(cellContainer, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
 						});
 					}
 

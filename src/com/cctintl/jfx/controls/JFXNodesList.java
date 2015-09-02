@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -38,7 +39,9 @@ public class JFXNodesList extends VBox {
 	public void addAnimatedNode(Region node, Callback<Boolean, ArrayList<KeyValue>> animationCallBack ){
 		// create container for the node if it's a sub nodes list
 		if(node instanceof JFXNodesList){ 
-			addAnimatedNode(new JFXNodesListContainer(node), animationCallBack);
+			StackPane container = new StackPane(node);
+			container.setPickOnBounds(false);
+			addAnimatedNode(container, animationCallBack);
 			return;
 		}
 		

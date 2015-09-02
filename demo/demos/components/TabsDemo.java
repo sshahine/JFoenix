@@ -64,9 +64,10 @@ public class TabsDemo extends Application {
 		hbox.setAlignment(Pos.CENTER);
 
 		root.getChildren().addAll(hbox);
-		scene.getStylesheets().add(InputDemo.class.getResource("css/styles.css").toExternalForm());
+		scene.getStylesheets().add(TabsDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		primaryStage.setTitle("JFX Tabs Demo");
 	}
 
 	private SecureRandom random = new SecureRandom();
