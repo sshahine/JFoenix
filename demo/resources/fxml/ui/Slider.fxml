@@ -11,30 +11,30 @@
 		<children>
 			<HBox spacing="100" alignment="BASELINE_CENTER">
 				<children>
-					<C3DSlider orientation="VERTICAL" prefHeight="300">
-					</C3DSlider>
-					<C3DSlider orientation="VERTICAL" styleClass="c3d-slider-style" prefHeight="200">
-					</C3DSlider>
-					<C3DSlider orientation="VERTICAL" prefHeight="200" disable="true">
-					</C3DSlider>
+					<JFXSlider orientation="VERTICAL" prefHeight="300">
+					</JFXSlider>
+					<JFXSlider orientation="VERTICAL" styleClass="c3d-slider-style" prefHeight="200">
+					</JFXSlider>
+					<JFXSlider orientation="VERTICAL" prefHeight="200" disable="true">
+					</JFXSlider>
 				</children>
 			</HBox>
 			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
-					<C3DSlider prefWidth="400">
-					</C3DSlider>
+					<JFXSlider prefWidth="400">
+					</JFXSlider>
 				</children>
 			</HBox>
 			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
-					<C3DSlider styleClass="c3d-slider-style" prefWidth="300">
-					</C3DSlider>
+					<JFXSlider styleClass="c3d-slider-style" prefWidth="300">
+					</JFXSlider>
 				</children>
 			</HBox>
 			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
-					<C3DSlider prefWidth="400" disable="true">
-					</C3DSlider>
+					<JFXSlider prefWidth="400" disable="true">
+					</JFXSlider>
 				</children>
 			</HBox>
 		</children>

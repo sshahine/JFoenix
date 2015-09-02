@@ -45,14 +45,14 @@ public class JFXDialogLayout extends StackPane {
 		super();
 		initialize();
 		layout.getChildren().add(heading);
-		heading.getStyleClass().add("c3d-layout-heading");
+		heading.getStyleClass().add("jfx-layout-heading");
 		heading.getStyleClass().add("title");
 		layout.getChildren().add(body);
-		body.getStyleClass().add("c3d-layout-body");
+		body.getStyleClass().add("jfx-layout-body");
 		body.prefHeightProperty().bind(this.prefHeightProperty());
 		body.prefWidthProperty().bind(this.prefWidthProperty());
 		layout.getChildren().add(actions);
-		actions.getStyleClass().add("c3d-layout-actions");
+		actions.getStyleClass().add("jfx-layout-actions");
 		this.getChildren().add(layout);
 	}
 
@@ -96,7 +96,7 @@ public class JFXDialogLayout extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-dialog-layout";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-dialog-layout";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);

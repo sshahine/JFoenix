@@ -352,7 +352,7 @@ public class JFXRippler extends StackPane {
 	 **************************************************************************/
 
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-rippler";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-rippler";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        

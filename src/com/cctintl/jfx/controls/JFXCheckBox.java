@@ -72,7 +72,7 @@ public class JFXCheckBox extends CheckBox {
 	 *                                                                         *
 	 **************************************************************************/
 	
-	private static final String DEFAULT_STYLE_CLASS = "c3d-check-box";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-check-box";
 	
 	
 	private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.CHECKED_COLOR, JFXCheckBox.this, "checkedColor", Color.valueOf("#0F9D58"));

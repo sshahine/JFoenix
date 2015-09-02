@@ -65,7 +65,7 @@ public class JFXDecorator extends VBox {
 
 	public JFXDecorator(Stage stage, Node node) {
 		super();
-		this.getStyleClass().add("c3d-decorator-window");
+		this.getStyleClass().add("jfx-decorator-window");
 
 		primaryStage = stage;
 		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
@@ -92,7 +92,7 @@ public class JFXDecorator extends VBox {
 		buttonContainer.prefWidthProperty().bind(this.widthProperty());
 		buttonContainer.getChildren().addAll(btnMax,btnClose);
 		buttonContainer.setAlignment(Pos.CENTER_RIGHT);
-		buttonContainer.getStyleClass().add("c3d-decorator-buttons-holder");
+		buttonContainer.getStyleClass().add("jfx-decorator-buttons-holder");
 		
 		
 		// clip the node in case it has hidden child nodes outside it's bounds (e.g drawer pane)
@@ -101,7 +101,7 @@ public class JFXDecorator extends VBox {
 		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
 		node.setClip(clip);
 
-		node.getStyleClass().add("c3d-decorator-content");
+		node.getStyleClass().add("jfx-decorator-content");
 //		node.setStyle("-fx-border-color:RED;");
 		
 		this.getChildren().addAll(buttonContainer,node);

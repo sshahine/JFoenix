@@ -333,13 +333,13 @@ public class JFXListCell<T> extends ListCell<T> {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-list-cell";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-list-cell";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		// set default classes
-		mainContainer.getStyleClass().add("c3d-list-cell-container");
-		cellContainer.getStyleClass().add("c3d-list-cell-content-container");
+		mainContainer.getStyleClass().add("jfx-list-cell-container");
+		cellContainer.getStyleClass().add("jfx-list-cell-content-container");
 		cellContainer.setPadding(new Insets(4,8,4,8));
 		this.setPadding(new Insets(0));
 		totalSubListsHeight = -34;

@@ -36,7 +36,7 @@ import javafx.util.Duration;
 
 public class JFXSpinner extends Region {
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-spinner";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-spinner";
 
 	private Color greenColor, redColor, yellowColor, blueColor, initialColor;
 	private Timeline timeline;

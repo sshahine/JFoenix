@@ -67,7 +67,7 @@ public class JFXTextField extends TextField {
 	}
 
 	private void initialize() {
-		this.getStyleClass().add("c3d-text-field");
+		this.getStyleClass().add("jfx-text-field");
 	}
 
 	/***************************************************************************

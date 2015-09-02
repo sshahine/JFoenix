@@ -50,7 +50,7 @@ import com.cctintl.jfx.skins.JFXComboBoxListViewSkin;
 public class JFXComboBox<T> extends ComboBox<T> {
 
 	
-	private static final String DEFAULT_STYLE_CLASS = "c3d-combo-box";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-combo-box";
 	
 	public JFXComboBox() {
 		super();

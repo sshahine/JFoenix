@@ -15,28 +15,28 @@
 		<Label styleClass="title-label">Toggle Buttons</Label>
 		<FlowPane hgap="96" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Wifi </Label>
-			<C3DToggleButton>
-			</C3DToggleButton>
+			<JFXToggleButton>
+			</JFXToggleButton>
 		</FlowPane>
 		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
 			<Label styleClass="toggle-label"> Bluetooth
 			</Label>
-			<C3DToggleButton styleClass="custom-c3d-toggle-button">
-			</C3DToggleButton>
+			<JFXToggleButton styleClass="custom-c3d-toggle-button">
+			</JFXToggleButton>
 		</FlowPane>
 
 		<Label styleClass="title-label">Toggle Icons</Label>
 
 		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-			<C3DToggleNode styleClass="toggle-icon1">
+			<JFXToggleNode styleClass="toggle-icon1">
 				<Icon awesomeIcon="PHONE" size="2em" style=";" styleClass="icon" />
-			</C3DToggleNode>
-			<C3DToggleNode styleClass="toggle-icon2">
+			</JFXToggleNode>
+			<JFXToggleNode styleClass="toggle-icon2">
 				<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
-			</C3DToggleNode>
-			<C3DToggleNode styleClass="toggle-icon3">
+			</JFXToggleNode>
+			<JFXToggleNode styleClass="toggle-icon3">
 				<Icon awesomeIcon="KEY" size="2em" style=";" styleClass="icon" />
-			</C3DToggleNode>
+			</JFXToggleNode>
 
 		</FlowPane>
 

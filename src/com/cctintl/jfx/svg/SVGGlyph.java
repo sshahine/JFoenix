@@ -19,7 +19,7 @@ public class SVGGlyph extends Pane {
 	private final String name;
 
 	private static final int DEFAULT_PREF_SIZE = 64;
-	private static final String DEFAULT_STYLE_CLASS = "c3d-svg-glyph";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-svg-glyph";
 
 	private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 

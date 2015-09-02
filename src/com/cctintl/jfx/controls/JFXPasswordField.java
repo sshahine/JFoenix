@@ -58,7 +58,7 @@ public class JFXPasswordField extends PasswordField {
 	}
 
 	private void initialize() {
-		this.getStyleClass().add("c3d-password-field");
+		this.getStyleClass().add("jfx-password-field");
 	}
 
 	@Override

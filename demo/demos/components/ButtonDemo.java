@@ -24,7 +24,7 @@ public class ButtonDemo extends Application {
 		main.getChildren().add(jfoenixButton);
 		
 		JFXButton button = new JFXButton("Raised Button".toUpperCase());
-		button.getStyleClass().add("c3dbutton-raised");
+		button.getStyleClass().add("button-raised");
 		main.getChildren().add(button);
 		
 		JFXButton button1 = new JFXButton("DISABLED");

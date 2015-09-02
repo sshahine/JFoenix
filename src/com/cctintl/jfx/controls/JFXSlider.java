@@ -43,7 +43,7 @@ import com.cctintl.jfx.skins.JFXSliderSkin;
 
 public class JFXSlider extends Slider {
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-slider";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-slider";
 
 	public JFXSlider() {
 		super(0, 100, 50);

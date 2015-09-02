@@ -14,20 +14,20 @@
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
 	<VBox spacing="20" alignment="CENTER"  maxWidth="400" maxHeight="300">
-		<C3DButton fx:id="centerButton" prefWidth="220" prefHeight="30"
-			styleClass="dialog-trigger">CENTER</C3DButton>
+		<JFXButton fx:id="centerButton" prefWidth="220" prefHeight="30"
+			styleClass="dialog-trigger">CENTER</JFXButton>
 		<HBox spacing="20" alignment="CENTER">
-			<C3DButton fx:id="topButton" prefWidth="100" prefHeight="30"
-				styleClass="dialog-trigger">TOP</C3DButton>
-			<C3DButton fx:id="bottomButton" prefWidth="100" prefHeight="30"
-				styleClass="dialog-trigger">BOTTOM</C3DButton>
+			<JFXButton fx:id="topButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">TOP</JFXButton>
+			<JFXButton fx:id="bottomButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">BOTTOM</JFXButton>
 		</HBox>
 
 		<HBox spacing="20" alignment="CENTER">
-			<C3DButton fx:id="rightButton" prefWidth="100" prefHeight="30"
-				styleClass="dialog-trigger">RIGHT</C3DButton>
-			<C3DButton fx:id="leftButton" prefWidth="100" prefHeight="30"
-				styleClass="dialog-trigger">LEFT</C3DButton>
+			<JFXButton fx:id="rightButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">RIGHT</JFXButton>
+			<JFXButton fx:id="leftButton" prefWidth="100" prefHeight="30"
+				styleClass="dialog-trigger">LEFT</JFXButton>
 		</HBox>
 		<StackPane.margin>
 			<Insets>
@@ -37,8 +37,8 @@
 	</VBox>
 
 
-	<C3DDialog fx:id="dialog">
-		<C3DDialogLayout>
+	<JFXDialog fx:id="dialog">
+		<JFXDialogLayout>
 			<heading>
 				<Label>C3D Dialog</Label>
 			</heading>
@@ -49,11 +49,11 @@
 					nisi ut aliquip ex ea commodo consequat.</Label>
 			</body>
 			<actions>
-				<C3DButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT
-				</C3DButton>
+				<JFXButton fx:id="acceptButton" styleClass="dialog-accept">ACCEPT
+				</JFXButton>
 			</actions>
-		</C3DDialogLayout>
-	</C3DDialog>
+		</JFXDialogLayout>
+	</JFXDialog>
 
 </StackPane>
 

@@ -15,7 +15,7 @@
 		<VBox spacing="20">
 			<children>
 				<Label styleClass="title-label">Combo Box</Label>
-				<C3DComboBox prefWidth="170" promptText="Select Item">
+				<JFXComboBox prefWidth="170" promptText="Select Item">
 					<items>
 						<FXCollections fx:factory="observableArrayList">
 							<Label>
@@ -55,14 +55,14 @@
 							</Label>
 						</FXCollections>
 					</items>
-				</C3DComboBox>
+				</JFXComboBox>
 			</children>
 		</VBox>
 
 
 		<VBox spacing="20">
 			<Label styleClass="title-label">Editable Box</Label>
-				<C3DComboBox editable="true" maxWidth="200" translateY="-6" promptText="Select/Edit Items">
+				<JFXComboBox editable="true" maxWidth="200" translateY="-6" promptText="Select/Edit Items">
 					<items>
 						<FXCollections fx:factory="observableArrayList">
 							<Label>
@@ -102,7 +102,7 @@
 							</Label>
 						</FXCollections>
 					</items>
-				</C3DComboBox>
+				</JFXComboBox>
 		</VBox>
 	</HBox>
 

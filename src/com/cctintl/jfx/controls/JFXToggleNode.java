@@ -45,7 +45,7 @@ public class JFXToggleNode extends ToggleButton {
 	}
 	
 	private void initialize() {
-		this.getStyleClass().add("c3d-toggle-node");        
+		this.getStyleClass().add("jfx-toggle-node");        
 	}
 	
 	

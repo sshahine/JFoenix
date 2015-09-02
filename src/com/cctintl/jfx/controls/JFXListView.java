@@ -203,7 +203,7 @@ public class JFXListView<T> extends ListView<T> {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-list-view";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-list-view";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);

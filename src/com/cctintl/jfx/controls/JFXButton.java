@@ -94,7 +94,7 @@ public class JFXButton extends Button {
 	 *                                                                         *
 	 **************************************************************************/
 	
-	private static final String DEFAULT_STYLE_CLASS = "c3d-button";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-button";
 	
 	
 	public static enum ButtonType{FLAT, RAISED};

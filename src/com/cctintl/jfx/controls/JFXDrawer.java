@@ -98,9 +98,9 @@ public class JFXDrawer extends StackPane {
 		overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), CornerRadii.EMPTY, Insets.EMPTY)));
 		overlayPane.setVisible(false);
 		overlayPane.setOpacity(0);
-		overlayPane.getStyleClass().add("c3d-drawer-overlay-pane");
+		overlayPane.getStyleClass().add("jfx-drawer-overlay-pane");
 
-		sidePane.getStyleClass().add("c3d-drawer-side-pane");
+		sidePane.getStyleClass().add("jfx-drawer-side-pane");
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
 		JFXDepthManager.setDepth(sidePane, 2);
 		sidePane.setPickOnBounds(false);
@@ -420,7 +420,7 @@ public class JFXDrawer extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-drawer";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-drawer";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        

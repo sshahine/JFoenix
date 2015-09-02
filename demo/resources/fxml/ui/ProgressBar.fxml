@@ -8,13 +8,13 @@
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
 	<VBox spacing="50" alignment="BASELINE_CENTER" maxWidth="550" maxHeight="250" >
-		<C3DProgressBar fx:id="progress1" progress="100"></C3DProgressBar>
-		<C3DProgressBar></C3DProgressBar>
+		<JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>
+		<JFXProgressBar></JFXProgressBar>
 
-		<C3DProgressBar fx:id="progress2" styleClass="custom-c3d-progress-bar" progress="100"></C3DProgressBar>
-		<C3DProgressBar styleClass="custom-c3d-progress-bar"></C3DProgressBar>
+		<JFXProgressBar fx:id="progress2" styleClass="custom-c3d-progress-bar" progress="100"></JFXProgressBar>
+		<JFXProgressBar styleClass="custom-c3d-progress-bar"></JFXProgressBar>
 
-		<C3DProgressBar styleClass="custom-c3d-progress-bar-stroke"></C3DProgressBar>
+		<JFXProgressBar styleClass="custom-c3d-progress-bar-stroke"></JFXProgressBar>
 		<StackPane.margin>	
 			<Insets>
 				<left>50</left>

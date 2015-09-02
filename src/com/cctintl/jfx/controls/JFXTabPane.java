@@ -33,7 +33,7 @@ import com.cctintl.jfx.skins.JFXTabPaneSkin;
 
 public class JFXTabPane extends TabPane {
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-tab-pane";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
 
 	public JFXTabPane() {
 		super();

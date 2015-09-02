@@ -21,13 +21,13 @@
 			<Label styleClass="title-label">Font Awesome Icons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DRippler postion="BACK" styleClass="icons-rippler">
+					<JFXRippler postion="BACK" styleClass="icons-rippler">
 						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
-					</C3DRippler>
+					</JFXRippler>
 
-					<C3DRippler postion="BACK" styleClass="icons-rippler1">
+					<JFXRippler postion="BACK" styleClass="icons-rippler1">
 						<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
-					</C3DRippler>
+					</JFXRippler>
 
 				</children>
 			</HBox>
@@ -35,18 +35,18 @@
 			<Label styleClass="title-label">Animated Icons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DHamburger fx:id="burger1" style="-fx-padding:20;">					
+					<JFXHamburger fx:id="burger1" style="-fx-padding:20;">					
 						<HamburgerSlideCloseTransition  />
-					</C3DHamburger>
-					<C3DHamburger fx:id="burger2" style="-fx-padding:20;">
+					</JFXHamburger>
+					<JFXHamburger fx:id="burger2" style="-fx-padding:20;">
 						<HamburgerBackArrowBasicTransition />
-					</C3DHamburger>
-					<C3DHamburger fx:id="burger3" style="-fx-padding:20;">
+					</JFXHamburger>
+					<JFXHamburger fx:id="burger3" style="-fx-padding:20;">
 						<HamburgerBasicCloseTransition />
-					</C3DHamburger>
-					<C3DHamburger fx:id="burger4" style="-fx-padding:20;">
+					</JFXHamburger>
+					<JFXHamburger fx:id="burger4" style="-fx-padding:20;">
 						<HamburgerNextArrowBasicTransition />
-					</C3DHamburger>
+					</JFXHamburger>
 				</children>
 			</HBox>
 		</children>

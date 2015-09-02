@@ -14,34 +14,34 @@
 	xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane maxWidth="500">
-	<C3DListView fx:id="list1" styleClass="custom-c3d-list-view"
+	<JFXListView fx:id="list1" styleClass="custom-c3d-list-view"
 			layoutX="0" layoutY="50">
 			<Label>Item 1</Label>
-			<C3DListView fx:id="subList" styleClass="sublist">
+			<JFXListView fx:id="subList" styleClass="sublist">
 				<groupnode>
 					<Label> My Sub List </Label>
 				</groupnode>
 				<Label> Buttons </Label>
 				<Label> Check Box </Label>
-			</C3DListView>
+			</JFXListView>
 			<Label>Item 2</Label>
 			<Label>Item 3</Label>
 			<Label>Item 4</Label>
-			<C3DListView fx:id="subList1" styleClass="sublist">
+			<JFXListView fx:id="subList1" styleClass="sublist">
 				<groupnode>
 					<Label> My Sub List </Label>
 				</groupnode>
 				<Label> Buttons </Label>
 				<Label> Check Box </Label>
-			</C3DListView>
+			</JFXListView>
 			<Label>Item 6</Label>
 			<Label>Item 7</Label>
 			<Label>Item 8</Label>
-		</C3DListView>
+		</JFXListView>
 		
 
 
-		<C3DListView fx:id="list2" styleClass="custom-c3d-list-view1"
+		<JFXListView fx:id="list2" styleClass="custom-c3d-list-view1"
 			layoutX="300" layoutY="50">
 			<Label>
 				Item 1
@@ -78,15 +78,15 @@
 						styleClass="custom-c3d-list-view-icon" />
 				</graphic>
 			</Label>
-		</C3DListView>
+		</JFXListView>
 
 		<FlowPane layoutX="80" layoutY="550">
-			<C3DButton fx:id="button3D" prefWidth="100" buttonType="RAISED"
-				text="3D" style="-fx-background-color:WHITE;"></C3DButton>
-			<C3DButton fx:id="expand" prefWidth="100" buttonType="FLAT"
-				text="EXPAND"></C3DButton>
-			<C3DButton fx:id="collapse" prefWidth="100" buttonType="FLAT"
-				text="COLLAPSE"></C3DButton>
+			<JFXButton fx:id="button3D" prefWidth="100" buttonType="RAISED"
+				text="3D" style="-fx-background-color:WHITE;"></JFXButton>
+			<JFXButton fx:id="expand" prefWidth="100" buttonType="FLAT"
+				text="EXPAND"></JFXButton>
+			<JFXButton fx:id="collapse" prefWidth="100" buttonType="FLAT"
+				text="COLLAPSE"></JFXButton>
 		</FlowPane>
 	</AnchorPane>
 

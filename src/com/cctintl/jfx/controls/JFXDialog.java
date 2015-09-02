@@ -145,7 +145,7 @@ public class JFXDialog extends StackPane {
 			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 			overlayPane = new StackPane();
 			overlayPane.getChildren().add(contentHolder);
-			overlayPane.getStyleClass().add("c3d-dialog-overlay-pane");
+			overlayPane.getStyleClass().add("jfx-dialog-overlay-pane");
 			StackPane.setAlignment(contentHolder, Pos.CENTER);
 			overlayPane.setVisible(false);
 			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
@@ -341,7 +341,7 @@ public class JFXDialog extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-dialog";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-dialog";
 
 
 	private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<DialogTransition>(StyleableProperties.DIALOG_TRANSITION, JFXDialog.this, "dialogTransition", DialogTransition.CENTER );

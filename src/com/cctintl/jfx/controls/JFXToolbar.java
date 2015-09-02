@@ -75,7 +75,7 @@ public class JFXToolbar extends BorderPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-tool-bar";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-tool-bar";
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);

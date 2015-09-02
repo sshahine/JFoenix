@@ -32,7 +32,7 @@ import com.cctintl.jfx.skins.JFXRadioButtonSkin;
 
 public class JFXRadioButton extends RadioButton {
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-radio-button";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
 
 	public JFXRadioButton(String text) {
 		super(text);

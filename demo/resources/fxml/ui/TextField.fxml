@@ -10,19 +10,19 @@
 	xmlns="http://javafx.com/javafx/2.2">
 	<VBox prefWidth="300" spacing="30" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER">
 		<children>
-			<C3DTextField promptText="Type Something" prefWidth="300">
-			</C3DTextField>
-			<C3DTextField promptText="Im disabled" disable="true"
+			<JFXTextField promptText="Type Something" prefWidth="300">
+			</JFXTextField>
+			<JFXTextField promptText="Im disabled" disable="true"
 				prefWidth="300">
-			</C3DTextField>
-			<C3DTextField id="validatedText" promptText="With validation"
+			</JFXTextField>
+			<JFXTextField id="validatedText" promptText="With validation"
 				prefWidth="300">
 				<validators>
 					<RequiredFieldValidator message="Input Required!">
 						<Icon awesomeIcon="WARNING" style=";" />
 					</RequiredFieldValidator>
 				</validators>
-			</C3DTextField>
+			</JFXTextField>
 		</children>
 	</VBox>
 </StackPane>

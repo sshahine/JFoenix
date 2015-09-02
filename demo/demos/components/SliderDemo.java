@@ -44,7 +44,7 @@ public class SliderDemo extends Application {
 
 			Scene scene = new Scene(new Group());
 			((Group) scene.getRoot()).getChildren().add(vbox);
-			//scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
+			//scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/jfx-components.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setWidth(900);
 			primaryStage.setHeight(900);

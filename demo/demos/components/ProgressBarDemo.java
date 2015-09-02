@@ -65,7 +65,7 @@ public class ProgressBarDemo extends Application {
 
 		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
 		stage.setTitle("JavaFX TextField ;) ");
-		scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
+		scene.getStylesheets().add(SliderDemo.class.getResource("/resources/css/jfx-components.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();

@@ -8,16 +8,16 @@
 	xmlns="http://javafx.com/javafx/2.2">
 	<HBox maxWidth="300" maxHeight="400" alignment="BASELINE_CENTER">
 		<children>
-			<C3DSpinner styleClass="first-spinner">
-			</C3DSpinner>
-			<C3DSpinner styleClass="second-spinner">
-			</C3DSpinner>
-			<C3DSpinner styleClass="third-spinner">
-			</C3DSpinner>
-			<C3DSpinner styleClass="fourth-spinner">
-			</C3DSpinner>
-			<C3DSpinner>
-			</C3DSpinner>
+			<JFXSpinner styleClass="first-spinner">
+			</JFXSpinner>
+			<JFXSpinner styleClass="second-spinner">
+			</JFXSpinner>
+			<JFXSpinner styleClass="third-spinner">
+			</JFXSpinner>
+			<JFXSpinner styleClass="fourth-spinner">
+			</JFXSpinner>
+			<JFXSpinner>
+			</JFXSpinner>
 		</children>
 	</HBox>
 </StackPane>

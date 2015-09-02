@@ -41,7 +41,7 @@ public class RadioButtonDemo extends Application {
 			primaryStage.setWidth(500);
 			primaryStage.setHeight(400);
 
-			scene.getStylesheets().add(InputDemo.class.getResource("/resources/css/c3dobjects.css").toExternalForm());
+			scene.getStylesheets().add(InputDemo.class.getResource("/resources/css/jfx-components.css").toExternalForm());
 
 			primaryStage.show();
 		} catch (Exception e) {

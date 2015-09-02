@@ -32,7 +32,7 @@ import com.cctintl.jfx.skins.JFXProgressBarSkin;
 
 public class JFXProgressBar extends ProgressBar {
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-progress-bar";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
 
 	public JFXProgressBar() {
 		super();

@@ -107,7 +107,7 @@ public class JFXPopup extends StackPane {
 			// bind the content holder size to its content
 			contentHolder.prefWidthProperty().bind(this.content.prefWidthProperty());
 			contentHolder.prefHeightProperty().bind(this.content.prefHeightProperty());
-			contentHolder.getStyleClass().add("c3d-popup-holder");
+			contentHolder.getStyleClass().add("jfx-popup-holder");
 			contentHolder.getTransforms().add(scaleTransform);			
 			JFXDepthManager.setDepth(contentHolder, 4);
 			// to allow closing he popup when clicking on the shadowed area
@@ -116,7 +116,7 @@ public class JFXPopup extends StackPane {
 			// ensure stackpane is never resized beyond it's preferred size
 			overlayPane = new AnchorPane();
 			overlayPane.getChildren().add(contentHolder);
-			overlayPane.getStyleClass().add("c3d-popup-overlay-pane");
+			overlayPane.getStyleClass().add("jfx-popup-overlay-pane");
 			overlayPane.setVisible(false);			
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
@@ -265,7 +265,7 @@ public class JFXPopup extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "c3d-popup";
+	private static final String DEFAULT_STYLE_CLASS = "jfx-popup";
 
 	private void initialize() {
 		this.setVisible(false);

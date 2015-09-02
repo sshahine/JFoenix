@@ -28,7 +28,7 @@ public class JFXNodesList extends VBox {
 	
 	public JFXNodesList() {
 		this.setPickOnBounds(false);
-		this.getStyleClass().add("c3d-nodes-list");
+		this.getStyleClass().add("jfx-nodes-list");
 	}
 	
 	public void addAnimatedNode(Region node){

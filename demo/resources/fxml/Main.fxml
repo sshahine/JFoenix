@@ -35,33 +35,33 @@
 
 		<top>
 			<VBox spacing="20">
-				<C3DToolbar>
+				<JFXToolbar>
 					<leftItems>
-						<C3DRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
+						<JFXRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
 							<StackPane fx:id="titleBurgerContainer">
-								<C3DHamburger fx:id="titleBurger">
+								<JFXHamburger fx:id="titleBurger">
 									<HamburgerBackArrowBasicTransition />
-								</C3DHamburger>
+								</JFXHamburger>
 							</StackPane>
-						</C3DRippler>
+						</JFXRippler>
 						<Label>Material Design</Label>
 					</leftItems>
 					<rightItems>
-						<C3DRippler fx:id="optionsRippler" maskType="CIRCLE"
+						<JFXRippler fx:id="optionsRippler" maskType="CIRCLE"
 							style="-fx-ripple-color:WHITE;">
 							<StackPane fx:id="optionsBurger">
-								<C3DHamburger styleClass="c3d-options-burger">
-								</C3DHamburger>
+								<JFXHamburger styleClass="c3d-options-burger">
+								</JFXHamburger>
 							</StackPane>
-						</C3DRippler>
+						</JFXRippler>
 					</rightItems>
-				</C3DToolbar>
+				</JFXToolbar>
 			</VBox>
 		</top>
 
 		<!-- Content Area -->
 		<center>
-			<C3DDrawer fx:id="drawer" drawerWidth="250" direction="LEFT">
+			<JFXDrawer fx:id="drawer" drawerWidth="250" direction="LEFT">
 				<styleClass>
 					<String fx:value="body" />
 				</styleClass>
@@ -73,12 +73,12 @@
 					<StackPane fx:id="content" >
 					</StackPane>
 				</content>
-			</C3DDrawer>
+			</JFXDrawer>
 		</center>
 	</BorderPane>
 
-	<C3DPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
-		<C3DListView styleClass="option-list-view">
+	<JFXPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
+		<JFXListView styleClass="option-list-view">
 			<Label>
 				Contact Us
 				<graphic>
@@ -93,7 +93,7 @@
 						styleClass="option-c3d-list-view-icon" />
 				</graphic>
 			</Label>
-		</C3DListView>
-	</C3DPopup>
+		</JFXListView>
+	</JFXPopup>
 
 </StackPane>

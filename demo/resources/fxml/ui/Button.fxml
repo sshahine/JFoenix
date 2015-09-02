@@ -13,25 +13,25 @@
 			<Label styleClass="title-label">Flat Buttons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="BUTTON" style="-fx-font-size:14px;"></C3DButton>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="COLORED" style="-fx-text-fill:#5264AE;-fx-font-size:14px;"></C3DButton>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="DISABLED" style="-fx-font-size:14px;" disable="true"></C3DButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="BUTTON" style="-fx-font-size:14px;"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="COLORED" style="-fx-text-fill:#5264AE;-fx-font-size:14px;"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="DISABLED" style="-fx-font-size:14px;" disable="true"></JFXButton>
 				</children>
 			</HBox>
 			
 			<Label styleClass="title-label">Raised Buttons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON" style="-fx-font-size:14px;-fx-background-color:WHITE;"></C3DButton>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"></C3DButton>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED" style="-fx-font-size:14px;" disable="true"></C3DButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON" style="-fx-font-size:14px;-fx-background-color:WHITE;"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED" style="-fx-font-size:14px;" disable="true"></JFXButton>
 				</children>
 			</HBox>
 			
 			<Label styleClass="title-label">Styling Options</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<C3DButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-c3d-button-raised"></C3DButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER" styleClass="custom-c3d-button-raised"></JFXButton>
 				</children>
 			</HBox>
 		</children>
