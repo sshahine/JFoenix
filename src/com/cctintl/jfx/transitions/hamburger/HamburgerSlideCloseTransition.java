@@ -57,9 +57,6 @@ public class HamburgerSlideCloseTransition extends CachedTimelineTransition impl
 			if(this.getRate() == 1)
 				burger.getChildren().get(1).setVisible(false);
 		});
-		burger.widthProperty().addListener((o,oldVal,newVal)->{
-			System.out.println(newVal);
-		});
 	}
 	
 	@Override
