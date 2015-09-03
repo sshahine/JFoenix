@@ -39,10 +39,14 @@ public class SVGGlyphLoader {
 	public static SVGGlyph getGlyph(String glyphName){
 		return glyphsMap.get(glyphName).build();
 	}
-	
+
+	/*
+	 * this method is used to retrive icons from icomoon
+	 * as we need to apply transformation to correct the icon since 
+	 * its being after importing from icomoon
+	 */
 	public static SVGGlyph getIcoMoonGlyph(String glyphName){
 		SVGGlyph glyph = glyphsMap.get(glyphName).build();
-		// apply transformation is the svg from icomoon is flipped
 		glyph.getTransforms().add(new Scale(1,-1));
 		Translate height = new Translate();
 		height.yProperty().bind(Bindings.createDoubleBinding(()-> -glyph.getHeight() , glyph.heightProperty()));
