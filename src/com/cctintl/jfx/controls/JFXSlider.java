@@ -56,7 +56,7 @@ public class JFXSlider extends Slider {
 	}
 
 	private void initialize() {
-		getStyleClass().add(DEFAULT_STYLE_CLASS);
+		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 	}
 
 	@Override
