@@ -31,10 +31,13 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 import com.cctintl.jfx.controls.JFXHamburger;
+import com.cctintl.jfx.controls.JFXRippler;
 import com.cctintl.jfx.jidefx.CachedTimelineTransition;
 
 public class HamburgerSlideCloseTransition extends CachedTimelineTransition implements HamburgerTransition {
@@ -46,11 +49,42 @@ public class HamburgerSlideCloseTransition extends CachedTimelineTransition impl
 	public HamburgerSlideCloseTransition(JFXHamburger burger) {
 		super(burger, createTimeline(burger));				
 		timeline.bind(Bindings.createObjectBinding(()->createTimeline(burger),
-				burger.widthProperty(), burger.heightProperty(),
 				((Region) burger.getChildren().get(0)).widthProperty(), ((Region) burger.getChildren().get(0)).heightProperty() ));					
 		setCycleDuration(Duration.seconds(0.3));
 		setDelay(Duration.seconds(0));
+		
+		setOnFinished((finish)->{
+			if(this.getRate() == 1)
+				burger.getChildren().get(1).setVisible(false);
+		});
+		burger.widthProperty().addListener((o,oldVal,newVal)->{
+			System.out.println(newVal);
+		});
 	}
+	
+	@Override
+	protected void starting() {		
+		super.starting();
+		
+		if(node.getParent() instanceof JFXRippler){
+			JFXRippler rippler = (JFXRippler) node.getParent();
+			BorderPane p = new BorderPane(node);
+			p.setMaxWidth(((JFXHamburger)node).getWidth());
+			p.setMinWidth(((JFXHamburger)node).getWidth());
+			p.addEventHandler(MouseEvent.ANY, (event)->{
+				if(!event.isConsumed()){
+					event.consume();
+					node.fireEvent(event);	
+				}
+			});
+			rippler.setControl(p);
+		}
+		
+		if(this.getRate() == -1) {
+			((JFXHamburger)node).getChildren().get(1).setVisible(true);
+		}
+	}
+	
 	
 	private static Timeline createTimeline(JFXHamburger burger){
 		double burgerWidth = burger.getChildren().get(0).getLayoutBounds().getWidth();

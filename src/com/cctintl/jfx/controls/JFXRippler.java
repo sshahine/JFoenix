@@ -174,10 +174,10 @@ public class JFXRippler extends StackPane {
 	 */
 	protected Node getMask(){
 		double borderWidth = ripplerPane.getBorder()!=null? ripplerPane.getBorder().getInsets().getTop() : 0;
-		Shape mask = new Rectangle(control.getBoundsInParent().getWidth() - 0.1 -2*borderWidth ,control.getBoundsInParent().getHeight() - 0.1 - 2*borderWidth); // -0.1 to prevent resizing the anchor pane
+		Shape mask = new Rectangle(control.getLayoutBounds().getWidth() - 0.1 -2*borderWidth ,control.getLayoutBounds().getHeight() - 0.1 - 2*borderWidth); // -0.1 to prevent resizing the anchor pane
 		if(maskType.get().equals(JFXRippler.RipplerMask.CIRCLE)){
-			double radius = Math.min((control.getBoundsInParent().getWidth()/2) - 0.1 - 2*borderWidth, (control.getBoundsInParent().getHeight()/2) - 0.1 - 2*borderWidth);
-			mask = new Circle(control.getBoundsInParent().getWidth()/2 , control.getBoundsInParent().getHeight()/2, radius, Color.BLUE);
+			double radius = Math.min((control.getLayoutBounds().getWidth()/2) - 0.1 - 2*borderWidth, (control.getLayoutBounds().getHeight()/2) - 0.1 - 2*borderWidth);
+			mask = new Circle(control.getLayoutBounds().getWidth()/2 , control.getLayoutBounds().getHeight()/2, radius, Color.BLUE);
 		}
 		return mask;
 	}
@@ -321,9 +321,9 @@ public class JFXRippler extends StackPane {
 //			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
 //					new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			public OverLayRipple() {
-				super(control.getBoundsInParent().getWidth() - 0.1,control.getBoundsInParent().getHeight() - 0.1);
-				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getWidth() - 0.1, control.boundsInParentProperty()));
-				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getBoundsInParent().getHeight() - 0.1, control.boundsInParentProperty()));
+				super(control.getLayoutBounds().getWidth() - 0.1,control.getLayoutBounds().getHeight() - 0.1);
+				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
+				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
 				this.setOpacity(0);
 			}
 		}
