@@ -24,7 +24,7 @@
 				<children>
 					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON" style="-fx-font-size:14px;-fx-background-color:WHITE;"></JFXButton>
 					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"></JFXButton>
-					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED" style="-fx-font-size:14px;" disable="true"></JFXButton>
+					<JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED" style="-fx-background-color:WHITE;-fx-font-size:14px;" disable="true"></JFXButton>
 				</children>
 			</HBox>
 			

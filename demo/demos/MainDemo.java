@@ -18,7 +18,8 @@ public class MainDemo extends Application {
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		flow.createHandler().start(container);
 		Scene scene = new Scene(container.getView(), 800, 800);
-//		Font.loadFont(MainDemo.class.getResource("/resources/roboto/Roboto-Medium.ttf").toExternalForm(), 10);
+		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
+		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-main-demo.css").toExternalForm());
 //		stage.initStyle(StageStyle.UNDECORATED);
 //		stage.setFullScreen(true);

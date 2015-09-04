@@ -22,9 +22,6 @@
 	-fx-padding	: 14.0 0.0 -20.0 0.0;	
 	-fx-text-fill: rgba(0.0, 0.0, 0.0, 0.87);
 }
-.jfx-button {
-	-fx-background-color: transparent ;
-}
 
 /*******************************************************************************
  *                                                                             *
@@ -53,7 +50,7 @@
 .dialog-trigger{
 	-fx-background-color: WHITE;
 	-fx-button-type:RAISED;
-	-fx-font-size: 16.0px;
+	-fx-font-size: 14.0px;
 }
 
 .jfx-dialog-layout {
@@ -669,9 +666,4 @@
 }
 .combo-box-popup .jfx-list-view .jfx-list-cell .jfx-rippler {
 	-fx-rippler-fill: #5264AE;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("../roboto/Roboto-Regular.ttf");
 }

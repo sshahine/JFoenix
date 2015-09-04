@@ -60,8 +60,6 @@ public class JFXButtonSkin extends ButtonSkin {
 	private final StackPane buttonContainer = new StackPane();
 	private JFXRippler buttonRippler;
 	private Transition clickedAnimation ;
-
-	private final Color disabledColor = Color.valueOf("#EAEAEA");
 	private final CornerRadii defaultRadii = new CornerRadii(3);
 	
 	private boolean invalid = true;
@@ -90,7 +88,7 @@ public class JFXButtonSkin extends ButtonSkin {
 		buttonContainer.getChildren().add(buttonRippler);
 
 
-		// add listeners to the button
+		// add listeners to the button and bind properties
 		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
 		button.setOnMousePressed((e)->{
 			if(clickedAnimation!=null){
@@ -105,8 +103,31 @@ public class JFXButtonSkin extends ButtonSkin {
 			}
 		});
 		
+		buttonContainer.borderProperty().bind(getSkinnable().borderProperty());		
+		buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+			// reset button background to transparent if its set to java default values
+			if(button.getBackground() == null || isJavaDefaultBackground(button.getBackground()) || isJavaDefaultClickedBackground(button.getBackground()) )
+				button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
+
+			//Insets always Empty
+			if(getSkinnable().getBackground()!=null && getSkinnable().getBackground().getFills().get(0).getInsets().equals(new Insets(-0.2,-0.2, -0.2,-0.2))){
+				return new Background(new BackgroundFill(getSkinnable().getBackground()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
+						getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
+						Insets.EMPTY/*new Insets(0,0,-1.0,0)*/));
+			}else{
+				return new Background(new BackgroundFill(getSkinnable().getBackground()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
+						getSkinnable().getBackground()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
+						Insets.EMPTY/*getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getInsets() : Insets.EMPTY*/));	
+			}
+		}, getSkinnable().backgroundProperty()));
+		
+		
 		button.ripplerFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
-		button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));		
+		
+		// set default background to transparent
+		if(button.getBackground() == null || isJavaDefaultBackground(button.getBackground()))
+			button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
+		
 		updateButtonType(button.getButtonType());
 		updateChildren();
 	}
@@ -123,19 +144,6 @@ public class JFXButtonSkin extends ButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
-			buttonContainer.borderProperty().bind(getSkinnable().borderProperty());
-			buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-				//Insets always Empty
-				if(getSkinnable().backgroundProperty().get()!=null && getSkinnable().backgroundProperty().get().getFills().get(0).getInsets().equals(new Insets(-0.2,-0.2, -0.2,-0.2))){
-					return new Background(new BackgroundFill(getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
-							getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
-							Insets.EMPTY/*new Insets(0,0,-1.0,0)*/));
-				}else{
-					return new Background(new BackgroundFill(getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getFill() : Color.TRANSPARENT, 
-							getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getRadii() : defaultRadii,
-							Insets.EMPTY/*getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getInsets() : Insets.EMPTY*/));	
-				}
-			}, getSkinnable().backgroundProperty()));
 			if(((JFXButton)getSkinnable()).getRipplerFill() == null){
 				if(getChildren().get(1) instanceof LabeledText){
 					buttonRippler.setRipplerFill(((LabeledText)getChildren().get(1)).getFill());			
@@ -154,6 +162,14 @@ public class JFXButtonSkin extends ButtonSkin {
 		layoutLabelInArea(x, y, w, h);
 	}
 
+	private boolean isJavaDefaultBackground(Background background){
+		return background.getFills().get(0).getFill().toString().equals("0xffffffba"); 
+	}
+	
+	private boolean isJavaDefaultClickedBackground(Background background){
+		return background.getFills().get(0).getFill().toString().equals("0x039ed3ff"); 
+	}
+	
 	private void updateButtonType(ButtonType type){
 		switch (type) {
 		case RAISED:

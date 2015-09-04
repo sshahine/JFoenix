@@ -40,7 +40,7 @@
 	<JFXDialog fx:id="dialog">
 		<JFXDialogLayout>
 			<heading>
-				<Label>C3D Dialog</Label>
+				<Label>JFoenix Dialog</Label>
 			</heading>
 			<body>
 				<Label>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed

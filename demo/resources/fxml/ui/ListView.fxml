@@ -80,7 +80,7 @@
 			</Label>
 		</JFXListView>
 
-		<FlowPane layoutX="80" layoutY="550">
+		<FlowPane hgap="20" layoutX="80" layoutY="550">
 			<JFXButton fx:id="button3D" prefWidth="100" buttonType="RAISED"
 				text="3D" style="-fx-background-color:WHITE;"></JFXButton>
 			<JFXButton fx:id="expand" prefWidth="100" buttonType="FLAT"

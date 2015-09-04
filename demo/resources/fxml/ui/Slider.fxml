@@ -13,7 +13,7 @@
 				<children>
 					<JFXSlider orientation="VERTICAL" prefHeight="300">
 					</JFXSlider>
-					<JFXSlider orientation="VERTICAL" styleClass="c3d-slider-style" prefHeight="200">
+					<JFXSlider orientation="VERTICAL" styleClass="jfx-slider-style" prefHeight="200">
 					</JFXSlider>
 					<JFXSlider orientation="VERTICAL" prefHeight="200" disable="true">
 					</JFXSlider>
@@ -27,7 +27,7 @@
 			</HBox>
 			<HBox spacing="50" alignment="BASELINE_CENTER">
 				<children>
-					<JFXSlider styleClass="c3d-slider-style" prefWidth="300">
+					<JFXSlider styleClass="jfx-slider-style" prefWidth="300">
 					</JFXSlider>
 				</children>
 			</HBox>
