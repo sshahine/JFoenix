@@ -185,8 +185,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 
-		if(invalid){
-
+		if(invalid){			
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
@@ -246,6 +245,8 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
+			if(getSkinnable().isFocused()) focus();
+			
 			invalid = false;
 		}		
 
