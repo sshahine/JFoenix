@@ -15,14 +15,14 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXTextField;
-import com.cctintl.jfx.controls.JFXTreeTableColumn;
-import com.cctintl.jfx.controls.JFXTreeTableView;
-import com.cctintl.jfx.controls.RecursiveTreeItem;
-import com.cctintl.jfx.controls.cells.editors.TextFieldEditorBuilder;
-import com.cctintl.jfx.controls.cells.editors.base.GenericEditableTreeTableCell;
-import com.cctintl.jfx.controls.datamodels.treetable.RecursiveTreeObject;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
+import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 
 
 public class TreeTableDemo extends Application {

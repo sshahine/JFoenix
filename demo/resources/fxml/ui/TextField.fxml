@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.StackPane?>
-<?import com.cctintl.jfx.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.VBox?>
-<?import com.cctintl.jfx.validation.RequiredFieldValidator?>
+<?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"

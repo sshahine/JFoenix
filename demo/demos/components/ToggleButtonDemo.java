@@ -12,8 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXToggleButton;
-import com.cctintl.jfx.controls.JFXToggleNode;
+import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.JFXToggleNode;
 
 import de.jensd.fx.fontawesome.Icon;
 

@@ -11,8 +11,8 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXListView;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 
 @FXMLController(value = "/resources/fxml/ui/ListView.fxml" , title = "Material Design Example")
 public class ListViewController {

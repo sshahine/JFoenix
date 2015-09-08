@@ -9,7 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXRadioButton;
 
 public class RadioButtonDemo extends Application {
 	@Override

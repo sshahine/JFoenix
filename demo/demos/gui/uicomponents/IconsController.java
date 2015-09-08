@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXHamburger;
+import com.jfoenix.controls.JFXHamburger;
 
 @FXMLController(value = "/resources/fxml/ui/Icons.fxml" , title = "Material Design Example")
 public class IconsController {

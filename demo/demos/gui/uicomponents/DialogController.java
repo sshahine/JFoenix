@@ -11,9 +11,9 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXDialog;
-import com.cctintl.jfx.controls.JFXDialog.DialogTransition;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialog.DialogTransition;
 
 @FXMLController(value = "/resources/fxml/ui/Dialog.fxml" , title = "Material Design Example")
 public class DialogController {

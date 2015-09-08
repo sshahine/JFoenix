@@ -5,7 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXSpinner;
+import com.jfoenix.controls.JFXSpinner;
 
 import demos.MainDemo;
 

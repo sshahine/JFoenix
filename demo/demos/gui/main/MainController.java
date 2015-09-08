@@ -16,12 +16,12 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXDrawer;
-import com.cctintl.jfx.controls.JFXHamburger;
-import com.cctintl.jfx.controls.JFXPopup;
-import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
-import com.cctintl.jfx.controls.JFXRippler;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXPopup.PopupHPosition;
+import com.jfoenix.controls.JFXPopup.PopupVPosition;
 
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;

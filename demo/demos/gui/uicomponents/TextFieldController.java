@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXTextField;
+import com.jfoenix.controls.JFXTextField;
 
 @FXMLController(value = "/resources/fxml/ui/TextField.fxml", title = "Material Design Example")
 public class TextFieldController {

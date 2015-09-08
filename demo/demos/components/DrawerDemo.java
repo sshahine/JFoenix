@@ -8,8 +8,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXDrawer;
-import com.cctintl.jfx.controls.JFXHamburger;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 public class DrawerDemo extends Application {
 

@@ -9,8 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXSlider;
-import com.cctintl.jfx.controls.JFXSlider.IndicatorPosition;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXSlider.IndicatorPosition;
 
 public class SliderDemo extends Application {
 

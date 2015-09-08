@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.StackPane?>
-<?import com.cctintl.jfx.controls.JFXToggleButton?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.Label?>
-<?import com.cctintl.jfx.controls.JFXToggleNode?>
+<?import com.jfoenix.controls.JFXToggleNode?>
 <?import de.jensd.fx.fontawesome.Icon?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"

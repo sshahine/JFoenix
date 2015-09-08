@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXListView;
+import com.jfoenix.controls.JFXListView;
 
 import demos.gui.uicomponents.ButtonController;
 import demos.gui.uicomponents.CheckboxController;

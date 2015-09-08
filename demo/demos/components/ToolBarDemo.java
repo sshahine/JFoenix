@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXToolbar;
+import com.jfoenix.controls.JFXToolbar;
 
 public class ToolBarDemo extends Application {
 

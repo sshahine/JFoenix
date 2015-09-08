@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import com.cctintl.jfx.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXProgressBar;
 
 public class ProgressBarDemo extends Application {
 

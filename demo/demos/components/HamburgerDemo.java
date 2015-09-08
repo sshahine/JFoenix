@@ -8,11 +8,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXHamburger;
-import com.cctintl.jfx.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import com.cctintl.jfx.transitions.hamburger.HamburgerBasicCloseTransition;
-import com.cctintl.jfx.transitions.hamburger.HamburgerNextArrowBasicTransition;
-import com.cctintl.jfx.transitions.hamburger.HamburgerSlideCloseTransition;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 
 public class HamburgerDemo extends Application {
 

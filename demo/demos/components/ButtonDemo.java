@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXButton;
+import com.jfoenix.controls.JFXButton;
 
 public class ButtonDemo extends Application {
 

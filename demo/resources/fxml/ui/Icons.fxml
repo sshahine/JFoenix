@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.FlowPane?>
-<?import com.cctintl.jfx.controls.JFXRippler?>
+<?import com.jfoenix.controls.JFXRippler?>
 <?import de.jensd.fx.fontawesome.Icon?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import com.cctintl.jfx.controls.JFXHamburger?>
-<?import com.cctintl.jfx.transitions.hamburger.HamburgerBackArrowBasicTransition?>
-<?import com.cctintl.jfx.transitions.hamburger.HamburgerSlideCloseTransition?>
-<?import com.cctintl.jfx.transitions.hamburger.HamburgerBasicCloseTransition?>
-<?import com.cctintl.jfx.transitions.hamburger.HamburgerNextArrowBasicTransition?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
+<?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
+<?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
+<?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
 
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"

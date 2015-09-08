@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXProgressBar;
 
 @FXMLController(value = "/resources/fxml/ui/ProgressBar.fxml", title = "Material Design Example")
 public class ProgressBarController {

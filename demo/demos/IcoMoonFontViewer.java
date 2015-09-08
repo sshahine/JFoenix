@@ -25,11 +25,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXSlider;
-import com.cctintl.jfx.controls.JFXSlider.IndicatorPosition;
-import com.cctintl.jfx.svg.SVGGlyph;
-import com.cctintl.jfx.svg.SVGGlyphLoader;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXSlider.IndicatorPosition;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.svg.SVGGlyphLoader;
 
 /**
  * @author sshahine

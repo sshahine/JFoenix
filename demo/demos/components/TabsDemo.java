@@ -13,8 +13,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXButton;
-import com.cctintl.jfx.controls.JFXTabPane;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTabPane;
 
 public class TabsDemo extends Application {
 

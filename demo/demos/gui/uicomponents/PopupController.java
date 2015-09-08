@@ -12,11 +12,11 @@ import javafx.scene.layout.StackPane;
 
 import javax.annotation.PostConstruct;
 
-import com.cctintl.jfx.controls.JFXHamburger;
-import com.cctintl.jfx.controls.JFXPopup;
-import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXPopup.PopupHPosition;
+import com.jfoenix.controls.JFXPopup.PopupVPosition;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {

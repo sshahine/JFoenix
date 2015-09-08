@@ -8,8 +8,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.effects.JFXDepthManager;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.effects.JFXDepthManager;
 
 public class RipplerDemo extends Application {
 

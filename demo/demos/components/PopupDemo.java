@@ -8,14 +8,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXHamburger;
-import com.cctintl.jfx.controls.JFXListView;
-import com.cctintl.jfx.controls.JFXPopup;
-import com.cctintl.jfx.controls.JFXPopup.PopupHPosition;
-import com.cctintl.jfx.controls.JFXPopup.PopupVPosition;
-import com.cctintl.jfx.controls.JFXRippler;
-import com.cctintl.jfx.controls.JFXRippler.RipplerMask;
-import com.cctintl.jfx.controls.JFXRippler.RipplerPos;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXPopup.PopupHPosition;
+import com.jfoenix.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXRippler.RipplerMask;
+import com.jfoenix.controls.JFXRippler.RipplerPos;
 
 public class PopupDemo extends Application {
 

@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.cctintl.jfx.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXCheckBox;
 
 public class CheckBoxDemo extends Application {
 
