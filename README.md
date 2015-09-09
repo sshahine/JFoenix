@@ -20,6 +20,20 @@ To run the main dmeo, in JFoenix make directory run the batch file run-demo.bat 
  you can download the source code of the library, and build it as mentioned before. Building JFoenix will generate jfoenix.jar under build/dist folder. To use JFoenix, import the jfoenix.jar into your project and start using the new material design java components :).
  
 # Pics
- // links to GIF
+
+![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
+
+![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
+
+![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
+
+![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
+
+![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
+
+![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
+
+![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
+
  
  
