@@ -73,6 +73,13 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		
+		<copy todir="${classes}/resources">
+			<fileset dir="${src}/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
 	</target>
 	
 	<target name="runDemo" depends="compileDemo" description="Run the demo">
