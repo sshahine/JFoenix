@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="JFoenix Demo" default="build-demo.jfx" basedir=".">
+	<import file="build.xml"/>
+	
 	<!-- Define the properties used by the build -->
-	<property name="src" location="../demo" />
-	<property name="build" location="build" />
-	<property name="dist" location="dist" />
+	<property name="srcDemo" location="../demo" />
+	<property name="build" location="../build" />
+	<property name="dist" location="${build}/dist" />
+	<property name="classes" location="${build}/classes"/>
 	<property name="libs" location="../libs" />
 	<property name="main-class"  value="demos.MainDemo"/>
 	
+	<path id="path.all">
+		<fileset dir="${java.home}/lib">
+			<include name="jce.jar" />
+			<include name="jsse.jar" />
+		</fileset>
+		<fileset dir="${dist}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
 	
-
 	<path id="path.jfx.lib">
 		<fileset dir="${libs}">
 			<include name="**/*.jar" />
@@ -18,39 +29,63 @@
 	    </fileset>
 	</path>
 
-	<manifestclasspath property="jar.classpath" jarfile="${dist}/jfoenix.jar">
-          <classpath refid="path.jfx.lib" />
-    </manifestclasspath>
-		
-	<target name="clean" description="Delete old work and dist directories">
+	<target name="cleanDemo" description="Delete old work and dist directories">
 		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}" />
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
 	</target>
 	
-	<target name="init">
+	<target name="initDemo" depends="cleanDemo">
 		<!-- Create the time stamp -->
 		<tstamp />
 		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build}" />
+		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
 	</target>
 	
-	<target name="compile" depends="init" description="compile the source ">
-		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" source="1.8" target="1.8">
-			<classpath>
-				<path refid="path.jfx.lib" />
-			</classpath>
-		<compilerarg value="-Xlint" />
-		</javac>
-	</target>
-	
-	<target name="run" depends="compile" description="Run the demo">
-		<!-- Put everything in ${build} into the jfoenix.jar file -->
-		     <java classname="${main-class}" fork="true">
-	         </java>
-	</target>
-	
-	<target name="build-demo.jfx" depends="clean,run">
+	<target name="compileDemo" description="compile the source ">
+		<!--create classes directory-->
+		<mkdir dir="${classes}"/>
 		
+		<!--create lib directory-->
+		<mkdir dir="${dist}/lib"/>
+		<!--copy libs to new destination-->
+		<copy todir="${dist}/lib">
+			<fileset dir="${libs}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac destdir="${classes}" bootclasspath="${java.home}/lib/rt.jar" source="1.8" target="1.8">
+			<classpath>
+				<path refid="path.all" />
+			</classpath>
+			<compilerarg value="-Xlint" />
+			<src path="${srcDemo}"/>  
+		</javac>
+		
+		<copy todir="${classes}/resources">
+			<fileset dir="${srcDemo}/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="runDemo" depends="compileDemo" description="Run the demo">
+		<!-- Put everything in ${build} into the jfoenix.jar file -->
+		<java classname="${main-class}" fork="true">
+			<classpath>
+				<path refid="path.all"/>
+				<pathelement path="."/>
+				<pathelement path="${classes}"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="build-demo.jfx" depends="initDemo,dist,runDemo">
 	</target>
 </project>
