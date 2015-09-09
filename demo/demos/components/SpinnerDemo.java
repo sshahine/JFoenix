@@ -1,7 +1,6 @@
 package demos.components;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -14,14 +13,11 @@ public class SpinnerDemo extends Application {
 	@Override
 	public void start(final Stage stage) throws Exception {
 
-		final Group group = new Group();
-		final Scene scene = new Scene(group, 800, 800);
+		final Scene scene = new Scene(new JFXSpinner(), 100, 100);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("JFX Spinner Demo");
 		stage.show();
-		JFXSpinner spinner = new JFXSpinner();
-		group.getChildren().add(spinner);
 	}
 
 	public static void main(final String[] arguments) {

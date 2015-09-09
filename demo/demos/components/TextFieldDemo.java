@@ -1,13 +1,8 @@
 package demos.components;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -27,14 +22,14 @@ public class TextFieldDemo extends Application {
 
 		pane = new VBox();
 		pane.setSpacing(30);
-		pane.setStyle("-fx-background-color:WHITE");
+		pane.setStyle("-fx-background-color:WHITE;-fx-padding:40;");
 		
 		pane.getChildren().add(new TextField());
 		
 		JFXTextField field = new JFXTextField();
 		field.setPromptText("Type Something");
 		pane.getChildren().add(field);
-				
+		
 		
 		JFXTextField disabledField = new JFXTextField();
 		disabledField.setPromptText("I'm disabled..");
@@ -55,12 +50,7 @@ public class TextFieldDemo extends Application {
 		pane.getChildren().add(validationField);
 		
 		
-		StackPane main = new StackPane();
-		main.getChildren().add(pane);
-		main.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		StackPane.setMargin(pane, new Insets(20,0,0,20));
-
-		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
+		final Scene scene = new Scene(pane, 600, 400, Color.WHITE);
 		scene.getStylesheets().add(TextFieldDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setTitle("JFX TextField Demo ");
 		stage.setScene(scene);

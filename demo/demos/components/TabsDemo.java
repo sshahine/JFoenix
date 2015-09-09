@@ -34,13 +34,13 @@ public class TabsDemo extends Application {
 
 		Tab tab = new Tab();
 		tab.setText(msg);
-		tab.setContent(new Label("Tab 0123"));
+		tab.setContent(new Label("Tab 0"));
 
 		tabPane.getTabs().add(tab);
 		tabPane.setPrefSize(300, 200);
 		Tab tab1 = new Tab();
 		tab1.setText("Tab 01");
-		tab1.setContent(new Label("Tab 1234"));
+		tab1.setContent(new Label("Tab 01"));
 
 		tabPane.getTabs().add(tab1);
 
@@ -52,7 +52,7 @@ public class TabsDemo extends Application {
 			Tab temp = new Tab();
 			int count = tabPane.getTabs().size();
 			temp.setText(msg + count);
-			temp.setContent(new Label("Tab" + count));
+			temp.setContent(new Label("Tab 0" + count));
 			tabPane.getTabs().add(temp);
 		});
 		
@@ -62,7 +62,8 @@ public class TabsDemo extends Application {
 		hbox.getChildren().addAll(button, tabPane);
 		hbox.setSpacing(50);
 		hbox.setAlignment(Pos.CENTER);
-
+		hbox.setStyle("-fx-padding:20");
+		
 		root.getChildren().addAll(hbox);
 		scene.getStylesheets().add(TabsDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		primaryStage.setScene(scene);

@@ -34,8 +34,7 @@ public class RadioButtonDemo extends Application {
 			hbox.setSpacing(50);
 			hbox.setPadding(new Insets(40, 10, 10, 120));
 			
-			Scene scene = new Scene(new Group());
-			((Group) scene.getRoot()).getChildren().add(hbox);
+			Scene scene = new Scene(hbox);
 			primaryStage.setScene(scene);
 			primaryStage.setWidth(500);
 			primaryStage.setHeight(400);

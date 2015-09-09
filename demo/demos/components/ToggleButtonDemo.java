@@ -4,10 +4,6 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -26,7 +22,7 @@ public class ToggleButtonDemo extends Application {
 		
 		pane = new VBox();
 		pane.setSpacing(30);
-		pane.setStyle("-fx-background-color:WHITE");
+		pane.setStyle("-fx-background-color:#EEE; -fx-padding: 40;");
 		
 		ToggleButton button = new ToggleButton("JavaFx Toggle");
 		pane.getChildren().add(button);
@@ -41,12 +37,8 @@ public class ToggleButtonDemo extends Application {
 		
 		pane.getChildren().add(node);
 		
-		StackPane main = new StackPane();
-		main.getChildren().add(pane);
-		main.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		StackPane.setMargin(pane, new Insets(20,0,0,20));
 
-		final Scene scene = new Scene(main, 600, 400, Color.WHITE);
+		final Scene scene = new Scene(pane, 600, 400, Color.valueOf("#EEE"));
 		stage.setTitle("JFX Toggle Button Demo ");
 		scene.getStylesheets().add(ToggleButtonDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setScene(scene);
