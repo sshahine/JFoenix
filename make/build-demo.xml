@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="JFoenix" default="build.jfx" basedir=".">
+<project name="JFoenix Demo" default="build-demo.jfx" basedir=".">
 	<!-- Define the properties used by the build -->
-	<property name="src" location="../src" />
+	<property name="src" location="../demo" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="libs" location="../libs" />
-
+	<property name="main-class"  value="demos.MainDemo"/>
 	
+	
+
 	<path id="path.jfx.lib">
 		<fileset dir="${libs}">
 			<include name="**/*.jar" />
 		</fileset>
+		<fileset dir="${dist}">
+		    <include name="**/*.jar" />
+	    </fileset>
 	</path>
-	
+
+	<manifestclasspath property="jar.classpath" jarfile="${dist}/jfoenix.jar">
+          <classpath refid="path.jfx.lib" />
+    </manifestclasspath>
+		
 	<target name="clean" description="Delete old work and dist directories">
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
-		<delete dir="${dist}" />
 	</target>
 	
 	<target name="init">
@@ -36,26 +44,13 @@
 		</javac>
 	</target>
 	
-	<target name="dist" depends="compile" description="generate the distribution">
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
+	<target name="run" depends="compile" description="Run the demo">
 		<!-- Put everything in ${build} into the jfoenix.jar file -->
-		<jar jarfile="${dist}/jfoenix.jar" basedir="${build}">
-			<manifest>
-				<attribute name="Main-Class" value="io.datafx.controller.flow.Flow.MainDemo" />
-				<attribute name="Class-Path" value="${jar.classpath}" />
-				<attribute name="Implementation-Title" value="JFX launcher" />
-				<attribute name="Implementation-Vendor" value="CCT International" />
-				<attribute name="Implementation-URL" value="http://jfoenix.com" />
-				<attribute name="Trusted-Library" value="true" />
-				<attribute name="Permissions" value="all-permissions" />
-				<attribute name="Codebase" value="*" />
-				<attribute name="Application-Name" value="JFoenix"/>
-			</manifest>
-		</jar>
+		     <java classname="${main-class}" fork="true">
+	         </java>
 	</target>
 	
-	<target name="build.jfx" depends="clean,dist">
-		<delete dir="${build}" />
+	<target name="build-demo.jfx" depends="clean,run">
+		
 	</target>
 </project>
