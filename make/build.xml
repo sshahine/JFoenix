@@ -46,7 +46,7 @@
 				<attribute name="Main-Class" value="io.datafx.controller.flow.Flow.MainDemo" />
 				<attribute name="Class-Path" value="${jar.classpath}" />
 				<attribute name="Implementation-Title" value="JFX launcher" />
-				<attribute name="Implementation-Vendor" value="CCT International" />
+				<attribute name="Implementation-Vendor" value="JFoenix" />
 				<attribute name="Implementation-URL" value="http://jfoenix.com" />
 				<attribute name="Trusted-Library" value="true" />
 				<attribute name="Permissions" value="all-permissions" />
