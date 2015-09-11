@@ -622,8 +622,9 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 						tabsContainer.setTranslateX(tabsContainer.getTranslateX() + contentWidth*diffTabsIndices);	
 						diffTabsIndices = 0;
 					}
-					Timeline animateTimeline = new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*index, Interpolator.EASE_BOTH)));				
-					animateTimeline.play();
+					// animate upon tab selection only otherwise just translate the selected tab 
+					if(isSelectingTab) new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*index, Interpolator.EASE_BOTH))).play();
+					else tabsContainer.setTranslateX(-contentWidth*index);
 				}
 			}
 
