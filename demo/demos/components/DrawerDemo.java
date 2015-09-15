@@ -1,45 +1,108 @@
 package demos.components;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXDrawer.DrawerDirection;
 
 public class DrawerDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		FlowPane content = new FlowPane();
-		JFXHamburger h1 = new JFXHamburger();
-		FlowPane.setMargin(h1, new Insets(300,0,0,400));
-		content.getChildren().add(h1);
-
-		JFXDrawer drawer = new JFXDrawer();
-		drawer.setDrawerWidth(250);
-		drawer.setContent(content);
-		
-		// create animation		
-		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			drawer.draw();
-		});
-
 		StackPane pane = new StackPane();
-		pane.getChildren().add(drawer);
-		pane.setStyle("-fx-background-color:WHITE");		
-		final Scene scene = new Scene(pane, 800, 800);
+		
+		FlowPane content = new FlowPane();
+		JFXButton leftButton = new JFXButton("LEFT");
+		JFXButton topButton = new JFXButton("TOP");
+		JFXButton rightButton = new JFXButton("RIGHT");
+		JFXButton bottomButton = new JFXButton("BOTTOM");
+		content.getChildren().addAll(leftButton, topButton, rightButton, bottomButton);
+		content.setMaxSize(200, 200);
+		
+		
+		JFXDrawer leftDrawer = new JFXDrawer();
+		StackPane leftDrawerPane = new StackPane();
+		leftDrawerPane.getStyleClass().add("red-400");
+		leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
+		leftDrawer.setSidePane(leftDrawerPane);
+		leftDrawer.setDefaultDrawerSize(250);
+		leftDrawer.setContent(content);	
+		leftDrawer.setOverLayVisible(false);
+		leftDrawer.setResizableOnDrag(true);
+		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			if(leftDrawer.isDrawn()) leftDrawer.hide();
+			else leftDrawer.draw();
+		});
+		
+		
+		JFXDrawer bottomDrawer = new JFXDrawer();
+		StackPane bottomDrawerPane = new StackPane();
+		bottomDrawerPane.getStyleClass().add("deep-purple-400");
+		bottomDrawerPane.getChildren().add(new JFXButton("Bottom Content"));		
+		bottomDrawer.setDirection(DrawerDirection.BOTTOM);		
+		bottomDrawer.setDefaultDrawerSize(250);
+		bottomDrawer.setSidePane(bottomDrawerPane);
+		bottomDrawer.setContent(leftDrawer);
+		bottomDrawer.setOverLayVisible(false);
+		bottomDrawer.setResizableOnDrag(true);
+		bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			if(bottomDrawer.isDrawn()) bottomDrawer.hide();
+			else bottomDrawer.draw();
+		});		
+		
+				
+		JFXDrawer rightDrawer = new JFXDrawer();
+		StackPane rightDrawerPane = new StackPane();
+		rightDrawerPane.getStyleClass().add("blue-400");
+		rightDrawerPane.getChildren().add(new JFXButton("Right Content"));
+		rightDrawer.setDirection(DrawerDirection.RIGHT);		
+		rightDrawer.setDefaultDrawerSize(250);
+		rightDrawer.setSidePane(rightDrawerPane);
+		rightDrawer.setContent(bottomDrawer);
+		rightDrawer.setOverLayVisible(false);
+		rightDrawer.setResizableOnDrag(true);
+		rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			if(rightDrawer.isDrawn()) rightDrawer.hide();
+			else rightDrawer.draw();
+		});
+		
+		
+		JFXDrawer topDrawer = new JFXDrawer();
+		StackPane topDrawerPane = new StackPane();
+		topDrawerPane.getStyleClass().add("green-400");
+		topDrawerPane.getChildren().add(new JFXButton("Top Content"));
+		topDrawer.setDirection(DrawerDirection.TOP);		
+		topDrawer.setDefaultDrawerSize(250);
+		topDrawer.setSidePane(topDrawerPane);
+		topDrawer.setContent(rightDrawer);
+		topDrawer.setOverLayVisible(false);
+		topDrawer.setResizableOnDrag(true);	
+		topButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			if(topDrawer.isDrawn()) topDrawer.hide();
+			else topDrawer.draw();
+		});
+		
+	
+		
+//		pane.getChildren().add(leftDrawer);
+		pane.setStyle("-fx-background-color:WHITE");
+		
+		final Scene scene = new Scene(topDrawer, 800, 800);
 		scene.getStylesheets().add(DrawerDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
+		scene.getStylesheets().add(DrawerDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 
 		primaryStage.setTitle("JFX Drawer Demo");
 		primaryStage.setScene(scene);
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(true);
 		primaryStage.show();		
+		
 	}
 
 	public static void main(String[] args) { launch(args); }
