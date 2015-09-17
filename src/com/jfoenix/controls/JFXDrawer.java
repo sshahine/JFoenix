@@ -44,6 +44,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -83,7 +84,7 @@ public class JFXDrawer extends StackPane {
 	};
 
 	private StackPane overlayPane = new StackPane();
-	private StackPane sidePane = new StackPane();
+	StackPane sidePane = new StackPane();
 	private StackPane content = new StackPane();
 	private Transition inTransition;
 	private Transition outTransition;
@@ -122,8 +123,8 @@ public class JFXDrawer extends StackPane {
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
 		JFXDepthManager.setDepth(sidePane, 2);
 		sidePane.setPickOnBounds(false);
-
-		this.getChildren().add(content);		
+		
+		this.getChildren().add(content);	
 		this.getChildren().add(overlayPane);
 		this.getChildren().add(sidePane);
 
@@ -138,10 +139,8 @@ public class JFXDrawer extends StackPane {
 		
 		updateDirection(directionProperty.get());		
 		initTranslate.bind(Bindings.createDoubleBinding(()-> -1 * directionProperty.get().doubleValue() * maxSizeProperty.get().getValue() - initOffset * directionProperty.get().doubleValue(), maxSizeProperty.get(), directionProperty ));
-		
-	
+			
 		// add listeners to update drawer properties
-		
 		overLayVisibleProperty().addListener((o,oldVal,newVal)->{
 			overlayPane.setStyle(!newVal?"-fx-background-color : transparent;":"");
 			overlayPane.setMouseTransparent(!newVal);
@@ -227,7 +226,7 @@ public class JFXDrawer extends StackPane {
 			maxSizeProperty.set(sidePane.maxWidthProperty());
 			minSizeProperty.set(sidePane.minWidthProperty());
 			sizeProperty.set(sidePane.widthProperty());
-			this.sceneProperty().addListener((o,oldVal,newVal) -> sceneSizeProperty.set(newVal.widthProperty()));
+			this.sceneProperty().addListener((o,oldVal,newVal) -> {if(newVal!=null) sceneSizeProperty.set(newVal.widthProperty());} );
 		}else if(dir.equals(DrawerDirection.RIGHT)){
 			StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
 			translateProperty.set(0);
@@ -235,7 +234,7 @@ public class JFXDrawer extends StackPane {
 			maxSizeProperty.set(sidePane.maxWidthProperty());
 			minSizeProperty.set(sidePane.minWidthProperty());
 			sizeProperty.set(sidePane.widthProperty());
-			this.sceneProperty().addListener((o,oldVal,newVal) -> sceneSizeProperty.set(newVal.widthProperty()));
+			this.sceneProperty().addListener((o,oldVal,newVal) ->{if(newVal!=null) sceneSizeProperty.set(newVal.widthProperty());} );
 		}else if(dir.equals(DrawerDirection.TOP)){
 			StackPane.setAlignment(sidePane, Pos.TOP_CENTER);
 			translateProperty.set(0);
@@ -243,7 +242,7 @@ public class JFXDrawer extends StackPane {
 			maxSizeProperty.set(sidePane.maxHeightProperty());
 			minSizeProperty.set(sidePane.minHeightProperty());
 			sizeProperty.set(sidePane.heightProperty());
-			this.sceneProperty().addListener((o,oldVal,newVal) -> sceneSizeProperty.set(newVal.heightProperty()));
+			this.sceneProperty().addListener((o,oldVal,newVal) -> {if(newVal!=null)sceneSizeProperty.set(newVal.heightProperty());} );
 		}else if(dir.equals(DrawerDirection.BOTTOM)){
 			StackPane.setAlignment(sidePane, Pos.BOTTOM_CENTER);
 			translateProperty.set(0);
@@ -251,13 +250,13 @@ public class JFXDrawer extends StackPane {
 			maxSizeProperty.set(sidePane.maxHeightProperty());
 			minSizeProperty.set(sidePane.minHeightProperty());
 			sizeProperty.set(sidePane.heightProperty());
-			this.sceneProperty().addListener((o,oldVal,newVal) -> sceneSizeProperty.set(newVal.heightProperty()));
+			this.sceneProperty().addListener((o,oldVal,newVal) ->{if(newVal!=null) sceneSizeProperty.set(newVal.heightProperty());} );
 		}
 		updateDrawerAnimation(initTranslate.doubleValue());
 	}
 	
 	private final void updateDrawerAnimation(double translation){
-		inTransition = new DrawerTransition(translation, 0);
+		inTransition = new InDrawerTransition(translation, 0);
 		outTransition = new OutDrawerTransition(translation,0);
 		translateProperty.set(translation);
 	}
@@ -291,6 +290,54 @@ public class JFXDrawer extends StackPane {
 			return true;
 		}
 	}
+		
+	
+	/**
+	 * this method is only used in drawers stack component
+	 * @param callback
+	 */
+	void bringToFront(Callback<Void, Void> callback){
+		
+		EventHandler<? super MouseEvent> eventFilter = (event)->event.consume();
+		final boolean bindSize = minSizeProperty.get().isBound();
+		minSizeProperty.get().unbind();
+		// disable mouse events
+		this.addEventFilter(MouseEvent.ANY, eventFilter);
+
+		
+		EventHandler<ActionEvent> drawerDrawer = (finish)->{
+			outTransition.setOnFinished(null);
+			callback.call(null);
+			
+			if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0){
+				if(tempDrawerSize > drawerSize) {
+					ParallelTransition parallelTransition = new ParallelTransition(new InDrawerSizeTransition(), new InDrawerTransition(initTranslate.doubleValue(),0));
+					parallelTransition.setOnFinished((finish1)->{if(bindSize) minSizeProperty.get().bind(sceneSizeProperty.get());});
+					parallelTransition.play();
+				}else {
+					EventHandler<ActionEvent> oldFinishHandler = this.inTransition.getOnFinished();
+					this.inTransition.setOnFinished((finish1)->{if(bindSize) minSizeProperty.get().bind(sceneSizeProperty.get()); this.inTransition.setOnFinished(oldFinishHandler);});
+					this.inTransition.play();	
+				}
+			}
+			// enable mouse events
+			this.removeEventFilter(MouseEvent.ANY, eventFilter);
+		};
+		
+		if(sizeProperty.get().get() > drawerSize){
+			tempDrawerSize = minSizeProperty.get().get();
+			ParallelTransition parallelTransition = new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0));
+			parallelTransition.setOnFinished(drawerDrawer);
+			parallelTransition.play();
+		}else{
+			if(outTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0) {
+				outTransition.setOnFinished(drawerDrawer);
+				outTransition.play();	
+			}
+			tempDrawerSize = drawerSize;
+		}
+	}
+	
 	
 	public void draw() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0)
@@ -301,10 +348,12 @@ public class JFXDrawer extends StackPane {
 	public void hide(){
 		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
 		if(sizeProperty.get().get() > drawerSize){
-			new ParallelTransition(new DrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0)).play();
+			tempDrawerSize = minSizeProperty.get().get();
+			new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0)).play();
 		}else{
 			if(outTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0)
-				outTransition.play();			
+				outTransition.play();	
+			tempDrawerSize = drawerSize;
 		}
 		onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
 	}
@@ -320,7 +369,7 @@ public class JFXDrawer extends StackPane {
 	}
 
 	public void setSidePane(Node... sidePane) {
-		this.sidePane.getChildren().addAll(sidePane);
+		this.sidePane.getChildren().setAll(sidePane);
 	}
 
 	public ObservableList<Node> getContent() {
@@ -328,7 +377,7 @@ public class JFXDrawer extends StackPane {
 	}
 
 	public void setContent(Node... content) {
-		this.content.getChildren().addAll(content);
+		this.content.getChildren().setAll(content);
 	}
 
 	public double getDefaultDrawerSize() {
@@ -454,9 +503,8 @@ public class JFXDrawer extends StackPane {
 		else startMouse = mouseEvent.getSceneY();		
 		startTranslate = translateProperty.get();
 		startSize = sizeProperty.get().get();
+		
 	};
-
-	
 
 	private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent)->{
 		if(directionProperty.get().doubleValue() * translateProperty.get() > directionProperty.get().doubleValue() * initTranslate.doubleValue() /2){
@@ -475,7 +523,7 @@ public class JFXDrawer extends StackPane {
 		startMouse = -1;
 		startTranslate = -1;
 		startSize = sizeProperty.get().get();
-		partialTransition = null;
+		partialTransition = null;		
 	};
 
 	private boolean drawCalled = false;
@@ -507,18 +555,29 @@ public class JFXDrawer extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	private double tempDrawerSize = drawerSize;
 	
-	private class DrawerSizeTransition extends CachedTimelineTransition{
-		public DrawerSizeTransition() {
+	private class OutDrawerSizeTransition extends CachedTimelineTransition{
+		public OutDrawerSizeTransition() {
 			super(sidePane, new Timeline(new KeyFrame(Duration.millis(1000),new KeyValue(minSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH))));
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}
 	}
 	
+	private class InDrawerSizeTransition extends CachedTimelineTransition{
+		public InDrawerSizeTransition() {
+			super(sidePane, new Timeline(
+					new KeyFrame(Duration.millis(0),new KeyValue(minSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH)),
+					new KeyFrame(Duration.millis(1000),new KeyValue(minSizeProperty.get(), tempDrawerSize,Interpolator.EASE_BOTH))));
+			setCycleDuration(Duration.seconds(0.5));
+			setDelay(Duration.seconds(0));
+		}
+	}
 	
-	private class DrawerTransition extends CachedTimelineTransition{
-		public DrawerTransition(double start, double end) {
+	
+	private class InDrawerTransition extends CachedTimelineTransition{
+		public InDrawerTransition(double start, double end) {
 			super(sidePane, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       

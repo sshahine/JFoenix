@@ -10,14 +10,13 @@ import javafx.stage.Stage;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
+import com.jfoenix.controls.JFXDrawersStack;
 
 public class DrawerDemo extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		StackPane pane = new StackPane();
-		
 		FlowPane content = new FlowPane();
 		JFXButton leftButton = new JFXButton("LEFT");
 		JFXButton topButton = new JFXButton("TOP");
@@ -33,13 +32,9 @@ public class DrawerDemo extends Application {
 		leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
 		leftDrawer.setSidePane(leftDrawerPane);
 		leftDrawer.setDefaultDrawerSize(250);
-		leftDrawer.setContent(content);	
+//		leftDrawer.setContent(content);	
 		leftDrawer.setOverLayVisible(false);
 		leftDrawer.setResizableOnDrag(true);
-		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			if(leftDrawer.isDrawn()) leftDrawer.hide();
-			else leftDrawer.draw();
-		});
 		
 		
 		JFXDrawer bottomDrawer = new JFXDrawer();
@@ -49,14 +44,10 @@ public class DrawerDemo extends Application {
 		bottomDrawer.setDirection(DrawerDirection.BOTTOM);		
 		bottomDrawer.setDefaultDrawerSize(250);
 		bottomDrawer.setSidePane(bottomDrawerPane);
-		bottomDrawer.setContent(leftDrawer);
+//		bottomDrawer.setContent(leftDrawer);
 		bottomDrawer.setOverLayVisible(false);
 		bottomDrawer.setResizableOnDrag(true);
-		bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			if(bottomDrawer.isDrawn()) bottomDrawer.hide();
-			else bottomDrawer.draw();
-		});		
-		
+				
 				
 		JFXDrawer rightDrawer = new JFXDrawer();
 		StackPane rightDrawerPane = new StackPane();
@@ -65,13 +56,10 @@ public class DrawerDemo extends Application {
 		rightDrawer.setDirection(DrawerDirection.RIGHT);		
 		rightDrawer.setDefaultDrawerSize(250);
 		rightDrawer.setSidePane(rightDrawerPane);
-		rightDrawer.setContent(bottomDrawer);
+//		rightDrawer.setContent(bottomDrawer);
 		rightDrawer.setOverLayVisible(false);
 		rightDrawer.setResizableOnDrag(true);
-		rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			if(rightDrawer.isDrawn()) rightDrawer.hide();
-			else rightDrawer.draw();
-		});
+		
 		
 		
 		JFXDrawer topDrawer = new JFXDrawer();
@@ -81,20 +69,38 @@ public class DrawerDemo extends Application {
 		topDrawer.setDirection(DrawerDirection.TOP);		
 		topDrawer.setDefaultDrawerSize(250);
 		topDrawer.setSidePane(topDrawerPane);
-		topDrawer.setContent(rightDrawer);
+//		topDrawer.setContent(rightDrawer);
 		topDrawer.setOverLayVisible(false);
-		topDrawer.setResizableOnDrag(true);	
+		topDrawer.setResizableOnDrag(true);
+		
+		
+
+		JFXDrawersStack drawersStack = new JFXDrawersStack();
+		drawersStack.setContent(content);
+		leftDrawer.setId("LEFT");
+		rightDrawer.setId("RIGHT");
+		bottomDrawer.setId("BOT");
+		topDrawer.setId("TOP");
+		drawersStack.addDrawer(leftDrawer);
+		drawersStack.addDrawer(rightDrawer);
+		drawersStack.addDrawer(bottomDrawer);
+		drawersStack.addDrawer(topDrawer);
+		
+		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			drawersStack.toggle(leftDrawer);
+		});
+		bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			drawersStack.toggle(bottomDrawer);
+		});		
+		rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+			drawersStack.toggle(rightDrawer);
+		});
 		topButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
-			if(topDrawer.isDrawn()) topDrawer.hide();
-			else topDrawer.draw();
+			drawersStack.toggle(topDrawer);
 		});
 		
-	
 		
-//		pane.getChildren().add(leftDrawer);
-		pane.setStyle("-fx-background-color:WHITE");
-		
-		final Scene scene = new Scene(topDrawer, 800, 800);
+		final Scene scene = new Scene(drawersStack, 800, 800);
 		scene.getStylesheets().add(DrawerDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		scene.getStylesheets().add(DrawerDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 
