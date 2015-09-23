@@ -35,13 +35,20 @@
 			</classpath>
 		<compilerarg value="-Xlint" />
 		</javac>
+		
+		<copy todir="${classes}/resources">
+			<fileset dir="${src}/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
 	</target>
 	
 	<target name="dist" depends="compile" description="generate the distribution">
 		<!-- Create the distribution directory -->
 		<mkdir dir="${dist}" />
 		<!-- Put everything in ${build} into the jfoenix.jar file -->
-		<jar jarfile="${dist}/jfoenix.jar" basedir="${build}/classes">
+		<jar jarfile="${dist}/jfoenix.jar" basedir="${classes}">
 			<manifest>
 				<attribute name="Main-Class" value="io.datafx.controller.flow.Flow.MainDemo" />
 				<attribute name="Class-Path" value="${jar.classpath}" />

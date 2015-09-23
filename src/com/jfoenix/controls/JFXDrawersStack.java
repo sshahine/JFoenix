@@ -6,21 +6,30 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 public class JFXDrawersStack extends StackPane {
 
-	ArrayList<JFXDrawer> drawers = new ArrayList<>();
-	Node content ;
+	private ArrayList<JFXDrawer> drawers = new ArrayList<>();
+	private Node content ;
+	private Rectangle clip = new Rectangle();
+	boolean holding = false;
+	
+	public JFXDrawersStack() {
+		super();
+		clip.widthProperty().bind(this.widthProperty());
+		clip.heightProperty().bind(this.heightProperty());
+		this.setClip(clip);
+	}
 	
 	public void setContent(Node content){
 		this.content = content;
 	}
 	
-	boolean holding = false;
 	
 	public void addDrawer(JFXDrawer drawer){
 		if(drawers.size() == 0){
-			drawer.setContent(content);			
+			drawer.setContent(content);
 			this.getChildren().add(drawer);
 		}else {
 			drawer.setContent(drawers.get(drawers.size()-1));
@@ -51,6 +60,7 @@ public class JFXDrawersStack extends StackPane {
 		drawer.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, (event)-> holding = false);
 		
 		drawers.add(drawer);
+		
 	}
 
 	private void updateDrawerPosition(JFXDrawer drawer){

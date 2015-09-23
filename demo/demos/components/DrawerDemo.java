@@ -41,8 +41,8 @@ public class DrawerDemo extends Application {
 		StackPane bottomDrawerPane = new StackPane();
 		bottomDrawerPane.getStyleClass().add("deep-purple-400");
 		bottomDrawerPane.getChildren().add(new JFXButton("Bottom Content"));		
-		bottomDrawer.setDirection(DrawerDirection.BOTTOM);		
 		bottomDrawer.setDefaultDrawerSize(250);
+		bottomDrawer.setDirection(DrawerDirection.BOTTOM);		
 		bottomDrawer.setSidePane(bottomDrawerPane);
 //		bottomDrawer.setContent(leftDrawer);
 		bottomDrawer.setOverLayVisible(false);
