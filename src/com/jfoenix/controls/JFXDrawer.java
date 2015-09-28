@@ -56,7 +56,6 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -99,7 +98,6 @@ public class JFXDrawer extends StackPane {
 	private double initOffset = 30;
 	private DoubleProperty initTranslate = new SimpleDoubleProperty();
 	private BooleanProperty overLayVisible = new SimpleBooleanProperty(true);
-	private double drawerSize = 0;
 	private double activeOffset = 20;
 	private double startMouse = -1;
 	private double startTranslate = -1;	
@@ -335,7 +333,7 @@ public class JFXDrawer extends StackPane {
 			callback.call(null);
 
 			if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0){
-				if(tempDrawerSize > drawerSize) {
+				if(tempDrawerSize > getDefaultDrawerSize()) {
 					ParallelTransition parallelTransition = new ParallelTransition(new InDrawerSizeTransition(), new InDrawerTransition(initTranslate.doubleValue(),0));
 					parallelTransition.setOnFinished((finish1)->{
 						if(bindSize){ 
@@ -359,7 +357,7 @@ public class JFXDrawer extends StackPane {
 			this.removeEventFilter(MouseEvent.ANY, eventFilter);
 		};
 
-		if(sizeProperty.get().get() > drawerSize){
+		if(sizeProperty.get().get() > getDefaultDrawerSize()){
 			tempDrawerSize = sizeProperty.get().get();
 			ParallelTransition parallelTransition = new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0));
 			parallelTransition.setOnFinished(drawerDrawer);
@@ -369,7 +367,7 @@ public class JFXDrawer extends StackPane {
 				outTransition.setOnFinished(drawerDrawer);
 				outTransition.play();	
 			}
-			tempDrawerSize = drawerSize;
+			tempDrawerSize = getDefaultDrawerSize();
 		}
 	}
 
@@ -382,13 +380,13 @@ public class JFXDrawer extends StackPane {
 
 	public void hide(){
 		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
-		if(sizeProperty.get().get() > drawerSize){
+		if(sizeProperty.get().get() > getDefaultDrawerSize()){
 			tempDrawerSize = prefSizeProperty.get().get();
 			new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0)).play();
 		}else{
 			if(outTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0)
 				outTransition.play();	
-			tempDrawerSize = drawerSize;
+			tempDrawerSize = getDefaultDrawerSize();
 		}
 		onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
 	}
@@ -416,14 +414,13 @@ public class JFXDrawer extends StackPane {
 	}
 
 	public double getDefaultDrawerSize() {
-		return drawerSize;
+		return defaultSizeProperty.get();
 	}
 
 	public void setDefaultDrawerSize(double drawerWidth) {
 		defaultSizeProperty.set(drawerWidth);
 		maxSizeProperty.get().set(drawerWidth);
 		prefSizeProperty.get().set(drawerWidth);
-		this.drawerSize = drawerWidth;
 	}
 
 	public DrawerDirection getDirection() {
@@ -527,26 +524,24 @@ public class JFXDrawer extends StackPane {
 				else currentTranslate = directionProperty.get().doubleValue() * (startTranslate + directionProperty.get().doubleValue() * ( eventPoint - startMouse ));			
 
 				if(directionProperty.get().doubleValue() * currentTranslate <= 0){
+					// the drawer is hidden
 					if(resizable){
 						maxSizeProperty.get().unbind();
 						prefSizeProperty.get().unbind();
-						if((startSize - drawerSize) + directionProperty.get().doubleValue() * currentTranslate > 0){
-							// change the side drawer size if dragging from hidden 
+						if((startSize - getDefaultDrawerSize()) + directionProperty.get().doubleValue() * currentTranslate > 0){
+							// change the side drawer size if dragging from hidden
 							maxSizeProperty.get().set(startSize + directionProperty.get().doubleValue() * currentTranslate);
 							prefSizeProperty.get().set(startSize + directionProperty.get().doubleValue() * currentTranslate);
 						}else{
 							// if the side drawer is not fully shown perform translation to show it , and set its default size
 							maxSizeProperty.get().set(defaultSizeProperty.get());
 							maxSizeProperty.get().set(defaultSizeProperty.get());
-							if(startSize > drawerSize && (startSize - drawerSize) + currentTranslate >= initTranslate.doubleValue()){
-								translateProperty.set(directionProperty.get().doubleValue() * ((startSize - drawerSize) + directionProperty.get().doubleValue() * currentTranslate));
-							}else{
-								translateProperty.set(currentTranslate);
-							}
+							translateProperty.set(directionProperty.get().doubleValue() * ((startSize - getDefaultDrawerSize()) + directionProperty.get().doubleValue() * currentTranslate));
 						}	
 					}else
 						translateProperty.set(currentTranslate);				
 				}else{
+					// the drawer is already shown
 					if(resizable){
 						if(startSize + directionProperty.get().doubleValue() * currentTranslate <= parentSizeProperty.get().get()){
 							// change the side drawer size after being shown 
@@ -623,13 +618,13 @@ public class JFXDrawer extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private double tempDrawerSize = drawerSize;
+	private double tempDrawerSize = getDefaultDrawerSize();
 
 	private class OutDrawerSizeTransition extends CachedTimelineTransition{
 		public OutDrawerSizeTransition() {
 			super(sidePane, new Timeline(new KeyFrame(Duration.millis(1000),
-					new KeyValue(prefSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH),
-					new KeyValue(maxSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH)))
+					new KeyValue(prefSizeProperty.get(), getDefaultDrawerSize(),Interpolator.EASE_BOTH),
+					new KeyValue(maxSizeProperty.get(), getDefaultDrawerSize(),Interpolator.EASE_BOTH)))
 			);
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
@@ -640,8 +635,8 @@ public class JFXDrawer extends StackPane {
 		public InDrawerSizeTransition() {
 			super(sidePane, new Timeline(
 					new KeyFrame(Duration.millis(0),
-							new KeyValue(maxSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH),
-							new KeyValue(prefSizeProperty.get(), drawerSize,Interpolator.EASE_BOTH)),
+							new KeyValue(maxSizeProperty.get(), getDefaultDrawerSize(),Interpolator.EASE_BOTH),
+							new KeyValue(prefSizeProperty.get(), getDefaultDrawerSize(),Interpolator.EASE_BOTH)),
 					new KeyFrame(Duration.millis(1000),
 							new KeyValue(maxSizeProperty.get(), tempDrawerSize,Interpolator.EASE_BOTH),
 							new KeyValue(prefSizeProperty.get(), tempDrawerSize,Interpolator.EASE_BOTH)
