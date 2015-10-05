@@ -35,7 +35,9 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
@@ -60,6 +62,10 @@ import com.jfoenix.converters.DialogTransitionConverter;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.jidefx.CachedTimelineTransition;
 
+/**
+ * @author sshahine
+ *
+ */
 @DefaultProperty(value="content")
 public class JFXDialog extends StackPane {
 
@@ -76,24 +82,55 @@ public class JFXDialog extends StackPane {
 	private Region content;
 	private Transition animation;
 
+	private BooleanProperty overlayClose = new SimpleBooleanProperty(true);
+	EventHandler<? super MouseEvent> closeHandler = (e)->close();
+	
 	public JFXDialog(){
 		this(null,null,DialogTransition.CENTER);
 	}
 
+	/**
+	 * creates JFX Dialog control
+	 * @param dialogContainer
+	 * @param content
+	 * @param transitionType
+	 */
+	
 	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType) {		
 		initialize();
-		setContent(content,true);
+		setContent(content);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
+		// init change listeners
+		initChangeListeners();
 	}
-
+	
+	/**
+	 * creates JFX Dialog control
+	 * @param dialogContainer
+	 * @param content
+	 * @param transitionType
+	 * @param overlayClose
+	 */
 	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {		
 		initialize();
-		setContent(content, overlayClose);
+		setOverlayClose(overlayClose);
+		setContent(content);
 		setDialogContainer(dialogContainer);
 		this.transitionType.set(transitionType);
+		// init change listeners
+		initChangeListeners();
 	}
 
+	private void initChangeListeners(){
+		overlayCloseProperty().addListener((o,oldVal,newVal)->{
+			if(overlayPane!=null){
+				if(newVal) overlayPane.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+				else overlayPane.removeEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);		
+			}
+		});
+	}
+	
 	private void initialize() {
 		this.setVisible(false);
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
@@ -130,10 +167,6 @@ public class JFXDialog extends StackPane {
 	}
 
 	public void setContent(Region content) {
-		if(content!=null) this.setContent(content,true);
-	}
-
-	public void setContent(Region content, boolean overlayClose) {
 		if(content!=null){
 			this.content = content;	
 			contentHolder = new StackPane();
@@ -150,12 +183,25 @@ public class JFXDialog extends StackPane {
 			overlayPane.setVisible(false);
 			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
 			// close the dialog if clicked on the overlay pane
-			if(overlayClose) overlayPane.setOnMousePressed((e)->close());
+			if(overlayClose.get()) overlayPane.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
 	}
 
+	
+	public final BooleanProperty overlayCloseProperty() {
+		return this.overlayClose;
+	}
+
+	public final boolean isOverlayClose() {
+		return this.overlayCloseProperty().get();
+	}
+
+	public final void setOverlayClose(final boolean overlayClose) {
+		this.overlayCloseProperty().set(overlayClose);
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * Public API                                                              *
@@ -428,6 +474,7 @@ public class JFXDialog extends StackPane {
 	public void getOnDialogOpened(EventHandler<? super JFXDialogEvent> handler){
 		onDialogOpenedProperty.get();
 	}
+
 
 
 	
