@@ -611,29 +611,91 @@
 	-fx-fill: transparent;
 }
 
+.first-spinner{
+	-fx-radius: 20;
+}
 .first-spinner > .arc {
-	-fx-stroke-width: 3.0;
-	-fx-fill: transparent;
+	-fx-stroke-width: 5.0;
+}
+
+.second-spinner{
+	-fx-radius: 30;
+}
+.second-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+.third-spinner{
+	-fx-radius: 40;
+}
+.third-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+.fourth-spinner {
+	-fx-radius: 50;
+}
+.fourth-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+.fifth-spinner {
+	-fx-radius: 60;
+}
+.fifth-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+.sixth-spinner {
+	-fx-radius: 70;
+}
+.sixth-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+.seventh-spinner {
+	-fx-radius: 80;
+}
+.seventh-spinner > .arc {
+	-fx-stroke-width: 5.0;
+}
+
+
+.blue-spinner .arc{
 	-fx-stroke: #4285f4;
 }
-
-.second-spinner > .arc {
-	-fx-stroke-width: 3.0;
-	-fx-fill: transparent;
+.red-spinner .arc{
 	-fx-stroke: #db4437;
 }
-
-.third-spinner > .arc {
-	-fx-stroke-width: 3.0;
-	-fx-fill: transparent;
+.green-spinner .arc{
 	-fx-stroke: #f4b400;
 }
-
-.fourth-spinner > .arc {
-	-fx-stroke-width: 3.0;
-	-fx-fill: transparent;
+.yellow-spinner .arc{
 	-fx-stroke: #0F9D58;
 }
+
+.materialDesign-purple .arc{
+	-fx-stroke:  #ab47bc;
+}
+.materialDesign-blue .arc{
+	-fx-stroke:  #2962ff;
+}
+.materialDesign-cyan .arc{
+	-fx-stroke:  #00b8d4;
+}
+.materialDesign-green .arc{
+	-fx-stroke:  #00c853;
+}
+.materialDesign-yellow .arc{
+	-fx-stroke:  #ffd600;
+}
+.materialDesign-orange .arc{
+	-fx-stroke:  #ff6d00;
+}
+.materialDesign-red .arc{
+	-fx-stroke:  #d50000;
+}
+
 
 /*******************************************************************************
 *                                                                              *

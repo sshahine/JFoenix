@@ -2,6 +2,7 @@ package demos.components;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import com.jfoenix.controls.JFXSpinner;
@@ -13,7 +14,13 @@ public class SpinnerDemo extends Application {
 	@Override
 	public void start(final Stage stage) throws Exception {
 
-		final Scene scene = new Scene(new JFXSpinner(), 100, 100);
+		StackPane pane = new StackPane();
+		
+		JFXSpinner root = new JFXSpinner();
+		
+		pane.getChildren().add(root);
+		
+		final Scene scene = new Scene(pane, 300, 300);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("JFX Spinner Demo");
