@@ -41,6 +41,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -83,13 +84,17 @@ public class JFXListCell<T> extends ListCell<T> {
 			setGraphic(null);
 		}else{
 			if(item != null) {
-
-
+				
 				Node currentNode = getGraphic();
 				
 				Node newNode;
 				if((item instanceof Region || item instanceof Control))  newNode = (Node) item;
 				else newNode = new Label(item.toString());
+				
+				// show cell tooltip if its toggled in JFXListView
+				if(((JFXListView<?>)getListView()).isShowTooltip() && newNode instanceof Label){
+					setTooltip(new Tooltip(((Label)newNode).getText()));
+				}
 				
 				boolean bindRippler = false;
 				boolean addCellRippler = true;
@@ -284,7 +289,7 @@ public class JFXListCell<T> extends ListCell<T> {
 					setText(null);
 
 					// propagate mouse events to all children
-					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> cellContent.fireEvent(e));
+					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> cellContent.fireEvent(e));					
 					cellContent.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 				}
 			}

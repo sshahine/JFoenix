@@ -31,10 +31,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -113,7 +115,23 @@ public class JFXListView<T> extends ListView<T> {
 		currentVerticalGapProperty.set(0);
 		expanded.set(false);
 	}
+
+	/*
+	 * this only works if the items were labels / strings
+	 */
+	private BooleanProperty showTooltip = new SimpleBooleanProperty(false);
 	
+	public final BooleanProperty showTooltipProperty() {
+		return this.showTooltip;
+	}
+
+	public final boolean isShowTooltip() {
+		return this.showTooltipProperty().get();
+	}
+
+	public final void setShowTooltip(final boolean showTooltip) {
+		this.showTooltipProperty().set(showTooltip);
+	}
 	
 	/***************************************************************************
 	 *                                                                         *
@@ -386,6 +404,5 @@ public class JFXListView<T> extends ListView<T> {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-
 
 }
