@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import javafx.scene.layout.HBox?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+
+	<StackPane>
+		<JFXSpinner styleClass="materialDesign-purple, first-spinner" startingAngle="-40" />
+		<JFXSpinner styleClass="materialDesign-blue, second-spinner" startingAngle="-90" />
+		<JFXSpinner styleClass="materialDesign-cyan, third-spinner" startingAngle="-120" />
+		<JFXSpinner styleClass="materialDesign-green, fourth-spinner" startingAngle="-150" />
+		<JFXSpinner styleClass="materialDesign-yellow, fifth-spinner" startingAngle="-180" />
+		<JFXSpinner styleClass="materialDesign-orange, sixth-spinner" startingAngle="-210" />
+		<JFXSpinner styleClass="materialDesign-red, seventh-spinner" startingAngle="-240" />
+	</StackPane>
+	
+	<HBox maxHeight="400" spacing="10" alignment="TOP_CENTER">
+		<JFXSpinner styleClass="blue-spinner" startingAngle="0" />
+		<JFXSpinner styleClass="red-spinner" startingAngle="0" />
+		<JFXSpinner styleClass="yellow-spinner" startingAngle="0" />
+		<JFXSpinner styleClass="green-spinner" startingAngle="0" />
+		<JFXSpinner startingAngle="0" />
+	</HBox>
+
+</StackPane>

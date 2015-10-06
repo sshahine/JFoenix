@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.collections.*?>
+<?import de.jensd.fx.fontawesome.Icon?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
+		<VBox spacing="20">
+			<children>
+				<Label styleClass="title-label">Combo Box</Label>
+				<JFXComboBox prefWidth="170" promptText="Select Item">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<Label>
+								Item 1
+								<graphic>
+									<Icon awesomeIcon="STAR" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 2
+								<graphic>
+									<Icon awesomeIcon="HEART" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 3
+								<graphic>
+									<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 4
+								<graphic>
+									<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 5
+								<graphic>
+									<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+						</FXCollections>
+					</items>
+				</JFXComboBox>
+			</children>
+		</VBox>
+
+
+		<VBox spacing="20">
+			<Label styleClass="title-label">Editable Box</Label>
+				<JFXComboBox editable="true" maxWidth="200" translateY="-6" promptText="Select/Edit Items">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<Label>
+								Item 1
+								<graphic>
+									<Icon awesomeIcon="STAR" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 2
+								<graphic>
+									<Icon awesomeIcon="HEART" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 3
+								<graphic>
+									<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 4
+								<graphic>
+									<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+							<Label>
+								Item 5
+								<graphic>
+									<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+										styleClass="custom-jfx-list-view-icon" />
+								</graphic>
+							</Label>
+						</FXCollections>
+					</items>
+				</JFXComboBox>
+		</VBox>
+	</HBox>
+
+</StackPane>
+
+

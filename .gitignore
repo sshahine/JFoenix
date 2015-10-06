@@ -6,23 +6,22 @@
 .metadata/*
 .settings
 
+#intellij specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+#gradle
+.gradle/
+
 #temp build
 [Bb]uild*/
 [Bb]in/
 [Dd]ebug*/
 [Rr]elease*/
 
-#c3d specific
-*.log
-commit.txt
-servershsql.xml
-hsqldbs/*
-
-
 #windows Junk
 *.ini
 [Tt]humbs.db
 *.DS_Store
-
-make/dist/C3DFX.jar
-make/dist/jfoenix.jar

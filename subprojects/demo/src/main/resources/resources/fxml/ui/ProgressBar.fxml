@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+	<VBox spacing="50" alignment="BASELINE_CENTER" maxWidth="550" maxHeight="250" >
+		<JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>
+		<JFXProgressBar></JFXProgressBar>
+
+		<JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="100"></JFXProgressBar>
+		<JFXProgressBar styleClass="custom-jfx-progress-bar"></JFXProgressBar>
+
+		<JFXProgressBar styleClass="custom-jfx-progress-bar-stroke"></JFXProgressBar>
+		<StackPane.margin>	
+			<Insets>
+				<left>50</left>
+				<top>10</top>
+			</Insets>			
+		</StackPane.margin>
+	</VBox>
+</StackPane>
+	

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.StackPane?>
+<?import de.jensd.fx.fontawesome.AwesomeIcon?>
+<?import de.jensd.fx.fontawesome.AwesomeIconsStack?>
+<?import de.jensd.fx.fontawesome.Icon?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
+<?import com.jfoenix.controls.JFXRippler?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXPopup?>
+<?import javafx.scene.layout.BorderPane?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<!-- Header -->
+	<BorderPane>
+
+		<top>
+			<VBox spacing="20">
+				<JFXToolbar>
+					<leftItems>
+						<JFXRippler maskType="CIRCLE" style="-fx-ripple-color:WHITE;">
+							<StackPane fx:id="titleBurgerContainer">
+								<JFXHamburger fx:id="titleBurger">
+									<HamburgerBackArrowBasicTransition />
+								</JFXHamburger>
+							</StackPane>
+						</JFXRippler>
+						<Label>Material Design</Label>
+					</leftItems>
+					<rightItems>
+						<JFXRippler fx:id="optionsRippler" maskType="CIRCLE"
+							style="-fx-ripple-color:WHITE;">
+							<StackPane fx:id="optionsBurger">
+								<JFXHamburger styleClass="jfx-options-burger">
+								</JFXHamburger>
+							</StackPane>
+						</JFXRippler>
+					</rightItems>
+				</JFXToolbar>
+			</VBox>
+		</top>
+
+		<!-- Content Area -->
+		<center>
+			<JFXDrawer fx:id="drawer" defaultDrawerSize="250" direction="LEFT">
+				<styleClass>
+					<String fx:value="body" />
+				</styleClass>
+				<sidePane>
+					<StackPane fx:id="sideContent">
+					</StackPane>
+				</sidePane>
+				<content>
+					<StackPane fx:id="content" >
+					</StackPane>
+				</content>
+			</JFXDrawer>
+		</center>
+	</BorderPane>
+
+	<JFXPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
+		<JFXListView styleClass="option-list-view">
+			<Label>
+				Contact Us
+				<graphic>
+					<Icon awesomeIcon="USER" size="1.5em" style=";"
+						styleClass="option-jfx-list-view-icon" />
+				</graphic>
+			</Label>
+			<Label fx:id="exit">
+				Exit
+				<graphic>
+					<Icon awesomeIcon="REPLY" size="1.5em" style=";"
+						styleClass="option-jfx-list-view-icon" />
+				</graphic>
+			</Label>
+		</JFXListView>
+	</JFXPopup>
+
+</StackPane>

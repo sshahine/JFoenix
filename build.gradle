@@ -1,0 +1,73 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.3.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+    }
+}
+
+allprojects {
+    apply plugin: 'base'
+    apply plugin: 'idea'
+    apply plugin: 'com.github.ben-manes.versions'
+
+    repositories {
+        flatDir { dir rootProject.file('libs') }
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+subprojects { subproj ->
+    apply plugin: 'java'
+    apply from: rootProject.file('gradle/code-coverage.gradle')
+    apply from: rootProject.file('gradle/code-quality.gradle')
+    apply from: rootProject.file('gradle/javafx.gradle')
+
+    configurations {
+        compileOnly
+        testCompileOnly
+    }
+
+    subproj.tasks.withType(JavaCompile) {
+        sourceCompatibility = subproj.sourceCompatibility
+        targetCompatibility = subproj.targetCompatibility
+    }
+
+    subproj.tasks.withType(GroovyCompile) {
+        sourceCompatibility = subproj.sourceCompatibility
+        targetCompatibility = subproj.targetCompatibility
+    }
+
+    dependencies {
+        compileOnly project.files(project.jfxrtLocation)
+    }
+
+    sourceSets {
+        main {
+            compileClasspath += [configurations.compileOnly]
+        }
+        test {
+            compileClasspath += [configurations.testCompileOnly]
+        }
+    }
+
+    javadoc {
+        classpath += [configurations.compileOnly]
+    }
+
+    idea {
+        module {
+            scopes.PROVIDED.plus += [configurations.compileOnly]
+            scopes.PROVIDED.plus += [configurations.testCompileOnly]
+        }
+    }
+}
