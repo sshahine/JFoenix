@@ -1,5 +1,5 @@
 # JFoenix
-JavaFX Material Design Library
+JavaFX Material Design Library (Beta)
 
 # Summary
 JFoenix is an open source java library, that implements Google Material Design using java components.
