@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+	<VBox spacing="50" maxWidth="450" maxHeight="600">
+		<children>
+			<HBox spacing="100" alignment="BASELINE_CENTER">
+				<children>
+					<JFXSlider orientation="VERTICAL" prefHeight="300">
+					</JFXSlider>
+					<JFXSlider orientation="VERTICAL" styleClass="jfx-slider-style" prefHeight="200">
+					</JFXSlider>
+					<JFXSlider orientation="VERTICAL" prefHeight="200" disable="true">
+					</JFXSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50" alignment="BASELINE_CENTER">
+				<children>
+					<JFXSlider prefWidth="400">
+					</JFXSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50" alignment="BASELINE_CENTER">
+				<children>
+					<JFXSlider styleClass="jfx-slider-style" prefWidth="300">
+					</JFXSlider>
+				</children>
+			</HBox>
+			<HBox spacing="50" alignment="BASELINE_CENTER">
+				<children>
+					<JFXSlider prefWidth="400" disable="true">
+					</JFXSlider>
+				</children>
+			</HBox>
+		</children>
+	</VBox>
+</StackPane>

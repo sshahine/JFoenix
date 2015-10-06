@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.validation.RequiredFieldValidator?>
+<?import de.jensd.fx.fontawesome.Icon?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox prefWidth="300" spacing="30" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER">
+		<children>
+			<JFXTextField promptText="Type Something" prefWidth="300">
+			</JFXTextField>
+			<JFXTextField promptText="Im disabled" disable="true"
+				prefWidth="300">
+			</JFXTextField>
+			<JFXTextField id="validatedText" promptText="With validation"
+				prefWidth="300">
+				<validators>
+					<RequiredFieldValidator message="Input Required!">
+						<Icon awesomeIcon="WARNING" style=";" />
+					</RequiredFieldValidator>
+				</validators>
+			</JFXTextField>
+		</children>
+	</VBox>
+</StackPane>

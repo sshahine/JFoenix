@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    JFoenix
+    Copyright (c) 2015, JFoenix and/or its affiliates., All rights reserved.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.
+
+-->
+
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<HBox spacing="100" maxWidth="400" maxHeight="300">
+		<VBox spacing="20">
+			<children>
+				<Label styleClass="title-label">Check Box</Label>
+				<JFXCheckBox text="Notifications"></JFXCheckBox>
+				<JFXCheckBox text="Auto Updates"></JFXCheckBox>
+				<JFXCheckBox text="Clear History"></JFXCheckBox>
+			</children>
+		</VBox>
+
+
+		<VBox spacing="20">
+			<Label styleClass="title-label">Style Options</Label>
+			<JFXCheckBox text="Notifications" styleClass="custom-jfx-check-box"></JFXCheckBox>
+			<JFXCheckBox text="Auto Updates"  styleClass="custom-jfx-check-box-all-colored"></JFXCheckBox>
+			<JFXCheckBox text="Clear History" styleClass="custom-jfx-check-box-text-colored"></JFXCheckBox>
+		</VBox>
+
+
+	</HBox>
+
+
+
+</StackPane>
+
+
