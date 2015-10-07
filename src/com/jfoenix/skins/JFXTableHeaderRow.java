@@ -1,3 +1,28 @@
+/*
+ * Copyright (c) 2015, JFoenix and/or its affiliates. All rights reserved.
+ * JFoenix PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 package com.jfoenix.skins;
 
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
