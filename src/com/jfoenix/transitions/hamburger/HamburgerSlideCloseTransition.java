@@ -31,9 +31,9 @@ import javafx.util.Duration;
 
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 
-public class HamburgerSlideCloseTransition extends CachedTimelineTransition implements HamburgerTransition {
+public class HamburgerSlideCloseTransition extends CachedTransition implements HamburgerTransition {
 	
 	public HamburgerSlideCloseTransition(){
 		super(null,null);

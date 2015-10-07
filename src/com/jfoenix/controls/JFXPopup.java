@@ -36,7 +36,7 @@ import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 
 @DefaultProperty(value="content")
 public class JFXPopup extends StackPane {
@@ -219,7 +219,7 @@ public class JFXPopup extends StackPane {
 	}
 
 
-	private class PopupTransition extends CachedTimelineTransition {
+	private class PopupTransition extends CachedTransition {
 
 		public PopupTransition() {
 			super(JFXPopup.this, new  Timeline(

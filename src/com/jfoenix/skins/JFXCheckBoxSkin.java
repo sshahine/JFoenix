@@ -40,7 +40,7 @@ import javafx.util.Duration;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
 public class JFXCheckBoxSkin extends CheckBoxSkin {
@@ -179,7 +179,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 		}
 	}
 
-	private class CheckBoxTransition extends CachedTimelineTransition {
+	private class CheckBoxTransition extends CachedTransition {
 
 		public CheckBoxTransition() {
 			super(box, new Timeline(

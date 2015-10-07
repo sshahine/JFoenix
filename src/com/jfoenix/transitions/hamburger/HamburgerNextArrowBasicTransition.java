@@ -28,9 +28,9 @@ import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 
-public class HamburgerNextArrowBasicTransition extends CachedTimelineTransition implements HamburgerTransition{
+public class HamburgerNextArrowBasicTransition extends CachedTransition implements HamburgerTransition{
 	
 	public HamburgerNextArrowBasicTransition(){
 		super(null,null);

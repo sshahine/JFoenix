@@ -58,7 +58,7 @@ import javafx.util.Duration;
 
 import com.jfoenix.controls.events.JFXDrawerEvent;
 import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 
 /**
  * @author sshahine
@@ -613,7 +613,7 @@ public class JFXDrawer extends StackPane {
 
 	private double tempDrawerSize = getDefaultDrawerSize();
 
-	private class OutDrawerSizeTransition extends CachedTimelineTransition{
+	private class OutDrawerSizeTransition extends CachedTransition{
 		public OutDrawerSizeTransition() {
 			super(sidePane, new Timeline(new KeyFrame(Duration.millis(1000),
 					new KeyValue(prefSizeProperty.get(), getDefaultDrawerSize(),Interpolator.EASE_BOTH),
@@ -624,7 +624,7 @@ public class JFXDrawer extends StackPane {
 		}
 	}
 
-	private class InDrawerSizeTransition extends CachedTimelineTransition{
+	private class InDrawerSizeTransition extends CachedTransition{
 		public InDrawerSizeTransition() {
 			super(sidePane, new Timeline(
 					new KeyFrame(Duration.millis(0),
@@ -640,7 +640,7 @@ public class JFXDrawer extends StackPane {
 	}
 
 
-	private class InDrawerTransition extends CachedTimelineTransition{
+	private class InDrawerTransition extends CachedTransition{
 		public InDrawerTransition(double start, double end) {
 			super(sidePane, new Timeline(
 					new KeyFrame(
@@ -661,7 +661,7 @@ public class JFXDrawer extends StackPane {
 		}
 	}
 
-	private class OutDrawerTransition extends CachedTimelineTransition{
+	private class OutDrawerTransition extends CachedTransition{
 		public OutDrawerTransition(double start, double end) {
 			super(sidePane, new Timeline(
 					new KeyFrame(
@@ -683,7 +683,7 @@ public class JFXDrawer extends StackPane {
 	}
 
 
-	private class DrawerPartialTransition extends CachedTimelineTransition{
+	private class DrawerPartialTransition extends CachedTransition{
 		public DrawerPartialTransition(double start, double end) {
 			super(sidePane, new Timeline(
 					new KeyFrame(

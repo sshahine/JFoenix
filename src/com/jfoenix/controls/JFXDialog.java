@@ -53,7 +53,7 @@ import javafx.util.Duration;
 import com.jfoenix.controls.events.JFXDialogEvent;
 import com.jfoenix.converters.DialogTransitionConverter;
 import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 
 /**
  * @author sshahine
@@ -264,7 +264,7 @@ public class JFXDialog extends StackPane {
 		contentHolder.setScaleY(1);
 	}
 
-	private class LeftTransition extends CachedTimelineTransition {
+	private class LeftTransition extends CachedTransition {
 		public LeftTransition() {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 
@@ -286,7 +286,7 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
-	private class RightTransition extends CachedTimelineTransition {
+	private class RightTransition extends CachedTransition {
 		public RightTransition() {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 
@@ -307,7 +307,7 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
-	private class TopTransition extends CachedTimelineTransition {
+	private class TopTransition extends CachedTransition {
 		public TopTransition() {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 
@@ -328,7 +328,7 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
-	private class BottomTransition extends CachedTimelineTransition {
+	private class BottomTransition extends CachedTransition {
 		public BottomTransition() {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 
@@ -349,7 +349,7 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
-	private class CenterTransition extends CachedTimelineTransition {
+	private class CenterTransition extends CachedTransition {
 		public CenterTransition() {
 			super(contentHolder, new Timeline(
 					new KeyFrame(Duration.ZERO, 

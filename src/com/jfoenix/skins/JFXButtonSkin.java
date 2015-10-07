@@ -39,7 +39,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.jidefx.CachedTimelineTransition;
+import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 
@@ -176,7 +176,7 @@ public class JFXButtonSkin extends ButtonSkin {
 	}
 
 
-	private class ButtonClickTransition extends CachedTimelineTransition {
+	private class ButtonClickTransition extends CachedTransition {
 
 		public ButtonClickTransition() {
 			super(buttonContainer, new Timeline(
