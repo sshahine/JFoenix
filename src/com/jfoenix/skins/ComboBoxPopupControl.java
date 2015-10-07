@@ -68,7 +68,7 @@ public abstract class ComboBoxPopupControl<T> extends ComboBoxBaseSkin<T> {
     private Point2D getPrefPopupPosition() {
         double dx = 0;
         dx += (getSkinnable().getEffectiveNodeOrientation() == NodeOrientation.RIGHT_TO_LEFT) ? -3 : 0;
-        return com.sun.javafx.Utils.pointRelativeTo(getSkinnable(), getPopupContent(), HPos.CENTER, VPos.BOTTOM, dx, 0, false);
+        return Utils.pointRelativeTo(getSkinnable(), getPopupContent(), HPos.CENTER, VPos.BOTTOM, dx, 0, false);
     }
     
     private void positionAndShowPopup() {

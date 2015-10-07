@@ -236,10 +236,16 @@ public class VirtualFlow<T extends IndexedCell<?>> extends Region {
 
     public void setPosition(double newPosition) {
         boolean needsUpdate = this.position != newPosition;
-        this.position = com.sun.javafx.Utils.clamp(0, newPosition, 1);;
+        this.position = clamp(0, newPosition, 1);;
         if (needsUpdate) {
             requestLayout();
         }
+    }
+    
+    private double clamp(double min, double value, double max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
     
     /**
@@ -2436,7 +2442,7 @@ public class VirtualFlow<T extends IndexedCell<?>> extends Region {
      * item would end up positioned correctly.
      */
     private double computeViewportOffset(double position) {
-        double p = com.sun.javafx.Utils.clamp(0, position, 1);
+        double p = clamp(0, position, 1);
         double fractionalPosition = p * getCellCount();
         int cellIndex = (int) fractionalPosition;
         double fraction = fractionalPosition - cellIndex;
@@ -2546,7 +2552,7 @@ public class VirtualFlow<T extends IndexedCell<?>> extends Region {
      */
     private double computeOffsetForCell(int itemIndex) {
         double cellCount = getCellCount();
-        double p = com.sun.javafx.Utils.clamp(0, itemIndex, cellCount) / cellCount;
+        double p = clamp(0, itemIndex, cellCount) / cellCount;
         return -(getViewportLength() * p);
     }
     

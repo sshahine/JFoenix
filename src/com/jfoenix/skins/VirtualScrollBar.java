@@ -3,7 +3,6 @@ package com.jfoenix.skins;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ScrollBar;
 
-import com.sun.javafx.Utils;
 
 /**
  * This custom ScrollBar is used to map the increment & decrement features
@@ -69,7 +68,7 @@ public class VirtualScrollBar extends ScrollBar {
             adjusting = true;
             double oldValue = flow.getPosition();
             
-            double newValue = ((getMax() - getMin()) * Utils.clamp(0, pos, 1))+getMin();
+            double newValue = ((getMax() - getMin()) * clamp(0, pos, 1))+getMin();
             if (newValue < oldValue) {
                 IndexedCell<?> cell = flow.getFirstVisibleCell();
                 if (cell == null) return;
@@ -86,4 +85,12 @@ public class VirtualScrollBar extends ScrollBar {
             super.adjustValue(pos);
         }
     }
+    
+    private double clamp(double min, double value, double max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+    
+    
 }
