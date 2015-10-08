@@ -329,14 +329,23 @@ public class JFXListViewSkin<T> extends  VirtualContainerBase<ListView<T>, ListV
         // compute the gap between list cells
     	double gap = ((JFXListView<T>) getSkinnable()).currentVerticalGapProperty().get() * (getSkinnable().getItems().size() - 1);
         // compute the height of each list cell
-    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index->{
+    	double cellsHeight = 0;
+    	for(int i = 0 ; i < flow.getCellCount(); i++){
     		double cellBorderWidth = 0;
-    		if(flow.getCell(index).getBorder()!=null){
-    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getTop();
-    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getBottom();
+    		if(flow.getCell(i).getBorder()!=null){
+    			cellBorderWidth += flow.getCell(i).getBorder().getStrokes().get(0).getWidths().getTop();
+    			cellBorderWidth += flow.getCell(i).getBorder().getStrokes().get(0).getWidths().getBottom();
     		}
-    		return flow.getCell(index).getHeight() + cellBorderWidth;
-    	}).sum();
+    		cellsHeight+= flow.getCell(i).getHeight() + cellBorderWidth;
+    	}
+//    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index->{
+//    		double cellBorderWidth = 0;
+//    		if(flow.getCell(index).getBorder()!=null){
+//    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getTop();
+//    			cellBorderWidth += flow.getCell(index).getBorder().getStrokes().get(0).getWidths().getBottom();
+//    		}
+//    		return flow.getCell(index).getHeight() + cellBorderWidth;
+//    	}).sum();
     	return cellsHeight + gap + borderWidth;
     }
     
