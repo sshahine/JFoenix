@@ -17,6 +17,17 @@ To run the main demo, go to the JFoenix/make directory and run the batch file ru
 
 **NOTE** : You need to update the build.bat to point to Java 1.8 and Apache Ant directories.
 
+# Gradle
+To build JFoenix, execute the following command
+
+    gradle build
+
+To run the main demo, execute the following command:
+
+    gradle run
+    
+**NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
+
 # How Can I Use JFoenix?
  You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix.jar under the build/dist folder. To use JFoenix, import jfoenix.jar into your project and start using the new material design Java components :).
 
