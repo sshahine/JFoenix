@@ -6,7 +6,7 @@
 JFoenix is an open source Java library, that implements Google Material Design using Java components.
 
 # Source Code
-To rebuild JFoenix, you need to create an Ant file named build.xml and build.bat. JFoenix uses Java version 1.8. Using the command line, you need to move to the JFoenix/make directory
+To rebuild JFoenix, we created an Ant file named build.xml and build.bat. JFoenix uses Java version 1.8. Using the command line, you need to move to the JFoenix/make directory
 and run the batch file build.bat by typing:
 
     build.bat
