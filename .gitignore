@@ -6,6 +6,15 @@
 .metadata/*
 .settings
 
+#intellij specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+#gradle specific
+.gradle/
+
 #temp build
 [Bb]uild*/
 [Bb]in/
