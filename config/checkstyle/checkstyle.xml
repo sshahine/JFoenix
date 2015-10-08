@@ -1,0 +1,82 @@
+<!--
+  ~ Copyright 2014 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <!-- Blocks -->
+        <module name="EmptyBlock">
+            <property name="option" value="stmt"/>
+            <property name="tokens" value="LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_IF,LITERAL_FOR,LITERAL_TRY,LITERAL_WHILE,INSTANCE_INIT,STATIC_INIT"/>
+        </module>
+        <module name="EmptyBlock">
+            <property name="option" value="text"/>
+            <property name="tokens" value="LITERAL_CATCH"/>
+        </module>
+        <module name="AvoidNestedBlocks"/>
+
+        <!-- Braces -->
+        <!--<module name="NeedBraces"/>-->
+
+        <!-- Coding -->
+        <module name="CovariantEquals"/>
+        <module name="DefaultComesLast"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <!--<module name="ExplicitInitialization"/>-->
+        <!--<module name="MultipleVariableDeclarations"/>-->
+        <module name="NoClone"/>
+        <module name="NoFinalizer"/>
+        <module name="RedundantThrows">
+            <property name="allowUnchecked" value="true"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <!--<module name="UnnecessaryParentheses"/>-->
+
+        <!-- Design -->
+        <!--<module name="InterfaceIsType"/>-->
+
+        <!-- Imports -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- Naming -->
+        <module name="ClassTypeParameterName">
+            <property name="format" value="^[A-Z]+([A-Z_]*)*$"/>
+        </module>
+        <!--<module name="ConstantName"/> -->
+        <module name="LocalFinalVariableName"/>
+        <!--<module name="LocalVariableName"/>-->
+        <module name="MemberName"/>
+        <module name="MethodName">
+            <property name="format" value="^(\$)?[a-z]?([a-zA-Z0-9_]*)*$"/>
+        </module>
+        <module name="MethodTypeParameterName">
+            <property name="format" value="^[A-Z]+([A-Z_]*)*$"/>
+        </module>
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+        <module name="ParameterName"/>
+        <!--<module name="StaticVariableName"/>-->
+        <module name="TypeName"/>
+
+    </module>
+    <module name="FileTabCharacter"/>
+</module>
