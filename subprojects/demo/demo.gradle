@@ -1,0 +1,13 @@
+apply plugin: 'application'
+
+mainClassName = 'demos.MainDemo'
+
+dependencies {
+    compile project(':jfoenix')
+    compile ':datafx:8.0b8'
+    compile ':core:8.0b8'
+    compile ':flow:8.0b8'
+}
+
+sourceSets.main.java.srcDirs = [rootProject.file('demo')]
+sourceSets.main.resources.srcDirs = [rootProject.file('demo')]
