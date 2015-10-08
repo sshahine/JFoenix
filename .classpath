@@ -2,15 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="demo"/>
-	<classpathentry kind="lib" path="libs/datafx/b8/core-8.0b8.jar"/>
-	<classpathentry kind="lib" path="libs/datafx/b8/datafx-8.0b8.jar"/>
-	<classpathentry kind="lib" path="libs/datafx/b8/flow-8.0b8.jar"/>
-	<classpathentry kind="lib" path="libs/datafx/javassist.jar"/>
-	<classpathentry kind="lib" path="libs/datafx/javax.inject.jar"/>
-	<classpathentry kind="lib" path="libs/FontAwesome/fontawesomefx-8.0.10.jar"/>
-	<classpathentry kind="lib" path="libs/jidefx/jidefx-common-0.9.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_25"/>
+	<classpathentry kind="lib" path="libs/core-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/datafx-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/flow-8.0b8.jar"/>
+	<classpathentry kind="lib" path="libs/fontawesomefx-8.0.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_45"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
