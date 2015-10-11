@@ -103,9 +103,7 @@ public class SVGGlyphLoader {
 				 String glyphId = glyphName.getNodeValue();
 				 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i, glyphId, (String)glyph.getAttributes().getNamedItem("d").getNodeValue());
 				 glyphsMap.put(svgFontFile.getName() + "." + glyphId, glyphPane);
-				 
-			}
-			
+			}			
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,9 +113,7 @@ public class SVGGlyphLoader {
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		glyphsMap.size();
+		}		
 	}
 	
 	public static SVGGlyph loadGlyph(URL url) throws IOException {

@@ -91,30 +91,34 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 			}
 		});
 		
-		this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {			
-	        return child -> {
-	            // Set the predicate of child items to force filtering
-	            if (child instanceof RecursiveTreeItem) {
-	            	if(!((RecursiveTreeItem)child).originalItems.isEmpty()){
-	            		RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
-	            		filterableChild.setPredicate(this.predicate.get());
-	            	}
-	            }
-	            // If there is no predicate, keep this tree item
-	            if (this.predicate.get() == null)
-	                return true;
-	            // If there are children, keep this tree item
-	            if (child.getChildren().size() > 0)
-	                return true;
-	            // If its a group node keep this item if it has children
-	            if (child.getValue() instanceof RecursiveTreeObject && child.getValue().getClass() == RecursiveTreeObject.class){
-	            	if(child.getChildren().size() == 0)
-	            		return false;
-	            	return true;
-	            }
-	            // Otherwise ask the TreeItemPredicate
-	            return this.predicate.get().test(child);
-	        };
+		this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+			Predicate<TreeItem<T>> newPredicate = new Predicate<TreeItem<T>>() {
+				@Override
+				public boolean test(TreeItem<T> child) {
+					// Set the predicate of child items to force filtering
+		            if (child instanceof RecursiveTreeItem) {
+		            	if(!((RecursiveTreeItem)child).originalItems.isEmpty()){
+		            		RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
+		            		filterableChild.setPredicate(RecursiveTreeItem.this.predicate.get());
+		            	}
+		            }
+		            // If there is no predicate, keep this tree item
+		            if (RecursiveTreeItem.this.predicate.get() == null)
+		                return true;
+		            // If there are children, keep this tree item
+		            if (child.getChildren().size() > 0)
+		                return true;
+		            // If its a group node keep this item if it has children
+		            if (child.getValue() instanceof RecursiveTreeObject && child.getValue().getClass() == RecursiveTreeObject.class){
+		            	if(child.getChildren().size() == 0)
+		            		return false;
+		            	return true;
+		            }
+		            // Otherwise ask the TreeItemPredicate
+		            return RecursiveTreeItem.this.predicate.get().test(child);
+				}
+			};
+			return newPredicate;
 	    }, this.predicate));
 		
 		

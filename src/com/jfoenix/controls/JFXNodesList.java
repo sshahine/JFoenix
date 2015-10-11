@@ -71,6 +71,7 @@ public class JFXNodesList extends VBox {
 		else {
 			if(node instanceof Button) ((Button)node).setOnAction((action)-> this.animateList());
 			else node.setOnMouseClicked((click)-> this.animateList());
+			node.getStyleClass().add("trigger-node");
 		}
 		
 		// init the list height and width
@@ -126,6 +127,7 @@ public class JFXNodesList extends VBox {
 	protected void initNode(Node node){
 		node.setScaleX(0);
 		node.setScaleY(0);
+		node.getStyleClass().add("sub-node");
 	}
 	
 	// init default animation keyvalues

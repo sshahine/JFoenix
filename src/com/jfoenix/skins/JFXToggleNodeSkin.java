@@ -46,13 +46,9 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {			
 		if(invalid){
 			rippler = new JFXRippler(getSkinnable().getGraphic(),RipplerPos.FRONT);
-			getSkinnable().selectedProperty().addListener((o,oldVal,newVal)->{
-				rippler.toggle();
-			});
+			getSkinnable().selectedProperty().addListener((o,oldVal,newVal)-> rippler.toggle());
 			main.getChildren().add(rippler);
-			getSkinnable().layoutBoundsProperty().addListener((o,oldVal,newVal)->{
-				main.resize(newVal.getWidth(), newVal.getHeight());
-			});				
+			getSkinnable().layoutBoundsProperty().addListener((o,oldVal,newVal)-> main.resize(newVal.getWidth(), newVal.getHeight()));
 			getChildren().add(main);
 			main.resize(getSkinnable().layoutBoundsProperty().get().getWidth(), getSkinnable().layoutBoundsProperty().get().getHeight());
 			invalid = false;
