@@ -35,8 +35,10 @@ public class JFXToolbar extends BorderPane {
 		initialize();
 		this.setLeft(leftBox);
 		leftBox.getStyleClass().add("tool-bar-left-box");
+		leftBox.setPickOnBounds(false);
 		this.setRight(rightBox);
 		rightBox.getStyleClass().add("tool-bar-right-box");
+		rightBox.setPickOnBounds(false);
 		JFXDepthManager.setDepth(this, 1);
 	}
 	

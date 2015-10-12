@@ -364,15 +364,28 @@ public class JFXDrawer extends StackPane {
 		}
 	}
 
+	
+	public boolean isShown() {
+		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0) return true;
+		return false;
+	}
 
 	public void draw() {
-		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0)
+		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0){
+			this.inTransition.setOnFinished((finish)-> onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED)) );
 			this.inTransition.play();
-		onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED));
+		}else{
+			onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED));
+		}
 	}
 
 	public void hide(){
-		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed 
+		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed
+
+		// unbind properties as the drawer size might be bound to stage size
+		maxSizeProperty.get().unbind();
+		prefSizeProperty.get().unbind();
+		
 		if(sizeProperty.get().get() > getDefaultDrawerSize()){
 			tempDrawerSize = prefSizeProperty.get().get();
 			new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0)).play();
@@ -711,6 +724,8 @@ public class JFXDrawer extends StackPane {
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
+
+
 
 }
 
