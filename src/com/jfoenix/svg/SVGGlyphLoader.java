@@ -116,6 +116,43 @@ public class SVGGlyphLoader {
 		}		
 	}
 	
+	public static void loadGlyphsFont(InputStream stream, String name) throws IOException {
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();	
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			
+			docBuilder.setEntityResolver(new EntityResolver() {
+	            @Override
+	            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+	            	// disable dtd entites at runtime
+//	                System.out.println("Ignoring " + publicId + ", " + systemId);
+	                return new InputSource(new StringReader(""));
+	            }
+	        });
+			
+			Document doc = docBuilder.parse(stream);	
+			doc.getDocumentElement().normalize();
+			
+			NodeList glyphsList = doc.getElementsByTagName("glyph");
+			for (int i = 0; i < glyphsList.getLength(); i++) {
+				 Node glyph = glyphsList.item(i);
+				 Node glyphName = glyph.getAttributes().getNamedItem("glyph-name");
+				 if(glyphName == null) continue;
+				
+				 String glyphId = glyphName.getNodeValue();
+				 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i, glyphId, (String)glyph.getAttributes().getNamedItem("d").getNodeValue());
+				 glyphsMap.put(name + "." + glyphId, glyphPane);
+			}
+			stream.close();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
 	public static SVGGlyph loadGlyph(URL url) throws IOException {
 		String urlString = url.toString();
 		String filename = urlString.substring(urlString.lastIndexOf('/') + 1);
