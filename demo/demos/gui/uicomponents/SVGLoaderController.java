@@ -107,6 +107,8 @@ public class SVGLoaderController {
 		
 		glyphs.forEach(glyph -> glyph.setSize(16, 16));
 		List<Button> iconButtons = glyphs.stream().map(this::createIconButton).collect(Collectors.toList());
+		// important to improve the performance of animation in scroll pane so buttons are treated as images
+		iconButtons.forEach(button-> button.setCache(true));
 		iconButtons.get(0).fire();
 
 		FlowPane glyphLayout = new FlowPane();
