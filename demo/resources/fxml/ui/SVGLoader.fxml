@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+
+	<VBox>
+		<HBox >
+			<padding><Insets top="12" bottom="12" left="12" right="12"/></padding>
+			<JFXButton fx:id="browseFont" text="Browse SVG icomoon font">
+			</JFXButton>
+				
+			<Label></Label>
+		</HBox>
+		<HBox VBox.vgrow="ALWAYS">
+			<StackPane HBox.hgrow="ALWAYS" fx:id="iconsContainer"></StackPane>
+			<StackPane fx:id="detailsContainer"></StackPane>
+		</HBox>
+	</VBox>
+
+</StackPane>

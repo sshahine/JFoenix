@@ -25,5 +25,6 @@
 		<Label fx:id="textfield"> Text Field </Label>
 		<Label fx:id="togglebutton"> Toggle Button </Label>
 		<Label fx:id="popup"> Popup </Label>
+		<Label fx:id="svgLoader"> SVG Loader </Label>
 	</JFXListView>
 </StackPane>

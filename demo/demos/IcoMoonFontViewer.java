@@ -1,6 +1,9 @@
 package demos;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import com.jfoenix.controls.JFXButton;
@@ -41,27 +45,57 @@ public class IcoMoonFontViewer extends Application {
 	private GlyphDetailViewer glyphDetailViewer = new GlyphDetailViewer();
 
 	private static String fileName = "icomoon.svg";
-	
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		
-		SVGGlyphLoader.loadGlyphsFont(IcoMoonFontViewer.class.getResource("/resources/fonts/" + fileName));
-		
-		stage.setTitle("IcoMoon SVG Font Viewer");
 
+		SVGGlyphLoader.loadGlyphsFont(IcoMoonFontViewer.class.getResource("/resources/fonts/" + fileName));
+		stage.setTitle("IcoMoon SVG Font Viewer");
 		ScrollPane scrollableGlyphs = allGlyphs();
 		scrollableGlyphs.setStyle("-fx-background-insets: 0;");
+
+
 		HBox layout = new HBox(scrollableGlyphs, glyphDetailViewer);
 		HBox.setHgrow(scrollableGlyphs, Priority.ALWAYS);
 
+		VBox container = new VBox();
+		JFXButton browseFile = new JFXButton("Browse File");
+		browseFile.setOnAction((action)->{
+			FileChooser fileChooser = new FileChooser();
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SVG files (*.svg)", "*.svg");
+			fileChooser.getExtensionFilters().add(extFilter);
+			File file = fileChooser.showOpenDialog(stage);
+			if(file!=null){
+				SVGGlyphLoader.clear();     		
+				try {
+					SVGGlyphLoader.loadGlyphsFont(new FileInputStream(file),file.getName());
+					ScrollPane newglyphs = allGlyphs();    		
+					newglyphs.setStyle("-fx-background-insets: 0;");
+								
+					layout.getChildren().set(0, newglyphs);
+					HBox.setHgrow(newglyphs, Priority.ALWAYS);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	 
+			}
+
+		});
+		container.getChildren().add(browseFile);
+		container.getChildren().add(layout);
+		VBox.setVgrow(layout, Priority.ALWAYS);
+
 		// display the app.  
-		stage.setScene(new Scene(layout));
+		stage.setScene(new Scene(container));
 		stage.show();
 	}
 
 	private ScrollPane allGlyphs() throws IOException {
-		
+
 		List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs().stream().map(item -> SVGGlyphLoader.getIcoMoonGlyph(item)).collect(Collectors.toList());
+		Collections.sort(glyphs, (o1,o2)-> o1.getName().compareTo(o2.getName()));
+		
+		
 		glyphs.forEach(glyph -> glyph.setSize(16, 16));
 		List<Button> iconButtons = glyphs.stream().map(this::createIconButton).collect(Collectors.toList());
 		iconButtons.get(0).fire();
@@ -81,9 +115,9 @@ public class IcoMoonFontViewer extends Application {
 
 	private Button createIconButton(SVGGlyph glyph) {
 		JFXButton button = new JFXButton(null, glyph);
-//		button.setStyle("-fx-background-color:#0F9D58;");
+		//		button.setStyle("-fx-background-color:#0F9D58;");
 		button.setRipplerFill(Color.valueOf("#0F9D58"));
-//		glyph.setStyle("-fx-background-color:WHITE;");
+		//		glyph.setStyle("-fx-background-color:WHITE;");
 		button.setOnAction(event -> viewGlyphDetail(glyph));
 		Tooltip.install(button, new Tooltip(glyph.getName()));
 		return button;

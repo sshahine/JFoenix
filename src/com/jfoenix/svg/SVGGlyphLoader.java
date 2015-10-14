@@ -173,6 +173,10 @@ public class SVGGlyphLoader {
 		return new SVGGlyph(id, name, extractSvgPath(getStringFromInputStream(url.openStream())), Color.BLACK);
 	}
 	
+	public static void clear(){
+		glyphsMap.clear();
+	}
+	
 	private static String extractSvgPath(String svgString) {
 		return svgString.replaceFirst(".*d=\"", "").replaceFirst("\".*", "");
 	}

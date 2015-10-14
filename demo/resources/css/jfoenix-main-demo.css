@@ -232,26 +232,10 @@
  *                                                                             *
  ******************************************************************************/
 
-.jfx-slider {
-	-fx-indicator-position: left;
+.svg-slider .thumb{
+	-fx-stroke : black;
+	-fx-fill : black;
 }
-
-
-.jfx-slider > .thumb {
-	-fx-stroke: #0F9D58;
-	-fx-stroke-width: 2.0;
-}
-
-.jfx-slider .track {
-	-fx-background-color: #CCCCCC;
-    -fx-stroke-width: 3.0;
-}
-
-.jfx-slider .sliderValue {
-	-fx-stroke: #FFFFFF;
-	-fx-font-size: 10.0;
-}
-
 .jfx-slider:disabled {
 	-fx-opacity: 0.4;
 }

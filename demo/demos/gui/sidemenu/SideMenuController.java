@@ -25,6 +25,7 @@ import demos.gui.uicomponents.ListViewController;
 import demos.gui.uicomponents.PopupController;
 import demos.gui.uicomponents.ProgressBarController;
 import demos.gui.uicomponents.RadioButtonController;
+import demos.gui.uicomponents.SVGLoaderController;
 import demos.gui.uicomponents.SliderController;
 import demos.gui.uicomponents.SpinnerController;
 import demos.gui.uicomponents.TextFieldController;
@@ -89,6 +90,11 @@ public class SideMenuController {
 	private Label popup;
 	
 	@FXML
+	@ActionTrigger("svgLoader")
+	private Label svgLoader;
+	
+	
+	@FXML
 	private JFXListView<?> sideList;
 
 	@PostConstruct
@@ -109,6 +115,7 @@ public class SideMenuController {
 		bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(svgLoader, SVGLoaderController.class, contentFlow, contentFlowHandler);
 	}
 
 	private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {

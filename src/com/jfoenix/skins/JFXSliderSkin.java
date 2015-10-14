@@ -32,6 +32,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -51,7 +52,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 	/** Track if slider is vertical/horizontal and cause re layout */
 	private boolean isHorizontal, isIndicatorLeft;
 
-	private Color thumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
+	private Paint thumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
 	private double thumbRadius, trackStart, trackLength, thumbTop, thumbLeft, preDragThumbPos, indicatorRotation, horizontalRotation, rotationAngle = 45, shifting;
 	private Point2D dragStart; // in skin coordinates
 
@@ -166,7 +167,11 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 
 		trackColor = (Color) track.getStroke();
 		thumbColor = (Color) thumb.getStroke();
+		
+		track.strokeProperty().addListener((o,oldVal,newVal)-> trackColor = newVal);
+		thumb.strokeProperty().addListener((o,oldVal,newVal)-> thumbColor = newVal);
 
+		
 		shifting = 30 + thumbRadius;
 
 		if (!isHorizontal) {
