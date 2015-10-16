@@ -194,27 +194,9 @@ public class JFXRippler extends StackPane {
 
 		// if the control got resized the overlay rect must be rest
 		if(this.control instanceof Region){
-			((Region)this.control).widthProperty().addListener((o,oldVal,newVal)->{
-				if(rippler.overlayRect!=null){
-					rippler.overlayRect.inAnimation.stop();
-					final RippleGenerator.OverLayRipple oldOverlay = rippler.overlayRect;
-					rippler.overlayRect.outAnimation.setOnFinished((finish)-> rippler.getChildren().remove(oldOverlay));
-					rippler.overlayRect.outAnimation.play();
-					rippler.overlayRect = null;
-				}
-			});
-			((Region)this.control).heightProperty().addListener((o,oldVal,newVal)->{
-				if(rippler.overlayRect!=null){
-					rippler.overlayRect.inAnimation.stop();
-					final RippleGenerator.OverLayRipple oldOverlay = rippler.overlayRect;
-					rippler.overlayRect.outAnimation.setOnFinished((finish)-> rippler.getChildren().remove(oldOverlay));
-					rippler.overlayRect.outAnimation.play();
-					rippler.overlayRect = null;
-				}
-			});	
+			((Region)this.control).widthProperty().addListener((o,oldVal,newVal)-> resetOverLay());
+			((Region)this.control).heightProperty().addListener((o,oldVal,newVal)-> resetOverLay());
 		}
-
-
 	}
 	/**
 	 *  create Ripple effect
@@ -289,7 +271,15 @@ public class JFXRippler extends StackPane {
 										new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
 										new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)));
 						
-						outAnimation.setOnFinished((event)-> getChildren().remove(ripple));
+						outAnimation.setOnFinished((event)-> {
+							getChildren().remove(ripple);
+							// remove overlay rect after 200 ms in case rippler is not generated
+							new Thread(()->{
+								try { Thread.sleep(200); } catch (Exception e1) { }
+								if(getChildren().size() == 1)
+									resetOverLay();
+							}).start();
+						});
 						outAnimation.play();
 						if(overlayRect!=null) overlayRect.outAnimation.play();
 					});
@@ -306,12 +296,10 @@ public class JFXRippler extends StackPane {
 		}
 
 		private class OverLayRipple extends Rectangle{
-			// better animation while clicking 
+			// Overlay ripple animations 
 			Timeline inAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
 			Timeline outAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)));
-			// used in toggle button
-//			Timeline animation = new Timeline(new KeyFrame(Duration.ZERO,new KeyValue(opacityProperty(),  0,Interpolator.EASE_BOTH)),
-//					new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
+			
 			public OverLayRipple() {
 				super(control.getLayoutBounds().getWidth() - 0.1,control.getLayoutBounds().getHeight() - 0.1);
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
@@ -344,6 +332,16 @@ public class JFXRippler extends StackPane {
 		}
 	}
 
+	private void resetOverLay(){
+		if(rippler.overlayRect!=null){
+			rippler.overlayRect.inAnimation.stop();
+			final RippleGenerator.OverLayRipple oldOverlay = rippler.overlayRect;
+			rippler.overlayRect.outAnimation.setOnFinished((finish)-> rippler.getChildren().remove(oldOverlay));
+			rippler.overlayRect.outAnimation.play();
+			rippler.overlayRect = null;			
+		}
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
