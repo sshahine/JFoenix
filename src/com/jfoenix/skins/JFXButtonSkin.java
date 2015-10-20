@@ -36,8 +36,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXButton.ButtonType;
+import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
@@ -128,10 +128,9 @@ public class JFXButtonSkin extends ButtonSkin {
 	@Override
 	protected void updateChildren() {
 		super.updateChildren();
-		if (buttonContainer != null) {		
-			getChildren().get(0).setMouseTransparent(true);
-			getChildren().add(0,buttonContainer);			
-		}
+		if (buttonContainer != null) getChildren().add(0,buttonContainer);			
+		for(int i = 1 ; i < getChildren().size(); i++)
+			getChildren().get(i).setMouseTransparent(true);
 	}
 
 	@Override 
