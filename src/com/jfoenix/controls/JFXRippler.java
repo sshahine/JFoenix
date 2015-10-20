@@ -276,7 +276,7 @@ public class JFXRippler extends StackPane {
 							// remove overlay rect after 200 ms in case rippler is not generated
 							new Thread(()->{
 								try { Thread.sleep(200); } catch (Exception e1) { }
-								if(getChildren().size() == 1)
+								if(getChildren().size() == 1 && !toggled)
 									resetOverLay();
 							}).start();
 						});
