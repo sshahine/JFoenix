@@ -38,6 +38,13 @@ import javafx.scene.paint.Color;
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
 
+/**
+ * @author sshahine
+ * JFXButton contains ripple effect , this effect is set according to text fill of the button
+ * or the text fill of graphic node if it was set to Label. Priority is set to the text fill 
+ * of the button.
+ * 
+ */
 public class JFXButton extends Button {
 	
 	

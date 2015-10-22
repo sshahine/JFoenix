@@ -137,12 +137,17 @@ public class JFXButtonSkin extends ButtonSkin {
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		if(invalid){
 			if(((JFXButton)getSkinnable()).getRipplerFill() == null){
-				if(getChildren().get(1) instanceof LabeledText){
-					buttonRippler.setRipplerFill(((LabeledText)getChildren().get(1)).getFill());			
-					((LabeledText)getChildren().get(1)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
-				}else if(getChildren().get(1) instanceof Label){
-					buttonRippler.setRipplerFill(((Label)getChildren().get(1)).getTextFill());			
-					((Label)getChildren().get(1)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+				// change rippler fill according to the last LabeledText/Label child
+				for(int i = getChildren().size()-1; i >= 1; i--){
+					if(getChildren().get(i) instanceof LabeledText){
+						buttonRippler.setRipplerFill(((LabeledText)getChildren().get(i)).getFill());			
+						((LabeledText)getChildren().get(i)).fillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+						break;
+					}else if(getChildren().get(i) instanceof Label){
+						buttonRippler.setRipplerFill(((Label)getChildren().get(i)).getTextFill());			
+						((Label)getChildren().get(i)).textFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
+						break;
+					}	
 				}
 			}else{
 				buttonRippler.setRipplerFill(((JFXButton)getSkinnable()).getRipplerFill());
