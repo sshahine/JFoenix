@@ -86,7 +86,8 @@ public class JFXNodesList extends VBox {
 		// add the node and its listeners
 		this.getChildren().add(node);
 		this.rotateProperty().addListener((o,oldVal,newVal)-> node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal.doubleValue()));	
-		if(animationCallBack == null) animationCallBack = (expanded)-> {return initDefaultAnimation(node, expanded);};
+		if(animationCallBack == null && this.getChildren().size() != 1) animationCallBack = (expanded)-> {return initDefaultAnimation(node, expanded);};
+		else if (animationCallBack == null && this.getChildren().size() == 1 ) animationCallBack = (expanded)-> {return new ArrayList<KeyValue>();};
 		animationsMap.put(node, animationCallBack);
 	}
 	

@@ -96,6 +96,12 @@ public class JFXButtonSkin extends ButtonSkin {
 			}
 		});
 		
+		/*
+		 * disable action when clicking on the button shadow 
+		 */
+		button.setPickOnBounds(false);
+		buttonContainer.setPickOnBounds(false);
+		
 		buttonContainer.borderProperty().bind(getSkinnable().borderProperty());		
 		buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
 			// reset button background to transparent if its set to java default values
@@ -113,7 +119,6 @@ public class JFXButtonSkin extends ButtonSkin {
 						Insets.EMPTY/*getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getInsets() : Insets.EMPTY*/));	
 			}
 		}, getSkinnable().backgroundProperty()));
-		
 		
 		button.ripplerFillProperty().addListener((o,oldVal,newVal)-> buttonRippler.setRipplerFill(newVal));
 		

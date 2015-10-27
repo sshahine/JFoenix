@@ -139,7 +139,6 @@ public class JFXRippler extends StackPane {
 
 			// add listeners
 			initListeners();
-			this.requestLayout();
 		}
 	}
 
@@ -302,6 +301,7 @@ public class JFXRippler extends StackPane {
 			
 			public OverLayRipple() {
 				super(control.getLayoutBounds().getWidth() - 0.1,control.getLayoutBounds().getHeight() - 0.1);
+				this.getStyleClass().add("jfx-rippler-overlay");
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
 				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
 				this.setOpacity(0);
