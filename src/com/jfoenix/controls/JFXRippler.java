@@ -69,7 +69,6 @@ public class JFXRippler extends StackPane {
 	private double minRadius = 100;
 	private double rippleRadius = 150;
 	private boolean enabled = true;
-	private boolean toggled = false;
 
 	public JFXRippler(){
 		this(null,RipplerMask.RECT,RipplerPos.FRONT);
@@ -212,18 +211,6 @@ public class JFXRippler extends StackPane {
 			ripplerPane.fireEvent(event);
 	}
 
-	public void toggle(){
-		if(!toggled){
-			rippler.overlayRect.outAnimation.stop();
-			rippler.overlayRect.inAnimation.play();
-		}else{
-			rippler.overlayRect.inAnimation.stop();
-			rippler.overlayRect.outAnimation.play();
-		}
-		toggled = !toggled;
-	}
-
-
 	/**
 	 * Generates ripples on the screen every 0.3 seconds or whenever
 	 * the createRipple method is called. Ripples grow and fade out
@@ -241,12 +228,7 @@ public class JFXRippler extends StackPane {
 				if(!generating){
 					generating = true;
 					// create overlay once then change its color later 
-					if(overlayRect == null){
-						overlayRect = new OverLayRipple();
-						overlayRect.setClip(getMask());
-						getChildren().add(overlayRect);
-					}					
-					overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
+					createOverlay();
 
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);				
@@ -275,7 +257,7 @@ public class JFXRippler extends StackPane {
 							// remove overlay rect after 200 ms in case rippler is not generated
 							new Thread(()->{
 								try { Thread.sleep(200); } catch (Exception e1) { }
-								if(getChildren().size() == 1 && !toggled)
+								if(getChildren().size() == 1 )
 									resetOverLay();
 							}).start();
 						});
@@ -286,6 +268,15 @@ public class JFXRippler extends StackPane {
 			}
 		}
 
+		public void createOverlay(){
+			if(overlayRect == null){
+				overlayRect = new OverLayRipple();
+				overlayRect.setClip(getMask());
+				getChildren().add(overlayRect);
+			}					
+			overlayRect.setFill(new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.2));
+		}
+		
 		public void setGeneratorCenterX(double generatorCenterX) {
 			this.generatorCenterX = generatorCenterX;
 		}

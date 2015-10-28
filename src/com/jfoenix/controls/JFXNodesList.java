@@ -79,8 +79,8 @@ public class JFXNodesList extends VBox {
 			node.setVisible(true);
 			this.minHeightProperty().bind(node.prefHeightProperty());
 			this.maxHeightProperty().bind(node.prefHeightProperty());
-			this.minWidthProperty().bind(node.prefHeightProperty());
-			this.maxWidthProperty().bind(node.prefHeightProperty());
+			this.minWidthProperty().bind(node.prefWidthProperty());
+			this.maxWidthProperty().bind(node.prefWidthProperty());
 		}				
 		
 		// add the node and its listeners

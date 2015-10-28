@@ -564,10 +564,34 @@
 	-fx-text-fill: #4285F4;
 	-fx-padding:20.0;
 }
+
+.toggle-icon1{
+	-fx-pref-width: 80px;
+	-fx-background-radius:80px;
+	-fx-pref-height: 80px;
+	-fx-background-color:transparent; 
+	-fx-selected-color:rgba(66.0,133.0,244.0,0.29885056614875793);
+	-fx-unselected-color:transparent;
+}
+
 .toggle-icon1 .jfx-rippler{
 	-fx-rippler-fill: rgba(66.0,133.0,244.0,0.29885056614875793);
 	-fx-mask-type: CIRCLE;
 }
+
+.toggle-icon2, .toggle-icon3{
+	-fx-pref-width: 50px;
+	-fx-background-radius: 50px;
+	-fx-pref-height: 50px; 
+	-fx-background-color:transparent ;
+}
+
+.toggle-icon3{
+	-fx-selected-color: rgba(128,128,255, 0.2);
+	-fx-unselected-color:transparent;
+}
+
+
 .toggle-icon2 .icon{
 	-fx-text-fill: RED;
 }
