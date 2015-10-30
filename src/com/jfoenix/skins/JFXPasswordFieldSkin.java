@@ -24,7 +24,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -126,7 +125,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		});
 		errorContainer.visibleProperty().addListener((o,oldVal,newVal)->{
 			// show the error label if it's not shown
-			Platform.runLater(()->new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play());
+			new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play();
 		});
 
 
