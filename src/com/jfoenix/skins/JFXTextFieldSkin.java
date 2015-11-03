@@ -273,7 +273,6 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 											)
 
 					);
-			linesAnimation.setOnFinished((finish)->focusedLine.endXProperty().bind(textPane.widthProperty()));
 			Timeline cursorAnimation = new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
@@ -296,6 +295,10 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 					);
 			transition = new ParallelTransition();
 			transition.getChildren().add(linesAnimation);
+			transition.setOnFinished((finish)->{
+				if(transition.getStatus().equals(Status.STOPPED))
+					focusedLine.endXProperty().bind(textPane.widthProperty());	
+			});
 			if(getSkinnable().getText().length() == 0)
 				transition.getChildren().add(cursorAnimation);
 			transition.play();

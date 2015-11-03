@@ -65,8 +65,16 @@ public class JFXProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 		getChildren().addAll(track, bar);
 		
 		getSkinnable().indeterminateProperty().addListener((o, oldVal, newVal) -> {
-			timeline.stop();
+			if(timeline!=null) timeline.stop();
 			initialization = false;
+			getSkinnable().requestLayout();
+		});
+		
+		getSkinnable().progressProperty().addListener((o, oldVal, newVal) -> {
+			if (!isIndeterminate) {
+				double barWidth = ((int) (trackLength - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, newVal.doubleValue()))) / 2.0F;
+				bar.setEndX(barWidth);
+			}
 		});
 		
 		getSkinnable().prefWidthProperty().addListener((o,oldVal,newVal)-> initialization = false);
@@ -95,7 +103,11 @@ public class JFXProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 			bar.setStartY(y + trackHeight / 2);
 			bar.setEndY(y + trackHeight / 2);
 			
-			initializeListeners();
+			
+			if (!isIndeterminate) {
+				double barWidth = ((int) (trackLength - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, getSkinnable().getProgress()))) / 2.0F;
+				bar.setEndX(barWidth);
+			}
 
 			if (isIndeterminate) {
 				initializeTimeline();
@@ -106,15 +118,6 @@ public class JFXProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 
 			initialization = true;
 		}
-	}
-
-	private void initializeListeners() {
-		getSkinnable().progressProperty().addListener((o, oldVal, newVal) -> {
-			if (!isIndeterminate) {
-				double barWidth = ((int) (trackLength - snappedLeftInset() - snappedRightInset()) * 2 * Math.min(1, Math.max(0, newVal.doubleValue()))) / 2.0F;
-				bar.setEndX(barWidth);
-			}
-		});
 	}
 
 	private void initializeTimeline() {
