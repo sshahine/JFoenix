@@ -370,5 +370,11 @@
 	-fx-background-color: rgb(203,104,96); 
 }
 
-
+.tree-table-view .menu-item:focused{
+	-fx-background-color:-fx-tree-table-color;
+	
+}
+.tree-table-view .menu-item .label{
+	-fx-padding: 5 0 5 0;
+} 
  
