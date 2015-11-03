@@ -23,7 +23,6 @@ import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -34,8 +33,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 /**
@@ -135,7 +133,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 				allowEdit = false;
 			}else{
 				// check grouped columns in the tableview
-				if(getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView)getTreeTableView()).getGroupOrder().contains(getTableColumn()))
+				if(getTableColumn() instanceof JFXTreeTableColumn && ((JFXTreeTableColumn)getTableColumn()).isGrouped())
 					allowEdit = false;
 			}
 		}

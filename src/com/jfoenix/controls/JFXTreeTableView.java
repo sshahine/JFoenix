@@ -99,10 +99,10 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 				setCurrentItemsCount(count(getRoot()));
 			}
 		});
-		
+
 		// compute the current items count
 		setCurrentItemsCount(count(getRoot()));
-		
+
 		//		getGroupOrder().addListener((Change<? extends TreeTableColumn<S, ?>> c) ->{
 		//			group();
 		//		});
@@ -126,7 +126,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	// in this observableArrayList.
 	private ObservableList<TreeTableColumn<S,?>> groupOrder = FXCollections.observableArrayList();
 
-	public final ObservableList<TreeTableColumn<S,?>> getGroupOrder() {
+	final ObservableList<TreeTableColumn<S,?>> getGroupOrder() {
 		return groupOrder;
 	}
 
@@ -135,33 +135,39 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	// this method will regroup the treetableview according to columns group order
 	public void group(TreeTableColumn<S, ?>... treeTableColumns){
-		if(groupOrder.size() == 0){
-			if(groupingSemaphore.tryAcquire()){
-				try{
-					if(originalRoot == null) originalRoot = getRoot();
-					
-					// group the data
-					Map<Object, Map<Object, ?>> groups = new HashMap<>();
-					for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
-						groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
-					groupOrder.addAll(treeTableColumns);
-					
-					// update table ui
-					buildGroupedRoot(groups, null, 0);
-
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-
-				groupingSemaphore.release();
+		// init groups map
+		if(groupingSemaphore.tryAcquire()){
+			if(groupOrder.size() == 0) groups = new HashMap<>();
+			try{
+				if(originalRoot == null) originalRoot = getRoot();				
+				for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
+					groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
+				groupOrder.addAll(treeTableColumns);
+				// update table ui
+				buildGroupedRoot(groups, null, 0);
+			}catch(Exception e){
+				e.printStackTrace();
 			}
+			groupingSemaphore.release();
 		}
 	}
 
-	public void unGroup(){
+	private void refreshGroups(List<TreeTableColumn<S, ?>> groupColumns){
+		groups = new HashMap<>();
+		for (TreeTableColumn<S, ?> treeTableColumn : groupColumns) 
+			groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
+		groupOrder.addAll(groupColumns);
+		// update table ui
+		buildGroupedRoot(groups, null, 0);
+	}
+
+	public void unGroup(TreeTableColumn<S, ?>... treeTableColumns){
 		if(groupingSemaphore.tryAcquire()){
 			try {
 				if(groupOrder.size() > 0){
+					groupOrder.removeAll(treeTableColumns);
+					List<TreeTableColumn<S, ?>> grouped = new ArrayList<TreeTableColumn<S, ?>>();
+					grouped.addAll(groupOrder);
 					groupOrder.clear();
 					JFXUtilities.runInFXAndWait(()->{
 						ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
@@ -169,7 +175,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 						setRoot(originalRoot);
 						getSelectionModel().select(0);	
 						getSortOrder().addAll(sortOrder);
-					});
+						if(grouped.size() != 0)
+							refreshGroups(grouped);						
+					});	
 				}		
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -231,13 +239,18 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
 			setRoot = true;
 		}
-		
+
 		for(Object key : groupedItems.keySet()){
 			RecursiveTreeObject groupItem = new RecursiveTreeObject<>();
 			groupItem.setGroupedValue(key);
 			groupItem.setGroupedColumn(groupOrder.get(groupIndex));
 
 			RecursiveTreeItem node = new RecursiveTreeItem<>(groupItem, RecursiveTreeObject::getChildren);
+			// TODO: need to be removed once the selection issue is fixed
+			node.expandedProperty().addListener((o,oldVal,newVal)->{
+				getSelectionModel().clearSelection();
+			});
+
 			parent.originalItems.add(node);
 			parent.getChildren().add(node);			
 
@@ -249,7 +262,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 				buildGroupedRoot((Map)children, node, groupIndex+1);
 			}
 		}
-		
+
 		// update ui
 		if(setRoot){
 			final RecursiveTreeItem<S> newParent = parent;
@@ -316,6 +329,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	}
 
 	private IntegerProperty currentItemsCount = new SimpleIntegerProperty(0);
+	private Map<Object, Map<Object, ?>> groups;
 
 	public final IntegerProperty currentItemsCountProperty() {
 		return this.currentItemsCount;
@@ -331,7 +345,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	private int count(TreeItem<?> node){
 		if(node == null ) return 0;
-		
+
 		int count = 1;
 		if(node.getValue() == null ||  (node.getValue() != null && node.getValue().getClass().equals(RecursiveTreeObject.class))) count = 0;
 		for (TreeItem<?> child : node.getChildren()) {

@@ -18,9 +18,12 @@
 
 package com.jfoenix.controls;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
@@ -42,44 +45,62 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		super();
 		init();
 	}
-	
+
 	public JFXTreeTableColumn(String text){
 		super(text);
 		init();
 	}
-	
+
 	private void init(){
 		this.setCellFactory(new Callback<TreeTableColumn<S,T>, TreeTableCell<S,T>>() {
 			@Override
 			public TreeTableCell<S, T> call(TreeTableColumn<S, T> param) {
 				return new JFXTreeTableCell<S, T>(){
-					 @Override protected void updateItem(T item, boolean empty) {
-		                    if (item == getItem()) return;
-		                    super.updateItem(item, empty);
-		                    if (item == null) {
-		                        super.setText(null);
-		                        super.setGraphic(null);
-		                    } else if (item instanceof Node) {
-		                        super.setText(null);
-		                        super.setGraphic((Node)item);
-		                    } else {
-		                        super.setText(item.toString());
-		                        super.setGraphic(null);
-		                    }
-		                }
+					@Override protected void updateItem(T item, boolean empty) {
+						if (item == getItem()) return;
+						super.updateItem(item, empty);
+						if (item == null) {
+							super.setText(null);
+							super.setGraphic(null);
+						} else if (item instanceof Node) {
+							super.setText(null);
+							super.setGraphic((Node)item);
+						} else {
+							super.setText(item.toString());
+							super.setGraphic(null);
+						}
+					}
 				};
 			}
 		});
+
+		Platform.runLater(()->{
+			final ContextMenu contextMenu = new ContextMenu();
+//			contextMenu.setOnShowing((showing)->{
+//				System.out.println("showing");
+//			});
+//			contextMenu.setOnShown((shown)->{
+//				System.out.println("shown");
+//			});
+			MenuItem item1 = new MenuItem("Group");		
+			item1.setOnAction((action)->{ 
+				((JFXTreeTableView)getTreeTableView()).group(this); 
+			});
+			MenuItem item2 = new MenuItem("UnGroup");
+			item2.setOnAction((action)->{ ((JFXTreeTableView)getTreeTableView()).unGroup(this); });
+			contextMenu.getItems().addAll(item1, item2);
+			setContextMenu(contextMenu);	
+		});
 	}
-	
+
 	public final boolean validateValue(CellDataFeatures<S, T> param){
 		Object rowObject = param.getValue().getValue();
 		if((rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class)
-		|| (param.getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>)param.getTreeTableView()).getGroupOrder().contains(this)))
+				|| (param.getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>)param.getTreeTableView()).getGroupOrder().contains(this)))
 			return false;
 		return true;
 	}
-	
+
 	public final ObservableValue<T> getComputedValue(CellDataFeatures<S, T> param){
 		Object rowObject = param.getValue().getValue();
 		if(rowObject instanceof RecursiveTreeObject){
@@ -89,5 +110,11 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		}
 		return null;
 	}
-	
+
+	public boolean isGrouped() {
+		if(getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>)getTreeTableView()).getGroupOrder().contains(this))
+			return true;
+		return false;
+	}
+
 }

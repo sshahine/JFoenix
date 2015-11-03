@@ -15,6 +15,8 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
+import org.scenicview.ScenicView;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -112,7 +114,7 @@ public class TreeTableDemo extends Application {
 			main.getChildren().add(groupButton);
 
 			JFXButton unGroupButton = new JFXButton("unGroup");
-			unGroupButton.setOnAction((action)->treeView.unGroup());
+			unGroupButton.setOnAction((action)->treeView.unGroup(empColumn));
 			main.getChildren().add(unGroupButton);
 
 			JFXTextField filterField = new JFXTextField();
@@ -132,9 +134,7 @@ public class TreeTableDemo extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-
-
-			//			ScenicView.show(scene);
+//						ScenicView.show(scene);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

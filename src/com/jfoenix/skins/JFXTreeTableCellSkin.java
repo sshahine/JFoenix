@@ -30,6 +30,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 
+import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.behavior.JFXTreeTableCellBehavior;
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
@@ -80,7 +81,7 @@ public class JFXTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S
 	        if ((treeColumn == null && columnIndex != 0) || (treeColumn != null && ! tableColumn.equals(treeColumn))) {
 	            return leftPadding;
 	        }
-        }else if(!((JFXTreeTableView<?>)treeTable).getGroupOrder().contains(tableColumn)){
+        }else if(!((JFXTreeTableColumn)tableColumn).isGrouped()){
         	return leftPadding;
         }
 
