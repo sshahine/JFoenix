@@ -29,10 +29,11 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.jensd.fx.fontawesome.Icon;
+
+import com.jfoenix.svg.SVGGlyph;
 
 
 /**
@@ -74,11 +75,18 @@ public class JFXDecorator extends VBox {
 		this.setPadding(new Insets(0,0,0,0));
 
 		JFXButton btnMax = new JFXButton();
-		btnMax.setGraphic(new Icon(AwesomeIcon.MINUS,"15px",";","icon"));
+		SVGGlyph minus = new SVGGlyph(0, "MINUS", "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z", Color.WHITE);
+		minus.setSize(15, 15);
+		minus.getStyleClass().add("icon");
+		btnMax.setGraphic(minus);
 		btnMax.setOnAction((action)->primaryStage.setMaximized(!primaryStage.isMaximized()));
 				
 		Button btnClose = new JFXButton();
-		btnClose.setGraphic(new Icon(AwesomeIcon.CLOSE,"15px",";","icon"));
+		SVGGlyph close = new SVGGlyph(0, "CLOSE", "M741.714 755.429q0 22.857-16 38.857l-77.714 77.714q-16 16-38.857 16t-38.857-16l-168-168-168 168q-16 16-38.857 16t-38.857-16l-77.714-77.714q-16-16-16-38.857t16-38.857l168-168-168-168q-16-16-16-38.857t16-38.857l77.714-77.714q16-16 38.857-16t38.857 16l168 168 168-168q16-16 38.857-16t38.857 16l77.714 77.714q16 16 16 38.857t-16 38.857l-168 168 168 168q16 16 16 38.857z", Color.WHITE);
+		close.setSize(15, 15);
+		close.getStyleClass().add("icon");
+		btnMax.setGraphic(close);
+		btnClose.setGraphic(close);
 		btnClose.setOnAction((action)->primaryStage.close());
 		
 		HBox buttonContainer = new HBox();

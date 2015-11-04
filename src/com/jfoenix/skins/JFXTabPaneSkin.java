@@ -85,12 +85,11 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.controls.JFXRippler.RipplerPos;
 import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.svg.SVGGlyph;
 import com.sun.javafx.css.converters.EnumConverter;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-
-import de.jensd.fx.fontawesome.Icon;
 
 public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
@@ -1611,40 +1610,42 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	 **************************************************************************/
 	class TabControlButtons extends StackPane {
 		private StackPane inner;
-		private Icon downArrowBtn;
 		private boolean showControlButtons, isLeftArrow;
 		private Timeline arrowAnimation;
+		private SVGGlyph arrowButton;
+		private SVGGlyph leftChevron = new SVGGlyph(0, "CHEVRON_LEFT", "M 742,-37 90,614 Q 53,651 53,704.5 53,758 90,795 l 652,651 q 37,37 90.5,37 53.5,0 90.5,-37 l 75,-75 q 37,-37 37,-90.5 0,-53.5 -37,-90.5 L 512,704 998,219 q 37,-38 37,-91 0,-53 -37,-90 L 923,-37 Q 886,-74 832.5,-74 779,-74 742,-37 z", Color.WHITE);
+		private SVGGlyph rightChevron = new SVGGlyph(0, "CHEVRON_RIGHT", "m 1099,704 q 0,-52 -37,-91 L 410,-38 q -37,-37 -90,-37 -53,0 -90,37 l -76,75 q -37,39 -37,91 0,53 37,90 l 486,486 -486,485 q -37,39 -37,91 0,53 37,90 l 76,75 q 36,38 90,38 54,0 90,-38 l 652,-651 q 37,-37 37,-90 z", Color.WHITE);
 		
 		public TabControlButtons(ArrowPosition pos) {
-
 			getStyleClass().setAll("control-buttons-tab");			
-
 			isLeftArrow = pos == ArrowPosition.LEFT;
-
-			downArrowBtn = new Icon(isLeftArrow ? "CHEVRON_LEFT" : "CHEVRON_RIGHT","1.5em",";","");
-			downArrowBtn.setPadding(new Insets(7));
-			downArrowBtn.getStyleClass().setAll("tab-down-button");
-			downArrowBtn.setVisible(isShowTabsMenu());
-			downArrowBtn.setCursor(Cursor.HAND);
-			downArrowBtn.setTextFill(selectedTabText);
+			arrowButton = isLeftArrow ? leftChevron : rightChevron;
+			arrowButton.setStyle("-fx-min-width:0.8em;-fx-max-width:0.8em;-fx-min-height:1.3em;-fx-max-height:1.3em;");
+			arrowButton.getStyleClass().setAll("tab-down-button");
+			arrowButton.setVisible(isShowTabsMenu());
+			arrowButton.setFill(selectedTabText);
 			
 			DoubleProperty offsetProperty = new SimpleDoubleProperty(0);
 			offsetProperty.addListener((o,oldVal,newVal)-> tabHeaderArea.setScrollOffset(newVal.doubleValue()));
 			
-			downArrowBtn.setOnMousePressed(press ->{
+			
+			
+			StackPane container = new StackPane(arrowButton);
+			container.getStyleClass().add("container");
+			container.setPadding(new Insets(7));
+			container.setCursor(Cursor.HAND);
+			
+			container.setOnMousePressed(press ->{
 				offsetProperty.set(tabHeaderArea.getScrollOffset());	
 				double offset = isLeftArrow ? tabHeaderArea.getScrollOffset() + tabHeaderArea.headersRegion.getWidth() : tabHeaderArea.getScrollOffset() - tabHeaderArea.headersRegion.getWidth();
 				arrowAnimation = new Timeline(new KeyFrame(Duration.seconds(1), new KeyValue(offsetProperty, offset , Interpolator.LINEAR)));
 				arrowAnimation.play();
 			});
+			container.setOnMouseReleased(release -> arrowAnimation.stop());
 			
-			downArrowBtn.setOnMouseReleased(release -> arrowAnimation.stop());
-			
-
-			JFXRippler arrowRippler = new JFXRippler(downArrowBtn,RipplerMask.CIRCLE,RipplerPos.BACK);
-			arrowRippler.ripplerFillProperty().bind(downArrowBtn.textFillProperty());
-			StackPane.setMargin(downArrowBtn, new Insets(0,0,0,isLeftArrow?-4:4));
-
+			JFXRippler arrowRippler = new JFXRippler(container,RipplerMask.CIRCLE,RipplerPos.BACK);
+			arrowRippler.ripplerFillProperty().bind(arrowButton.fillProperty());
+			StackPane.setMargin(arrowButton, new Insets(0,0,0,isLeftArrow?-4:4));
 
 			inner = new StackPane() {
 				@Override
@@ -1689,9 +1690,10 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 					positionInArea(btn, x, y, width, height, 0, HPos.CENTER, VPos.CENTER);
 				}
 			};
-			inner.getStyleClass().add("container");
+			
+			arrowRippler.setPadding(new Insets(0,5,0,5));
 			inner.getChildren().add(arrowRippler);
-			StackPane.setMargin(arrowRippler, new Insets(0,5,0,5));
+			StackPane.setMargin(arrowRippler, new Insets(0,4,0,4));
 			getChildren().add(inner);
 
 			showControlButtons = false;
@@ -1708,7 +1710,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			this.showTabsMenu = value;
 
 			if (showTabsMenu && !wasTabsMenuShowing) {
-				downArrowBtn.setVisible(true);
+				arrowButton.setVisible(true);
 				showControlButtons = true;
 				inner.requestLayout();
 				tabHeaderArea.requestLayout();

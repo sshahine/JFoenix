@@ -39,12 +39,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import com.jfoenix.skins.JFXListCellSkin;
-
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.jensd.fx.fontawesome.Icon;
+import com.jfoenix.svg.SVGGlyph;
 
 public class JFXListCell<T> extends ListCell<T> {
 
@@ -119,7 +118,11 @@ public class JFXListCell<T> extends ListCell<T> {
 						group.getStyleClass().add("sublist-header");
 						group.getChildren().clear();						
 						group.getChildren().add(((JFXListView<?>)newNode).getGroupnode());
-						Icon dropIcon = new Icon(AwesomeIcon.ANGLE_RIGHT, "1.2em", ";", "drop-icon");
+						
+						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
+						dropIcon.setStyle("-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
+						dropIcon.getStyleClass().add("drop-icon");
+						
 						group.getChildren().add(dropIcon);
 						// the margin is needed when rotating the angle
 						StackPane.setMargin(dropIcon, new Insets(0,7,0,0));

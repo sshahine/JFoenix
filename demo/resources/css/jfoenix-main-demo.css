@@ -493,10 +493,10 @@
 	-fx-border-width: 1 0 1 0;
 }
 .custom-jfx-list-view .jfx-list-cell .sublist-header > .drop-icon{
-	-fx-text-fill: GRAY;
+	-fx-background-color: GRAY;
 }
 .custom-jfx-list-view .jfx-list-cell:filled:hover .sublist-header > .drop-icon{
-	-fx-text-fill: BLACK;
+	-fx-background-color: BLACK;
 }
 
 /*******************************************************************************/
