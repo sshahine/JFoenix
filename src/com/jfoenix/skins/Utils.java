@@ -24,6 +24,8 @@ package com.jfoenix.skins;
  *
  */
 
+import java.util.List;
+
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
@@ -38,7 +40,7 @@ import javafx.scene.paint.Stop;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import java.util.List;
+
 import com.sun.javafx.PlatformUtil;
 import com.sun.javafx.stage.StageHelper;
 

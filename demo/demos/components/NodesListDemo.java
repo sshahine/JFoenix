@@ -14,8 +14,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXNodesList;
 import com.jfoenix.controls.JFXButton.ButtonType;
+import com.jfoenix.controls.JFXNodesList;
 
 
 public class NodesListDemo extends Application {

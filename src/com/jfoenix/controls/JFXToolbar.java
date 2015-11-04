@@ -19,12 +19,12 @@
 package com.jfoenix.controls;
 
 
-import com.jfoenix.effects.JFXDepthManager;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+
+import com.jfoenix.effects.JFXDepthManager;
 
 public class JFXToolbar extends BorderPane {
 	

@@ -14,9 +14,9 @@ import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXRippler;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {

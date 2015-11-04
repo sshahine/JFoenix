@@ -21,7 +21,6 @@ package com.jfoenix.skins;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.stream.IntStream;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

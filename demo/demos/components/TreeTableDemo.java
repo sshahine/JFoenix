@@ -15,8 +15,6 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-import org.scenicview.ScenicView;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
