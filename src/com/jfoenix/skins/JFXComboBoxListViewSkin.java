@@ -171,7 +171,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxPopupControl<T> {
 		getSkinnable().backgroundProperty().addListener((o,oldVal,newVal)-> customPane.setBackground(newVal));
 		customPane.backgroundProperty().bindBidirectional(getSkinnable().backgroundProperty());
 		customPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-		customPane.getStyleClass().add("combo-box-button-holder");
+		customPane.getStyleClass().add("combo-box-button-container");
 		customPane.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, Color.TRANSPARENT, Color.BLACK, Color.TRANSPARENT,  BorderStrokeStyle.NONE,BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE, null, new BorderWidths(0, 0, 1, 0), null)));
 		getChildren().add(0,customPane);
 		arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));

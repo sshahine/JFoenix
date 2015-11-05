@@ -90,7 +90,7 @@
 	-fx-background-color: transparent ;
 }
 
-.jfx-popup-holder{
+.jfx-popup-container{
 	-fx-background-color: WHITE;
 	-fx-pref-width:151.0px;
 }

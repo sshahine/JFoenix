@@ -215,7 +215,7 @@
 -fx-text-fill: WHITE;
 }
 
-.jfx-popup-holder{
+.jfx-popup-container{
 	-fx-background-color: WHITE;
 }
 
@@ -258,10 +258,10 @@
   	-fx-expanded : false;
 }
  
-/*.combo-box .combo-box-button-holder{
+/*.combo-box .combo-box-button-container{
  	-fx-border-color:BLACK;-fx-border-width: 0 0 1 0;
 }
-.combo-box .combo-box-selected-value-holder{
+.combo-box .combo-box-selected-value-container{
 	-fx-border-color:BLACK;
 } */
 

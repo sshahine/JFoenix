@@ -108,7 +108,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 			@Override public Node toNode(T object) {
 				if(object == null) return null;
 				StackPane selectedValueContainer = new StackPane();
-				selectedValueContainer.getStyleClass().add("combo-box-selected-value-holder");
+				selectedValueContainer.getStyleClass().add("combo-box-selected-value-container");
 				selectedValueContainer.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 				Label selectedValueLabel;
 				if(object instanceof Label) selectedValueLabel = new Label(((Label)object).getText());	

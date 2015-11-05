@@ -100,7 +100,7 @@ public class JFXPopup extends StackPane {
 			// bind the content holder size to its content
 			contentHolder.prefWidthProperty().bind(this.content.prefWidthProperty());
 			contentHolder.prefHeightProperty().bind(this.content.prefHeightProperty());
-			contentHolder.getStyleClass().add("jfx-popup-holder");
+			contentHolder.getStyleClass().add("jfx-popup-container");
 			contentHolder.getTransforms().add(scaleTransform);			
 			JFXDepthManager.setDepth(contentHolder, 4);
 			// to allow closing he popup when clicking on the shadowed area
