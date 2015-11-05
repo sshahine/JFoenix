@@ -294,18 +294,17 @@ public class JFXDrawer extends StackPane {
 	}
 
 
-	public boolean isDrawn(){
-		switch (directionProperty.get()) {
-		case LEFT:
-		case TOP:
-			return translateProperty.get() >= 0;
-		case RIGHT:
-		case BOTTOM:
-			return translateProperty.get() <= 0;
-		default:
-			return true;
-		}
-	}
+//	public boolean isDrawn(){
+//		switch (directionProperty.get()) {
+//		case LEFT:
+//		case TOP:
+//			return translateProperty.get() >= 0;
+//		case RIGHT:
+//		case BOTTOM:
+//			return translateProperty.get() <= 0;
+//			return true;
+//		}
+//	}
 
 
 	/**
@@ -364,7 +363,10 @@ public class JFXDrawer extends StackPane {
 		}
 	}
 
-	
+	/**
+	 * this method indicates whether the drawer is shown or not 
+	 * @return
+	 */
 	public boolean isShown() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0) return true;
 		return false;

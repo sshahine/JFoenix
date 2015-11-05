@@ -96,7 +96,7 @@ public class JFXDrawersStack extends StackPane {
 	}
 	
 	public void toggle(JFXDrawer drawer){
-		if(drawer.isDrawn()) drawer.hide();
+		if(drawer.isShown()) drawer.hide();
 		else{
 			updateDrawerPosition(drawer);
 			drawer.draw();	
