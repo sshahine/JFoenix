@@ -18,20 +18,36 @@
 
 package com.jfoenix.controls;
 
-import javafx.beans.binding.Bindings;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import com.jfoenix.svg.SVGGlyph;
 
@@ -48,67 +64,165 @@ import com.jfoenix.svg.SVGGlyph;
 
 public class JFXDecorator extends VBox {
 
+	private Stage primaryStage;
+	
 	private double xOffset = 0;
 	private double yOffset = 0;
-	private Stage primaryStage;
 	private double newX;
 	private double newY;
 	private double initX;
 	private double initY;
-	private Border resizeBorder = Border.EMPTY;
 
+	private boolean allowMove = false;
+	private boolean isDragging = false;
+	private Timeline windowDecoratorAnimation;
+	private StackPane contentPlaceHolder = new StackPane();
+	private HBox buttonsContainer;
+	
 	public JFXDecorator(Stage stage, Node node) {
 		super();
-		this.getStyleClass().add("jfx-decorator-window");
-
 		primaryStage = stage;
-		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
-			if(newVal){
-				resizeBorder = this.getBorder();
-				this.setBorder(Border.EMPTY);				
+		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		
+		setPickOnBounds(false);
+		this.getStyleClass().add("jfx-decorator");
+		
+		JFXButton btnFull = new JFXButton();		
+		JFXButton btnMin = new JFXButton();
+		JFXButton btnMax = new JFXButton();
+		JFXButton btnClose = new JFXButton();
+		
+		SVGGlyph full = new SVGGlyph(0, "FULLSCREEN", "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z", Color.WHITE);
+		full.setSize(16, 16);
+		SVGGlyph minus = new SVGGlyph(0, "MINUS", "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z", Color.WHITE);
+		minus.setSize(12, 2);
+		minus.setTranslateY(4);
+		SVGGlyph resizeMax = new SVGGlyph(0, "RESIZE_MAX", "M726 810v-596h-428v596h428zM726 44q34 0 59 25t25 59v768q0 34-25 60t-59 26h-428q-34 0-59-26t-25-60v-768q0-34 25-60t59-26z", Color.WHITE);
+		resizeMax.setSize(12, 12);
+		SVGGlyph resizeMin = new SVGGlyph(0, "RESIZE_MIN", "M80.842 943.158v-377.264h565.894v377.264h-565.894zM0 404.21v619.79h727.578v-619.79h-727.578zM377.264 161.684h565.894v377.264h-134.736v80.842h215.578v-619.79h-727.578v323.37h80.842v-161.686z", Color.WHITE);
+		resizeMin.setSize(12, 12);
+		SVGGlyph close = new SVGGlyph(0, "CLOSE", "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z", Color.WHITE);
+		close.setSize(12, 12);
+		
+		btnFull.getStyleClass().add("jfx-decorator-button");
+		btnFull.setCursor(Cursor.HAND);
+		btnFull.setOnAction((action)->primaryStage.setFullScreen(!primaryStage.isFullScreen()));
+		btnFull.setGraphic(full);
+		btnFull.setTranslateX(-30);
+		btnFull.setRipplerFill(Color.WHITE);
+
+		btnClose.getStyleClass().add("jfx-decorator-button");
+		btnClose.setCursor(Cursor.HAND);
+		btnClose.setOnAction((action)->Platform.exit());
+		btnClose.setGraphic(close);
+		btnClose.setRipplerFill(Color.WHITE);
+
+		btnMin.getStyleClass().add("jfx-decorator-button");
+		btnMin.setCursor(Cursor.HAND);
+		btnMin.setOnAction((action)->primaryStage.setIconified(true));
+		btnMin.setGraphic(minus);
+		btnMin.setRipplerFill(Color.WHITE);
+		
+		btnMax.getStyleClass().add("jfx-decorator-button");
+		btnMax.setCursor(Cursor.HAND);
+		btnMax.setRipplerFill(Color.WHITE);
+		btnMax.setOnAction((action)->{
+			primaryStage.setMaximized(!primaryStage.isMaximized());
+			if(primaryStage.isMaximized()){
+				btnMax.setGraphic(resizeMin);
+				btnMax.setTooltip(new Tooltip("Restore Down"));
 			}else{
-				this.setBorder(resizeBorder);
+				btnMax.setGraphic(resizeMax);
+				btnMax.setTooltip(new Tooltip("Maximize"));
+			}
+		});
+		btnMax.setGraphic(resizeMax);
+		
+		
+		buttonsContainer = new HBox();
+		buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
+		buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		buttonsContainer.setPadding(new Insets(4));		
+		buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
+		buttonsContainer.getChildren().addAll(btnFull, btnMin, btnMax,btnClose);
+		buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter)->allowMove = true);
+		buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter)->{ if(!isDragging) allowMove = false;});
+		buttonsContainer.setMinWidth(180);
+		// maximize/restore the window on header double click
+		buttonsContainer.setOnMouseClicked((mouseEvent)->{
+			if(mouseEvent.getClickCount() == 2){
+				btnMax.fire();
 			}
 		});
 		
+		contentPlaceHolder.setMinSize(0, 0);
+		((Region)node).setMinSize(0, 0);
+		((Region)node).minWidthProperty().addListener((o,oldVal,newVal)->{
+			
+		});
 		
-		this.setPadding(new Insets(0,0,0,0));
+		contentPlaceHolder.getChildren().add(node);
+		VBox.setVgrow(contentPlaceHolder, Priority.ALWAYS);
+		contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));
+		contentPlaceHolder.getStyleClass().add("resize-border");
+		Rectangle clip = new Rectangle();
+		clip.widthProperty().bind(((Region)node).widthProperty());
+		clip.heightProperty().bind(((Region)node).heightProperty());
+		node.setClip(clip);
+		this.getChildren().addAll(buttonsContainer,contentPlaceHolder);
 
-		JFXButton btnMax = new JFXButton();
-		SVGGlyph minus = new SVGGlyph(0, "MINUS", "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z", Color.WHITE);
-		minus.setSize(15, 15);
-		minus.getStyleClass().add("icon");
-		btnMax.setGraphic(minus);
-		btnMax.setOnAction((action)->primaryStage.setMaximized(!primaryStage.isMaximized()));
-				
-		Button btnClose = new JFXButton();
-		SVGGlyph close = new SVGGlyph(0, "CLOSE", "M741.714 755.429q0 22.857-16 38.857l-77.714 77.714q-16 16-38.857 16t-38.857-16l-168-168-168 168q-16 16-38.857 16t-38.857-16l-77.714-77.714q-16-16-16-38.857t16-38.857l168-168-168-168q-16-16-16-38.857t16-38.857l77.714-77.714q16-16 38.857-16t38.857 16l168 168 168-168q16-16 38.857-16t38.857 16l77.714 77.714q16 16 16 38.857t-16 38.857l-168 168 168 168q16 16 16 38.857z", Color.WHITE);
-		close.setSize(15, 15);
-		close.getStyleClass().add("icon");
-		btnMax.setGraphic(close);
-		btnClose.setGraphic(close);
-		btnClose.setOnAction((action)->primaryStage.close());
 		
-		HBox buttonContainer = new HBox();
-		buttonContainer.prefWidthProperty().bind(this.widthProperty());
-		buttonContainer.getChildren().addAll(btnMax,btnClose);
-		buttonContainer.setAlignment(Pos.CENTER_RIGHT);
-		buttonContainer.getStyleClass().add("jfx-decorator-buttons-holder");
 		
+		primaryStage.fullScreenProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				// remove border
+				contentPlaceHolder.getStyleClass().remove("resize-border");
+				contentPlaceHolder.setBorder(Border.EMPTY);
+				if(windowDecoratorAnimation!=null)windowDecoratorAnimation.stop();
+				windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(this.translateYProperty(), -buttonsContainer.getHeight(), Interpolator.EASE_BOTH )));
+				windowDecoratorAnimation.setOnFinished((finish)->{
+					this.getChildren().remove(buttonsContainer);
+					this.setTranslateY(0);
+				});
+				windowDecoratorAnimation.play();
+			}else{
+				// add border
+				if(windowDecoratorAnimation!=null){
+					if(windowDecoratorAnimation.getStatus().equals(Animation.Status.RUNNING)) windowDecoratorAnimation.stop();	
+					else this.getChildren().add(0,buttonsContainer);							
+				}
+				this.setTranslateY(-buttonsContainer.getHeight());
+				windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),new KeyValue(this.translateYProperty(), 0, Interpolator.EASE_BOTH)));
+				windowDecoratorAnimation.setOnFinished((finish)->{
+					contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));
+					contentPlaceHolder.getStyleClass().add("resize-border");	
+				});
+				windowDecoratorAnimation.play();
+			}
+		});	
+		
+		
+		
+//		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
+//			if(newVal){
+//				resizeBorder = this.getBorder();
+//				this.setBorder(Border.EMPTY);				
+//			}else{
+//				this.setBorder(resizeBorder);
+//			}
+//		});		
+//		this.setPadding(new Insets(0,0,0,0));
 		
 		// clip the node in case it has hidden child nodes outside it's bounds (e.g drawer pane)
-		Rectangle clip = new Rectangle();
-		clip.widthProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getWidth(), ((Region)node).widthProperty()));
-		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
-		node.setClip(clip);
-
-		node.getStyleClass().add("jfx-decorator-content");
+//		Rectangle clip = new Rectangle();
+//		clip.widthProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getWidth(), ((Region)node).widthProperty()));
+//		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
+//		node.setClip(clip);
+//		node.getStyleClass().add("jfx-decorator-content");
 //		node.setStyle("-fx-border-color:RED;");
 		
-		this.getChildren().addAll(buttonContainer,node);
-
 		// save the mouse pressed position when clicking on the decorator pane
-		this.setOnMousePressed((mouseEvent) -> {
+		this.addEventFilter(MouseEvent.MOUSE_PRESSED, (mouseEvent) -> {
 			initX = mouseEvent.getScreenX();
 			initY = mouseEvent.getScreenY();
 			xOffset = mouseEvent.getSceneX();
@@ -118,21 +232,18 @@ public class JFXDecorator extends VBox {
 
 		// show the drag cursor on the borders
 		this.setOnMouseMoved((mouseEvent)->{
-			if (stage.isMaximized()) {
+			if (primaryStage.isMaximized() || primaryStage.isFullScreen()) {
 				this.setCursor(Cursor.DEFAULT);
 				return; // maximized mode does not support resize
 			}
-			if (stage.isFullScreen()) {
-				return;
-			}
-			if (!stage.isResizable()) {
+			if (!primaryStage.isResizable()) {
 				return;
 			}
 			double x = mouseEvent.getX();
 			double y = mouseEvent.getY();
-			Bounds boundsInParent = node.getBoundsInParent();
-//			if(this.getBorder()!=null && this.getBorder().getStrokes().size() > 0){
-				double borderWidth = 4;
+			Bounds boundsInParent = this.getBoundsInParent();
+			if(contentPlaceHolder.getBorder()!=null && contentPlaceHolder.getBorder().getStrokes().size() > 0){
+				double borderWidth = contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft();
 				if (isRightEdge(x, y, boundsInParent)) {
 					if (y < borderWidth) {
 						this.setCursor(Cursor.NE_RESIZE);
@@ -156,25 +267,22 @@ public class JFXDecorator extends VBox {
 				} else {
 					this.setCursor(Cursor.DEFAULT);
 				}	
-//			}
+			}
 		});
 
 
 		// handle drag events on the decorator pane
+		this.setOnMouseReleased((mouseEvent)-> isDragging = false);
+
 		this.setOnMouseDragged((mouseEvent)->{
+			isDragging = true;
 			if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
-				return;
-			}
-			if (stage.isFullScreen()) {
 				return;
 			}
 			/*
 			 * Long press generates drag event!
 			 */
-			if (mouseEvent.isStillSincePress()) {
-				return;
-			}
-			if (primaryStage.isMaximized()) {				
+			if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized()) {
 				return;
 			}
 
@@ -225,56 +333,62 @@ public class JFXDecorator extends VBox {
 					primaryStage.setY(primaryStage.getY() + deltay);
 				}
 				mouseEvent.consume();
-			}else {
+			}else if(allowMove){
 				primaryStage.setX(mouseEvent.getScreenX() - xOffset);
 				primaryStage.setY(mouseEvent.getScreenY() - yOffset);
+				mouseEvent.consume();
 			}
-//			((Region)node).requestLayout();
 		});
 	}
 
 
 	private boolean isRightEdge(double x, double y, Bounds boundsInParent) {
-		if (x < this.getWidth() && x > this.getWidth() - this.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isTopEdge(double x, double y, Bounds boundsInParent) {
-		if (y >= 0 && y < this.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (y >= 0 && y < contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isBottomEdge(double x, double y, Bounds boundsInParent) {
-		if (y < this.getHeight() && y > this.getHeight() - this.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isLeftEdge(double x, double y, Bounds boundsInParent) {
-		if (x >= 0 && x < this.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (x >= 0 && x < contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
 			return true;
 		}
 		return false;
 	}
-
 	boolean setStageWidth( double width) {
-		if (width >= primaryStage.getMinWidth()) {
+		if (width >= primaryStage.getMinWidth() && width >= buttonsContainer.getMinWidth()) {
 			primaryStage.setWidth(width);
 			initX = newX;
 			return true;
+		}else if( width >= primaryStage.getMinWidth() && width <= buttonsContainer.getMinWidth() ){
+			width = buttonsContainer.getMinWidth();
+			primaryStage.setWidth(width);
 		}
 		return false;
 	}
 	boolean setStageHeight(double height) {
-		if (height >= primaryStage.getMinHeight()) {
+		if (height >= primaryStage.getMinHeight() && height >= buttonsContainer.getHeight()) {			
 			primaryStage.setHeight(height);
 			initY = newY;
 			return true;
+		}else if(height >= primaryStage.getMinHeight() && height <= buttonsContainer.getHeight()){
+			height = buttonsContainer.getHeight();
+			primaryStage.setHeight(height);
 		}
 		return false;
 	}
+
 
 
 } 

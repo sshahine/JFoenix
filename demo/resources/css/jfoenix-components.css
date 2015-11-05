@@ -34,6 +34,17 @@
     -fx-max-width: 300;
 }
 
+.jfx-decorator {
+	-fx-decorator-color: RED;
+}
+.jfx-decorator .jfx-decorator-buttons-container{
+	-fx-background-color:-fx-decorator-color;
+}
+.jfx-decorator .resize-border{
+	-fx-border-color:-fx-decorator-color;
+	-fx-border-width: 0 4 4 4;
+}
+
 .jfx-text-field.error{
 	-fx-focus-color: #D34336;
 	-fx-unfocus-color: #D34336;

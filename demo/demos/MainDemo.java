@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.svg.SVGGlyphLoader;
 
 import demos.gui.main.MainController;
@@ -36,12 +37,15 @@ public class MainDemo extends Application {
 		flowContext = new ViewFlowContext();
 		flowContext.register("Stage", stage);
 		flow.createHandler(flowContext).start(container);
-		Scene scene = new Scene(container.getView(), 800, 800);
+		
+		Scene scene = new Scene(new JFXDecorator(stage, container.getView()), 800, 800);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-main-demo.css").toExternalForm());
 		//		stage.initStyle(StageStyle.UNDECORATED);
 		//		stage.setFullScreen(true);
+		stage.setMinWidth(700);
+		stage.setMinHeight(700);
 		stage.setScene(scene);
 		stage.show();
 	}

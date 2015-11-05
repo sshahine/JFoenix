@@ -737,3 +737,22 @@
 .combo-box-popup .jfx-list-view .jfx-list-cell .jfx-rippler {
 	-fx-rippler-fill: #5264AE;
 }
+
+
+
+/*******************************************************************************
+*                                                                              *
+* JFX Decorator                                                                *
+*                                                                              *
+*******************************************************************************/
+
+.jfx-decorator {
+	-fx-decorator-color: derive(#5264AE,-20%);
+}
+.jfx-decorator .jfx-decorator-buttons-container{
+	-fx-background-color:-fx-decorator-color;
+}
+.jfx-decorator .resize-border{
+	-fx-border-color:-fx-decorator-color;
+	-fx-border-width: 0 4 4 4;
+}
