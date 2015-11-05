@@ -159,6 +159,8 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		}
 	}
 
+	private boolean internalChange = false;
+	
 	private void initializeVariables() {
 
 		double stroke = thumb.getStrokeWidth();
@@ -168,8 +170,24 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		trackColor = (Color) track.getStroke();
 		thumbColor = (Color) thumb.getStroke();
 		
-		track.strokeProperty().addListener((o,oldVal,newVal)-> trackColor = newVal);
-		thumb.strokeProperty().addListener((o,oldVal,newVal)-> thumbColor = newVal);
+		track.strokeProperty().addListener((o,oldVal,newVal)-> {
+			// prevent internal color change
+			if(!internalChange)
+				trackColor = newVal;		
+		});
+		
+		thumb.strokeProperty().addListener((o,oldVal,newVal)-> {
+			// prevent internal color change
+			if(!internalChange){				
+				thumbColor = newVal;
+				if(getSkinnable().getValue() == 0){
+					internalChange = true;
+					thumb.setFill(trackColor);
+					thumb.setStroke(trackColor);
+					internalChange = false;
+				}
+			}
+		});
 
 		
 		shifting = 30 + thumbRadius;
@@ -249,6 +267,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 					coloredTrack.setEndX(coloredTrack.getStartX());
 				}
 
+				internalChange = true;
 				if (value == 0) {
 					thumb.setFill(trackColor);
 					thumb.setStroke(trackColor);
@@ -258,6 +277,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 					thumb.setStroke(thumbColor);
 					coloredTrack.setVisible(true);
 				}
+				internalChange = false;
 			}
 		});
 
@@ -271,7 +291,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 				} else {
 					coloredTrack.setEndY(coloredTrack.getStartY());
 				}
-
+				internalChange = true;
 				if (value == 0) {
 					thumb.setFill(trackColor);
 					thumb.setStroke(trackColor);
@@ -281,6 +301,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 					thumb.setStroke(thumbColor);
 					coloredTrack.setVisible(true);
 				}
+				internalChange = false;
 			}
 		});
 	}
