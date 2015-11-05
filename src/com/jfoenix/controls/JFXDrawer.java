@@ -372,7 +372,7 @@ public class JFXDrawer extends StackPane {
 
 	public void draw() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0){
-			this.inTransition.setOnFinished((finish)-> onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED)) );
+			this.inTransition.setOnFinished((finish)-> onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
 			this.inTransition.play();
 		}else{
 			onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED));
@@ -388,13 +388,16 @@ public class JFXDrawer extends StackPane {
 		
 		if(sizeProperty.get().get() > getDefaultDrawerSize()){
 			tempDrawerSize = prefSizeProperty.get().get();
-			new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0)).play();
+			ParallelTransition parallelTransition = new ParallelTransition(new OutDrawerSizeTransition(), new OutDrawerTransition(initTranslate.doubleValue(),0));
+			parallelTransition.setOnFinished((finish)->onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED)));
+			parallelTransition.play();
 		}else{
-			if(outTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0)
+			if(outTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0){
+				outTransition.setOnFinished((finish)->onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED)));
 				outTransition.play();	
+			}
 			tempDrawerSize = getDefaultDrawerSize();
 		}
-		onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
 	}
 
 	/***************************************************************************
@@ -585,8 +588,10 @@ public class JFXDrawer extends StackPane {
 			// hide the sidePane
 			partialTransition = new DrawerPartialTransition(translateProperty.get(), initTranslate.doubleValue() );
 			partialTransition.play();
-			partialTransition.setOnFinished((event)-> translateProperty.set(initTranslate.doubleValue()));
-			onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
+			partialTransition.setOnFinished((event)-> {
+				translateProperty.set(initTranslate.doubleValue());	
+				onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
+			});
 		}	
 		// reset drawer animation properties
 		startMouse = -1;
