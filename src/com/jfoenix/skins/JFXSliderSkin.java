@@ -108,13 +108,19 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		getChildren().addAll(track, coloredTrack, animatedThumb, thumb);
 	}
 
+	// JFXSliderSkin
+	private double trackSize;
+	
 	@Override
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 
-		if (!initialization) {
-
-			initializeVariables();
-
+		
+		if (trackSize != (isHorizontal ? w : h)) {
+			
+			trackSize = (isHorizontal ? w : h);
+			
+			if (!initialization) initializeVariables();
+			
 			if (isHorizontal) {
 				double trackHeight = snapSize(track.getStrokeWidth());
 				double trackAreaHeight = Math.max(trackHeight, 2 * thumbRadius);
@@ -150,11 +156,13 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 				coloredTrack.setStartX(trackLeft + trackWidth / 2);
 				coloredTrack.setEndX(trackLeft + trackWidth / 2);
 			}
-
-			initializeMouseEvents();
-			initializeTimeline();
-
-			initialization = true;
+		
+			if (!initialization) {
+				initializeMouseEvents();
+				initializeTimeline();
+				initialization = true;
+			}
+		
 			positionThumb(true);
 		}
 	}
