@@ -285,14 +285,16 @@ public final class JFXFillTransition extends Transition {
 	private Insets insets;
 	protected void starting() {
 		// init animation values
-		oldCache = region.get().isCache();
-		oldCacheHint = region.get().getCacheHint();
-		radii = region.get().getBackground()==null ? null : region.get().getBackground().getFills().get(0).getRadii();
-		insets = region.get().getBackground()==null ? null : region.get().getBackground().getFills().get(0).getInsets();
-		start = fromValue.get();
-		end = toValue.get();
-		region.get().setCache(true);		
-		region.get().setCacheHint(CacheHint.SPEED);
+		if(start == null){
+			oldCache = region.get().isCache();
+			oldCacheHint = region.get().getCacheHint();
+			radii = region.get().getBackground()==null ? null : region.get().getBackground().getFills().get(0).getRadii();
+			insets = region.get().getBackground()==null ? null : region.get().getBackground().getFills().get(0).getInsets();
+			start = fromValue.get();
+			end = toValue.get();
+			region.get().setCache(true);		
+			region.get().setCacheHint(CacheHint.SPEED);	
+		}
 	}
 	/**
 	 * Called when the animation is stopping
@@ -307,6 +309,7 @@ public final class JFXFillTransition extends Transition {
 	 */
 	@Override
 	protected void interpolate(double frac) {
+		if(start == null) starting();		
 		final Color newColor = start.interpolate(end, frac);
 		region.get().setBackground(new Background(new BackgroundFill(newColor, radii, insets)));
 	}

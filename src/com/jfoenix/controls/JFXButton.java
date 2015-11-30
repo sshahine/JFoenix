@@ -33,7 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
@@ -73,17 +73,17 @@ public class JFXButton extends Button {
 	}
 	
 	
-	private ObjectProperty<Color> ripplerFill = new SimpleObjectProperty<>(null);
+	private ObjectProperty<Paint> ripplerFill = new SimpleObjectProperty<>(null);
 	
-	public final ObjectProperty<Color> ripplerFillProperty() {
+	public final ObjectProperty<Paint> ripplerFillProperty() {
 		return this.ripplerFill;
 	}
 
-	public final Color getRipplerFill() {
+	public final Paint getRipplerFill() {
 		return this.ripplerFillProperty().get();
 	}
 
-	public final void setRipplerFill(final Color ripplerFill) {
+	public final void setRipplerFill(final Paint ripplerFill) {
 		this.ripplerFillProperty().set(ripplerFill);
 	}
 	

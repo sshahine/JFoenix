@@ -93,7 +93,7 @@ import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
 public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
-	private Color defaultColor = Color.valueOf("#00BCD4"), ripplerColor = Color.valueOf("FFFF8D"), selectedTabText = Color.WHITE, unSelectedTabText = Color.LIGHTGREY;
+	private Color defaultColor = Color.valueOf("#00BCD4"), ripplerColor = Color.valueOf("FFFF8D"), selectedTabText = Color.WHITE, tempLabelColor = Color.WHITE;
 
 	private static enum TabAnimation {
 		NONE, GROW
@@ -819,6 +819,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			};
 			headersRegion.getStyleClass().setAll("headers-region");
+			headersRegion.setCache(true);
 			headersRegion.setClip(headerClip);
 
 
@@ -827,6 +828,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			headerBackground.getStyleClass().setAll("tab-header-background");
 
 			selectedTabLine = new Line();
+			selectedTabLine.setCache(true);
 			selectedTabLine.getStyleClass().add("tab-selected-line");
 			selectedTabLine.setStrokeWidth(2);
 			selectedTabLine.setStroke(ripplerColor);
@@ -1209,7 +1211,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 	class TabHeaderSkin extends StackPane {
 		private final Tab tab;
-
+		private boolean systemChange = false;
 		public Tab getTab() {
 			return tab;
 		}
@@ -1291,16 +1293,24 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			if (tab.isSelected()) {
 				tabText.setTextFill(selectedTabText);
 			} else {
-				tabText.setTextFill(unSelectedTabText);
+				tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
 			}
 //			closeLabel.setVisible(tab.isSelected());
 
-			tab.selectedProperty().addListener((o, oldVal, newVal) -> {
-				if (newVal) {
-					tabText.setTextFill(selectedTabText);
-				} else {
-					tabText.setTextFill(unSelectedTabText);
+			tabText.textFillProperty().addListener((o,oldVal,newVal)->{
+				if(!systemChange){
+					tempLabelColor = (Color) newVal;
 				}
+			});
+			
+			tab.selectedProperty().addListener((o, oldVal, newVal) -> {
+				systemChange = true;
+				if (newVal) {
+					tabText.setTextFill(tempLabelColor);
+				} else {
+					tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
+				}
+				systemChange = false;
 //				closeLabel.setVisible(newVal);
 			});
 
