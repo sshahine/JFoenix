@@ -20,7 +20,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,11 +39,13 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
 
@@ -130,7 +137,10 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 			tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
 			tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
 			((Line)tabs.lookup(".tab-selected-line")).setStroke(fontColor);
-			pickerDecorator.buttonsColorProperty().set(fontColor);
+			pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button->{
+				((JFXButton)button).setRipplerFill(fontColor);
+				((SVGGlyph)((JFXButton)button).getGraphic()).setFill(fontColor);
+			});
 
 			Color newColor = (Color) newVal.getFills().get(0).getFill();
 			String hex = String.format("#%02X%02X%02X",
@@ -201,9 +211,16 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 			hexField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
 				return pane.getBackground().getFills().get(0).getFill();
 			}, pane.backgroundProperty()));
-			pickerDecorator.decoratorColorProperty().bind(Bindings.createObjectBinding(()->{
-				return (Color) pane.getBackground().getFills().get(0).getFill();
-			},  pane.backgroundProperty()));
+			
+			
+			((Pane)pickerDecorator.lookup(".jfx-decorator-buttons-container")).backgroundProperty().bind(Bindings.createObjectBinding(()->{
+				return new Background(new BackgroundFill((Color) pane.getBackground().getFills().get(0).getFill(), CornerRadii.EMPTY, Insets.EMPTY));
+			}, pane.backgroundProperty()));
+			
+			((Pane)pickerDecorator.lookup(".jfx-decorator-content-container")).borderProperty().bind(Bindings.createObjectBinding(()->{
+				return new Border(new BorderStroke((Color) pane.getBackground().getFills().get(0).getFill(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+			}, pane.backgroundProperty()));
+			
 
 		});
 
@@ -216,10 +233,14 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		dialog.addEventHandler(KeyEvent.ANY, keyEventListener);
 	}
 
-	private void updateColorFromUserInput(String color) {
+	private void updateColorFromUserInput(String colorWebString) {
 		if(!systemChange){
 			userChange = true;
-			curvedColorPicker.setColor(Color.valueOf(color));
+			try {
+				curvedColorPicker.setColor(Color.valueOf(colorWebString));
+			} catch (Exception e) {
+				// if color is not valid then do nothing
+			}
 			userChange = false;
 		}
 	}

@@ -285,7 +285,12 @@ public class JFXListCell<T> extends ListCell<T> {
 					setText(null);
 
 					// propagate mouse events to all children
-					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> cellContent.fireEvent(e));					
+					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> {
+						if(!e.isConsumed()){
+							cellContent.fireEvent(e);
+							e.consume();
+						}
+					});					
 					cellContent.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 				}
 			}

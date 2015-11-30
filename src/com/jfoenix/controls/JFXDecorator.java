@@ -27,7 +27,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
@@ -84,8 +83,6 @@ public class JFXDecorator extends VBox {
 	private Timeline windowDecoratorAnimation;
 	private StackPane contentPlaceHolder = new StackPane();
 	private HBox buttonsContainer;
-	private ObjectProperty<Color> buttonsColor = new SimpleObjectProperty<Color>(Color.WHITE);
-	private ObjectProperty<Color> decoratorColor = new SimpleObjectProperty<Color>(Color.BLACK);
 	private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(()->{Platform.exit();});
 	
 	public JFXDecorator(Stage stage, Node node){
@@ -100,21 +97,16 @@ public class JFXDecorator extends VBox {
 		setPickOnBounds(false);
 		this.getStyleClass().add("jfx-decorator");
 		
-		SVGGlyph full = new SVGGlyph(0, "FULLSCREEN", "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z", Color.WHITE);
-		full.fillProperty().bind(buttonsColor);
+		SVGGlyph full = new SVGGlyph(0, "FULLSCREEN", "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z", Color.WHITE);		
 		full.setSize(16, 16);
 		SVGGlyph minus = new SVGGlyph(0, "MINUS", "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z", Color.WHITE);
-		minus.fillProperty().bind(buttonsColor);
 		minus.setSize(12, 2);
 		minus.setTranslateY(4);
 		SVGGlyph resizeMax = new SVGGlyph(0, "RESIZE_MAX", "M726 810v-596h-428v596h428zM726 44q34 0 59 25t25 59v768q0 34-25 60t-59 26h-428q-34 0-59-26t-25-60v-768q0-34 25-60t59-26z", Color.WHITE);
-		resizeMax.fillProperty().bind(buttonsColor);
 		resizeMax.setSize(12, 12);
 		SVGGlyph resizeMin = new SVGGlyph(0, "RESIZE_MIN", "M80.842 943.158v-377.264h565.894v377.264h-565.894zM0 404.21v619.79h727.578v-619.79h-727.578zM377.264 161.684h565.894v377.264h-134.736v80.842h215.578v-619.79h-727.578v323.37h80.842v-161.686z", Color.WHITE);
-		resizeMin.fillProperty().bind(buttonsColor);
 		resizeMin.setSize(12, 12);
 		SVGGlyph close = new SVGGlyph(0, "CLOSE", "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z", Color.WHITE);
-		close.fillProperty().bind(buttonsColor);
 		close.setSize(12, 12);
 		
 		JFXButton btnFull = new JFXButton();
@@ -123,26 +115,26 @@ public class JFXDecorator extends VBox {
 		btnFull.setOnAction((action)->primaryStage.setFullScreen(!primaryStage.isFullScreen()));
 		btnFull.setGraphic(full);
 		btnFull.setTranslateX(-30);
-		btnFull.ripplerFillProperty().bind(buttonsColor);
+		btnFull.setRipplerFill(Color.WHITE);
 
 		JFXButton btnClose = new JFXButton();
 		btnClose.getStyleClass().add("jfx-decorator-button");
 		btnClose.setCursor(Cursor.HAND);
 		btnClose.setOnAction((action)->onCloseButtonAction.get().run());
 		btnClose.setGraphic(close);
-		btnClose.ripplerFillProperty().bind(buttonsColor);		
+		btnClose.setRipplerFill(Color.WHITE);
 
 		JFXButton btnMin = new JFXButton();
 		btnMin.getStyleClass().add("jfx-decorator-button");
 		btnMin.setCursor(Cursor.HAND);
 		btnMin.setOnAction((action)->primaryStage.setIconified(true));
 		btnMin.setGraphic(minus);
-		btnMin.ripplerFillProperty().bind(buttonsColor);
+		btnMin.setRipplerFill(Color.WHITE);
 		
 		JFXButton btnMax = new JFXButton();
 		btnMax.getStyleClass().add("jfx-decorator-button");
 		btnMax.setCursor(Cursor.HAND);
-		btnMax.ripplerFillProperty().bind(buttonsColor);
+		btnMax.setRipplerFill(Color.WHITE);
 		btnMax.setOnAction((action)->{
 			primaryStage.setMaximized(!primaryStage.isMaximized());
 			if(primaryStage.isMaximized()){
@@ -158,9 +150,13 @@ public class JFXDecorator extends VBox {
 		
 		buttonsContainer = new HBox();
 		buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
-		buttonsContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-			return new Background(new BackgroundFill(decoratorColor.get(), CornerRadii.EMPTY, Insets.EMPTY));
-		}, decoratorColor));
+		buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		// BINDING
+//		buttonsContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+//			return new Background(new BackgroundFill(decoratorColor.get(), CornerRadii.EMPTY, Insets.EMPTY));
+//		}, decoratorColor));
+		
+		
 		buttonsContainer.setPadding(new Insets(4));		
 		buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
 		// customize decorator buttons
@@ -177,19 +173,19 @@ public class JFXDecorator extends VBox {
 		buttonsContainer.getChildren().addAll(btns);
 		buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter)->allowMove = true);
 		buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter)->{ if(!isDragging) allowMove = false;});
-		buttonsContainer.setMinWidth(180);		
-		contentPlaceHolder.setMinSize(0, 0);
-		((Region)node).setMinSize(0, 0);
-		((Region)node).minWidthProperty().addListener((o,oldVal,newVal)->{
-			
-		});
-		
+		buttonsContainer.setMinWidth(180);	
+		contentPlaceHolder.getStyleClass().add("jfx-decorator-content-container");
+		contentPlaceHolder.setMinSize(0, 0);	
 		contentPlaceHolder.getChildren().add(node);
+		((Region)node).setMinSize(0, 0);		
 		VBox.setVgrow(contentPlaceHolder, Priority.ALWAYS);
-		contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-			return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-		}, decoratorColor));
 		contentPlaceHolder.getStyleClass().add("resize-border");
+		contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));
+		// BINDING
+//		contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
+//			return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+//		}, decoratorColor));
+		
 		Rectangle clip = new Rectangle();
 		clip.widthProperty().bind(((Region)node).widthProperty());
 		clip.heightProperty().bind(((Region)node).heightProperty());
@@ -202,6 +198,10 @@ public class JFXDecorator extends VBox {
 			if(newVal){
 				// remove border
 				contentPlaceHolder.getStyleClass().remove("resize-border");
+				/*
+				 *  note the border property MUST NOT be bound to another property 
+				 *  when going full screen mode, thus the binding will be lost if exisited   
+				 */				
 				contentPlaceHolder.borderProperty().unbind();
 				contentPlaceHolder.setBorder(Border.EMPTY);
 				if(windowDecoratorAnimation!=null)windowDecoratorAnimation.stop();
@@ -219,11 +219,12 @@ public class JFXDecorator extends VBox {
 				}
 				this.setTranslateY(-buttonsContainer.getHeight());
 				windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),new KeyValue(this.translateYProperty(), 0, Interpolator.EASE_BOTH)));
-				windowDecoratorAnimation.setOnFinished((finish)->{
-					contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-						return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-					}, decoratorColor));
+				windowDecoratorAnimation.setOnFinished((finish)->{					
+					contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));					
 					contentPlaceHolder.getStyleClass().add("resize-border");	
+//					contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
+//						return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+//					}, decoratorColor));
 				});
 				windowDecoratorAnimation.play();
 			}
@@ -417,30 +418,6 @@ public class JFXDecorator extends VBox {
 		return false;
 	}
 
-	public final ObjectProperty<Color> buttonsColorProperty() {
-		return this.buttonsColor;
-	}
-
-	public final Color getButtonsColor() {
-		return this.buttonsColorProperty().get();
-	}
-
-	public final void setButtonsColor(final Color buttonsColor) {
-		this.buttonsColorProperty().set(buttonsColor);
-	}
-
-	public final ObjectProperty<Color> decoratorColorProperty() {
-		return this.decoratorColor;
-	}
-
-	public final Color getDecoratorColor() {
-		return this.decoratorColorProperty().get();
-	}
-
-	public final void setDecoratorColor(final Color decoratorColor) {
-		this.decoratorColorProperty().set(decoratorColor);
-	}
-	
 	public void setOnCloseButtonAction(Runnable onCloseButtonAction) {
 		this.onCloseButtonAction.set(onCloseButtonAction);
 	}
