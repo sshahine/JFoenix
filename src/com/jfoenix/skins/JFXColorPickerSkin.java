@@ -45,6 +45,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -639,6 +640,17 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
 	@Override
 	public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
 		return getClassCssMetaData();
+	}
+	
+	protected TextField getEditor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	protected javafx.util.StringConverter<Color> getConverter() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

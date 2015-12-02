@@ -18,6 +18,8 @@
 
 package com.jfoenix.skins;
 
+import java.util.List;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,8 +32,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -145,9 +150,16 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		tabContent.getChildren().add(rgbField);
 		tabContent.setMinHeight(100);
 
-		tabs.getTabs().add(new Tab("RGB", tabContent));		
-		tabs.getTabs().add(new Tab("HSB", hsbField));		
-		tabs.getTabs().add(new Tab("HEX", hexField));
+		Tab rgbTab = new Tab("RGB");
+		rgbTab.setContent(tabContent);
+		Tab hsbTab = new Tab("HSB");
+		hsbTab.setContent(hsbField);
+		Tab hexTab = new Tab("HEX");
+		hexTab.setContent(hexField);
+		
+		tabs.getTabs().add(rgbTab);		
+		tabs.getTabs().add(hsbTab);		
+		tabs.getTabs().add(hexTab);
 
 		// change tabs labels font color according to the selected color
 		pane.backgroundProperty().addListener((o,oldVal,newVal)->{			
@@ -375,7 +387,7 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 
 	private void fixPosition() {
 		Window w = dialog.getOwner();
-		Screen s = com.sun.javafx.Utils.getScreen(w);
+		Screen s = getScreen(w);
 		Rectangle2D sb = s.getBounds();
 		double xR = w.getX() + w.getWidth();
 		double xL = w.getX() - dialog.getWidth();
@@ -406,5 +418,114 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		dialog.setMinHeight(minHeight);
 	}
 
+	/*
+	 * Added Private Java Methods for java version (1.8_u60) compatibility
+	 */
+    private static Screen getScreen(Object obj) {
+        final Bounds parentBounds = getBounds(obj);
+
+        final Rectangle2D rect = new Rectangle2D(
+                parentBounds.getMinX(),
+                parentBounds.getMinY(),
+                parentBounds.getWidth(),
+                parentBounds.getHeight());
+
+        return getScreenForRectangle(rect);
+    }
+
+    private static Screen getScreenForRectangle(final Rectangle2D rect) {
+        final List<Screen> screens = Screen.getScreens();
+
+        final double rectX0 = rect.getMinX();
+        final double rectX1 = rect.getMaxX();
+        final double rectY0 = rect.getMinY();
+        final double rectY1 = rect.getMaxY();
+
+        Screen selectedScreen;
+
+        selectedScreen = null;
+        double maxIntersection = 0;
+        for (final Screen screen: screens) {
+            final Rectangle2D screenBounds = screen.getBounds();
+            final double intersection =
+                    getIntersectionLength(rectX0, rectX1,
+                                          screenBounds.getMinX(),
+                                          screenBounds.getMaxX())
+                        * getIntersectionLength(rectY0, rectY1,
+                                                screenBounds.getMinY(),
+                                                screenBounds.getMaxY());
+
+            if (maxIntersection < intersection) {
+                maxIntersection = intersection;
+                selectedScreen = screen;
+            }
+        }
+
+        if (selectedScreen != null) {
+            return selectedScreen;
+        }
+
+        selectedScreen = Screen.getPrimary();
+        double minDistance = Double.MAX_VALUE;
+        for (final Screen screen: screens) {
+            final Rectangle2D screenBounds = screen.getBounds();
+            final double dx = getOuterDistance(rectX0, rectX1,
+                                               screenBounds.getMinX(),
+                                               screenBounds.getMaxX());
+            final double dy = getOuterDistance(rectY0, rectY1,
+                                               screenBounds.getMinY(),
+                                               screenBounds.getMaxY());
+            final double distance = dx * dx + dy * dy;
+
+            if (minDistance > distance) {
+                minDistance = distance;
+                selectedScreen = screen;
+            }
+        }
+
+        return selectedScreen;
+    }
+    private static double getOuterDistance(
+            final double a0, final double a1,
+            final double b0, final double b1) {
+        // (a0 <= a1) && (b0 <= b1)
+        if (a1 <= b0) {
+            return b0 - a1;
+        }
+        if (b1 <= a0) {
+            return b1 - a0;
+        }
+        return 0;
+    }
+    private static Bounds getBounds(Object obj) {
+        if (obj instanceof Node) {
+            final Node n = (Node)obj;
+            Bounds b = n.localToScreen(n.getLayoutBounds());
+            return b != null ? b : new BoundingBox(0, 0, 0, 0);
+        } else if (obj instanceof Window) {
+            final Window window = (Window)obj;
+            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
+        } else {
+            return new BoundingBox(0, 0, 0, 0);
+        }
+    }
+    private static double getIntersectionLength(
+            final double a0, final double a1,
+            final double b0, final double b1) {
+        // (a0 <= a1) && (b0 <= b1)
+        return (a0 <= b0) ? getIntersectionLengthImpl(b0, b1, a1)
+                          : getIntersectionLengthImpl(a0, a1, b1);
+    }
+
+    private static double getIntersectionLengthImpl(
+            final double v0, final double v1, final double v) {
+        // (v0 <= v1)
+        if (v <= v0) {
+            return 0;
+        }
+
+        return (v <= v1) ? v - v0 : v1 - v0;
+    }
+	
 
 }
