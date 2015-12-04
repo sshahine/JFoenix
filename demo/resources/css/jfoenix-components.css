@@ -23,7 +23,7 @@
     -fx-max-width: 300;
 }
 
-.jfx-text-field{
+.jfx-text-field, .jfx-password-field{
 	-fx-background-color: WHITE;
     -fx-font-weight: BOLD;
     -fx-prompt-text-fill: #808080;
@@ -44,16 +44,16 @@
 	-fx-border-width: 0 4 4 4;
 }
 
-.jfx-text-field.error{
+.jfx-text-field:error, .jfx-password-field:error{
 	-fx-focus-color: #D34336;
 	-fx-unfocus-color: #D34336;
 }
 
-.jfx-text-field .errorLabel{
+.jfx-text-field .errorLabel, .jfx-password-field .errorLabel{
 	-fx-text-fill : #D34336;
 	-fx-font-size: 0.75em;
 }
-.jfx-text-field .errorIcon{
+.jfx-text-field .errorIcon, .jfx-password-field .errorIcon{
 	-fx-text-fill : #D34336;
 	-fx-font-size: 1em;
 }

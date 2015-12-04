@@ -18,13 +18,23 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.transitions.CachedTransition;
+import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
+
 import javafx.animation.Animation.Status;
+import javafx.application.Platform;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -39,21 +49,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
 public class JFXPasswordFieldSkin extends TextFieldSkin{
 
 	private AnchorPane cursorPane = new AnchorPane();
-	
+
 	private Line line = new Line();
 	private Line focusedLine = new Line();
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
-	
+
 	private double endX;
 	private double startX;
 	private double mid ;
@@ -70,8 +77,35 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 	private double errorLabelInitHeight = 0;
 
 	private Timeline hideErrorAnimation;
+	private ParallelTransition transition;
+	private StackPane promptContainer;
 
-	
+	private BooleanProperty floatLabel = new SimpleBooleanProperty(false);
+	private Node promptText;
+	private CachedTransition promptTextUpTransition;
+	private CachedTransition promptTextDownTransition;
+	private Timeline promptTextColorTransition;
+
+	BooleanBinding usePromptText = Bindings.createBooleanBinding(()->{
+		String txt = getSkinnable().getText();
+		String promptTxt = getSkinnable().getPromptText();
+		return ((txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT));
+	}, getSkinnable().textProperty(), getSkinnable().promptTextProperty());
+
+	ChangeListener<? super Boolean> focusPromptTextListener = (o,oldVal,newVal)->{
+		String txt = getSkinnable().getText();
+		String promptTxt = getSkinnable().getPromptText();
+		boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
+		if(newVal && hasPromptText) floatLabel.set(true);
+		else if(!newVal)  {
+			promptTextColorTransition.stop();
+			floatLabel.set(!hasPromptText);
+		}
+		else if (newVal) promptTextColorTransition.playFromStart();
+	};
+
+
+
 	public JFXPasswordFieldSkin(JFXPasswordField field) {
 		super(field);
 		//initial styles
@@ -87,6 +121,9 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		//		errorLabel.setStyle("-fx-border-color:BLUE;");
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
+
+		promptContainer = new StackPane();
+		this.getChildren().add(promptContainer);
 
 		errorContainer = new HBox();
 		errorContainer.getChildren().add(errorLabelContainer);
@@ -129,6 +166,17 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		});
 
 
+		field.labelFloatProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				promptText.visibleProperty().unbind();
+				promptText.visibleProperty().set(true);
+				getSkinnable().focusedProperty().addListener(focusPromptTextListener);		
+			}else{
+				promptText.visibleProperty().bind(usePromptText);
+				getSkinnable().focusedProperty().removeListener(focusPromptTextListener);	
+			}
+		});
+
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
 			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
 				hideErrorAnimation.stop();
@@ -145,7 +193,10 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
-			else focusedLine.setOpacity(0);	
+			else {
+				if(transition!=null) transition.stop();
+				focusedLine.setOpacity(0);	
+			}
 		});
 
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
@@ -170,11 +221,11 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
-		
+
 		if(invalid){
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
-			
+
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
 			line.startYProperty().bind(textPane.heightProperty());
@@ -215,6 +266,46 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
 
+			if(textPane.getChildren().get(0) instanceof Text){				
+				promptText = textPane.getChildren().get(0);
+				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
+						new KeyFrame(Duration.millis(1300),
+								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+								new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
+								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+
+								promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
+
+								promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+										new KeyFrame(Duration.millis(1300), 
+												new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+												new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+										)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+
+										floatLabel.addListener((o,oldVal,newVal)->{
+											if(newVal){ 
+												promptTextDownTransition.stop();
+												promptTextUpTransition.play();
+											} else{
+												promptTextUpTransition.stop();
+												promptTextDownTransition.play();
+											}
+										});
+
+										promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
+
+										if(((JFXPasswordField)getSkinnable()).isLabelFloat()){
+											promptText.visibleProperty().unbind();
+											promptText.visibleProperty().set(true);
+											getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										}
+			}
+
+
 			textPane.getChildren().remove(line);
 			textPane.getChildren().add(line);
 
@@ -235,59 +326,78 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 	}
 
 	private void focus(){
-		Timeline linesAnimation = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
-						new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
-						new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
-						),
-						new KeyFrame(
-								Duration.millis(5),
-								new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(
-										Duration.millis(160),
-										new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
-										new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
-										)
+		/*
+		 * in case the method request layout is not called before focused
+		 * this is bug is reported while editing treetableview cells
+		 */
+		if(textPane == null){
+			Platform.runLater(()->focus());
+		}else{
+			// create the focus animations
+			focusedLine.endXProperty().unbind();
 
-				);
+			Timeline linesAnimation = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,       
+							new KeyValue(focusedLine.startXProperty(), mid ,Interpolator.EASE_BOTH),
+							new KeyValue(focusedLine.opacityProperty(), 0 ,Interpolator.EASE_BOTH),									
+							new KeyValue(focusedLine.endXProperty(), mid ,Interpolator.EASE_BOTH)
+							),
+					new KeyFrame(
+							Duration.millis(5),
+							new KeyValue(focusedLine.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
+							),
+					new KeyFrame(
+							Duration.millis(160),
+							new KeyValue(focusedLine.startXProperty(), startX ,Interpolator.EASE_BOTH),
+							new KeyValue(focusedLine.endXProperty(), endX ,Interpolator.EASE_BOTH)
+							)
 
-		Timeline cursorAnimation = new Timeline(
-				new KeyFrame(
-						Duration.ZERO,       
-						new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
-						new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
-						),
-						new KeyFrame(
-								Duration.millis(5),
-								new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
-								),
-								new KeyFrame(
-										Duration.millis(160),
-										new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
-										new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
-										new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-										)
+					);
 
-				);
-		ParallelTransition transition = new ParallelTransition();
-		transition.getChildren().add(linesAnimation);
-		if(getSkinnable().getText().length() == 0)
-			transition.getChildren().add(cursorAnimation);
-		transition.play();
+			transition = new ParallelTransition();
+			transition.getChildren().add(linesAnimation);
+			transition.setOnFinished((finish)->{
+				if(transition.getStatus().equals(Status.STOPPED))
+					focusedLine.endXProperty().bind(textPane.widthProperty());	
+			});
+
+			if(getSkinnable().getText().length() == 0){
+				if(!((JFXPasswordField)getSkinnable()).isLabelFloat()){
+					Timeline cursorAnimation = new Timeline(
+							new KeyFrame(
+									Duration.ZERO,       
+									new KeyValue(cursorPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
+									new KeyValue(cursorPane.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
+									new KeyValue(cursorPane.translateXProperty(), 40 ,Interpolator.EASE_BOTH),
+									new KeyValue(cursorPane.opacityProperty(), 0.75 ,Interpolator.EASE_BOTH)
+									),
+							new KeyFrame(
+									Duration.millis(5),
+									new KeyValue(cursorPane.visibleProperty(), true ,Interpolator.EASE_BOTH)
+									),
+							new KeyFrame(
+									Duration.millis(160),
+									new KeyValue(cursorPane.scaleXProperty(), 1/cursorPane.getWidth() ,Interpolator.EASE_BOTH),
+									new KeyValue(cursorPane.translateXProperty(), -40 ,Interpolator.EASE_BOTH),
+									new KeyValue(cursorPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
+									)
+
+							);				
+					transition.getChildren().add(cursorAnimation);
+				}
+			}
+			transition.play();
+		}
 	}
 
 
-	
+
 	private void showError(ValidatorBase validator){
 		// set text in error label
 		errorLabel.setText(validator.getMessage());
 		// show error icon
-		Node awsomeIcon = validator.getAwsomeIcon();
+		Node awsomeIcon = validator.getIcon();
 		errorIcon.getChildren().clear();
 		if(awsomeIcon!=null){
 			errorIcon.getChildren().add(awsomeIcon);
@@ -302,6 +412,20 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		}
 		errorContainer.setVisible(true);
 		errorShowen = true;
+
+		// update prompt color transition
+		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
+				new KeyFrame(Duration.millis(1300),
+						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+						new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
+						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
+				)){{
+					setDelay(Duration.millis(0));
+					setCycleDuration(Duration.millis(300));
+				}};
+
 	}
 
 	private void hideError(){		
@@ -318,7 +442,20 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		// hide error container
 		errorContainer.setVisible(false);
 		errorShowen = false;	
+
+		// update prompt color transition
+		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
+				new KeyFrame(Duration.millis(1300),
+						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+						new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
+						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
+				)){{
+					setDelay(Duration.millis(0));
+					setCycleDuration(Duration.millis(300));
+				}};
 	}
 
-	
+
 }

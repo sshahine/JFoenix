@@ -144,22 +144,21 @@ public abstract class ValidatorBase extends Parent {
 	}
 
 	/***** Awsome Icon *****/
-	protected SimpleObjectProperty<Node> awsomeIcon = new SimpleObjectProperty<Node>(){
+	protected SimpleObjectProperty<Node> icon = new SimpleObjectProperty<Node>(){
 		@Override
 		protected void invalidated() {
 			updateSrcControl();
 		}
 	};
-	public void setAwsomeIcon(Node icon){
-		icon.setStyle("-fx-font-family: FontAwesome;");
+	public void setIcon(Node icon){
 		icon.getStyleClass().add("errorIcon");
-		this.awsomeIcon.set(icon);
+		this.icon.set(icon);
 	}
-	public Node getAwsomeIcon(){
-		return this.awsomeIcon.get();
+	public Node getIcon(){
+		return this.icon.get();
 	}
-	public SimpleObjectProperty<Node> awsomeIconProperty(){
-		return this.awsomeIcon;
+	public SimpleObjectProperty<Node> iconProperty(){
+		return this.icon;
 	}
 
 	

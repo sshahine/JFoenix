@@ -19,7 +19,7 @@
 				prefWidth="300">
 				<validators>
 					<RequiredFieldValidator message="Input Required!">
-						<Icon awesomeIcon="WARNING" style=";" />
+						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
 					</RequiredFieldValidator>
 				</validators>
 			</JFXTextField>

@@ -22,13 +22,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.jfoenix.skins.JFXPasswordFieldSkin;
+import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.PaintConverter;
+
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
@@ -37,11 +45,11 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.jfoenix.skins.JFXPasswordFieldSkin;
-import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.css.converters.PaintConverter;
 
-
+/**
+ * @author sshahine
+ *
+ */
 
 public class JFXPasswordField extends PasswordField {
 	
@@ -92,10 +100,12 @@ public class JFXPasswordField extends PasswordField {
 			validator.validate();
 			if (validator.getHasErrors()) {
 				activeValidator.set(validator);
+				pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 				return false;
 			}
 		}
 		activeValidator.set(null);
+		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
 		return true;
 	}
 
@@ -106,6 +116,20 @@ public class JFXPasswordField extends PasswordField {
 	 * styleable Properties                                                    *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT, JFXPasswordField.this, "lableFloat", false);
+	
+	public final StyleableBooleanProperty labelFloatProperty() {
+		return this.labelFloat;
+	}
+
+	public final boolean isLabelFloat() {
+		return this.labelFloatProperty().get();
+	}
+
+	public final void setLabelFloat(final boolean labelFloat) {
+		this.labelFloatProperty().set(labelFloat);
+	}
 	
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, JFXPasswordField.this, "unFocusColor", Color.rgb(77, 77, 77));
 
@@ -158,11 +182,24 @@ public class JFXPasswordField extends PasswordField {
 				return control.focusColorProperty();
 			}
 		};
+		
+		private static final CssMetaData<JFXPasswordField, Boolean> LABEL_FLOAT = new CssMetaData<JFXPasswordField, Boolean>("-fx-label-float", BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXPasswordField control) {
+				return control.labelFloat == null || !control.labelFloat.isBound();
+			}
+
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXPasswordField control) {
+				return control.labelFloatProperty();
+			}
+		};
+
 
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR);
+			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}
@@ -184,5 +221,7 @@ public class JFXPasswordField extends PasswordField {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
+	
+	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 	
 }

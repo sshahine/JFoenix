@@ -28,8 +28,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
 import javafx.css.PseudoClass;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
@@ -40,8 +42,14 @@ import javafx.scene.paint.Paint;
 
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 
+
+/**
+ * @author sshahine
+ *
+ */
 public class JFXTextField extends TextField {
 
 	public JFXTextField() {
@@ -111,6 +119,20 @@ public class JFXTextField extends TextField {
 	 *                                                                         *
 	 **************************************************************************/
 	
+	private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT, JFXTextField.this, "lableFloat", false);
+	
+	public final StyleableBooleanProperty labelFloatProperty() {
+		return this.labelFloat;
+	}
+
+	public final boolean isLabelFloat() {
+		return this.labelFloatProperty().get();
+	}
+
+	public final void setLabelFloat(final boolean labelFloat) {
+		this.labelFloatProperty().set(labelFloat);
+	}
+	
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, JFXTextField.this, "unFocusColor", Color.rgb(77, 77, 77));
 
 	public Paint getUnFocusColor() {
@@ -162,11 +184,22 @@ public class JFXTextField extends TextField {
 				return control.focusColorProperty();
 			}
 		};
+		private static final CssMetaData<JFXTextField, Boolean> LABEL_FLOAT = new CssMetaData<JFXTextField, Boolean>("-fx-label-float", BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXTextField control) {
+				return control.labelFloat == null || !control.labelFloat.isBound();
+			}
+
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXTextField control) {
+				return control.labelFloatProperty();
+			}
+		};
 
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR);
+			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}
@@ -191,5 +224,8 @@ public class JFXTextField extends TextField {
 	
 	
 	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
+
+
+	
 	
 }

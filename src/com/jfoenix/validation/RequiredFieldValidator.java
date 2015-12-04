@@ -23,7 +23,7 @@ import javafx.scene.control.TextInputControl;
 
 import com.jfoenix.validation.base.ValidatorBase;
 
-@DefaultProperty(value="awsomeIcon")
+@DefaultProperty(value="icon")
 public class RequiredFieldValidator extends ValidatorBase {
 
 	@Override

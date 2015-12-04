@@ -49,6 +49,7 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import com.jfoenix.converters.MaskTypeConverter;
+import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.css.converters.PaintConverter;
 
 /**
@@ -103,14 +104,6 @@ public class JFXRippler extends StackPane {
 	public void setControl(Node control){
 		if(control!=null){
 			this.control = control;
-
-			//			if(this.control instanceof Control){
-			//				((Control)this.control).widthProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxWidth((double) newVal);});
-			//				((Control)this.control).heightProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxHeight((double) newVal);});
-			//			}else if(this.control instanceof Pane){
-			//				((Pane)this.control).widthProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxWidth((double) newVal);});
-			//				((Pane)this.control).heightProperty().addListener((o,oldVal,newVal) -> {ripplerPane.setMaxHeight((double) newVal);});
-			//			}
 
 			// create rippler panels
 			rippler = new RippleGenerator();
@@ -287,8 +280,8 @@ public class JFXRippler extends StackPane {
 
 		private class OverLayRipple extends Rectangle{
 			// Overlay ripple animations 
-			Timeline inAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)));
-			Timeline outAnimation = new Timeline(new KeyFrame(Duration.seconds(0.3),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)));
+			CachedTransition inAnimation = new CachedTransition(this, new Timeline(new KeyFrame(Duration.millis(1300),new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)))){{setDelay(Duration.millis(0));setCycleDuration(Duration.millis(300));}};
+			CachedTransition outAnimation = new CachedTransition(this, new Timeline(new KeyFrame(Duration.millis(1300),new KeyValue(opacityProperty(), 0,Interpolator.EASE_BOTH)))){{setDelay(Duration.millis(0));setCycleDuration(Duration.millis(300));}};
 			
 			public OverLayRipple() {
 				super(control.getLayoutBounds().getWidth() - 0.1,control.getLayoutBounds().getHeight() - 0.1);
@@ -296,21 +289,26 @@ public class JFXRippler extends StackPane {
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
 				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
 				this.setOpacity(0);
+				this.setCache(true);
 			}
 		}
 
 		private class Ripple extends Circle {
 
-			Timeline inAnimation = new Timeline(
+			CachedTransition inAnimation = new CachedTransition(this,  new Timeline(
 					new KeyFrame(Duration.ZERO,
 							new KeyValue(radiusProperty(),  0,Interpolator.LINEAR),
 							new KeyValue(opacityProperty(), 1,Interpolator.EASE_BOTH)
-							),new KeyFrame(Duration.seconds(0.3), 
+							),new KeyFrame(Duration.millis(1300), 
 									new KeyValue(radiusProperty(),  rippleRadius ,Interpolator.LINEAR)					
-									));
+									))){{
+										setCycleDuration(Duration.millis(300));
+										setDelay(Duration.millis(0));
+									}};
 
 			private Ripple(double centerX, double centerY) {
 				super(centerX, centerY, 0, null);	
+				setCache(true);
 				if(ripplerFill.get() instanceof Color){
 					Color circleColor = new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.3);
 					setStroke(circleColor);
