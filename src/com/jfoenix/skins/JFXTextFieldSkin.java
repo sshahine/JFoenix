@@ -43,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
@@ -87,6 +88,8 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	private CachedTransition promptTextUpTransition;
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
+	private Paint oldPromptTextFill;
+	
 	
 	BooleanBinding usePromptText = Bindings.createBooleanBinding(()->{
 		String txt = getSkinnable().getText();
@@ -101,9 +104,12 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		if(newVal && hasPromptText) floatLabel.set(true);
 		else if(!newVal)  {
 			promptTextColorTransition.stop();
+			if(oldPromptTextFill!=null) promptTextFill.set(oldPromptTextFill);
 			floatLabel.set(!hasPromptText);
 		}
-		else if (newVal) promptTextColorTransition.playFromStart();
+		else if (newVal){
+			promptTextColorTransition.playFromStart();
+		}
 	};
 	
 	
@@ -293,10 +299,13 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 								)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
 				floatLabel.addListener((o,oldVal,newVal)->{
-					if(newVal){ 
+					if(newVal){
+						oldPromptTextFill = promptTextFill.get();
+						// if this is removed the prompt text flicker on the 1st focus
+						promptTextFill.set(oldPromptTextFill);
 						promptTextDownTransition.stop();
 						promptTextUpTransition.play();
-					} else{
+					} else{						
 						promptTextUpTransition.stop();
 						promptTextDownTransition.play();
 					}

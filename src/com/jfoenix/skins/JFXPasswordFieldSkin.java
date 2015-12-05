@@ -24,12 +24,12 @@ import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 
 import javafx.animation.Animation.Status;
-import javafx.application.Platform;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -47,6 +47,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
@@ -86,6 +87,8 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
 
+	private Paint oldPromptTextFill;
+	
 	BooleanBinding usePromptText = Bindings.createBooleanBinding(()->{
 		String txt = getSkinnable().getText();
 		String promptTxt = getSkinnable().getPromptText();
@@ -99,6 +102,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		if(newVal && hasPromptText) floatLabel.set(true);
 		else if(!newVal)  {
 			promptTextColorTransition.stop();
+			if(oldPromptTextFill!=null) promptTextFill.set(oldPromptTextFill);
 			floatLabel.set(!hasPromptText);
 		}
 		else if (newVal) promptTextColorTransition.playFromStart();
@@ -287,7 +291,10 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 										)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
 										floatLabel.addListener((o,oldVal,newVal)->{
-											if(newVal){ 
+											if(newVal){
+												oldPromptTextFill = promptTextFill.get();
+												// if this is removed the prompt text flicker on the 1st focus
+												promptTextFill.set(oldPromptTextFill);
 												promptTextDownTransition.stop();
 												promptTextUpTransition.play();
 											} else{
