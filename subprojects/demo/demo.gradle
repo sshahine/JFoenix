@@ -7,6 +7,7 @@ dependencies {
     compile ':datafx:8.0b8'
     compile ':core:8.0b8'
     compile ':flow:8.0b8'
+    compile ':fontawesomefx:8.0.10'
 }
 
 sourceSets.main.java.srcDirs = [rootProject.file('demo')]

@@ -1,4 +1,5 @@
 apply from: rootProject.file('gradle/publishing.gradle')
+apply plugin: 'me.tatarka.retrolambda'
 
 task sourcesJar(type: Jar) {
     group 'Build'
@@ -7,12 +8,19 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-dependencies {
-    compile ':fontawesomefx:8.0.10'
-}
-
 sourceSets.main.java.srcDirs = [rootProject.file('src')]
 sourceSets.main.resources.srcDirs = [rootProject.file('src')]
+
+task retroSourcesJar(type: Jar){
+	String str = sourceSets.main.output.classesDir;
+	sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"	
+   	group 'Build'
+    description 'JFoenix compiled using retro-lambda'
+    classifier 'retrolambda'    
+    from sourceSets.main.output
+    sourceSets.main.output.classesDir = str
+}
+
 
 javadoc {
     excludes = ['**/*.html', 'META-INF/**']
@@ -35,6 +43,9 @@ task javadocJar(type: Jar) {
     from javadoc.destinationDir
 }
 
+
+// execute jar tasks
+jar.finalizedBy retroSourcesJar
 jar.finalizedBy sourcesJar
 jar.finalizedBy javadocJar
 
