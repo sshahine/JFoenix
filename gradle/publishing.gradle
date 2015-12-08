@@ -39,28 +39,42 @@ def pomConfig = {
     scm {
         url project.project_scm
     }
-    developers {
-        [
-            sshahine : 'Shadi Shaheen'
-        ].each { devId, devName ->
-            developer {
-                id devId
-                name devName
-                roles {
-                    role 'Developer'
-                }
-            }
+    developers {    
+    	developer {
+            id 'sshahine'
+            name 'Shadi Shaheen'                
+            roles{role 'Developer'}               
+        }
+        developer {
+            id 'belias'
+            name 'Bachir Elias'                
+            roles{role 'Developer'}               
+        }
+        developer {
+            id 'mhelou'
+            name 'Marwan Helou'                
+            roles{role 'Head of Framework Development'}               
+        }
+        developer {
+            id 'gmoubarak'
+            name 'Gerard Moubarak'                
+            roles{role 'Head of IT Section'}               
+        }        
+        developer {
+            id 'rjreije'
+            name 'Rayan Jreije'                
+            roles{role 'Project Manager'}               
         }
     }
 }
 
 publishing {
-    publications {
-        mavenCustom(MavenPublication) {
+    publications {    	
+        mavenJava(MavenPublication) {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-
+            artifact retroSourcesJar
             pom.withXml {
                 asNode().children().last() + pomConfig
             }
@@ -74,7 +88,7 @@ if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
 bintray {
     user = project.bintrayUsername
     key = project.bintrayApiKey
-    publications = ['mavenCustom']
+    publications = ['mavenJava']
     pkg {
         repo = project.project_bintray_repo
         userOrg = project.project_bintray_org

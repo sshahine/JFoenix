@@ -52,4 +52,5 @@ jar.finalizedBy javadocJar
 artifacts {
     sourcesJar
     javadocJar
+    retroSourcesJar
 }
