@@ -375,7 +375,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 				if(transition.getStatus().equals(Status.STOPPED))
 					focusedLine.endXProperty().bind(textPane.widthProperty());	
 			});
-			if(getSkinnable().getText().length() == 0){
+			if(getSkinnable().getText()==null || getSkinnable().getText().length() == 0){
 				if(!((JFXTextField)getSkinnable()).isLabelFloat()){
 					Timeline cursorAnimation = new Timeline(
 							new KeyFrame(

@@ -369,7 +369,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 					focusedLine.endXProperty().bind(textPane.widthProperty());	
 			});
 
-			if(getSkinnable().getText().length() == 0){
+			if(getSkinnable().getText()==null || getSkinnable().getText().length() == 0){
 				if(!((JFXPasswordField)getSkinnable()).isLabelFloat()){
 					Timeline cursorAnimation = new Timeline(
 							new KeyFrame(
