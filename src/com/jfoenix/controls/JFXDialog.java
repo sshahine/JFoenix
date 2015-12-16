@@ -207,6 +207,7 @@ public class JFXDialog extends StackPane {
 	}
 
 	public void show(){
+		animation = getShowAnimation(transitionType.get());
 		animation.play();		
 	}
 
