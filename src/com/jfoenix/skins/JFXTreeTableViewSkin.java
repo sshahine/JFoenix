@@ -30,8 +30,8 @@ public class JFXTreeTableViewSkin<S> extends TreeTableViewSkin<S> {
 	}
 	
     protected TableHeaderRow createTableHeaderRow() {
-    	JFXTableHeaderRow c3dHeaderRow = new JFXTableHeaderRow(this);
-    	return c3dHeaderRow.getHeaderRow();
+    	JFXTableHeaderRow jfxHeaderRow = new JFXTableHeaderRow(this);
+    	return jfxHeaderRow.getHeaderRow();
     }
 
 	

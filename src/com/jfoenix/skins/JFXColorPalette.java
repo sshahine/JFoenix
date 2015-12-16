@@ -20,26 +20,33 @@ package com.jfoenix.skins;
 
 import java.util.List;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PopupControl;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -48,11 +55,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-import com.jfoenix.controls.JFXButton;
-
 /**
  * @author sshahine
- *
+ * FUTURE WORK: this UI will get re-designed to match material design guidlines
  */
 
 class JFXColorPalette extends Region {
@@ -60,33 +65,27 @@ class JFXColorPalette extends Region {
 	private static final int SQUARE_SIZE = 15;
 
 	// package protected for testing purposes
-	ColorPickerGrid colorPickerGrid;
-	final JFXButton customColorLink = new JFXButton(JFXColorPickerSkin.getString("customColorLink"));
+	JFXColorGrid colorPickerGrid;
+	final JFXButton customColorLink = new JFXButton("Custom Color");
 	JFXCustomColorPickerDialog customColorDialog = null;
 
 	private ColorPicker colorPicker;
 	private final GridPane customColorGrid = new GridPane();
-	private final Separator separator = new Separator();
-	private final Label customColorLabel = new Label(JFXColorPickerSkin.getString("customColorLabel"));
+	private final Label customColorLabel = new Label("Recent Colors");
 	
 	private PopupControl popupControl;
 	private ColorSquare focusedSquare;
-	private ContextMenu contextMenu = null;
 
 	private Color mouseDragColor = null;
 	private boolean dragDetected = false;
 
-	// Metrics for custom colors
-	private int customColorNumber = 0;
-	private int customColorRows = 0;
-	private int customColorLastRowLength = 0;
 
 	private final ColorSquare hoverSquare = new ColorSquare();
 
 	public JFXColorPalette(final ColorPicker colorPicker) {
 		getStyleClass().add("color-palette-region");
 		this.colorPicker = colorPicker;
-		colorPickerGrid = new ColorPickerGrid();
+		colorPickerGrid = new JFXColorGrid();
 		colorPickerGrid.getChildren().get(0).requestFocus();
 		customColorLabel.setAlignment(Pos.CENTER_LEFT);
 		customColorLink.setPrefWidth(colorPickerGrid.prefWidth(-1));
@@ -107,10 +106,6 @@ class JFXColorPalette extends Region {
 						Event.fireEvent(colorPicker, new ActionEvent());
 						colorPicker.hide();
 					});
-					customColorDialog.setOnUse(() -> {
-						Event.fireEvent(colorPicker, new ActionEvent());
-						colorPicker.hide();
-					});
 				}
 				customColorDialog.setCurrentColor(colorPicker.valueProperty().get());
 				if (popupControl != null) popupControl.setAutoHide(false);
@@ -124,17 +119,15 @@ class JFXColorPalette extends Region {
 		initNavigation();
 		customColorGrid.getStyleClass().add("color-picker-grid");
 		customColorGrid.setVisible(false);
+		
 		buildCustomColors();
-		colorPicker.getCustomColors().addListener(new ListChangeListener<Color>() {
-			@Override public void onChanged(Change<? extends Color> change) {
-				buildCustomColors();
-			}
-		});
-
+		
+		colorPicker.getCustomColors().addListener((Change<? extends Color> change) -> buildCustomColors());		
 		VBox paletteBox = new VBox();
 		paletteBox.getStyleClass().add("color-palette");
-		paletteBox.setStyle("-fx-background-color:WHITE; -fx-border-color:GRAY; -fx-border-radius:5px;");
-		paletteBox.getChildren().addAll(colorPickerGrid, customColorLabel, customColorGrid, separator, customColorLink);
+		paletteBox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+		paletteBox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		paletteBox.getChildren().addAll(colorPickerGrid, customColorLabel, customColorGrid, customColorLink);
 
 		hoverSquare.setMouseTransparent(true);
 		hoverSquare.getStyleClass().addAll("hover-square");
@@ -183,8 +176,6 @@ class JFXColorPalette extends Region {
 
 	private void buildCustomColors() {
 		final ObservableList<Color> customColors = colorPicker.getCustomColors();
-		customColorNumber = customColors.size();
-
 		customColorGrid.getChildren().clear();
 		if (customColors.isEmpty()) {
 			customColorLabel.setVisible(false);
@@ -197,22 +188,12 @@ class JFXColorPalette extends Region {
 			customColorLabel.setManaged(true);
 			customColorGrid.setVisible(true);
 			customColorGrid.setManaged(true);
-			if (contextMenu == null) {
-				MenuItem item = new MenuItem(JFXColorPickerSkin.getString("removeColor"));
-				item.setOnAction(e -> {
-					ColorSquare square = (ColorSquare)contextMenu.getOwnerNode();
-					customColors.remove(square.rectangle.getFill());
-					buildCustomColors();
-				});
-				contextMenu = new ContextMenu(item);
-			}
 		}
 
 		int customColumnIndex = 0;
 		int customRowIndex = 0;
 		int remainingSquares = customColors.size() % NUM_OF_COLUMNS;
 		int numEmpty = (remainingSquares == 0) ? 0 : NUM_OF_COLUMNS - remainingSquares;
-		customColorLastRowLength = remainingSquares == 0 ? 12 : remainingSquares;
 
 		for (int i = 0; i < customColors.size(); i++) {
 			Color c = customColors.get(i);
@@ -229,9 +210,7 @@ class JFXColorPalette extends Region {
 			customColorGrid.add(emptySquare, customColumnIndex, customRowIndex);
 			customColumnIndex++;
 		}
-		customColorRows = customRowIndex + 1;
 		requestLayout();
-
 	}
 
 	private void initNavigation() {
@@ -239,126 +218,20 @@ class JFXColorPalette extends Region {
 			switch (ke.getCode()) {
 			case SPACE:
 			case ENTER:
-				processSelectKey(ke);
+				// select the focused color
+				if (focusedSquare != null) focusedSquare.selectColor(ke);
 				ke.consume();
 				break;
 			default: // no-op
 			}
 		});
-
-//		setImpl_traversalEngine(new ParentTraversalEngine(this, new Algorithm() {
-//			@Override
-//			public Node select(Node owner, Direction dir, TraversalContext context) {
-//				final Node subsequentNode = context.selectInSubtree(context.getRoot(), owner, dir);
-//				switch (dir) {
-//				case NEXT:
-//				case NEXT_IN_LINE:
-//				case PREVIOUS:
-//					return subsequentNode;
-//					// Here, we need to intercept the standard algorithm in a few cases to get the desired traversal
-//					// For right or left direction we want to continue on the next or previous row respectively
-//					// For up and down, the custom color panel might be skipped by the standard algorithm (if not wide enough
-//					// to be between the current color and custom color button), so we need to include it in the path explicitly.
-//				case LEFT:
-//				case RIGHT:
-//				case UP:
-//				case DOWN:
-//					if (owner instanceof ColorSquare) {
-//						Node result =  processArrow((ColorSquare)owner, dir);
-//						return result != null ? result : subsequentNode;
-//					} else {
-//						return subsequentNode;
-//					}
-//				}
-//				return null;
-//			}
-//
-//			private Node processArrow(ColorSquare owner, Direction dir) {
-//				final int row = owner.index / NUM_OF_COLUMNS;
-//				final int column = owner.index % NUM_OF_COLUMNS;
-//
-//				// Adjust the direction according to color picker orientation
-//				dir = dir.getDirectionForNodeOrientation(colorPicker.getEffectiveNodeOrientation());
-//				// This returns true for all the cases which we need to override
-//				if (isAtBorder(dir, row, column, owner.isCustom)) {
-//					// There's no other node in the direction from the square, so we need to continue on some other row
-//					// or cycle
-//					int subsequentRow = row;
-//					int subsequentColumn = column;
-//					boolean subSequentSquareCustom = owner.isCustom;
-//					switch (dir) {
-//					case LEFT:
-//					case RIGHT:
-//						// The next row is either the first or the last, except when cycling in custom colors, the last row
-//						// might have different number of columns
-//						if (owner.isCustom) {
-//							subsequentRow = Math.floorMod(dir == Direction.LEFT ? row - 1 : row + 1, customColorRows);
-//							subsequentColumn = dir == Direction.LEFT ? subsequentRow == customColorRows - 1 ?
-//									customColorLastRowLength - 1 : NUM_OF_COLUMNS - 1 : 0;
-//						} else {
-//							subsequentRow = Math.floorMod(dir == Direction.LEFT ? row - 1 : row + 1, NUM_OF_ROWS);
-//							subsequentColumn = dir == Direction.LEFT ? NUM_OF_COLUMNS - 1 : 0;
-//						}
-//						break;
-//					case UP: // custom color are not handled here
-//						subsequentRow = NUM_OF_ROWS - 1;
-//						break;
-//					case DOWN: // custom color are not handled here
-//						if (customColorNumber > 0) {
-//							subSequentSquareCustom = true;
-//							subsequentRow = 0;
-//							subsequentColumn = customColorRows > 1 ? column : Math.min(customColorLastRowLength - 1, column);
-//							break;
-//						} else {
-//							return null; // Let the default algorith handle this
-//						}
-//
-//					}
-//					if (subSequentSquareCustom) {
-//						return customColorGrid.getChildren().get(subsequentRow * NUM_OF_COLUMNS + subsequentColumn);
-//					} else {
-//						return colorPickerGrid.getChildren().get(subsequentRow * NUM_OF_COLUMNS + subsequentColumn);
-//					}
-//				}
-//				return null;
-//			}
-//
-//			private boolean isAtBorder(Direction dir, int row, int column, boolean custom) {
-//				switch (dir) {
-//				case LEFT:
-//					return column == 0;
-//				case RIGHT:
-//					return custom && row == customColorRows - 1 ?
-//							column == customColorLastRowLength - 1 : column == NUM_OF_COLUMNS - 1;
-//				case UP:
-//					return !custom && row == 0;
-//				case DOWN:
-//					return !custom && row == NUM_OF_ROWS - 1;
-//				}
-//				return false;
-//			}
-//
-//			@Override
-//			public Node selectFirst(TraversalContext context) {
-//				return colorPickerGrid.getChildren().get(0);
-//			}
-//
-//			@Override
-//			public Node selectLast(TraversalContext context) {
-//				return customColorLink;
-//			}
-//		}));
-	}
-
-	private void processSelectKey(KeyEvent ke) {
-		if (focusedSquare != null) focusedSquare.selectColor(ke);
 	}
 
 	public void setPopupControl(PopupControl pc) {
 		this.popupControl = pc;
 	}
 
-	public ColorPickerGrid getColorGrid() {
+	public JFXColorGrid getColorGrid() {
 		return colorPickerGrid;
 	}
 
@@ -386,18 +259,9 @@ class JFXColorPalette extends Region {
 			getStyleClass().add("color-square");
 			if (color != null) {
 				setFocusTraversable(true);
-
-				focusedProperty().addListener((s, ov, nv) -> {
-					setFocusedSquare(nv ? this : null);
-				});
-
-				addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-					setFocusedSquare(ColorSquare.this);
-				});
-				addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-					setFocusedSquare(null);
-				});
-
+				focusedProperty().addListener((s, ov, nv) -> setFocusedSquare(nv ? this : null));
+				addEventHandler(MouseEvent.MOUSE_ENTERED, event -> setFocusedSquare(ColorSquare.this));
+				addEventHandler(MouseEvent.MOUSE_EXITED, event -> setFocusedSquare(null));
 				addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
 					if (!dragDetected && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
 						if (!isEmpty) {
@@ -408,18 +272,6 @@ class JFXColorPalette extends Region {
 							event.consume();
 						}
 						colorPicker.hide();
-					} else if (event.getButton() == MouseButton.SECONDARY ||
-							event.getButton() == MouseButton.MIDDLE) {
-						// handle secondary/middle mouse button release event
-						//                        if (isCustom && contextMenu != null) {
-							//                            if (!contextMenu.isShowing()) {
-								//                                contextMenu.show(ColorSquare.this, Side.RIGHT, 0, 0);
-								//                                Utils.addMnemonics(contextMenu, ColorSquare.this.getScene(), colorPicker.impl_isShowMnemonics());
-						//                            } else {
-						//                                contextMenu.hide();
-						//                                Utils.removeMnemonics(contextMenu, ColorSquare.this.getScene());
-						//                            }
-						//                        }
 					}
 				});
 			}
@@ -439,7 +291,6 @@ class JFXColorPalette extends Region {
 			Tooltip.install(this, new Tooltip((tooltipStr == null) ? "".toUpperCase() : tooltipStr.toUpperCase()));
 
 			rectangle.getStyleClass().add("color-rect");
-
 			getChildren().add(rectangle);
 		}
 
@@ -475,11 +326,11 @@ class JFXColorPalette extends Region {
 		}
 	}
 
-	class ColorPickerGrid extends GridPane {
+	class JFXColorGrid extends GridPane {
 
 		private final List<ColorSquare> squares;
 
-		public ColorPickerGrid() {
+		public JFXColorGrid() {
 			getStyleClass().add("color-picker-grid");
 			setId("ColorCustomizerColorGrid");
 			int columnIndex = 0, rowIndex = 0;
@@ -771,5 +622,4 @@ class JFXColorPalette extends Region {
         if (value > max) return max;
         return value;
     }
-	
 }

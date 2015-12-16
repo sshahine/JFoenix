@@ -18,7 +18,15 @@
 
 package com.jfoenix.skins;
 
-import java.util.List;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.transitions.CachedTransition;
+import com.jfoenix.transitions.JFXFillTransition;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -32,11 +40,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -62,16 +67,6 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.transitions.CachedTransition;
-import com.jfoenix.transitions.JFXFillTransition;
-
 
 /**
  * @author sshahine
@@ -84,8 +79,6 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 	private ObjectProperty<Color> currentColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 	private ObjectProperty<Color> customColorProperty = new SimpleObjectProperty<>(Color.TRANSPARENT);
 	private Runnable onSave;
-	private Runnable onUse;
-	private Runnable onCancel;
 
 	private Scene customScene;
 	private JFXCustomColorPicker curvedColorPicker;
@@ -97,7 +90,6 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 	public JFXCustomColorPickerDialog(Window owner) {
 		getStyleClass().add("custom-color-dialog");
 		if (owner != null) dialog.initOwner(owner);
-		dialog.setTitle(JFXColorPickerSkin.getString("customColorDialogTitle"));
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.initStyle(StageStyle.TRANSPARENT);
 		dialog.setResizable(false);
@@ -114,9 +106,8 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		customScene = new Scene(decoratorContainer, Color.TRANSPARENT);
 		final Scene ownerScene = owner.getScene();
 		if (ownerScene != null) {
-			if (ownerScene.getUserAgentStylesheet() != null) {
+			if (ownerScene.getUserAgentStylesheet() != null) 
 				customScene.setUserAgentStylesheet(ownerScene.getUserAgentStylesheet());
-			}
 			customScene.getStylesheets().addAll(ownerScene.getStylesheets());
 		}
 		curvedColorPicker = new JFXCustomColorPicker();   
@@ -132,7 +123,6 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		JFXTextField rgbField = new JFXTextField();
 		JFXTextField hsbField = new JFXTextField();
 		JFXTextField hexField = new JFXTextField();
-
 
 		rgbField.setStyle("-fx-background-color:TRANSPARENT;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080; -fx-alignment: top-left ; -fx-max-width: 300;");
 		rgbField.setPromptText("RGB Color");
@@ -275,8 +265,8 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		}
 	}
 
-	private final EventHandler<KeyEvent> keyEventListener = e -> {
-		switch (e.getCode()) {
+	private final EventHandler<KeyEvent> keyEventListener = key -> {
+		switch (key.getCode()) {
 		case ESCAPE :
 			close();
 			break;
@@ -323,45 +313,20 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		this.onSave = onSave;
 	}
 
-	public Runnable getOnUse() {
-		return onUse;
-	}
-
-	public void setOnUse(Runnable onUse) {
-		this.onUse = onUse;
-	}
-
-	public Runnable getOnCancel() {
-		return onCancel;
-	}
-
-	public void setOnCancel(Runnable onCancel) {
-		this.onCancel = onCancel;
-	}
-
 	public void setOnHidden(EventHandler<WindowEvent> onHidden) {
 		dialog.setOnHidden(onHidden);
-	}
-
-	Stage getDialog() {
-		return dialog;
 	}
 
 	public void show() {		
 		pickerDecorator.setOpacity(0);
 		if (dialog.getOwner() != null) {
-			// Workaround of RT-29871: Instead of just invoking fixPosition() 
-			// here need to use listener that fixes dialog position once both
-			// width and height are determined
 			dialog.widthProperty().addListener(positionAdjuster);
 			dialog.heightProperty().addListener(positionAdjuster);
 			positionAdjuster.invalidated(null);
 		}
 		if (dialog.getScene() == null) dialog.setScene(customScene);
-		//        colorRectPane.updateValues();
 		curvedColorPicker.preAnimate();
 		dialog.show();		
-
 		CachedTransition showStage = new CachedTransition(pickerDecorator,new Timeline(new KeyFrame(Duration.millis(1000), new KeyValue(pickerDecorator.opacityProperty(), 1, Interpolator.EASE_BOTH)))){{
 			this.setDelay(Duration.millis(0));
 			this.setCycleDuration(Duration.millis(320));
@@ -370,35 +335,28 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		showStage.play();
 	}
 
+	
+	// add option to show color picker using JFX Dialog
 	private InvalidationListener positionAdjuster = new InvalidationListener() {
-
 		@Override
 		public void invalidated(Observable ignored) {
-			if (Double.isNaN(dialog.getWidth()) || Double.isNaN(dialog.getHeight())) {
-				return;
-			}
+			if (Double.isNaN(dialog.getWidth()) || Double.isNaN(dialog.getHeight())) return;
 			dialog.widthProperty().removeListener(positionAdjuster);
 			dialog.heightProperty().removeListener(positionAdjuster);
 			fixPosition();
 		}
-
 	};
-
 
 	private void fixPosition() {
 		Window w = dialog.getOwner();
-		Screen s = getScreen(w);
+		Screen s = com.sun.javafx.util.Utils.getScreen(w);
 		Rectangle2D sb = s.getBounds();
 		double xR = w.getX() + w.getWidth();
 		double xL = w.getX() - dialog.getWidth();
 		double x, y;
-		if (sb.getMaxX() >= xR + dialog.getWidth()) {
-			x = xR;
-		} else if (sb.getMinX() <= xL) {
-			x = xL;
-		} else {
-			x = Math.max(sb.getMinX(), sb.getMaxX() - dialog.getWidth());
-		}
+		if (sb.getMaxX() >= xR + dialog.getWidth()) x = xR;
+		else if (sb.getMinX() <= xL) x = xL;
+		else x = Math.max(sb.getMinX(), sb.getMaxX() - dialog.getWidth());
 		y = Math.max(sb.getMinY(), Math.min(sb.getMaxY() - dialog.getHeight(), w.getY()));
 		dialog.setX(x);
 		dialog.setY(y);
@@ -406,126 +364,12 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 
 	@Override public void layoutChildren() {
 		super.layoutChildren();
-		if (dialog.getMinWidth() > 0 && dialog.getMinHeight() > 0) {
-			// don't recalculate min size once it's set
-			return;
-		}
-
-		// Math.max(0, ...) added for RT-34704 to ensure the dialog is at least 0 x 0
+		if (dialog.getMinWidth() > 0 && dialog.getMinHeight() > 0) return;
 		double minWidth = Math.max(0, computeMinWidth(getHeight()) + (dialog.getWidth() - customScene.getWidth()));
 		double minHeight = Math.max(0, computeMinHeight(getWidth()) + (dialog.getHeight() - customScene.getHeight()));
 		dialog.setMinWidth(minWidth);
 		dialog.setMinHeight(minHeight);
 	}
 
-	/*
-	 * Added Private Java Methods for java version (1.8_u60) compatibility
-	 */
-    private static Screen getScreen(Object obj) {
-        final Bounds parentBounds = getBounds(obj);
-
-        final Rectangle2D rect = new Rectangle2D(
-                parentBounds.getMinX(),
-                parentBounds.getMinY(),
-                parentBounds.getWidth(),
-                parentBounds.getHeight());
-
-        return getScreenForRectangle(rect);
-    }
-
-    private static Screen getScreenForRectangle(final Rectangle2D rect) {
-        final List<Screen> screens = Screen.getScreens();
-
-        final double rectX0 = rect.getMinX();
-        final double rectX1 = rect.getMaxX();
-        final double rectY0 = rect.getMinY();
-        final double rectY1 = rect.getMaxY();
-
-        Screen selectedScreen;
-
-        selectedScreen = null;
-        double maxIntersection = 0;
-        for (final Screen screen: screens) {
-            final Rectangle2D screenBounds = screen.getBounds();
-            final double intersection =
-                    getIntersectionLength(rectX0, rectX1,
-                                          screenBounds.getMinX(),
-                                          screenBounds.getMaxX())
-                        * getIntersectionLength(rectY0, rectY1,
-                                                screenBounds.getMinY(),
-                                                screenBounds.getMaxY());
-
-            if (maxIntersection < intersection) {
-                maxIntersection = intersection;
-                selectedScreen = screen;
-            }
-        }
-
-        if (selectedScreen != null) {
-            return selectedScreen;
-        }
-
-        selectedScreen = Screen.getPrimary();
-        double minDistance = Double.MAX_VALUE;
-        for (final Screen screen: screens) {
-            final Rectangle2D screenBounds = screen.getBounds();
-            final double dx = getOuterDistance(rectX0, rectX1,
-                                               screenBounds.getMinX(),
-                                               screenBounds.getMaxX());
-            final double dy = getOuterDistance(rectY0, rectY1,
-                                               screenBounds.getMinY(),
-                                               screenBounds.getMaxY());
-            final double distance = dx * dx + dy * dy;
-
-            if (minDistance > distance) {
-                minDistance = distance;
-                selectedScreen = screen;
-            }
-        }
-
-        return selectedScreen;
-    }
-    private static double getOuterDistance(
-            final double a0, final double a1,
-            final double b0, final double b1) {
-        // (a0 <= a1) && (b0 <= b1)
-        if (a1 <= b0) {
-            return b0 - a1;
-        }
-        if (b1 <= a0) {
-            return b1 - a0;
-        }
-        return 0;
-    }
-    private static Bounds getBounds(Object obj) {
-        if (obj instanceof Node) {
-            final Node n = (Node)obj;
-            Bounds b = n.localToScreen(n.getLayoutBounds());
-            return b != null ? b : new BoundingBox(0, 0, 0, 0);
-        } else if (obj instanceof Window) {
-            final Window window = (Window)obj;
-            return new BoundingBox(window.getX(), window.getY(), window.getWidth(), window.getHeight());
-        } else {
-            return new BoundingBox(0, 0, 0, 0);
-        }
-    }
-    private static double getIntersectionLength(
-            final double a0, final double a1,
-            final double b0, final double b1) {
-        // (a0 <= a1) && (b0 <= b1)
-        return (a0 <= b0) ? getIntersectionLengthImpl(b0, b1, a1)
-                          : getIntersectionLengthImpl(a0, a1, b1);
-    }
-
-    private static double getIntersectionLengthImpl(
-            final double v0, final double v1, final double v) {
-        // (v0 <= v1)
-        if (v <= v0) {
-            return 0;
-        }
-
-        return (v <= v1) ? v - v0 : v1 - v0;
-    }
-	
 
 }

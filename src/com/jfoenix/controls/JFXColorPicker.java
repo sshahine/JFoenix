@@ -24,6 +24,11 @@ import javafx.scene.paint.Color;
 
 import com.jfoenix.skins.JFXColorPickerSkin;
 
+/**
+ * @author sshahine
+ * 
+ */
+
 public class JFXColorPicker extends ColorPicker {
 	
 	private static final String DEFAULT_STYLE_CLASS = "jfx-color-picker";

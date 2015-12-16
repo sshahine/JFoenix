@@ -45,7 +45,7 @@ import com.sun.javafx.scene.control.skin.LabeledText;
 
 /**
  * @author sshahine
- * TODO: C3D Button doesn't support borders yet
+ * 
  */
 
 public class JFXButtonSkin extends ButtonSkin {

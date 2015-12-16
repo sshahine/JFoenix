@@ -21,17 +21,12 @@
 [Dd]ebug*/
 [Rr]elease*/
 
-#c3d specific
+#debug specific
 *.log
-commit.txt
-servershsql.xml
-hsqldbs/*
-
 
 #windows Junk
 *.ini
 [Tt]humbs.db
 *.DS_Store
 
-make/dist/C3DFX.jar
 make/dist/jfoenix.jar

@@ -126,8 +126,6 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		errorLabel.getStyleClass().add("errorLabel");
 		errorLabel.setWrapText(true);		
 
-		//		errorLabel.minWidthProperty().bind(Bindings.createDoubleBinding(()->field.getWidth()/1.14, field.widthProperty()));
-		//		errorLabel.setStyle("-fx-border-color:BLUE;");
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
 
@@ -187,7 +185,6 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 				getSkinnable().focusedProperty().removeListener(focusPromptTextListener);	
 			}
 		});
-		
 		
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
 			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))

@@ -48,7 +48,7 @@ import com.sun.javafx.scene.control.skin.VirtualFlow;
 public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
 
-	static final Map<Control, Double> maxDisclosureWidthMap = new WeakHashMap<Control, Double>();
+	static final Map<Control, Double> disclosureWidthMap = new WeakHashMap<Control, Double>();
 
 //	private JFXRippler rippler;
 //	private int oldselectedIndex = -1;
@@ -114,8 +114,8 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 	}
 
 
-	@Override protected void updateChildren() {
-		super.updateChildren();				
+//	@Override protected void updateChildren() {
+//		super.updateChildren();				
 //		if(getSkinnable().getIndex() > -1){
 //			if(oldSkin != this){
 //				if( (!(expandedIndex == getSkinnable().getIndex() || expandTriggered) || rippler == null)
@@ -133,7 +133,7 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 //			}
 //			getChildren().add(0,rippler);
 //		}
-	}
+//	}
 
 
 	@Override 
@@ -163,14 +163,10 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
 				// register the width of disclosure node
 				Control c = getVirtualFlowOwner();
-				final double defaultDisclosureWidth = maxDisclosureWidthMap.containsKey(c) ? maxDisclosureWidthMap.get(c) : 0;
+				final double defaultDisclosureWidth = disclosureWidthMap.containsKey(c) ? disclosureWidthMap.get(c) : 0;
 				double disclosureWidth =  getDisclosureNode().prefWidth(h);
 				if (disclosureWidth > defaultDisclosureWidth) {
-					maxDisclosureWidthMap.put(c, disclosureWidth);
-					// RT-36359: The recorded max width of the disclosure node
-					// has increased. We need to go back and request all
-					// earlier rows to update themselves to take into account
-					// this increased indentation.
+					disclosureWidthMap.put(c, disclosureWidth);
 					Parent p = getSkinnable();
 					while (p != null) {
 						if (p instanceof VirtualFlow)

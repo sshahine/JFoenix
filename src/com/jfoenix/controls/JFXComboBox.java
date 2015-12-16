@@ -18,6 +18,9 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.converters.base.NodeConverter;
+import com.jfoenix.skins.JFXComboBoxListViewSkin;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -36,9 +39,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-
-import com.jfoenix.converters.base.NodeConverter;
-import com.jfoenix.skins.JFXComboBoxListViewSkin;
+import javafx.util.StringConverter;
 
 public class JFXComboBox<T> extends ComboBox<T> {
 
@@ -54,36 +55,49 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				return new JFXListCell<T>();
 			}
 		});
+		this.setConverter(new StringConverter<T>() {
+			@Override
+			public String toString(T object) {
+				if(object == null) return null;
+				if(object instanceof Label) return ((Label)object).getText();
+				return object.toString();				
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public T fromString(String string) {
+				return (T) string;
+			}
+		});
 	}
+	
     @Override protected Skin<?> createDefaultSkin() {
         return new JFXComboBoxListViewSkin<T>(this);
     }
-
-    
 
     /***************************************************************************
 	 *                                                                         *
 	 * Node Converter Propertie                                                *
 	 *                                                                         *
 	 **************************************************************************/
-    private JFXTextField textField;
+    private TextField textField;
     /**
-     * C3D text field is set as the editor for the ComboBox.
+     * JFX text field is set as the editor for the ComboBox.
      * The editor is null if the ComboBox is not
-     * {@link #editableProperty() editable}.
-     * @since JavaFX 2.2
+     * {@link #editableProperty() editable}. 
      */
-    private ReadOnlyObjectWrapper<JFXTextField> editor;
-    public final TextField getC3DEditor() { 
-        return c3dEditorProperty().get(); 
+    private ReadOnlyObjectWrapper<TextField> jfxEditor;
+    public final TextField getJFXEditor() { 
+        return jfxEditorProperty().get(); 
     }
-    public final ReadOnlyObjectProperty<JFXTextField> c3dEditorProperty() { 
-        if (editor == null) {
-            editor = new ReadOnlyObjectWrapper<JFXTextField>(this, "editor");
-            textField = new JFXComboBoxListViewSkin.FakeFocusTextField();
-            editor.set(textField);
+    public final ReadOnlyObjectProperty<TextField> jfxEditorProperty() { 
+        if (jfxEditor == null) {
+        	jfxEditor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
+        	// TODO: solve focus issue after selection
+            textField = new JFXTextField();
+            jfxEditor.set(textField);
         }
-        return editor.getReadOnlyProperty(); 
+        return jfxEditor.getReadOnlyProperty(); 
     }
     
     
@@ -119,6 +133,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				StackPane.setMargin(selectedValueLabel, new Insets(0,0,0,5));
 				return selectedValueContainer;
 			}
+			@SuppressWarnings("unchecked")
 			@Override public T fromNode(Node node) {
 				return (T) node;
 			}

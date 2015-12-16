@@ -13,4 +13,10 @@
   src: url("../font/roboto/Roboto-Light.ttf");
 }
 
+@font-face {
+  font-family: "Roboto Bold";
+  src: url("../font/roboto/Roboto-Bold.ttf");
+}
+
+
 /* NOTE: the file font must be included as the 1st css file in order to work */

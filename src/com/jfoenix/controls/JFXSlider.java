@@ -57,13 +57,6 @@ public class JFXSlider extends Slider {
 		return new JFXSliderSkin(this);
 	}
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * */
-
 	public static enum IndicatorPosition {
 		LEFT, RIGHT
 	};

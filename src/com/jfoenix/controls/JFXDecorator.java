@@ -59,11 +59,8 @@ import com.jfoenix.svg.SVGGlyph;
 
 /**
  * @author sshahine
- * this class is been re implemented in the main controller and its fxml, 
- * if not used later , it can be deleted or moved to C3DFX project
+ * Window Decorator allow to resize/move its content
  * 
- * this class is not been tested or shown in the demo
- * FUTURE WORK
  */
 
 

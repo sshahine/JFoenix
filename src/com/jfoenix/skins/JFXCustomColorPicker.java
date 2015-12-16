@@ -291,14 +291,8 @@ class JFXCustomColorPicker extends Pane {
 		hslColorPicker.moveToColor(color);	
 	}
 	
-//	public void setColor(Color color, int index){
-//		if(index < shapes.size() && index >= 0)
-//			shapes.get(index).setFill(color);
-//	}
-
 	public Color getColor(int index){
-		if(index < shapes.size() && index >= 0)
-			return (Color) shapes.get(index).getFill();
+		if(index < shapes.size() && index >= 0) return (Color) shapes.get(index).getFill();
 		return Color.WHITE;
 	}
 

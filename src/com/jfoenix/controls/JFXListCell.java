@@ -18,6 +18,9 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.skins.JFXListCellSkin;
+import com.jfoenix.svg.SVGGlyph;
+
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -42,9 +45,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import com.jfoenix.skins.JFXListCellSkin;
-import com.jfoenix.svg.SVGGlyph;
-
 public class JFXListCell<T> extends ListCell<T> {
 
 	private StackPane cellContainer = new StackPane();
@@ -55,9 +55,8 @@ public class JFXListCell<T> extends ListCell<T> {
 
 	private Timeline animateGap;
 	private Timeline expandAnimation;
-	private double animatedHeight = 0;
-
-
+	private double animatedHeight = 0;	
+	
 	public JFXListCell() {
 		super();
 		initialize();
@@ -74,22 +73,31 @@ public class JFXListCell<T> extends ListCell<T> {
 		if(empty){
 			setText(null);
 			setGraphic(null);
-		}else{
-			if(item != null) {
+			// remove empty (Trailing cells)
+			setMouseTransparent(true);
+			setStyle("-fx-background-color:TRANSPARENT;");			
+			
+		}else{			
+			if(item != null) {				
+				// if cell is not a trailing cell then show it
+				setStyle(null);
+				setMouseTransparent(false);				
 				
 				Node currentNode = getGraphic();
 				
 				Node newNode;
 				if((item instanceof Region || item instanceof Control))  newNode = (Node) item;
 				else newNode = new Label(item.toString());
+
+				boolean bindRippler = false;
+				boolean addCellRippler = true;
+				boolean isJFXListView = getListView() instanceof JFXListView;
 				
 				// show cell tooltip if its toggled in JFXListView
-				if(((JFXListView<?>)getListView()).isShowTooltip() && newNode instanceof Label){
+				if(isJFXListView && ((JFXListView<?>)getListView()).isShowTooltip() && newNode instanceof Label){
 					setTooltip(new Tooltip(((Label)newNode).getText()));
 				}
 				
-				boolean bindRippler = false;
-				boolean addCellRippler = true;
 
 				if (currentNode == null || !currentNode.equals(newNode)) {
 					// clear nodes
@@ -116,7 +124,6 @@ public class JFXListCell<T> extends ListCell<T> {
 						// First build the group item used to expand / hide the sublist
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
-						group.getChildren().clear();						
 						group.getChildren().add(((JFXListView<?>)newNode).getGroupnode());
 						
 						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
@@ -141,6 +148,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						// Second build the sublist container
 						StackPane sublistContainer = new StackPane();
 						sublistContainer.getStyleClass().add("sublist-container");
+						sublistContainer.setMaxWidth(getListView().getWidth()-2);
 						sublistContainer.getChildren().add(cellContent);
 						sublistContainer.setTranslateY(1);
 						sublistContainer.setOpacity(0);	
@@ -214,65 +222,69 @@ public class JFXListCell<T> extends ListCell<T> {
 
 					if(addCellRippler){
 						// initialize the gaps between cells
-						double cellInsetHgap = ((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
-						double cellInsetVgap = ((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue();
+						double cellInsetHgap = isJFXListView?((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue():0;
+						double cellInsetVgap = isJFXListView?((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue():4;
 						StackPane.setMargin(cellContainer, new Insets(cellInsetVgap, cellInsetHgap, cellInsetVgap, cellInsetHgap));
 
 						// add listeners to gaps properties 
-						((JFXListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
-							// fit the rippler into the cell bounds
-							double newCellInsetHgap = newVal.doubleValue();
-							double oldCellInsetVgap = ((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue();
-							StackPane.setMargin(cellContainer, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
-						});
-						((JFXListView<T>)getListView()).cellVerticalMarginProperty().addListener((o,oldVal,newVal)-> {
-							// fit the rippler into the cell bounds
-							double oldCellInsetHgap = ((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
-							double newCellInsetVgap = newVal.doubleValue();						
-							StackPane.setMargin(cellContainer, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
-						});
+						if(isJFXListView){
+							((JFXListView<T>)getListView()).cellHorizontalMarginProperty().addListener((o,oldVal,newVal)-> {
+								// fit the rippler into the cell bounds
+								double newCellInsetHgap = newVal.doubleValue();
+								double oldCellInsetVgap = ((JFXListView<T>)getListView()).getCellVerticalMargin().doubleValue();
+								StackPane.setMargin(cellContainer, new Insets(oldCellInsetVgap, newCellInsetHgap, oldCellInsetVgap, newCellInsetHgap));
+							});
+							((JFXListView<T>)getListView()).cellVerticalMarginProperty().addListener((o,oldVal,newVal)-> {
+								// fit the rippler into the cell bounds
+								double oldCellInsetHgap = ((JFXListView<T>)getListView()).getCellHorizontalMargin().doubleValue();
+								double newCellInsetVgap = newVal.doubleValue();						
+								StackPane.setMargin(cellContainer, new Insets(newCellInsetVgap, oldCellInsetHgap, newCellInsetVgap, oldCellInsetHgap));
+							});
+						}
 					}
 
 					// check if the list is in expanded mode 
-					if(this.getIndex() > 0 && ((JFXListView<T>)getListView()).isExpanded()) 
+					if(isJFXListView && this.getIndex() > 0 && ((JFXListView<T>)getListView()).isExpanded()) 
 						this.translateYProperty().set(((JFXListView<T>)getListView()).getVerticalGap()*this.getIndex());
 
-					((JFXListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
-						// validate changing gap operation
-						JFXListView<T> listview = ((JFXListView<T>)getListView());
-						double borderWidth = 0;
-						if(listview.getPadding()!=null){
-							borderWidth += listview.getPadding().getTop();
-							borderWidth += listview.getPadding().getBottom();
-						}
-						double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + borderWidth - listview.currentVerticalGapProperty().get();
-						if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
-							if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
-								// stop the previous animation 
-								if(animateGap!=null) animateGap.stop();
-								// create new animation
-								animateGap = new Timeline(
-										new KeyFrame( Duration.ZERO, new KeyValue( this.translateYProperty(), this.translateYProperty().get() ,Interpolator.EASE_BOTH)),
-										new KeyFrame(Duration.millis(500), new KeyValue( this.translateYProperty(), newVal.doubleValue()*this.getIndex()  ,Interpolator.EASE_BOTH))
-										);	
-								// change the height of the list view
-								if(oldVal.doubleValue()<newVal.doubleValue())
-									listview.setPrefHeight(newHeight);
-								else
-									animateGap.setOnFinished((e)->{
-										listview.setPrefHeight(newHeight);
-									});
-
-								animateGap.play();	
+					if(isJFXListView){
+						((JFXListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
+							// validate changing gap operation
+							JFXListView<T> listview = ((JFXListView<T>)getListView());
+							double borderWidth = 0;
+							if(listview.getPadding()!=null){
+								borderWidth += listview.getPadding().getTop();
+								borderWidth += listview.getPadding().getBottom();
 							}
-						}
-					});
+							double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + borderWidth - listview.currentVerticalGapProperty().get();
+							if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
+								if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
+									// stop the previous animation 
+									if(animateGap!=null) animateGap.stop();
+									// create new animation
+									animateGap = new Timeline(
+											new KeyFrame( Duration.ZERO, new KeyValue( this.translateYProperty(), this.translateYProperty().get() ,Interpolator.EASE_BOTH)),
+											new KeyFrame(Duration.millis(500), new KeyValue( this.translateYProperty(), newVal.doubleValue()*this.getIndex()  ,Interpolator.EASE_BOTH))
+											);	
+									// change the height of the list view
+									if(oldVal.doubleValue()<newVal.doubleValue())
+										listview.setPrefHeight(newHeight);
+									else
+										animateGap.setOnFinished((e)->{
+											listview.setPrefHeight(newHeight);
+										});
+
+									animateGap.play();	
+								}
+							}
+						});
+					}
 
 					// set the content of the cell
 					mainContainer.getChildren().add(cellContainer);
 					if(addCellRippler){
 						cellRippler = new JFXRippler(mainContainer);
-						// if the item passed to the list is C3D Rippler then we bind its color mask and position properties to the cell rippler
+						// if the item passed to the list is JFXRippler then we bind its color mask and position properties to the cell rippler
 						if(bindRippler){
 							cellRippler.ripplerFillProperty().bind(((JFXRippler)newNode).ripplerFillProperty());
 							cellRippler.maskTypeProperty().bind(((JFXRippler)newNode).maskTypeProperty());
