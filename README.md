@@ -28,6 +28,7 @@ To run the main demo, execute the following command:
     gradle run
     
 **NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
+
 **NOTE** : JFoinex requires **Java 1.8 u60** and above.
 
 # How Can I Use JFoenix?
