@@ -43,6 +43,10 @@ import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.skin.CheckBoxSkin;
 
+/**
+ * @author sshahine
+ *
+ */
 public class JFXCheckBoxSkin extends CheckBoxSkin {
 
 	private final StackPane box = new StackPane();
