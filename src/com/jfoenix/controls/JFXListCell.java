@@ -52,7 +52,6 @@ public class JFXListCell<T> extends ListCell<T> {
 	private JFXRippler cellRippler;
 
 	private Node cellContent;
-
 	private Timeline animateGap;
 	private Timeline expandAnimation;
 	private double animatedHeight = 0;	
@@ -101,7 +100,6 @@ public class JFXListCell<T> extends ListCell<T> {
 
 				if (currentNode == null || !currentNode.equals(newNode)) {
 					// clear nodes
-					mainContainer.getChildren().clear();
 					cellContainer.getChildren().clear();
 					cellContent = newNode;
 
@@ -281,20 +279,23 @@ public class JFXListCell<T> extends ListCell<T> {
 					}
 
 					// set the content of the cell
-					mainContainer.getChildren().add(cellContainer);
-					if(addCellRippler){
-						cellRippler = new JFXRippler(mainContainer);
-						// if the item passed to the list is JFXRippler then we bind its color mask and position properties to the cell rippler
-						if(bindRippler){
-							cellRippler.ripplerFillProperty().bind(((JFXRippler)newNode).ripplerFillProperty());
-							cellRippler.maskTypeProperty().bind(((JFXRippler)newNode).maskTypeProperty());
-							cellRippler.positionProperty().bind(((JFXRippler)newNode).positionProperty());
+					mainContainer.getChildren().setAll(cellContainer);
+					// creating rippler/calling set graphic must be executed once for each visible cell in the list
+					if(cellRippler == null){
+						if(addCellRippler){
+							cellRippler = new JFXRippler(mainContainer);
+							// if the item passed to the list is JFXRippler then we bind its color mask and position properties to the cell rippler
+							if(bindRippler){
+								cellRippler.ripplerFillProperty().bind(((JFXRippler)newNode).ripplerFillProperty());
+								cellRippler.maskTypeProperty().bind(((JFXRippler)newNode).maskTypeProperty());
+								cellRippler.positionProperty().bind(((JFXRippler)newNode).positionProperty());
+							}
+							setGraphic(cellRippler);
+						}else{
+							setGraphic(mainContainer);	
 						}
-						setGraphic(cellRippler);
-					}else{
-						setGraphic(mainContainer);	
+						setText(null);
 					}
-					setText(null);
 
 					// propagate mouse events to all children
 					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> {

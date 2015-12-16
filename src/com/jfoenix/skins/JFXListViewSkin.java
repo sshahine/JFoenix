@@ -35,16 +35,16 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
     @Override protected void layoutChildren(final double x, final double y,
             final double w, final double h) {
     	super.layoutChildren(x, y, w, h);
-    	if (getItemCount() != 0) {
-    		 double estimatedHeight = estimateHeight();
-             if(flow.getCellCount() > 0 && estimatedHeight < getSkinnable().getPrefHeight())
-             	getSkinnable().setPrefHeight(estimatedHeight); 
-    	}
+//    	if (getItemCount() != 0) {
+//    		 double estimatedHeight = estimateHeight();
+//             if(flow.getCellCount() > 0 && estimatedHeight < getSkinnable().getPrefHeight())
+//             	getSkinnable().setPrefHeight(estimatedHeight); 
+//    	}
     }
     
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
     	if (getSkinnable().getItems().size() <= 0) return 200;
-    	// handel if the list has border
+    	if(getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();    	
         return estimateHeight();
     }
     
