@@ -24,6 +24,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.converters.base.NodeConverter;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -90,7 +91,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 			Field listView = this.getClass().getSuperclass().getDeclaredField("listView");
 			listView.setAccessible(true);
 			ListView<T> view = (ListView) listView.get(this);
-			view.prefWidthProperty().bind(getSkinnable().widthProperty());
+			view.widthProperty().addListener(new WeakChangeListener<>((o,oldVal,newVal)-> view.setPrefWidth(newVal.doubleValue())));
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

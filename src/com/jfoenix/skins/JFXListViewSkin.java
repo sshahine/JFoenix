@@ -44,7 +44,8 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
     
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
     	if (getSkinnable().getItems().size() <= 0) return 200;
-    	if(getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();    	
+    	if(getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();
+    	if(getSkinnable().maxHeightProperty().isBound()) return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         return estimateHeight();
     }
     

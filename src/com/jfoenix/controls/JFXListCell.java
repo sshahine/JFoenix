@@ -80,7 +80,7 @@ public class JFXListCell<T> extends ListCell<T> {
 			if(item != null) {				
 				// if cell is not a trailing cell then show it
 				setStyle(null);
-				setMouseTransparent(false);				
+				setMouseTransparent(false);
 				
 				Node currentNode = getGraphic();
 				
@@ -100,7 +100,6 @@ public class JFXListCell<T> extends ListCell<T> {
 
 				if (currentNode == null || !currentNode.equals(newNode)) {
 					// clear nodes
-					cellContainer.getChildren().clear();
 					cellContent = newNode;
 
 					// build the Cell node and its rippler					
@@ -109,7 +108,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						bindRippler = true;
 						// build cell container from exisiting rippler
 						cellContent = ((JFXRippler)newNode).getControl();						
-						cellContainer.getChildren().add(cellContent);
+						cellContainer.getChildren().setAll(cellContent);
 					}
 
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
@@ -122,13 +121,11 @@ public class JFXListCell<T> extends ListCell<T> {
 						// First build the group item used to expand / hide the sublist
 						StackPane group = new StackPane();						
 						group.getStyleClass().add("sublist-header");
-						group.getChildren().add(((JFXListView<?>)newNode).getGroupnode());
-						
 						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
 						dropIcon.setStyle("-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
-						dropIcon.getStyleClass().add("drop-icon");
+						dropIcon.getStyleClass().add("drop-icon");						
+						group.getChildren().setAll(((JFXListView<?>)newNode).getGroupnode(), dropIcon);
 						
-						group.getChildren().add(dropIcon);
 						// the margin is needed when rotating the angle
 						StackPane.setMargin(dropIcon, new Insets(0,7,0,0));
 						StackPane.setAlignment(dropIcon, Pos.CENTER_RIGHT);						
@@ -147,7 +144,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						StackPane sublistContainer = new StackPane();
 						sublistContainer.getStyleClass().add("sublist-container");
 						sublistContainer.setMaxWidth(getListView().getWidth()-2);
-						sublistContainer.getChildren().add(cellContent);
+						sublistContainer.getChildren().setAll(cellContent);
 						sublistContainer.setTranslateY(1);
 						sublistContainer.setOpacity(0);	
 						
@@ -171,9 +168,8 @@ public class JFXListCell<T> extends ListCell<T> {
 
 						// Third, create container of group title and the sublist
 						VBox contentHolder = new VBox();
-						contentHolder.getChildren().add(groupRippler);
-						contentHolder.getChildren().add(sublistContainer);
-						cellContainer.getChildren().add(contentHolder);
+						contentHolder.getChildren().setAll(groupRippler, sublistContainer);
+						cellContainer.getChildren().setAll(contentHolder);
 						cellContainer.addEventHandler(MouseEvent.ANY, (e)-> contentHolder.fireEvent(e));
 						contentHolder.addEventHandler(MouseEvent.ANY, (e)-> e.consume());
 
@@ -214,8 +210,7 @@ public class JFXListCell<T> extends ListCell<T> {
 
 					// DEFAULT BUILD  : build cell container and rippler if the cell has no rippler
 					else{
-						cellContainer.getChildren().clear();
-						cellContainer.getChildren().add(newNode);						
+						cellContainer.getChildren().setAll(newNode);
 					}
 
 					if(addCellRippler){
@@ -281,7 +276,7 @@ public class JFXListCell<T> extends ListCell<T> {
 					// set the content of the cell
 					mainContainer.getChildren().setAll(cellContainer);
 					// creating rippler/calling set graphic must be executed once for each visible cell in the list
-					if(cellRippler == null){
+//					if(cellRippler == null){
 						if(addCellRippler){
 							cellRippler = new JFXRippler(mainContainer);
 							// if the item passed to the list is JFXRippler then we bind its color mask and position properties to the cell rippler
@@ -295,7 +290,7 @@ public class JFXListCell<T> extends ListCell<T> {
 							setGraphic(mainContainer);	
 						}
 						setText(null);
-					}
+//					}
 
 					// propagate mouse events to all children
 					mainContainer.addEventHandler(MouseEvent.ANY, (e)-> {
