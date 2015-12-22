@@ -18,7 +18,6 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.skins.JFXListCellSkin;
 import com.jfoenix.svg.SVGGlyph;
 
 import javafx.animation.Animation.Status;
@@ -36,7 +35,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.Skin;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -47,11 +45,11 @@ import javafx.util.Duration;
 
 public class JFXListCell<T> extends ListCell<T> {
 
-	private StackPane cellContainer = new StackPane();
-	private StackPane mainContainer = new StackPane();
-	private JFXRippler cellRippler;
+	protected StackPane cellContainer = new StackPane();
+	protected StackPane mainContainer = new StackPane();
+	protected JFXRippler cellRippler;
 
-	private Node cellContent;
+	protected Node cellContent;
 	private Timeline animateGap;
 	private Timeline expandAnimation;
 	private double animatedHeight = 0;	
@@ -59,11 +57,6 @@ public class JFXListCell<T> extends ListCell<T> {
 	public JFXListCell() {
 		super();
 		initialize();
-	}
-
-	@Override
-	protected Skin<?> createDefaultSkin()	{
-		return new JFXListCellSkin<T>(this);
 	}
 
 	@Override
