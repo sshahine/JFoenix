@@ -1,10 +1,15 @@
 apply from: rootProject.file('gradle/publishing.gradle')
+apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
+
+dependencies {
+    compile ':jfxrt'
+}
 
 task sourcesJar(type: Jar) {
     group 'Build'
     description 'An archive of the source code'
-    classifier 'sources'
+    classifier 'sources'    
     from sourceSets.main.allSource
 }
 
@@ -53,4 +58,8 @@ artifacts {
     sourcesJar
     javadocJar
     retroSourcesJar
+}
+
+jar {
+    exclude('com/jfoenix/android/**')   
 }

@@ -1,4 +1,4 @@
-//apply plugin: 'com.github.hierynomus.license'
+apply plugin: 'com.github.hierynomus.license'
 
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
     apply plugin: 'checkstyle'
@@ -39,19 +39,20 @@ if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean(
     }
 }
 
-//license {
-//    header = rootProject.file('config/HEADER')
-//    strictCheck = true
-//    ignoreFailures = true
-//    mapping {
-//        java  = 'SLASHSTAR_STYLE'
-//        fxml  = 'XML_STYLE'
-//    }
-//    ext.year = '2015'
-//    exclude '**/*.png'
-//    exclude '**/*.ttf'
-//}
+license {
+    header = rootProject.file('config/HEADER')
+    strictCheck = true
+    ignoreFailures = true
+    mapping {
+        java  = 'SLASHSTAR_STYLE'
+        fxml  = 'XML_STYLE'
+    }
+    ext.year = '2015'
+    exclude '**/*.txt'
+    exclude '**/*.png'
+    exclude '**/*.ttf'
+}
 
-//licenseTest {
-//     source -= sourceSets.test.resources
-//}
+licenseTest {
+     source -= sourceSets.test.resources
+}

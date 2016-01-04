@@ -36,7 +36,7 @@ import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 
 /**
- * @author sshahine
+ * @author Shadi Shaheen
  *
  */
 
