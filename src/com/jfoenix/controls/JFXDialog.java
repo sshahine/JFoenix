@@ -126,7 +126,24 @@ public class JFXDialog extends StackPane {
 	
 	private void initialize() {
 		this.setVisible(false);
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);   
+		
+		contentHolder = new StackPane();
+		contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
+		JFXDepthManager.setDepth(contentHolder, 4);
+		contentHolder.setPickOnBounds(false);
+		// ensure stackpane is never resized beyond it's preferred size
+		contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		overlayPane = new StackPane();
+		overlayPane.getChildren().add(contentHolder);
+		overlayPane.getStyleClass().add("jfx-dialog-overlay-pane");
+		StackPane.setAlignment(contentHolder, Pos.CENTER);
+		overlayPane.setVisible(false);
+		overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
+		// close the dialog if clicked on the overlay pane
+		if(overlayClose.get()) overlayPane.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+		// prevent propagating the events to overlay pane
+		contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 	}
 
 	/***************************************************************************
@@ -161,24 +178,8 @@ public class JFXDialog extends StackPane {
 
 	public void setContent(Region content) {
 		if(content!=null){
-			this.content = content;	
-			contentHolder = new StackPane();
-			contentHolder.getChildren().add(content);
-			contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
-			JFXDepthManager.setDepth(contentHolder, 4);
-			contentHolder.setPickOnBounds(false);
-			// ensure stackpane is never resized beyond it's preferred size
-			contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-			overlayPane = new StackPane();
-			overlayPane.getChildren().add(contentHolder);
-			overlayPane.getStyleClass().add("jfx-dialog-overlay-pane");
-			StackPane.setAlignment(contentHolder, Pos.CENTER);
-			overlayPane.setVisible(false);
-			overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
-			// close the dialog if clicked on the overlay pane
-			if(overlayClose.get()) overlayPane.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
-			// prevent propagating the events to overlay pane
-			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
+			this.content = content;				
+			contentHolder.getChildren().add(content);			
 		}
 	}
 

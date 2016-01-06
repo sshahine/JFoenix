@@ -31,8 +31,8 @@ def pomConfig = {
     inceptionYear '2015'
     licenses {
         license([:]) {
-            name 'LGPL3'
-            url 'http://www.gnu.org/licenses/lgpl-3.0.en.html'
+            name 'Apache Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
             distribution 'repo'
         }
     }
@@ -71,7 +71,7 @@ def pomConfig = {
 publishing {
     publications {    	
         mavenJava(MavenPublication) {
-            from components.java
+            from components.java            
             artifact sourcesJar
             artifact javadocJar
             artifact retroSourcesJar
@@ -94,7 +94,7 @@ bintray {
         userOrg = project.project_bintray_org
         name = project.name
         desc = project.project_description
-        licenses = ['LGPL-3.0']
+        licenses = ['Apache Version 2.0']
         labels = ['javafx','material design']
         websiteUrl = project.project_url
         issueTrackerUrl = project.project_issues

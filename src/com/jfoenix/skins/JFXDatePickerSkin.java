@@ -22,7 +22,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.jfoenix.controls.behavior.JFXDatePickerBehavior;
 import com.jfoenix.svg.SVGGlyph;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
@@ -35,6 +37,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
@@ -54,6 +57,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     // displayNode is the same as editorNode
     private TextField displayNode;
     private JFXDatePickerContent jfxDatePickerContent;
+    private JFXDialog dialog;
 
     public JFXDatePickerSkin(final JFXDatePicker datePicker) {
         super(datePicker, new JFXDatePickerBehavior(datePicker));        
@@ -66,6 +70,8 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         ((SVGGlyph)arrow).setSize(20, 20);
         arrowButton.getChildren().setAll(arrow);
 		arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+		
+		//dialog = new JFXDialog(null, content, transitionType, overlayClose)
 		
         registerChangeListener(datePicker.converterProperty(), "CONVERTER");
         registerChangeListener(datePicker.dayCellFactoryProperty(), "DAY_CELL_FACTORY");
@@ -82,9 +88,21 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     }
 
     @Override public void show() {
-        super.show();        
+    	if(!((JFXDatePicker)getSkinnable()).isOverLay()) super.show();
+    	getPopupContent();
         jfxDatePickerContent.init();
         jfxDatePickerContent.clearFocus();
+        
+        // show overlay
+        if(((JFXDatePicker)getSkinnable()).isOverLay()){
+        	if(dialog == null){
+            	dialog = new JFXDialog((Pane) getSkinnable().getScene().getRoot(), jfxDatePickerContent, DialogTransition.CENTER, true);
+            	arrowButton.setOnMouseClicked((click)->{
+            		if(((JFXDatePicker)getSkinnable()).isOverLay())
+            			dialog.show((Pane) getSkinnable().getScene().getRoot());		
+            	});
+            }	
+        }        
     }
 
     @Override protected void handleControlPropertyChanged(String p) {
@@ -130,6 +148,12 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     // these methods are called from the super constructor
     @Override protected TextField getEditor() {
     	StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
+    	/*
+    	 *  added to fix android issue as the stack trace on adroid is 
+    	 *  not the same as desktop  
+    	 */
+    	if(caller.getClassName().equals(this.getClass().getName()))
+    		caller = Thread.currentThread().getStackTrace()[3];
 		boolean parentListenerCall = caller.getMethodName().contains("lambda") && caller.getClassName().equals(this.getClass().getSuperclass().getName());
 		if(parentListenerCall) return null;
         return editorNode;

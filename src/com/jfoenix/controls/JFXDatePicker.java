@@ -24,11 +24,14 @@ import java.util.Collections;
 import java.util.List;
 
 import com.jfoenix.skins.JFXDatePickerSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 
 import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
@@ -75,6 +78,18 @@ public class JFXDatePicker extends DatePicker {
 	
 	private static final String DEFAULT_STYLE_CLASS = "jfx-date-picker";
     
+	private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY, JFXDatePicker.this, "overLay", false);
+	
+	public final StyleableBooleanProperty overLayProperty() {
+		return this.overLay;
+	}
+	public final boolean isOverLay() {
+		return overLay == null ? false : this.overLayProperty().get();
+	}
+	public final void setOverLay(final boolean overLay) {
+		this.overLayProperty().set(overLay);
+	}
+	
 	
 	private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR, JFXDatePicker.this, "defaultColor", Color.valueOf("#009688"));
 
@@ -102,12 +117,26 @@ public class JFXDatePicker extends DatePicker {
 			}
 		};
 
+		private static final CssMetaData< JFXDatePicker, Boolean> OVERLAY =
+				new CssMetaData< JFXDatePicker, Boolean>("-fx-overlay",
+						BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXDatePicker control) {
+				return control.overLay == null || !control.overLay.isBound();
+			}
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXDatePicker control) {
+				return control.overLayProperty();
+			}
+		};
+		
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables =
 					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
 			Collections.addAll(styleables,
-					DEFAULT_COLOR);
+					DEFAULT_COLOR,
+					OVERLAY);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}

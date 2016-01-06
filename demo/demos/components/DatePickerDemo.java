@@ -49,6 +49,7 @@ public class DatePickerDemo  extends Application {
 		datePickerFX.setPromptText("pick a date");
 		JFXDatePicker blueDatePicker = new JFXDatePicker();
 		blueDatePicker.setDefaultColor(Color.valueOf("#3f51b5"));
+		blueDatePicker.setOverLay(true);
 		main.getChildren().add(blueDatePicker);
 		
 		

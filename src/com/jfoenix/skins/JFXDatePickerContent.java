@@ -739,7 +739,8 @@ public class JFXDatePickerContent extends VBox {
 	}
 
 	protected Locale getLocale() {
-		return Locale.getDefault(Locale.Category.FORMAT);
+		// for android compatibility
+		return Locale.getDefault(/*Locale.Category.FORMAT*/);
 	}
 	
 	protected boolean isValidDate(Chronology chrono, LocalDate date, int offset, ChronoUnit unit) {

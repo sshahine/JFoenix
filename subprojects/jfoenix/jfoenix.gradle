@@ -3,7 +3,7 @@ apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
-    compile ':jfxrt'
+    compile 'fakeGroup:jfxrt:dalvik'
 }
 
 task sourcesJar(type: Jar) {
