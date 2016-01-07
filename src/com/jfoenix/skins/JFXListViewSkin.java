@@ -22,6 +22,8 @@ import com.jfoenix.controls.JFXListView;
 import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 
+import javafx.application.Platform;
+
 /**
  * @author Shadi Shaheen
  *
@@ -32,23 +34,23 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
         super(listView);
         JFXDepthManager.setDepth(flow, listView.depthProperty().get());
         listView.depthProperty().addListener((o,oldVal,newVal)->JFXDepthManager.setDepth(flow, newVal));
-        flow.setCreateCell(flow1 -> JFXListViewSkin.this.createCell());
+//        flow.setCreateCell(flow1 -> JFXListViewSkin.this.createCell());        
     }
     
-    @Override protected void layoutChildren(final double x, final double y,
-            final double w, final double h) {
-    	super.layoutChildren(x, y, w, h);
-//    	if (getItemCount() != 0) {
-//    		 double estimatedHeight = estimateHeight();
-//             if(flow.getCellCount() > 0 && estimatedHeight < getSkinnable().getPrefHeight())
-//             	getSkinnable().setPrefHeight(estimatedHeight); 
-//    	}
-    }
+//    @Override protected void layoutChildren(final double x, final double y,
+//            final double w, final double h) {
+//    	super.layoutChildren(x, y, w, h);
+////    	if (getItemCount() != 0) {
+////    		 double estimatedHeight = estimateHeight();
+////             if(flow.getCellCount() > 0 && estimatedHeight < getSkinnable().getPrefHeight())
+////             	getSkinnable().setPrefHeight(estimatedHeight); 
+////    	}
+//    }
     
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-    	if (getSkinnable().getItems().size() <= 0) return 200;
+    	if(getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0) return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
     	if(getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();
-    	if(getSkinnable().maxHeightProperty().isBound()) return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+    	Platform.runLater(()->getSkinnable().requestLayout());
         return estimateHeight();
     }
     
