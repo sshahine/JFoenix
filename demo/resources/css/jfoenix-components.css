@@ -33,6 +33,8 @@
     -fx-max-width: 300;
 }
 
+
+
 .jfx-decorator {
 	-fx-decorator-color: RED;
 }
@@ -44,16 +46,20 @@
 	-fx-border-width: 0 4 4 4;
 }
 
-.jfx-text-field:error, .jfx-password-field:error{
+.jfx-text-area, .text-area{
+	-fx-font-weight: BOLD;
+}
+
+.jfx-text-field:error, .jfx-password-field:error, .jfx-text-area:error{
 	-fx-focus-color: #D34336;
 	-fx-unfocus-color: #D34336;
 }
 
-.jfx-text-field .errorLabel, .jfx-password-field .errorLabel{
+.jfx-text-field .errorLabel, .jfx-password-field .errorLabel , .jfx-text-area .errorLabel{
 	-fx-text-fill : #D34336;
 	-fx-font-size: 0.75em;
 }
-.jfx-text-field .errorIcon, .jfx-password-field .errorIcon{
+.jfx-text-field .errorIcon, .jfx-password-field .errorIcon, .jfx-text-area .errorIcon{
 	-fx-text-fill : #D34336;
 	-fx-font-size: 1em;
 }
@@ -378,4 +384,12 @@
 .tree-table-view .menu-item .label{
 	-fx-padding: 5 0 5 0;
 } 
- 
+
+
+
+.jfx-combo-box .combo-box-button-container {
+	-fx-border-color:rgb(180, 180, 180);	
+	-fx-border-width: 0 0 2 0;
+}
+
+
