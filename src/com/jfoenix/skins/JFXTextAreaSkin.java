@@ -3,7 +3,6 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 import javafx.animation.Animation.Status;
@@ -39,7 +38,7 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class JFXTexAreaSkin extends TextAreaSkin {
+public class JFXTextAreaSkin extends TextAreaSkin {
 	private static Background transparentBackground = new Background(
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
@@ -51,7 +50,9 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 	private Line focusedLine = new Line();
 	private Label errorLabel = new Label();
 	private StackPane errorIcon = new StackPane();
-
+	private Pane mainPane = new Pane();
+	private ScrollPane scrollPane;
+	
 	private double endX;
 	private double startX;
 	private double mid ;
@@ -101,18 +102,16 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 		}
 	};
 	
-	Pane mainPane = new Pane();
-	
-	
-	public JFXTexAreaSkin(JFXTextArea textArea) {
+	public JFXTextAreaSkin(JFXTextArea textArea) {
 		super(textArea);
-
+		
+		// TODO: FIX the resizing issue of text area, the line goes into textarea bounds
+		if(textArea.getPrefHeight() == -1) textArea.setPrefHeight(180);
 		mainPane.getChildren().addAll(this.getChildren());
-		this.getChildren().setAll(mainPane);
+		scrollPane = (ScrollPane) mainPane.getChildren().get(0);
 		
 		promptContainer = new StackPane();
 		promptContainer.setFocusTraversable(false);
-		this.getChildren().add(promptContainer);
 
 		errorContainer = new HBox();
 		errorContainer.setFocusTraversable(false);
@@ -128,14 +127,16 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 		errorContainer.setSpacing(10);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
-		this.getChildren().add(errorContainer);
 
-
+		this.getChildren().setAll(mainPane, promptContainer, errorContainer);
+		
+		scrollPane.prefWidthProperty().bind(mainPane.widthProperty());
+		scrollPane.prefHeightProperty().bind(mainPane.heightProperty());
 		// hide text area borders
-		((ScrollPane)mainPane.getChildren().get(0)).setBackground(transparentBackground);
-		((Region)((ScrollPane)mainPane.getChildren().get(0)).getContent()).setBackground(transparentBackground);
+		scrollPane.setBackground(transparentBackground);
+		((Region)scrollPane.getContent()).setBackground(transparentBackground);
 		getSkinnable().setBackground(transparentBackground);
-
+		
 		// add listeners to show error label
 		errorLabel.heightProperty().addListener((o,oldVal,newVal)->{
 			if(errorShowen){
@@ -144,7 +145,7 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 
 				heightChanged = true;
 				double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight +  newVal.doubleValue();
-				// show the error
+//				// show the error
 //				Timeline errorAnimation = new Timeline(
 //						new KeyFrame(Duration.ZERO, new KeyValue(getSkinnable().minHeightProperty(), currentFieldHeight,  Interpolator.EASE_BOTH)),
 //						new KeyFrame(Duration.millis(160),
@@ -228,7 +229,7 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 		if(invalid){
 			mainPane.resize(w, h);
 			// set the default background of text area viewport to white
-			Region viewPort = ((Region)((ScrollPane)mainPane.getChildren().get(0)).getChildrenUnmodifiable().get(0));
+			Region viewPort = ((Region)scrollPane.getChildrenUnmodifiable().get(0));
 			viewPort.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 			// reapply css of scroll pane in case set by the user
 			viewPort.applyCss();
@@ -277,7 +278,7 @@ public class JFXTexAreaSkin extends TextAreaSkin {
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
 
-			promptText = ((Region)(((ScrollPane)mainPane.getChildren().get(0)).getContent())).getChildrenUnmodifiable().get(0);
+			promptText = ((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0);
 			
 			if(promptText instanceof Text){				
 				promptTextUpTransition = new CachedTransition(mainPane, new Timeline(

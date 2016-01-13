@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.jfoenix.skins.JFXTexAreaSkin;
+import com.jfoenix.skins.JFXTextAreaSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
@@ -48,7 +48,7 @@ public class JFXTextArea extends TextArea{
 	
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new JFXTexAreaSkin(this);
+		return new JFXTextAreaSkin(this);
 	}
 	
 	

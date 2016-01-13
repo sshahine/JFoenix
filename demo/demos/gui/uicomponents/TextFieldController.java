@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 
 import javax.annotation.PostConstruct;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
 @FXMLController(value = "/resources/fxml/ui/TextField.fxml", title = "Material Design Example")
@@ -18,6 +20,10 @@ public class TextFieldController {
 
 	@FXML
 	private JFXTextField validatedText;
+	
+	@FXML private JFXPasswordField validatedPassowrd;
+	@FXML private JFXTextArea jfxTextArea;
+	
 
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
@@ -30,6 +36,12 @@ public class TextFieldController {
 		
 		validatedText.focusedProperty().addListener((o, oldVal, newVal) -> {
 			if (!newVal) validatedText.validate();
+		});
+		validatedPassowrd.focusedProperty().addListener((o, oldVal, newVal) -> {
+			if (!newVal) validatedPassowrd.validate();
+		});
+		jfxTextArea.focusedProperty().addListener((o, oldVal, newVal) -> {
+			if (!newVal) jfxTextArea.validate();
 		});
 	}
 

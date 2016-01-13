@@ -1,7 +1,5 @@
 package demos.components;
 
-import org.scenicview.ScenicView;
-
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.validation.RequiredFieldValidator;
 
@@ -11,8 +9,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class TextAreaDemo extends Application {
@@ -20,9 +18,8 @@ public class TextAreaDemo extends Application {
 	
 	@Override public void start(Stage stage) {
 
-		FlowPane main = new FlowPane();
-		main.setVgap(20);
-		main.setHgap(20);
+		VBox main = new VBox();
+		main.setSpacing(50);
 		
 		main.getChildren().add(new TextArea());
 		JFXTextArea prompt = new JFXTextArea();

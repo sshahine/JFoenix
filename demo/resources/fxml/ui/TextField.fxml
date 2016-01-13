@@ -5,24 +5,43 @@
 <?import javafx.scene.layout.VBox?>
 <?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import de.jensd.fx.fontawesome.Icon?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
-	<VBox prefWidth="300" spacing="30" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER">
+
+	<VBox prefWidth="300" spacing="40" maxWidth="400" alignment="CENTER">
 		<children>
-			<JFXTextField promptText="Type Something" prefWidth="300">
+			<JFXTextField promptText="Type Something">
 			</JFXTextField>
-			<JFXTextField promptText="Im disabled" disable="true"
-				prefWidth="300">
+			<JFXTextField promptText="Im disabled" disable="true">
 			</JFXTextField>
-			<JFXTextField id="validatedText" promptText="With validation"
-				prefWidth="300">
+			<JFXTextField id="validatedText" promptText="With validation">
 				<validators>
 					<RequiredFieldValidator message="Input Required!">
 						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
 					</RequiredFieldValidator>
 				</validators>
 			</JFXTextField>
+			<JFXPasswordField id="validatedPassowrd" promptText="Password"
+				labelFloat="true">
+				<validators>
+					<RequiredFieldValidator message="Input Required!">
+						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
+					</RequiredFieldValidator>
+				</validators>
+			</JFXPasswordField>
+			<JFXTextArea id="jfxTextArea" promptText="What do you think of JFoenix?"
+				labelFloat="true" maxWidth="300" minHeight="200">
+				<validators>
+					<RequiredFieldValidator message="We would love to get your feedback.">
+						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
+					</RequiredFieldValidator>
+				</validators>
+			</JFXTextArea>
 		</children>
 	</VBox>
 </StackPane>

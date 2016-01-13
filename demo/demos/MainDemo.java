@@ -1,5 +1,9 @@
 package demos;
 
+import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.svg.SVGGlyphLoader;
+
+import demos.gui.main.MainController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -7,11 +11,6 @@ import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.svg.SVGGlyphLoader;
-
-import demos.gui.main.MainController;
 
 public class MainDemo extends Application {
 
@@ -48,6 +47,7 @@ public class MainDemo extends Application {
 		stage.setMinHeight(700);
 		stage.setScene(scene);
 		stage.show();
+
 	}
 
 }
