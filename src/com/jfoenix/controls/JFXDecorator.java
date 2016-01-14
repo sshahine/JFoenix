@@ -266,7 +266,7 @@ public class JFXDecorator extends VBox {
 			double y = mouseEvent.getY();
 			Bounds boundsInParent = this.getBoundsInParent();
 			if(contentPlaceHolder.getBorder()!=null && contentPlaceHolder.getBorder().getStrokes().size() > 0){
-				double borderWidth = contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft();
+				double borderWidth = contentPlaceHolder.snappedLeftInset();
 				if (isRightEdge(x, y, boundsInParent)) {
 					if (y < borderWidth) {
 						this.setCursor(Cursor.NE_RESIZE);
@@ -366,25 +366,25 @@ public class JFXDecorator extends VBox {
 
 
 	private boolean isRightEdge(double x, double y, Bounds boundsInParent) {
-		if (x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.snappedLeftInset()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isTopEdge(double x, double y, Bounds boundsInParent) {
-		if (y >= 0 && y < contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (y >= 0 && y < contentPlaceHolder.snappedLeftInset()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isBottomEdge(double x, double y, Bounds boundsInParent) {
-		if (y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.snappedLeftInset()) {
 			return true;
 		}
 		return false;
 	}
 	private boolean isLeftEdge(double x, double y, Bounds boundsInParent) {
-		if (x >= 0 && x < contentPlaceHolder.getBorder().getStrokes().get(0).getWidths().getLeft()) {
+		if (x >= 0 && x < contentPlaceHolder.snappedLeftInset()) {
 			return true;
 		}
 		return false;

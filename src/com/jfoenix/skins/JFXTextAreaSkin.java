@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -76,6 +77,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 	private BooleanProperty floatLabel = new SimpleBooleanProperty(false);
 	private Node promptText;
+	private Group promptTextGroup;
 	private CachedTransition promptTextUpTransition;
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
@@ -107,12 +109,14 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		
 		// TODO: FIX the resizing issue of text area, the line goes into textarea bounds
 		if(textArea.getPrefHeight() == -1) textArea.setPrefHeight(180);
+		if(textArea.getPrefWidth() == -1) textArea.setPrefWidth(511);
 		mainPane.getChildren().addAll(this.getChildren());
 		scrollPane = (ScrollPane) mainPane.getChildren().get(0);
 		
 		promptContainer = new StackPane();
 		promptContainer.setFocusTraversable(false);
-
+		promptContainer.setStyle("-fx-background-color:GREEN");
+		
 		errorContainer = new HBox();
 		errorContainer.setFocusTraversable(false);
 		errorLabel.getStyleClass().add("errorLabel");
@@ -226,8 +230,10 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
+		mainPane.resize(w-1, h-1);
+		errorContainer.resizeRelocate(0, 0, w, 20);
+		
 		if(invalid){
-			mainPane.resize(w, h);
 			// set the default background of text area viewport to white
 			Region viewPort = ((Region)scrollPane.getChildrenUnmodifiable().get(0));
 			viewPort.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -235,7 +241,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 			viewPort.applyCss();
 			
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/1.14, mainPane.widthProperty()));
-			errorContainer.resize(w, 20);
 			errorContainer.translateYProperty().bind(mainPane.heightProperty());			
 			
 			// draw lines
@@ -280,21 +285,28 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 			promptText = ((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0);
 			
-			if(promptText instanceof Text){				
-				promptTextUpTransition = new CachedTransition(mainPane, new Timeline(
+			if(promptText instanceof Text){		
+				
+				promptTextGroup = new Group(promptText);			
+				promptContainer.getChildren().add(promptTextGroup);
+				promptContainer.setAlignment(Pos.CENTER_LEFT);
+				promptContainer.setPadding(new Insets(20,0,0,2));
+				
+				// create prompt animations
+				promptTextUpTransition = new CachedTransition(promptTextGroup, new Timeline(
 						new KeyFrame(Duration.millis(1300),
-								new KeyValue(promptText.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.translateXProperty(), - mainPane.getWidth()*0.15/2, Interpolator.EASE_BOTH),
+								new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
 				promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
-				promptTextDownTransition = new CachedTransition(mainPane, new Timeline(
+				promptTextDownTransition = new CachedTransition(promptTextGroup, new Timeline(
 								new KeyFrame(Duration.millis(1300), 
-										new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+										new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
+//										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
 										new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
 										new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
 								)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
@@ -312,8 +324,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 					}
 				});
 
-				promptContainer.getChildren().add(promptText);	
-				
 				if(((JFXTextArea)getSkinnable()).isLabelFloat()){
 					promptText.visibleProperty().unbind();
 					promptText.visibleProperty().set(true);
@@ -427,10 +437,10 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		errorShowen = true;
 
 		// update prompt color transition
-		promptTextUpTransition = new CachedTransition(mainPane, new Timeline(
+		promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
 				new KeyFrame(Duration.millis(1300),
-						new KeyValue(promptText.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
-						new KeyValue(promptText.translateXProperty(), - mainPane.getWidth()*0.15/2, Interpolator.EASE_BOTH),
+						new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+//						new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
 						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
@@ -456,10 +466,10 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		errorShowen = false;
 
 		// update prompt color transition
-		promptTextUpTransition = new CachedTransition(mainPane, new Timeline(
+		promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
 				new KeyFrame(Duration.millis(1300),
-						new KeyValue(promptText.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
-						new KeyValue(promptText.translateXProperty(), - mainPane.getWidth()*0.15/2, Interpolator.EASE_BOTH),
+						new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+//						new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
 						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};

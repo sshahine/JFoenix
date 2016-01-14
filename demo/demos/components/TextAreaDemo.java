@@ -21,23 +21,25 @@ public class TextAreaDemo extends Application {
 		VBox main = new VBox();
 		main.setSpacing(50);
 		
-		main.getChildren().add(new TextArea());
-		JFXTextArea prompt = new JFXTextArea();
-		prompt.setPromptText("TEST SDFSDLFSDd");
-		prompt.setLabelFloat(true);
+		TextArea javafxTextArea = new TextArea();
+		javafxTextArea.setPromptText("JavaFX Text Area");
+		main.getChildren().add(javafxTextArea);
+		JFXTextArea jfxTextArea = new JFXTextArea();
+		jfxTextArea.setPromptText("JFoenix Text Area :D");
+		jfxTextArea.setLabelFloat(true);
 		
 		RequiredFieldValidator validator = new RequiredFieldValidator();
 		// NOTE adding error class to text area is causing the cursor to disapper
 		validator.setErrorStyleClass("");
-		validator.setMessage("Input Requireas x");
+		validator.setMessage("Please type something!");
 		validator.setIcon(new Icon(AwesomeIcon.WARNING,"1em",";","error"));		
-		prompt.getValidators().add(validator);
-		prompt.focusedProperty().addListener((o,oldVal,newVal)->{
-			if(!newVal) prompt.validate();
+		jfxTextArea.getValidators().add(validator);
+		jfxTextArea.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(!newVal) jfxTextArea.validate();
 		});
 		
 		
-		main.getChildren().add(prompt);
+		main.getChildren().add(jfxTextArea);
 		
 		StackPane pane = new StackPane();
 		pane.getChildren().add(main);
