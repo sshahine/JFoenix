@@ -58,7 +58,7 @@ public class DatePickerDemo  extends Application {
 		StackPane.setMargin(main, new Insets(100));
 		pane.setStyle("-fx-background-color:WHITE");
 		
-		final Scene scene = new Scene(pane, 500, 200);
+		final Scene scene = new Scene(pane, 400, 700);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 		stage.setTitle("JFX Date Picker Demo");

@@ -92,7 +92,7 @@ import javafx.util.Duration;
  *
  */
 public class JFXDatePickerContent extends VBox {
-	
+
 	protected JFXDatePicker datePicker;
 	private JFXButton backMonthButton;
 	private JFXButton forwardMonthButton;
@@ -102,12 +102,12 @@ public class JFXDatePickerContent extends VBox {
 	private Label monthYearLabel;
 	protected GridPane contentGrid;
 	private StackPane calendarPlaceHolder = new StackPane();
-	
+
 	// animation
 	private CachedTransition showTransition;
 	private CachedTransition hideTransition;
 	private ParallelTransition tempImageTransition;
-	
+
 	private int daysPerWeek = 7;
 	private List<DateCell> weekDaysCells = new ArrayList<DateCell>();
 	private List<DateCell> weekNumberCells = new ArrayList<DateCell>();
@@ -117,25 +117,37 @@ public class JFXDatePickerContent extends VBox {
 
 	private ListView<String> yearsListView = new JFXListView<String>()
 	{{
+		
 		this.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> listView) {
-				return new JFXListCell<String>(){{
+				return new JFXListCell<String>(){
+					boolean mousePressed = false;
+					{
+					setOnMousePressed((click)->{
+						mousePressed = true;
+					});
 					setOnMouseEntered((enter)->{
-						setBackground(new Background(new BackgroundFill(Color.valueOf("#EDEDED"), CornerRadii.EMPTY, Insets.EMPTY)));
+						if(!mousePressed)
+							setBackground(new Background(new BackgroundFill(Color.valueOf("#EDEDED"), CornerRadii.EMPTY, Insets.EMPTY)));
 					});
 					setOnMouseExited((enter)->{
-						setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+						if(!mousePressed)
+							setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 					});
 					setOnMouseReleased((release)->{
-						int offset = Integer.parseInt(((Label)cellContent).getText()) - Integer.parseInt(selectedYearLabel.getText());
-						forward(offset, YEARS, false, false);
-						hideTransition.setOnFinished((finish)->{
-							selectedYearCell.set((Label)cellContent);
-							yearsListView.scrollTo(this.getIndex()-2 >=0 ? this.getIndex()-2 : this.getIndex());
-							hideTransition.setOnFinished(null);
-						});
-						hideTransition.play();
+						String selectedItem = yearsListView.getSelectionModel().getSelectedItem();
+						if(selectedItem!=null && selectedItem.equals(((Label)cellContent).getText())){
+							int offset = Integer.parseInt(((Label)cellContent).getText()) - Integer.parseInt(selectedYearLabel.getText());
+							forward(offset, YEARS, false, false);
+							hideTransition.setOnFinished((finish)->{
+								selectedYearCell.set((Label)cellContent);
+								yearsListView.scrollTo(this.getIndex()-2 >=0 ? this.getIndex()-2 : this.getIndex());
+								hideTransition.setOnFinished(null);
+							});
+							hideTransition.play();	
+						}
+						mousePressed = false;
 					});
 					selectedYearLabel.textProperty().addListener((o,oldVal,newVal)->{
 						if(!yearsListView.isVisible())							
@@ -174,7 +186,7 @@ public class JFXDatePickerContent extends VBox {
 	ObjectProperty<YearMonth> displayedYearMonthProperty() {
 		return selectedYearMonth;
 	}
-	
+
 	JFXDatePickerContent(final DatePicker datePicker) {
 		this.datePicker = (JFXDatePicker) datePicker;
 		getStyleClass().add("date-picker-popup");
@@ -197,8 +209,8 @@ public class JFXDatePickerContent extends VBox {
 
 		// create the header pane
 		getChildren().add(createHeaderPane());
-		
-		
+
+
 		contentGrid = new GridPane() {
 			@Override protected double computePrefWidth(double height) {
 				final int nCols = daysPerWeek + (datePicker.isShowWeekNumbers() ? 1 : 0);
@@ -226,7 +238,7 @@ public class JFXDatePickerContent extends VBox {
 		createWeekDaysCells();
 		// create month days cells
 		createDayCells();
-		
+
 		VBox contentHolder = new VBox();				
 		// create content pane
 		contentHolder.getChildren().add(createCalendarMonthLabelPane());
@@ -234,7 +246,7 @@ public class JFXDatePickerContent extends VBox {
 		calendarPlaceHolder.getChildren().add(contentHolder);
 		// add month arrows pane
 		calendarPlaceHolder.getChildren().add(createCalendarArrowsPane());
-		
+
 		Rectangle clip = new Rectangle();
 		clip.widthProperty().bind(calendarPlaceHolder.widthProperty());
 		clip.heightProperty().bind(calendarPlaceHolder.heightProperty());
@@ -290,7 +302,7 @@ public class JFXDatePickerContent extends VBox {
 				event.consume();
 			}
 		});
-				
+
 		// create animation
 		showTransition = new CachedTransition(yearsListView, new Timeline(
 				new KeyFrame(Duration.millis(0),
@@ -310,24 +322,24 @@ public class JFXDatePickerContent extends VBox {
 				setDelay(Duration.seconds(0));
 			}};
 
-		hideTransition = new CachedTransition(yearsListView, new Timeline(
-				new KeyFrame(Duration.millis(0),
-						new KeyValue(yearsListView.opacityProperty(),1,Interpolator.EASE_BOTH),
-						new KeyValue(calendarPlaceHolder.opacityProperty(),0,Interpolator.EASE_BOTH)),
-				new KeyFrame(Duration.millis(500),
-						new KeyValue(yearsListView.opacityProperty(),0,Interpolator.EASE_BOTH),
-						new KeyValue(calendarPlaceHolder.opacityProperty(),0,Interpolator.EASE_BOTH)),
-				new KeyFrame(Duration.millis(1000),
-						new KeyValue(yearsListView.opacityProperty(),0,Interpolator.EASE_BOTH),
-						new KeyValue(calendarPlaceHolder.opacityProperty(),1,Interpolator.EASE_BOTH),
-						new KeyValue(selectedDateLabel.textFillProperty(),Color.WHITE,Interpolator.EASE_BOTH),
-						new KeyValue(selectedYearLabel.textFillProperty(),Color.rgb(255, 255, 255, 0.67),Interpolator.EASE_BOTH)))){
-			@Override protected void stopping() {super.stopping();yearsListView.setVisible(false);}
-			{
-				setCycleDuration(Duration.millis(320));
-				setDelay(Duration.seconds(0));
-			}};
-				
+			hideTransition = new CachedTransition(yearsListView, new Timeline(
+					new KeyFrame(Duration.millis(0),
+							new KeyValue(yearsListView.opacityProperty(),1,Interpolator.EASE_BOTH),
+							new KeyValue(calendarPlaceHolder.opacityProperty(),0,Interpolator.EASE_BOTH)),
+					new KeyFrame(Duration.millis(500),
+							new KeyValue(yearsListView.opacityProperty(),0,Interpolator.EASE_BOTH),
+							new KeyValue(calendarPlaceHolder.opacityProperty(),0,Interpolator.EASE_BOTH)),
+					new KeyFrame(Duration.millis(1000),
+							new KeyValue(yearsListView.opacityProperty(),0,Interpolator.EASE_BOTH),
+							new KeyValue(calendarPlaceHolder.opacityProperty(),1,Interpolator.EASE_BOTH),
+							new KeyValue(selectedDateLabel.textFillProperty(),Color.WHITE,Interpolator.EASE_BOTH),
+							new KeyValue(selectedYearLabel.textFillProperty(),Color.rgb(255, 255, 255, 0.67),Interpolator.EASE_BOTH)))){
+				@Override protected void stopping() {super.stopping();yearsListView.setVisible(false);}
+				{
+					setCycleDuration(Duration.millis(320));
+					setDelay(Duration.seconds(0));
+				}};
+
 	}
 
 	private void createWeekDaysCells() {
@@ -445,7 +457,7 @@ public class JFXDatePickerContent extends VBox {
 		monthYearLabel.getStyleClass().add("spinner-label");
 		monthYearLabel.setFont(Font.font("Roboto",FontWeight.BOLD,13));
 		monthYearLabel.setTextFill(Color.valueOf("#313131"));
-		
+
 		BorderPane monthContainer = new BorderPane();
 		monthContainer.setMinHeight(50);
 		monthContainer.setCenter(monthYearLabel);
@@ -461,11 +473,11 @@ public class JFXDatePickerContent extends VBox {
 		columnConstraints.setPercentWidth(100);		
 		for (int i = 0; i < colsNumber; i++) 
 			contentGrid.getColumnConstraints().add(columnConstraints);
-		
+
 		// Week days cells
 		for (int i = 0; i < daysPerWeek; i++) 
 			contentGrid.add(weekDaysCells.get(i), i + colsNumber - daysPerWeek, 1); 
-		
+
 		// Week number cells
 		if (datePicker.isShowWeekNumbers()) 
 			for (int i = 0; i < 6; i++) 
@@ -481,7 +493,7 @@ public class JFXDatePickerContent extends VBox {
 		updateDayNameCells();
 		updateValues();
 	}
-	
+
 	void updateDayNameCells() {
 		int weekFirstDay = WeekFields.of(getLocale()).getFirstDayOfWeek().getValue();
 		LocalDate date = LocalDate.of(2009, 7, 12 + weekFirstDay);
@@ -489,9 +501,9 @@ public class JFXDatePickerContent extends VBox {
 			String name = weekDayNameFormatter.withLocale(getLocale()).format(date.plus(i, DAYS));
 			// Fix Chinese environment week display incorrectly
 			if (weekDayNameFormatter.getLocale() == java.util.Locale.CHINA) {
-			    name = name.substring(2, 3).toUpperCase();
+				name = name.substring(2, 3).toUpperCase();
 			} else {
-			    name = name.substring(0, 1).toUpperCase();
+				name = name.substring(0, 1).toUpperCase();
 			}
 			weekDaysCells.get(i).setText(name);
 		}
@@ -502,7 +514,7 @@ public class JFXDatePickerContent extends VBox {
 		updateDayCells();
 		updateMonthYearPane();
 	}
-	
+
 	void updateWeekNumberDateCells() {
 		if (datePicker.isShowWeekNumbers()) {
 			final Locale locale = getLocale();
@@ -538,11 +550,11 @@ public class JFXDatePickerContent extends VBox {
 			dayCell.setTooltip(null);
 			dayCell.setTextFill(Color.valueOf("#313131"));
 			dayCell.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-			
+
 			try {
 				if (daysInCurMonth == -1) 
 					daysInCurMonth = currentYearMonth.lengthOfMonth();
-				
+
 				YearMonth month = currentYearMonth;
 				int dayIndex = i - firstOfMonthIndex + 1;
 
@@ -588,7 +600,7 @@ public class JFXDatePickerContent extends VBox {
 		else selectedDateLabel.setText(DateTimeFormatter.ofPattern("EEE, MMM yy").format(LocalDate.now()));
 		selectedYearLabel.setText(formatYear(yearMonth));
 		monthYearLabel.setText(formatMonth(yearMonth) + " " + formatYear(yearMonth));
-		
+
 		Chronology chrono = datePicker.getChronology();
 		LocalDate firstDayOfMonth = yearMonth.atDay(1);
 		backMonthButton.setDisable(!isValidDate(chrono, firstDayOfMonth, -1, DAYS));
@@ -600,8 +612,8 @@ public class JFXDatePickerContent extends VBox {
 			Chronology chrono = getPrimaryChronology();
 			ChronoLocalDate cDate = chrono.date(yearMonth.atDay(1));
 			String str = monthFormatter.withLocale(getLocale())
-						.withChronology(chrono)
-						.format(cDate);
+					.withChronology(chrono)
+					.format(cDate);
 			return str;
 		} catch (DateTimeException ex) {
 			// Date is out of range.
@@ -633,8 +645,9 @@ public class JFXDatePickerContent extends VBox {
 		if(withAnimation){
 			if(tempImageTransition == null || tempImageTransition.getStatus().equals(Status.STOPPED)){
 				Pane monthContent = (Pane) calendarPlaceHolder.getChildren().get(0);
-				WritableImage temp = monthContent.snapshot(new SnapshotParameters(), new WritableImage((int)monthContent.getWidth(), (int)monthContent.getHeight()));
-				ImageView tempImage = new ImageView(temp);
+				this.getParent().setManaged(false);
+				WritableImage temp = monthContent.snapshot(new SnapshotParameters(), new WritableImage((int)monthContent.getWidth(), (int)monthContent.getHeight()));				
+				ImageView tempImage = new ImageView(temp);				
 				calendarPlaceHolder.getChildren().add(calendarPlaceHolder.getChildren().size()-2,tempImage);
 				TranslateTransition imageTransition = new TranslateTransition(Duration.millis(160), tempImage);
 				imageTransition.setToX(-offset*calendarPlaceHolder.getWidth());		
@@ -644,7 +657,10 @@ public class JFXDatePickerContent extends VBox {
 				contentTransition.setToX(0);		
 
 				tempImageTransition = new ParallelTransition(imageTransition, contentTransition);
-				tempImageTransition.setOnFinished((finish)->calendarPlaceHolder.getChildren().remove(tempImage));
+				tempImageTransition.setOnFinished((finish)->{
+					calendarPlaceHolder.getChildren().remove(tempImage);
+					this.getParent().setManaged(true);
+				});
 				tempImageTransition.play();
 			}
 		}
@@ -673,8 +689,8 @@ public class JFXDatePickerContent extends VBox {
 			if (date.equals(dayCellDates[i])) return dayCells.get(i);
 		return dayCells.get(dayCells.size()/2+1);
 	}
-	
-	
+
+
 	void init(){
 		calendarPlaceHolder.setOpacity(1);
 		selectedDateLabel.setTextFill(Color.WHITE);
@@ -682,7 +698,7 @@ public class JFXDatePickerContent extends VBox {
 		yearsListView.setOpacity(0);
 		yearsListView.setVisible(false);
 	}
-	
+
 	void clearFocus() {
 		LocalDate focusDate = datePicker.getValue();
 		if (focusDate == null) focusDate = LocalDate.now();
@@ -742,7 +758,7 @@ public class JFXDatePickerContent extends VBox {
 		// for android compatibility
 		return Locale.getDefault(/*Locale.Category.FORMAT*/);
 	}
-	
+
 	protected boolean isValidDate(Chronology chrono, LocalDate date, int offset, ChronoUnit unit) {
 		if (date != null) return isValidDate(chrono, date.plus(offset, unit));
 		return false;

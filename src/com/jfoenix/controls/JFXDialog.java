@@ -159,12 +159,13 @@ public class JFXDialog extends StackPane {
 	public void setDialogContainer(Pane dialogContainer) {
 		if(dialogContainer!=null){
 			this.dialogContainer = dialogContainer;
-			this.getChildren().clear();
-			this.getChildren().add(overlayPane);
+			if(this.getChildren().indexOf(overlayPane)==-1)this.getChildren().setAll(overlayPane);
 			this.visibleProperty().unbind();
 			this.visibleProperty().bind(overlayPane.visibleProperty());
-			this.dialogContainer.getChildren().remove(this);
-			this.dialogContainer.getChildren().add(this);
+			if(this.dialogContainer.getChildren().indexOf(this)==-1 || this.dialogContainer.getChildren().indexOf(this)!=this.dialogContainer.getChildren().size()-1){
+				this.dialogContainer.getChildren().remove(this);
+				this.dialogContainer.getChildren().add(this);
+			}
 			// FIXME: need to be improved to consider only the parent boundary
 			offsetX = (this.getParent().getBoundsInLocal().getWidth());
 			offsetY = (this.getParent().getBoundsInLocal().getHeight());
@@ -208,7 +209,8 @@ public class JFXDialog extends StackPane {
 	}
 
 	public void show(){
-		animation = getShowAnimation(transitionType.get());
+		this.setDialogContainer(dialogContainer);
+//		animation = getShowAnimation(transitionType.get());
 		animation.play();		
 	}
 

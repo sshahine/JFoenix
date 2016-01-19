@@ -216,6 +216,13 @@ public class JFXRippler extends StackPane {
 		private OverLayRipple overlayRect;
 		private boolean generating = false;
 
+		public RippleGenerator() {
+			/* 
+			 * improve in performance, by preventing  
+			 * redrawing the parent when the ripple effect is triggered
+			 */
+			this.setManaged(false);
+		}
 		public void createRipple() {
 			if(enabled){
 				if(!generating){

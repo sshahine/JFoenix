@@ -23,6 +23,7 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener.Change;
 import javafx.scene.control.ListCell;
 
 /**
@@ -35,6 +36,16 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
         super(listView);
         JFXDepthManager.setDepth(flow, listView.depthProperty().get());
         listView.depthProperty().addListener((o,oldVal,newVal)->JFXDepthManager.setDepth(flow, newVal));
+        listView.getItems().addListener((Change<? extends T> change)->{
+        	new Thread(()->{
+        		try {
+					Thread.sleep(20);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+        		Platform.runLater(()->getSkinnable().requestLayout());
+        	}).start();
+        });
 //        flow.setCreateCell(flow1 -> JFXListViewSkin.this.createCell());        
     }
     
@@ -51,8 +62,13 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
     @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
     	if(getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0) return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
     	if(getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();
-    	Platform.runLater(()->getSkinnable().requestLayout());
-        return estimateHeight();
+
+    	double computedHeight = estimateHeight();
+    	double height = super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);    	
+    	if(height > computedHeight)
+    		height = computedHeight;
+    
+        return height;
     }
     
     private double estimateHeight(){
