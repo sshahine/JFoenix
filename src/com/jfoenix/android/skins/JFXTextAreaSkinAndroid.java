@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.jfoenix.skins;
+package com.jfoenix.android.skins;
 
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
+import com.sun.javafx.scene.control.skin.TextAreaSkinAndroid;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -57,7 +57,8 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class JFXTextAreaSkin extends TextAreaSkin {
+public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
+
 	private static Background transparentBackground = new Background(
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
@@ -122,7 +123,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		}
 	};
 	
-	public JFXTextAreaSkin(JFXTextArea textArea) {
+	public JFXTextAreaSkinAndroid(JFXTextArea textArea) {
 		super(textArea);
 		
 		// TODO: FIX the resizing issue of text area, the line goes into textarea bounds
@@ -493,6 +494,8 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 		
 	}
+
+
 
 
 }
