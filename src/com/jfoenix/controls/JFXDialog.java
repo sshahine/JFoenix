@@ -57,7 +57,8 @@ import com.jfoenix.transitions.CachedTransition;
 
 /**
  * @author Shadi Shaheen
- *
+ * note that for JFXDialog to work properly the root node should
+ * be of type {@link StackPane}
  */
 @DefaultProperty(value="content")
 public class JFXDialog extends StackPane {
