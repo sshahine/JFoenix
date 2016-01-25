@@ -145,29 +145,33 @@ public class JFXListView<T> extends ListView<T> {
 		this.groupnode.set(node);
 	}
 
-	// sublists property
-	private ObjectProperty<ObservableList<JFXListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<JFXListView<?>>>(FXCollections.observableArrayList());	
-	private LinkedHashMap<Integer, JFXListView<?>> sublistsIndices = new LinkedHashMap<Integer, JFXListView<?>>();
-	public void addSublist(JFXListView<?> subList, int index){
-		if(!sublistsProperty.get().contains(subList)){
-			sublistsProperty.get().add(subList);
-			sublistsIndices.put(index, subList);
-			subList.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
-				if(newVal.intValue() != -1){
-					getOverAllSelectedIndex();
-				}
-			});
-		}
-	}
-
-	// selection property across list and its sublists
+	/*
+	 *  selected index property that includes the sublists
+	 */
 	private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<Integer>(-1);
 
 	public ReadOnlyObjectProperty<Integer> overAllIndexProperty(){
 		return overAllIndexProperty.getReadOnlyProperty();
 	}
+	
+	// private sublists property
+	private ObjectProperty<ObservableList<JFXListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<JFXListView<?>>>(FXCollections.observableArrayList());	
+	private LinkedHashMap<Integer, JFXListView<?>> sublistsIndices = new LinkedHashMap<Integer, JFXListView<?>>();
+	
+	// this method shouldn't be called from user
+	void addSublist(JFXListView<?> subList, int index){
+		if(!sublistsProperty.get().contains(subList)){
+			sublistsProperty.get().add(subList);
+			sublistsIndices.put(index, subList);
+			subList.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
+				if(newVal.intValue() != -1){
+					udpateOverAllSelectedIndex();
+				}
+			});
+		}
+	}
 
-	private void getOverAllSelectedIndex(){
+	private void udpateOverAllSelectedIndex(){
 		// if item from the list is selected
 		if(this.getSelectionModel().getSelectedIndex() != -1 ){
 			int selectedIndex = this.getSelectionModel().getSelectedIndex();
@@ -244,7 +248,7 @@ public class JFXListView<T> extends ListView<T> {
 		// listen to index changes
 		this.getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
 			if(newVal.intValue() != -1){
-				getOverAllSelectedIndex();	
+				udpateOverAllSelectedIndex();	
 			}
 		});
 	}

@@ -120,7 +120,11 @@ public class JFXListCell<T> extends ListCell<T> {
 						group.getStyleClass().add("sublist-header");
 						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
 						dropIcon.setStyle("-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
-						dropIcon.getStyleClass().add("drop-icon");						
+						dropIcon.getStyleClass().add("drop-icon");			
+						/*
+						 *  alignment of the group node can be changed using the following css selector
+						 *  .jfx-list-view .sublist-header{ }
+						 */						
 						group.getChildren().setAll(((JFXListView<?>)newNode).getGroupnode(), dropIcon);
 						
 						// the margin is needed when rotating the angle
@@ -241,13 +245,18 @@ public class JFXListCell<T> extends ListCell<T> {
 						((JFXListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
 							// validate changing gap operation
 							JFXListView<T> listview = ((JFXListView<T>)getListView());
-							double borderWidth = 0;
-							if(listview.getPadding()!=null){
-								borderWidth += listview.getPadding().getTop();
-								borderWidth += listview.getPadding().getBottom();
-							}
-							double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + borderWidth - listview.currentVerticalGapProperty().get();
-							if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
+//							double borderWidth = 0;
+//							if(listview.getPadding()!=null){
+//								borderWidth += listview.getPadding().getTop();
+//								borderWidth += listview.getPadding().getBottom();
+//							}
+							double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + this.snappedTopInset() + this.snappedBottomInset() - listview.currentVerticalGapProperty().get();
+							/*
+							 *  expanding list will ignore its maxheight property. 
+							 *  the maxHeight property shouldn't be set by the user, otherwise
+							 *  the expanding animatino will be corrupted
+							 */
+//							if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
 								if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
 									// stop the previous animation 
 									if(animateGap!=null) animateGap.stop();
@@ -266,7 +275,7 @@ public class JFXListCell<T> extends ListCell<T> {
 
 									animateGap.play();	
 								}
-							}
+//							}
 						});
 					}
 
