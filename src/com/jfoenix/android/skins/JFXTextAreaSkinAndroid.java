@@ -58,7 +58,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
-
 	private static Background transparentBackground = new Background(
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
 			new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY),
@@ -134,7 +133,6 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 		
 		promptContainer = new StackPane();
 		promptContainer.setFocusTraversable(false);
-		promptContainer.setStyle("-fx-background-color:GREEN");
 		
 		errorContainer = new HBox();
 		errorContainer.setFocusTraversable(false);
@@ -151,7 +149,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
 
-		this.getChildren().setAll(mainPane, promptContainer, errorContainer);
+		this.getChildren().setAll(mainPane, new Pane(promptContainer), errorContainer);
 		
 		scrollPane.prefWidthProperty().bind(mainPane.widthProperty());
 		scrollPane.prefHeightProperty().bind(mainPane.heightProperty());
@@ -159,6 +157,17 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 		scrollPane.setBackground(transparentBackground);
 		((Region)scrollPane.getContent()).setBackground(transparentBackground);
 		getSkinnable().setBackground(transparentBackground);
+		
+		line.layoutXProperty().bind(scrollPane.layoutXProperty());
+		line.layoutYProperty().bind(scrollPane.layoutYProperty());
+		focusedLine.layoutXProperty().bind(scrollPane.layoutXProperty());
+		focusedLine.layoutYProperty().bind(scrollPane.layoutYProperty());
+		cursorPane.layoutXProperty().bind(scrollPane.layoutXProperty());
+		cursorPane.layoutYProperty().bind(scrollPane.layoutYProperty());
+		
+//		errorContainer.layoutXProperty().bind(scrollPane.layoutXProperty());
+//		errorContainer.layoutYProperty().bind(scrollPane.layoutYProperty());
+		
 		
 		// add listeners to show error label
 		errorLabel.heightProperty().addListener((o,oldVal,newVal)->{
@@ -250,7 +259,8 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 		mainPane.resize(w-1, h-1);
-		errorContainer.resizeRelocate(0, 0, w, 20);
+		errorContainer.resizeRelocate(x, y, w, 20);		
+		promptContainer.relocate(x+2, y);
 		
 		if(invalid){
 			// set the default background of text area viewport to white
@@ -263,7 +273,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 			errorContainer.translateYProperty().bind(mainPane.heightProperty());			
 			
 			// draw lines
-			line.setStartX(3);
+			line.setStartX(3);			
 			line.endXProperty().bind(mainPane.widthProperty());
 			line.startYProperty().bind(mainPane.heightProperty());
 			line.endYProperty().bind(line.startYProperty());
@@ -277,7 +287,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 				if(newVal)
 					line.getStrokeDashArray().addAll(2d);
 			});
-
+			
 			mainPane.widthProperty().addListener((o,oldVal,newVal)->{
 				startX = 3;
 				endX = newVal.doubleValue();
@@ -309,10 +319,9 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 				promptTextGroup = new Group(promptText);			
 				promptContainer.getChildren().add(promptTextGroup);
 				promptContainer.setAlignment(Pos.CENTER_LEFT);
-				promptContainer.setPadding(new Insets(20,0,0,2));
 				
 				// create prompt animations
-				promptTextUpTransition = new CachedTransition(promptTextGroup, new Timeline(
+				promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
 						new KeyFrame(Duration.millis(1300),
 								new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
 //								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
@@ -322,7 +331,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
 				promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
-				promptTextDownTransition = new CachedTransition(promptTextGroup, new Timeline(
+				promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
 								new KeyFrame(Duration.millis(1300), 
 										new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
 //										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
@@ -494,8 +503,6 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 		
 	}
-
-
 
 
 }
