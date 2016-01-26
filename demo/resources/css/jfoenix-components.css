@@ -210,10 +210,9 @@
 }
 
 
-.jfx-toggle-button{
-	-fx-toggle-color:RED;
-}
-
+ .jfx-toggle-button{
+  		-fx-toggle-color: RED;
+ }
 
 .jfx-tool-bar{
 	-fx-font-size: 20;

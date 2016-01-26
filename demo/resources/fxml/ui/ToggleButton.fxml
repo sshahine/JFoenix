@@ -13,16 +13,18 @@
 
 	<VBox prefWidth="300" spacing="50" maxWidth="400" maxHeight="300">
 		<Label styleClass="title-label">Toggle Buttons</Label>
-		<FlowPane hgap="96" style="-fx-padding:0 0 0 50">
-			<Label styleClass="toggle-label"> Wifi </Label>
-			<JFXToggleButton>
+		<FlowPane hgap="26" style="-fx-padding:0 0 0 50">
+			<Label styleClass="toggle-label"> Wifi (separate label) </Label>
+			<JFXToggleButton styleClass="custom-jfx-toggle-button-red">
 			</JFXToggleButton>
 		</FlowPane>
 		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-			<Label styleClass="toggle-label"> Bluetooth
-			</Label>
-			<JFXToggleButton styleClass="custom-jfx-toggle-button">
+			<JFXToggleButton styleClass="custom-jfx-toggle-button" text="Bluetooth">
 			</JFXToggleButton>
+			
+			<JFXToggleButton text="Wifi">
+			</JFXToggleButton>
+			
 		</FlowPane>
 
 		<Label styleClass="title-label">Toggle Icons</Label>

@@ -560,6 +560,11 @@
 	-fx-toggle-color:#4285F4;
 }
 
+
+.custom-jfx-toggle-button-red{
+	-fx-toggle-color:red;
+}
+
 .toggle-label {
 	-fx-font-size: 14.0px;
 }

@@ -1,5 +1,9 @@
 package demos.components;
 
+import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.JFXToggleNode;
+
+import de.jensd.fx.fontawesome.Icon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,11 +11,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXToggleButton;
-import com.jfoenix.controls.JFXToggleNode;
-
-import de.jensd.fx.fontawesome.Icon;
 
 public class ToggleButtonDemo extends Application {
 
@@ -28,6 +27,7 @@ public class ToggleButtonDemo extends Application {
 		pane.getChildren().add(button);
 		
 		JFXToggleButton toggleButton = new JFXToggleButton();
+		toggleButton.setText("New Skin");
 		pane.getChildren().add(toggleButton);		
 		
 		JFXToggleNode node = new JFXToggleNode();		
@@ -44,6 +44,7 @@ public class ToggleButtonDemo extends Application {
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();
+		
 
 	}
 	public static void main(String[] args) { launch(args); }
