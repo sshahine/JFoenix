@@ -40,6 +40,8 @@ To run the main demo, execute the following command:
 
 ![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
 
+![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Buton Demo")
+
 ![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
 
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
