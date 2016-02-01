@@ -365,7 +365,7 @@ public class JFXSliderSkin extends BehaviorSkinBase<Slider, SliderBehavior> {
 		if (s.getValue() > s.getMax()) {
 			return;// this can happen if we are bound to something 
 		}
-		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))))) : thumbLeft;
+		final double endX = (isHorizontal) ? trackStart + (((trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin()))))) - snappedLeftInset() : thumbLeft;
 		final double endY = (isHorizontal) ? thumbTop : snappedTopInset() + thumbRadius + trackLength - (trackLength * ((s.getValue() - s.getMin()) / (s.getMax() - s.getMin())));
 
 		if (animate) {
