@@ -31,8 +31,7 @@ allprojects {
 
 subprojects { subproj ->
     apply plugin: 'java'
-    apply from: rootProject.file('gradle/code-coverage.gradle')
-    apply from: rootProject.file('gradle/code-quality.gradle')
+    apply from: rootProject.file('gradle/code-coverage.gradle')    
     apply from: rootProject.file('gradle/javafx.gradle')
 
     configurations {
