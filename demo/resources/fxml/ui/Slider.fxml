@@ -6,37 +6,28 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
-	<VBox spacing="50" maxWidth="450" maxHeight="600">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox spacing="50" maxWidth="450" maxHeight="600" alignment="CENTER">
 		<children>
 			<HBox spacing="100" alignment="CENTER">
 				<children>
 					<JFXSlider orientation="VERTICAL" prefHeight="300">
 					</JFXSlider>
-					<JFXSlider orientation="VERTICAL" styleClass="jfx-slider-style" maxHeight="200">
+					<JFXSlider orientation="VERTICAL" styleClass="jfx-slider-style"
+						maxHeight="200">
 					</JFXSlider>
-					<JFXSlider orientation="VERTICAL" prefHeight="200" disable="true">
-					</JFXSlider>
-				</children>
-			</HBox>
-			<HBox spacing="50" alignment="BASELINE_CENTER">
-				<children>
-					<JFXSlider prefWidth="400">
+					<JFXSlider orientation="VERTICAL" prefHeight="200"
+						disable="true">
 					</JFXSlider>
 				</children>
 			</HBox>
-			<HBox spacing="50" alignment="BASELINE_CENTER">
-				<children>
-					<JFXSlider styleClass="jfx-slider-style" prefWidth="300">
-					</JFXSlider>
-				</children>
-			</HBox>
-			<HBox spacing="50" alignment="BASELINE_CENTER">
-				<children>
-					<JFXSlider prefWidth="400" disable="true">
-					</JFXSlider>
-				</children>
-			</HBox>
+			<JFXSlider prefWidth="400">
+			</JFXSlider>
+			<JFXSlider styleClass="jfx-slider-style" maxWidth="300" >
+			</JFXSlider>
+			<JFXSlider prefWidth="400" disable="true">
+			</JFXSlider>
 		</children>
 	</VBox>
 </StackPane>

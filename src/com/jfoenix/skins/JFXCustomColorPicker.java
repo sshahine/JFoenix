@@ -69,7 +69,7 @@ class JFXCustomColorPicker extends Pane {
 	private double centerY = distance;
 	private double radius = 110;
 
-	private int shapesNumber = 20;
+	private int shapesNumber = 13;
 	private ArrayList<RecentColorPath> shapes = new ArrayList<>();
 	private CachedTransition showAnimation;
 	private JFXColorPickerUI hslColorPicker;

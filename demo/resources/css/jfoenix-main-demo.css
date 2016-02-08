@@ -251,17 +251,17 @@
 }
 
 .jfx-slider-style > .thumb {
-	-fx-stroke: #5264AE;
-	-fx-stroke-width: 1.0;
+	-fx-background-color:#03a9f4;
 }
 
 .jfx-slider-style .track {
-	-fx-stroke: rgb(230.0,230.0,153.0);
-    -fx-stroke-width: 5.0;
+	-fx-background-color: #ff5252;
+	-fx-pref-height: 5px;
+	-fx-pref-width: 5px;
 }
 
 .jfx-slider-style .sliderValue {
-	-fx-stroke: rgb(0.0,255.0,64.0);
+	-fx-stroke: WHITE;
 	-fx-font-size: 10.0;
 }
 

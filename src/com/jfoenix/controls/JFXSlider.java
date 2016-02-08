@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.jfoenix.converters.IndicatorPositionConverter;
+import com.jfoenix.skins.JFXSliderSkin;
+
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -30,9 +33,6 @@ import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
-
-import com.jfoenix.converters.IndicatorPositionConverter;
-import com.jfoenix.skins.JFXSliderSkin;
 
 /**
  * @author Bashir Elias & Shadi Shaheen
@@ -51,7 +51,7 @@ public class JFXSlider extends Slider {
 	}
 
 	private void initialize() {
-		getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+		getStyleClass().add(DEFAULT_STYLE_CLASS);
 	}
 
 	@Override

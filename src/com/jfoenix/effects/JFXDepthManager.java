@@ -21,6 +21,7 @@ package com.jfoenix.effects;
 import javafx.scene.Node;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
@@ -37,6 +38,12 @@ public class JFXDepthManager {
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 25, 0.25, 0, 8),
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 30, 0.30, 0, 10)};
 
+	/**
+	 * this method is used to add shadow effect to the node,
+	 * however the shadow is not real ( gets affected with node transformations)
+	 *
+	 * use {@link #createMaterialNode()} instead to generate a real shadow  
+	 */
 	public static void setDepth(Node control, int level){
 		level = level < 0 ? 0 : level;
 		level = level > 5 ? 5 : level;
@@ -49,6 +56,20 @@ public class JFXDepthManager {
 
 	public static DropShadow getShadowAt(int level){
 		return depth[level];
+	}
+	
+	/**
+	 * this method will generate a new container node that prevent
+	 * control transformation to be applied to the shadow effect
+	 * (which makes it looks as a real shadow)
+	 */
+	public static Node createMaterialNode(Node control, int level){		
+		Node container = new Pane(control);
+		container.getStyleClass().add("depth-container");
+		level = level < 0 ? 0 : level;
+		level = level > 5 ? 5 : level;
+		container.setEffect(new DropShadow(BlurType.GAUSSIAN, depth[level].getColor() ,depth[level].getRadius(),depth[level].getSpread(),depth[level].getOffsetX(),depth[level].getOffsetY()));
+		return container;
 	}
 	
 	public static void pop(Node control){
