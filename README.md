@@ -18,6 +18,8 @@ To run the main demo, go to the JFoenix/make directory and run the batch file ru
 
 **NOTE** : You need to update the build.bat to point to Java 1.8 and Apache Ant directories.
 
+**NOTE** : Linux is also supported. In the make directory, use `./build.sh` and `./run-demo.sh`, respectively.
+
 ## Gradle
 To build JFoenix, execute the following command:
 
