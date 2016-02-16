@@ -16,10 +16,6 @@ task extractDalvik(type: Copy) {
 compileJava.dependsOn extractDalvik
 
 
-dependencies { 
-	compile 'org.javafxports:jfxdvk:8.60.6'
-}
-
 task sourcesJar(type: Jar) {
     group 'Build'
     description 'An archive of the source code'
