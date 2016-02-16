@@ -2,8 +2,22 @@ apply from: rootProject.file('gradle/publishing.gradle')
 apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 
-dependencies {
-    compile 'fakeGroup:jfxrt:dalvik'
+configurations {
+    dalvikSDK
+}
+dependencies { 
+	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.6@zip'
+ 	compile fileTree(dir: "$buildDir/dalvik-sdk/rt/lib/ext/jfxrt.jar", include: 'jfxrt.jar')
+}
+task extractDalvik(type: Copy) {
+    from { configurations.dalvikSDK.collect { zipTree(it) }}
+    into "$buildDir/"   
+}
+compileJava.dependsOn extractDalvik
+
+
+dependencies { 
+	compile 'org.javafxports:jfxdvk:8.60.6'
 }
 
 task sourcesJar(type: Jar) {

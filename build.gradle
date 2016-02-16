@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -19,6 +20,8 @@ allprojects {
     apply plugin: 'com.github.ben-manes.versions'
 	
     repositories {
+    	jcenter()
+        mavenCentral()
         flatDir { dir rootProject.file('libs') }
     }
 
