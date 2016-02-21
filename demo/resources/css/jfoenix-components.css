@@ -97,6 +97,12 @@
 	-fx-cursor: hand;
 }
 
+.icons-badge {
+	-fx-badge-fill: BLUE;
+	-fx-badge-scale: 3.0;
+	-fx-mask-type: CIRCLE;
+}
+
 
 
 .jfx-check-box{

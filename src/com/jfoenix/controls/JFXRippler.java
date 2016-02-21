@@ -49,7 +49,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
-import com.jfoenix.converters.MaskTypeConverter;
+import com.jfoenix.converters.RipplerMaskTypeConverter;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.css.converters.PaintConverter;
 
@@ -399,7 +399,7 @@ public class JFXRippler extends StackPane {
 			}
 		};
 		private static final CssMetaData< JFXRippler, RipplerMask> MASK_TYPE =
-				new CssMetaData< JFXRippler, RipplerMask>("-fx-mask-type", MaskTypeConverter.getInstance(), RipplerMask.RECT) {
+				new CssMetaData< JFXRippler, RipplerMask>("-fx-mask-type", RipplerMaskTypeConverter.getInstance(), RipplerMask.RECT) {
 			@Override
 			public boolean isSettable(JFXRippler control) {
 				return control.maskType == null || !control.maskType.isBound();

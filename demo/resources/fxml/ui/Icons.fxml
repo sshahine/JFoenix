@@ -12,7 +12,7 @@
 <?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
-
+<?import com.jfoenix.controls.JFXBadge?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
@@ -47,6 +47,15 @@
 					<JFXHamburger fx:id="burger4" style="-fx-padding:20;">
 						<HamburgerNextArrowBasicTransition />
 					</JFXHamburger>
+				</children>
+			</HBox>
+			
+			<Label styleClass="title-label">Badge Icons</Label>
+			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<JFXBadge fx:id="badge1" postion="TOP_RIGHT" text="1" styleClass="icons-badge">
+						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
+					</JFXBadge>				
 				</children>
 			</HBox>
 		</children>
