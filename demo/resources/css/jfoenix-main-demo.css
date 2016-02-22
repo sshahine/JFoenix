@@ -130,10 +130,12 @@
 	-fx-background-radius:4px;
 }
 
-.icons-badge {
-	-fx-badge-fill: #ff4081;
-	-fx-badge-scale: 2;
-	-fx-mask-type: CIRCLE;
+.icons-badge .badge-pane {
+	-fx-background-color:#ff4081;
+	-fx-background-radius: 23;	
+	-fx-pref-width: 23;
+	-fx-pref-height: 23;	
+	-fx-alignment: center;
 }
 
 .icons-badge Label{

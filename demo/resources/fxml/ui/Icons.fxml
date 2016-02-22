@@ -53,7 +53,7 @@
 			<Label styleClass="title-label">Badge Icons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<JFXBadge fx:id="badge1" postion="TOP_RIGHT" text="1" styleClass="icons-badge">
+					<JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1" styleClass="icons-badge">
 						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
 					</JFXBadge>				
 				</children>
