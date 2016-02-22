@@ -29,15 +29,15 @@ import com.sun.javafx.css.StyleConverterImpl;
  * @author Shadi Shaheen
  *
  */
-public final class MaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
+public final class RipplerMaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
     // lazy, thread-safe instatiation
     private static class Holder {
-        static final MaskTypeConverter INSTANCE = new MaskTypeConverter();
+        static final RipplerMaskTypeConverter INSTANCE = new RipplerMaskTypeConverter();
     }
     public static StyleConverter<String, RipplerMask> getInstance() {
         return Holder.INSTANCE;
     }
-    private MaskTypeConverter() {
+    private RipplerMaskTypeConverter() {
         super();
     }
 
@@ -53,6 +53,6 @@ public final class MaskTypeConverter extends StyleConverterImpl<String , Rippler
 
     @Override
     public String toString() {
-        return "MaskTypeConverter";
+        return "RipplerMaskTypeConverter";
     }
 }
