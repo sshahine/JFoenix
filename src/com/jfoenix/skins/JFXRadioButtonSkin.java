@@ -69,6 +69,9 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 		dot = new Circle();
 		dot.setRadius(minRadius);
 		dot.setFill(selectedColor);
+		dot.fillProperty().addListener((o,oldVal,newVal)->{
+			selectedColor = (Color) newVal;
+		});
 		dot.getStyleClass().setAll("dot");
 
 		StackPane boxContainer = new StackPane();
