@@ -1,5 +1,24 @@
 package demos.gui.sidemenu;
 
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXListView;
+
+import demos.gui.uicomponents.ButtonController;
+import demos.gui.uicomponents.CheckboxController;
+import demos.gui.uicomponents.ComboBoxController;
+import demos.gui.uicomponents.DialogController;
+import demos.gui.uicomponents.IconsController;
+import demos.gui.uicomponents.ListViewController;
+import demos.gui.uicomponents.PickersController;
+import demos.gui.uicomponents.PopupController;
+import demos.gui.uicomponents.ProgressBarController;
+import demos.gui.uicomponents.RadioButtonController;
+import demos.gui.uicomponents.SVGLoaderController;
+import demos.gui.uicomponents.SliderController;
+import demos.gui.uicomponents.SpinnerController;
+import demos.gui.uicomponents.TextFieldController;
+import demos.gui.uicomponents.ToggleButtonController;
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -11,25 +30,6 @@ import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-
-import javax.annotation.PostConstruct;
-
-import com.jfoenix.controls.JFXListView;
-
-import demos.gui.uicomponents.ButtonController;
-import demos.gui.uicomponents.CheckboxController;
-import demos.gui.uicomponents.ComboBoxController;
-import demos.gui.uicomponents.DialogController;
-import demos.gui.uicomponents.IconsController;
-import demos.gui.uicomponents.ListViewController;
-import demos.gui.uicomponents.PopupController;
-import demos.gui.uicomponents.ProgressBarController;
-import demos.gui.uicomponents.RadioButtonController;
-import demos.gui.uicomponents.SVGLoaderController;
-import demos.gui.uicomponents.SliderController;
-import demos.gui.uicomponents.SpinnerController;
-import demos.gui.uicomponents.TextFieldController;
-import demos.gui.uicomponents.ToggleButtonController;
 
 @FXMLController(value = "/resources/fxml/SideMenu.fxml", title = "Material Design Example")
 public class SideMenuController {
@@ -93,6 +93,10 @@ public class SideMenuController {
 	@ActionTrigger("svgLoader")
 	private Label svgLoader;
 	
+	@FXML
+	@ActionTrigger("pickers")
+	private Label pickers;
+	
 	
 	@FXML
 	private JFXListView<?> sideList;
@@ -116,6 +120,7 @@ public class SideMenuController {
 		bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(svgLoader, SVGLoaderController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(pickers, PickersController.class, contentFlow, contentFlowHandler);
 	}
 
 	private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {

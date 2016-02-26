@@ -19,6 +19,7 @@
 package com.jfoenix.controls;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,8 @@ import com.jfoenix.skins.JFXDatePickerSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableObjectProperty;
@@ -41,6 +44,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -49,6 +53,8 @@ import javafx.scene.paint.Paint;
  *
  */
 public class JFXDatePicker extends DatePicker {
+	
+	private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>(LocalTime.now());
 	
 	public JFXDatePicker() {
 		super();		
@@ -70,6 +76,39 @@ public class JFXDatePicker extends DatePicker {
     }
     
     
+	public final ObjectProperty<LocalTime> timeProperty() {
+		return this.lastValidTime;
+	}
+	public final java.time.LocalTime getTime() {
+		return this.timeProperty().get();
+	}
+	public final void setTime(final java.time.LocalTime lastValidTime) {
+		this.timeProperty().set(lastValidTime);
+	}
+	
+
+	private boolean showTime = false;
+    
+	public boolean isShowTime() {
+		return showTime;
+	}
+
+	public void setShowTime(boolean showTime) {
+		this.showTime = showTime;
+	}
+	
+	private ObjectProperty<Pane> dialogParent = new SimpleObjectProperty<>(null);
+	public final ObjectProperty<Pane> dialogParentProperty() {
+		return this.dialogParent;
+	}
+	public final Pane getDialogParent() {
+		return this.dialogParentProperty().get();
+	}
+	public final void setDialogParent(final Pane dialogParent) {
+		this.dialogParentProperty().set(dialogParent);
+	}
+
+
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
@@ -159,6 +198,4 @@ public class JFXDatePicker extends DatePicker {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
 
-
-	
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import com.jfoenix.controls.JFXColorPicker?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox maxWidth="500" maxHeight="400">
+		<children>
+			<Label styleClass="title-label">Popup ups</Label>
+			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<JFXColorPicker minWidth="100"></JFXColorPicker>
+					<JFXDatePicker></JFXDatePicker>
+					<JFXDatePicker showTime="true"></JFXDatePicker>
+				</children>
+			</HBox>
+			<Label styleClass="title-label">Overylays</Label>
+			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+				<children>
+					<JFXDatePicker fx:id="dateOverlay" overLay="true" defaultColor="#3f51b5"></JFXDatePicker>
+					<JFXDatePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5" showTime="true"></JFXDatePicker>
+				</children>
+			</HBox>
+			
+		</children>
+	</VBox>
+</StackPane>
+
