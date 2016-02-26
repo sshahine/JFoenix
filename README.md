@@ -55,3 +55,7 @@ To run the main demo, execute the following command:
 ![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
 
 ![Alt text](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
+
+![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
+
+![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
