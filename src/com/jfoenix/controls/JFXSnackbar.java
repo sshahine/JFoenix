@@ -199,6 +199,7 @@ public class JFXSnackbar extends StackPane {
 						),
 				new KeyFrame(Duration.millis(timeout/2))
 				);
+		animation.setDelay(Duration.millis(100));
 		animation.setAutoReverse(true);
 		animation.setCycleCount(2);
 	
