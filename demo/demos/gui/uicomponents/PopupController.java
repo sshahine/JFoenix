@@ -1,5 +1,17 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXPopup.PopupHPosition;
+import com.jfoenix.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
+
+
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -9,14 +21,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
-import javax.annotation.PostConstruct;
-
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXPopup.PopupHPosition;
-import com.jfoenix.controls.JFXPopup.PopupVPosition;
-import com.jfoenix.controls.JFXRippler;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {
@@ -34,9 +38,15 @@ public class PopupController {
 	@FXML private JFXHamburger burger2;
 	@FXML private JFXHamburger burger3;
 	@FXML private JFXHamburger burger4;
+	@FXML private JFXHamburger burger5;
 
 	@FXML private JFXPopup popup;
 
+	@FXML private JFXButton notify;
+	@FXML private JFXSnackbar snackbar;
+	
+	int count=0;
+	
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 
@@ -44,6 +54,15 @@ public class PopupController {
 			Platform.runLater(()-> ((Pane)((Pane) context.getRegisteredObject("ContentPane")).getChildren().get(0)).getChildren().remove(1));
 
 		popup.setPopupContainer(root);
+		snackbar.registerSnackbarContainer(root);
+		
+		notify.setOnMouseClicked((e)->{	
+			if (count++%2==0){
+				snackbar.fireEvent(new SnackbarEvent("Toast Message " + count));
+			} else {
+				snackbar.fireEvent(new SnackbarEvent("Snackbar Message "+ count,"UNDO",3000,(b)->{}));
+			}
+		});
 
 		burger1.setOnMouseClicked((e)->{
 			popup.setSource(rippler1);

@@ -3,7 +3,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPopup?>
+<?import com.jfoenix.controls.JFXSnackbar?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import de.jensd.fx.fontawesome.Icon?>
@@ -15,22 +17,27 @@
 	xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane styleClass="animated-burgers">
-		<JFXRippler fx:id="rippler1" maskType="CIRCLE" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0">		
-			<JFXHamburger fx:id="burger1" style="-fx-padding:15;" >
+		<JFXRippler fx:id="rippler1" maskType="CIRCLE"
+			AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0">
+			<JFXHamburger fx:id="burger1" style="-fx-padding:15;">
 			</JFXHamburger>
 		</JFXRippler>
-		<JFXRippler fx:id="rippler2" maskType="CIRCLE" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
+		<JFXRippler fx:id="rippler2" maskType="CIRCLE"
+			AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
 			<JFXHamburger fx:id="burger2" style="-fx-padding:15;">
 			</JFXHamburger>
 		</JFXRippler>
-		<JFXRippler fx:id="rippler3" maskType="CIRCLE" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" >
+		<JFXRippler fx:id="rippler3" maskType="CIRCLE"
+			AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0">
 			<JFXHamburger fx:id="burger3" style="-fx-padding:15;">
 			</JFXHamburger>
 		</JFXRippler>
-		<JFXRippler fx:id="rippler4" maskType="CIRCLE" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="100.0">
+		<JFXRippler fx:id="rippler4" maskType="CIRCLE"
+			AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="100.0">
 			<JFXHamburger fx:id="burger4" style="-fx-padding:15;">
 			</JFXHamburger>
 		</JFXRippler>
+		<JFXButton fx:id="notify" prefWidth="100" prefHeight="40" buttonType="RAISED" text="Snackbar" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="100.0"></JFXButton>
 	</AnchorPane>
 
 	<JFXPopup fx:id="popup">
@@ -74,6 +81,8 @@
 			</JFXListView>
 		</content>
 	</JFXPopup>
+
+	<JFXSnackbar fx:id="snackbar" prefWidth="300" prefHeight="40"/>
 
 </StackPane>
 

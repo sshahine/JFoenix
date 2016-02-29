@@ -240,6 +240,19 @@
 	-fx-background-color: WHITE;
 }
 
+.jfx-snackbar-content {
+	-fx-background-color: #323232;
+    -fx-padding: 5;
+    -fx-spacing: 5;	
+}
+
+.jfx-snackbar-toast {
+	-fx-text-fill: WHITE;	
+}
+
+.jfx-snackbar-action {
+	-fx-text-fill: #ff4081;	
+}
 
 .jfx-list-cell-content-container {
 	-fx-alignment: center-left;
