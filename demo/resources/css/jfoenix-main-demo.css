@@ -99,6 +99,20 @@
 	-fx-pref-width:150.0px;
 }
 
+.jfx-snackbar-content {
+	-fx-background-color: #323232;
+    -fx-padding: 5;
+    -fx-spacing: 5;	
+}
+
+.jfx-snackbar-toast {
+	-fx-text-fill: WHITE;	
+}
+
+.jfx-snackbar-action {
+	-fx-text-fill: #ff4081;	
+}
+
 /*******************************************************************************
  *                                                                             *
  * JFX Icons                                                                   *
