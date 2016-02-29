@@ -82,7 +82,7 @@
 		</content>
 	</JFXPopup>
 
-	<JFXSnackbar fx:id="snackbar" prefWidth="300" prefHeight="40"/>
+	<JFXSnackbar fx:id="snackbar" prefWidth="300" />
 
 </StackPane>
 

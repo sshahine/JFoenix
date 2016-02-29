@@ -101,8 +101,6 @@
 
 .jfx-snackbar-content {
 	-fx-background-color: #323232;
-    -fx-padding: 5;
-    -fx-spacing: 5;	
 }
 
 .jfx-snackbar-toast {
