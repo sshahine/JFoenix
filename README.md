@@ -23,11 +23,11 @@ To run the main demo, go to the JFoenix/make directory and run the batch file ru
 ## Gradle
 To build JFoenix, execute the following command:
 
-    gradle build
+    gradlew build
 
 To run the main demo, execute the following command:
 
-    gradle run
+    gradlew run
     
 **NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
 
