@@ -1,5 +1,6 @@
 # JFoenix
 * JavaFX Material Design Library (Beta) [download jar](http://www.jfoenix.com/download/jfoenix.jar)
+* JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
 
 # Summary
