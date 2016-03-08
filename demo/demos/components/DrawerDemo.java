@@ -77,15 +77,11 @@ public class DrawerDemo extends Application {
 
 		JFXDrawersStack drawersStack = new JFXDrawersStack();
 		drawersStack.setContent(content);
-//		drawersStack.addDrawer(leftDrawer);
 		
 		leftDrawer.setId("LEFT");
 		rightDrawer.setId("RIGHT");
 		bottomDrawer.setId("BOT");
 		topDrawer.setId("TOP");
-//		drawersStack.addDrawer(rightDrawer);
-//		drawersStack.addDrawer(bottomDrawer);
-//		drawersStack.addDrawer(topDrawer);
 		
 		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
 			drawersStack.toggle(leftDrawer);
