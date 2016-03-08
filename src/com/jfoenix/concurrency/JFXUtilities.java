@@ -53,6 +53,7 @@ public class JFXUtilities {
 			doneLatch.await();
 		}
 		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 	}
 }
