@@ -46,12 +46,16 @@ public class JFXDrawersStack extends StackPane {
 	
 	public void setContent(Node content){
 		this.content = content;
+		if(drawers.size() > 0) drawers.get(0).setContent(content);
+		else this.getChildren().add(this.content);
 	}
 	
 	
-	public void addDrawer(JFXDrawer drawer){
+	private void addDrawer(JFXDrawer drawer){
+		if (drawer == null) return;
+		
 		if(drawers.size() == 0){
-			drawer.setContent(content);
+			if(content!=null) drawer.setContent(content);
 			this.getChildren().add(drawer);
 		}else {
 			drawer.setContent(drawers.get(drawers.size()-1));
@@ -100,6 +104,7 @@ public class JFXDrawersStack extends StackPane {
 	}
 	
 	public void toggle(JFXDrawer drawer){
+		if(!drawers.contains(drawer)) addDrawer(drawer);
 		if(drawer.isShown()) drawer.hide();
 		else{
 			updateDrawerPosition(drawer);
