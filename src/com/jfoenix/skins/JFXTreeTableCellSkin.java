@@ -32,8 +32,9 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
 /**
- * @author Shadi Shaheen
- *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S,T>, TreeTableCellBehavior<S,T>> {
     
@@ -83,36 +84,5 @@ public class JFXTreeTableCellSkin<S,T> extends TableCellSkinBase<TreeTableCell<S
         
         return leftPadding;
     }
-    
-    /**
-     * @author Shadi Shaheen
-     * this class is used to exploit the method of the parent class
-     * 
-     * @param <S>
-     * @param <t>
-     */
-//    class  TreeTableCellSkinWrapper<S,t> extends TreeTableCellSkin<S, T>{
-//
-//		public TreeTableCellSkinWrapper(TreeTableCell<S, T> treeTableCell) {
-//			super(treeTableCell);
-//		}
-//		
-//		public double tempLeftLabelPadding(){
-//			return super.leftLabelPadding();
-//		}
-//		
-//		public double tempComputePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset){
-//			return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
-//		}
-//
-//		public BooleanProperty columnVisibleProperty() {
-//	        return super.columnVisibleProperty();
-//	    }
-//
-//		public ReadOnlyDoubleProperty columnWidthProperty() {
-//	        return super.columnWidthProperty();
-//	    }
-//		
-//    }
     
 }

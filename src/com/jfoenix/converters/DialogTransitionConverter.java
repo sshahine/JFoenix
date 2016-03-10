@@ -26,8 +26,12 @@ import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.sun.javafx.css.StyleConverterImpl;
 
 /**
- * @author Shadi Shaheen
- *
+ * Converts the CSS for -fx-dialog-transition items into DialogTransition.
+ * it's used in JFXDialog.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class DialogTransitionConverter  extends StyleConverterImpl<String , DialogTransition> {
     // lazy, thread-safe instatiation

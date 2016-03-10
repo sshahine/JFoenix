@@ -21,6 +21,10 @@ package com.jfoenix.controls.cells.editors.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
@@ -32,23 +36,33 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
-
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 /**
- * @author Shadi Shaheen
+ * <h1>Generic Editable Tree Table cell</h1>
  * Provides the base for an editable table cell using a text field. Sub-classes can provide formatters for display and a
  * commitHelper to control when editing is committed.
+ * <p>
+ *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 	protected EditorNodeBuilder builder;
 	protected Region editorNode;
 
+
+	/**
+	 * constructor that takes a custom builder to edit the cell
+	 * @param builder
+	 */
 	public GenericEditableTreeTableCell(EditorNodeBuilder builder) {
 		this.builder = builder;
 	}
 
+	/**
+	 * constructor that creates the default {@link com.jfoenix.controls.cells.editors.TextFieldEditorBuilder TextField} editor node 
+	 * to edit the cell
+	 */
 	public GenericEditableTreeTableCell() {
 		builder = new TextFieldEditorBuilder();
 	}
@@ -97,19 +111,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 			setGraphic(editorNode);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);			
 		}
-
-		//		StackPane pane = new StackPane();
-		//		pane.setStyle("-fx-padding:-10 -8 -10 -8");
-		//		pane.getChildren().add(textField);
-		//		Platform.runLater(new Runnable() {
-		//			@Override
-		//			public void run() {
-		//				textField.selectAll();
-		//				textField.requestFocus();
-		//			}
-		//		});
 	}
-
 
 	@Override
 	public void cancelEdit() {
@@ -154,13 +156,6 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 				setGraphic(editorNode);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 				builder.updateItem(item, empty);
-				//				Platform.runLater(new Runnable() {
-				//					@Override
-				//					public void run() {
-				//						textField.selectAll();
-				//						textField.requestFocus();
-				//					}
-				//				});
 			} else {
 				Object value = getValue();
 				if(value instanceof Node) {
@@ -213,8 +208,8 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 		}, this.widthProperty(), this.graphicTextGapProperty());
 		editorNode = builder.createNode(getValue(), minWidthBinding, keyEventsHandler, focusChangeListener);
 	}
+	
 	/**
-	 *
 	 * @param forward true gets the column to the right, false the column to the left of the current column
 	 * @return
 	 */

@@ -29,8 +29,14 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Text field cell editor</h1>
+ * this an example of the cell editor, it creates a JFXTextField node to 
+ * allow the user to edit the cell value
+ * <p>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 
@@ -84,6 +90,4 @@ public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 	public void validateValue() throws Exception {
 		
 	}
-
-
 }

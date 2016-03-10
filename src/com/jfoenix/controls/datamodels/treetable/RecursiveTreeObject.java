@@ -25,18 +25,31 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TreeTableColumn;
 
 /**
- * @author Shadi Shaheen
+ * data model that is used in JFXTreeTableView, it's used to implement 
+ * the grouping feature.
+ * <p>
+ * <b>Note:</b> the data object used in JFXTreeTableView <b>must</b> extends this class
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
+ * 
  * @param <T> is the concrete object of the Tree table
  */
 public class RecursiveTreeObject<T> {
 
+	/**
+	 * gropued children objects
+	 */
 	ObservableList<T> children = FXCollections.observableArrayList();
 	
 	public ObservableList<T> getChildren(){
 		return children;
 	}	
 	
+	/**
+	 * Whether or not the object is grouped by a specifed tree table column 
+	 */
 	ObjectProperty<TreeTableColumn<T, ?>> groupedColumn = new SimpleObjectProperty<>();
 
 	public final ObjectProperty<TreeTableColumn<T, ?>> groupedColumnProperty() {
@@ -51,7 +64,9 @@ public class RecursiveTreeObject<T> {
 		this.groupedColumnProperty().set(groupedColumn);
 	}
 	
-	
+	/**
+	 * the value that must be shown when grouped 
+	 */
 	ObjectProperty<Object> groupedValue = new SimpleObjectProperty<>();
 
 	public final ObjectProperty<Object> groupedValueProperty() {

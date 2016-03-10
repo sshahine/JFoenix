@@ -26,8 +26,12 @@ import com.jfoenix.controls.JFXButton.ButtonType;
 import com.sun.javafx.css.StyleConverterImpl;
 
 /**
- * @author Shadi Shaheen
- *
+ * Converts the CSS for -fx-button-type items into ButtonType.
+ * it's used in JFXButton
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class ButtonTypeConverter  extends StyleConverterImpl<String , ButtonType> {
     // lazy, thread-safe instatiation

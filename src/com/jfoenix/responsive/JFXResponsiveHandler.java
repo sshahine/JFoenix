@@ -28,10 +28,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
- * @author Shadi Shaheen
  * Responsive handler will scan all nodes in the scene and add a certain 
  * pseudo class (style class) to them according to the device ( screen size )
  * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXResponsiveHandler {
 	
@@ -40,12 +42,33 @@ public class JFXResponsiveHandler {
 	public static final PseudoClass PSEUDO_CLASS_MEDIUM = PseudoClass.getPseudoClass("medium-device");
 	public static final PseudoClass PSEUDO_CLASS_LARGE = PseudoClass.getPseudoClass("large-device");
 	
-	
+	/**
+	 * Construct a responsive handler for a specified Stage and css class.
+	 * <p>
+	 * Device css classes can be one of the following:
+	 * <ul>
+	 * 	<li>{@link JFXResponsiveHandler#PSEUDO_CLASS_EX_SMALL}</li>
+	 * 	<li>{@link JFXResponsiveHandler#PSEUDO_CLASS_LARGE}</li>
+	 * 	<li>{@link JFXResponsiveHandler#PSEUDO_CLASS_MEDIUM}</li>
+	 * 	<li>{@link JFXResponsiveHandler#PSEUDO_CLASS_SMALL}</li>
+	 * </ul>
+	 * 
+	 * <b>Note:</b> the css class must be chosen by the user according to a device
+	 * detection methodology
+	 * 
+	 * @param stage the JavaFX Application stage
+	 * @param pseudoClass css class for certain device
+	 */
 	public JFXResponsiveHandler(Stage stage, PseudoClass pseudoClass) {
 		scanAllNodes(stage.getScene().getRoot(), PSEUDO_CLASS_LARGE);		
-		
 	}
 	
+	/**
+	 * scans all nodes in the scene and apply the css pseduoClass to them.
+	 * 
+	 * @param parent stage parent node
+	 * @param pseudoClass css class for certain device
+	 */
 	private void scanAllNodes(Parent parent, PseudoClass pseudoClass){		
 		parent.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>(){
 			@Override

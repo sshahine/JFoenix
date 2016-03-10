@@ -31,7 +31,7 @@ public class DrawerDemo extends Application {
 		leftDrawerPane.getStyleClass().add("red-400");
 		leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
 		leftDrawer.setSidePane(leftDrawerPane);
-		leftDrawer.setDefaultDrawerSize(250);
+		leftDrawer.setDefaultDrawerSize(150);
 //		leftDrawer.setContent(content);	
 		leftDrawer.setOverLayVisible(false);
 		leftDrawer.setResizableOnDrag(true);
@@ -41,7 +41,7 @@ public class DrawerDemo extends Application {
 		StackPane bottomDrawerPane = new StackPane();
 		bottomDrawerPane.getStyleClass().add("deep-purple-400");
 		bottomDrawerPane.getChildren().add(new JFXButton("Bottom Content"));		
-		bottomDrawer.setDefaultDrawerSize(250);
+		bottomDrawer.setDefaultDrawerSize(150);
 		bottomDrawer.setDirection(DrawerDirection.BOTTOM);		
 		bottomDrawer.setSidePane(bottomDrawerPane);
 //		bottomDrawer.setContent(leftDrawer);
@@ -54,7 +54,7 @@ public class DrawerDemo extends Application {
 		rightDrawerPane.getStyleClass().add("blue-400");
 		rightDrawerPane.getChildren().add(new JFXButton("Right Content"));
 		rightDrawer.setDirection(DrawerDirection.RIGHT);		
-		rightDrawer.setDefaultDrawerSize(250);
+		rightDrawer.setDefaultDrawerSize(150);
 		rightDrawer.setSidePane(rightDrawerPane);
 //		rightDrawer.setContent(bottomDrawer);
 		rightDrawer.setOverLayVisible(false);
@@ -67,7 +67,7 @@ public class DrawerDemo extends Application {
 		topDrawerPane.getStyleClass().add("green-400");
 		topDrawerPane.getChildren().add(new JFXButton("Top Content"));
 		topDrawer.setDirection(DrawerDirection.TOP);		
-		topDrawer.setDefaultDrawerSize(250);
+		topDrawer.setDefaultDrawerSize(150);
 		topDrawer.setSidePane(topDrawerPane);
 //		topDrawer.setContent(rightDrawer);
 		topDrawer.setOverLayVisible(false);

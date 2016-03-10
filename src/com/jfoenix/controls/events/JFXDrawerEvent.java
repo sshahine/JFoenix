@@ -18,26 +18,47 @@
  */
 package com.jfoenix.controls.events;
 
+import com.jfoenix.controls.JFXDrawer;
+
 import javafx.event.Event;
 import javafx.event.EventType;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXDrawer events, used exclusively by the following methods:
+ * <ul>
+ *   <li>{@link JFXDrawer#draw()}
+ *   <li>{@link JFXDrawer#hide()}
+ * </ul>
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDrawerEvent extends Event {
-	
+
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct a new JFXDrawer {@code Event} with the specified event type
+	 * @param eventType the event type
+	 */
 	public JFXDrawerEvent(EventType<? extends Event> eventType) {
 		super(eventType);
 	}
-	
+
+	/**
+	 * This event occurs when a JFXDrawer is closed, no longer visible to the user
+	 * ( after the exit animation ends )
+	 */
 	public static final EventType<JFXDrawerEvent> CLOSED =
 			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_CLOSED");
-	
+
+	/**
+	 * This event occurs when a JFXDrawer is drawn, visible to the user
+	 * ( after the entrance animation ends )
+	 */
 	public static final EventType<JFXDrawerEvent> OPENED =
 			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_OPENED");
-	
-	
+
+
 }

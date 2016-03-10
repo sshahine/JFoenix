@@ -25,8 +25,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
- * @author Shadi Shaheen
- *
+ * it will create a shadow effect for a given node and a specifed depth level.
+ * depth levels are {0,1,2,3,4,5} 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDepthManager {
 

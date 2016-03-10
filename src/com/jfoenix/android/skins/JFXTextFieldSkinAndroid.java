@@ -55,9 +55,18 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design TextField Skin for android</h1>
+ * The JFXTextFieldSkinAndroid implements material design text field for android
+ * when porting JFoenix to android using JavaFXPorts 
+ * <p>
+ * <b>Note:</b> the implementation is a copy of the original {@link com.jfoenix.controls.JFXTextArea JFXTextArea} 
+ * however it extends the JavaFXPorts text area android skin.
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
+
 public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 
 	private AnchorPane cursorPane = new AnchorPane();
@@ -80,7 +89,6 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	private boolean errorShowen = false;
 	private double currentFieldHeight = -1;
 	private double errorLabelInitHeight = 0;
-
 	private boolean heightChanged = false;
 
 	private Timeline hideErrorAnimation;
@@ -93,8 +101,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
 	private Paint oldPromptTextFill;
-	
-	
+
+
 	private BooleanBinding usePromptText = Bindings.createBooleanBinding(()->{
 		String txt = getSkinnable().getText();
 		String promptTxt = getSkinnable().getPromptText();
@@ -115,11 +123,14 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			promptTextColorTransition.playFromStart();
 		}
 	};
-	
 
+
+	/** 
+	 * Class constructor.
+	 */
 	public JFXTextFieldSkinAndroid(JFXTextField field) {
 		super(field);
-		
+
 		// initial styles
 		//		field.setStyle("-fx-background-color: transparent ;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080;-fx-alignment: top-left ;");
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -187,7 +198,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 				getSkinnable().focusedProperty().removeListener(focusPromptTextListener);	
 			}
 		});
-		
+
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
 			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
 				hideErrorAnimation.stop();
@@ -287,36 +298,36 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
-				promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
+								promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
-				promptTextDownTransition = new CachedTransition(textPane, new Timeline(
-								new KeyFrame(Duration.millis(1300), 
-										new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-										new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-										new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-								)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+								promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+										new KeyFrame(Duration.millis(1300), 
+												new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+												new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+										)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
-				floatLabel.addListener((o,oldVal,newVal)->{
-					if(newVal){
-						oldPromptTextFill = promptTextFill.get();
-						// if this is removed the prompt text flicker on the 1st focus
-						promptTextFill.set(oldPromptTextFill);
-						promptTextDownTransition.stop();
-						promptTextUpTransition.play();
-					} else{						
-						promptTextUpTransition.stop();
-						promptTextDownTransition.play();
-					}
-				});
+										floatLabel.addListener((o,oldVal,newVal)->{
+											if(newVal){
+												oldPromptTextFill = promptTextFill.get();
+												// if this is removed the prompt text flicker on the 1st focus
+												promptTextFill.set(oldPromptTextFill);
+												promptTextDownTransition.stop();
+												promptTextUpTransition.play();
+											} else{						
+												promptTextUpTransition.stop();
+												promptTextDownTransition.play();
+											}
+										});
 
-				promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
-				
-				if(((JFXTextField)getSkinnable()).isLabelFloat()){
-					promptText.visibleProperty().unbind();
-					promptText.visibleProperty().set(true);
-					getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
-				}
+										promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
+
+										if(((JFXTextField)getSkinnable()).isLabelFloat()){
+											promptText.visibleProperty().unbind();
+											promptText.visibleProperty().set(true);
+											getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										}
 			}
 
 			textPane.getChildren().remove(line);

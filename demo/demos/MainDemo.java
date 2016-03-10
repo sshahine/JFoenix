@@ -24,7 +24,7 @@ public class MainDemo extends Application {
 
 		new Thread(()->{
 			try {
-				SVGGlyphLoader.loadGlyphsFont(MainDemo.class.getResource("/resources/fonts/icomoon.svg"));
+				SVGGlyphLoader.loadGlyphsFont(MainDemo.class.getResourceAsStream("/resources/fonts/icomoon.svg"),"icomoon.svg");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -27,8 +27,9 @@ import com.sun.javafx.scene.control.behavior.KeyBinding;
 import javafx.scene.control.DatePicker;
 
 /**
- * @author Shadi Shaheen
- *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDatePickerBehavior extends ComboBoxBaseBehavior<LocalDate> {
 

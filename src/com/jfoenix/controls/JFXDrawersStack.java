@@ -36,24 +36,24 @@ public class JFXDrawersStack extends StackPane {
 	private Node content ;
 	private Rectangle clip = new Rectangle();
 	boolean holding = false;
-	
+
 	public JFXDrawersStack() {
 		super();
 		clip.widthProperty().bind(this.widthProperty());
 		clip.heightProperty().bind(this.heightProperty());
 		this.setClip(clip);
 	}
-	
+
 	public void setContent(Node content){
 		this.content = content;
 		if(drawers.size() > 0) drawers.get(0).setContent(content);
 		else this.getChildren().add(this.content);
 	}
-	
-	
+
+
 	private void addDrawer(JFXDrawer drawer){
 		if (drawer == null) return;
-		
+
 		if(drawers.size() == 0){
 			if(content!=null) drawer.setContent(content);
 			this.getChildren().add(drawer);
@@ -61,7 +61,7 @@ public class JFXDrawersStack extends StackPane {
 			drawer.setContent(drawers.get(drawers.size()-1));
 			this.getChildren().add(drawer);
 		}
-		
+
 		drawer.sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED, (event)->{
 			holding = true;
 			new Thread(()->{
@@ -81,12 +81,12 @@ public class JFXDrawersStack extends StackPane {
 				}
 			}).start();
 		});
-		
+
 		drawer.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, (event)-> holding = false);
 		drawer.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, (event)-> holding = false);
-		
+
 		drawers.add(drawer);
-		
+
 	}
 
 	private void updateDrawerPosition(JFXDrawer drawer){
@@ -102,7 +102,7 @@ public class JFXDrawersStack extends StackPane {
 			this.getChildren().add(drawer);
 		}
 	}
-	
+
 	public void toggle(JFXDrawer drawer){
 		if(!drawers.contains(drawer)) addDrawer(drawer);
 		if(drawer.isShown()) drawer.hide();
@@ -111,6 +111,18 @@ public class JFXDrawersStack extends StackPane {
 			drawer.draw();	
 		}
 	}
-	
-	
+
+	public void toggle(JFXDrawer drawer, boolean show){
+		if(!drawers.contains(drawer)) addDrawer(drawer);
+		if(!show){
+			if(drawer.isShown()) drawer.hide();
+		}else{
+			if(!drawer.isShown()){
+				updateDrawerPosition(drawer);
+				drawer.draw();
+			}
+		}
+	}
+
+
 }

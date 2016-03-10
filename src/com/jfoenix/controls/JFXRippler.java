@@ -26,6 +26,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.DefaultProperty;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -49,6 +50,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
+import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.converters.RipplerMaskTypeConverter;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.css.converters.PaintConverter;
@@ -258,7 +260,7 @@ public class JFXRippler extends StackPane {
 							new Thread(()->{
 								try { Thread.sleep(200); } catch (Exception e1) { }
 								if(getChildren().size() == 1 )
-									resetOverLay();
+									JFXUtilities.runInFXAndWait(()->resetOverLay());
 							}).start();
 						});
 						outAnimation.play();

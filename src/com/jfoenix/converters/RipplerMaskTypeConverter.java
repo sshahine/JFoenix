@@ -26,8 +26,12 @@ import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.sun.javafx.css.StyleConverterImpl;
 
 /**
- * @author Shadi Shaheen
- *
+ * Converts the CSS for -fx-mask-type items into RipplerMask.
+ * it's used in JFXRippler.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public final class RipplerMaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
     // lazy, thread-safe instatiation

@@ -26,8 +26,12 @@ import com.jfoenix.controls.JFXSlider.IndicatorPosition;
 import com.sun.javafx.css.StyleConverterImpl;
 
 /**
- * @author Shadi Shaheen
- *
+ * Converts the CSS for -fx-indicator-position items into IndicatorPosition.
+ * it's used in JFXSlider.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class IndicatorPositionConverter extends StyleConverterImpl<String, IndicatorPosition> {
 	// lazy, thread-safe instatiation
