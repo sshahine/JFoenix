@@ -180,7 +180,8 @@ public class JFXDialog extends StackPane {
 
 	public void setContent(Region content) {
 		if(content!=null){
-			this.content = content;				
+			this.content = content;		
+			this.content.setPickOnBounds(false);
 			contentHolder.getChildren().add(content);			
 		}
 	}
