@@ -31,8 +31,11 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.CachedTransition;
 
 /**
- * @author Shadi Shaheen
- *
+ * transform {@link JFXHamburger} into close icon
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class HamburgerBasicCloseTransition extends CachedTransition implements HamburgerTransition {
 	

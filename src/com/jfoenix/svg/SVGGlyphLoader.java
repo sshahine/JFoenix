@@ -46,24 +46,34 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * @author Shadi Shaheen
- *
+ * will load icomoon svg font file, it will create a map of the 
+ * available svg glyphs. the user can retrive the svg glyph using its name. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class SVGGlyphLoader {
 
 	private static HashMap<String, SVGGlyphBuilder> glyphsMap = new HashMap<>();
+
 	
 	public static SVGGlyph getGlyph(String glyphName){
 		return glyphsMap.get(glyphName).build();
 	}
 
-	/*
-	 * this method is used to retrive icons from icomoon
-	 * as we need to apply transformation to correct the icon since 
-	 * its being after importing from icomoon
+	/**
+	 * will retrive icons from the glyphs map for a certain glyphName 
+	 * 
+	 * @param glyphName the glyph name
+	 * @return SVGGlyph node 
 	 */
 	public static SVGGlyph getIcoMoonGlyph(String glyphName){
 		SVGGlyph glyph = glyphsMap.get(glyphName).build();
+		/*
+		 * we need to apply transformation to correct the icon since 
+		 * its being after importing from icomoon
+		 */
 		glyph.getTransforms().add(new Scale(1,-1));
 		Translate height = new Translate();
 		height.yProperty().bind(Bindings.createDoubleBinding(()-> -glyph.getHeight() , glyph.heightProperty()));
@@ -71,10 +81,18 @@ public class SVGGlyphLoader {
 		return glyph;
 	}
 	
+	/** 
+	 * @return a set of all loaded svg IDs (names)
+	 */
 	public static Set<String> getAllGlyphsIDs(){
 		return glyphsMap.keySet();
 	}
 	
+	/**
+	 * will load SVG icons from icomoon font file (e.g font.svg)
+	 * @param url of the svg font file
+	 * @throws IOException
+	 */
 	public static void loadGlyphsFont(URL url) throws IOException {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();	
@@ -115,7 +133,13 @@ public class SVGGlyphLoader {
 		}		
 	}
 	
-	public static void loadGlyphsFont(InputStream stream, String name) throws IOException {
+	/**
+	 * will load SVG icons from input stream 
+	 * @param stream input stream of svg font file
+	 * @param keyPrefix will be used as a prefix when storing SVG icons in the map
+	 * @throws IOException
+	 */
+	public static void loadGlyphsFont(InputStream stream, String keyPrefix) throws IOException {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();	
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -140,7 +164,7 @@ public class SVGGlyphLoader {
 				
 				 String glyphId = glyphName.getNodeValue();
 				 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i, glyphId, (String)glyph.getAttributes().getNamedItem("d").getNodeValue());
-				 glyphsMap.put(name + "." + glyphId, glyphPane);
+				 glyphsMap.put(keyPrefix + "." + glyphId, glyphPane);
 			}
 			stream.close();
 		} catch (ParserConfigurationException e) {
@@ -151,7 +175,12 @@ public class SVGGlyphLoader {
 			e.printStackTrace();
 		}		
 	}
-	
+	/**
+	 * load a single svg icon from a file
+	 * @param url of the svg icon
+	 * @return SVGGLyph node 
+	 * @throws IOException
+	 */
 	public static SVGGlyph loadGlyph(URL url) throws IOException {
 		String urlString = url.toString();
 		String filename = urlString.substring(urlString.lastIndexOf('/') + 1);
@@ -172,6 +201,9 @@ public class SVGGlyphLoader {
 		return new SVGGlyph(id, name, extractSvgPath(getStringFromInputStream(url.openStream())), Color.BLACK);
 	}
 	
+	/**
+	 * clear all loaded svg icons
+	 */
 	public static void clear(){
 		glyphsMap.clear();
 	}

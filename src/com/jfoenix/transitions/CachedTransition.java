@@ -27,9 +27,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.util.Duration;
+
 /**
- * @author Shadi Shaheen
+ * applies animation on a cahced node to improve the performance
  * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class CachedTransition extends Transition {
 	protected final Node node;
@@ -69,6 +73,10 @@ public class CachedTransition extends Transition {
 		node.setCache(oldCache);
 		node.setCacheHint(oldCacheHint);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override protected void interpolate(double d) {
 		timeline.get().playFrom(Duration.seconds(d));
 		timeline.get().stop();

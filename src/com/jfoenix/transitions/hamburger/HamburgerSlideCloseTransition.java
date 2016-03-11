@@ -34,8 +34,11 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.transitions.CachedTransition;
 
 /**
- * @author Shadi Shaheen
- *
+ * transform {@link JFXHamburger} into close icon v.2
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class HamburgerSlideCloseTransition extends CachedTransition implements HamburgerTransition {
 	

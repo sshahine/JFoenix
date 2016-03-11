@@ -28,8 +28,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 
 /**
- * @author Shadi Shaheen
- *
+ * An abstract class that defines the basic validation functionalities for a certain control.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public abstract class ValidatorBase extends Parent {
 	public static final String DEFAULT_ERROR_STYLE_CLASS = "error";
@@ -56,13 +59,22 @@ public abstract class ValidatorBase extends Parent {
 		}
 	}
 
-	protected abstract void eval();
-
+	/**
+	 * will validate the source control
+	 */
 	public void validate(){
 		eval();
 		onEval();
 	}
+	
+	/**
+	 * will evalutate the validation condition once calling validate method
+	 */
+	protected abstract void eval();
 
+	/**
+	 *	this method will update the source control after evaluating the validation condition 
+	 */
 	protected void onEval(){
 		Node control = getSrcControl();
 		if (hasErrors.get()) {
@@ -169,7 +181,6 @@ public abstract class ValidatorBase extends Parent {
 	public SimpleObjectProperty<Node> iconProperty(){
 		return this.icon;
 	}
-
 	
 	
 	/***** error style class *****/

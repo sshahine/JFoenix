@@ -45,7 +45,9 @@ import javafx.util.Duration;
  * It's similar to JavaFX FillTransition, however it can be applied on Region 
  * instead of shape
  * 
- * @author Shadi Shaheen
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 
 public final class JFXFillTransition extends Transition {
@@ -62,12 +64,7 @@ public final class JFXFillTransition extends Transition {
 	 **************************************************************************/
 
 	/**
-	 * The target region of this {@code FillTransition}.
-	 * <p>
-	 * It is not possible to change the target {@code region} of a running
-	 * {@code FillTransition}. If the value of {@code region} is changed for a
-	 * running {@code FillTransition}, the animation has to be stopped and
-	 * started again to pick up the new value.
+	 * The target region of this {@code JFXFillTransition}.
 	 */
 	private ObjectProperty<Region> region;
 
@@ -89,12 +86,7 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The duration of this {@code FillTransition}.
-	 * <p>
-	 * It is not possible to change the {@code duration} of a running
-	 * {@code FillTransition}. If the value of {@code duration} is changed for a
-	 * running {@code FillTransition}, the animation has to be stopped and
-	 * started again to pick up the new value.
+	 * The duration of this {@code JFXFillTransition}.
 	 * <p>
 	 * Note: While the unit of {@code duration} is a millisecond, the
 	 * granularity depends on the underlying operating system and will in
@@ -151,12 +143,7 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * Specifies the start color value for this {@code FillTransition}.
-	 * <p>
-	 * It is not possible to change {@code fromValue} of a running
-	 * {@code FillTransition}. If the value of {@code fromValue} is changed for
-	 * a running {@code FillTransition}, the animation has to be stopped and
-	 * started again to pick up the new value.
+	 * Specifies the start color value for this {@code JFXFillTransition}.
 	 * 
 	 * @defaultValue {@code null}
 	 */
@@ -181,12 +168,7 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * Specifies the stop color value for this {@code FillTransition}.
-	 * <p>
-	 * It is not possible to change {@code toValue} of a running
-	 * {@code FillTransition}. If the value of {@code toValue} is changed for a
-	 * running {@code FillTransition}, the animation has to be stopped and
-	 * started again to pick up the new value.
+	 * Specifies the stop color value for this {@code JFXFillTransition}.
 	 * 
 	 * @defaultValue {@code null}
 	 */
@@ -211,8 +193,8 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The constructor of {@code FillTransition}
-	 * @param duration The duration of the {@code FillTransition}
+	 * The constructor of {@code JFXFillTransition}
+	 * @param duration The duration of the {@code JFXFillTransition}
 	 * @param region The {@code region} which filling will be animated
 	 * @param fromValue The start value of the color-animation
 	 * @param toValue The end value of the color-animation
@@ -239,8 +221,8 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The constructor of {@code FillTransition}
-	 * @param duration The duration of the {@code FillTransition}
+	 * The constructor of {@code JFXFillTransition}
+	 * @param duration The duration of the {@code JFXFillTransition}
 	 * @param fromValue The start value of the color-animation
 	 * @param toValue The end value of the color-animation
 	 */
@@ -249,10 +231,10 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The constructor of {@code FillTransition}
+	 * The constructor of {@code JFXFillTransition}
 	 * 
 	 * @param duration
-	 *            The duration of the {@code FillTransition}
+	 *            The duration of the {@code JFXFillTransition}
 	 * @param region
 	 *            The {@code region} which filling will be animated
 	 */
@@ -261,7 +243,7 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The constructor of {@code FillTransition}
+	 * The constructor of {@code JFXFillTransition}
 	 * 
 	 * @param duration
 	 *            The duration of the {@code FadeTransition}
@@ -271,7 +253,7 @@ public final class JFXFillTransition extends Transition {
 	}
 
 	/**
-	 * The constructor of {@code FillTransition}
+	 * The constructor of {@code JFXFillTransition}
 	 */
 	public JFXFillTransition() {
 		this(DEFAULT_DURATION, null);

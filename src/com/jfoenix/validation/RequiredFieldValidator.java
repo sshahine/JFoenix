@@ -19,28 +19,35 @@
 package com.jfoenix.validation;
 
 import javafx.beans.DefaultProperty;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 
 import com.jfoenix.validation.base.ValidatorBase;
 
 /**
- * @author Shadi Shaheen
- *
+ * An example of required field validtaion, that is applied on text input controls
+ * such as {@link TextField} and {@link TextArea}
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 @DefaultProperty(value="icon")
 public class RequiredFieldValidator extends ValidatorBase {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void eval() {
 		if(srcControl.get() instanceof TextInputControl)
 			evalTextInputField();
 	}
 	
-	protected void evalTextInputField(){
+	private void evalTextInputField(){
 		TextInputControl textField = (TextInputControl) srcControl.get();
-		if (textField.getText() == null || textField.getText().equals(""))
-			hasErrors.set(true);
-		else
-			hasErrors.set(false);
+		if (textField.getText() == null || textField.getText().equals("")) hasErrors.set(true);
+		else hasErrors.set(false);
 	}
 }
