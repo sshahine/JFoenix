@@ -288,7 +288,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
 
-			if(textPane.getChildren().get(0) instanceof Text){				
+			if(textPane.getChildren().get(0) instanceof Text && ((JFXTextField)getSkinnable()).isLabelFloat()){				
 				promptText = textPane.getChildren().get(0);
 				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 						new KeyFrame(Duration.millis(1300),
@@ -435,17 +435,18 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		errorShowen = true;
 
 		// update prompt color transition
-		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
-				new KeyFrame(Duration.millis(1300),
-						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
-						new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
-						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
-						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
-				)){{
-					setDelay(Duration.millis(0));
-					setCycleDuration(Duration.millis(300));
-				}};
+		if(((JFXTextField)getSkinnable()).isLabelFloat())
+			promptTextUpTransition = new CachedTransition(promptText, new Timeline(
+					new KeyFrame(Duration.millis(1300),
+							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
+					)){{
+						setDelay(Duration.millis(0));
+						setCycleDuration(Duration.millis(300));
+					}};
 	}
 
 	private void hideError(){	
@@ -467,17 +468,18 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		errorShowen = false;
 
 		// update prompt color transition
-		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
-				new KeyFrame(Duration.millis(1300),
-						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
-						new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
-						new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-						new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
-						new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
-				)){{
-					setDelay(Duration.millis(0));
-					setCycleDuration(Duration.millis(300));
-				}};
+		if(((JFXTextField)getSkinnable()).isLabelFloat())
+			promptTextUpTransition = new CachedTransition(promptText, new Timeline(
+					new KeyFrame(Duration.millis(1300),
+							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))
+					)){{
+						setDelay(Duration.millis(0));
+						setCycleDuration(Duration.millis(300));
+					}};
 	}
 
 
