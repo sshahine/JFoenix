@@ -202,7 +202,7 @@ public class JFXSliderSkin extends SliderSkin {
 			// prevent internal color change
 			if(!internalChange && newVal!=null){				
 				thumbColor = newVal.getFills().get(0).getFill();
-				if(getSkinnable().getValue() == 0){
+				if(getSkinnable().getValue() == getSkinnable().getMin()){
 					internalChange = true;
 					thumb.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(20), Insets.EMPTY)));
 					internalChange = false;

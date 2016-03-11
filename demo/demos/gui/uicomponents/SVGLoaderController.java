@@ -33,6 +33,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -130,8 +131,10 @@ public class SVGLoaderController {
 		JFXButton button = new JFXButton(null, glyph);
 		button.ripplerFillProperty().bind(glyphDetailViewer.colorPicker.valueProperty());
 		glyphDetailViewer.colorPicker.valueProperty().addListener((o,oldVal,newVal)->{
-			String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();
-			glyphDetailViewer.sizeSlider.lookup(".thumb").setStyle("-fx-stroke: "+webColor+"; -fx-fill: "+webColor+";");
+			String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();			
+			BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).getBackground().getFills().get(0);
+			((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).setBackground(new Background(new BackgroundFill(Color.valueOf(webColor), fill.getRadii(),fill.getInsets())));
+//			glyphDetailViewer.sizeSlider.lookup(".thumb").setStyle("-fx-background-color: "+webColor+"; -fx-fill: "+webColor+";");
 			if(lastClicked != null) lastClicked.setBackground(new Background(new BackgroundFill(Color.valueOf(glyphDetailViewer.colorPicker.getValue().toString().substring(0, 8)+"33"), null, null)));
 		});
 		button.setOnAction(event -> {
