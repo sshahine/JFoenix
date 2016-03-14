@@ -1,4 +1,7 @@
 # JFoenix
+
+[![Circle CI](https://img.shields.io/circleci/project/jfoenixadmin/JFoenix/master.svg?style=flat-square)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
+
 * JavaFX Material Design Library (Beta) [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
