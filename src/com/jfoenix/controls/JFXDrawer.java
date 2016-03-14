@@ -129,6 +129,8 @@ public class JFXDrawer extends StackPane {
 		overlayPane.setOnMouseClicked((e) -> hide());
 		initListeners();
 
+		//  init size value
+		setDefaultDrawerSize(100);
 	}
 
 
