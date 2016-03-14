@@ -89,6 +89,8 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 		main.getChildren().add(circles);
 		main.setCursor(Cursor.HAND);
 		
+						
+		// add change listener to selected property
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
 			rippler.setRipplerFill(newVal?toggleButton.getToggleColor():toggleButton.getUnToggleLineColor());
 			transition.setRate(newVal?1:-1);
@@ -103,6 +105,15 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 		toggleButton.unToggleColorProperty().addListener((o,oldVal,newVal)-> {updateToggleTransition(); udpateCricle();});
 		toggleButton.toggleLineColorProperty().addListener((o,oldVal,newVal)-> {updateToggleTransition(); updateLine();});
 		toggleButton.unToggleLineColorProperty().addListener((o,oldVal,newVal)-> {updateToggleTransition(); updateLine();});
+		
+		// init selected state 
+		rippler.setRipplerFill(getSkinnable().isSelected()?toggleButton.getToggleColor():toggleButton.getUnToggleLineColor());
+		if(getSkinnable().isSelected()){
+			circles.setTranslateX((line.getLayoutBounds().getWidth()/2) - circleRadius);
+			line.setStroke(((JFXToggleButton) getSkinnable()).getToggleLineColor());
+			circle.setFill(((JFXToggleButton) getSkinnable()).getToggleColor());
+			transition.play();
+		}
 	}
 
 	private void udpateCricle(){
