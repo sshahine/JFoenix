@@ -63,3 +63,7 @@ To run the main demo, execute the following command:
 ![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
 
 ![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
+
+![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
+
+![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
