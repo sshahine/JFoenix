@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.beans.DefaultProperty;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -33,6 +34,7 @@ import javafx.scene.shape.Rectangle;
  * @version 1.0
  * @since   2016-03-09
  */
+@DefaultProperty(value="content")
 public class JFXDrawersStack extends StackPane {
 
 	private ArrayList<JFXDrawer> drawers = new ArrayList<>();
@@ -48,6 +50,14 @@ public class JFXDrawersStack extends StackPane {
 		clip.widthProperty().bind(this.widthProperty());
 		clip.heightProperty().bind(this.heightProperty());
 		this.setClip(clip);
+	}
+	
+	/**
+	 * @return the content of the drawer stack (Note: the parent of the
+	 *  content node is that latest active drawer if existed)
+	 */
+	public Node getContent(){
+		return this.content;
 	}
 	
 	/**
