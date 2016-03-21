@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.jfoenix.controls.events.JFXDialogEvent;
+import com.jfoenix.converters.DialogTransitionConverter;
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CachedTransition;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -44,21 +49,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import com.jfoenix.controls.events.JFXDialogEvent;
-import com.jfoenix.converters.DialogTransitionConverter;
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CachedTransition;
-
 /**
- * @author Shadi Shaheen
- * note that for JFXDialog to work properly the root node should
+ * Note: for JFXDialog to work properly, the root node <b>MUST</b>
  * be of type {@link StackPane}
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 @DefaultProperty(value="content")
 public class JFXDialog extends StackPane {
@@ -72,25 +74,36 @@ public class JFXDialog extends StackPane {
 	private double offsetX = 0;
 	private double offsetY = 0;
 
-	private Pane dialogContainer;
+	private StackPane dialogContainer;
 	private Region content;
 	private Transition animation;
-
-	private BooleanProperty overlayClose = new SimpleBooleanProperty(true);
-	EventHandler<? super MouseEvent> closeHandler = (e)->close();
 	
+	EventHandler<? super MouseEvent> closeHandler = (e)->close();
+
+	/**
+	 * creates empty JFXDialog control with CENTER animation type
+	 */
 	public JFXDialog(){
 		this(null,null,DialogTransition.CENTER);
 	}
 
 	/**
-	 * creates JFX Dialog control
-	 * @param dialogContainer
-	 * @param content
-	 * @param transitionType
+	 * creates JFXDialog control with a specified animation type, the animation type
+	 * can be one of the following:
+	 * <ul>
+	 * <li>CENTER</li>
+	 * <li>TOP</li>
+	 * <li>RIGHT</li>
+	 * <li>BOTTOM</li>
+	 * <li>LEFT</li>
+	 * </ul>
+	 * 
+	 * @param dialogContainer is the parent of the dialog, it 
+	 * @param content the content of dialog
+	 * @param transitionType the animation type
 	 */
 	
-	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType) {		
+	public JFXDialog(StackPane dialogContainer, Region content, DialogTransition transitionType) {		
 		initialize();
 		setContent(content);
 		setDialogContainer(dialogContainer);
@@ -100,13 +113,23 @@ public class JFXDialog extends StackPane {
 	}
 	
 	/**
-	 * creates JFX Dialog control
+	 * creates JFXDialog control with a specified animation type that
+	 * is closed when clicking on the overlay, the animation type
+	 * can be one of the following:
+	 * <ul>
+	 * <li>CENTER</li>
+	 * <li>TOP</li>
+	 * <li>RIGHT</li>
+	 * <li>BOTTOM</li>
+	 * <li>LEFT</li>
+	 * </ul>
+	 * 
 	 * @param dialogContainer
 	 * @param content
 	 * @param transitionType
 	 * @param overlayClose
 	 */
-	public JFXDialog(Pane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {		
+	public JFXDialog(StackPane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {		
 		initialize();
 		setOverlayClose(overlayClose);
 		setContent(content);
@@ -153,11 +176,20 @@ public class JFXDialog extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	public Pane getDialogContainer() {
+	/**
+	 * @return the dialog container 
+	 */
+	public StackPane getDialogContainer() {
 		return dialogContainer;
 	}
 
-	public void setDialogContainer(Pane dialogContainer) {
+	/**
+	 * set the dialog container
+	 * Note: the dialog container must be StackPane, its the container for the dialog to be shown in.
+	 * 
+	 * @param dialogContainer
+	 */
+	public void setDialogContainer(StackPane dialogContainer) {
 		if(dialogContainer!=null){
 			this.dialogContainer = dialogContainer;
 			if(this.getChildren().indexOf(overlayPane)==-1)this.getChildren().setAll(overlayPane);
@@ -174,10 +206,17 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
+	/**
+	 * @return dialog content node
+	 */
 	public Region getContent() {
 		return content;
 	}
 
+	/**
+	 * set the content of the dialog
+	 * @param content
+	 */
 	public void setContent(Region content) {
 		if(content!=null){
 			this.content = content;		
@@ -186,36 +225,43 @@ public class JFXDialog extends StackPane {
 		}
 	}
 
+	/**
+	 * indicates whether the dialog will close when clicking on the overlay or not
+	 * @return
+	 */
+	private BooleanProperty overlayClose = new SimpleBooleanProperty(true);
 	
 	public final BooleanProperty overlayCloseProperty() {
 		return this.overlayClose;
 	}
-
 	public final boolean isOverlayClose() {
 		return this.overlayCloseProperty().get();
 	}
-
 	public final void setOverlayClose(final boolean overlayClose) {
 		this.overlayCloseProperty().set(overlayClose);
 	}
 	
-	/***************************************************************************
-	 *                                                                         *
-	 * Public API                                                              *
-	 *                                                                         *
-	 **************************************************************************/
-
-	public void show(Pane dialogContainer){
+	/**
+	 * it will show the dialog in the specified container
+	 * @param dialogContainer
+	 */
+	public void show(StackPane dialogContainer){
 		this.setDialogContainer(dialogContainer);
 		animation.play();
 	}
 
+	/**
+	 * show the dialog inside its parent container
+	 */
 	public void show(){
 		this.setDialogContainer(dialogContainer);
 //		animation = getShowAnimation(transitionType.get());
 		animation.play();		
 	}
 
+	/**
+	 * close the dialog
+	 */
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
@@ -385,10 +431,24 @@ public class JFXDialog extends StackPane {
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
-
+	 /**
+     * Initialize the style class to 'jfx-dialog'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-dialog";
 
-
+	/**
+	 * dialog transition type property, it can be one of the following:
+	 * <ul>
+	 * <li>CENTER</li>
+	 * <li>TOP</li>
+	 * <li>RIGHT</li>
+	 * <li>BOTTOM</li>
+	 * <li>LEFT</li>
+	 * </ul>
+	 */
 	private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<DialogTransition>(StyleableProperties.DIALOG_TRANSITION, JFXDialog.this, "dialogTransition", DialogTransition.CENTER );
 
 	public DialogTransition getTransitionType(){
@@ -400,7 +460,6 @@ public class JFXDialog extends StackPane {
 	public void setTransitionType(DialogTransition transition){
 		this.transitionType.set(transition);
 	}
-
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXDialog, DialogTransition> DIALOG_TRANSITION =
@@ -455,6 +514,10 @@ public class JFXDialog extends StackPane {
 	
 	private ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed)->{});
 
+	/**
+     * Defines a function to be called when the dialog is closed.
+     * Note: it will be triggered after the close animation is finished.
+     */
 	public void setOnDialogClosed(EventHandler<? super JFXDialogEvent> handler){
 		onDialogClosedProperty.set(handler);
 	}
@@ -466,6 +529,10 @@ public class JFXDialog extends StackPane {
 
 	private ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened)->{});
 	
+	/**
+     * Defines a function to be called when the dialog is opened.
+     * Note: it will be triggered after the show animation is finished.
+     */
 	public void setOnDialogOpened(EventHandler<? super JFXDialogEvent> handler){
 		onDialogOpenedProperty.set(handler);
 	}
@@ -474,9 +541,5 @@ public class JFXDialog extends StackPane {
 		onDialogOpenedProperty.get();
 	}
 
-
-
-	
-	
 }
 

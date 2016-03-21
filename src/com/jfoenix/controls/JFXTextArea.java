@@ -45,30 +45,53 @@ import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * JFXTextArea is the material design implementation of a text area. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
+ */
 public class JFXTextArea extends TextArea{
 
+	/**
+     * {@inheritDoc}
+     */
 	public JFXTextArea() {
 		super();
 		initialize();
 	}
 
+	/**
+     * {@inheritDoc}
+     */
 	public JFXTextArea(String text) {
 		super(text);
 		initialize();
 	}
 
+	/**
+     * {@inheritDoc}
+     */
+	@Override
+	protected Skin<?> createDefaultSkin() {
+		return new JFXTextAreaSkin(this);
+	}
+
 	private void initialize() {
-		this.getStyleClass().add("jfx-text-area");
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		if(System.getProperty("java.vm.name").toLowerCase().equals("dalvik")){
 			this.setStyle("-fx-skin: \"com.jfoenix.android.skins.JFXTextAreaSkinAndroid\";");
 		}
 	}
 	
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new JFXTextAreaSkin(this);
-	}
-	
+	/**
+     * Initialize the style class to 'jfx-text-field'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-text-area";
 	
 	/***************************************************************************
 	 *                                                                         *
@@ -76,6 +99,9 @@ public class JFXTextArea extends TextArea{
 	 *                                                                         *
 	 **************************************************************************/
 
+	/**
+	 * holds the current active validator on the text area in case of validation error 
+	 */
 	private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
 
 	public ValidatorBase getActiveValidator() {
@@ -86,6 +112,10 @@ public class JFXTextArea extends TextArea{
 		return this.activeValidator.getReadOnlyProperty();
 	}
 
+	/**
+	 * list of validators that will validate the text value upon calling 
+	 * {{@link #validate()}
+	 */
 	private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
 
 	public ObservableList<ValidatorBase> getValidators() {
@@ -96,6 +126,11 @@ public class JFXTextArea extends TextArea{
 		this.validators.addAll(validators);
 	}
 
+	/**
+	 * validates the text value using the list of validators provided by the user
+	 * {{@link #setValidators(ValidatorBase...)}
+	 * @return true if the value is valid else false
+	 */
 	public boolean validate() {
 		for (ValidatorBase validator : validators) {
 			if (validator.getSrcControl() == null)
@@ -118,6 +153,9 @@ public class JFXTextArea extends TextArea{
 	 *                                                                         *
 	 **************************************************************************/
 	
+	/**
+	 * set true to show a float the prompt text when focusing the field
+	 */
 	private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT, JFXTextArea.this, "lableFloat", false);
 	
 	public final StyleableBooleanProperty labelFloatProperty() {
@@ -132,6 +170,9 @@ public class JFXTextArea extends TextArea{
 		this.labelFloatProperty().set(labelFloat);
 	}
 	
+	/**
+	 * default color used when the text area is unfocused
+	 */
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, JFXTextArea.this, "unFocusColor", Color.rgb(77, 77, 77));
 
 	public Paint getUnFocusColor() {
@@ -146,6 +187,9 @@ public class JFXTextArea extends TextArea{
 		this.unFocusColor.set(color);
 	}
 
+	/**
+	 * default color used when the text area is focused
+	 */
 	private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.FOCUS_COLOR, JFXTextArea.this, "focusColor", Color.valueOf("#4059A9"));
 
 	public Paint getFocusColor() {
@@ -221,11 +265,9 @@ public class JFXTextArea extends TextArea{
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
 	
-	
+	/**
+	 * this style class will be activated when a validation error occurs
+	 */
 	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
-
-
-	
-	
 	
 }

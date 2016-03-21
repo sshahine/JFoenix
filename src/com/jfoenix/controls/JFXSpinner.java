@@ -40,19 +40,22 @@ import javafx.util.Duration;
 import com.sun.javafx.css.converters.SizeConverter;
 
 /**
+ * JFXSpinner is the material design implementation of a loading spinner. 
+ * 
  * @author Bashir Elias & Shadi Shaheen
- *
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXSpinner extends StackPane {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-spinner";
-
-	
 	private Color greenColor, redColor, yellowColor, blueColor, initialColor;
 	private Timeline timeline;
 	private Arc arc;
 	private boolean initialized;
 
+	/**
+	 * creates a spinner node
+	 */
 	public JFXSpinner() {
 		super();
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
@@ -60,7 +63,6 @@ public class JFXSpinner extends StackPane {
 	}
 
 	private void initialize() {
-
 		blueColor = Color.valueOf("#4285f4");
 		redColor = Color.valueOf("#db4437");
 		yellowColor = Color.valueOf("#f4b400");
@@ -102,7 +104,10 @@ public class JFXSpinner extends StackPane {
 		return frames;
 	}
 
-	protected void layoutChildren() {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override protected void layoutChildren() {
 		if (!initialized) {
 			super.layoutChildren();
 			initialColor = (Color) arc.getStroke();
@@ -134,8 +139,19 @@ public class JFXSpinner extends StackPane {
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
+
+	/**
+	 * Initialize the style class to 'jfx-spinner'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-spinner";
 	
 	
+	/**
+	 * specifies the radius of the spinner node
+	 */
 	private StyleableDoubleProperty radius = new SimpleStyleableDoubleProperty(StyleableProperties.RADIUS, JFXSpinner.this, "radius", 12.0);
 
 	public final StyleableDoubleProperty radiusProperty() {
@@ -150,6 +166,9 @@ public class JFXSpinner extends StackPane {
 		this.radiusProperty().set(radius);
 	}
 	
+	/**
+	 * specifies from which angle the spinner should start spinning
+	 */
 	private StyleableDoubleProperty startingAngle = new SimpleStyleableDoubleProperty(StyleableProperties.STARTING_ANGLE, JFXSpinner.this, "starting_angle", 360 - Math.random()*720);
 
 	public final StyleableDoubleProperty startingAngleProperty() {

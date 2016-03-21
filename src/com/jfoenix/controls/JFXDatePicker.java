@@ -44,23 +44,30 @@ import javafx.scene.control.Skin;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXDatePicker is the material design implementation of a date picker. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDatePicker extends DatePicker {
 	
-	private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>(LocalTime.now());
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXDatePicker() {
 		super();		
 		initialize();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
     public JFXDatePicker(LocalDate localDate) {
        super(localDate);
        initialize();
@@ -71,10 +78,38 @@ public class JFXDatePicker extends DatePicker {
 		setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 	}
     
+	/**
+	 * {@inheritDoc}
+	 */
     @Override protected Skin<?> createDefaultSkin() {
         return new JFXDatePickerSkin(this);
     }
-    
+
+    /***************************************************************************
+     *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+	 * the parent node used when showing the data picker content as an overlay,
+	 * intead of a popup
+	 */
+	private ObjectProperty<StackPane> dialogParent = new SimpleObjectProperty<>(null);
+	public final ObjectProperty<StackPane> dialogParentProperty() {
+		return this.dialogParent;
+	}
+	public final StackPane getDialogParent() {
+		return this.dialogParentProperty().get();
+	}
+	public final void setDialogParent(final StackPane dialogParent) {
+		this.dialogParentProperty().set(dialogParent);
+	}
+
+	/**
+	 * property that holds the time value if showing the time picker
+	 */
+    private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>(LocalTime.now());
     
 	public final ObjectProperty<LocalTime> timeProperty() {
 		return this.lastValidTime;
@@ -85,7 +120,6 @@ public class JFXDatePicker extends DatePicker {
 	public final void setTime(final java.time.LocalTime lastValidTime) {
 		this.timeProperty().set(lastValidTime);
 	}
-	
 
 	private boolean showTime = false;
     
@@ -93,21 +127,12 @@ public class JFXDatePicker extends DatePicker {
 		return showTime;
 	}
 
+	/**
+	 * indicates whether to pick time or date 
+	 */
 	public void setShowTime(boolean showTime) {
 		this.showTime = showTime;
 	}
-	
-	private ObjectProperty<Pane> dialogParent = new SimpleObjectProperty<>(null);
-	public final ObjectProperty<Pane> dialogParentProperty() {
-		return this.dialogParent;
-	}
-	public final Pane getDialogParent() {
-		return this.dialogParentProperty().get();
-	}
-	public final void setDialogParent(final Pane dialogParent) {
-		this.dialogParentProperty().set(dialogParent);
-	}
-
 
 	/***************************************************************************
 	 *                                                                         *
@@ -115,8 +140,19 @@ public class JFXDatePicker extends DatePicker {
 	 *                                                                         *
 	 **************************************************************************/
 	
+	/**
+     * Initialize the style class to 'jfx-date-picker'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-date-picker";
     
+	/**
+	 * show the popup as an overlay using JFXDialog
+	 * NOTE: to show it properly the scene root must be StackPane, or the user must set
+	 * the dialog parent manually using the property {{@link #dialogParentProperty()}
+	 */
 	private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY, JFXDatePicker.this, "overLay", false);
 	
 	public final StyleableBooleanProperty overLayProperty() {
@@ -129,7 +165,9 @@ public class JFXDatePicker extends DatePicker {
 		this.overLayProperty().set(overLay);
 	}
 	
-	
+	/**
+	 * the default color used in the data picker content
+	 */
 	private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR, JFXDatePicker.this, "defaultColor", Color.valueOf("#009688"));
 
 	public Paint getDefaultColor(){

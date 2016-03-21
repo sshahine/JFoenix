@@ -1,5 +1,11 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialog.DialogTransition;
+
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -8,12 +14,7 @@ import io.datafx.controller.util.VetoException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
-
-import javax.annotation.PostConstruct;
-
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialog.DialogTransition;
+import javafx.scene.layout.StackPane;
 
 @FXMLController(value = "/resources/fxml/ui/Dialog.fxml" , title = "Material Design Example")
 public class DialogController {
@@ -43,27 +44,27 @@ public class DialogController {
 
 		centerButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.CENTER);
-			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
+			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
 		});
 
 		topButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.TOP);
-			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
+			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
 		});
 
 		rightButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.RIGHT);
-			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
+			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
 		});
 
 		bottomButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.BOTTOM);
-			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
+			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
 		});
 
 		leftButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.LEFT);
-			dialog.show((Pane) context.getRegisteredObject("ContentPane"));
+			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
 		});
 
 		acceptButton.setOnMouseClicked((e)->{

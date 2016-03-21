@@ -25,18 +25,25 @@ import javafx.scene.input.MouseEvent;
 import com.jfoenix.skins.JFXTabPaneSkin;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXTabPane is the material design implementation of a tab pane. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTabPane extends TabPane {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTabPane() {
 		super();
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXTabPaneSkin(this);
@@ -46,6 +53,17 @@ public class JFXTabPane extends TabPane {
 		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 	}
 	
+	/**
+	 * Initialize the style class to 'jfx-tab-pane'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
+	
+	/**
+	 * propagate any mouse events on the tab pane to its parent
+	 */
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
 			e.consume();

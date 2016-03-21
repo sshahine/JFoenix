@@ -61,11 +61,18 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXDrawer is material design implementation of drawer.
+ * the drawer has two main nodes, the content and side pane.
+ * <ul>
+ * <li><b>content pane:</b> is a stack pane that holds the nodes inside the drawer</li>
+ * <li><b>side pane:</b> is a stack pane that holds the nodes inside the drawer side area (Drawable node)</li>
+ * </ul>
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDrawer extends StackPane {
-
 
 	public static enum DrawerDirection{
 		LEFT(1), RIGHT(-1), TOP(1), BOTTOM(-1); 
@@ -107,6 +114,9 @@ public class JFXDrawer extends StackPane {
 
 	private SimpleObjectProperty<DrawerDirection> directionProperty = new SimpleObjectProperty<DrawerDirection>(DrawerDirection.LEFT);
 
+	/**
+	 * creates empy drawer node
+	 */
 	public JFXDrawer(){
 		super();
 		initialize();
@@ -133,9 +143,11 @@ public class JFXDrawer extends StackPane {
 		setDefaultDrawerSize(100);
 	}
 
+	private void initialize() {
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
+	}
 
 	private void initListeners(){
-
 		updateDirection(directionProperty.get());		
 		initTranslate.bind(Bindings.createDoubleBinding(()-> -1 * directionProperty.get().doubleValue() * defaultSizeProperty.getValue() - initOffset * directionProperty.get().doubleValue(), defaultSizeProperty, directionProperty ));
 
@@ -286,27 +298,13 @@ public class JFXDrawer extends StackPane {
 
 	private ArrayList<Callback<Void, Boolean>> callBacks = new ArrayList<>();
 
-	/*
+	/**
 	 *  the callbacks are used to add conditions to allow 
 	 *  starting the drawer when holding on the side part of the content
 	 */
 	public void addInitDrawerCallback(Callback<Void, Boolean> callBack){
 		callBacks.add(callBack);
 	}
-
-
-//	public boolean isDrawn(){
-//		switch (directionProperty.get()) {
-//		case LEFT:
-//		case TOP:
-//			return translateProperty.get() >= 0;
-//		case RIGHT:
-//		case BOTTOM:
-//			return translateProperty.get() <= 0;
-//			return true;
-//		}
-//	}
-
 
 	/**
 	 * this method is only used in drawers stack component
@@ -366,13 +364,16 @@ public class JFXDrawer extends StackPane {
 
 	/**
 	 * this method indicates whether the drawer is shown or not 
-	 * @return
+	 * @return true if he drawer is totally visible else false
 	 */
 	public boolean isShown() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0) return true;
 		return false;
 	}
 
+	/**
+	 * toggle the drawer on
+	 */
 	public void draw() {
 		if(this.inTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0){
 			this.inTransition.setOnFinished((finish)-> onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
@@ -382,6 +383,9 @@ public class JFXDrawer extends StackPane {
 		}
 	}
 
+	/**
+	 * toggle the drawer off
+	 */
 	public void hide(){
 		// (sidePane.getTranslateX() == 0), prevents the drawer from playing the hidden animation if it's already closed
 
@@ -606,6 +610,10 @@ public class JFXDrawer extends StackPane {
 	private boolean drawCalled = false;
 	private boolean hideCalled = true;
 
+	/**
+     * Defines a function to be called when the drawer is drawn.
+     * Note: it will be triggered after the show animation is finished.
+     */
 	public void setOnDrawingAction(EventHandler<Event> handler){
 		translateProperty.addListener((o,oldVal,newVal)->{
 			if(!drawCalled && hideCalled && directionProperty.get().doubleValue() * newVal.doubleValue() > directionProperty.get().doubleValue() * initTranslate.doubleValue() /2){
@@ -615,6 +623,11 @@ public class JFXDrawer extends StackPane {
 			}
 		});
 	}
+	
+	/**
+     * Defines a function to be called when the drawer is closed
+     * Note: it will be triggered after the close animation is finished.
+     */
 	public void setOnHidingAction(EventHandler<Event> handler){
 		translateProperty.addListener((o,oldVal,newVal)->{
 			if(drawCalled && !hideCalled && directionProperty.get().doubleValue() * newVal.doubleValue() < directionProperty.get().doubleValue() * initTranslate.doubleValue() /2){
@@ -727,13 +740,13 @@ public class JFXDrawer extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	/**
+     * Initialize the style class to 'jfx-drawer'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-drawer";
-
-	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
-	}
-
-
 
 }
 

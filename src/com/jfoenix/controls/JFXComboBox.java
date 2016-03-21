@@ -25,6 +25,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -41,13 +42,32 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
+/**
+ * JFXComboBox is the material design implementation of a combobox. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
+ */
 public class JFXComboBox<T> extends ComboBox<T> {
 
-	
-	private static final String DEFAULT_STYLE_CLASS = "jfx-combo-box";
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXComboBox() {
 		super();
+		initialize();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public JFXComboBox(ObservableList<T> items) {
+		super(items);
+		initialize();
+	}
+
+	private void initialize() {
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
 		this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
 			@Override
@@ -62,7 +82,6 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				if(object instanceof Label) return ((Label)object).getText();
 				return object.toString();				
 			}
-
 			@SuppressWarnings("unchecked")
 			@Override
 			public T fromString(String string) {
@@ -70,55 +89,60 @@ public class JFXComboBox<T> extends ComboBox<T> {
 			}
 		});
 	}
-	
-    @Override protected Skin<?> createDefaultSkin() {
-        return new JFXComboBoxListViewSkin<T>(this);
-    }
 
-    /***************************************************************************
-	 *                                                                         *
-	 * Node Converter Propertie                                                *
-	 *                                                                         *
-	 **************************************************************************/
-    private TextField textField;
-    /**
-     * JFX text field is set as the editor for the ComboBox.
-     * The editor is null if the ComboBox is not
-     * {@link #editableProperty() editable}. 
-     */
-    private ReadOnlyObjectWrapper<TextField> jfxEditor;
-    public final TextField getJFXEditor() { 
-        return jfxEditorProperty().get(); 
-    }
-    public final ReadOnlyObjectProperty<TextField> jfxEditorProperty() { 
-        if (jfxEditor == null) {
-        	jfxEditor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
-        	// TODO: solve focus issue after selection
-            textField = new JFXTextField();
-            jfxEditor.set(textField);
-        }
-        return jfxEditor.getReadOnlyProperty(); 
-    }
-    
-    
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override protected Skin<?> createDefaultSkin() {
+		return new JFXComboBoxListViewSkin<T>(this);
+	}
+
+	/**
+	 * Initialize the style class to 'jfx-combo-box'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-combo-box";
+
+	/**
+	 * JFXTextField is set as the editor for the ComboBox.
+	 * The editor is null if the ComboBox is not
+	 * {@link #editableProperty() editable}. 
+	 */
+	private TextField textField;
+	private ReadOnlyObjectWrapper<TextField> jfxEditor;
+	public final TextField getJFXEditor() { 
+		return jfxEditorProperty().get(); 
+	}
+	public final ReadOnlyObjectProperty<TextField> jfxEditorProperty() { 
+		if (jfxEditor == null) {
+			jfxEditor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
+			// TODO: solve focus issue after selection
+			textField = new JFXTextField();
+			jfxEditor.set(textField);
+		}
+		return jfxEditor.getReadOnlyProperty(); 
+	}
+
+
 	/***************************************************************************
 	 *                                                                         *
-	 * Node Converter Propertie                                                *
+	 * Node Converter Property                                                 *
 	 *                                                                         *
 	 **************************************************************************/
-    
-    /**
-     * Converts the user-typed input (when the ComboBox is 
-     * {@link #editableProperty() editable}) to an object of type T, such that 
-     * the input may be retrieved via the  {@link #valueProperty() value} property.
-     */
-    public ObjectProperty<NodeConverter<T>> nodeConverterProperty() { return nodeConverter; }
-    private ObjectProperty<NodeConverter<T>> nodeConverter =  new SimpleObjectProperty<NodeConverter<T>>(this, "nodeConverter", JFXComboBox.<T>defaultNodeConverter());
-    public final void setNodeConverter(NodeConverter<T> value) { nodeConverterProperty().set(value); }
-    public final NodeConverter<T> getNodeConverter() {return nodeConverterProperty().get(); }
-            
-    private static <T> NodeConverter<T> defaultNodeConverter() {
-        return new NodeConverter<T>() {
+	/**
+	 * Converts the user-typed input (when the ComboBox is 
+	 * {@link #editableProperty() editable}) to an object of type T, such that 
+	 * the input may be retrieved via the  {@link #valueProperty() value} property.
+	 */
+	public ObjectProperty<NodeConverter<T>> nodeConverterProperty() { return nodeConverter; }
+	private ObjectProperty<NodeConverter<T>> nodeConverter =  new SimpleObjectProperty<NodeConverter<T>>(this, "nodeConverter", JFXComboBox.<T>defaultNodeConverter());
+	public final void setNodeConverter(NodeConverter<T> value) { nodeConverterProperty().set(value); }
+	public final NodeConverter<T> getNodeConverter() {return nodeConverterProperty().get(); }
+
+	private static <T> NodeConverter<T> defaultNodeConverter() {
+		return new NodeConverter<T>() {
 			@Override public Node toNode(T object) {
 				if(object == null) return null;
 				StackPane selectedValueContainer = new StackPane();
@@ -143,8 +167,6 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				if(object instanceof Label) return ((Label)object).getText();
 				return object.toString();
 			}
-        };
-    }
-    
-    
+		};
+	}
 }

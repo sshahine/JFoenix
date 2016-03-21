@@ -44,8 +44,11 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
- * @author Shadi Shaheen
- *
+ * material design implementation of ListCell
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXListCell<T> extends ListCell<T> {
 
@@ -58,11 +61,17 @@ public class JFXListCell<T> extends ListCell<T> {
 	private Timeline expandAnimation;
 	private double animatedHeight = 0;	
 	
+	/**
+     * {@inheritDoc}
+     */
 	public JFXListCell() {
 		super();
 		initialize();
 	}
 
+	/**
+     * {@inheritDoc}
+     */
 	@Override
 	public void updateItem(T item, boolean empty){
 		super.updateItem(item,empty);
@@ -353,6 +362,12 @@ public class JFXListCell<T> extends ListCell<T> {
 	 *                                                                         *
 	 **************************************************************************/
 
+	 /**
+     * Initialize the style class to 'jfx-list-cell'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-list-cell";
 
 	private void initialize() {

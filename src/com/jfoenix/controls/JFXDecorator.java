@@ -57,9 +57,11 @@ import javafx.util.Duration;
 import com.jfoenix.svg.SVGGlyph;
 
 /**
- * @author Shadi Shaheen
  * Window Decorator allow to resize/move its content
  * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDecorator extends VBox {
 
@@ -79,10 +81,31 @@ public class JFXDecorator extends VBox {
 	private HBox buttonsContainer;
 	private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(()->{Platform.exit();});
 	
+	/**
+	 * Create a window decorator for the specified node with the options:
+	 * - full screen
+	 * - maximize
+	 * - minimize
+	 * 
+	 * @param stage the primary stage used by the application
+	 * @param node the node to be decorated
+	 */
 	public JFXDecorator(Stage stage, Node node){
 		this(stage,node,true,true,true);
 	}
 	
+	/**
+	 * Create a window decorator for the specified node with the options:
+	 * - full screen
+	 * - maximize
+	 * - minimize
+	 * 
+	 * @param stage the primary stage used by the application
+	 * @param node the node to be decorated
+	 * @param fullScreen indicates whether to show full screen option or not  
+	 * @param max indicates whether to show maximize option or not
+	 * @param min indicates whether to show minimize option or not
+	 */
 	public JFXDecorator(Stage stage, Node node, boolean fullScreen, boolean max, boolean min) {
 		super();
 		primaryStage = stage;
@@ -186,8 +209,6 @@ public class JFXDecorator extends VBox {
 		node.setClip(clip);
 		this.getChildren().addAll(buttonsContainer,contentPlaceHolder);
 
-		
-		
 		primaryStage.fullScreenProperty().addListener((o,oldVal,newVal)->{
 			if(newVal){
 				// remove border
@@ -412,6 +433,10 @@ public class JFXDecorator extends VBox {
 		return false;
 	}
 
+	/**
+	 * set a speficed runnable when clicking on the close button
+	 * @param onCloseButtonAction runnable to be executed
+	 */
 	public void setOnCloseButtonAction(Runnable onCloseButtonAction) {
 		this.onCloseButtonAction.set(onCloseButtonAction);
 	}

@@ -36,13 +36,27 @@ import javafx.scene.paint.Paint;
 import com.jfoenix.skins.JFXCheckBoxSkin;
 import com.sun.javafx.css.converters.PaintConverter;
 
+/**
+ * JFXCheckBox is the material design implementation of a checkbox. 
+ * it shows ripple effect and a custom selection animation.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
+ */
 public class JFXCheckBox extends CheckBox {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXCheckBox(String text){
 		super(text);
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXCheckBox(){
 		super();
 		initialize();
@@ -50,9 +64,11 @@ public class JFXCheckBox extends CheckBox {
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);  
-//		if(this.getText().isEmpty()) this.setText("CheckBox");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new JFXCheckBoxSkin(this);
@@ -65,9 +81,17 @@ public class JFXCheckBox extends CheckBox {
 	 *                                                                         *
 	 **************************************************************************/
 	
+	/**
+	 * Initialize the style class to 'jfx-check-box'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-check-box";
-	
-	
+
+	/**
+	 * checkbox color property when selected
+	 */
 	private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.CHECKED_COLOR, JFXCheckBox.this, "checkedColor", Color.valueOf("#0F9D58"));
 
 	public Paint getCheckedColor(){
@@ -80,7 +104,9 @@ public class JFXCheckBox extends CheckBox {
 		this.checkedColor.set(color);
 	}
 
-
+	/**
+	 * checkbox color property when not selected
+	 */
 	private StyleableObjectProperty<Paint> unCheckedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNCHECKED_COLOR, JFXCheckBox.this, "unCheckedColor", Color.valueOf("#5A5A5A"));
 
 	public Paint getUnCheckedColor(){

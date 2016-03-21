@@ -41,6 +41,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
@@ -114,13 +115,13 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         
         if(((JFXDatePicker)getSkinnable()).isOverLay()){
 			if(dialog == null){
-				Pane dialogParent = jfxDatePicker.getDialogParent();
-				if(dialogParent == null	) dialogParent = (Pane) getSkinnable().getScene().getRoot();
+				StackPane dialogParent = jfxDatePicker.getDialogParent();
+				if(dialogParent == null	) dialogParent = (StackPane) getSkinnable().getScene().getRoot();
 				dialog = new JFXDialog(dialogParent, (Region) getPopupContent(), DialogTransition.CENTER, true);
 				arrowButton.setOnMouseClicked((click)->{
 					if(((JFXDatePicker)getSkinnable()).isOverLay()){
-						Pane parent = jfxDatePicker.getDialogParent();
-						if(parent == null ) parent = (Pane) getSkinnable().getScene().getRoot();
+						StackPane parent = jfxDatePicker.getDialogParent();
+						if(parent == null ) parent = (StackPane) getSkinnable().getScene().getRoot();
 						dialog.show(parent);		
 					}
 				});	

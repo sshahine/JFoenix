@@ -47,24 +47,37 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.jfoenix.skins.JFXTreeTableViewSkin;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXTreeTableView is the material design implementation of table view.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
+ * DOC: not completed
  */
 public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTableView<S> {
 
 	private TreeItem<S> originalRoot;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTreeTableView() {
 		super();
 		init();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTreeTableView(TreeItem<S> root, ObservableList<S> items) {
 		super(root);
 		originalRoot = root;
 		init();
 	}
 
+	/**
+	 * propagate any mouse event on the tree table view to its parent
+	 */	
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
 			e.consume();
@@ -111,6 +124,10 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	 * clear selection before sorting as its bugged in java
 	 */
 	private boolean itemWasSelected = false;
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void sort(){
 		getSelectionModel().clearSelection();
@@ -122,6 +139,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
 	// Allows for multiple column Grouping based on the order of the TreeTableColumns
 	// in this observableArrayList.
+	//TODO: treat group order as sort order
 	private ObservableList<TreeTableColumn<S,?>> groupOrder = FXCollections.observableArrayList();
 
 	final ObservableList<TreeTableColumn<S,?>> getGroupOrder() {

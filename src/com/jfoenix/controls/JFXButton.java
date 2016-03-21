@@ -39,66 +39,103 @@ import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
 
 /**
- * @author Shadi Shaheen
- * JFXButton contains ripple effect , this effect is set according to text fill of the button
- * or the text fill of graphic node if it was set to Label. Priority is set to the text fill 
- * of the button.
+ * JFXButton is the material design implementation of a button. 
+ * it contains ripple effect , the effect color is set according to text fill of the button 1st
+ * or the text fill of graphic node (if it was set to Label) 2nd.
  * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXButton extends Button {
-	
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXButton() {
 		super();
 		initialize();		
 	}	
-		
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXButton(String text){
 		super(text);
 		initialize();
 	}
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXButton(String text, Node graphic){
 		super(text, graphic);
 		initialize();
 	}
 
-    private void initialize() {
-    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-//    	if(this.getText().isEmpty()) this.setText("Button");
-    }
-    
+	private void initialize() {
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new JFXButtonSkin(this);
-	}
-	
-	
+	}	
+
+
+	/***************************************************************************
+	 *                                                                         *
+	 * Properties                                                              *
+	 *                                                                         *
+	 **************************************************************************/	
+	/**
+	 * the ripple color property of JFXButton.
+	 */
 	private ObjectProperty<Paint> ripplerFill = new SimpleObjectProperty<>(null);
-	
+
 	public final ObjectProperty<Paint> ripplerFillProperty() {
 		return this.ripplerFill;
 	}
 
+	/**
+	 * @return the ripple color
+	 */
 	public final Paint getRipplerFill() {
 		return this.ripplerFillProperty().get();
 	}
 
+	/**
+	 * set the ripple color  
+	 * @param ripplerFill the color of the ripple effect
+	 */
 	public final void setRipplerFill(final Paint ripplerFill) {
 		this.ripplerFillProperty().set(ripplerFill);
 	}
-	
-	
+
+
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
-	
+
+	/**
+	 * Initialize the style class to 'jfx-button'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-button";
-	
-	
+
+
 	public static enum ButtonType{FLAT, RAISED};
-	
+
+	/**
+	 * according to material design the button has two types:
+	 * - flat : only shows the ripple effect upon clicking the button
+	 * - raised : shows the ripple effect and change in depth upon clicking the button
+	 */
 	private StyleableObjectProperty<ButtonType> buttonType = new SimpleStyleableObjectProperty<ButtonType>(StyleableProperties.BUTTON_TYPE, JFXButton.this, "buttonType", ButtonType.FLAT );
 
 	public ButtonType getButtonType(){
@@ -110,7 +147,6 @@ public class JFXButton extends Button {
 	public void setButtonType(ButtonType type){
 		this.buttonType.set(type);
 	}
-
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXButton, ButtonType> BUTTON_TYPE =
@@ -125,7 +161,7 @@ public class JFXButton extends Button {
 				return control.buttonTypeProperty();
 			}
 		};
-		
+
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables =
@@ -136,10 +172,10 @@ public class JFXButton extends Button {
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}
-	
+
 	// inherit the styleable properties from parent
 	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-	
+
 	@Override
 	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
 		if(STYLEABLES == null){
@@ -155,5 +191,5 @@ public class JFXButton extends Button {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
 
-	
+
 }

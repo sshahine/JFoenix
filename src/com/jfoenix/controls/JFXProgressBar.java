@@ -18,29 +18,39 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.skins.JFXProgressBarSkin;
+
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Skin;
 
-import com.jfoenix.skins.JFXProgressBarSkin;
-
 /**
- * @author Shadi Shaheen
- *
+ * JFXProgressBar is the material design implementation of a progress bar. 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXProgressBar extends ProgressBar {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXProgressBar() {
 		super();
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXProgressBar(double progress) {
 		super(progress);
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXProgressBarSkin(this);
@@ -50,5 +60,13 @@ public class JFXProgressBar extends ProgressBar {
 		setPrefWidth(200);
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
 	}
+
+	/**
+	 * Initialize the style class to 'jfx-progress-bar'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
 
 }

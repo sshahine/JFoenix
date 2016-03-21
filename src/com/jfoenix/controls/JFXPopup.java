@@ -39,8 +39,11 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXPopup is the material design implementation of a popup.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 @DefaultProperty(value="content")
 public class JFXPopup extends StackPane {
@@ -60,10 +63,18 @@ public class JFXPopup extends StackPane {
 	private Transition animation;
 	private Node source;
 
+	/**
+	 * creates empty popup
+	 */
 	public JFXPopup(){
 		this(null,null);
 	}
 
+	/**
+	 * creates popup with a specified container and content 
+	 * @param popupContainer the container where the popup will be added (e.g the root of the scene)
+	 * @param content the node that will be shown in the popup
+	 */
 	public JFXPopup(Pane popupContainer, Region content) {
 		initialize();
 		setContent(content);
@@ -124,6 +135,10 @@ public class JFXPopup extends StackPane {
 		return source;
 	}
 
+	/**
+	 * set the node that will trigger the popup upon an action
+	 * @param source
+	 */
 	public void setSource(Node source) {
 		this.source = source;
 	}
@@ -134,20 +149,40 @@ public class JFXPopup extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	/**
+	 * show the popup in the specified container with the specified position
+	 * 
+	 * @param vAlign can be TOP/BOTTOM
+	 * @param hAlign can be LEFT/RIGHT
+	 * @param popupContainer parent the show the popup inside (e.g the root of the scene)
+	 */
 	public void show(PopupVPosition vAlign, PopupHPosition hAlign, Pane popupContainer){
 		this.setPopupContainer(popupContainer);
 		this.show(vAlign, hAlign);
 	}
 
+	/**
+	 * show the popup according to the specified position
+	 * 
+	 * @param vAlign can be TOP/BOTTOM
+	 * @param hAlign can be LEFT/RIGHT
+	 */
 	public void show(PopupVPosition vAlign, PopupHPosition hAlign ){
 		this.show(vAlign, hAlign, 0, 0);
 	}
 
+	/**
+	 * show the popup according to the specified position with a certain offset
+	 * 
+	 * @param vAlign can be TOP/BOTTOM
+	 * @param hAlign can be LEFT/RIGHT
+	 * @param initOffsetX on the x axis
+	 * @param initOffsetY on the y axis
+	 */
 	public void show(PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY ){
 
 		offsetX = 0;
 		offsetY = 0;
-
 		// compute the position of the popup
 		Node tempSource = this.source;
 		Bounds bound = tempSource.localToParent(tempSource.getBoundsInLocal());
@@ -199,14 +234,16 @@ public class JFXPopup extends StackPane {
 	}
 
 
-
+	/**
+	 * close the popup, by default the popup will close when clicking outside the popup
+	 * content and inside its container
+	 */
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
 		animation.setOnFinished((e)->{
 			resetProperties();
 		});
-
 	}
 
 	/***************************************************************************
@@ -262,6 +299,12 @@ public class JFXPopup extends StackPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	 /**
+     * Initialize the style class to 'jfx-popup'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-popup";
 
 	private void initialize() {

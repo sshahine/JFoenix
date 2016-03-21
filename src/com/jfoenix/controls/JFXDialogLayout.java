@@ -28,8 +28,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
- * @author Shadi Shaheen
- *
+ * Default dialog layout according to material design guidelines.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDialogLayout extends StackPane {
 
@@ -37,7 +40,10 @@ public class JFXDialogLayout extends StackPane {
 	private StackPane heading = new StackPane();
 	private StackPane body = new StackPane();
 	private FlowPane actions = new FlowPane();
-	
+
+	/**
+	 * creates empty dialog layout
+	 */
 	public JFXDialogLayout() {
 		super();
 		initialize();
@@ -63,6 +69,10 @@ public class JFXDialogLayout extends StackPane {
 		return heading.getChildren();
 	}
 
+	/**
+	 * set header node
+	 * @param titleContent
+	 */
 	public void setHeading(Node... titleContent) {
 		this.heading.getChildren().addAll(titleContent);
 	}
@@ -71,6 +81,10 @@ public class JFXDialogLayout extends StackPane {
 		return body.getChildren();
 	}
 
+	/**
+	 * set body node
+	 * @param body
+	 */
 	public void setBody(Node... body) {
 		this.body.getChildren().addAll(body);
 	}
@@ -79,6 +93,11 @@ public class JFXDialogLayout extends StackPane {
 		return actions.getChildren();
 	}
 
+	/**
+	 * set actions of the dialog (Accept, Cancel,...) 
+	 * 
+	 * @param actions
+	 */
 	public void setActions(Node... actions) {
 		this.actions.getChildren().addAll(actions);
 	}
@@ -92,9 +111,15 @@ public class JFXDialogLayout extends StackPane {
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
-
+	/**
+     * Initialize the style class to 'jfx-dialog-layout'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-dialog-layout";
 
+	
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		this.setPadding(new Insets(24,24,16,24));

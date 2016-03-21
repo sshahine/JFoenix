@@ -37,6 +37,7 @@ import javafx.util.Duration;
  * @author Shadi Shaheen
  * toggle pane is a hidden pane that is shown upon mouse click on its toggle node
  * NOTE : the toggle animation is specified by the pane clipping shape
+ * TODO : reimplement, currently not used
  */
 public class JFXTogglePane extends StackPane {
 

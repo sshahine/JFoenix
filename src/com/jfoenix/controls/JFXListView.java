@@ -57,11 +57,17 @@ import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.SizeConverter;
 
 /**
- * @author Shadi Shaheen
- *
+ * Material design implementation of List View
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXListView<T> extends ListView<T> {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXListView() {
 		super();
 		// bug : to prevent selection when focusing the list
@@ -75,6 +81,9 @@ public class JFXListView<T> extends ListView<T> {
 		initialize();    	
 	}	 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new JFXListViewSkin<T>(this);
@@ -222,6 +231,12 @@ public class JFXListView<T> extends ListView<T> {
 	 *                                                                         *
 	 **************************************************************************/
 
+	 /**
+     * Initialize the style class to 'jfx-list-view'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-list-view";
 
 	private void initialize() {
@@ -268,7 +283,9 @@ public class JFXListView<T> extends ListView<T> {
 		}
 	}
 
-	// propagate mouse events to the parent node ( e.g. to allow dragging while clicking on the list)
+	/**
+	 *  propagate mouse events to the parent node ( e.g. to allow dragging while clicking on the list)
+	 */
 	public void propagateMouseEventsToParent(){
 		this.addEventHandler(MouseEvent.ANY, (e)->{
 			e.consume();

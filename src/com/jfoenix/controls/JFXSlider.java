@@ -35,42 +35,64 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 
 /**
+ * JFXSlider is the material design implementation of a slider. 
+ * 
  * @author Bashir Elias & Shadi Shaheen
- *
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXSlider extends Slider {
 
+	/**
+     * {@inheritDoc}
+     */
 	public JFXSlider() {
 		super(0, 100, 50);
 		initialize();
 	}
 
+	/**
+     * {@inheritDoc}
+     */
 	public JFXSlider(double min, double max, double value) {
 		super(min, max, value);
 		initialize();
 	}
 
-	private void initialize() {
-		getStyleClass().add(DEFAULT_STYLE_CLASS);
-	}
-
+	/**
+     * {@inheritDoc}
+     */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXSliderSkin(this);
 	}
-
+	
+	private void initialize() {
+		getStyleClass().add(DEFAULT_STYLE_CLASS);
+	}
 	
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
+	
+	 /**
+     * Initialize the style class to 'jfx-slider'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-slider";
 	
 	public static enum IndicatorPosition {
 		LEFT, RIGHT
 	};
 
+	/**
+	 * indicates the position of the slider indicator, can be 
+	 * either LEFT or RIGHT 
+	 */
 	private StyleableObjectProperty<IndicatorPosition> indicatorPosition = new SimpleStyleableObjectProperty<IndicatorPosition>(StyleableProperties.INDICATOR_POSITION, JFXSlider.this, "indicatorPosition",
 			IndicatorPosition.LEFT);
 

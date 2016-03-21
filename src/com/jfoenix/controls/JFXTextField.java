@@ -46,39 +46,62 @@ import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXTextField is the material design implementation of a text Field.
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTextField extends TextField {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTextField() {
 		super();
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTextField(String text) {
 		super(text);
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXTextFieldSkin(this);
 	}
 
 	private void initialize() {
-		this.getStyleClass().add("jfx-text-field");
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		if(System.getProperty("java.vm.name").toLowerCase().equals("dalvik")){
 			this.setStyle("-fx-skin: \"com.jfoenix.android.skins.JFXTextFieldSkinAndroid\";");
 		}
 	}
 
+	 /**
+     * Initialize the style class to 'jfx-text-field'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * Properties                                                              *
 	 *                                                                         *
 	 **************************************************************************/
 
+	/**
+	 * holds the current active validator on the text field in case of validation error 
+	 */
 	private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
 
 	public ValidatorBase getActiveValidator() {
@@ -89,6 +112,10 @@ public class JFXTextField extends TextField {
 		return this.activeValidator.getReadOnlyProperty();
 	}
 
+	/**
+	 * list of validators that will validate the text value upon calling 
+	 * {{@link #validate()}
+	 */
 	private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
 
 	public ObservableList<ValidatorBase> getValidators() {
@@ -99,6 +126,11 @@ public class JFXTextField extends TextField {
 		this.validators.addAll(validators);
 	}
 
+	/**
+	 * validates the text value using the list of validators provided by the user
+	 * {{@link #setValidators(ValidatorBase...)}
+	 * @return true if the value is valid else false
+	 */
 	public boolean validate() {
 		for (ValidatorBase validator : validators) {
 			if (validator.getSrcControl() == null)
@@ -121,6 +153,9 @@ public class JFXTextField extends TextField {
 	 *                                                                         *
 	 **************************************************************************/
 	
+	/**
+	 * set true to show a float the prompt text when focusing the field
+	 */
 	private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT, JFXTextField.this, "lableFloat", false);
 	
 	public final StyleableBooleanProperty labelFloatProperty() {
@@ -135,6 +170,9 @@ public class JFXTextField extends TextField {
 		this.labelFloatProperty().set(labelFloat);
 	}
 	
+	/**
+	 * default color used when the field is unfocused
+	 */
 	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, JFXTextField.this, "unFocusColor", Color.rgb(77, 77, 77));
 
 	public Paint getUnFocusColor() {
@@ -149,6 +187,9 @@ public class JFXTextField extends TextField {
 		this.unFocusColor.set(color);
 	}
 
+	/**
+	 * default color used when the field is focused
+	 */
 	private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.FOCUS_COLOR, JFXTextField.this, "focusColor", Color.valueOf("#4059A9"));
 
 	public Paint getFocusColor() {
@@ -225,9 +266,9 @@ public class JFXTextField extends TextField {
 	}
 	
 	
+	/**
+	 * this style class will be activated when a validation error occurs
+	 */
 	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
-
-
-	
 	
 }

@@ -26,14 +26,21 @@ import javafx.scene.layout.HBox;
 import com.jfoenix.effects.JFXDepthManager;
 
 /**
- * @author Shadi Shaheen
- *
+ * JFXToolbar is the material design implementation of a tool bar. 
+ * toolbar is a borderpane, where the right/left content are HBoxs
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXToolbar extends BorderPane {
 	
 	private HBox leftBox = new HBox();
 	private HBox rightBox = new HBox();
 
+	/**
+	 * creates empty tool bar
+	 */
 	public JFXToolbar() {
 		initialize();
 		this.setLeft(leftBox);
@@ -73,6 +80,12 @@ public class JFXToolbar extends BorderPane {
 	 *                                                                         *
 	 **************************************************************************/
 
+	/**
+	 * Initialize the style class to 'jfx-tool-bar'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-tool-bar";
 
 	private void initialize() {

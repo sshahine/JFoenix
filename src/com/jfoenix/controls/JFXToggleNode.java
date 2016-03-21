@@ -37,40 +37,57 @@ import com.jfoenix.skins.JFXToggleNodeSkin;
 import com.sun.javafx.css.converters.ColorConverter;
 
 /**
- * @author Shadi Shaheen
- *
- *	JFX Toggle Node , allows any node set as its graphic to be toggled
- *  not that JFXToggleNode background color MUST match the unselected 
- *  color property, else the toggle animation will not be consistent.
- *  Notice that the default value for unselected color is set to 
- *  transparent color.
- * 
+ * JFX Toggle Node , allows any node set as its graphic to be toggled
+ * not that JFXToggleNode background color MUST match the unselected 
+ * color property, else the toggle animation will not be consistent.
+ * Notice that the default value for unselected color is set to 
+ * transparent color.
+ *  
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 @DefaultProperty(value="graphic")
 public class JFXToggleNode extends ToggleButton {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXToggleNode() {
 		super();
 		initialize();
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new JFXToggleNodeSkin(this);
 	}
-	
+
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
 	}
-	
+
 
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
-	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-node";
 	
+	/**
+	 * Initialize the style class to 'jfx-toggle-node'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-node";
+
+	/**
+	 * default color used when the node is toggled
+	 */
 	private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.SELECTED_COLOR, JFXToggleNode.this, "selectedColor", Color.rgb(0, 0, 0, 0.2));
 
 	public final StyleableObjectProperty<Color> selectedColorProperty() {
@@ -82,7 +99,10 @@ public class JFXToggleNode extends ToggleButton {
 	public final void setSelectedColor(final Color selectedColor) {
 		this.selectedColorProperty().set(selectedColor);
 	}
-	
+
+	/**
+	 * default color used when the node is not toggled
+	 */
 	private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.UNSELECTED_COLOR, JFXToggleNode.this, "unSelectedCOlor", Color.TRANSPARENT);
 	public final StyleableObjectProperty<Color> unSelectedColorProperty() {
 		return this.unSelectedColor;
@@ -93,7 +113,7 @@ public class JFXToggleNode extends ToggleButton {
 	public final void setUnSelectedColor(final Color unSelectedColor) {
 		this.unSelectedColorProperty().set(unSelectedColor);
 	}
-	
+
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXToggleNode, Color> SELECTED_COLOR =
@@ -108,7 +128,7 @@ public class JFXToggleNode extends ToggleButton {
 				return control.selectedColorProperty();
 			}
 		};
-		
+
 		private static final CssMetaData< JFXToggleNode, Color> UNSELECTED_COLOR =
 				new CssMetaData< JFXToggleNode, Color>("-fx-unselected-color",
 						ColorConverter.getInstance(), Color.TRANSPARENT) {
@@ -121,7 +141,7 @@ public class JFXToggleNode extends ToggleButton {
 				return control.unSelectedColorProperty();
 			}
 		};
-		
+
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables =
@@ -133,10 +153,10 @@ public class JFXToggleNode extends ToggleButton {
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}
-	
+
 	// inherit the styleable properties from parent
 	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-	
+
 	@Override
 	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
 		if(STYLEABLES == null){
@@ -152,6 +172,4 @@ public class JFXToggleNode extends ToggleButton {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
 
-	
-	
 }

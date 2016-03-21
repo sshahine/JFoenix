@@ -48,7 +48,7 @@ public class RecursiveTreeObject<T> {
 	}	
 	
 	/**
-	 * Whether or not the object is grouped by a specifed tree table column 
+	 * Whether or not the object is grouped by a specified tree table column 
 	 */
 	ObjectProperty<TreeTableColumn<T, ?>> groupedColumn = new SimpleObjectProperty<>();
 

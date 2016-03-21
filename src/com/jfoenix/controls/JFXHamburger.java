@@ -31,16 +31,20 @@ import javafx.scene.paint.Color;
 import com.jfoenix.transitions.hamburger.HamburgerTransition;
 
 /**
- * @author Shadi Shaheen
- *
+ * the famous animated hamburger icon used in material design 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 @DefaultProperty(value="animation")
 public class JFXHamburger extends VBox {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-hamburger";
-	
 	private Transition animation;
 	
+	/**
+	 * creates a hamburger icon
+	 */
 	public JFXHamburger() {
 				
 		StackPane line1 = new StackPane();
@@ -61,10 +65,17 @@ public class JFXHamburger extends VBox {
 		this.setSpacing(4);
 	}
 
+	/**
+	 * @return the current animation of the hamburger
+	 */
 	public Transition getAnimation() {
 		return animation;
 	}
 
+	/**
+	 * set a specified {@link HamburgerTransition}
+	 * @param animation
+	 */
 	public void setAnimation(Transition animation) {
 		this.animation = ((HamburgerTransition)animation).getAnimation(this);
 		this.animation.setRate(-1);
@@ -76,4 +87,12 @@ public class JFXHamburger extends VBox {
 		pane.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(5), Insets.EMPTY)));
 	}
 
+	/**
+     * Initialize the style class to 'jfx-hamburger'.
+     *
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-hamburger";
+	
 }

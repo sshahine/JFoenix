@@ -24,31 +24,47 @@ import javafx.scene.control.Skin;
 import com.jfoenix.skins.JFXRadioButtonSkin;
 
 /**
- * @author Bashir Elias & Shadi Shaheen
- *
+ * JFXRadioButton is the material design implementation of a radio button. 
+ * 
+ * @author  Bashir Elias & Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXRadioButton extends RadioButton {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXRadioButton(String text) {
 		super(text);
 		initialize();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXRadioButton() {
 		super();
 		initialize();
 	}
-
-	private void initialize() {
-    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);    	
-//    	if(this.getText().isEmpty()) this.setText("RadioButton");
-    }
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXRadioButtonSkin(this);
 	}
 
+	private void initialize() {
+    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);    	
+    }
+	
+	/**
+	 * Initialize the style class to 'jfx-radio-button'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
 }

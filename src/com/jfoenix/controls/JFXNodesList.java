@@ -35,24 +35,42 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 /**
- * @author Shadi Shaheen
  * list of nodes that are toggled On/Off by clicking on the 1st node
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXNodesList extends VBox {
 	
 	HashMap<Node, Callback<Boolean, ArrayList<KeyValue>>> animationsMap = new HashMap<>();
 	private boolean expanded = false;
 	private Timeline animateTimeline = new Timeline();
-	
+
+	/**
+	 * creates empty nodes list
+	 */
 	public JFXNodesList() {
 		this.setPickOnBounds(false);
 		this.getStyleClass().add("jfx-nodes-list");
 	}
-	
+		
+	/**
+	 * add node to list. 
+	 * Note: this method must be called instead of getChildren().add().
+	 * 
+	 * @param node
+	 */
 	public void addAnimatedNode(Region node){
 		addAnimatedNode(node, null);
 	}
 	
+	/**
+	 * add node to list with a specified callback that is triggered after the node animation is finished. 
+	 * Note: this method must be called instead of getChildren().add().
+	 * 
+	 * @param node
+	 */
 	public void addAnimatedNode(Region node, Callback<Boolean, ArrayList<KeyValue>> animationCallBack ){
 		// create container for the node if it's a sub nodes list
 		if(node instanceof JFXNodesList){ 
@@ -90,6 +108,9 @@ public class JFXNodesList extends VBox {
 		animationsMap.put(node, animationCallBack);
 	}
 	
+	/**
+	 * animates the list to show/hide the nodes
+	 */
 	public void animateList(){
 		expanded = !expanded;
 		
@@ -132,10 +153,9 @@ public class JFXNodesList extends VBox {
 	
 	// init default animation keyvalues
 	private ArrayList<KeyValue> initDefaultAnimation(Region region, boolean expanded) {
-		return new ArrayList<KeyValue>(){{
-			add(new KeyValue(region.scaleXProperty(), expanded?1:0 , Interpolator.EASE_BOTH));
-			add(new KeyValue(region.scaleYProperty(), expanded?1:0, Interpolator.EASE_BOTH));
-		}};
+		ArrayList<KeyValue> defaultAnimationValues = new ArrayList<>();
+		defaultAnimationValues.add(new KeyValue(region.scaleXProperty(), expanded?1:0 , Interpolator.EASE_BOTH));
+		defaultAnimationValues.add(new KeyValue(region.scaleYProperty(), expanded?1:0, Interpolator.EASE_BOTH));
+		return defaultAnimationValues;
 	}
-	
 }

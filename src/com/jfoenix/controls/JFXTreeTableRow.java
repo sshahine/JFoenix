@@ -18,23 +18,30 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.skins.JFXTreeTableRowSkin;
+
 import javafx.scene.control.Skin;
 import javafx.scene.control.TreeTableRow;
 
-import com.jfoenix.skins.JFXTreeTableRowSkin;
-
 /**
- * @author Shadi Shaheen
- *
+ * JFXTreeTableRow is the row object used in {@link JFXTreeTableView} 
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTreeTableRow<T> extends TreeTableRow<T> {
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTreeTableRow() {
 		super();		
 	}
-	
-    @Override protected Skin<?> createDefaultSkin() {
-    	return new JFXTreeTableRowSkin<T>(this);
-    }
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override protected Skin<?> createDefaultSkin() {
+		return new JFXTreeTableRowSkin<T>(this);
+	}
 }

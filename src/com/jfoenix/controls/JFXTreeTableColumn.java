@@ -18,6 +18,9 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.controls.cells.editors.base.JFXTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -28,20 +31,25 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
 
-import com.jfoenix.controls.cells.editors.base.JFXTreeTableCell;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
 /**
- * @author Shadi Shaheen
- *
+ * JFXTreeTableColumn is used by {@Link JFXTreeTableView}, it supports grouping functionality
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTreeTableColumn() {
 		super();
 		init();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTreeTableColumn(String text){
 		super(text);
 		init();
@@ -72,12 +80,12 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 
 		Platform.runLater(()->{
 			final ContextMenu contextMenu = new ContextMenu();
-//			contextMenu.setOnShowing((showing)->{
-//				System.out.println("showing");
-//			});
-//			contextMenu.setOnShown((shown)->{
-//				System.out.println("shown");
-//			});
+			//			contextMenu.setOnShowing((showing)->{
+			//				System.out.println("showing");
+			//			});
+			//			contextMenu.setOnShown((shown)->{
+			//				System.out.println("shown");
+			//			});
 			MenuItem item1 = new MenuItem("Group");		
 			item1.setOnAction((action)->{ 
 				((JFXTreeTableView)getTreeTableView()).group(this); 
@@ -89,6 +97,11 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		});
 	}
 
+	/**
+	 * validates the value of the tree item
+	 * @param param tree item
+	 * @return true if the value is valid else false
+	 */
 	public final boolean validateValue(CellDataFeatures<S, T> param){
 		Object rowObject = param.getValue().getValue();
 		if((rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class)
@@ -97,6 +110,10 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		return true;
 	}
 
+	/**
+	 * @param param tree item
+	 * @return the data represented by the tree item
+	 */
 	public final ObservableValue<T> getComputedValue(CellDataFeatures<S, T> param){
 		Object rowObject = param.getValue().getValue();
 		if(rowObject instanceof RecursiveTreeObject){
@@ -107,6 +124,9 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 		return null;
 	}
 
+	/**
+	 * @return true if the column is grouped else false
+	 */
 	public boolean isGrouped() {
 		if(getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>)getTreeTableView()).getGroupOrder().contains(this))
 			return true;

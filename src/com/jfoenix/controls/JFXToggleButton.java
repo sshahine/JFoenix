@@ -37,8 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
- * @author Shadi Shaheen
- * 
+ * JFXToggleButton is the material design implementation of a toggle button. 
  * important CSS Selectors:
  * 
  * .jfx-toggle-button{
@@ -58,22 +57,28 @@ import javafx.scene.paint.Paint;
  * 		-fx-rippler-fill: color-value;
  * 	}
  * 
- * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXToggleButton extends ToggleButton {
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-button";
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXToggleButton() {
 		super();
 		initialize();
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin()	{
 		return new JFXToggleButtonSkin(this);
 	}
-	
+
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);      
 		toggleColor.addListener((o,oldVal,newVal)->{
@@ -81,14 +86,24 @@ public class JFXToggleButton extends ToggleButton {
 			toggleLineColor.set(((Color)getToggleColor()).desaturate().desaturate().brighter());
 		});
 	}
-	
 
 	/***************************************************************************
 	 *                                                                         *
 	 * styleable Properties                                                    *
 	 *                                                                         *
 	 **************************************************************************/
-	
+
+	/**
+	 * Initialize the style class to 'jfx-toggle-button'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "jfx-toggle-button";
+
+	/**
+	 * default color used when the button is toggled
+	 */
 	private StyleableObjectProperty<Paint> toggleColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.TOGGLE_COLOR, JFXToggleButton.this, "toggleColor", Color.valueOf("#009688"));
 
 	public Paint getToggleColor(){
@@ -101,6 +116,9 @@ public class JFXToggleButton extends ToggleButton {
 		this.toggleColor.set(color);
 	}
 
+	/**
+	 * default color used when the button is not toggled
+	 */
 	private StyleableObjectProperty<Paint> untoggleColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNTOGGLE_COLOR, JFXToggleButton.this, "unToggleColor", Color.valueOf("#FAFAFA"));
 
 	public Paint getUnToggleColor(){
@@ -112,7 +130,10 @@ public class JFXToggleButton extends ToggleButton {
 	public void setUnToggleColor(Paint color){
 		this.untoggleColor.set(color);
 	}
-	
+
+	/**
+	 * default line color used when the button is toggled
+	 */
 	private StyleableObjectProperty<Paint> toggleLineColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.TOGGLE_LINE_COLOR, JFXToggleButton.this, "toggleLineColor", Color.valueOf("#77C2BB"));
 
 	public Paint getToggleLineColor(){
@@ -124,7 +145,10 @@ public class JFXToggleButton extends ToggleButton {
 	public void setToggleLineColor(Paint color){
 		this.toggleLineColor.set(color);
 	}
-	
+
+	/**
+	 * default line color used when the button is not toggled
+	 */
 	private StyleableObjectProperty<Paint> untoggleLineColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNTOGGLE_LINE_COLOR, JFXToggleButton.this, "unToggleLineColor", Color.valueOf("#999999"));
 
 	public Paint getUnToggleLineColor(){
@@ -151,7 +175,7 @@ public class JFXToggleButton extends ToggleButton {
 				return control.toggleColorProperty();
 			}
 		};
-		
+
 		private static final CssMetaData< JFXToggleButton, Paint> UNTOGGLE_COLOR =
 				new CssMetaData< JFXToggleButton, Paint>("-fx-untoggle-color",
 						PaintConverter.getInstance(), Color.valueOf("#FAFAFA")) {
@@ -164,7 +188,7 @@ public class JFXToggleButton extends ToggleButton {
 				return control.unToggleColorProperty();
 			}
 		};
-		
+
 		private static final CssMetaData< JFXToggleButton, Paint> TOGGLE_LINE_COLOR =
 				new CssMetaData< JFXToggleButton, Paint>("-fx-toggle-line-color",
 						PaintConverter.getInstance(), Color.valueOf("#77C2BB")) {
@@ -177,7 +201,7 @@ public class JFXToggleButton extends ToggleButton {
 				return control.toggleLineColorProperty();
 			}
 		};
-		
+
 		private static final CssMetaData< JFXToggleButton, Paint> UNTOGGLE_LINE_COLOR =
 				new CssMetaData< JFXToggleButton, Paint>("-fx-untoggle-line-color",
 						PaintConverter.getInstance(), Color.valueOf("#999999")) {
@@ -190,8 +214,8 @@ public class JFXToggleButton extends ToggleButton {
 				return control.unToggleLineColorProperty();
 			}
 		};
-		
-		
+
+
 
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
@@ -225,6 +249,6 @@ public class JFXToggleButton extends ToggleButton {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
 
-	
-	
+
+
 }

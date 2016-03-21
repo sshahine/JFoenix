@@ -27,8 +27,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * @author Shadi Shaheen
- *
+ * DrawersStack is used to show multiple drawers at once
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDrawersStack extends StackPane {
 
@@ -37,20 +40,30 @@ public class JFXDrawersStack extends StackPane {
 	private Rectangle clip = new Rectangle();
 	boolean holding = false;
 
+	/**
+	 * creates empty drawers stack
+	 */
 	public JFXDrawersStack() {
 		super();
 		clip.widthProperty().bind(this.widthProperty());
 		clip.heightProperty().bind(this.heightProperty());
 		this.setClip(clip);
 	}
-
+	
+	/**
+	 * set the content of the drawers stack, similar to {@link JFXDrawer#setContent(Node...)} 
+	 * @param content
+	 */
 	public void setContent(Node content){
 		this.content = content;
 		if(drawers.size() > 0) drawers.get(0).setContent(content);
 		else this.getChildren().add(this.content);
 	}
 
-
+	/**
+	 * add JFXDrawer to the stack
+	 * @param drawer
+	 */
 	private void addDrawer(JFXDrawer drawer){
 		if (drawer == null) return;
 
@@ -86,9 +99,12 @@ public class JFXDrawersStack extends StackPane {
 		drawer.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, (event)-> holding = false);
 
 		drawers.add(drawer);
-
 	}
 
+	/**
+	 * update drawers position in the stack once a drawer is drawn
+	 * @param drawer
+	 */
 	private void updateDrawerPosition(JFXDrawer drawer){
 		int index = drawers.indexOf(drawer);
 		if(index + 1 < drawers.size()){
@@ -103,6 +119,11 @@ public class JFXDrawersStack extends StackPane {
 		}
 	}
 
+	/**
+	 * toggle a drawer in the stack
+	 * 
+	 * @param drawer the drawer to be toggled
+	 */
 	public void toggle(JFXDrawer drawer){
 		if(!drawers.contains(drawer)) addDrawer(drawer);
 		if(drawer.isShown()) drawer.hide();
@@ -112,6 +133,12 @@ public class JFXDrawersStack extends StackPane {
 		}
 	}
 
+	/**
+	 * toggle on/off a drawer in the stack
+	 * 
+	 * @param drawer the drawer to be toggled
+	 * @param show true to toggle on, false to toggle off
+	 */
 	public void toggle(JFXDrawer drawer, boolean show){
 		if(!drawers.contains(drawer)) addDrawer(drawer);
 		if(!show){
