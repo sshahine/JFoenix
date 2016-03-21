@@ -207,8 +207,8 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		});
 
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
-			field.setMaxWidth(newVal.doubleValue());
-			field.setMinWidth(newVal.doubleValue());
+			if(!field.maxWidthProperty().isBound()) field.setMaxWidth(newVal.doubleValue());
+			if(!field.minWidthProperty().isBound()) field.setMinWidth(newVal.doubleValue());
 		});
 
 	}

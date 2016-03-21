@@ -19,6 +19,7 @@ import demos.gui.uicomponents.SliderController;
 import demos.gui.uicomponents.SpinnerController;
 import demos.gui.uicomponents.TextFieldController;
 import demos.gui.uicomponents.ToggleButtonController;
+import demos.gui.uicomponents.TreeTableViewController;
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -61,6 +62,10 @@ public class SideMenuController {
 	@ActionTrigger("listview")
 	private Label listview;
 
+	@FXML
+	@ActionTrigger("treetableview")
+	private Label treetableview;
+	
 	@FXML
 	@ActionTrigger("progressbar")
 	private Label progressbar;
@@ -112,6 +117,7 @@ public class SideMenuController {
 		bindNodeToController(dialogs, DialogController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(icons, IconsController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(listview, ListViewController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(treetableview, TreeTableViewController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(progressbar, ProgressBarController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(radiobutton, RadioButtonController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);

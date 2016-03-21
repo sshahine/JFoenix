@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXTreeTableColumn?>
+<?import com.jfoenix.controls.JFXTextField?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<VBox maxWidth="600" maxHeight="600" spacing="10">
+		<children>
+			<HBox>
+				<Label styleClass="title-label">Read Only Tree Table View</Label>
+				<Label styleClass="title-label" fx:id="treeTableViewCount"></Label>
+				<StackPane HBox.hgrow="ALWAYS"><StackPane StackPane.alignment="CENTER_RIGHT" maxWidth="200"><JFXTextField fx:id="searchField" promptText="Search..." ></JFXTextField></StackPane></StackPane>
+			</HBox>
+			<JFXTreeTableView fx:id="treeTableView">
+				<columns>
+					<JFXTreeTableColumn fx:id="firstNameColumn"
+						text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+					<JFXTreeTableColumn fx:id="lastNameColumn" text="Last Name"
+						prefWidth="133" resizable="false"></JFXTreeTableColumn>
+					<JFXTreeTableColumn fx:id="ageColumn" text="Age"
+						prefWidth="133" resizable="false"></JFXTreeTableColumn>
+				</columns>
+			</JFXTreeTableView>
+
+			<HBox>
+				<Label styleClass="title-label">Editable Tree Table View</Label>
+				<Label styleClass="title-label" fx:id="editableTreeTableViewCount"></Label>
+				<StackPane HBox.hgrow="ALWAYS"><StackPane StackPane.alignment="CENTER_RIGHT" maxWidth="200"><JFXTextField fx:id="searchField2" promptText="Search..." ></JFXTextField></StackPane></StackPane>
+			</HBox>
+			<JFXTreeTableView fx:id="editableTreeTableView">
+				<columns>
+					<JFXTreeTableColumn fx:id="firstNameEditableColumn"
+						text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+					<JFXTreeTableColumn fx:id="lastNameEditableColumn"
+						text="Last Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+					<JFXTreeTableColumn fx:id="ageEditableColumn"
+						text="Age" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+				</columns>
+			</JFXTreeTableView>
+		</children>
+	</VBox>
+</StackPane>

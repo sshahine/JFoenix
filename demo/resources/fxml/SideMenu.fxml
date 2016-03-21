@@ -18,6 +18,7 @@
 		<Label fx:id="dialogs"> Dialogs </Label>
 		<Label fx:id="icons"> Icons </Label>
 		<Label fx:id="listview"> List View </Label>
+		<Label fx:id="treetableview"> Tree Table View</Label>
 		<Label fx:id="progressbar"> Progress Bar </Label>
 		<Label fx:id="radiobutton"> Radio Button </Label>
 		<Label fx:id="slider"> Slider </Label>

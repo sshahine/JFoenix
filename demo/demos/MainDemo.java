@@ -44,7 +44,7 @@ public class MainDemo extends Application {
 		//		stage.initStyle(StageStyle.UNDECORATED);
 		//		stage.setFullScreen(true);
 		stage.setMinWidth(700);
-		stage.setMinHeight(700);
+		stage.setMinHeight(800);
 		stage.setScene(scene);
 		stage.show();
 
