@@ -74,7 +74,7 @@ public class JFXDialogLayout extends StackPane {
 	 * @param titleContent
 	 */
 	public void setHeading(Node... titleContent) {
-		this.heading.getChildren().addAll(titleContent);
+		this.heading.getChildren().setAll(titleContent);
 	}
 
 	public ObservableList<Node> getBody() {
@@ -86,7 +86,7 @@ public class JFXDialogLayout extends StackPane {
 	 * @param body
 	 */
 	public void setBody(Node... body) {
-		this.body.getChildren().addAll(body);
+		this.body.getChildren().setAll(body);
 	}
 
 	public ObservableList<Node> getActions() {
@@ -99,11 +99,11 @@ public class JFXDialogLayout extends StackPane {
 	 * @param actions
 	 */
 	public void setActions(Node... actions) {
-		this.actions.getChildren().addAll(actions);
+		this.actions.getChildren().setAll(actions);
 	}
 	
 	public void setActions(List<? extends Node> actions) {
-		this.actions.getChildren().addAll(actions);
+		this.actions.getChildren().setAll(actions);
 	}
 	
 	/***************************************************************************
