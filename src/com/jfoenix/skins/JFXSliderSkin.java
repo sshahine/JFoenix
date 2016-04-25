@@ -42,9 +42,14 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design Slider Skin</h1>
+ * 
  * rework of JFXSliderSkin by extending Java SliderSkin
  * this solves padding and resizing issues
+ * 
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXSliderSkin extends SliderSkin {
 

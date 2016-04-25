@@ -37,8 +37,11 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 /**
- * @author Bashi Elias & Shadi Shaheen
+ * <h1>Material Design Radio Button Skin</h1>
  *
+ * @author  Bashi Elias & Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXRadioButtonSkin extends RadioButtonSkin {
 

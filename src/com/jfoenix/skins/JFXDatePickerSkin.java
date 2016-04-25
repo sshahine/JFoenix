@@ -39,15 +39,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design Date Picker Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
 

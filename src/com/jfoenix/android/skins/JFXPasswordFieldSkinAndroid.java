@@ -18,10 +18,13 @@
  */
 package com.jfoenix.android.skins;
 
+import java.lang.reflect.Field;
+
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.skins.JFXPasswordFieldSkin;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
 import com.sun.javafx.scene.control.skin.TextFieldSkinAndroid;
 
 import javafx.animation.Interpolator;
@@ -98,7 +101,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 	private StackPane promptContainer;
 
 	private BooleanProperty floatLabel = new SimpleBooleanProperty(false);
-	private Node promptText;
+	private Text promptText;
 	private CachedTransition promptTextUpTransition;
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
@@ -122,6 +125,8 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 		}
 		else if (newVal) promptTextColorTransition.playFromStart();
 	};
+
+
 
 	public JFXPasswordFieldSkinAndroid(JFXPasswordField field) {
 		super(field);
@@ -237,6 +242,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 		super.layoutChildren(x, y, w, h);
 
 		if(invalid){
+			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
@@ -279,9 +285,35 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 			line.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
-
-			if(textPane.getChildren().get(0) instanceof Text){				
-				promptText = textPane.getChildren().get(0);
+			if(((JFXPasswordField)getSkinnable()).isLabelFloat()){
+				// get the prompt text node or create it
+				boolean triggerFloatLabel = false;
+				if(textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
+				else{
+					Field field;
+					try {
+						field = TextFieldSkin.class.getDeclaredField("promptNode");
+						field.setAccessible(true);
+						createPromptNode();
+						field.set(this, promptText);
+						// position the prompt node in its position
+						triggerFloatLabel = true;
+						floatLabel.set(true);
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
 				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 						new KeyFrame(Duration.millis(1300),
 								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
@@ -313,13 +345,20 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 					}
 				});
 
-				promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
+				promptContainer.getChildren().add(promptText);	
 
-				if(((JFXPasswordField)getSkinnable()).isLabelFloat()){
+				if(triggerFloatLabel){
+					promptText.setTranslateY(-textPane.getHeight());
+					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
+					promptText.setLayoutY(0);
+					promptText.setScaleX(0.85);
+					promptText.setScaleY(0.85);								
+				}
+				
 					promptText.visibleProperty().unbind();
 					promptText.visibleProperty().set(true);
-					getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
-				}
+					getSkinnable().focusedProperty().addListener(focusPromptTextListener);			
+					super.layoutChildren(x, y, w, h);
 			}
 
 
@@ -339,10 +378,21 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
 			if(getSkinnable().isFocused()) focus();
 			
-			invalid = false;
 		}				
 	}
 
+	
+	private void createPromptNode(){
+		promptText = new Text();
+		promptText.setManaged(false);
+		promptText.getStyleClass().add("text");
+		promptText.visibleProperty().bind(usePromptText);
+		promptText.fontProperty().bind(getSkinnable().fontProperty());
+		promptText.textProperty().bind(getSkinnable().promptTextProperty());
+		promptText.fillProperty().bind(promptTextFill);
+		promptText.setLayoutX(1);
+	}
+	
 	private void focus(){
 		/*
 		 * in case the method request layout is not called before focused
@@ -476,5 +526,6 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 					setCycleDuration(Duration.millis(300));
 				}};
 	}
+
 
 }

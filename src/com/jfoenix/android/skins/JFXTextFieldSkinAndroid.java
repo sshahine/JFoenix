@@ -18,10 +18,13 @@
  */
 package com.jfoenix.android.skins;
 
+import java.lang.reflect.Field;
+
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
 import com.sun.javafx.scene.control.skin.TextFieldSkinAndroid;
 
 import javafx.animation.Animation.Status;
@@ -68,7 +71,7 @@ import javafx.util.Duration;
  * @since   2016-03-09
  */
 public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
-
+	
 	private AnchorPane cursorPane = new AnchorPane();
 	private Line line = new Line();
 	private Line focusedLine = new Line();
@@ -89,6 +92,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	private boolean errorShowen = false;
 	private double currentFieldHeight = -1;
 	private double errorLabelInitHeight = 0;
+
 	private boolean heightChanged = false;
 
 	private Timeline hideErrorAnimation;
@@ -96,7 +100,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	private StackPane promptContainer;
 
 	private BooleanProperty floatLabel = new SimpleBooleanProperty(false);
-	private Node promptText;
+	private Text promptText;
 	private CachedTransition promptTextUpTransition;
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
@@ -125,9 +129,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	};
 
 
-	/** 
-	 * Class constructor.
-	 */
+
+
 	public JFXTextFieldSkinAndroid(JFXTextField field) {
 		super(field);
 
@@ -151,6 +154,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
 		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
+		//TODO: need to bind this value to textfield height
 		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
@@ -164,7 +168,6 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			if(errorShowen){
 				if(oldErrorLabelHeight == -1)
 					oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
-
 				heightChanged = true;
 				double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight +  newVal.doubleValue();
 				// show the error
@@ -243,7 +246,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 
-		if(invalid){			
+		if(invalid){	
+			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
@@ -287,9 +291,35 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			line.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
+			if(((JFXTextField)getSkinnable()).isLabelFloat()){
+				// get the prompt text node or create it
+				boolean triggerFloatLabel = false;
+				if(textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
+				else{
+					Field field;
+					try {
+						field = TextFieldSkin.class.getDeclaredField("promptNode");
+						field.setAccessible(true);
+						createPromptNode();
+						field.set(this, promptText);
+						// position the prompt node in its position
+						triggerFloatLabel = true;
+						floatLabel.set(true);
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
-			if(textPane.getChildren().get(0) instanceof Text && ((JFXTextField)getSkinnable()).isLabelFloat()){				
-				promptText = textPane.getChildren().get(0);
 				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 						new KeyFrame(Duration.millis(1300),
 								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
@@ -297,7 +327,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-
+								
 								promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
 								promptTextDownTransition = new CachedTransition(textPane, new Timeline(
@@ -321,13 +351,21 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 											}
 										});
 
-										promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
+										promptContainer.getChildren().add(promptText);	
 
-										if(((JFXTextField)getSkinnable()).isLabelFloat()){
-											promptText.visibleProperty().unbind();
-											promptText.visibleProperty().set(true);
-											getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										if(triggerFloatLabel){
+											promptText.setTranslateY(-textPane.getHeight());
+											promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
+											promptText.setLayoutY(0);
+											promptText.setScaleX(0.85);
+											promptText.setScaleY(0.85);								
 										}
+										
+										promptText.visibleProperty().unbind();
+										promptText.visibleProperty().set(true);
+										getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										super.layoutChildren(x, y, w, h);
+										//if(triggerFloatLabel)floatLabel.set(true);
 			}
 
 			textPane.getChildren().remove(line);
@@ -344,11 +382,20 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
-			if(getSkinnable().isFocused()) focus();
-
-			invalid = false;
+			if(getSkinnable().isFocused()) focus();			
 		}		
 
+	}
+
+	private void createPromptNode(){
+		promptText = new Text();
+		promptText.setManaged(false);
+		promptText.getStyleClass().add("text");
+		promptText.visibleProperty().bind(usePromptText);
+		promptText.fontProperty().bind(getSkinnable().fontProperty());
+		promptText.textProperty().bind(getSkinnable().promptTextProperty());
+		promptText.fillProperty().bind(promptTextFill);
+		promptText.setLayoutX(1);
 	}
 
 	private void focus(){

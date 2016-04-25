@@ -18,6 +18,12 @@
  */
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXRippler.RipplerMask;
+import com.jfoenix.transitions.CachedTransition;
+import com.sun.javafx.scene.control.skin.CheckBoxSkin;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -37,15 +43,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.controls.JFXRippler.RipplerMask;
-import com.jfoenix.transitions.CachedTransition;
-import com.sun.javafx.scene.control.skin.CheckBoxSkin;
-
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design CheckBox Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXCheckBoxSkin extends CheckBoxSkin {
 

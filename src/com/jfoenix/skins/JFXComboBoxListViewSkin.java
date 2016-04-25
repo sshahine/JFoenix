@@ -38,8 +38,11 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design ComboBox Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 
 public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {

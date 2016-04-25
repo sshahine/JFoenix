@@ -18,6 +18,13 @@
  */
 package com.jfoenix.skins;
 
+import java.lang.reflect.Field;
+
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.transitions.CachedTransition;
+import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
+
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -49,14 +56,12 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.transitions.CachedTransition;
-import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.scene.control.skin.TextFieldSkin;
-
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design TextField Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXTextFieldSkin extends TextFieldSkin{
 
@@ -88,7 +93,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	private StackPane promptContainer;
 
 	private BooleanProperty floatLabel = new SimpleBooleanProperty(false);
-	private Node promptText;
+	private Text promptText;
 	private CachedTransition promptTextUpTransition;
 	private CachedTransition promptTextDownTransition;
 	private Timeline promptTextColorTransition;
@@ -234,7 +239,8 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 
-		if(invalid){			
+		if(invalid){	
+			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
@@ -278,9 +284,35 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			line.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 			focusedLine.translateXProperty().bind(Bindings.createDoubleBinding(()-> -focusedLine.getStrokeWidth(), focusedLine.strokeWidthProperty()));
 
+			if(((JFXTextField)getSkinnable()).isLabelFloat()){
+				// get the prompt text node or create it
+				boolean triggerFloatLabel = false;
+				if(textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
+				else{
+					Field field;
+					try {
+						field = TextFieldSkin.class.getDeclaredField("promptNode");
+						field.setAccessible(true);
+						createPromptNode();
+						field.set(this, promptText);
+						// position the prompt node in its position
+						triggerFloatLabel = true;
+						floatLabel.set(true);
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
-			if(textPane.getChildren().get(0) instanceof Text && ((JFXTextField)getSkinnable()).isLabelFloat()){				
-				promptText = textPane.getChildren().get(0);
 				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 						new KeyFrame(Duration.millis(1300),
 								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
@@ -288,7 +320,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-
+								
 								promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
 								promptTextDownTransition = new CachedTransition(textPane, new Timeline(
@@ -312,13 +344,21 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 											}
 										});
 
-										promptContainer.getChildren().add((Text)textPane.getChildren().get(0));	
+										promptContainer.getChildren().add(promptText);	
 
-										if(((JFXTextField)getSkinnable()).isLabelFloat()){
-											promptText.visibleProperty().unbind();
-											promptText.visibleProperty().set(true);
-											getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										if(triggerFloatLabel){
+											promptText.setTranslateY(-textPane.getHeight());
+											promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
+											promptText.setLayoutY(0);
+											promptText.setScaleX(0.85);
+											promptText.setScaleY(0.85);								
 										}
+										
+										promptText.visibleProperty().unbind();
+										promptText.visibleProperty().set(true);
+										getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
+										super.layoutChildren(x, y, w, h);
+										//if(triggerFloatLabel)floatLabel.set(true);
 			}
 
 			textPane.getChildren().remove(line);
@@ -335,11 +375,20 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
-			if(getSkinnable().isFocused()) focus();
-
-			invalid = false;
+			if(getSkinnable().isFocused()) focus();			
 		}		
 
+	}
+
+	private void createPromptNode(){
+		promptText = new Text();
+		promptText.setManaged(false);
+		promptText.getStyleClass().add("text");
+		promptText.visibleProperty().bind(usePromptText);
+		promptText.fontProperty().bind(getSkinnable().fontProperty());
+		promptText.textProperty().bind(getSkinnable().promptTextProperty());
+		promptText.fillProperty().bind(promptTextFill);
+		promptText.setLayoutX(1);
 	}
 
 	private void focus(){

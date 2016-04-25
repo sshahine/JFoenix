@@ -41,8 +41,11 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design ToggleButton Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXToggleButtonSkin extends ToggleButtonSkin {
 

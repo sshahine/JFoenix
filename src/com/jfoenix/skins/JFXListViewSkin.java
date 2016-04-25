@@ -27,8 +27,11 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.scene.control.ListCell;
 
 /**
- * @author Shadi Shaheen
+ * <h1>Material Design ListView Skin</h1>
  *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXListViewSkin<T> extends  ListViewSkin<T>{
 

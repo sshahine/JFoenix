@@ -44,8 +44,11 @@ import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 
 /**
- * @author Shadi Shaheen
- * 
+ * <h1>Material Design Button Skin</h1>
+ *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2016-03-09
  */
 public class JFXButtonSkin extends ButtonSkin {
 
