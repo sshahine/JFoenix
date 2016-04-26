@@ -119,6 +119,13 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		else if (newVal) promptTextColorTransition.playFromStart();
 	};
 
+	// handle text changing at runtime
+	private ChangeListener<? super String> textPromptListener = (o,oldVal,newVal)->{
+		if(!getSkinnable().isFocused()){
+			if(newVal == null || newVal.isEmpty()) floatLabel.set(false);
+			else floatLabel.set(true);
+		}
+	};
 
 
 	public JFXPasswordFieldSkin(JFXPasswordField field) {
@@ -182,9 +189,11 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 			if(newVal){
 				promptText.visibleProperty().unbind();
 				promptText.visibleProperty().set(true);
+				getSkinnable().textProperty().addListener(textPromptListener);
 				getSkinnable().focusedProperty().addListener(focusPromptTextListener);		
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
+				getSkinnable().textProperty().removeListener(textPromptListener);
 				getSkinnable().focusedProperty().removeListener(focusPromptTextListener);	
 			}
 		});
@@ -314,7 +323,14 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-
+								
+				CachedTransition promptTextUpTransitionNoColor = new CachedTransition(textPane, new Timeline(
+										new KeyFrame(Duration.millis(1300),
+												new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+												new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+												new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+								
 				promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
 				promptTextDownTransition = new CachedTransition(textPane, new Timeline(
@@ -331,8 +347,10 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 						// if this is removed the prompt text flicker on the 1st focus
 						promptTextFill.set(oldPromptTextFill);
 						promptTextDownTransition.stop();
-						promptTextUpTransition.play();
-					} else{
+						if(getSkinnable().isFocused()) promptTextUpTransition.play();
+						else promptTextUpTransitionNoColor.play();
+					} else{						
+						promptTextUpTransitionNoColor.stop();
 						promptTextUpTransition.stop();
 						promptTextDownTransition.play();
 					}
@@ -350,6 +368,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 				
 					promptText.visibleProperty().unbind();
 					promptText.visibleProperty().set(true);
+					getSkinnable().textProperty().addListener(textPromptListener);
 					getSkinnable().focusedProperty().addListener(focusPromptTextListener);			
 					super.layoutChildren(x, y, w, h);
 			}

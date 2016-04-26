@@ -131,6 +131,15 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		}
 	};
 
+	// handle text changing at runtime
+	private ChangeListener<? super String> textPromptListener = (o,oldVal,newVal)->{
+		if(!getSkinnable().isFocused()){
+			if(newVal == null || newVal.isEmpty()) floatLabel.set(false);
+			else floatLabel.set(true);
+		}
+	};
+	
+	
 	public JFXTextAreaSkin(JFXTextArea textArea) {
 		super(textArea);
 
@@ -211,9 +220,11 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 			if(newVal){
 				promptText.visibleProperty().unbind();
 				promptText.visibleProperty().set(true);
+				getSkinnable().textProperty().addListener(textPromptListener);
 				getSkinnable().focusedProperty().addListener(focusPromptTextListener);		
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
+				getSkinnable().textProperty().removeListener(textPromptListener);
 				getSkinnable().focusedProperty().removeListener(focusPromptTextListener);	
 			}
 		});
@@ -364,7 +375,14 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH),
 								new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-
+								
+				CachedTransition promptTextUpTransitionNoColor = new CachedTransition(promptContainer, new Timeline(
+						new KeyFrame(Duration.millis(1300),
+								new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+								//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};			
+												
 				promptTextColorTransition =  new Timeline(new KeyFrame(Duration.millis(300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH)));				
 
 				promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
@@ -379,10 +397,12 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 					if(newVal){
 						oldPromptTextFill = promptTextFill.get();
 						// if this is removed the prompt text flicker on the 1st focus
-						promptTextFill.set(oldPromptTextFill);
+						promptTextFill.set(oldPromptTextFill);						
 						promptTextDownTransition.stop();
-						promptTextUpTransition.play();
-					} else{						
+						if(getSkinnable().isFocused()) promptTextUpTransition.play();
+						else promptTextUpTransitionNoColor.play();
+					} else{
+						promptTextUpTransitionNoColor.stop();
 						promptTextUpTransition.stop();
 						promptTextDownTransition.play();
 					}
@@ -396,6 +416,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 				promptText.visibleProperty().unbind();
 				promptText.visibleProperty().set(true);
+				getSkinnable().textProperty().addListener(textPromptListener);
 				getSkinnable().focusedProperty().addListener(focusPromptTextListener);
 			}
 
