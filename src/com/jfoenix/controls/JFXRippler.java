@@ -41,6 +41,7 @@ import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.event.Event;
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -126,6 +127,10 @@ public class JFXRippler extends StackPane {
 		this.maskType.set(mask);
 		this.position.set(pos);
 		setControl(control);
+		setCache(true);
+		setCacheHint(CacheHint.SPEED);
+		setCacheShape(true);
+		setSnapToPixel(false);
 	}	
 
 	/***************************************************************************
@@ -333,7 +338,10 @@ public class JFXRippler extends StackPane {
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
 				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
 				this.setOpacity(0);
-				this.setCache(true);
+				setCache(true);
+				setCacheHint(CacheHint.SPEED);
+				setCacheShape(true);
+				setSnapToPixel(false);
 			}
 		}
 
@@ -353,6 +361,9 @@ public class JFXRippler extends StackPane {
 									private Ripple(double centerX, double centerY) {
 										super(centerX, centerY, 0, null);	
 										setCache(true);
+										setCacheHint(CacheHint.SPEED);
+										setCacheShape(true);
+										setSnapToPixel(false);
 										if(ripplerFill.get() instanceof Color){
 											Color circleColor = new Color(((Color)ripplerFill.get()).getRed(), ((Color)ripplerFill.get()).getGreen(), ((Color)ripplerFill.get()).getBlue(),0.3);
 											setStroke(circleColor);

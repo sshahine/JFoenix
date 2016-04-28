@@ -109,7 +109,11 @@ public class JFXDecorator extends VBox {
 	public JFXDecorator(Stage stage, Node node, boolean fullScreen, boolean max, boolean min) {
 		super();
 		primaryStage = stage;
-		primaryStage.initStyle(StageStyle.TRANSPARENT);
+		/*
+		 *  Note that setting the style to TRANSPARENT is causing performance
+		 *  degradation, as an alternative we set it to UNDECORATED instead.
+		 */
+		primaryStage.initStyle(StageStyle.UNDECORATED);
 		
 		setPickOnBounds(false);
 		this.getStyleClass().add("jfx-decorator");

@@ -24,7 +24,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -38,9 +37,9 @@ import javafx.util.Duration;
 public class CachedTransition extends Transition {
 	protected final Node node;
 	protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
-	private CacheHint oldCacheHint = CacheHint.DEFAULT;
-	private boolean oldCache = false;
-
+	private CacheMomento[] momentos = new CacheMomento[0];
+	private CacheMomento nodeCacheMomento;
+	
 	public CachedTransition(final Node node, final Timeline timeline) {
 		this.node = node;
 		this.timeline.set(timeline);
@@ -57,21 +56,45 @@ public class CachedTransition extends Transition {
 			}
 		});
 	}
+	public CachedTransition(final Node node, final Timeline timeline, CacheMomento...cacheMomentos) {
+		this.node = node;
+		this.timeline.set(timeline);
+		this.momentos = cacheMomentos;
+		statusProperty().addListener(new ChangeListener<Status>() {
+			@Override public void changed(ObservableValue<? extends Status> ov, Status t, Status newStatus) {
+				switch(newStatus) {
+				case RUNNING:
+					starting();
+					break;
+				default:
+					stopping();
+					break;
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Called when the animation is starting
 	 */
 	protected void starting() {
-		oldCache = node.isCache();
-		oldCacheHint = node.getCacheHint();
-		node.setCache(true);
-		node.setCacheHint(CacheHint.SPEED);
+		nodeCacheMomento = new CacheMomento(node);
+		if(momentos!=null){
+			for (int i = 0; i < momentos.length; i++) {
+				momentos[i].cache();
+			}
+		}
 	}
 	/**
 	 * Called when the animation is stopping
 	 */
 	protected void stopping() {
-		node.setCache(oldCache);
-		node.setCacheHint(oldCacheHint);
+		nodeCacheMomento.restore();
+		if(momentos!=null){
+			for (int i = 0; i < momentos.length; i++) {
+				momentos[i].restore();
+			}
+		}
 	}
 	
 	/**

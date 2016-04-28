@@ -58,6 +58,7 @@ import javafx.util.Duration;
 
 import com.jfoenix.controls.events.JFXDrawerEvent;
 import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CacheMomento;
 import com.jfoenix.transitions.CachedTransition;
 
 /**
@@ -689,7 +690,7 @@ public class JFXDrawer extends StackPane {
 											new KeyValue(overlayPane.opacityProperty(), 1,Interpolator.EASE_BOTH),
 											new KeyValue(translateProperty, end , Interpolator.EASE_BOTH)									
 											)
-					));
+					), new CacheMomento(overlayPane));
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}
@@ -710,7 +711,7 @@ public class JFXDrawer extends StackPane {
 											new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
 											new KeyValue(overlayPane.opacityProperty(), 0,Interpolator.EASE_BOTH)																
 											)
-					));
+					), new CacheMomento(overlayPane));
 			setCycleDuration(Duration.seconds(0.5));
 			setDelay(Duration.seconds(0));
 		}
