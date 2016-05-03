@@ -267,8 +267,9 @@ public class JFXDialog extends StackPane {
 		animation.play();
 		animation.setOnFinished((e)->{
 			resetProperties();
+			onDialogClosedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.CLOSED));
+			dialogContainer.getChildren().remove(this);
 		});
-		onDialogClosedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.CLOSED));
 	}
 
 	/***************************************************************************
