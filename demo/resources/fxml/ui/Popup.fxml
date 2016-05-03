@@ -3,9 +3,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPopup?>
-<?import com.jfoenix.controls.JFXSnackbar?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import de.jensd.fx.fontawesome.Icon?>
@@ -37,7 +35,6 @@
 			<JFXHamburger fx:id="burger4" style="-fx-padding:15;">
 			</JFXHamburger>
 		</JFXRippler>
-		<JFXButton fx:id="notify" prefWidth="100" prefHeight="40" buttonType="RAISED" text="Snackbar" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="100.0"></JFXButton>
 	</AnchorPane>
 
 	<JFXPopup fx:id="popup">
@@ -81,8 +78,6 @@
 			</JFXListView>
 		</content>
 	</JFXPopup>
-
-	<JFXSnackbar fx:id="snackbar" prefWidth="300" />
 
 </StackPane>
 

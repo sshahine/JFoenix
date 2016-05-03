@@ -13,6 +13,7 @@
 <?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
 <?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.JFXSnackbar?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
@@ -60,6 +61,8 @@
 			</HBox>
 		</children>
 	</VBox>
+	
+	<JFXSnackbar fx:id="snackbar" prefWidth="300" />
 </StackPane>
 
 

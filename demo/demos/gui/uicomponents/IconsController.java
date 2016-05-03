@@ -4,6 +4,8 @@ import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
@@ -14,6 +16,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 @FXMLController(value = "/resources/fxml/ui/Icons.fxml", title = "Material Design Example")
 public class IconsController {
@@ -29,10 +32,14 @@ public class IconsController {
 
 	@FXML
 	private JFXBadge badge1;
-
+	
+	@FXML private StackPane root;
+	@FXML private JFXSnackbar snackbar;
+	int count=0;
+	
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
-
+	
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
 		if (((Pane) context.getRegisteredObject("ContentPane")).getChildren().size() > 0)
@@ -43,6 +50,8 @@ public class IconsController {
 		bindAction(burger3);
 		bindAction(burger4);
 
+		snackbar.registerSnackbarContainer(root);
+		
 		badge1.setOnMouseClicked((e) -> {
 			int value = Integer.parseInt(badge1.getText());
 			if (e.getButton() == MouseButton.PRIMARY) {
@@ -57,6 +66,13 @@ public class IconsController {
 				badge1.setEnabled(true);
 			}
 			badge1.setText(String.valueOf(value));
+			
+			// trigger snackbar
+			if (count++%2==0){
+				snackbar.fireEvent(new SnackbarEvent("Toast Message " + count));
+			} else {
+				snackbar.fireEvent(new SnackbarEvent("Snackbar Message "+ count,"UNDO",3000,(b)->{}));
+			}
 		});
 	}
 
