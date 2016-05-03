@@ -122,10 +122,11 @@ public class JFXSnackbar extends StackPane {
 		//popup.requestLayout();
 		popup.setVisible(false);
 
+		sizeListener = (o, oldVal, newVal) ->{refreshPopup();};
+		
 		// register the container before resizing it
 		registerSnackbarContainer(snackbarContainer);
 		
-		sizeListener = (o, oldVal, newVal) ->{refreshPopup();};
 		// resize the popup if its layout has been changed
 		popup.layoutBoundsProperty().addListener((o,oldVal,newVal)-> refreshPopup());
 
