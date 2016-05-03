@@ -20,6 +20,10 @@ package com.jfoenix.controls;
 
 import java.util.ArrayList;
 
+import com.jfoenix.controls.events.JFXDrawerEvent;
+import com.jfoenix.transitions.CacheMomento;
+import com.jfoenix.transitions.CachedTransition;
+
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -46,6 +50,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -55,11 +60,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.events.JFXDrawerEvent;
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CacheMomento;
-import com.jfoenix.transitions.CachedTransition;
 
 /**
  * JFXDrawer is material design implementation of drawer.
@@ -129,8 +129,9 @@ public class JFXDrawer extends StackPane {
 
 		sidePane.getStyleClass().add("jfx-drawer-side-pane");
 		sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1), CornerRadii.EMPTY, Insets.EMPTY)));
-		JFXDepthManager.setDepth(sidePane, 2);
 		sidePane.setPickOnBounds(false);
+		// causes performance issue when animating the drawer
+//		JFXDepthManager.setDepth(sidePane, 2);
 
 		this.getChildren().add(content);	
 		this.getChildren().add(overlayPane);
@@ -223,7 +224,8 @@ public class JFXDrawer extends StackPane {
 
 	ChangeListener<? super Node> widthListener = (o,oldVal,newVal) -> {if(newVal!=null && newVal instanceof Region) parentSizeProperty.set(((Region)newVal).widthProperty());};
 	ChangeListener<? super Node> heightListener = (o,oldVal,newVal) -> {if(newVal!=null && newVal instanceof Region) parentSizeProperty.set(((Region)newVal).heightProperty());};
-	
+	ChangeListener<? super Scene> sceneWidthListener = (o,oldVal,newVal)->{ if(newVal!=null && this.getParent()==null) parentSizeProperty.set(newVal.widthProperty());};
+	ChangeListener<? super Scene> sceneHeightListener = (o,oldVal,newVal)->{ if(newVal!=null && this.getParent()==null) parentSizeProperty.set(newVal.heightProperty());};
 	/**
 	 * this method will change the drawer behavior according to its direction
 	 * @param dir
@@ -247,6 +249,9 @@ public class JFXDrawer extends StackPane {
 			this.boundedNodeProperty().removeListener(heightListener);
 			this.boundedNodeProperty().addListener(widthListener);
 			if(getBoundedNode()==null) this.boundedNodeProperty().bind(this.parentProperty());
+			this.sceneProperty().removeListener(sceneHeightListener);
+			this.sceneProperty().removeListener(sceneWidthListener);
+			this.sceneProperty().addListener(sceneWidthListener);
 		}else if(dir.equals(DrawerDirection.RIGHT)){
 			StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
 			translateProperty.set(0);
@@ -258,6 +263,9 @@ public class JFXDrawer extends StackPane {
 			this.boundedNodeProperty().removeListener(heightListener);
 			this.boundedNodeProperty().addListener(widthListener);
 			if(getBoundedNode()==null) this.boundedNodeProperty().bind(this.parentProperty());
+			this.sceneProperty().removeListener(sceneHeightListener);
+			this.sceneProperty().removeListener(sceneWidthListener);
+			this.sceneProperty().addListener(sceneWidthListener);
 		}else if(dir.equals(DrawerDirection.TOP)){
 			StackPane.setAlignment(sidePane, Pos.TOP_CENTER);
 			translateProperty.set(0);
@@ -269,6 +277,9 @@ public class JFXDrawer extends StackPane {
 			this.boundedNodeProperty().removeListener(widthListener);
 			this.boundedNodeProperty().addListener(heightListener);
 			if(getBoundedNode()==null) this.boundedNodeProperty().bind(this.parentProperty());
+			this.sceneProperty().removeListener(sceneHeightListener);
+			this.sceneProperty().removeListener(sceneWidthListener);
+			this.sceneProperty().addListener(sceneHeightListener);
 		}else if(dir.equals(DrawerDirection.BOTTOM)){
 			StackPane.setAlignment(sidePane, Pos.BOTTOM_CENTER);
 			translateProperty.set(0);
@@ -280,6 +291,9 @@ public class JFXDrawer extends StackPane {
 			this.boundedNodeProperty().removeListener(widthListener);
 			this.boundedNodeProperty().addListener(heightListener);
 			if(getBoundedNode()==null) this.boundedNodeProperty().bind(this.parentProperty());
+			this.sceneProperty().removeListener(sceneHeightListener);
+			this.sceneProperty().removeListener(sceneWidthListener);
+			this.sceneProperty().addListener(sceneHeightListener);
 		}
 		setDefaultDrawerSize(defaultSizeProperty.get());
 		updateDrawerAnimation(initTranslate.doubleValue());

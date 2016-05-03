@@ -142,8 +142,7 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
         }
         placeholder.setVisible(true);
         placeholder.setOpacity(1.0);
-        root.getChildren().setAll(placeholder);
-        root.getChildren().add(newView);
+        root.getChildren().setAll(placeholder, newView);
         placeholder.toFront();
 
     }

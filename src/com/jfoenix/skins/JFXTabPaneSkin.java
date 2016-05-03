@@ -27,6 +27,7 @@ import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.controls.JFXRippler.RipplerPos;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
@@ -314,7 +315,12 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 						diffTabsIndices = 0;
 					}
 					// animate upon tab selection only otherwise just translate the selected tab 
-					if(isSelectingTab) new Timeline(new KeyFrame(Duration.millis(320), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*index, Interpolator.EASE_BOTH))).play();
+					if(isSelectingTab) {
+						new CachedTransition(tabsContainer, new Timeline(new KeyFrame(Duration.millis(1000), new KeyValue(tabsContainer.translateXProperty(), -contentWidth*index, Interpolator.EASE_BOTH)))){{
+							setCycleDuration(Duration.seconds(0.320));
+							setDelay(Duration.seconds(0));
+						}}.play();
+					}
 					else tabsContainer.setTranslateX(-contentWidth*index);
 				}
 			}
