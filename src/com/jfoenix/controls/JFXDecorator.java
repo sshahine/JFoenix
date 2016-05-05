@@ -21,17 +21,23 @@ package com.jfoenix.controls;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jfoenix.svg.SVGGlyph;
+
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
@@ -50,11 +56,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import com.jfoenix.svg.SVGGlyph;
 
 /**
  * Window Decorator allow to resize/move its content
@@ -66,7 +72,7 @@ import com.jfoenix.svg.SVGGlyph;
 public class JFXDecorator extends VBox {
 
 	private Stage primaryStage;
-	
+
 	private double xOffset = 0;
 	private double yOffset = 0;
 	private double newX;
@@ -80,7 +86,14 @@ public class JFXDecorator extends VBox {
 	private StackPane contentPlaceHolder = new StackPane();
 	private HBox buttonsContainer;
 	private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(()->{Platform.exit();});
-	
+
+	private BooleanProperty customMaximize = new SimpleBooleanProperty(false);
+	private boolean maximized = false;
+	private BoundingBox originalBox;
+	private BoundingBox maximizedBox;
+
+	private JFXButton btnMax;
+
 	/**
 	 * Create a window decorator for the specified node with the options:
 	 * - full screen
@@ -93,7 +106,7 @@ public class JFXDecorator extends VBox {
 	public JFXDecorator(Stage stage, Node node){
 		this(stage,node,true,true,true);
 	}
-	
+
 	/**
 	 * Create a window decorator for the specified node with the options:
 	 * - full screen
@@ -114,10 +127,10 @@ public class JFXDecorator extends VBox {
 		 *  degradation, as an alternative we set it to UNDECORATED instead.
 		 */
 		primaryStage.initStyle(StageStyle.UNDECORATED);
-		
+
 		setPickOnBounds(false);
 		this.getStyleClass().add("jfx-decorator");
-		
+
 		SVGGlyph full = new SVGGlyph(0, "FULLSCREEN", "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z", Color.WHITE);		
 		full.setSize(16, 16);
 		SVGGlyph minus = new SVGGlyph(0, "MINUS", "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z", Color.WHITE);
@@ -129,7 +142,7 @@ public class JFXDecorator extends VBox {
 		resizeMin.setSize(12, 12);
 		SVGGlyph close = new SVGGlyph(0, "CLOSE", "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z", Color.WHITE);
 		close.setSize(12, 12);
-		
+
 		JFXButton btnFull = new JFXButton();
 		btnFull.getStyleClass().add("jfx-decorator-button");
 		btnFull.setCursor(Cursor.HAND);
@@ -151,33 +164,62 @@ public class JFXDecorator extends VBox {
 		btnMin.setOnAction((action)->primaryStage.setIconified(true));
 		btnMin.setGraphic(minus);
 		btnMin.setRipplerFill(Color.WHITE);
-		
-		JFXButton btnMax = new JFXButton();
+
+		btnMax = new JFXButton();
 		btnMax.getStyleClass().add("jfx-decorator-button");
 		btnMax.setCursor(Cursor.HAND);
 		btnMax.setRipplerFill(Color.WHITE);
 		btnMax.setOnAction((action)->{
-			primaryStage.setMaximized(!primaryStage.isMaximized());
-			if(primaryStage.isMaximized()){
-				btnMax.setGraphic(resizeMin);
-				btnMax.setTooltip(new Tooltip("Restore Down"));
+			if(!isCustomMaximize()){
+				primaryStage.setMaximized(!primaryStage.isMaximized());	
+				maximized = primaryStage.isMaximized();
+				if(primaryStage.isMaximized()){
+					btnMax.setGraphic(resizeMin);
+					btnMax.setTooltip(new Tooltip("Restore Down"));
+				}else{
+					btnMax.setGraphic(resizeMax);
+					btnMax.setTooltip(new Tooltip("Maximize"));
+				}
 			}else{
-				btnMax.setGraphic(resizeMax);
-				btnMax.setTooltip(new Tooltip("Maximize"));
+				if (!maximized) {
+					// store original bounds
+					originalBox = new BoundingBox(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
+					// get the max stage bounds
+					Screen screen = Screen.getScreensForRectangle(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()).get(0);
+					Rectangle2D bounds = screen.getVisualBounds();
+					maximizedBox = new BoundingBox(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
+					// maximized the stage
+					stage.setX(maximizedBox.getMinX());
+					stage.setY(maximizedBox.getMinY());
+					stage.setWidth(maximizedBox.getWidth());
+					stage.setHeight(maximizedBox.getHeight());
+					btnMax.setGraphic(resizeMin);
+					btnMax.setTooltip(new Tooltip("Restore Down"));
+				}else{
+					// restore stage to its original size
+					stage.setX(originalBox.getMinX());
+					stage.setY(originalBox.getMinY());
+					stage.setWidth(originalBox.getWidth());
+					stage.setHeight(originalBox.getHeight());
+					originalBox = null;
+					btnMax.setGraphic(resizeMax);
+					btnMax.setTooltip(new Tooltip("Maximize"));
+				}
+				maximized = !maximized;
 			}
 		});
 		btnMax.setGraphic(resizeMax);
-		
-		
+
+
 		buttonsContainer = new HBox();
 		buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
 		buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 		// BINDING
-//		buttonsContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-//			return new Background(new BackgroundFill(decoratorColor.get(), CornerRadii.EMPTY, Insets.EMPTY));
-//		}, decoratorColor));
-		
-		
+		//		buttonsContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+		//			return new Background(new BackgroundFill(decoratorColor.get(), CornerRadii.EMPTY, Insets.EMPTY));
+		//		}, decoratorColor));
+
+
 		buttonsContainer.setPadding(new Insets(4));		
 		buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
 		// customize decorator buttons
@@ -190,7 +232,7 @@ public class JFXDecorator extends VBox {
 		if(min) btns.add(btnMin);
 		if(max) btns.add(btnMax);
 		btns.add(btnClose);
-		
+
 		buttonsContainer.getChildren().addAll(btns);
 		buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter)->allowMove = true);
 		buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter)->{ if(!isDragging) allowMove = false;});
@@ -203,10 +245,10 @@ public class JFXDecorator extends VBox {
 		contentPlaceHolder.getStyleClass().add("resize-border");
 		contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));
 		// BINDING
-//		contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-//			return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-//		}, decoratorColor));
-		
+		//		contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
+		//			return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+		//		}, decoratorColor));
+
 		Rectangle clip = new Rectangle();
 		clip.widthProperty().bind(((Region)node).widthProperty());
 		clip.heightProperty().bind(((Region)node).heightProperty());
@@ -241,34 +283,34 @@ public class JFXDecorator extends VBox {
 				windowDecoratorAnimation.setOnFinished((finish)->{					
 					contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4))));					
 					contentPlaceHolder.getStyleClass().add("resize-border");	
-//					contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-//						return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-//					}, decoratorColor));
+					//					contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
+					//						return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+					//					}, decoratorColor));
 				});
 				windowDecoratorAnimation.play();
 			}
 		});	
-		
-		
-		
-//		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
-//			if(newVal){
-//				resizeBorder = this.getBorder();
-//				this.setBorder(Border.EMPTY);				
-//			}else{
-//				this.setBorder(resizeBorder);
-//			}
-//		});		
-//		this.setPadding(new Insets(0,0,0,0));
-		
+
+
+
+		//		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
+		//			if(newVal){
+		//				resizeBorder = this.getBorder();
+		//				this.setBorder(Border.EMPTY);				
+		//			}else{
+		//				this.setBorder(resizeBorder);
+		//			}
+		//		});		
+		//		this.setPadding(new Insets(0,0,0,0));
+
 		// clip the node in case it has hidden child nodes outside it's bounds (e.g drawer pane)
-//		Rectangle clip = new Rectangle();
-//		clip.widthProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getWidth(), ((Region)node).widthProperty()));
-//		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
-//		node.setClip(clip);
-//		node.getStyleClass().add("jfx-decorator-content");
-//		node.setStyle("-fx-border-color:RED;");
-		
+		//		Rectangle clip = new Rectangle();
+		//		clip.widthProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getWidth(), ((Region)node).widthProperty()));
+		//		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
+		//		node.setClip(clip);
+		//		node.getStyleClass().add("jfx-decorator-content");
+		//		node.setStyle("-fx-border-color:RED;");
+
 		// save the mouse pressed position when clicking on the decorator pane
 		this.addEventFilter(MouseEvent.MOUSE_PRESSED, (mouseEvent) -> {
 			initX = mouseEvent.getScreenX();
@@ -280,7 +322,7 @@ public class JFXDecorator extends VBox {
 
 		// show the drag cursor on the borders
 		this.setOnMouseMoved((mouseEvent)->{
-			if (primaryStage.isMaximized() || primaryStage.isFullScreen()) {
+			if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
 				this.setCursor(Cursor.DEFAULT);
 				return; // maximized mode does not support resize
 			}
@@ -330,7 +372,7 @@ public class JFXDecorator extends VBox {
 			/*
 			 * Long press generates drag event!
 			 */
-			if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized()) {
+			if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
 				return;
 			}
 
@@ -445,5 +487,39 @@ public class JFXDecorator extends VBox {
 		this.onCloseButtonAction.set(onCloseButtonAction);
 	}
 
+	/**
+	 * this property is used to replace JavaFX maximization 
+	 * with a custom one that prevents hiding windows taskbar when 
+	 * the JFXDecorator is maximized.
+	 * @return customMaximizeProperty whether to use custom maximization or not.
+	 */
+	public final BooleanProperty customMaximizeProperty() {
+		return this.customMaximize;
+	}
+
+	/**
+	 * @return whether customMaximizeProperty is active or not
+	 */
+	public final boolean isCustomMaximize() {
+		return this.customMaximizeProperty().get();
+	}
+
+	/**
+	 * set customMaximize property
+	 * @param customMaximize
+	 */
+	public final void setCustomMaximize(final boolean customMaximize) {
+		this.customMaximizeProperty().set(customMaximize);
+	}
+
+	/**
+	 * @param maximized
+	 */
+	public void setMaximized(boolean maximized) {
+		if(this.maximized!=maximized)
+			Platform.runLater(()->{
+				btnMax.fire();
+			});
+	}
 
 } 

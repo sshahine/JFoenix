@@ -37,7 +37,9 @@ public class MainDemo extends Application {
 		flowContext.register("Stage", stage);
 		flow.createHandler(flowContext).start(container);
 		
-		Scene scene = new Scene(new JFXDecorator(stage, container.getView()), 800, 800);
+		JFXDecorator decorator = new JFXDecorator(stage, container.getView());
+		decorator.setCustomMaximize(true);
+		Scene scene = new Scene(decorator, 800, 800);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-main-demo.css").toExternalForm());
