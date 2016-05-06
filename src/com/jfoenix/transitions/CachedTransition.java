@@ -22,8 +22,6 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -39,20 +37,18 @@ public class CachedTransition extends Transition {
 	protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
 	private CacheMomento[] momentos = new CacheMomento[0];
 	private CacheMomento nodeCacheMomento;
-	
+
 	public CachedTransition(final Node node, final Timeline timeline) {
 		this.node = node;
 		this.timeline.set(timeline);
-		statusProperty().addListener(new ChangeListener<Status>() {
-			@Override public void changed(ObservableValue<? extends Status> ov, Status t, Status newStatus) {
-				switch(newStatus) {
-				case RUNNING:
-					starting();
-					break;
-				default:
-					stopping();
-					break;
-				}
+		statusProperty().addListener((o,oldStatus,newStatus)->{
+			switch(newStatus) {
+			case RUNNING:
+				starting();
+				break;
+			default:
+				stopping();
+				break;
 			}
 		});
 	}
@@ -60,25 +56,24 @@ public class CachedTransition extends Transition {
 		this.node = node;
 		this.timeline.set(timeline);
 		this.momentos = cacheMomentos;
-		statusProperty().addListener(new ChangeListener<Status>() {
-			@Override public void changed(ObservableValue<? extends Status> ov, Status t, Status newStatus) {
-				switch(newStatus) {
-				case RUNNING:
-					starting();
-					break;
-				default:
-					stopping();
-					break;
-				}
+		statusProperty().addListener((o,oldStatus,newStatus)->{
+			switch(newStatus) {
+			case RUNNING:
+				starting();
+				break;
+			default:
+				stopping();
+				break;
 			}
 		});
 	}
-	
+
 	/**
 	 * Called when the animation is starting
 	 */
 	protected void starting() {
 		nodeCacheMomento = new CacheMomento(node);
+		nodeCacheMomento.cache();
 		if(momentos!=null){
 			for (int i = 0; i < momentos.length; i++) {
 				momentos[i].cache();
@@ -96,7 +91,7 @@ public class CachedTransition extends Transition {
 			}
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
