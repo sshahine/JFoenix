@@ -59,7 +59,7 @@ public class JFXButton extends Button {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		for(int i = 0 ; i < stackTraceElements.length && i < 15; i++){
 			if(stackTraceElements[i].getClassName().toLowerCase().contains(".scenebuilder.kit.fxom.")){
-				this.setText(stackTraceElements[i].getClassName());
+				this.setText("Button");
 				break;
 			}
 		}
