@@ -46,8 +46,16 @@ public class JFXRadioButton extends RadioButton {
 	public JFXRadioButton() {
 		super();
 		initialize();
+		// init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )		
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		for(int i = 0 ; i < stackTraceElements.length && i < 15; i++){
+			if(stackTraceElements[i].getClassName().toLowerCase().contains(".scenebuilder.kit.fxom.")){
+				this.setText("RadioButton");
+				break;
+			}
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -57,9 +65,9 @@ public class JFXRadioButton extends RadioButton {
 	}
 
 	private void initialize() {
-    	this.getStyleClass().add(DEFAULT_STYLE_CLASS);    	
-    }
-	
+		this.getStyleClass().add(DEFAULT_STYLE_CLASS);    	
+	}
+
 	/**
 	 * Initialize the style class to 'jfx-radio-button'.
 	 *

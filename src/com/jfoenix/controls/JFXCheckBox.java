@@ -60,6 +60,14 @@ public class JFXCheckBox extends CheckBox {
 	public JFXCheckBox(){
 		super();
 		initialize();
+		// init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )		
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		for(int i = 0 ; i < stackTraceElements.length && i < 15; i++){
+			if(stackTraceElements[i].getClassName().toLowerCase().contains(".scenebuilder.kit.fxom.")){
+				this.setText("CheckBox");
+				break;
+			}
+		}
 	}
 
 	private void initialize() {

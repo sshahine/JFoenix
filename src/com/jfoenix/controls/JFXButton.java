@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.jfoenix.converters.ButtonTypeConverter;
+import com.jfoenix.skins.JFXButtonSkin;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
@@ -34,9 +37,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Paint;
-
-import com.jfoenix.converters.ButtonTypeConverter;
-import com.jfoenix.skins.JFXButtonSkin;
 
 /**
  * JFXButton is the material design implementation of a button. 
@@ -54,7 +54,15 @@ public class JFXButton extends Button {
 	 */
 	public JFXButton() {
 		super();
-		initialize();		
+		initialize();
+		// init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		for(int i = 0 ; i < stackTraceElements.length && i < 15; i++){
+			if(stackTraceElements[i].getClassName().toLowerCase().contains(".scenebuilder.kit.fxom.")){
+				this.setText(stackTraceElements[i].getClassName());
+				break;
+			}
+		}
 	}	
 	/**
 	 * {@inheritDoc}
