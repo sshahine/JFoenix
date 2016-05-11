@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.time.chrono.Chronology;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 import com.jfoenix.controls.JFXDatePicker;
 
@@ -71,34 +72,34 @@ import javafx.util.converter.NumberStringConverter;
  */
 
 public class JFXTimePickerContent extends VBox {
-	
+
 	private static enum TimeUnit{HOURS, MINUTES};
-	
+
 	protected JFXDatePicker datePicker;
 
 	private Color fadedColor = Color.rgb(255, 255, 255, 0.67);
 	private double contentCircleRadius = 100;
 
-	
+
 	private Label selectedHourLabel = new Label();
 	private Label selectedMinLabel = new Label();
 	private Label periodPMLabel, periodAMLabel;
 	private StackPane calendarPlaceHolder = new StackPane();
 	private StackPane hoursContent;
 	private StackPane minutesContent;
-	
+
 	private Rotate hoursPointerRotate;
 	private Rotate minsPointerRotate;
-	
+
 	private ObjectProperty<TimeUnit> unit = new SimpleObjectProperty<>(TimeUnit.HOURS);
 	private DoubleProperty angle = new SimpleDoubleProperty(Math.toDegrees(2 * Math.PI/12));
 	private StringProperty period = new SimpleStringProperty("AM");
 	private ObjectProperty<Rotate> pointerRotate = new SimpleObjectProperty<>();
 	private ObjectProperty<Label> timeLabel = new SimpleObjectProperty<>();
-	
+
 	private NumberStringConverter unitConverter = new NumberStringConverter("#00"); 	
-	
-	
+
+
 	private ObjectProperty<LocalTime> selectedTime = new SimpleObjectProperty<LocalTime>(this, "selectedTime");
 
 	ObjectProperty<LocalTime> displayedTimeProperty() {
@@ -108,7 +109,7 @@ public class JFXTimePickerContent extends VBox {
 	JFXTimePickerContent(final DatePicker datePicker) {
 		this.datePicker = (JFXDatePicker) datePicker;
 		getStyleClass().add("date-picker-popup");
-				
+
 		// create the header pane
 		getChildren().add(createHeaderPane(this.datePicker.getTime()));
 
@@ -116,7 +117,7 @@ public class JFXTimePickerContent extends VBox {
 		// create content pane
 		contentHolder.getChildren().add(createContentPane(this.datePicker.getTime()));
 		calendarPlaceHolder.getChildren().add(contentHolder);
-		
+
 		Rectangle clip = new Rectangle();
 		clip.widthProperty().bind(calendarPlaceHolder.widthProperty());
 		clip.heightProperty().bind(calendarPlaceHolder.heightProperty());
@@ -139,7 +140,7 @@ public class JFXTimePickerContent extends VBox {
 			swapLabelsColor(selectedHourLabel, selectedMinLabel);
 			switchTimeUnit(newVal);
 		});
-		
+
 		period.addListener((o,oldVal,newVal)->{
 			swapLabelsColor(periodPMLabel, periodAMLabel);
 			updateValue();
@@ -153,7 +154,7 @@ public class JFXTimePickerContent extends VBox {
 	 */
 	protected StackPane createHeaderPane(LocalTime time) {
 		int hour = time.getHour();
-		
+
 		selectedHourLabel.setText((hour%12==0?12:hour%12) + "");		
 		selectedHourLabel.getStyleClass().add("spinner-label");
 		selectedHourLabel.setTextFill(Color.WHITE);
@@ -162,24 +163,24 @@ public class JFXTimePickerContent extends VBox {
 		selectedHourLabel.setMinWidth(49);
 		selectedHourLabel.setAlignment(Pos.CENTER_RIGHT);
 		timeLabel.set(selectedHourLabel);
-		
+
 		selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
 		selectedMinLabel.getStyleClass().add("spinner-label");
 		selectedMinLabel.setTextFill(fadedColor);
 		selectedMinLabel.setFont(Font.font("Roboto",FontWeight.BOLD,42));
 		selectedMinLabel.setOnMouseClicked((click)-> unit.set(TimeUnit.MINUTES));
-		
+
 		Label separatorLabel = new Label(":");
 		separatorLabel.setPadding(new Insets(0, 0, 4, 0));
 		separatorLabel.setTextFill(fadedColor);
 		separatorLabel.setFont(Font.font("Roboto",FontWeight.BOLD,42));
-		
+
 		periodPMLabel = new Label("PM");
 		periodPMLabel.getStyleClass().add("spinner-label");
 		periodPMLabel.setTextFill(fadedColor);
 		periodPMLabel.setFont(Font.font("Roboto",FontWeight.BOLD,14));
 		periodPMLabel.setOnMouseClicked((click)-> period.set("PM"));
-		
+
 		periodAMLabel = new Label("AM");
 		periodAMLabel.getStyleClass().add("spinner-label");
 		periodAMLabel.setTextFill(fadedColor);
@@ -190,12 +191,12 @@ public class JFXTimePickerContent extends VBox {
 		if(hour < 12) periodAMLabel.setTextFill(Color.WHITE);
 		else periodPMLabel.setTextFill(Color.WHITE);
 		period.set(hour < 12? "AM" : "PM");
-		
-		
+
+
 		VBox periodContainer = new VBox();
 		periodContainer.setPadding(new Insets(0,0,0,4));
 		periodContainer.getChildren().addAll(periodAMLabel, periodPMLabel);
-		
+
 		// Year label container
 		HBox selectedTimeContainer = new HBox();
 		selectedTimeContainer.getStyleClass().add("spinner");
@@ -214,7 +215,7 @@ public class JFXTimePickerContent extends VBox {
 	protected BorderPane createContentPane(LocalTime time){
 		Circle circle = new Circle(contentCircleRadius);
 		circle.setFill(Color.rgb(224, 224, 224, 0.67));
-		
+
 		EventHandler<? super MouseEvent> mouseActionHandler = (event)->{
 			double dx = event.getX();
 			double dy = event.getY();
@@ -226,7 +227,7 @@ public class JFXTimePickerContent extends VBox {
 			timeLabel.get().setText(unit.get() == TimeUnit.MINUTES? unitConverter.toString(timeValue) : timeValue+"");
 			updateValue();
 		};
-		
+
 		circle.setOnMousePressed(mouseActionHandler);
 		circle.setOnMouseDragged(mouseActionHandler);
 
@@ -235,25 +236,25 @@ public class JFXTimePickerContent extends VBox {
 		minutesContent = createMinutesContent(time);
 		minutesContent.setOpacity(0);
 		minutesContent.setMouseTransparent(true);
-		
+
 		StackPane contentPane = new StackPane();
 		contentPane.getChildren().addAll(circle,hoursContent, minutesContent);
 		contentPane.setPadding(new Insets(12));
-		
+
 		BorderPane contentContainer = new BorderPane();
 		contentContainer.setCenter(contentPane);
 		contentContainer.setMinHeight(50);
 		contentContainer.setPadding(new Insets(2,12,2,12));
 		return contentContainer;
 	}
-	
-	
+
+
 	private StackPane createMinutesContent(LocalTime time){
 		// create minutes content
 		StackPane minsPointer = new StackPane();
 		Circle selectionCircle = new Circle(contentCircleRadius/6);
 		selectionCircle.fillProperty().bind(datePicker.defaultColorProperty());
-		
+
 		Circle minCircle = new Circle(selectionCircle.getRadius()/8);
 		minCircle.setFill(Color.rgb(255, 255, 255, 0.87));
 		minCircle.setTranslateX(selectionCircle.getRadius() - minCircle.getRadius());
@@ -262,8 +263,8 @@ public class JFXTimePickerContent extends VBox {
 			if(Integer.parseInt(newVal)%5==0) minCircle.setVisible(false);
 			else minCircle.setVisible(true);
 		});
-				
-		
+
+
 		double shift = 9;
 		Line line = new Line(shift,0,contentCircleRadius,0);		
 		line.fillProperty().bind(datePicker.defaultColorProperty());
@@ -272,14 +273,14 @@ public class JFXTimePickerContent extends VBox {
 		minsPointer.getChildren().addAll(line, selectionCircle, minCircle);
 		StackPane.setAlignment(selectionCircle, Pos.CENTER_LEFT);
 		StackPane.setAlignment(minCircle, Pos.CENTER_LEFT);
-		
-				
+
+
 		Group pointerGroup = new Group();
 		pointerGroup.getChildren().add(minsPointer);
 		pointerGroup.setTranslateX((-contentCircleRadius+shift)/2);
 		minsPointerRotate = new Rotate(0, contentCircleRadius-shift, selectionCircle.getRadius());		
 		pointerGroup.getTransforms().add(minsPointerRotate);	
-		
+
 		Pane clockLabelsContainer = new Pane();
 		// inner circle radius
 		double radius = contentCircleRadius-shift-selectionCircle.getRadius();		
@@ -298,11 +299,11 @@ public class JFXTimePickerContent extends VBox {
 					label.setTextFill(Color.rgb(0, 0, 0, 0.87));
 				}
 			});
-			
+
 			labelContainer.getChildren().add(label);
 			double labelSize = (selectionCircle.getRadius()/Math.sqrt(2))*2;
 			labelContainer.setMinSize(labelSize,labelSize);			
-			
+
 			double angle = 2 * i * Math.PI / 12 ;
 			double xOffset = radius * Math.cos(angle);
 			double yOffset = radius * Math.sin(angle);
@@ -310,22 +311,22 @@ public class JFXTimePickerContent extends VBox {
 			final double starty = contentCircleRadius + yOffset;
 			labelContainer.setLayoutX(startx - labelContainer.getMinWidth()/2);
 			labelContainer.setLayoutY(starty - labelContainer.getMinHeight()/2);			
-			
+
 			// add label to the parent node
 			clockLabelsContainer.getChildren().add(labelContainer);
 		}
-		
+
 		minsPointerRotate.setAngle(180 + (time.getMinute()+45)%60 * Math.toDegrees(2 * Math.PI/60));
-		
+
 		return new StackPane(pointerGroup, clockLabelsContainer);
 	}
-	
+
 	private StackPane createHoursContent(LocalTime time){
 		// create hours content
 		StackPane hoursPointer = new StackPane();
 		Circle selectionCircle = new Circle(contentCircleRadius/6);
 		selectionCircle.fillProperty().bind(datePicker.defaultColorProperty());
-		
+
 		double shift = 9;
 		Line line = new Line(shift,0,contentCircleRadius,0);		
 		line.fillProperty().bind(datePicker.defaultColorProperty());
@@ -333,15 +334,15 @@ public class JFXTimePickerContent extends VBox {
 		line.setStrokeWidth(1.5);
 		hoursPointer.getChildren().addAll(line, selectionCircle);
 		StackPane.setAlignment(selectionCircle, Pos.CENTER_LEFT);
-				
+
 		Group pointerGroup = new Group();
 		pointerGroup.getChildren().add(hoursPointer);
 		pointerGroup.setTranslateX((-contentCircleRadius+shift)/2);
 		hoursPointerRotate = new Rotate(0, contentCircleRadius-shift, selectionCircle.getRadius());
 		pointerRotate.set(hoursPointerRotate);
 		pointerGroup.getTransforms().add(hoursPointerRotate);	
-		
-		
+
+
 		Pane clockLabelsContainer = new Pane();
 		// inner circle radius
 		double radius = contentCircleRadius-shift-selectionCircle.getRadius();		
@@ -365,7 +366,7 @@ public class JFXTimePickerContent extends VBox {
 			labelContainer.getChildren().add(label);
 			double labelSize = (selectionCircle.getRadius()/Math.sqrt(2))*2;
 			labelContainer.setMinSize(labelSize,labelSize);			
-			
+
 			// position the label on the circle
 			double angle = 2 * i * Math.PI / 12 ;
 			double xOffset = radius * Math.cos(angle);
@@ -374,23 +375,23 @@ public class JFXTimePickerContent extends VBox {
 			final double starty = contentCircleRadius + yOffset;
 			labelContainer.setLayoutX(startx - labelContainer.getMinWidth()/2);
 			labelContainer.setLayoutY(starty - labelContainer.getMinHeight()/2);
-			
+
 			// add label to the parent node
 			clockLabelsContainer.getChildren().add(labelContainer);
-			
+
 			// init pointer angle
 			if(val == time.getHour()%12) hoursPointerRotate.setAngle(180+ Math.toDegrees(angle));
 		}		
 		return new StackPane(pointerGroup, clockLabelsContainer);
 	}
-	
+
 
 	private void swapLabelsColor(Label lbl1 , Label lbl2){
 		Paint color = lbl1.getTextFill();
 		lbl1.setTextFill(lbl2.getTextFill());
 		lbl2.setTextFill(color);
 	}
-	
+
 
 	private void switchTimeUnit(TimeUnit newVal){
 		if(newVal == TimeUnit.HOURS){
@@ -403,12 +404,12 @@ public class JFXTimePickerContent extends VBox {
 			new ParallelTransition(fadeout,fadein).play();		
 		}
 	}
-	
+
 	void updateValue(){
-		LocalTimeStringConverter converter = new LocalTimeStringConverter(FormatStyle.SHORT);
+		LocalTimeStringConverter converter = new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH);
 		datePicker.setTime(converter.fromString(selectedHourLabel.getText()+":"+selectedMinLabel.getText()+" "+period.get()));
 	}
-	
+
 	void init(){
 		calendarPlaceHolder.setOpacity(1);
 		selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
@@ -417,9 +418,9 @@ public class JFXTimePickerContent extends VBox {
 	void clearFocus() {
 		LocalDate focusDate = datePicker.getValue();
 		if (focusDate == null) focusDate = LocalDate.now();
-//		if (YearMonth.from(focusDate).equals(selectedYearMonth.get())) goToDate(focusDate, true);
+		// if (YearMonth.from(focusDate).equals(selectedYearMonth.get())) goToDate(focusDate, true);
 	}
-	
+
 	protected boolean isValidDate(Chronology chrono, LocalDate date, int offset, ChronoUnit unit) {
 		if (date != null) return isValidDate(chrono, date.plus(offset, unit));
 		return false;
