@@ -109,7 +109,7 @@ public class JFXDatePicker extends DatePicker {
 	/**
 	 * property that holds the time value if showing the time picker
 	 */
-    private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>(LocalTime.now());
+    private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>();
     
 	public final ObjectProperty<LocalTime> timeProperty() {
 		return this.lastValidTime;

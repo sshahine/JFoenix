@@ -108,14 +108,16 @@ public class JFXTimePickerContent extends VBox {
 
 	JFXTimePickerContent(final DatePicker datePicker) {
 		this.datePicker = (JFXDatePicker) datePicker;
+		LocalTime time = this.datePicker.getTime() == null? LocalTime.now() : this.datePicker.getTime();
+			
 		getStyleClass().add("date-picker-popup");
 
 		// create the header pane
-		getChildren().add(createHeaderPane(this.datePicker.getTime()));
+		getChildren().add(createHeaderPane(time));
 
 		VBox contentHolder = new VBox();				
 		// create content pane
-		contentHolder.getChildren().add(createContentPane(this.datePicker.getTime()));
+		contentHolder.getChildren().add(createContentPane(time));
 		calendarPlaceHolder.getChildren().add(contentHolder);
 
 		Rectangle clip = new Rectangle();
@@ -352,7 +354,7 @@ public class JFXTimePickerContent extends VBox {
 			Label label = new Label(val+"");
 			label.setFont(Font.font("Roboto",FontWeight.BOLD,12));
 			// init color 
-			if(val == time.getHour()%12) label.setTextFill(Color.rgb(255, 255, 255, 0.87));
+			if(val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) label.setTextFill(Color.rgb(255, 255, 255, 0.87));
 			else label.setTextFill(Color.rgb(0, 0, 0, 0.87));
 			selectedHourLabel.textProperty().addListener((o,oldVal,newVal)->{
 				if(Integer.parseInt(newVal) == Integer.parseInt(label.getText())){
@@ -380,7 +382,7 @@ public class JFXTimePickerContent extends VBox {
 			clockLabelsContainer.getChildren().add(labelContainer);
 
 			// init pointer angle
-			if(val == time.getHour()%12) hoursPointerRotate.setAngle(180+ Math.toDegrees(angle));
+			if(val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) hoursPointerRotate.setAngle(180+ Math.toDegrees(angle));
 		}		
 		return new StackPane(pointerGroup, clockLabelsContainer);
 	}

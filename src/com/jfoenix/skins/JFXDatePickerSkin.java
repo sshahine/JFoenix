@@ -167,13 +167,19 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             }
             jfxDatePicker.fireEvent(new ActionEvent());
         } else if("TIME".equals(p)){
-        	DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
-        	displayNode.setText(fmt.format(jfxDatePicker.getTime()));
+        	updateTimeDisplayNode();
         } else {
             super.handleControlPropertyChanged(p);
         }
     }
 
+    private void updateTimeDisplayNode(){
+    	if(jfxDatePicker.isShowTime() && jfxDatePicker.getTime()!=null){
+	    	DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+	    	displayNode.setText(fmt.format(jfxDatePicker.getTime()));
+    	}
+    }
+    
     // these methods are called from the super constructor
     @Override protected TextField getEditor() {
     	StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
@@ -197,6 +203,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             displayNode = getEditableInputNode();
             displayNode.getStyleClass().add("date-picker-display-node");
             updateDisplayNode();
+            updateTimeDisplayNode();
         }
         displayNode.setEditable(jfxDatePicker.isEditable());
         return displayNode;
