@@ -1,11 +1,5 @@
 package demos.gui.uicomponents;
 
-import io.datafx.controller.FXMLController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
-import io.datafx.controller.util.VetoException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +7,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXSlider.IndicatorPosition;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.svg.SVGGlyphLoader;
+
+import io.datafx.controller.FXMLController;
+import io.datafx.controller.flow.FlowException;
+import io.datafx.controller.flow.context.FXMLViewFlowContext;
+import io.datafx.controller.flow.context.ViewFlowContext;
+import io.datafx.controller.util.VetoException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -31,7 +37,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -39,14 +44,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import javax.annotation.PostConstruct;
-
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXSlider;
-import com.jfoenix.controls.JFXSlider.IndicatorPosition;
-import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.svg.SVGGlyphLoader;
 
 @FXMLController(value = "/resources/fxml/ui/SVGLoader.fxml", title = "Material Design Example")
 public class SVGLoaderController {
@@ -63,8 +60,6 @@ public class SVGLoaderController {
 	
 	@PostConstruct
 	public void init() throws FlowException, VetoException, Exception {
-		if(((Pane) context.getRegisteredObject("ContentPane")).getChildren().size() > 0)
-			Platform.runLater(()-> ((Pane)((Pane) context.getRegisteredObject("ContentPane")).getChildren().get(0)).getChildren().remove(1));
 		final Stage stage = (Stage) context.getRegisteredObject("Stage");
 		
 		glyphDetailViewer = new GlyphDetailViewer();

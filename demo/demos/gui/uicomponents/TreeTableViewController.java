@@ -15,10 +15,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -30,14 +27,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
-import javafx.scene.layout.Pane;
 
 @FXMLController(value = "/resources/fxml/ui/TreeTableView.fxml" , title = "Material Design Example")
 public class TreeTableViewController {
-
-
-	@FXMLViewFlowContext
-	private ViewFlowContext context;
 
 	@FXML JFXTreeTableView<Person> treeTableView;
 	@FXML JFXTreeTableView<Person> editableTreeTableView;
@@ -54,8 +46,6 @@ public class TreeTableViewController {
 
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-		if(((Pane) context.getRegisteredObject("ContentPane")).getChildren().size() > 0)
-			Platform.runLater(()-> ((Pane)((Pane) context.getRegisteredObject("ContentPane")).getChildren().get(0)).getChildren().remove(1));
 
 		String[] names = { "Morley", "Scott", "Kruger", "Lain",
 				"Kennedy", "Gawron", "Han", "Hall", "Aydogdu", "Grace",

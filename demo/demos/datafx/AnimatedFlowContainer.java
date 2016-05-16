@@ -91,15 +91,12 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     @Override
     public <U> void setViewContext(ViewContext<U> context) {
         updatePlaceholder(context.getRootNode());
-
         if (animation != null) {
             animation.stop();
         }
-
         animation = new Timeline();
         animation.getKeyFrames().addAll(animationProducer.apply(this));
         animation.getKeyFrames().add(new KeyFrame(duration, (e) -> clearPlaceholder()));
-
         animation.play();
     }
 
@@ -127,6 +124,8 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     private void clearPlaceholder() {
         placeholder.setImage(null);
         placeholder.setVisible(false);
+        placeholder.setFitHeight(1);
+        placeholder.setFitWidth(1);
     }
 
     private void updatePlaceholder(Node newView) {

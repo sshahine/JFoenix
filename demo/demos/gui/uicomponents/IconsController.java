@@ -9,13 +9,9 @@ import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 @FXMLController(value = "/resources/fxml/ui/Icons.fxml", title = "Material Design Example")
@@ -37,14 +33,10 @@ public class IconsController {
 	@FXML private JFXSnackbar snackbar;
 	int count=0;
 	
-	@FXMLViewFlowContext
-	private ViewFlowContext context;
 	
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-		if (((Pane) context.getRegisteredObject("ContentPane")).getChildren().size() > 0)
-			Platform.runLater(() -> ((Pane) ((Pane) context.getRegisteredObject("ContentPane")).getChildren().get(0))
-					.getChildren().remove(1));
+		
 		bindAction(burger1);
 		bindAction(burger2);
 		bindAction(burger3);
