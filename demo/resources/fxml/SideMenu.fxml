@@ -28,5 +28,6 @@
 		<Label fx:id="popup"> Popup </Label>
 		<Label fx:id="pickers"> Pickers </Label>
 		<Label fx:id="svgLoader"> SVG Loader </Label>
+		<Label fx:id="masonry"> Masonry Layout </Label>
 	</JFXListView>
 </StackPane>

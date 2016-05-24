@@ -10,6 +10,7 @@ import demos.gui.uicomponents.ComboBoxController;
 import demos.gui.uicomponents.DialogController;
 import demos.gui.uicomponents.IconsController;
 import demos.gui.uicomponents.ListViewController;
+import demos.gui.uicomponents.MasonryPaneController;
 import demos.gui.uicomponents.PickersController;
 import demos.gui.uicomponents.PopupController;
 import demos.gui.uicomponents.ProgressBarController;
@@ -102,6 +103,9 @@ public class SideMenuController {
 	@ActionTrigger("pickers")
 	private Label pickers;
 	
+	@FXML
+	@ActionTrigger("masonry")
+	private Label masonry;
 	
 	@FXML
 	private JFXListView<?> sideList;
@@ -127,6 +131,7 @@ public class SideMenuController {
 		bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(svgLoader, SVGLoaderController.class, contentFlow, contentFlowHandler);
 		bindNodeToController(pickers, PickersController.class, contentFlow, contentFlowHandler);
+		bindNodeToController(masonry, MasonryPaneController.class, contentFlow, contentFlowHandler);
 	}
 
 	private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
