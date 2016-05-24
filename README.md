@@ -54,6 +54,8 @@ To run the main demo, execute the following command:
 
 ![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 
+![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
+
 ![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
 
 ![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
