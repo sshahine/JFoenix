@@ -175,9 +175,6 @@
 }
 
 
-
-
-
 .jfx-list-cell-container{
 	-fx-alignment: center-left;
 }
@@ -186,7 +183,7 @@
 }
 
 
-.jfx-list-cell:odd:selected .jfx-list-cell-container  , .jfx-list-cell:even:selected .jfx-list-cell-container{ 
+.jfx-list-cell:odd:selected > .jfx-rippler > StackPane , .jfx-list-cell:even:selected > .jfx-rippler > StackPane{ 
 	-fx-background-color: rgba(0,0,255,0.2);
 }
 

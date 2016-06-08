@@ -49,7 +49,6 @@ public class MainDemo extends Application {
 		stage.setMinHeight(800);
 		stage.setScene(scene);
 		stage.show();
-
 	}
 
 }

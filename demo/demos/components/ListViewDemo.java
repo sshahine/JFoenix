@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -14,8 +15,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import org.scenicview.ScenicView;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
 
 public class ListViewDemo extends Application {
@@ -30,8 +35,27 @@ public class ListViewDemo extends Application {
 		for(int i = 0 ; i < 4 ; i++) list.getItems().add(new Label("Item " + i));
 		list.getStyleClass().add("mylistview");
 		
-		ListView<String> javaList = new ListView<String>();
-		for(int i = 0 ; i < 4 ; i++) javaList.getItems().add("Item " + i);
+		list.setCellFactory(new Callback<ListView<Label>, ListCell<Label>>() {
+			
+			@Override
+			public ListCell<Label> call(ListView<Label> param) {
+				 final JFXListCell<Label> cell = new JFXListCell<Label>() {
+			          @Override
+			          public void updateItem(Label item, boolean empty) {
+			            super.updateItem(item, empty);
+			            if (item != null && !empty) {
+			              setText("SDFSDF");
+			            } else {
+			              setText(null);
+			            }
+			          }
+			        };
+			        return cell;
+			}
+		});
+		
+		ListView<JFXButton> javaList = new ListView<JFXButton>();
+		for(int i = 0 ; i < 4 ; i++) javaList.getItems().add(new JFXButton("Item " + i));
 						
 		FlowPane pane = new FlowPane();
 		pane.setStyle("-fx-background-color:WHITE");
@@ -71,6 +95,9 @@ public class ListViewDemo extends Application {
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.show();
+		
+		ScenicView.show(scene);
+		
 	}
 	
 	public static void main(String[] args) { launch(args); }

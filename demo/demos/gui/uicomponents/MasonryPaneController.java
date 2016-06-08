@@ -9,14 +9,16 @@ import com.jfoenix.controls.JFXMasonryPane;
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 
 @FXMLController(value = "/resources/fxml/ui/Masonry.fxml" , title = "Material Design Example")
 public class MasonryPaneController {
 
-	
+	@FXML ScrollPane scrollPane; 
 	@FXML JFXMasonryPane masonryPane;
 	
 	@PostConstruct
@@ -38,8 +40,8 @@ public class MasonryPaneController {
 			label.setWrapText(true);
 			labels.add(label);
 		}
-		
 		masonryPane.getChildren().addAll(labels);
+		Platform.runLater(()->scrollPane.requestLayout());
 	}
 	
 	private String getDefaultColor(int i) {

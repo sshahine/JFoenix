@@ -96,7 +96,7 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
 //    			cellBorderWidth += flow.getCell(i).getBorder().getStrokes().get(0).getWidths().getTop();
 //    			cellBorderWidth += flow.getCell(i).getBorder().getStrokes().get(0).getWidths().getBottom();
 //    		}
-    		cellsHeight+= flow.getCell(i).getHeight() + cell.snappedTopInset() + cell.snappedBottomInset();
+    		cellsHeight+= cell.getHeight();
     	}
 //    	double cellsHeight = IntStream.range(0, flow.getCellCount()).mapToDouble(index->{
 //    		double cellBorderWidth = 0;

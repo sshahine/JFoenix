@@ -494,6 +494,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		errorShowen = true;
 
 		// update prompt color transition
+		if(((JFXPasswordField)getSkinnable()).isLabelFloat())
 		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
 				new KeyFrame(Duration.millis(1300),
 						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
@@ -526,6 +527,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		errorShowen = false;	
 
 		// update prompt color transition
+		if(((JFXPasswordField)getSkinnable()).isLabelFloat())
 		promptTextUpTransition = new CachedTransition(promptText, new Timeline(
 				new KeyFrame(Duration.millis(1300),
 						new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),

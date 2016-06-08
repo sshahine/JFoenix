@@ -84,6 +84,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
@@ -117,13 +118,14 @@ public class JFXDatePickerContent extends VBox {
 
 	private ListView<String> yearsListView = new JFXListView<String>()
 	{{
-		
+		this.getStyleClass().setAll("date-picker-list-view");
 		this.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> listView) {
 				return new JFXListCell<String>(){
 					boolean mousePressed = false;
 					{
+					this.getStyleClass().setAll("data-picker-list-cell");
 					setOnMousePressed((click)->{
 						mousePressed = true;
 					});
@@ -136,6 +138,10 @@ public class JFXDatePickerContent extends VBox {
 							setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 					});
 					setOnMouseReleased((release)->{
+						if(mousePressed) setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+						mousePressed = false;
+					});
+					setOnMouseClicked((click)->{
 						String selectedItem = yearsListView.getSelectionModel().getSelectedItem();
 						if(selectedItem!=null && selectedItem.equals(((Label)cellContent).getText())){
 							int offset = Integer.parseInt(((Label)cellContent).getText()) - Integer.parseInt(selectedYearLabel.getText());
@@ -147,7 +153,6 @@ public class JFXDatePickerContent extends VBox {
 							});
 							hideTransition.play();	
 						}
-						mousePressed = false;
 					});
 					selectedYearLabel.textProperty().addListener((o,oldVal,newVal)->{
 						if(!yearsListView.isVisible())							
@@ -160,10 +165,13 @@ public class JFXDatePickerContent extends VBox {
 					if(!empty){						
 						cellRippler.setRipplerFill(Color.GREY);
 						Label lbl = (Label) cellContent;
+						lbl.setAlignment(Pos.CENTER);
+						lbl.setTextAlignment(TextAlignment.CENTER);
+						lbl.setMaxWidth(Double.MAX_VALUE);
 						if(!item.equals(selectedYearLabel.getText())){
 							// default style for each cell
-							lbl.setFont(Font.font("Roboto", FontWeight.NORMAL, 16));
-							lbl.setTextFill(Color.valueOf("#313131"));	
+							lbl.setStyle("-fx-font-size: 16; -fx-font-weight: NORMAL;");
+							lbl.setTextFill(Color.valueOf("#313131"));
 						}else{
 							selectedYearCell.set((Label)cellContent);
 						}
@@ -183,7 +191,7 @@ public class JFXDatePickerContent extends VBox {
 
 	private ObjectProperty<YearMonth> selectedYearMonth = new SimpleObjectProperty<YearMonth>(this, "selectedYearMonth");
 
-	ObjectProperty<YearMonth> displayedYearMonthProperty() {
+	ObjectProperty<YearMonth> displayedYearMonthProperty() {		
 		return selectedYearMonth;
 	}
 
@@ -198,11 +206,13 @@ public class JFXDatePickerContent extends VBox {
 		// add change listener to change the color of the selected year cell
 		selectedYearCell.addListener((o,oldVal,newVal)->{
 			if(oldVal!=null){
-				oldVal.setFont(Font.font("Roboto", FontWeight.NORMAL, 16));
+				oldVal.setStyle("-fx-font-size: 16; -fx-font-weight: NORMAL;");
+//				oldVal.setFont(Font.font("Roboto", FontWeight.NORMAL, 16));
 				oldVal.setTextFill(Color.valueOf("#313131"));	
 			}
 			if(newVal!=null){
-				newVal.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+				newVal.setStyle("-fx-font-size: 24; -fx-font-weight: BOLD;");
+//				newVal.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
 				newVal.setTextFill(this.datePicker.getDefaultColor());
 			}
 		});
@@ -241,11 +251,9 @@ public class JFXDatePickerContent extends VBox {
 
 		VBox contentHolder = new VBox();				
 		// create content pane
-		contentHolder.getChildren().add(createCalendarMonthLabelPane());
-		contentHolder.getChildren().add(contentGrid);
-		calendarPlaceHolder.getChildren().add(contentHolder);
+		contentHolder.getChildren().setAll(createCalendarMonthLabelPane(), contentGrid);
 		// add month arrows pane
-		calendarPlaceHolder.getChildren().add(createCalendarArrowsPane());
+		calendarPlaceHolder.getChildren().setAll(contentHolder, createCalendarArrowsPane());
 
 		Rectangle clip = new Rectangle();
 		clip.widthProperty().bind(calendarPlaceHolder.widthProperty());
@@ -258,10 +266,10 @@ public class JFXDatePickerContent extends VBox {
 		yearsListView.setOpacity(0);
 		yearsListView.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		StackPane contentPlaceHolder = new StackPane(calendarPlaceHolder);
+		StackPane contentPlaceHolder = new StackPane();
 		yearsListView.maxWidthProperty().bind(contentPlaceHolder.widthProperty());
 		yearsListView.maxHeightProperty().bind(contentPlaceHolder.heightProperty());
-		contentPlaceHolder.getChildren().add(yearsListView);
+		contentPlaceHolder.getChildren().setAll(calendarPlaceHolder, yearsListView);
 		getChildren().add(contentPlaceHolder);
 
 		refresh();
