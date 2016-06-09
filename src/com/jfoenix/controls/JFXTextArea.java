@@ -142,9 +142,13 @@ public class JFXTextArea extends TextArea{
 				return false;
 			}
 		}
+		reset();
+		return true;
+	}
+	
+	public void reset() {
 		activeValidator.set(null);
 		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
-		return true;
 	}
 
 	/***************************************************************************
