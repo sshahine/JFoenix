@@ -922,4 +922,26 @@
     -fx-background-insets: 0;
 }
 
+/*******************************************************************************
+*                                                                              *
+* Error Facade                                                                 *
+*                                                                              *
+*******************************************************************************/
+
+.error {
+	-fx-focus-color: #D34336;
+	-fx-unfocus-color: #D34336;
+}
+
+.label.errorLabel {
+	-fx-text-fill : #D34336;
+	-fx-font-size: 0.75em;
+	-fx-font-weight: bold;
+}
+.errorIcon {
+	-fx-text-fill : #D34336;
+	-fx-font-size: 1.0em;
+}
+
+
 

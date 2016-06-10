@@ -23,6 +23,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.validation.base.ValidatorBase;
 
 /**
@@ -43,11 +44,21 @@ public class RequiredFieldValidator extends ValidatorBase {
 	protected void eval() {
 		if(srcControl.get() instanceof TextInputControl)
 			evalTextInputField();
+		if(srcControl.get() instanceof JFXComboBox<?>)
+			evalComboBoxField();
 	}
 	
 	private void evalTextInputField(){
 		TextInputControl textField = (TextInputControl) srcControl.get();
 		if (textField.getText() == null || textField.getText().equals("")) hasErrors.set(true);
 		else hasErrors.set(false);
+	}
+	
+	private void evalComboBoxField(){
+		JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
+		boolean valid = comboField.getValue()!=null;
+		valid |= comboField.isEditable() && comboField.getJFXEditor().getText()!=null && !comboField.getJFXEditor().getText().isEmpty();
+		if (valid ) hasErrors.set(false);
+		else hasErrors.set(true);
 	}
 }
