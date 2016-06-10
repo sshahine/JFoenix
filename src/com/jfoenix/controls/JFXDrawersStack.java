@@ -136,10 +136,10 @@ public class JFXDrawersStack extends StackPane {
 	 */
 	public void toggle(JFXDrawer drawer){
 		if(!drawers.contains(drawer)) addDrawer(drawer);
-		if(drawer.isShown()) drawer.hide();
+		if(drawer.isShown() || drawer.isShowing()) drawer.close();
 		else{
 			updateDrawerPosition(drawer);
-			drawer.draw();	
+			drawer.open();	
 		}
 	}
 
@@ -152,11 +152,11 @@ public class JFXDrawersStack extends StackPane {
 	public void toggle(JFXDrawer drawer, boolean show){
 		if(!drawers.contains(drawer)) addDrawer(drawer);
 		if(!show){
-			if(drawer.isShown()) drawer.hide();
+			if(drawer.isShown() || drawer.isShowing()) drawer.close();
 		}else{
-			if(!drawer.isShown()){
+			if(!drawer.isShown() && !drawer.isShowing()){
 				updateDrawerPosition(drawer);
-				drawer.draw();
+				drawer.open();
 			}
 		}
 	}

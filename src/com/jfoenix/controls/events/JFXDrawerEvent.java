@@ -26,8 +26,8 @@ import javafx.event.EventType;
 /**
  * JFXDrawer events, used exclusively by the following methods:
  * <ul>
- *   <li>{@link JFXDrawer#draw()}
- *   <li>{@link JFXDrawer#hide()}
+ *   <li>{@link JFXDrawer#open()}
+ *   <li>{@link JFXDrawer#close()}
  * </ul>
  * 
  * @author  Shadi Shaheen
@@ -59,6 +59,22 @@ public class JFXDrawerEvent extends Event {
 	 */
 	public static final EventType<JFXDrawerEvent> OPENED =
 			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_OPENED");
+	
+	/**
+	 * This event occurs when a JFXDrawer is being drawn, visible to the user
+	 * ( after the entrance animation ends )
+	 */
+	public static final EventType<JFXDrawerEvent> OPENING =
+			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_OPENING");
+	
+	
+	/**
+	 * This event occurs when a JFXDrawer is being closed, will become invisible to the user
+	 * at the end of the animation
+	 * ( after the entrance animation ends )
+	 */
+	public static final EventType<JFXDrawerEvent> CLOSING =
+			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_CLOSING");
 
 
 }
