@@ -65,14 +65,6 @@
 				<styleClass>
 					<String fx:value="body" />
 				</styleClass>
-				<sidePane>
-					<StackPane fx:id="sideContent">
-					</StackPane>
-				</sidePane>
-				<content>
-					<StackPane fx:id="content" >
-					</StackPane>
-				</content>
 			</JFXDrawer>
 		</center>
 	</BorderPane>

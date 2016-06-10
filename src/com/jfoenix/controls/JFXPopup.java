@@ -18,6 +18,9 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CachedTransition;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,12 +34,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
-
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CachedTransition;
 
 /**
  * JFXPopup is the material design implementation of a popup.
@@ -46,13 +45,12 @@ import com.jfoenix.transitions.CachedTransition;
  * @since   2016-03-09
  */
 @DefaultProperty(value="content")
-public class JFXPopup extends StackPane {
+public class JFXPopup extends AnchorPane {
 
 	public static enum PopupHPosition{ RIGHT, LEFT };
 	public static enum PopupVPosition{ TOP, BOTTOM };
 
 	private AnchorPane contentHolder;
-	private AnchorPane overlayPane;
 
 	private Scale scaleTransform = new Scale(0,0,0,0);
 	private double offsetX = -1;
@@ -96,9 +94,7 @@ public class JFXPopup extends StackPane {
 		if(popupContainer!=null){
 			this.popupContainer = popupContainer;
 			// close the popup if clicked on the overlay pane
-			overlayPane.setOnMouseClicked((e)->{ if(e.isStillSincePress())close(); });
-			this.popupContainer.getChildren().remove(overlayPane);
-			this.popupContainer.getChildren().add(overlayPane);
+			this.setOnMouseClicked((e)->{ if(e.isStillSincePress())close(); });
 			animation = new PopupTransition();
 		}
 	}
@@ -122,10 +118,9 @@ public class JFXPopup extends StackPane {
 			contentHolder.setPickOnBounds(false);
 			
 			// ensure stackpane is never resized beyond it's preferred size
-			overlayPane = new AnchorPane();
-			overlayPane.getChildren().add(contentHolder);
-			overlayPane.getStyleClass().add("jfx-popup-overlay-pane");
-			overlayPane.setVisible(false);			
+			this.getChildren().add(contentHolder);
+			this.getStyleClass().add("jfx-popup-overlay-pane");
+			this.setVisible(false);			
 			// prevent propagating the events to overlay pane
 			contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 		}
@@ -191,6 +186,8 @@ public class JFXPopup extends StackPane {
 		
 		// set the scene root as popup container if it's not set by the user
 		if(popupContainer == null) this.setPopupContainer((Pane) this.source.getScene().getRoot());
+		// add the popup to be rendered
+		if(!popupContainer.getChildren().contains(this)) this.popupContainer.getChildren().add(this);
 		
 		while(!tempSource.getParent().equals(popupContainer)){
 			tempSource = tempSource.getParent();
@@ -254,7 +251,8 @@ public class JFXPopup extends StackPane {
 
 
 	private void resetProperties(){
-		overlayPane.setVisible(false);
+		this.popupContainer.getChildren().remove(this);
+		this.setVisible(false);
 		scaleTransform.setX(0);
 		scaleTransform.setY(0);
 	}
@@ -266,12 +264,12 @@ public class JFXPopup extends StackPane {
 			super(JFXPopup.this, new  Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
-							new KeyValue(overlayPane.visibleProperty(), false ,Interpolator.EASE_BOTH),
+							new KeyValue(JFXPopup.this.visibleProperty(), false ,Interpolator.EASE_BOTH),
 							new KeyValue(content.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
 							),
 							new KeyFrame(Duration.millis(10),
-									new KeyValue(overlayPane.visibleProperty(), true ,Interpolator.EASE_BOTH),
-									new KeyValue(overlayPane.opacityProperty(), 0 ,Interpolator.EASE_BOTH),
+									new KeyValue(JFXPopup.this.visibleProperty(), true ,Interpolator.EASE_BOTH),
+									new KeyValue(JFXPopup.this.opacityProperty(), 0 ,Interpolator.EASE_BOTH),
 									new KeyValue(scaleTransform.xProperty(), 0,Interpolator.EASE_BOTH),
 									new KeyValue(scaleTransform.yProperty(), 0,Interpolator.EASE_BOTH)
 									),
@@ -281,7 +279,7 @@ public class JFXPopup extends StackPane {
 											),		
 											new KeyFrame(Duration.millis(1000),
 													new KeyValue(content.opacityProperty(), 1 ,Interpolator.EASE_BOTH),
-													new KeyValue(overlayPane.opacityProperty(), 1 ,Interpolator.EASE_BOTH),
+													new KeyValue(JFXPopup.this.opacityProperty(), 1 ,Interpolator.EASE_BOTH),
 													new KeyValue(scaleTransform.yProperty(), 1  ,Interpolator.EASE_BOTH)
 
 													)

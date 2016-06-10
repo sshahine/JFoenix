@@ -150,7 +150,6 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
 		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
-		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
 
@@ -248,6 +247,9 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
+			errorContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
+				return textPane.getHeight() + focusedLine.getStrokeWidth();
+			}, textPane.heightProperty(), focusedLine.strokeWidthProperty()));
 			
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());

@@ -122,10 +122,11 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     }
     
     private void clearPlaceholder() {
-        placeholder.setImage(null);
-        placeholder.setVisible(false);
-        placeholder.setFitHeight(1);
-        placeholder.setFitWidth(1);
+    	root.getChildren().remove(placeholder);
+//        placeholder.setImage(null);
+//        placeholder.setVisible(false);
+//        placeholder.setFitHeight(1);
+//        placeholder.setFitWidth(1);
     }
 
     private void updatePlaceholder(Node newView) {

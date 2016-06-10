@@ -148,7 +148,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 
 		errorLabel.getStyleClass().add("errorLabel");
 		errorLabel.setWrapText(true);		
-
+		errorIcon.setTranslateY(3);
+		
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
 
@@ -156,13 +157,9 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		this.getChildren().add(promptContainer);
 
 		errorContainer = new HBox();
-		errorContainer.getChildren().add(errorLabelContainer);
-		errorContainer.getChildren().add(errorIcon);
+		errorContainer.getChildren().setAll(errorLabelContainer, errorIcon);
 		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
-		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
-		//TODO: need to bind this value to textfield height
-		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
 
@@ -257,8 +254,12 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
+			// bind error container
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
-
+			errorContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
+				return textPane.getHeight() + focusedLine.getStrokeWidth();
+			}, textPane.heightProperty(), focusedLine.strokeWidthProperty()));
+			
 			// draw lines
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());

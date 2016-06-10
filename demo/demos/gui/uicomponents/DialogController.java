@@ -31,13 +31,16 @@ public class DialogController {
 	@FXML private JFXButton leftButton;
 
 	@FXML private JFXButton acceptButton;
+	
+	@FXML private StackPane root;
 
 	@FXML
 	private JFXDialog dialog;
 
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-
+		root.getChildren().remove(dialog);
+		
 		centerButton.setOnMouseClicked((e)->{
 			dialog.setTransitionType(DialogTransition.CENTER);
 			dialog.show((StackPane) context.getRegisteredObject("ContentPane"));

@@ -157,7 +157,6 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
 		errorIcon.setTranslateY(3);		
 		errorContainer.setSpacing(10);
-		errorContainer.setTranslateY(25);
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
 
@@ -197,7 +196,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 				promptText.visibleProperty().unbind();
 				promptText.visibleProperty().set(true);
 				getSkinnable().textProperty().addListener(textPromptListener);
-				getSkinnable().focusedProperty().addListener(focusPromptTextListener);
+				getSkinnable().focusedProperty().addListener(focusPromptTextListener);		
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
 				getSkinnable().textProperty().removeListener(textPromptListener);
@@ -255,6 +254,9 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 			textPane = ((Pane)this.getChildren().get(0));
 			textPane.prefWidthProperty().bind(getSkinnable().prefWidthProperty());
 			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
+			errorContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
+				return textPane.getHeight() + focusedLine.getStrokeWidth();
+			}, textPane.heightProperty(), focusedLine.strokeWidthProperty()));
 			
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
