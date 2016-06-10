@@ -425,7 +425,7 @@ public class JFXDrawer extends StackPane {
 				else this.drawerTransition.play();	
 			}
 		}else{
-			partialDraw();
+			partialOpen();
 		}	
 	}
 
@@ -453,7 +453,7 @@ public class JFXDrawer extends StackPane {
 					else this.drawerTransition.play();
 				}
 			}else{
-				partialHide();
+				partialClose();
 			}
 			tempDrawerSize = getDefaultDrawerSize();
 		}
@@ -667,19 +667,18 @@ public class JFXDrawer extends StackPane {
 	private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent)->{
 		if(directionProperty.get().doubleValue() * translateProperty.get() > directionProperty.get().doubleValue() * initTranslate.doubleValue() /2){
 			// show side pane
-			partialDraw();
+			partialOpen();
 		}else{
 			// hide the sidePane
-			partialHide();
+			partialClose();
 		}	
 		// reset drawer animation properties
 		startMouse = -1;
 		startTranslate = -1;
 		startSize = sizeProperty.get().get();
-		partialTransition = null;		
 	};
 	
-	private void partialHide(){
+	private void partialClose(){
 		if(partialTransition!=null) partialTransition.stop();
 		partialTransition = new DrawerPartialTransitionHide(translateProperty.get(), initTranslate.doubleValue());
 		partialTransition.setOnFinished((event)-> {
@@ -691,7 +690,7 @@ public class JFXDrawer extends StackPane {
 		partialTransition.play();
 	}
 	
-	private void partialDraw(){
+	private void partialOpen(){
 		if(partialTransition!=null) partialTransition.stop();
 		partialTransition = new DrawerPartialTransitionDraw(translateProperty.get(), 0);
 		partialTransition.setOnFinished((event)->{
