@@ -1,0 +1,254 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package com.jfoenix.validation;
+
+import com.jfoenix.validation.base.ValidatorBase;
+
+import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
+public class ValidationFacade extends VBox {
+	private Label errorLabel;
+	private StackPane errorIcon;
+	private HBox errorContainer;
+
+	private double oldErrorLabelHeight = -1;
+	private double initYlayout = -1;
+	private double initHeight = -1;
+	private boolean errorShown = false;
+	private double currentFieldHeight = -1;
+	private double errorLabelInitHeight = 0;
+
+	private boolean heightChanged = false;
+
+	private Timeline hideErrorAnimation;
+
+	public ValidationFacade() {
+		setPadding(new Insets(0, 0, 0, 0));
+		setSpacing(0);
+		//setStyle("-fx-padding: 0;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;" + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: blue;");
+
+		errorLabel = new Label();
+		errorLabel.getStyleClass().add("errorLabel");	
+		errorLabel.setWrapText(true);
+
+		errorIcon = new StackPane();
+
+		errorContainer = new HBox();
+		errorContainer.getChildren().add(errorLabel);				
+		errorContainer.getChildren().add(errorIcon);
+
+		HBox.setHgrow(errorLabel, Priority.ALWAYS);
+		errorLabel.setMaxWidth(Double.MAX_VALUE);		
+		
+		errorIcon.setTranslateY(3);
+		errorContainer.setSpacing(10);
+		errorContainer.setVisible(false);
+		errorContainer.setManaged(false);
+		errorContainer.setOpacity(0);
+
+		//errorContainer.setStyle("-fx-padding: 0;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;" + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: red;");
+
+		// add listeners to show error label
+		errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
+			if (errorShown) {
+				if (oldErrorLabelHeight == -1)
+					oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
+				heightChanged = true;
+				double newHeight = getHeight() - oldErrorLabelHeight + newVal.doubleValue();
+				// show the error
+				Timeline errorAnimation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(minHeightProperty(), currentFieldHeight, Interpolator.EASE_BOTH)),
+						new KeyFrame(Duration.millis(160),
+								// text pane animation
+								new KeyValue(translateYProperty(), (initYlayout + getMaxHeight() / 2) - newHeight / 2, Interpolator.EASE_BOTH),
+								// animate the height change effect
+								new KeyValue(minHeightProperty(), newHeight, Interpolator.EASE_BOTH)));
+				errorAnimation.play();
+				// show the error label when finished
+				errorAnimation.setOnFinished(finish -> new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play());
+				currentFieldHeight = newHeight;
+				oldErrorLabelHeight = newVal.doubleValue();
+			}
+		});
+		errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
+			// show the error label if it's not shown
+			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play();
+		});
+
+		activeValidatorProperty().addListener((o, oldVal, newVal) -> {
+			if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+				hideErrorAnimation.stop();
+			if (newVal != null) {
+				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+				hideErrorAnimation.setOnFinished(finish -> {
+					showError(newVal);
+				});
+				hideErrorAnimation.play();
+			} else {
+				hideError();
+			}
+		});
+
+	}
+
+	/***************************************************************************
+	 * * Properties * *
+	 **************************************************************************/
+
+	/**
+	 * holds the current active validator on the text field in case of
+	 * validation error
+	 */
+	private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
+
+	public ValidatorBase getActiveValidator() {
+		return activeValidator == null ? null : activeValidator.get();
+	}
+
+	public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
+		return this.activeValidator.getReadOnlyProperty();
+	}
+
+	/**
+	 * list of validators that will validate the text value upon calling {
+	 * {@link #validate()}
+	 */
+	private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
+
+	public ObservableList<ValidatorBase> getValidators() {
+		return validators;
+	}
+
+	public void setValidators(ValidatorBase... validators) {
+		this.validators.addAll(validators);
+	}
+
+	/**
+	 * validates the text value using the list of validators provided by the
+	 * user {{@link #setValidators(ValidatorBase...)}
+	 * 
+	 * @return true if the value is valid else false
+	 */
+	public static boolean validate(Control control) {
+		ValidationFacade facade = (ValidationFacade) control.getParent();
+		for (ValidatorBase validator : facade.validators) {
+			if (validator.getSrcControl() == null)
+				validator.setSrcControl(facade.controlProperty.get());
+			validator.validate();
+			if (validator.getHasErrors()) {
+				facade.activeValidator.set(validator);
+				return false;
+			}
+		}
+		facade.activeValidator.set(null);
+		return true;
+	}
+	
+	public static void reset(Control control) {
+		ValidationFacade facade = (ValidationFacade) control.getParent();
+		facade.activeValidator.set(null);
+	}
+
+	private ObjectProperty<Control> controlProperty = new SimpleObjectProperty<Control>();
+
+	public Control getControl() {
+		return controlProperty.get();
+	}
+
+	public void setControl(Control control) {		
+		setMaxWidth(control.getMaxWidth());
+		prefWidthProperty().bind(control.prefWidthProperty());
+		prefHeightProperty().bind(control.prefHeightProperty());
+		
+		errorContainer.setMaxWidth(control.getMaxWidth()>-1? control.getMaxWidth() : control.getPrefWidth());
+		errorContainer.prefWidthProperty().bind(control.prefWidthProperty());
+		errorContainer.prefHeightProperty().bind(control.prefHeightProperty());
+		
+		getChildren().clear();
+		getChildren().add(control);
+		getChildren().add(errorContainer);
+		this.controlProperty.set(control);
+	}
+
+	private void showError(ValidatorBase validator) {
+		
+		// set text in error label
+		errorLabel.setText(validator.getMessage());
+		// show error icon
+		Node awsomeIcon = validator.getIcon();
+		errorIcon.getChildren().clear();
+		if (awsomeIcon != null) {
+			errorIcon.getChildren().add(awsomeIcon);
+			StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);
+		}
+		// init only once, to fix the text pane from resizing
+		if (initYlayout == -1) {
+			initYlayout = getBoundsInParent().getMinY();
+			initHeight = getHeight();
+			currentFieldHeight = initHeight;
+		}
+		errorContainer.setManaged(true);
+		errorContainer.setVisible(true);
+	
+		errorShown = true;
+
+	}
+
+	private void hideError() {
+		if (heightChanged) {
+			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+			// reset the height of text field
+			new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
+			heightChanged = false;
+		}
+		// clear error label text
+		errorLabel.setText(null);
+		oldErrorLabelHeight = errorLabelInitHeight;
+		// clear error icon
+		errorIcon.getChildren().clear();
+		// reset the height of the text field
+		currentFieldHeight = initHeight;
+		// hide error container
+		errorContainer.setManaged(false);
+		errorContainer.setVisible(false);
+
+		errorShown = false;
+	
+	}
+
+}

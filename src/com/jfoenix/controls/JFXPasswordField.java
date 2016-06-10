@@ -134,11 +134,14 @@ public class JFXPasswordField extends PasswordField {
 				return false;
 			}
 		}
-		activeValidator.set(null);
-		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+		reset();
 		return true;
 	}
 
+	public void reset() {
+		activeValidator.set(null);
+		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+	}
 	
 	
 	/***************************************************************************
