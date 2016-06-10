@@ -928,9 +928,9 @@
 *                                                                              *
 *******************************************************************************/
 
-.error {
-	-fx-focus-color: #D34336;
-	-fx-unfocus-color: #D34336;
+.jfx-combo-box:error .combo-box-button-container {
+	-fx-border-color:#D34336;	
+	-fx-border-width: 0 0 2 0;
 }
 
 .label.errorLabel {

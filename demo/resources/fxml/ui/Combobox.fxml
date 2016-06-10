@@ -17,10 +17,9 @@
 		<VBox spacing="20">
 			<children>
 				<Label styleClass="title-label">Combo Box</Label>
-				
 				<ValidationFacade>
 					<control>
-						<JFXComboBox id="jfxComboBox" prefWidth="170" promptText="Select Item">
+						<JFXComboBox id="jfxComboBox" prefWidth="200" promptText="Select Item">
 							<items>
 								<FXCollections fx:factory="observableArrayList">
 									<Label>
@@ -72,11 +71,11 @@
 		</VBox>
 
 
-		<VBox spacing="20">
+		<VBox spacing="14">
 			<Label styleClass="title-label">Editable Box</Label>
 				<ValidationFacade>
 					<control>
-						<JFXComboBox id="jfxEditableComboBox" editable="true" maxWidth="200" translateY="-6" promptText="Select/Edit Items">
+						<JFXComboBox id="jfxEditableComboBox" editable="true" maxWidth="200" promptText="Select/Edit Items">
 							<items>
 								<FXCollections fx:factory="observableArrayList">
 									<Label>

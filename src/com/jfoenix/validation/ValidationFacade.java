@@ -31,6 +31,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -172,9 +173,11 @@ public class ValidationFacade extends VBox {
 			validator.validate();
 			if (validator.getHasErrors()) {
 				facade.activeValidator.set(validator);
+				control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR,true);
 				return false;
 			}
 		}
+		control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR,false);
 		facade.activeValidator.set(null);
 		return true;
 	}
@@ -248,7 +251,11 @@ public class ValidationFacade extends VBox {
 		errorContainer.setVisible(false);
 
 		errorShown = false;
-	
 	}
 
+	/**
+	 * this style class will be activated when a validation error occurs
+	 */
+	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
+	
 }
