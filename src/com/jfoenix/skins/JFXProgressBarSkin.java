@@ -100,7 +100,8 @@ public class JFXProgressBarSkin extends BehaviorSkinBase<ProgressIndicator, Beha
 			
 			trackLength = snapSize(getSkinnable().getPrefWidth() - track.getStrokeWidth() - (getSkinnable().snappedLeftInset() + getSkinnable().snappedRightInset()));			
 			trackStart = snapPosition(x);
-
+			getSkinnable().setMaxWidth(trackLength);
+			
 			track.setStartX(trackStart);
 			track.setEndX(trackStart + trackLength);
 			track.setStartY(y + trackHeight / 2);
