@@ -176,14 +176,6 @@ public class JFXRippler extends StackPane {
 		return this.control;
 	}
 
-	public void setPostion(RipplerPos pos){
-		this.position.set(pos);
-	}
-
-	public RipplerPos getPostion(){
-		return this.position.get();
-	}
-
 	public void setEnabled(boolean enable){
 		this.enabled = enable;
 	}
@@ -440,6 +432,9 @@ public class JFXRippler extends StackPane {
 	 */
 	protected ObjectProperty<RipplerPos> position = new SimpleObjectProperty<RipplerPos>();
 
+	public void setPosition(RipplerPos pos){
+		this.position.set(pos);
+	}
 	public RipplerPos getPosition(){
 		return position == null ? RipplerPos.FRONT : position.get();
 	}
