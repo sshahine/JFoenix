@@ -186,11 +186,12 @@ public class JFXRippler extends StackPane {
 	 * @return the mask node
 	 */
 	protected Node getMask(){
-		double borderWidth = ripplerPane.getBorder()!=null? ripplerPane.getBorder().getInsets().getTop() : 0;
-		Shape mask = new Rectangle(control.getLayoutBounds().getWidth() - 0.1 -2*borderWidth ,control.getLayoutBounds().getHeight() - 0.1 - 2*borderWidth); // -0.1 to prevent resizing the anchor pane
-		if(maskType.get().equals(JFXRippler.RipplerMask.CIRCLE)){
-			double radius = Math.min((control.getLayoutBounds().getWidth()/2) - 0.1 - 2*borderWidth, (control.getLayoutBounds().getHeight()/2) - 0.1 - 2*borderWidth);
-			mask = new Circle(control.getLayoutBounds().getWidth()/2 , control.getLayoutBounds().getHeight()/2, radius, Color.BLUE);
+		double borderWidth = ripplerPane.getBorder() != null ? ripplerPane.getBorder().getInsets().getTop() : 0;
+		Bounds bounds = control.getBoundsInParent();
+		Shape mask = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth() - 0.1 - 2 * borderWidth, bounds.getHeight() - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
+		if (maskType.get().equals(RipplerMask.CIRCLE)) {
+			double radius = Math.min((bounds.getWidth() / 2) - 0.1 - 2 * borderWidth, (bounds.getHeight() / 2) - 0.1 - 2 * borderWidth);
+			mask = new Circle((bounds.getMinX() + bounds.getMaxX()) / 2, (bounds.getMinY() + bounds.getMaxY()) / 2, radius, Color.BLUE);
 		}
 		return mask;
 	}
