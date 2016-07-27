@@ -22,11 +22,11 @@
 			<Label styleClass="title-label">Font Awesome Icons</Label>
 			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 				<children>
-					<JFXRippler postion="BACK" styleClass="icons-rippler">
+					<JFXRippler position="BACK" styleClass="icons-rippler">
 						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
 					</JFXRippler>
 
-					<JFXRippler postion="BACK" styleClass="icons-rippler1">
+					<JFXRippler position="BACK" styleClass="icons-rippler1">
 						<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
 					</JFXRippler>
 

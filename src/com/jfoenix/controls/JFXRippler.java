@@ -41,6 +41,7 @@ import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.event.Event;
+import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Node;
