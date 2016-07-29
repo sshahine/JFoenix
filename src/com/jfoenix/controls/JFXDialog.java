@@ -516,8 +516,8 @@ public class JFXDialog extends StackPane {
 		onDialogClosedProperty.set(handler);
 	}
 
-	public void getOnDialogClosed(EventHandler<? super JFXDialogEvent> handler){
-		onDialogClosedProperty.get();
+	public EventHandler<? super JFXDialogEvent> getOnDialogClosed() {
+		return onDialogClosedProperty.get();
 	}
 
 
@@ -531,9 +531,7 @@ public class JFXDialog extends StackPane {
 		onDialogOpenedProperty.set(handler);
 	}
 
-	public void getOnDialogOpened(EventHandler<? super JFXDialogEvent> handler){
-		onDialogOpenedProperty.get();
+	public EventHandler<? super JFXDialogEvent> getOnDialogOpened() {
+		return onDialogOpenedProperty.get();
 	}
-
 }
-
