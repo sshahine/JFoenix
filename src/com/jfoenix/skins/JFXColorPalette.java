@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
@@ -90,7 +91,7 @@ class JFXColorPalette extends Region {
 		customColorLabel.setAlignment(Pos.CENTER_LEFT);
 		customColorLink.setPrefWidth(colorPickerGrid.prefWidth(-1));
 		customColorLink.setAlignment(Pos.CENTER);
-		customColorLink.setFocusTraversable(true);
+		customColorLink.setFocusTraversable(true);		
 		customColorLink.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent t) {
 				if (customColorDialog == null) {
@@ -115,7 +116,7 @@ class JFXColorPalette extends Region {
 				});
 			}
 		});
-
+		
 		initNavigation();
 		customColorGrid.getStyleClass().add("color-picker-grid");
 		customColorGrid.setVisible(false);
@@ -134,6 +135,20 @@ class JFXColorPalette extends Region {
 		setFocusedSquare(null);
 
 		getChildren().addAll(paletteBox, hoverSquare);
+		Platform.runLater(()->{
+			customColorDialog = new JFXCustomColorPickerDialog(popupControl);
+			customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
+				colorPicker.setValue(customColorDialog.customColorProperty().get());
+			});
+			customColorDialog.setOnSave(() -> {
+				Color customColor = customColorDialog.customColorProperty().get();
+				buildCustomColors();
+				colorPicker.getCustomColors().add(customColor);
+				updateSelection(customColor);
+				Event.fireEvent(colorPicker, new ActionEvent());
+				colorPicker.hide();
+			});
+		});
 	}
 
 	private void setFocusedSquare(ColorSquare square) {

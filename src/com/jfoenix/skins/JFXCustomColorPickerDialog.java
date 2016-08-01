@@ -85,7 +85,9 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 	private JFXDecorator pickerDecorator;
 	private boolean systemChange = false;
 	private boolean userChange = false;
-
+	private boolean initOnce = true;
+	private Runnable initRun;
+	
 	public JFXCustomColorPickerDialog(Window owner) {
 		getStyleClass().add("custom-color-dialog");
 		if (owner != null) dialog.initOwner(owner);
@@ -97,12 +99,12 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		pickerDecorator = new JFXDecorator(dialog,this, false,false,false);
 		pickerDecorator.setOnCloseButtonAction(()-> close());
 		pickerDecorator.setPickOnBounds(false);
-		JFXDepthManager.setDepth(pickerDecorator, 2);		
-		StackPane decoratorContainer = new StackPane(pickerDecorator);
-		decoratorContainer.setPadding(new Insets(20));
-		decoratorContainer.setStyle("-fx-background-color:TRANSPARENT;");
-		decoratorContainer.setPickOnBounds(false);		
-		customScene = new Scene(decoratorContainer, Color.TRANSPARENT);
+		//		JFXDepthManager.setDepth(pickerDecorator, 2);		
+		//		StackPane decoratorContainer = new StackPane(pickerDecorator);
+		//		decoratorContainer.setPadding(new Insets(20));
+		//		decoratorContainer.setStyle("-fx-background-color:TRANSPARENT;");
+		//		decoratorContainer.setPickOnBounds(false);		
+		customScene = new Scene(pickerDecorator, Color.TRANSPARENT);
 		final Scene ownerScene = owner.getScene();
 		if (ownerScene != null) {
 			if (ownerScene.getUserAgentStylesheet() != null) 
@@ -130,11 +132,11 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		hsbField.setStyle("-fx-background-color:TRANSPARENT;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080; -fx-alignment: top-left ; -fx-max-width: 300;");
 		hsbField.setPromptText("HSB Color");		
 		hsbField.textProperty().addListener((o,oldVal,newVal)-> updateColorFromUserInput(newVal));
-		
+
 		hexField.setStyle("-fx-background-color:TRANSPARENT;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080; -fx-alignment: top-left ; -fx-max-width: 300;");
 		hexField.setPromptText("#HEX Color");
 		hexField.textProperty().addListener((o,oldVal,newVal)-> updateColorFromUserInput(newVal));
-		
+
 		StackPane tabContent = new StackPane();
 		tabContent.getChildren().add(rgbField);
 		tabContent.setMinHeight(100);
@@ -145,47 +147,10 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		hsbTab.setContent(hsbField);
 		Tab hexTab = new Tab("HEX");
 		hexTab.setContent(hexField);
-		
+
 		tabs.getTabs().add(rgbTab);		
 		tabs.getTabs().add(hsbTab);		
 		tabs.getTabs().add(hexTab);
-
-		// change tabs labels font color according to the selected color
-		pane.backgroundProperty().addListener((o,oldVal,newVal)->{			
-			Color fontColor = ((Color)newVal.getFills().get(0).getFill()).grayscale().getRed() > 0.5? Color.valueOf("rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");						
-			tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
-			tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
-			((Line)tabs.lookup(".tab-selected-line")).setStroke(fontColor);
-			pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button->{
-				((JFXButton)button).setRipplerFill(fontColor);
-				((SVGGlyph)((JFXButton)button).getGraphic()).setFill(fontColor);
-			});
-
-			Color newColor = (Color) newVal.getFills().get(0).getFill();
-			String hex = String.format("#%02X%02X%02X",
-					(int)( newColor.getRed() * 255),
-					(int)( newColor.getGreen() * 255),
-					(int)( newColor.getBlue() * 255));
-			String rgb = String.format("rgba(%d, %d, %d, 1)",
-					(int)( newColor.getRed() * 255),
-					(int)( newColor.getGreen() * 255),
-					(int)( newColor.getBlue() * 255));
-			String hsb = String.format("hsl(%d, %d%%, %d%%)",
-					(int)( newColor.getHue()),
-					(int)(newColor.getSaturation()*100),
-					(int)(newColor.getBrightness()*100));
-
-			if(!userChange){
-				Platform.runLater(()->{
-					systemChange = true;
-					rgbField.setText(rgb);
-					hsbField.setText(hsb);
-					hexField.setText(hex);
-					systemChange = false;	
-				});
-			}
-		});
-
 
 		curvedColorPicker.selectedPath.addListener((o,oldVal,newVal)->{
 			if(paraTransition!=null) paraTransition.stop();
@@ -206,42 +171,79 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 			paraTransition.play();			
 		});
 
-		// initial selected colors
-		Platform.runLater(()->{			
-			pane.setBackground(new Background(new BackgroundFill(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()), CornerRadii.EMPTY, Insets.EMPTY)));
-			((Region) tabs.lookup(".tab-header-background")).setBackground(new Background(new BackgroundFill(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()), CornerRadii.EMPTY, Insets.EMPTY)));
-			Region tabsHeader = (Region) tabs.lookup(".tab-header-background");    
-			pane.backgroundProperty().unbind();
-			tabsHeader.backgroundProperty().unbind();			
-			tabsHeader.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-				return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(), CornerRadii.EMPTY, Insets.EMPTY));
-			}, curvedColorPicker.selectedPath.get().fillProperty()));
-			pane.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-				return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(), CornerRadii.EMPTY, Insets.EMPTY));
-			}, curvedColorPicker.selectedPath.get().fillProperty()));
+		initRun = ()->{
+			// change tabs labels font color according to the selected color
+			pane.backgroundProperty().addListener((o,oldVal,newVal)->{			
+				Color fontColor = ((Color)newVal.getFills().get(0).getFill()).grayscale().getRed() > 0.5? Color.valueOf("rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");						
+				tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
+				tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
+				((Line)tabs.lookup(".tab-selected-line")).setStroke(fontColor);
+				pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button->{
+					((JFXButton)button).setRipplerFill(fontColor);
+					((SVGGlyph)((JFXButton)button).getGraphic()).setFill(fontColor);
+				});
 
-			// bind text field line color
-			rgbField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
-				return pane.getBackground().getFills().get(0).getFill();
-			}, pane.backgroundProperty()));
-			hsbField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
-				return pane.getBackground().getFills().get(0).getFill();
-			}, pane.backgroundProperty()));
-			hexField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
-				return pane.getBackground().getFills().get(0).getFill();
-			}, pane.backgroundProperty()));
-			
-			
-			((Pane)pickerDecorator.lookup(".jfx-decorator-buttons-container")).backgroundProperty().bind(Bindings.createObjectBinding(()->{
-				return new Background(new BackgroundFill((Color) pane.getBackground().getFills().get(0).getFill(), CornerRadii.EMPTY, Insets.EMPTY));
-			}, pane.backgroundProperty()));
-			
-			((Pane)pickerDecorator.lookup(".jfx-decorator-content-container")).borderProperty().bind(Bindings.createObjectBinding(()->{
-				return new Border(new BorderStroke((Color) pane.getBackground().getFills().get(0).getFill(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-			}, pane.backgroundProperty()));
-			
+				Color newColor = (Color) newVal.getFills().get(0).getFill();
+				String hex = String.format("#%02X%02X%02X",
+						(int)( newColor.getRed() * 255),
+						(int)( newColor.getGreen() * 255),
+						(int)( newColor.getBlue() * 255));
+				String rgb = String.format("rgba(%d, %d, %d, 1)",
+						(int)( newColor.getRed() * 255),
+						(int)( newColor.getGreen() * 255),
+						(int)( newColor.getBlue() * 255));
+				String hsb = String.format("hsl(%d, %d%%, %d%%)",
+						(int)( newColor.getHue()),
+						(int)(newColor.getSaturation()*100),
+						(int)(newColor.getBrightness()*100));
 
-		});
+				if(!userChange){
+					Platform.runLater(()->{
+						systemChange = true;
+						rgbField.setText(rgb);
+						hsbField.setText(hsb);
+						hexField.setText(hex);
+						systemChange = false;	
+					});
+				}
+			});
+
+			// initial selected colors
+			Platform.runLater(()->{			
+				pane.setBackground(new Background(new BackgroundFill(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()), CornerRadii.EMPTY, Insets.EMPTY)));
+				((Region) tabs.lookup(".tab-header-background")).setBackground(new Background(new BackgroundFill(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()), CornerRadii.EMPTY, Insets.EMPTY)));
+				Region tabsHeader = (Region) tabs.lookup(".tab-header-background");    
+				pane.backgroundProperty().unbind();
+				tabsHeader.backgroundProperty().unbind();			
+				tabsHeader.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+					return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(), CornerRadii.EMPTY, Insets.EMPTY));
+				}, curvedColorPicker.selectedPath.get().fillProperty()));
+				pane.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+					return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(), CornerRadii.EMPTY, Insets.EMPTY));
+				}, curvedColorPicker.selectedPath.get().fillProperty()));
+
+				// bind text field line color
+				rgbField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
+					return pane.getBackground().getFills().get(0).getFill();
+				}, pane.backgroundProperty()));
+				hsbField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
+					return pane.getBackground().getFills().get(0).getFill();
+				}, pane.backgroundProperty()));
+				hexField.focusColorProperty().bind(Bindings.createObjectBinding(()->{
+					return pane.getBackground().getFills().get(0).getFill();
+				}, pane.backgroundProperty()));
+
+
+				((Pane)pickerDecorator.lookup(".jfx-decorator-buttons-container")).backgroundProperty().bind(Bindings.createObjectBinding(()->{
+					return new Background(new BackgroundFill((Color) pane.getBackground().getFills().get(0).getFill(), CornerRadii.EMPTY, Insets.EMPTY));
+				}, pane.backgroundProperty()));
+
+				((Pane)pickerDecorator.lookup(".jfx-decorator-content-container")).borderProperty().bind(Bindings.createObjectBinding(()->{
+					return new Border(new BorderStroke((Color) pane.getBackground().getFills().get(0).getFill(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
+				}, pane.backgroundProperty()));
+			});
+		};
+
 
 		container.getChildren().add(tabs);
 
@@ -316,8 +318,9 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		dialog.setOnHidden(onHidden);
 	}
 
-	public void show() {		
-		pickerDecorator.setOpacity(0);
+	public void show() {
+		dialog.setOpacity(0);
+		//		pickerDecorator.setOpacity(0);
 		if (dialog.getOwner() != null) {
 			dialog.widthProperty().addListener(positionAdjuster);
 			dialog.heightProperty().addListener(positionAdjuster);
@@ -325,16 +328,27 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 		}
 		if (dialog.getScene() == null) dialog.setScene(customScene);
 		curvedColorPicker.preAnimate();
-		dialog.show();		
-		CachedTransition showStage = new CachedTransition(pickerDecorator,new Timeline(new KeyFrame(Duration.millis(1000), new KeyValue(pickerDecorator.opacityProperty(), 1, Interpolator.EASE_BOTH)))){{
-			this.setDelay(Duration.millis(0));
-			this.setCycleDuration(Duration.millis(320));
-		}};
-		showStage.setOnFinished((finish)-> curvedColorPicker.animate());
-		showStage.play();
+		dialog.show();
+		if(initOnce) {
+			initRun.run();
+			initOnce = false;
+		}
+		
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(120), 
+				//				new KeyValue(pickerDecorator.opacityProperty(), 1, Interpolator.EASE_BOTH), 
+				new KeyValue(dialog.opacityProperty(), 1, Interpolator.EASE_BOTH)));
+		timeline.setOnFinished((finish)-> curvedColorPicker.animate());
+		timeline.play();
+		//		CachedTransition showStage = new CachedTransition(
+		//				pickerDecorator,)
+		//		{{
+		//			this.setDelay(Duration.millis(0));
+		//			this.setCycleDuration(Duration.millis(320));
+		//		}};
+
 	}
 
-	
+
 	// add option to show color picker using JFX Dialog
 	private InvalidationListener positionAdjuster = new InvalidationListener() {
 		@Override
