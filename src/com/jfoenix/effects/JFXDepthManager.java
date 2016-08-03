@@ -35,7 +35,7 @@ import javafx.scene.paint.Color;
 public class JFXDepthManager {
 
 	private static DropShadow[] depth = new DropShadow[]{
-		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 0, 0, 0, 0),
+		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0), 0, 0, 0, 0),
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 10, 0.12, -1, 2),
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 15, 0.16, 0, 4),
 		new DropShadow(BlurType.GAUSSIAN, Color.rgb(0,0,0,0.26), 20, 0.19, 0, 6),
