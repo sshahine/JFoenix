@@ -189,10 +189,24 @@ public class JFXRippler extends StackPane {
 	protected Node getMask(){
 		double borderWidth = ripplerPane.getBorder() != null ? ripplerPane.getBorder().getInsets().getTop() : 0;
 		Bounds bounds = control.getBoundsInParent();
-		Shape mask = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth() - 0.1 - 2 * borderWidth, bounds.getHeight() - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
-		if (maskType.get().equals(RipplerMask.CIRCLE)) {
-			double radius = Math.min((bounds.getWidth() / 2) - 0.1 - 2 * borderWidth, (bounds.getHeight() / 2) - 0.1 - 2 * borderWidth);
-			mask = new Circle((bounds.getMinX() + bounds.getMaxX()) / 2, (bounds.getMinY() + bounds.getMaxY()) / 2, radius, Color.BLUE);
+		double width = control.getLayoutBounds().getWidth();
+		double height = control.getLayoutBounds().getHeight();
+		double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
+		double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
+		double diffMaxX = Math.abs(control.getBoundsInLocal().getMaxX() - control.getLayoutBounds().getMaxX());
+		double diffMaxY = Math.abs(control.getBoundsInLocal().getMaxY() - control.getLayoutBounds().getMaxY());
+		Shape mask;
+		switch(getMaskType()){
+			case RECT:
+				mask = new Rectangle(bounds.getMinX()+diffMinX, bounds.getMinY() + diffMinY, width - 0.1 - 2 * borderWidth, height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
+				break;
+			case CIRCLE:
+				double radius = Math.min((width / 2) - 0.1 - 2 * borderWidth, (height / 2) - 0.1 - 2 * borderWidth);
+				mask = new Circle((bounds.getMinX() + diffMinX + bounds.getMaxX() - diffMaxX) / 2 , (bounds.getMinY() + diffMinY + bounds.getMaxY() - diffMaxY) / 2, radius, Color.BLUE);
+				break;
+			default:
+				mask = new Rectangle(bounds.getMinX()+diffMinX, bounds.getMinY() + diffMinY, width - 0.1 - 2 * borderWidth, height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
+				break;
 		}
 		return mask;
 	}
