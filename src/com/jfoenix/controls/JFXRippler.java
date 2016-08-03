@@ -21,8 +21,8 @@ package com.jfoenix.controls;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.converters.RipplerMaskTypeConverter;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.css.converters.PaintConverter;
@@ -264,7 +264,7 @@ public class JFXRippler extends StackPane {
 		private double generatorCenterX = 0;
 		private double generatorCenterY = 0;
 		private OverLayRipple overlayRect;
-		private boolean generating = false;
+		private AtomicBoolean generating = new AtomicBoolean(false);
 
 		public RippleGenerator() {
 			/* 
@@ -275,8 +275,7 @@ public class JFXRippler extends StackPane {
 		}
 		public void createRipple() {
 			if(enabled){
-				if(!generating){
-					generating = true;
+				if(!generating.getAndSet(true)){					
 					// create overlay once then change its color later 
 					createOverlay();
 
@@ -291,28 +290,19 @@ public class JFXRippler extends StackPane {
 
 					// create fade out transition for the ripple
 					ripplerPane.setOnMouseReleased((e)->{
-						generating = false;
-						if(overlayRect!=null)overlayRect.inAnimation.stop();
-						ripple.inAnimation.pause();
-						double fadeOutRadious = rippleRadius + 20;
-						if(ripple.radiusProperty().get() < rippleRadius*0.5)
-							fadeOutRadious = rippleRadius;
-
-						Timeline outAnimation = new Timeline( new KeyFrame(Duration.seconds(0.4),
-								new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
-								new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-
-						outAnimation.setOnFinished((event)-> {
-							getChildren().remove(ripple);
-							// remove overlay rect after 200 ms in case rippler is not generated
-							new Thread(()->{
-								try { Thread.sleep(200); } catch (Exception e1) { }
-								if(getChildren().size() == 1 )
-									JFXUtilities.runInFXAndWait(()->resetOverLay());
-							}).start();
-						});
-						outAnimation.play();
-						if(overlayRect!=null) overlayRect.outAnimation.play();
+						if(generating.getAndSet(false)){
+							if(overlayRect!=null)overlayRect.inAnimation.stop();
+							ripple.inAnimation.pause();
+							double fadeOutRadious = rippleRadius + 20;
+							if(ripple.radiusProperty().get() < rippleRadius*0.5)
+								fadeOutRadious = rippleRadius;
+							Timeline outAnimation = new Timeline( new KeyFrame(Duration.seconds(0.4),
+									new KeyValue(ripple.radiusProperty(), fadeOutRadious ,Interpolator.LINEAR),
+									new KeyValue(ripple.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+							outAnimation.setOnFinished((event)-> getChildren().remove(ripple));
+							outAnimation.play();
+							if(overlayRect!=null) overlayRect.outAnimation.play();
+						}
 					});
 				}
 			}
@@ -345,11 +335,19 @@ public class JFXRippler extends StackPane {
 				this.getStyleClass().add("jfx-rippler-overlay");
 				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
 				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
+				// update initial position
+				double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
+				double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
+				Bounds bounds = control.getBoundsInParent();
+				this.setX(bounds.getMinX() + diffMinX);
+				this.setY(bounds.getMinY() + diffMinY);
+				// set initial attributes
 				this.setOpacity(0);
 				setCache(true);
 				setCacheHint(CacheHint.SPEED);
 				setCacheShape(true);
 				setSnapToPixel(false);
+				outAnimation.setOnFinished((finish)->resetOverLay());
 			}
 		}
 
