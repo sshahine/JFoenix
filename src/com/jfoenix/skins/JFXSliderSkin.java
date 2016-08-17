@@ -27,9 +27,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -39,6 +41,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 /**
@@ -156,7 +159,29 @@ public class JFXSliderSkin extends SliderSkin {
 		animatedThumb.setScaleX(0);
 		animatedThumb.setScaleY(0);
 	}
-	
+
+	/**
+	 * Sets a custom renderer for the value text (by default, it shows the value rounded to the nearest whole number).
+	 *
+	 * <p>For example, to have the value displayed as a percentage (assuming the slider has a range of (0, 100)):
+	 * <pre><code>
+	 * JFXSlider mySlider = ...
+	 * JFXSliderSkin mySliderSkin = ...
+	 * mySliderSkin.setTextRenderStrategy(slider ->
+	 * 		Bindings.createStringBinding(
+	 * 			() -> ((int) slider.getValue()) + "%",
+	 * 			slider.valueProperty()
+	 * 		)
+	 * );
+	 * mySlider.setSkin(mySliderSkin);
+	 * </code></pre>
+	 * 
+	 * @param callback a callback to create the render strategy
+	 */
+	public void setTextRenderStrategy(Callback<? super Slider, ? extends StringBinding> callback) {
+		sliderValue.textProperty().unbind();
+		sliderValue.textProperty().bind(callback.call(getSkinnable()));
+	}
 
 	private void initListeners() {
 		// delegate slider mouse events to track node 
