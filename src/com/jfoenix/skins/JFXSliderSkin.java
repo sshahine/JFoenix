@@ -66,8 +66,8 @@ public class JFXSliderSkin extends SliderSkin {
 
 	private double indicatorRotation, horizontalRotation, rotationAngle = 45, shifting;
 	private boolean isValid = false;
-	
-	
+
+
 	public JFXSliderSkin(JFXSlider slider) {
 		super(slider);
 
@@ -78,12 +78,12 @@ public class JFXSliderSkin extends SliderSkin {
 			track =  (StackPane) getChildren().get(1);
 			thumb =  (StackPane) getChildren().get(2);
 		}
-		
+
 		track.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(5), Insets.EMPTY)));
 		thumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(20), Insets.EMPTY)));		
 		track.setPrefHeight(2);
 		track.setPrefWidth(2);
-	
+
 		coloredTrack = new StackPane();
 		coloredTrack.backgroundProperty().bind(Bindings.createObjectBinding(()->{
 			BackgroundFill trackBackgroundFill = track.getBackground().getFills().get(0);
@@ -99,17 +99,39 @@ public class JFXSliderSkin extends SliderSkin {
 		animatedThumb = new StackPane();
 		animatedThumb.getChildren().add(sliderValue);
 		animatedThumb.setMouseTransparent(true);
-		
+
 		getChildren().add(getChildren().indexOf(thumb), coloredTrack);
 		getChildren().add(getChildren().indexOf(thumb), animatedThumb);
-		
+
+		registerChangeListener(slider.valueFactoryProperty(), "VALUE_FACTORY");
+
 		initListeners();
+	}
+
+	@Override
+	protected void handleControlPropertyChanged(String p) {
+		super.handleControlPropertyChanged(p);
+		if("VALUE_FACTORY".equals(p)){
+
+		}
+	}
+
+	private final void refreshSliderValueBinding(){
+		sliderValue.textProperty().unbind();
+		if (((JFXSlider)getSkinnable()).getValueFactory() != null) {
+			sliderValue.textProperty().bind(((JFXSlider)getSkinnable()).getValueFactory().call((JFXSlider) getSkinnable()));
+		} else {
+			sliderValue.textProperty().bind(Bindings.createStringBinding(()->{
+				return Math.round(getSkinnable().getValue())+"";
+			}, getSkinnable().valueProperty()));
+
+		}
 	}
 
 	@Override
 	protected void layoutChildren(double x, double y, double w, double h) {
 		super.layoutChildren(x, y, w, h);
-		
+
 		boolean horizontal = getSkinnable().getOrientation() == Orientation.HORIZONTAL;
 		double width, height, layoutX,layoutY;
 		if(horizontal){
@@ -126,7 +148,7 @@ public class JFXSliderSkin extends SliderSkin {
 			animatedThumb.setLayoutY(thumb.getLayoutY() + thumb.getHeight()/2 - animatedThumb.getHeight()/2);
 		}
 		coloredTrack.resizeRelocate(layoutX, layoutY, width, height);
-		
+
 		if(!isValid){
 			initializeVariables();
 			initAnimation(getSkinnable().getOrientation());
@@ -135,9 +157,9 @@ public class JFXSliderSkin extends SliderSkin {
 	}
 
 	private boolean internalChange = false;
-	
+
 	private void initializeVariables() {
-				
+
 		shifting = 30 + thumb.getWidth();
 
 		if (getSkinnable().getOrientation() != Orientation.HORIZONTAL) 
@@ -156,7 +178,7 @@ public class JFXSliderSkin extends SliderSkin {
 		animatedThumb.setScaleX(0);
 		animatedThumb.setScaleY(0);
 	}
-	
+
 
 	private void initListeners() {
 		// delegate slider mouse events to track node 
@@ -178,7 +200,7 @@ public class JFXSliderSkin extends SliderSkin {
 				track.fireEvent(me);
 			}
 		});
-		
+
 		// animate value node
 		track.addEventHandler(MouseEvent.MOUSE_PRESSED, (event)->{
 			timeline.setRate(1);
@@ -202,7 +224,7 @@ public class JFXSliderSkin extends SliderSkin {
 			if(!internalChange && newVal!=null)
 				trackColor = newVal.getFills().get(0).getFill();		
 		});
-		
+
 		thumb.backgroundProperty().addListener((o,oldVal,newVal)-> {
 			// prevent internal color change
 			if(!internalChange && newVal!=null){				
@@ -214,10 +236,8 @@ public class JFXSliderSkin extends SliderSkin {
 				}
 			}
 		});
-		
-		sliderValue.textProperty().bind(Bindings.createStringBinding(()->{
-			return Math.round(getSkinnable().getValue())+"";
-		}, getSkinnable().valueProperty()));
+
+		refreshSliderValueBinding();
 
 		getSkinnable().valueProperty().addListener((o,oldVal,newVal)->{
 			internalChange = true;
@@ -238,7 +258,7 @@ public class JFXSliderSkin extends SliderSkin {
 	private void initAnimation(Orientation orientation){
 		double thumbPos, thumbNewPos;
 		DoubleProperty layoutProperty;
-		
+
 		if(orientation == Orientation.HORIZONTAL){
 			if(((JFXSlider)getSkinnable()).getIndicatorPosition() == IndicatorPosition.RIGHT){
 				thumbPos = thumb.getLayoutY() - thumb.getHeight();
@@ -258,7 +278,7 @@ public class JFXSliderSkin extends SliderSkin {
 			}					
 			layoutProperty = animatedThumb.layoutXProperty();
 		}
-		
+
 		timeline = new Timeline(
 				new KeyFrame(
 						Duration.ZERO,

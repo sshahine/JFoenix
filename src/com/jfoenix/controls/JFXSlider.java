@@ -25,6 +25,9 @@ import java.util.List;
 import com.jfoenix.converters.IndicatorPositionConverter;
 import com.jfoenix.skins.JFXSliderSkin;
 
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
@@ -33,6 +36,7 @@ import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
+import javafx.util.Callback;
 
 /**
  * JFXSlider is the material design implementation of a slider. 
@@ -44,31 +48,80 @@ import javafx.scene.control.Slider;
 public class JFXSlider extends Slider {
 
 	/**
-     * {@inheritDoc}
-     */
+	 * {@inheritDoc}
+	 */
 	public JFXSlider() {
 		super(0, 100, 50);
 		initialize();
 	}
 
 	/**
-     * {@inheritDoc}
-     */
+	 * {@inheritDoc}
+	 */
 	public JFXSlider(double min, double max, double value) {
 		super(min, max, value);
 		initialize();
 	}
 
 	/**
-     * {@inheritDoc}
-     */
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new JFXSliderSkin(this);
 	}
-	
+
 	private void initialize() {
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
+	}
+
+	public static enum IndicatorPosition {
+		LEFT, RIGHT
+	};
+
+	/***************************************************************************
+	 *                                                                         *
+	 * Properties                                                              *
+	 *                                                                         *
+	 **************************************************************************/
+	
+	/**
+	 * String binding factory for the slider value.
+	 * Sets a custom string for the value text (by default, it shows the value rounded to the nearest whole number).
+	 *
+	 * <p>For example, to have the value displayed as a percentage (assuming the slider has a range of (0, 100)):
+	 * <pre><code>
+	 * JFXSlider mySlider = ...
+	 * mySlider.setValueFactory(slider ->
+	 * 		Bindings.createStringBinding(
+	 * 			() -> ((int) slider.getValue()) + "%",
+	 * 			slider.valueProperty()
+	 * 		)
+	 * );
+	 * </code></pre>
+	 *
+	 * NOTE: might be replaced later with a call back to create the animated thumb node 
+	 * @param callback a callback to create the string value binding
+	 */
+	private ObjectProperty<Callback<JFXSlider, StringBinding>> valueFactory;
+	public final ObjectProperty<Callback<JFXSlider, StringBinding>> valueFactoryProperty() {
+		if (valueFactory == null) {
+			valueFactory = new SimpleObjectProperty<Callback<JFXSlider, StringBinding>>(this, "valueFactory");
+		}
+		return valueFactory;
+	}
+	/**
+	 * @return the current slider value factory
+	 */
+	public final Callback<JFXSlider, StringBinding> getValueFactory() {
+		return valueFactory == null ? null : valueFactory.get();
+	}
+	/**
+	 * sets custom string binding for the slider text value
+	 * @param valueFactory a callback to create the string value binding
+	 */
+	public final void setValueFactory(final Callback<JFXSlider, StringBinding> valueFactory) {
+		this.valueFactoryProperty().set(valueFactory);
 	}
 	
 	/***************************************************************************
@@ -76,18 +129,14 @@ public class JFXSlider extends Slider {
 	 * Stylesheet Handling                                                     *
 	 *                                                                         *
 	 **************************************************************************/
-	
-	 /**
-     * Initialize the style class to 'jfx-slider'.
-     *
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
+
+	/**
+	 * Initialize the style class to 'jfx-slider'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-slider";
-	
-	public static enum IndicatorPosition {
-		LEFT, RIGHT
-	};
 
 	/**
 	 * indicates the position of the slider indicator, can be 
@@ -147,5 +196,4 @@ public class JFXSlider extends Slider {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-
 }
