@@ -18,6 +18,8 @@
  */
 package com.jfoenix.skins;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXRippler;
@@ -74,6 +76,8 @@ import javafx.util.Duration;
 public class JFXCustomColorPickerDialog  extends StackPane {
 
 	private final Stage dialog = new Stage();
+	// used for concurrency control and preventing FX-thread over use
+	private final AtomicInteger concurrencyController = new AtomicInteger(-1);
 
 	private ObjectProperty<Color> currentColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 	private ObjectProperty<Color> customColorProperty = new SimpleObjectProperty<>(Color.TRANSPARENT);
@@ -87,7 +91,7 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 	private boolean userChange = false;
 	private boolean initOnce = true;
 	private Runnable initRun;
-	
+
 	public JFXCustomColorPickerDialog(Window owner) {
 		getStyleClass().add("custom-color-dialog");
 		if (owner != null) dialog.initOwner(owner);
@@ -173,38 +177,39 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 
 		initRun = ()->{
 			// change tabs labels font color according to the selected color
-			pane.backgroundProperty().addListener((o,oldVal,newVal)->{			
-				Color fontColor = ((Color)newVal.getFills().get(0).getFill()).grayscale().getRed() > 0.5? Color.valueOf("rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");						
-				tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
-				tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
-				((Line)tabs.lookup(".tab-selected-line")).setStroke(fontColor);
-				pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button->{
-					((JFXButton)button).setRipplerFill(fontColor);
-					((SVGGlyph)((JFXButton)button).getGraphic()).setFill(fontColor);
-				});
+			pane.backgroundProperty().addListener((o,oldVal,newVal)->{
+				if (concurrencyController.getAndSet(1) == -1) {
+					concurrencyController.getAndSet(-1);
+					Color fontColor = ((Color)newVal.getFills().get(0).getFill()).grayscale().getRed() > 0.5? Color.valueOf("rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");						
+					tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
+					tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
+					((Line)tabs.lookup(".tab-selected-line")).setStroke(fontColor);
+					pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button->{
+						((JFXButton)button).setRipplerFill(fontColor);
+						((SVGGlyph)((JFXButton)button).getGraphic()).setFill(fontColor);
+					});
 
-				Color newColor = (Color) newVal.getFills().get(0).getFill();
-				String hex = String.format("#%02X%02X%02X",
-						(int)( newColor.getRed() * 255),
-						(int)( newColor.getGreen() * 255),
-						(int)( newColor.getBlue() * 255));
-				String rgb = String.format("rgba(%d, %d, %d, 1)",
-						(int)( newColor.getRed() * 255),
-						(int)( newColor.getGreen() * 255),
-						(int)( newColor.getBlue() * 255));
-				String hsb = String.format("hsl(%d, %d%%, %d%%)",
-						(int)( newColor.getHue()),
-						(int)(newColor.getSaturation()*100),
-						(int)(newColor.getBrightness()*100));
+					Color newColor = (Color) newVal.getFills().get(0).getFill();
+					String hex = String.format("#%02X%02X%02X",
+							(int)( newColor.getRed() * 255),
+							(int)( newColor.getGreen() * 255),
+							(int)( newColor.getBlue() * 255));
+					String rgb = String.format("rgba(%d, %d, %d, 1)",
+							(int)( newColor.getRed() * 255),
+							(int)( newColor.getGreen() * 255),
+							(int)( newColor.getBlue() * 255));
+					String hsb = String.format("hsl(%d, %d%%, %d%%)",
+							(int)( newColor.getHue()),
+							(int)(newColor.getSaturation()*100),
+							(int)(newColor.getBrightness()*100));
 
-				if(!userChange){
-					Platform.runLater(()->{
+					if(!userChange){
 						systemChange = true;
 						rgbField.setText(rgb);
 						hsbField.setText(hsb);
 						hexField.setText(hex);
 						systemChange = false;	
-					});
+					}
 				}
 			});
 
@@ -333,7 +338,7 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 			initRun.run();
 			initOnce = false;
 		}
-		
+
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(120), 
 				//				new KeyValue(pickerDecorator.opacityProperty(), 1, Interpolator.EASE_BOTH), 
 				new KeyValue(dialog.opacityProperty(), 1, Interpolator.EASE_BOTH)));
