@@ -25,9 +25,7 @@ import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
 
 import javafx.animation.Interpolator;
@@ -179,7 +177,6 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 			// change tabs labels font color according to the selected color
 			pane.backgroundProperty().addListener((o,oldVal,newVal)->{
 				if (concurrencyController.getAndSet(1) == -1) {
-					concurrencyController.getAndSet(-1);
 					Color fontColor = ((Color)newVal.getFills().get(0).getFill()).grayscale().getRed() > 0.5? Color.valueOf("rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");						
 					tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".tab-label").forEach(node-> ((Label)node).setTextFill(fontColor)));
 					tabs.lookupAll(".tab").forEach(tabNode->tabNode.lookupAll(".jfx-rippler").forEach(node-> ((JFXRippler)node).setRipplerFill(fontColor)));
@@ -210,6 +207,7 @@ public class JFXCustomColorPickerDialog  extends StackPane {
 						hexField.setText(hex);
 						systemChange = false;	
 					}
+					concurrencyController.getAndSet(-1);
 				}
 			});
 
