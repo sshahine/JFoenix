@@ -94,11 +94,16 @@ public class JFXSliderSkin extends SliderSkin {
 		sliderValue = new Text();
 		sliderValue.setStroke(Color.WHITE);
 		sliderValue.setFont(new Font(10));
-		sliderValue.getStyleClass().setAll("sliderValue");
+		sliderValue.getStyleClass().setAll("slider-value");
 
 		animatedThumb = new StackPane();
+		animatedThumb.getStyleClass().add("animated-thumb");
 		animatedThumb.getChildren().add(sliderValue);
 		animatedThumb.setMouseTransparent(true);
+		animatedThumb.setPrefSize(30, 30);
+		animatedThumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(50, 50, 50, 0, true), null)));
+		animatedThumb.setScaleX(0);
+		animatedThumb.setScaleY(0);
 
 		getChildren().add(getChildren().indexOf(thumb), coloredTrack);
 		getChildren().add(getChildren().indexOf(thumb), animatedThumb);
@@ -112,7 +117,7 @@ public class JFXSliderSkin extends SliderSkin {
 	protected void handleControlPropertyChanged(String p) {
 		super.handleControlPropertyChanged(p);
 		if("VALUE_FACTORY".equals(p)){
-
+			refreshSliderValueBinding();
 		}
 	}
 
@@ -122,7 +127,11 @@ public class JFXSliderSkin extends SliderSkin {
 			sliderValue.textProperty().bind(((JFXSlider)getSkinnable()).getValueFactory().call((JFXSlider) getSkinnable()));
 		} else {
 			sliderValue.textProperty().bind(Bindings.createStringBinding(()->{
-				return Math.round(getSkinnable().getValue())+"";
+				if(getSkinnable().getLabelFormatter()!=null){
+					return getSkinnable().getLabelFormatter().toString(getSkinnable().getValue());	
+				}else{
+					return Math.round(getSkinnable().getValue())+"";
+				}
 			}, getSkinnable().valueProperty()));
 
 		}
@@ -131,7 +140,16 @@ public class JFXSliderSkin extends SliderSkin {
 	@Override
 	protected void layoutChildren(double x, double y, double w, double h) {
 		super.layoutChildren(x, y, w, h);
-
+		
+		if(!isValid){
+			initializeVariables();
+			initAnimation(getSkinnable().getOrientation());
+			isValid = true;
+		}
+		
+		double prefWidth = animatedThumb.prefWidth(-1);
+		animatedThumb.resize(prefWidth, animatedThumb.prefHeight(prefWidth));
+		
 		boolean horizontal = getSkinnable().getOrientation() == Orientation.HORIZONTAL;
 		double width, height, layoutX,layoutY;
 		if(horizontal){
@@ -147,13 +165,11 @@ public class JFXSliderSkin extends SliderSkin {
 			layoutY = thumb.getLayoutY();
 			animatedThumb.setLayoutY(thumb.getLayoutY() + thumb.getHeight()/2 - animatedThumb.getHeight()/2);
 		}
+		
 		coloredTrack.resizeRelocate(layoutX, layoutY, width, height);
-
-		if(!isValid){
-			initializeVariables();
-			initAnimation(getSkinnable().getOrientation());
-			isValid = true;
-		}
+		
+		
+		
 	}
 
 	private boolean internalChange = false;
@@ -172,11 +188,14 @@ public class JFXSliderSkin extends SliderSkin {
 
 		sliderValue.setRotate(rotationAngle + indicatorRotation + 3 * horizontalRotation);
 
-		animatedThumb.resize(30, 30);
 		animatedThumb.setRotate(-rotationAngle + indicatorRotation + horizontalRotation);
-		animatedThumb.backgroundProperty().bind(Bindings.createObjectBinding(() -> new Background(new BackgroundFill(thumb.getBackground().getFills().get(0).getFill(), new CornerRadii(50, 50, 50, 0, true), null)), thumb.backgroundProperty()));
-		animatedThumb.setScaleX(0);
-		animatedThumb.setScaleY(0);
+		thumb.backgroundProperty().addListener((o,oldVal,newVal)->{
+			if(animatedThumb.getBackground()!=null){
+				animatedThumb.setBackground(new Background(new BackgroundFill(newVal.getFills().get(0).getFill(), animatedThumb.getBackground().getFills().get(0).getRadii(), animatedThumb.getBackground().getFills().get(0).getInsets())));
+			}else{
+				animatedThumb.setBackground(new Background(new BackgroundFill(newVal.getFills().get(0).getFill(), new CornerRadii(50, 50, 50, 0, true), null)));
+			}
+		});
 	}
 
 
@@ -249,9 +268,9 @@ public class JFXSliderSkin extends SliderSkin {
 			internalChange = false;
 		});
 
-		getSkinnable().orientationProperty().addListener((o,oldVal,newVal)->{
-			initAnimation(newVal);
-		});
+		
+		getSkinnable().orientationProperty().addListener((o,oldVal,newVal)-> initAnimation(newVal));
+		animatedThumb.layoutBoundsProperty().addListener((o,oldVal,newVal)-> initAnimation(getSkinnable().getOrientation()));
 	}
 
 
@@ -267,18 +286,19 @@ public class JFXSliderSkin extends SliderSkin {
 				thumbPos = thumb.getLayoutY() - animatedThumb.getHeight()/2;
 				thumbNewPos = thumb.getLayoutY() - animatedThumb.getHeight() - thumb.getHeight();
 			}
-			layoutProperty = animatedThumb.layoutYProperty();
+			layoutProperty = animatedThumb.translateYProperty();
 		}else{			
 			if(((JFXSlider)getSkinnable()).getIndicatorPosition() == IndicatorPosition.RIGHT){
 				thumbPos = thumb.getLayoutX() - thumb.getWidth();
-				thumbNewPos = thumbPos - shifting;	
+				thumbNewPos = thumbPos - shifting;
 			}else{
-				thumbPos = thumb.getLayoutX() - animatedThumb.getWidth()/2;
+				thumbPos = thumb.getLayoutX() - animatedThumb.getWidth()/2;				
 				thumbNewPos = thumb.getLayoutX() - animatedThumb.getWidth() - thumb.getWidth();
 			}					
-			layoutProperty = animatedThumb.layoutXProperty();
+			layoutProperty = animatedThumb.translateXProperty();
 		}
 
+		
 		timeline = new Timeline(
 				new KeyFrame(
 						Duration.ZERO,

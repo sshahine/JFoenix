@@ -184,7 +184,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     @Override protected TextField getEditor() {
     	StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
     	/*
-    	 *  added to fix android issue as the stack trace on adroid is 
+    	 *  added to fix android issue as the stack trace on android is 
     	 *  not the same as desktop  
     	 */
     	if(caller.getClassName().equals(this.getClass().getName()))
