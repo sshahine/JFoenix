@@ -82,6 +82,3 @@ artifacts {
 jar {
     exclude('com/jfoenix/android/**')   
 }
-
-
-apply from: rootProject.file('gradle/publishing.gradle')
