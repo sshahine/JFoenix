@@ -53,20 +53,6 @@ Reference the repository from this location using:
       compile 'com.jfoenix:jfoenix:1.0.0'
     }
 
-### How to Include The Latest Version
-
-JFoenix latest updates will be published as a snapshot for the version 0.0.0
-
-    repositories {
-        maven { url 'https://oss.sonatype.org/content/groups/public' }
-    }
-
-Reference the repository from this location using:
-
-    dependencies {
-      compile 'com.jfoenix:jfoenix:0.0.0-SNAPSHOT'
-    }
-
 # Pics
 
 ![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
