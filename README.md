@@ -2,7 +2,7 @@
 
 [![Circle CI](https://img.shields.io/circleci/project/jfoenixadmin/JFoenix/master.svg?style=flat-square)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
 
-* JavaFX Material Design Library (Beta) [download jar](http://www.jfoenix.com/download/jfoenix.jar)
+* JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
 
@@ -39,6 +39,33 @@ To run the main demo, execute the following command:
 
 # How Can I Use JFoenix?
  You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix.jar under the build/dist folder. To use JFoenix, import jfoenix.jar into your project and start using the new material design Java components :).
+ 
+## Maven
+### How to Include In Project
+
+    repositories {
+        mavenCentral()
+    }
+
+Reference the repository from this location using:
+
+    dependencies {
+      compile 'com.jfoenix:jfoenix:1.0.0'
+    }
+
+### How to Include The Latest Version
+
+JFoenix latest updates will be published as a snapshot for the version 0.0.0
+
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/groups/public' }
+    }
+
+Reference the repository from this location using:
+
+    dependencies {
+      compile 'com.jfoenix:jfoenix:0.0.0-SNAPSHOT'
+    }
 
 # Pics
 

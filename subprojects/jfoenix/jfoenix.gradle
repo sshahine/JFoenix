@@ -1,9 +1,14 @@
-apply from: rootProject.file('gradle/publishing.gradle')
 apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 
+// pom file name
+ext {
+    pomFilePath = "${project.projectDir}/tmp/pom.xml"
+    pomFile = file(pomFilePath)
+}
 configurations {
     dalvikSDK
+    pom
 }
 dependencies { 
 	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.6@zip'
@@ -58,18 +63,25 @@ task javadocJar(type: Jar) {
     from javadoc.destinationDir
 }
 
-
 // execute jar tasks
 jar.finalizedBy retroSourcesJar
 jar.finalizedBy sourcesJar
 jar.finalizedBy javadocJar
 
+// summarize artifacts
 artifacts {
-    sourcesJar
-    javadocJar
-    retroSourcesJar
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+    archives retroSourcesJar
+    if (pomFile.exists()) {
+        pom pomFile
+    }
 }
 
 jar {
     exclude('com/jfoenix/android/**')   
 }
+
+
+apply from: rootProject.file('gradle/publishing.gradle')
