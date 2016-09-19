@@ -148,7 +148,10 @@ public class JFXDialog extends StackPane {
 	private void initialize() {
 		this.setVisible(false);
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);   
-
+		this.transitionType.addListener((o,oldVal,newVal)->{
+			animation = getShowAnimation(transitionType.get());
+		});
+		
 		contentHolder = new StackPane();
 		contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
 		JFXDepthManager.setDepth(contentHolder, 4);
@@ -157,8 +160,7 @@ public class JFXDialog extends StackPane {
 		contentHolder.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		this.getChildren().add(contentHolder);
 		this.getStyleClass().add("jfx-dialog-overlay-pane");
-		StackPane.setAlignment(contentHolder, Pos.CENTER);
-		this.setVisible(false);
+		StackPane.setAlignment(contentHolder, Pos.CENTER);		
 		this.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
 		// close the dialog if clicked on the overlay pane
 		if(overlayClose.get()) this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
@@ -275,19 +277,27 @@ public class JFXDialog extends StackPane {
 		Transition animation = null;
 		if(contentHolder!=null){
 			switch (transitionType) {		
-			case LEFT:	
+			case LEFT:
+				contentHolder.setScaleX(1);
+				contentHolder.setScaleY(1);
 				contentHolder.setTranslateX(-offsetX);
 				animation = new LeftTransition();
 				break;
 			case RIGHT:			
+				contentHolder.setScaleX(1);
+				contentHolder.setScaleY(1);
 				contentHolder.setTranslateX(offsetX);
 				animation = new RightTransition();
 				break;
 			case TOP:	
+				contentHolder.setScaleX(1);
+				contentHolder.setScaleY(1);
 				contentHolder.setTranslateY(-offsetY);
 				animation = new TopTransition();
 				break;
 			case BOTTOM:			
+				contentHolder.setScaleX(1);
+				contentHolder.setScaleY(1);
 				contentHolder.setTranslateY(offsetY);
 				animation = new BottomTransition();
 				break;
