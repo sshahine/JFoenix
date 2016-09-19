@@ -115,7 +115,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 			circleContainer.setTranslateX((line.getLayoutBounds().getWidth()/2) - circleRadius);
 			line.setStroke(((JFXToggleButton) getSkinnable()).getToggleLineColor());
 			circle.setFill(((JFXToggleButton) getSkinnable()).getToggleColor());
-			transition.playFrom(Duration.millis(100));
+//			transition.playFrom(Duration.millis(100));
 		}
 	}
 
