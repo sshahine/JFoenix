@@ -86,7 +86,9 @@ public class JFXListViewSkin<T> extends  ListViewSkin<T>{
 //        	borderWidth += getSkinnable().getPadding().getBottom();
 //        }
         // compute the gap between list cells
-    	double gap = ((JFXListView<T>) getSkinnable()).currentVerticalGapProperty().get() * (getSkinnable().getItems().size() - 1);
+    	
+    	JFXListView<T> listview = ((JFXListView<T>) getSkinnable());
+    	double gap = listview.isExpanded()? ((JFXListView<T>) getSkinnable()).getVerticalGap() * (getSkinnable().getItems().size() - 1) : 0;
         // compute the height of each list cell
     	double cellsHeight = 0;
     	for(int i = 0 ; i < flow.getCellCount(); i++){
