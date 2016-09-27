@@ -105,18 +105,13 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 		// add listeners
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
 			rippler.setRipplerFill(newVal?control.getUnCheckedColor():control.getCheckedColor());
-			transition.setRate(newVal?1:-1);
-			select.setRate(newVal?1:-1);
-			transition.play();
-			select.play();
-			box.setBorder(new Border(new BorderStroke(newVal?control.getCheckedColor():control.getUnCheckedColor(),BorderStrokeStyle.SOLID,new CornerRadii(2), new BorderWidths(lineThick))));
+			playSelectAnimation(newVal);
 		});
 
 		updateChildren();
 
 		registerChangeListener(control.checkedColorProperty(), "CHECKED_COLOR");
 	}
-
 
 	@Override
 	protected void handleControlPropertyChanged(String p) {
@@ -159,8 +154,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 			transition = new CheckBoxTransition();
 			createFillTransition();
 			if(getSkinnable().isSelected()){
-				transition.play();
-				select.play();
+				playSelectAnimation(true);
 			}
 			invalid = false;
 		}
@@ -198,6 +192,15 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 		}
 	}
 
+	private void playSelectAnimation(Boolean selection) {
+		JFXCheckBox control = ((JFXCheckBox) getSkinnable());
+		transition.setRate(selection?1:-1);
+		select.setRate(selection?1:-1);
+		transition.play();
+		select.play();
+		box.setBorder(new Border(new BorderStroke(selection?control.getCheckedColor():control.getUnCheckedColor(),BorderStrokeStyle.SOLID,new CornerRadii(2), new BorderWidths(lineThick))));
+	}
+	
 	private void createFillTransition(){
 		select = new JFXFillTransition(Duration.millis(120), box, Color.TRANSPARENT, (Color)((JFXCheckBox)getSkinnable()).getCheckedColor());
 		select.setInterpolator(Interpolator.EASE_OUT);
@@ -206,7 +209,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 	private class CheckBoxTransition extends CachedTransition {
 
 		public CheckBoxTransition() {
-			super(box, new Timeline(
+			super(mark, new Timeline(
 					new KeyFrame(
 							Duration.ZERO,       
 							//							new KeyValue(rightLine.visibleProperty(), false,Interpolator.EASE_BOTH),
