@@ -34,6 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -84,7 +85,6 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 		container.getChildren().add(rippler);
 		AnchorPane.setRightAnchor(rippler, labelOffset);
 		updateChildren();
-		
 	}
 
 	@Override
@@ -107,13 +107,14 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 		maxHeight = Math.max(contHeight, labelHeight);
 		final double xOffset = computeXOffset(w, labelWidth + contWidth, radioButton.getAlignment().getHpos()) + x;
 		final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
-
+		
 		if (invalid) {
 			initializeComponents(x, y, w, h);
 			invalid = false;
 		}
 		
         layoutLabelInArea(xOffset + contWidth, yOffset, labelWidth, maxHeight,  radioButton.getAlignment());
+        ((Text)getChildren().get(0)).textProperty().set(getSkinnable().textProperty().get());
         container.resize(snapSize(contWidth), snapSize(contHeight));		
         positionInArea(container, xOffset, yOffset, contWidth, maxHeight, 0, radioButton.getAlignment().getHpos(), radioButton.getAlignment().getVpos());
 	}
