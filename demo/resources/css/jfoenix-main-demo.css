@@ -249,8 +249,22 @@
 	-fx-fill: transparent;	
 }
 
-.custom-jfx-radio-button .dot {
-	-fx-fill: #5264AE;
+.custom-jfx-radio-button-blue {
+	-fx-text-fill:  #5264AE;
+	-fx-selected-color: #5264AE;
+	-fx-unselected-color: #212121;
+}
+
+.custom-jfx-radio-button-red {
+	-fx-text-fill:  #f44336;
+	-fx-selected-color: #f44336;
+	-fx-unselected-color: #b71c1c;
+}
+
+.custom-jfx-radio-button-green {
+	-fx-text-fill:  #4caf50;
+	-fx-selected-color: #4caf50;
+	-fx-unselected-color: #1b5e20;
 }
 
 /*******************************************************************************

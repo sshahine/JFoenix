@@ -18,10 +18,22 @@
  */
 package com.jfoenix.controls;
 
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Skin;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.jfoenix.skins.JFXRadioButtonSkin;
+import com.sun.javafx.css.converters.ColorConverter;
+
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
+import javafx.scene.control.Control;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Skin;
+import javafx.scene.paint.Color;
 
 /**
  * JFXRadioButton is the material design implementation of a radio button. 
@@ -75,4 +87,91 @@ public class JFXRadioButton extends RadioButton {
 	 * this control.
 	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
+	
+	/**
+	 * default color used when the radio button is selected
+	 */
+	private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.SELECTED_COLOR, JFXRadioButton.this, "selectedColor", Color.valueOf("#0F9D58"));
+
+	public final StyleableObjectProperty<Color> selectedColorProperty() {
+		return this.selectedColor;
+	}
+	public final Color getSelectedColor() {
+		return selectedColor == null ? Color.rgb(0, 0, 0, 0.2) : this.selectedColorProperty().get();
+	}
+	public final void setSelectedColor(final Color selectedColor) {
+		this.selectedColorProperty().set(selectedColor);
+	}
+
+	/**
+	 * default color used when the radio button is not selected
+	 */
+	private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.UNSELECTED_COLOR, JFXRadioButton.this, "unSelectedColor", Color.valueOf("#5A5A5A"));
+	
+	public final StyleableObjectProperty<Color> unSelectedColorProperty() {
+		return this.unSelectedColor;
+	}
+	public final Color getUnSelectedColor() {
+		return unSelectedColor == null ? Color.TRANSPARENT : this.unSelectedColorProperty().get();
+	}
+	public final void setUnSelectedColor(final Color unSelectedColor) {
+		this.unSelectedColorProperty().set(unSelectedColor);
+	}
+
+
+	private static class StyleableProperties {
+		private static final CssMetaData< JFXRadioButton, Color> SELECTED_COLOR =
+				new CssMetaData< JFXRadioButton, Color>("-fx-selected-color",
+						ColorConverter.getInstance(), Color.valueOf("#0F9D58")) {
+			@Override
+			public boolean isSettable(JFXRadioButton control) {
+				return control.selectedColor == null || !control.selectedColor.isBound();
+			}
+			@Override
+			public StyleableProperty<Color> getStyleableProperty(JFXRadioButton control) {
+				return control.selectedColorProperty();
+			}
+		};
+		private static final CssMetaData< JFXRadioButton, Color> UNSELECTED_COLOR =
+				new CssMetaData< JFXRadioButton, Color>("-fx-unselected-color",
+						ColorConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+			@Override
+			public boolean isSettable(JFXRadioButton control) {
+				return control.unSelectedColor == null || !control.unSelectedColor.isBound();
+			}
+			@Override
+			public StyleableProperty<Color> getStyleableProperty(JFXRadioButton control) {
+				return control.unSelectedColorProperty();
+			}
+		};
+
+		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+		static {
+			final List<CssMetaData<? extends Styleable, ?>> styleables =
+					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+			Collections.addAll(styleables,
+					SELECTED_COLOR,
+					UNSELECTED_COLOR
+					);
+			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+		}
+	}
+
+	// inherit the styleable properties from parent
+	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+	@Override
+	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+		if(STYLEABLES == null){
+			final List<CssMetaData<? extends Styleable, ?>> styleables =
+					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+			styleables.addAll(getClassCssMetaData());
+			styleables.addAll(super.getClassCssMetaData());
+			STYLEABLES = Collections.unmodifiableList(styleables);
+		}
+		return STYLEABLES;
+	}
+	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+		return StyleableProperties.CHILD_STYLEABLES;
+	}
 }

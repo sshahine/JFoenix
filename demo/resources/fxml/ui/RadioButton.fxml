@@ -30,18 +30,18 @@
 		</VBox>
 
 
-		<VBox spacing="37">
+		<VBox spacing="36">
 			<children>
 				
 				<Label styleClass="radio-button-title-label">Style Options</Label>				
 			
-				<JFXRadioButton fx:id="radio_1" text="Radio 1" styleClass="custom-jfx-radio-button">
+				<JFXRadioButton fx:id="radio_1" text="Radio 1" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-blue">
 					<toggleGroup>
 						<ToggleGroup fx:id="toggleGroup" />
 					</toggleGroup>
 				</JFXRadioButton>
-				<JFXRadioButton fx:id="radio_2" selected="true" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button"/>
-				<JFXRadioButton fx:id="radio_3" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button" />
+				<JFXRadioButton fx:id="radio_2" selected="true" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-red"/>
+				<JFXRadioButton fx:id="radio_3" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-green" />
 			</children>
 		</VBox>
 
