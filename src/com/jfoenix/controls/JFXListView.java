@@ -102,13 +102,13 @@ public class JFXListView<T> extends ListView<T> {
 
 	private DoubleProperty currentVerticalGapProperty = new SimpleDoubleProperty();
 
-	public DoubleProperty currentVerticalGapProperty(){
+	DoubleProperty currentVerticalGapProperty(){
 		return currentVerticalGapProperty;
 	}
-	public double getCurrentVerticalGap(){
+	double getCurrentVerticalGap(){
 		return currentVerticalGapProperty.get();
 	}
-	public void setCurrentVerticalGap(double gap){
+	void setCurrentVerticalGap(double gap){
 		currentVerticalGapProperty.set(gap);
 	}
 
