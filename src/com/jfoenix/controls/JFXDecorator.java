@@ -64,6 +64,8 @@ import javafx.util.Duration;
 
 /**
  * Window Decorator allow to resize/move its content
+ * Note: the default close button will call Platform.exit() which will close the 
+ * java application, however it can be customized by calling {@link #setOnCloseButtonAction(Runnable)} 
  * 
  * @author  Shadi Shaheen
  * @version 1.0
