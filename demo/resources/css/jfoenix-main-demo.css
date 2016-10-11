@@ -490,7 +490,7 @@
 }
 
 .custom-jfx-list-view1{
-	-fx-vertical-gap : 15.0;
+	-fx-vertical-gap : 10.0;
   	-fx-pref-width: 150px;
   	-fx-background-color: transparent ;
 }
@@ -507,6 +507,7 @@
 	-fx-border-color: #e0e0e0;
 	-fx-border-width: 1 0 1 0;
 }
+
 .custom-jfx-list-view .jfx-list-cell .sublist-header > .drop-icon{
 	-fx-background-color: GRAY;
 }
@@ -531,6 +532,10 @@
 .sublist .scroll-bar:vertical .decrement-button {
     -fx-padding:0;
 }
+.sublist .scroll-bar:vertical .track,
+.sublist .scroll-bar:vertical .thumb{
+    -fx-background-color:WHITE;
+}
 .sublist {
 	-fx-background-color: TRANSPARENT;
 }
@@ -542,7 +547,7 @@
 
 .sublist .jfx-list-cell {
 	-fx-background-insets: 0.0 ; 
-	-fx-text-fill: BLACK; 
+	-fx-text-fill: BLACK;
 }
 
 /*.custom-jfx-list-view .sublist-container {

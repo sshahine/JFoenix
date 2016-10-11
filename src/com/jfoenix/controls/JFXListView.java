@@ -24,13 +24,17 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.jfoenix.skins.JFXListViewSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.SizeConverter;
+
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -51,10 +55,6 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-
-import com.jfoenix.skins.JFXListViewSkin;
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.css.converters.SizeConverter;
 
 /**
  * Material design implementation of List View
@@ -78,7 +78,7 @@ public class JFXListView<T> extends ListView<T> {
 				return new JFXListCell<T>();
 			}
 		});
-		initialize();    	
+		initialize();    
 	}	 
 
 	/**
@@ -100,26 +100,18 @@ public class JFXListView<T> extends ListView<T> {
 		depthProperty.set(depth);
 	}	
 
-	private DoubleProperty currentVerticalGapProperty = new SimpleDoubleProperty();
+	private ReadOnlyDoubleWrapper currentVerticalGapProperty = new ReadOnlyDoubleWrapper();
 
-	DoubleProperty currentVerticalGapProperty(){
-		return currentVerticalGapProperty;
-	}
-	double getCurrentVerticalGap(){
-		return currentVerticalGapProperty.get();
-	}
-	void setCurrentVerticalGap(double gap){
-		currentVerticalGapProperty.set(gap);
+	ReadOnlyDoubleProperty currentVerticalGapProperty(){
+		return currentVerticalGapProperty.getReadOnlyProperty();
 	}
 
 	private void expand(){
 		currentVerticalGapProperty.set(verticalGap.get());
-		expanded.set(true);
 	}
 
 	private void collapse(){	
 		currentVerticalGapProperty.set(0);
-		expanded.set(false);
 	}
 
 	/*
@@ -243,6 +235,11 @@ public class JFXListView<T> extends ListView<T> {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
 		expanded.addListener((o,oldVal,newVal)->{
 			if(newVal) expand();
+			else collapse();
+		});
+		
+		verticalGap.addListener((o,oldVal,newVal)->{
+			if(isExpanded()) expand();
 			else collapse();
 		});
 

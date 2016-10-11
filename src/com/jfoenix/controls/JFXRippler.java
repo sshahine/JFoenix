@@ -282,7 +282,7 @@ public class JFXRippler extends StackPane {
 				if(!generating.getAndSet(true)){					
 					// create overlay once then change its color later
 					createOverlay();
-					if(this.getClip() == null ) this.setClip(getMask());
+					if(this.getClip() == null || getChildren().size() == 1) this.setClip(getMask());
 
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);
@@ -399,6 +399,11 @@ public class JFXRippler extends StackPane {
 					setFill(ripplerFill.get());
 				}
 			}
+		}
+
+		public void clear() {
+			getChildren().clear();
+			generating.set(false);
 		}
 	}
 

@@ -36,10 +36,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
@@ -52,28 +54,71 @@ import javafx.util.Duration;
  */
 public class JFXListCell<T> extends ListCell<T> {
 
-	//	protected StackPane cellContainer = new StackPane();
-	//	protected StackPane mainContainer = new StackPane();
 	protected JFXRippler cellRippler = new JFXRippler(new StackPane()){		
 		@Override protected void initListeners(){
 			ripplerPane.setOnMousePressed((event) -> {
-				createRipple(event.getX(),event.getY());
+				createRipple(event.getX(),event.getY());				
 			});
 		}
 	};
-	//	private JFXRippler rippler;
 
 	protected Node cellContent;
-	private Timeline animateGap;
+	private Rectangle clip;
+	//	private Timeline animateGap;
 	private Timeline expandAnimation;
-	private double animatedHeight = 0;	
-
+	private Timeline gapAnimation;
+	private double animatedHeight = 0;
+	private boolean playExpandAnimation = false;
+	private boolean selectionChanged = false;
 	/**
 	 * {@inheritDoc}
 	 */
 	public JFXListCell() {
 		super();		
-		initialize();
+		initialize();				
+		initListeners();
+	}
+
+	/**
+	 * init listeners to update the vertical gap / selection animation
+	 */
+	private void initListeners(){
+		listViewProperty().addListener((listObj,oldList,newList)->{
+			if(newList!=null){
+				if(getListView() instanceof JFXListView){
+					((JFXListView<?>)newList).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
+						cellRippler.rippler.setClip(null);
+						if(newVal.doubleValue() != 0) {
+							playExpandAnimation = true;
+							getListView().requestLayout();
+						}else{
+							// fake expand state
+							double gap = clip.getY() * 2;
+							gapAnimation = new Timeline(
+									new KeyFrame(Duration.millis(240),
+											new KeyValue(this.translateYProperty(), -gap/2 - (gap * (getIndex())), Interpolator.EASE_BOTH)
+											));								
+							gapAnimation.play();
+							gapAnimation.setOnFinished((finish)->{
+								requestLayout();
+								Platform.runLater(()-> getListView().requestLayout());
+							});
+						}
+					});		
+					selectedProperty().addListener((o,oldVal,newVal)->{
+						if(newVal) selectionChanged = true;
+					});
+
+					// propagate mouse events to content
+					this.addEventHandler(MouseEvent.ANY, (e)->{
+						if(!e.isConsumed()){
+							e.consume();
+							if(getGraphic()!=null) getGraphic().fireEvent(e);
+						}
+					});
+				}
+			}
+		});
 	}
 
 	/**
@@ -83,10 +128,56 @@ public class JFXListCell<T> extends ListCell<T> {
 	protected void layoutChildren() {		
 		super.layoutChildren();
 		cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
+		double gap = getGap();
+
+		if(clip == null){
+			clip = new Rectangle(0, gap/2, getWidth(), getHeight()-gap);
+			setClip(clip);
+		}else{
+			if(gap!=0){
+				if(playExpandAnimation || selectionChanged){
+					// fake list collapse state
+					if(playExpandAnimation){
+						this.setTranslateY(-gap/2 + (-gap * (getIndex())));
+						clip.setY(gap/2);
+						clip.setHeight(getHeight()-gap);
+						gapAnimation = new Timeline(new KeyFrame(Duration.millis(240), new KeyValue(this.translateYProperty(), 0, Interpolator.EASE_BOTH)));
+						playExpandAnimation = false;
+					} else if(selectionChanged){
+						clip.setY(0);
+						clip.setHeight(getHeight());
+						gapAnimation = new Timeline(
+								new KeyFrame(Duration.millis(240),
+										new KeyValue(clip.yProperty(), gap/2, Interpolator.EASE_BOTH),
+										new KeyValue(clip.heightProperty(), getHeight()-gap, Interpolator.EASE_BOTH)
+										));
+					}
+					playExpandAnimation = false;
+					selectionChanged = false;
+					gapAnimation.play();
+				}else{
+					if(gapAnimation!=null) gapAnimation.stop();
+					this.setTranslateY(0);
+					clip.setY(gap/2);
+					clip.setHeight(getHeight() - gap);
+				}
+			}else{
+				this.setTranslateY(0);
+				clip.setX(0);
+				clip.setY(0);
+				clip.setHeight(getHeight());
+				clip.setWidth(getWidth());
+			}
+		}
 		if(!getChildren().contains(cellRippler)){
 			makeChildrenTransparent();
 			getChildren().add(0,cellRippler);
+			cellRippler.rippler.clear();
 		}
+
+		// refresh sublist style class
+		if(this.getGraphic()!=null && this.getGraphic().getStyleClass().contains("sublist-container")) this.getStyleClass().add("sublist-item");
+		else this.getStyleClass().remove("sublist-item");
 	}
 
 	/**
@@ -156,8 +247,8 @@ public class JFXListCell<T> extends ListCell<T> {
 						//						addCellRippler = false;
 
 						// First build the group item used to expand / hide the sublist
-						StackPane group = new StackPane();						
-						group.getStyleClass().add("sublist-header");
+						StackPane groupNode = new StackPane();						
+						groupNode.getStyleClass().add("sublist-header");
 						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
 						dropIcon.setStyle("-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
 						dropIcon.getStyleClass().add("drop-icon");			
@@ -165,38 +256,40 @@ public class JFXListCell<T> extends ListCell<T> {
 						 *  alignment of the group node can be changed using the following css selector
 						 *  .jfx-list-view .sublist-header{ }
 						 */						
-						group.getChildren().setAll(((JFXListView<?>)newNode).getGroupnode(), dropIcon);
+						groupNode.getChildren().setAll(((JFXListView<?>)newNode).getGroupnode(), dropIcon);
 						// the margin is needed when rotating the angle
 						StackPane.setMargin(dropIcon, new Insets(0,7,0,0));
 						StackPane.setAlignment(dropIcon, Pos.CENTER_RIGHT);						
 
 						// Second build the sublist container
 						StackPane sublistContainer = new StackPane();
-						//						sublistContainer.setMaxWidth(getListView().getWidth()-2);
+						sublistContainer.setMinHeight(0);
+						sublistContainer.setMaxHeight(0);
 						sublistContainer.getChildren().setAll(newNode);
 						sublistContainer.setTranslateY(this.snappedBottomInset());
-						sublistContainer.setOpacity(0);	
+						sublistContainer.setOpacity(0);
 
-						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
-							// store the hieght of the sublist and resize it to 0 to make it hidden
-							if(subListHeight == -1){
-								subListHeight = newVal.doubleValue() + this.snappedBottomInset()/2;
-								//								totalSubListsHeight += subListHeight;
-								// set the parent list 
-								Platform.runLater(()->{
-									sublistContainer.setMinHeight(0);
-									sublistContainer.setPrefHeight(0);
-									sublistContainer.setMaxHeight(0);
-									//									double currentHeight = ((JFXListView<T>)getListView()).getHeight();
-									// FIXME : THIS SHOULD ONLY CALLED ONCE ( NOW ITS BEING CALLED FOR EVERY SUBLIST)
-									//									updateListViewHeight(currentHeight - totalSubListsHeight);
-								});	
-							}
-						});
+						//						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
+						//							// store the hieght of the sublist and resize it to 0 to make it hidden
+						//							if(subListHeight == -1){
+						//								subListHeight = newVal.doubleValue() + this.snappedBottomInset()/2;
+						//								//								totalSubListsHeight += subListHeight;
+						//								// set the parent list 
+						//								Platform.runLater(()->{
+						//									sublistContainer.setMinHeight(0);
+						//									sublistContainer.setPrefHeight(0);
+						//									sublistContainer.setMaxHeight(0);
+						//									//									double currentHeight = ((JFXListView<T>)getListView()).getHeight();
+						//									// FIXME : THIS SHOULD ONLY CALLED ONCE ( NOW ITS BEING CALLED FOR EVERY SUBLIST)
+						//									//									updateListViewHeight(currentHeight - totalSubListsHeight);
+						//								});	
+						//							}
+						//						});
 						// Third, create container of group title and the sublist
 						VBox contentHolder = new VBox();
-						contentHolder.getChildren().setAll(group, sublistContainer);
+						contentHolder.getChildren().setAll(groupNode, sublistContainer);
 						contentHolder.getStyleClass().add("sublist-container");
+						VBox.setVgrow(groupNode, Priority.ALWAYS);
 						cellContent = contentHolder;						
 						cellRippler.ripplerPane.addEventHandler(MouseEvent.ANY, (e)->e.consume());
 						contentHolder.addEventHandler(MouseEvent.ANY, (e)->{
@@ -215,28 +308,37 @@ public class JFXListCell<T> extends ListCell<T> {
 						// Finally, add sublist animation						
 						contentHolder.setOnMouseClicked((click)->{
 							click.consume();
-							JFXListView<T> listview = ((JFXListView<T>)getListView());
+							// stop the animation or change the list height 
+							if(expandAnimation!=null && expandAnimation.getStatus().equals(Status.RUNNING)) expandAnimation.stop();
+
 							// invert the expand property 
 							expandedProperty.set(!expandedProperty.get());
 
-							// change the list height
-							animatedHeight = subListHeight;
-							if(!expandedProperty.get()) animatedHeight = -animatedHeight;
-
-							// stop the animation or change the list height 
-							if(expandAnimation!=null && expandAnimation.getStatus().equals(Status.RUNNING)) expandAnimation.stop();								
-							else if(expandedProperty.get()) updateListViewHeight(listview.getHeight() + animatedHeight);
-
-
+							double newAnimatedHeight = ((Region)newNode).prefHeight(-1) * (expandedProperty.get() ? 1 : -1);
+							double newHeight = expandedProperty.get() ? this.getHeight() + newAnimatedHeight : this.prefHeight(-1);
 							// animate showing/hiding the sublist
-							double initMin,initMax;
-							initMin = initMax = !expandedProperty.get()? subListHeight : 0.0;
-							int opacity = !expandedProperty.get()? 0 : 1;
+							double contentHeight = expandedProperty.get()? newAnimatedHeight : 0;
+
+							if(expandedProperty.get()){
+								updateClipHeight(newHeight);
+								getListView().setPrefHeight(getListView().getHeight() + newAnimatedHeight + animatedHeight);
+							}
+							// update the animated height
+							animatedHeight = newAnimatedHeight;
+
+							int opacity = expandedProperty.get()? 1 : 0;
 							expandAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-									new KeyValue( sublistContainer.minHeightProperty(), initMin + animatedHeight ,Interpolator.EASE_BOTH),																
-									new KeyValue( sublistContainer.maxHeightProperty(), initMax + animatedHeight ,Interpolator.EASE_BOTH),
-									new KeyValue( sublistContainer.opacityProperty(), opacity ,Interpolator.EASE_BOTH)));							
-							if(!expandedProperty.get()) expandAnimation.setOnFinished((finish)->updateListViewHeight(listview.getHeight() + animatedHeight));
+									new KeyValue( sublistContainer.minHeightProperty(), contentHeight ,Interpolator.EASE_BOTH),																
+									new KeyValue( sublistContainer.maxHeightProperty(), contentHeight ,Interpolator.EASE_BOTH),
+									new KeyValue( sublistContainer.opacityProperty(), opacity ,Interpolator.EASE_BOTH)));
+
+							if(!expandedProperty.get()){
+								expandAnimation.setOnFinished((finish)->{
+									updateClipHeight(newHeight);
+									getListView().setPrefHeight(getListView().getHeight() + newAnimatedHeight);
+									animatedHeight = 0;
+								});
+							}
 							expandAnimation.play();
 						});
 
@@ -247,64 +349,17 @@ public class JFXListCell<T> extends ListCell<T> {
 						});
 					}
 
-					// check if the list is in expanded mode 
-					if(isJFXListView && this.getIndex() > 0 && ((JFXListView<T>)getListView()).isExpanded()) 
-						this.translateYProperty().set(((JFXListView<T>)getListView()).getVerticalGap()*this.getIndex());
-
-					if(isJFXListView){
-						((JFXListView<T>)getListView()).currentVerticalGapProperty().addListener((o,oldVal,newVal)->{
-							// validate changing gap operation
-							JFXListView<T> listview = ((JFXListView<T>)getListView());
-							double newHeight = (this.getHeight() + listview.currentVerticalGapProperty().get()) * listview.getItems().size() + listview.snappedTopInset() + listview.snappedBottomInset() - listview.currentVerticalGapProperty().get();
-							/*
-							 *  expanding list will ignore its maxheight property. 
-							 *  the maxHeight property shouldn't be set by the user, otherwise
-							 *  the expanding animatino will be corrupted
-							 */
-							//							if(listview.getMaxHeight() == -1 || (listview.getMaxHeight() > 0 && newHeight <= listview.getMaxHeight())){
-							if(this.getIndex() > 0 && this.getIndex() < listview.getItems().size()){
-								// stop the previous animation 
-								if(animateGap!=null) animateGap.stop();
-								// create new animation
-								animateGap = new Timeline(
-										new KeyFrame( Duration.ZERO, new KeyValue( this.translateYProperty(), this.translateYProperty().get() ,Interpolator.EASE_BOTH)),
-										new KeyFrame(Duration.millis(500), new KeyValue( this.translateYProperty(), newVal.doubleValue()*this.getIndex()  ,Interpolator.EASE_BOTH))
-										);	
-								// change the height of the list view
-								if(oldVal.doubleValue()<newVal.doubleValue()){
-									if(newHeight >= listview.getPrefHeight())
-										listview.setPrefHeight(newHeight);
-								}else
-									animateGap.setOnFinished((e)->{
-										if(newHeight >= listview.getPrefHeight())
-											listview.setPrefHeight(newHeight);
-									});
-
-								animateGap.play();	
-							}
-						});
-					}
-
+					((Region)cellContent).setMaxHeight(((Region)cellContent).prefHeight(-1));
 					setGraphic(cellContent);	
 					setText(null);
-					
-					// propagate mouse events to content
-					this.addEventHandler(MouseEvent.ANY, (e)->{
-						if(!e.isConsumed()){
-							e.consume();
-							newNode.fireEvent(e);
-						}
-					});
 				}
 			}
 		}
 	}
 
 
-	private void updateListViewHeight(double newHeight){
-		((JFXListView<T>)getListView()).setPrefHeight(newHeight);
-		((JFXListView<T>)getListView()).setMaxHeight(newHeight);
-		((JFXListView<T>)getListView()).setMinHeight(newHeight);
+	private void updateClipHeight(double newHeight){
+		clip.setHeight(newHeight - getGap());
 	}
 
 
@@ -327,9 +382,6 @@ public class JFXListCell<T> extends ListCell<T> {
 		return expandedProperty.get();
 	}
 
-	// hold the height of the sub list if existed
-	private double subListHeight = -1;
-
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
@@ -346,9 +398,18 @@ public class JFXListCell<T> extends ListCell<T> {
 
 	private void initialize() {
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-//		this.setPadding(new Insets(4,8,4,8));
+		//		this.setPadding(new Insets(4,8,4,8));
 		this.setPadding(new Insets(8,12,8,12));
-//		this.setPadding(new Insets(0));
+		//		this.setPadding(new Insets(0));		
 	}
 
+	@Override
+	protected double computePrefHeight(double width) {
+		double gap = getGap();
+		return super.computePrefHeight(width) + gap;
+	}
+
+	private double getGap() {
+		return (getListView() instanceof JFXListView)? (((JFXListView<?>)getListView()).isExpanded()? ((JFXListView<?>)getListView()).currentVerticalGapProperty().get() : 0) : 0;
+	}
 }
