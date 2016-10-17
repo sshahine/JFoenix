@@ -174,7 +174,11 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     }
 
     private void updateTimeDisplayNode(){
-    	if(jfxDatePicker.isShowTime() && jfxDatePicker.getTime()!=null){
+        if(jfxDatePicker.getTime()==null){
+            displayNode.setText("");
+            return;
+        }
+    	if(jfxDatePicker.isShowTime()){
 	    	DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 	    	displayNode.setText(fmt.format(jfxDatePicker.getTime()));
     	}
