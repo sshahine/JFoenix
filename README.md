@@ -40,7 +40,7 @@ To run the main demo, execute the following command:
 # How Can I Use JFoenix?
  You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix.jar under the build/dist folder. To use JFoenix, import jfoenix.jar into your project and start using the new material design Java components :).
  
-## Maven
+## Gradle
 ### How to Include In Project
 
     repositories {
