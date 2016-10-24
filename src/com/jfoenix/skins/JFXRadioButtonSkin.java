@@ -144,9 +144,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 			initializeComponents(x, y, w, h);
 			invalid = false;
 		}
-		
         layoutLabelInArea(xOffset + contWidth, yOffset, labelWidth, maxHeight,  radioButton.getAlignment());
-        ((Text)getChildren().get(0)).textProperty().set(getSkinnable().textProperty().get());
+        ((Text)getChildren().get((getChildren().get(0) instanceof Text)? 0 : 1)).textProperty().set(getSkinnable().textProperty().get());
         container.resize(snapSize(contWidth), snapSize(contHeight));		
         positionInArea(container, xOffset, yOffset, contWidth, maxHeight, 0, radioButton.getAlignment().getHpos(), radioButton.getAlignment().getVpos());
 	}
