@@ -19,42 +19,53 @@
 				<Label styleClass="title-label">Combo Box</Label>
 				<ValidationFacade>
 					<control>
-						<JFXComboBox id="jfxComboBox" prefWidth="200" promptText="Select Item">
+						<JFXComboBox id="jfxComboBox" prefWidth="200"
+							promptText="Select Item">
 							<items>
 								<FXCollections fx:factory="observableArrayList">
 									<Label>
 										Item 1
 										<graphic>
-											<Icon awesomeIcon="STAR" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
+											<StackPane styleClass="custom-jfx-list-view-icon-container">
+												<Icon awesomeIcon="STAR" size="1.5em" style=";"
+													styleClass="custom-jfx-list-view-icon" />
+											</StackPane>
 										</graphic>
 									</Label>
 									<Label>
 										Item 2
 										<graphic>
-											<Icon awesomeIcon="HEART" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
+											<StackPane styleClass="custom-jfx-list-view-icon-container">
+												<Icon awesomeIcon="HEART" size="1.5em" style=";"
+													styleClass="custom-jfx-list-view-icon" />
+											</StackPane>
 										</graphic>
 									</Label>
 									<Label>
 										Item 3
 										<graphic>
-											<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
+											<StackPane styleClass="custom-jfx-list-view-icon-container">
+												<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+													styleClass="custom-jfx-list-view-icon" />
+											</StackPane>
 										</graphic>
 									</Label>
 									<Label>
 										Item 4
 										<graphic>
-											<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
+											<StackPane styleClass="custom-jfx-list-view-icon-container">
+												<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+													styleClass="custom-jfx-list-view-icon" />
+											</StackPane>
 										</graphic>
 									</Label>
 									<Label>
 										Item 5
 										<graphic>
-											<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
+											<StackPane styleClass="custom-jfx-list-view-icon-container">
+												<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+													styleClass="custom-jfx-list-view-icon" />
+											</StackPane>
 										</graphic>
 									</Label>
 								</FXCollections>
@@ -73,56 +84,67 @@
 
 		<VBox spacing="14">
 			<Label styleClass="title-label">Editable Box</Label>
-				<ValidationFacade>
-					<control>
-						<JFXComboBox id="jfxEditableComboBox" editable="true" maxWidth="200" promptText="Select/Edit Items">
-							<items>
-								<FXCollections fx:factory="observableArrayList">
-									<Label>
-										Item 1
-										<graphic>
+			<ValidationFacade>
+				<control>
+					<JFXComboBox id="jfxEditableComboBox" editable="true"
+						maxWidth="200" promptText="Select/Edit Items">
+						<items>
+							<FXCollections fx:factory="observableArrayList">
+								<Label>
+									Item 1
+									<graphic>
+										<StackPane styleClass="custom-jfx-list-view-icon-container">
 											<Icon awesomeIcon="STAR" size="1.5em" style=";"
 												styleClass="custom-jfx-list-view-icon" />
-										</graphic>
-									</Label>
-									<Label>
-										Item 2
-										<graphic>
+										</StackPane>
+									</graphic>
+								</Label>
+								<Label>
+									Item 2
+									<graphic>
+										<StackPane styleClass="custom-jfx-list-view-icon-container">
 											<Icon awesomeIcon="HEART" size="1.5em" style=";"
 												styleClass="custom-jfx-list-view-icon" />
-										</graphic>
-									</Label>
-									<Label>
-										Item 3
-										<graphic>
+										</StackPane>
+									</graphic>
+								</Label>
+								<Label>
+									Item 3
+									<graphic>
+										<StackPane styleClass="custom-jfx-list-view-icon-container">
 											<Icon awesomeIcon="WARNING" size="1.5em" style=";"
 												styleClass="custom-jfx-list-view-icon" />
-										</graphic>
-									</Label>
-									<Label>
-										Item 4
-										<graphic>
+										</StackPane>
+									</graphic>
+								</Label>
+								<Label>
+									Item 4
+									<graphic>
+										<StackPane styleClass="custom-jfx-list-view-icon-container">
 											<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
 												styleClass="custom-jfx-list-view-icon" />
-										</graphic>
-									</Label>
-									<Label>
-										Item 5
-										<graphic>
+										</StackPane>
+									</graphic>
+								</Label>
+								<Label>
+									Item 5
+									<graphic>
+										<StackPane styleClass="custom-jfx-list-view-icon-container">
 											<Icon awesomeIcon="TABLET" size="1.5em" style=";"
 												styleClass="custom-jfx-list-view-icon" />
-										</graphic>
-									</Label>
-								</FXCollections>
-							</items>
-						</JFXComboBox>
-					</control>
-					<validators>
-						<RequiredFieldValidator message="Input Required!">
-							<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
-						</RequiredFieldValidator>
-					</validators>
-				</ValidationFacade>
+										</StackPane>
+									</graphic>
+								</Label>
+							</FXCollections>
+						</items>
+					</JFXComboBox>
+				</control>
+				<validators>
+					<RequiredFieldValidator message="Input Required!">
+						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
+					</RequiredFieldValidator>
+				</validators>
+			</ValidationFacade>
 		</VBox>
 	</HBox>
 

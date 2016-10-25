@@ -500,7 +500,9 @@
 	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
 }
-
+.custom-jfx-list-view-icon-container{
+	-fx-pref-width:40px;
+}
 
 
 .custom-jfx-list-view .sublist-item {
@@ -548,6 +550,13 @@
 .sublist .jfx-list-cell {
 	-fx-background-insets: 0.0 ; 
 	-fx-text-fill: BLACK;
+}
+
+.sublist-header{
+	-fx-alignment: center-left ;
+}
+.sublist-header .sub-label{
+	-fx-padding: 0 0 0 12;
 }
 
 /*.custom-jfx-list-view .sublist-container {
@@ -736,6 +745,7 @@
 	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
 }
+
 .combo-box-popup .list-view .jfx-list-cell:odd:selected > .jfx-rippler > StackPane,
 .combo-box-popup .list-view .jfx-list-cell:even:selected > .jfx-rippler > StackPane { 
 	-fx-background-color: rgba(0.0,0.0,255.0,0.2);

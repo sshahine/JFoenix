@@ -14,31 +14,31 @@
 	xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane maxWidth="500">
-	<JFXListView fx:id="list1" styleClass="custom-jfx-list-view"
+		<JFXListView fx:id="list1" styleClass="custom-jfx-list-view"
 			layoutX="0" layoutY="50">
 			<Label>Item 1</Label>
 			<JFXListView fx:id="subList" styleClass="sublist">
 				<groupnode>
-					<Label> My Sub List </Label>
+					<Label styleClass="sub-label"> Item 2 </Label>
 				</groupnode>
-				<Label> Buttons </Label>
-				<Label> Check Box </Label>
+				<Label> Item 2.1 </Label>
+				<Label> Item 2.2 </Label>
 			</JFXListView>
-			<Label>Item 2</Label>
 			<Label>Item 3</Label>
 			<Label>Item 4</Label>
+			<Label>Item 5</Label>
 			<JFXListView fx:id="subList1" styleClass="sublist">
 				<groupnode>
-					<Label> My Sub List </Label>
+					<Label styleClass="sub-label"> Item 6 </Label>
 				</groupnode>
-				<Label> Buttons </Label>
-				<Label> Check Box </Label>
+				<Label> Item 6.1 </Label>
+				<Label> Item 6.2 </Label>
 			</JFXListView>
-			<Label>Item 6</Label>
 			<Label>Item 7</Label>
 			<Label>Item 8</Label>
+			<Label>Item 9</Label>
 		</JFXListView>
-		
+
 
 
 		<JFXListView fx:id="list2" styleClass="custom-jfx-list-view1"
@@ -46,36 +46,46 @@
 			<Label>
 				Item 1
 				<graphic>
-					<Icon awesomeIcon="STAR" size="1.5em" style=";"
-						styleClass="custom-jfx-list-view-icon" />
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<Icon awesomeIcon="STAR" size="1.5em" style=";"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
 				</graphic>
 			</Label>
 			<Label>
 				Item 2
 				<graphic>
-					<Icon awesomeIcon="HEART" size="1.5em" style=";"
-						styleClass="custom-jfx-list-view-icon" />
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<Icon awesomeIcon="HEART" size="1.5em" style=";"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
 				</graphic>
 			</Label>
 			<Label>
 				Item 3
 				<graphic>
-					<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-						styleClass="custom-jfx-list-view-icon" />
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<Icon awesomeIcon="WARNING" size="1.5em" style=";"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
 				</graphic>
 			</Label>
 			<Label>
 				Item 4
 				<graphic>
-					<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-						styleClass="custom-jfx-list-view-icon" />
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
 				</graphic>
 			</Label>
 			<Label>
 				Item 5
 				<graphic>
-					<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-						styleClass="custom-jfx-list-view-icon" />
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<Icon awesomeIcon="TABLET" size="1.5em" style=";"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
 				</graphic>
 			</Label>
 		</JFXListView>

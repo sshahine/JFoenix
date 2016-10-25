@@ -228,7 +228,8 @@ public class JFXListCell<T> extends ListCell<T> {
 				if (currentNode == null || !currentNode.equals(newNode)) {
 					// clear nodes
 					cellContent = newNode;
-
+					cellRippler.rippler.cacheRippleClip(false);
+					
 					// build the Cell node 			
 					// RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
 					if(newNode instanceof JFXRippler){
@@ -242,23 +243,24 @@ public class JFXListCell<T> extends ListCell<T> {
 					// SUBLIST ITEM : build the Cell node as sublist the sublist
 					else if(newNode instanceof JFXListView<?>){
 						// add the sublist to the parent and style the cell as sublist item
-						((JFXListView<?>)getListView()).addSublist((JFXListView<?>) newNode, this.getIndex());						
+						((JFXListView<?>)getListView()).addSublist((JFXListView<?>) newNode, this.getIndex());
 						this.getStyleClass().add("sublist-item");
-						//						addCellRippler = false;
+						
+						if(this.getPadding()!=null) this.setPadding(new Insets(this.getPadding().getTop(),0,this.getPadding().getBottom(),0));
 
 						// First build the group item used to expand / hide the sublist
 						StackPane groupNode = new StackPane();						
 						groupNode.getStyleClass().add("sublist-header");
 						SVGGlyph dropIcon = new SVGGlyph(0, "ANGLE_RIGHT", "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z", Color.BLACK);
 						dropIcon.setStyle("-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
-						dropIcon.getStyleClass().add("drop-icon");			
+						dropIcon.getStyleClass().add("drop-icon");
 						/*
 						 *  alignment of the group node can be changed using the following css selector
 						 *  .jfx-list-view .sublist-header{ }
 						 */						
 						groupNode.getChildren().setAll(((JFXListView<?>)newNode).getGroupnode(), dropIcon);
 						// the margin is needed when rotating the angle
-						StackPane.setMargin(dropIcon, new Insets(0,7,0,0));
+						StackPane.setMargin(dropIcon, new Insets(0,19,0,0));
 						StackPane.setAlignment(dropIcon, Pos.CENTER_RIGHT);						
 
 						// Second build the sublist container
@@ -268,6 +270,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						sublistContainer.getChildren().setAll(newNode);
 						sublistContainer.setTranslateY(this.snappedBottomInset());
 						sublistContainer.setOpacity(0);
+						StackPane.setMargin(newNode, new Insets(-1,-1,0,-1));
 
 						//						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
 						//							// store the hieght of the sublist and resize it to 0 to make it hidden
@@ -304,6 +307,9 @@ public class JFXListCell<T> extends ListCell<T> {
 								contentHolder.fireEvent(e);
 							}
 						});
+						// cache rippler clip in subnodes						
+						cellRippler.rippler.cacheRippleClip(true);
+						
 						this.setOnMouseClicked((e)->e.consume());
 						// Finally, add sublist animation						
 						contentHolder.setOnMouseClicked((click)->{

@@ -269,7 +269,8 @@ public class JFXRippler extends StackPane {
 		private double generatorCenterY = 0;
 		private OverLayRipple overlayRect;
 		private AtomicBoolean generating = new AtomicBoolean(false);
-
+		private boolean cacheRipplerClip = false;
+				
 		public RippleGenerator() {
 			/* 
 			 * improve in performance, by preventing  
@@ -282,7 +283,7 @@ public class JFXRippler extends StackPane {
 				if(!generating.getAndSet(true)){					
 					// create overlay once then change its color later
 					createOverlay();
-					if(this.getClip() == null || getChildren().size() == 1) this.setClip(getMask());
+					if(this.getClip() == null || (getChildren().size() == 1 && !cacheRipplerClip)) this.setClip(getMask());
 
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);
@@ -307,7 +308,11 @@ public class JFXRippler extends StackPane {
 				}
 			}
 		}
-
+		
+		void cacheRippleClip(boolean cached){
+			cacheRipplerClip = cached;
+		}
+		
 		public void createOverlay(){
 			if(overlayRect == null){
 				overlayRect = new OverLayRipple();
