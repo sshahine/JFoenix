@@ -316,11 +316,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 					// filter the ungrouped root
 					((RecursiveTreeItem) originalRoot).setPredicate(predicate);
 					// regroup the data
-					if(!groupOrder.isEmpty()){
-						ArrayList<TreeTableColumn<S, ?>> tempGroups = new ArrayList<>(groupOrder);
-						groupOrder.clear();
-						group(tempGroups.toArray(new TreeTableColumn[tempGroups.size()]));	
-					}
+					reGroup();
 					Platform.runLater(()->{
 						getSelectionModel().select(0);	
 						setCurrentItemsCount(count(getRoot()));
@@ -330,6 +326,14 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		},  500);
 	}
 
+	public void reGroup() {
+		if(!groupOrder.isEmpty()){
+			ArrayList<TreeTableColumn<S, ?>> tempGroups = new ArrayList<>(groupOrder);
+			groupOrder.clear();
+			group(tempGroups.toArray(new TreeTableColumn[tempGroups.size()]));	
+		}
+	}
+	
 	private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<S>>>((TreeItem<S> t) -> true);
 
 	public final ObjectProperty<Predicate<TreeItem<S>>> predicateProperty() {

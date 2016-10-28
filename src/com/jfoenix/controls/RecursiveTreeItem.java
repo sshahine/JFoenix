@@ -107,8 +107,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 	 */
 	public RecursiveTreeItem(ObservableList<T> dataList, Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
 		RecursiveTreeObject<T> root = new RecursiveTreeObject<>();
-		root.getChildren().addAll(dataList);
-
+		root.setChildren(dataList);
 		this.childrenFactory = func;
 		init(root);
 	}

@@ -47,6 +47,10 @@ public class RecursiveTreeObject<T> {
 		return children;
 	}	
 	
+	public void setChildren(ObservableList<T> children) {
+		this.children = children;
+	}
+
 	/**
 	 * Whether or not the object is grouped by a specified tree table column 
 	 */
