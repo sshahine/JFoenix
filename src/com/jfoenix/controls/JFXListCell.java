@@ -185,11 +185,9 @@ public class JFXListCell<T> extends ListCell<T> {
 	 * so clicking on them will trigger the ripple effect.
 	 */
 	protected void makeChildrenTransparent(){
-		getChildren().forEach((child)->{
-			if(child instanceof Label || child instanceof Shape){
+		for (Node child : getChildren())
+			if(child instanceof Label || child instanceof Shape)
 				child.setMouseTransparent(true);
-			}
-		});		
 	}
 	/**
 	 * {@inheritDoc}
@@ -229,7 +227,7 @@ public class JFXListCell<T> extends ListCell<T> {
 					// clear nodes
 					cellContent = newNode;
 					cellRippler.rippler.cacheRippleClip(false);
-					
+
 					// build the Cell node 			
 					// RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
 					if(newNode instanceof JFXRippler){
@@ -245,7 +243,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						// add the sublist to the parent and style the cell as sublist item
 						((JFXListView<?>)getListView()).addSublist((JFXListView<?>) newNode, this.getIndex());
 						this.getStyleClass().add("sublist-item");
-						
+
 						if(this.getPadding()!=null) this.setPadding(new Insets(this.getPadding().getTop(),0,this.getPadding().getBottom(),0));
 
 						// First build the group item used to expand / hide the sublist
@@ -309,7 +307,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						});
 						// cache rippler clip in subnodes						
 						cellRippler.rippler.cacheRippleClip(true);
-						
+
 						this.setOnMouseClicked((e)->e.consume());
 						// Finally, add sublist animation						
 						contentHolder.setOnMouseClicked((click)->{
