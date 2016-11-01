@@ -19,6 +19,7 @@
 package com.jfoenix.controls;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
+
+import com.jfoenix.concurrency.JFXUtilities;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.jfoenix.skins.JFXTreeTableViewSkin;
 
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -41,10 +46,6 @@ import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-
-import com.jfoenix.concurrency.JFXUtilities;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import com.jfoenix.skins.JFXTreeTableViewSkin;
 
 /**
  * JFXTreeTableView is the material design implementation of table view.
@@ -119,12 +120,31 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		//		});
 	}
 
+	@Override
+	public int getTreeItemLevel(TreeItem<?> node) {
+		final TreeItem<?> root = getRoot();
+		if (node == null) return -1;
+		if (node == root) return 0;
+		int level = 0;
+		TreeItem<?> parent = node.getParent();
+		while (parent != null) {
+			level++;
+			if (parent == root ) {
+				break;
+			}
+			// handle group nodes
+			if(((RecursiveTreeObject<?>)parent.getValue()).getGroupedColumn()!=null)
+				level--;
+			parent = parent.getParent();
+		}
+		return level;
+	}
 
 	/*
 	 * clear selection before sorting as its bugged in java
 	 */
 	private boolean itemWasSelected = false;
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -155,7 +175,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 		if(groupingSemaphore.tryAcquire()){
 			if(groupOrder.size() == 0) groups = new HashMap<>();
 			try{
-				if(originalRoot == null) originalRoot = getRoot();				
+				if(originalRoot == null) originalRoot = getRoot();
 				for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) 
 					groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);			
 				groupOrder.addAll(treeTableColumns);
@@ -188,6 +208,11 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 					JFXUtilities.runInFXAndWait(()->{
 						ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
 						sortOrder.addAll(getSortOrder());
+						// needs to reset the children in order to update the parent
+						List children = Arrays.asList(originalRoot.getChildren().toArray());
+						originalRoot.getChildren().clear();
+						originalRoot.getChildren().setAll(children);
+						// reset the original root
 						setRoot(originalRoot);
 						getSelectionModel().select(0);	
 						getSortOrder().addAll(sortOrder);
@@ -333,7 +358,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 			group(tempGroups.toArray(new TreeTableColumn[tempGroups.size()]));	
 		}
 	}
-	
+
 	private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<S>>>((TreeItem<S> t) -> true);
 
 	public final ObjectProperty<Predicate<TreeItem<S>>> predicateProperty() {

@@ -126,6 +126,10 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 		editorNode = null;
 	}
 	
+	/**
+	 * only allows editing for items that are not grouped
+	 * @return whether the item is grouped or not
+	 */
 	private boolean checkGroupedColumn(){
 		boolean allowEdit = true;
 		if(getTreeTableRow().getTreeItem()!=null){
@@ -133,9 +137,13 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 			if(rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class){
 				allowEdit = false;
 			}else{
-				// check grouped columns in the tableview
-				if(getTableColumn() instanceof JFXTreeTableColumn && ((JFXTreeTableColumn)getTableColumn()).isGrouped())
-					allowEdit = false;
+				// check grouped columns in the tableview				
+				if(getTableColumn() instanceof JFXTreeTableColumn && ((JFXTreeTableColumn)getTableColumn()).isGrouped()){
+					// make sure that the object is a direct child to a group node
+					if(getTreeTableRow().getTreeItem().getParent() != null &&
+					   getTreeTableRow().getTreeItem().getParent().getValue().getClass() == RecursiveTreeObject.class)
+						allowEdit = false;
+				}
 			}
 		}
 		return allowEdit;

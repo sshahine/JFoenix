@@ -21,11 +21,11 @@
 			<JFXTreeTableView fx:id="treeTableView">
 				<columns>
 					<JFXTreeTableColumn fx:id="firstNameColumn"
-						text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						minWidth="133" text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="lastNameColumn" text="Last Name"
-						prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="ageColumn" text="Age"
-						prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 				</columns>
 			</JFXTreeTableView>
 
@@ -37,11 +37,11 @@
 			<JFXTreeTableView fx:id="editableTreeTableView">
 				<columns>
 					<JFXTreeTableColumn fx:id="firstNameEditableColumn"
-						text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="First Name" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="lastNameEditableColumn"
-						text="Last Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="Last Name" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="ageEditableColumn"
-						text="Age" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="Age" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 				</columns>
 			</JFXTreeTableView>
 		</children>
