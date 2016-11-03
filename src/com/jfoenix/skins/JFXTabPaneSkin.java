@@ -63,6 +63,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -70,6 +72,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
+import javafx.scene.control.Button;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 /**
  * @author Shadi Shaheen
  * only support the default side of the tab pane (Side.Top)
@@ -90,6 +96,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	private static final int SPACER = 10;
 	private double maxWidth = 0.0d;
 	private double maxHeight = 0.0d;
+	public static  boolean issClosable = false;
 
 	public JFXTabPaneSkin(TabPane tabPane) {
 		super(tabPane, new TabPaneBehavior(tabPane));		
@@ -170,6 +177,12 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		registerChangeListener(tabPane.getSelectionModel().selectedItemProperty(), "SELECTED_TAB");
 		registerChangeListener(tabPane.widthProperty(), "WIDTH");
 		registerChangeListener(tabPane.heightProperty(), "HEIGHT");
+
+	}
+
+		public JFXTabPaneSkin(TabPane tabPane , boolean issClosable) {
+			this(tabPane);
+			this.issClosable=issClosable;
 
 	}
 
@@ -496,7 +509,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		}
 
 		private void addTab(Tab tab, int addToIndex, boolean visible) {
-			TabHeaderContainer tabHeaderSkin = new TabHeaderContainer(tab);
+
+			TabHeaderContainer tabHeaderSkin = new TabHeaderContainer(tab,issClosable);
 			tabHeaderSkin.setVisible(visible);
 			headersRegion.getChildren().add(addToIndex, tabHeaderSkin);
 		}
@@ -693,6 +707,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		private JFXRippler rippler;
 		private boolean systemChange = false;
 		private boolean isClosing = false;
+		private boolean issClosable = true;
+		//private ImageView closeImg;
 
 		private MultiplePropertyChangeListenerHandler listener = new MultiplePropertyChangeListenerHandler(param -> {
 			handlePropertyChanged(param);
@@ -712,11 +728,14 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			tabText.setPadding(new Insets(5, 10, 5, 10));
 			tabText.getStyleClass().setAll("tab-label");
 
+
+			
 			inner = new BorderPane();
 			inner.setCenter(tabText);
 			inner.getStyleClass().add("tab-container");
 
-			rippler = new JFXRippler(inner, RipplerPos.FRONT);
+
+			rippler = new JFXRippler(inner, RipplerPos.BACK);
 			rippler.setRipplerFill(ripplerColor);
 			getChildren().addAll(rippler);
 
@@ -766,6 +785,32 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			pseudoClassStateChanged(SELECTED_PSEUDOCLASS_STATE, tab.isSelected());
 			pseudoClassStateChanged(DISABLED_PSEUDOCLASS_STATE, tab.isDisable());
 		}
+
+
+		public TabHeaderContainer(final Tab tab, boolean closable){
+			this(tab);
+			this.issClosable = closable;
+
+			if(issClosable){
+				Font font = Font.font("Arial",FontWeight.BOLD, 16.0);   
+		        Button closeBtn = new Button("x");
+		        closeBtn.setPrefSize(font.getSize(),font.getSize());
+		        closeBtn.setTextFill(Color.GRAY);
+		        closeBtn.setFont(font);
+		        closeBtn.setBackground(null);
+		        this.tab.setGraphic(closeBtn);
+		        inner.setLeft(closeBtn);
+
+		        closeBtn.setOnAction((e) -> {
+                    removeTab(tab);       
+                    System.out.println("tab removed");
+                });
+
+			}
+
+		}
+
+
 
 		private void handlePropertyChanged(final String p) {
 			if ("SELECTED".equals(p)) {
