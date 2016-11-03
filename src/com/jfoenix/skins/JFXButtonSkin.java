@@ -18,6 +18,14 @@
  */
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXButton.ButtonType;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CachedTransition;
+import com.sun.javafx.scene.control.skin.ButtonSkin;
+import com.sun.javafx.scene.control.skin.LabeledText;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -34,14 +42,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXButton.ButtonType;
-import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CachedTransition;
-import com.sun.javafx.scene.control.skin.ButtonSkin;
-import com.sun.javafx.scene.control.skin.LabeledText;
 
 /**
  * <h1>Material Design Button Skin</h1>
@@ -103,7 +103,7 @@ public class JFXButtonSkin extends ButtonSkin {
 		 */
 		button.setPickOnBounds(false);
 		buttonContainer.setPickOnBounds(false);
-		
+		buttonContainer.shapeProperty().bind(getSkinnable().shapeProperty());
 		buttonContainer.borderProperty().bind(getSkinnable().borderProperty());		
 		buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
 			// reset button background to transparent if its set to java default values

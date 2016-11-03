@@ -44,10 +44,14 @@ import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.event.Event;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -188,7 +192,7 @@ public class JFXRippler extends StackPane {
 		double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
 		double diffMaxX = Math.abs(control.getBoundsInLocal().getMaxX() - control.getLayoutBounds().getMaxX());
 		double diffMaxY = Math.abs(control.getBoundsInLocal().getMaxY() - control.getLayoutBounds().getMaxY());
-		Shape mask;
+		Node mask;		
 		switch(getMaskType()){
 		case RECT:
 			mask = new Rectangle(bounds.getMinX()+diffMinX, bounds.getMinY() + diffMinY, width - 0.1 - 2 * borderWidth, height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
@@ -199,8 +203,15 @@ public class JFXRippler extends StackPane {
 			break;
 		default:
 			mask = new Rectangle(bounds.getMinX()+diffMinX, bounds.getMinY() + diffMinY, width - 0.1 - 2 * borderWidth, height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
-			break;
-		}
+			break;			
+		}		
+		if(control instanceof Shape || (control instanceof Region && ((Region)control).getShape()!=null)){
+			mask = new StackPane();
+			((Region)mask).setShape((control instanceof Shape)? (Shape) control: ((Region)control).getShape());			
+			((Region)mask).setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+			mask.resize(width, height);
+			mask.relocate(bounds.getMinX()+diffMinX, bounds.getMinY() + diffMinY);
+		}		
 		return mask;
 	}
 
@@ -208,9 +219,9 @@ public class JFXRippler extends StackPane {
 	 * compute the ripple raddius
 	 * @return the ripple radius size
 	 */
-	protected double computeRipleRadius() {
-		double width2 = ((Region)control).getLayoutBounds().getWidth() * ((Region)control).getLayoutBounds().getWidth();
-		double height2 = ((Region)control).getLayoutBounds().getHeight() * ((Region)control).getLayoutBounds().getHeight();
+	protected double computeRippleRadius() {
+		double width2 = control.getLayoutBounds().getWidth() * control.getLayoutBounds().getWidth();
+		double height2 = control.getLayoutBounds().getHeight() * control.getLayoutBounds().getHeight();
 		double radius = Math.min(Math.sqrt(width2 + height2), RIPPLE_MAX_RADIUS) * 1.1 + 5;
 		return radius;
 	}
@@ -232,12 +243,9 @@ public class JFXRippler extends StackPane {
 			if(this.position.get() == RipplerPos.FRONT )
 				this.control.fireEvent(event);
 		});
-
 		// if the control got resized the overlay rect must be rest
-		if(this.control instanceof Region){
-			((Region)this.control).widthProperty().addListener((o,oldVal,newVal)-> resetOverLay());
-			((Region)this.control).heightProperty().addListener((o,oldVal,newVal)-> resetOverLay());
-		}
+		control.layoutBoundsProperty().addListener((o,oldVal,newVal)-> resetOverLay());
+		control.boundsInParentProperty().addListener((o,oldVal,newVal)-> resetOverLay());
 	}
 
 	/**
@@ -270,7 +278,7 @@ public class JFXRippler extends StackPane {
 		private OverLayRipple overlayRect;
 		private AtomicBoolean generating = new AtomicBoolean(false);
 		private boolean cacheRipplerClip = false;
-				
+
 		public RippleGenerator() {
 			/* 
 			 * improve in performance, by preventing  
@@ -308,11 +316,11 @@ public class JFXRippler extends StackPane {
 				}
 			}
 		}
-		
+
 		void cacheRippleClip(boolean cached){
 			cacheRipplerClip = cached;
 		}
-		
+
 		public void createOverlay(){
 			if(overlayRect == null){
 				overlayRect = new OverLayRipple();
@@ -363,8 +371,8 @@ public class JFXRippler extends StackPane {
 			CachedAnimation inAnimation = null;
 
 			private Ripple(double centerX, double centerY) {
-				super(centerX, centerY, ripplerRadius.get().doubleValue() == Region.USE_COMPUTED_SIZE ? computeRipleRadius() : ripplerRadius.get().doubleValue() , null);
-				
+				super(centerX, centerY, ripplerRadius.get().doubleValue() == Region.USE_COMPUTED_SIZE ? computeRippleRadius() : ripplerRadius.get().doubleValue() , null);
+
 				KeyValue[] inKeyValues = new KeyValue[isRipplerRecenter()? 4 : 2];
 				outKeyValues = new KeyValue[isRipplerRecenter()? 5 : 3];
 
@@ -376,8 +384,8 @@ public class JFXRippler extends StackPane {
 				outKeyValues[2] = new KeyValue(this.opacityProperty(), 0, rippleInterpolator);
 
 				if(isRipplerRecenter()){
-					double dx = (((Region)control).getWidth()/2 - centerX) / 1.55;
-					double dy = (((Region)control).getHeight()/2 - centerY) / 1.55;		
+					double dx = (control.getLayoutBounds().getWidth()/2 - centerX) / 1.55;
+					double dy = (control.getLayoutBounds().getHeight()/2 - centerY) / 1.55;		
 					inKeyValues[2] = outKeyValues[3] = new KeyValue(translateXProperty(), Math.signum(dx) * Math.min(Math.abs(dx), this.getRadius()/2), rippleInterpolator);
 					inKeyValues[3] = outKeyValues[4] = new KeyValue(translateYProperty(), Math.signum(dy) * Math.min(Math.abs(dy), this.getRadius()/2), rippleInterpolator);
 				}				
@@ -388,7 +396,7 @@ public class JFXRippler extends StackPane {
 						new KeyValue(translateYProperty(),  0, rippleInterpolator),
 						new KeyValue(opacityProperty(), 1, rippleInterpolator)
 						),new KeyFrame(Duration.millis(900), inKeyValues)), this);
-				
+
 				setCache(true);
 				setCacheHint(CacheHint.SPEED);
 				setCacheShape(true);
