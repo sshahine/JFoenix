@@ -138,7 +138,7 @@ public class JFXMasonryPane extends Pane {
 			List<Region> childs = new ArrayList<>();
 			for(int i = 0 ; i < getChildren().size(); i++)
 				if(getChildren().get(i) instanceof Region) childs.add((Region) getChildren().get(i));
-			newBoxes = layoutMode.get().impl().fillGrid(matrix, childs, getCellWidth() , getCellHeight() , row, col, getHSpacing(), getVSpacing()); 
+			newBoxes = layoutMode.get().fillGrid(matrix, childs, getCellWidth() , getCellHeight() , row, col, getHSpacing(), getVSpacing()); 
 
 			if(newBoxes == null){
 				performingLayout = false;
@@ -436,21 +436,11 @@ public class JFXMasonryPane extends Pane {
 	 *                                                                         *
 	 **************************************************************************/	
 
-	public static enum LayoutMode {
-		MASONRY {
-			Layout layout = new MasonryLayout();
-			Layout impl() { return layout; }
-		},
-		BIN_PACKING {
-			Layout layout = new BinPackingLayout();
-			Layout impl() { return layout; }
-		};
-		Layout impl() { return new MasonryLayout(); }
-	}
-
-
-	protected interface Layout {
-		List<BoundingBox> fillGrid(int[][] matrix, List<Region> children,  double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY);
+	public static abstract class LayoutMode {
+		public static final MasonryLayout MASONRY = new MasonryLayout();
+		public static final BinPackingLayout BIN_PACKING = new BinPackingLayout();
+		
+		protected abstract List<BoundingBox> fillGrid(int[][] matrix, List<Region> children,  double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY);
 
 		/**
 		 * returns the available box at the cell (x,y) of the grid that fits the block if existed
@@ -459,7 +449,7 @@ public class JFXMasonryPane extends Pane {
 		 * @param block
 		 * @return
 		 */
-		default BoundingBox getFreeArea(int[][] matrix, int x, int y, Region block, double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY){
+		protected BoundingBox getFreeArea(int[][] matrix, int x, int y, Region block, double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY){
 			double blockHeight = getBLockHeight(block);
 			double blockWidth = getBLockWidth(block);
 			
@@ -490,19 +480,19 @@ public class JFXMasonryPane extends Pane {
 			return new BoundingBox(x, y, minCol - y, minRow - x );    	
 		}
 
-		default double getBLockWidth(Region region){
+		protected double getBLockWidth(Region region){
 			if(region.getMinWidth()!= -1) return region.getMinWidth();
 			if(region.getPrefWidth() != USE_COMPUTED_SIZE) return region.getPrefWidth();
 			else return region.prefWidth(-1);
 		}
 
-		default double getBLockHeight(Region region){
+		protected double getBLockHeight(Region region){
 			if(region.getMinHeight()!= -1) return region.getMinHeight();
 			if(region.getPrefHeight() != USE_COMPUTED_SIZE) return region.getPrefHeight();
 			else return region.prefHeight(getBLockWidth(region));
 		}
 
-		default boolean validWidth(BoundingBox box , Region region, double cellW, double gutterX, double gutterY){
+		protected boolean validWidth(BoundingBox box , Region region, double cellW, double gutterX, double gutterY){
 			boolean valid = false;
 			if(region.getMinWidth() != -1 && box.getWidth()*cellW + (box.getWidth()-1)*2*gutterX < region.getMinWidth()) return false;
 
@@ -513,7 +503,7 @@ public class JFXMasonryPane extends Pane {
 			return valid;		
 		}
 
-		default boolean validHeight(BoundingBox box , Region region, double cellH, double gutterX, double gutterY){
+		protected boolean validHeight(BoundingBox box , Region region, double cellH, double gutterX, double gutterY){
 			boolean valid = false;
 			if(region.getMinHeight() != -1 && box.getHeight()*cellH + (box.getHeight()-1)*2*gutterY < region.getMinHeight()) return false;
 
@@ -524,7 +514,7 @@ public class JFXMasonryPane extends Pane {
 			return valid;		
 		}
 
-		default int[][] fillMatrix(int[][] matrix, int id, double row, double col, double width, double height){
+		protected int[][] fillMatrix(int[][] matrix, int id, double row, double col, double width, double height){
 			//			int maxCol = (int) col;
 			//			int maxRow = (int) row;
 			for(int x = (int)row; x < row + height;x++){
@@ -545,7 +535,7 @@ public class JFXMasonryPane extends Pane {
 	 *                                                                         *
 	 **************************************************************************/
 
-	private static class MasonryLayout implements Layout {
+	private static class MasonryLayout extends LayoutMode {
 		@Override
 		public List<BoundingBox> fillGrid(int[][] matrix, List<Region> children,  double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY) {
 			int row = matrix.length;
@@ -595,7 +585,7 @@ public class JFXMasonryPane extends Pane {
 	 * Bin Packing Layout                                                      *
 	 *                                                                         *
 	 **************************************************************************/
-	private static class BinPackingLayout implements Layout {
+	private static class BinPackingLayout extends LayoutMode {
 		@Override
 		public List<BoundingBox> fillGrid(int[][] matrix, List<Region> children, double cellWidth, double cellHeight, int limitRow, int limitCol, double gutterX, double gutterY) {
 			int row = matrix.length;
