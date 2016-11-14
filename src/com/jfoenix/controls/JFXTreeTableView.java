@@ -376,14 +376,24 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	private IntegerProperty currentItemsCount = new SimpleIntegerProperty(0);
 	private Map<Object, Map<Object, ?>> groups;
 
+	/**
+	 * @return the initial tree items count ( add / remove items should be handled manually for now )
+	 */
 	public final IntegerProperty currentItemsCountProperty() {
 		return this.currentItemsCount;
 	}
 
+	/**
+	 * @return the initial tree items count ( add / remove items should be handled manually for now )
+	 */
 	public final int getCurrentItemsCount() {
 		return this.currentItemsCountProperty().get();
 	}
 
+	/**
+	 * sets the current items count
+	 * @param currentItemsCount
+	 */
 	public final void setCurrentItemsCount(final int currentItemsCount) {
 		this.currentItemsCountProperty().set(currentItemsCount);
 	}

@@ -15,7 +15,7 @@
 		<children>
 			<HBox alignment="CENTER">
 				<Label styleClass="title-label">Read Only Tree Table View</Label>
-				<Label styleClass="title-label" fx:id="treeTableViewCount"></Label>
+				<Label styleClass="title-label" fx:id="treeTableViewCount" minWidth="80"></Label>
 				<JFXButton fx:id="treeTableViewAdd" buttonType="FLAT" text="+" />
 				<JFXButton fx:id="treeTableViewRemove" buttonType="FLAT" text="-" />
 				<StackPane HBox.hgrow="ALWAYS"><StackPane StackPane.alignment="CENTER_RIGHT" maxWidth="200"><JFXTextField fx:id="searchField" promptText="Search..." ></JFXTextField></StackPane></StackPane>
@@ -25,9 +25,9 @@
 					<JFXTreeTableColumn fx:id="firstNameColumn"
 						minWidth="133" text="First Name" prefWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="lastNameColumn" text="Last Name"
-						minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						minWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="ageColumn" text="Age"
-						minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						minWidth="133" resizable="false"></JFXTreeTableColumn>
 				</columns>
 			</JFXTreeTableView>
 
@@ -39,11 +39,11 @@
 			<JFXTreeTableView fx:id="editableTreeTableView">
 				<columns>
 					<JFXTreeTableColumn fx:id="firstNameEditableColumn"
-						text="First Name" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="First Name" minWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="lastNameEditableColumn"
-						text="Last Name" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="Last Name" minWidth="133" resizable="false"></JFXTreeTableColumn>
 					<JFXTreeTableColumn fx:id="ageEditableColumn"
-						text="Age" minWidth="133" prefWidth="133" resizable="false"></JFXTreeTableColumn>
+						text="Age" minWidth="133" resizable="false"></JFXTreeTableColumn>
 				</columns>
 			</JFXTreeTableView>
 		</children>

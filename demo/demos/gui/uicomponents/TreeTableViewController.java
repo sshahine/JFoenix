@@ -70,19 +70,20 @@ public class TreeTableViewController {
 			else return ageColumn.getComputedValue(param);
 		});		
 		
-		Person root = new Person(null,null,-1);
-		for (int i = 0; i < 100; i++) root.getChildren().add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100))); 
-		treeTableView.setRoot(new RecursiveTreeItem<Person>(root, RecursiveTreeObject::getChildren));
+		ObservableList<Person> people = FXCollections.observableArrayList();
+		for (int i = 0; i < 100; i++) people.add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100))); 
+		treeTableView.setRoot(new RecursiveTreeItem<Person>(people, RecursiveTreeObject::getChildren));
+		
 		treeTableView.setShowRoot(false);
 		treeTableViewCount.textProperty().bind(Bindings.createStringBinding(()-> "( " + treeTableView.getCurrentItemsCount()+" )", treeTableView.currentItemsCountProperty()));
 		treeTableViewAdd.disableProperty().bind(Bindings.notEqual(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
 		treeTableViewRemove.disableProperty().bind(Bindings.equal(-1, treeTableView.getSelectionModel().selectedIndexProperty()));	
 		treeTableViewAdd.setOnMouseClicked((e) -> {
-			root.getChildren().add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100)));
+			people.add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100)));
 			treeTableView.currentItemsCountProperty().set(treeTableView.currentItemsCountProperty().get()+1);
 		});
 		treeTableViewRemove.setOnMouseClicked((e) -> {
-			root.getChildren().remove(treeTableView.getSelectionModel().selectedItemProperty().get().getValue());
+			people.remove(treeTableView.getSelectionModel().selectedItemProperty().get().getValue());
 			treeTableView.currentItemsCountProperty().set(treeTableView.currentItemsCountProperty().get()-1);
 		});
 		searchField.textProperty().addListener((o,oldVal,newVal)->{

@@ -186,8 +186,8 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 					change.getRemoved().forEach(t -> {
 						for(int i = 0 ; i < RecursiveTreeItem.this.getChildren().size(); i++){
 							if(this.getChildren().get(i).getValue().equals(t)){
-								this.getChildren().remove(i);
-								originalItems.remove(i);
+								// remove the items from the current/original items list
+								originalItems.remove(this.getChildren().remove(i));
 								i--;
 							}							
 						}
