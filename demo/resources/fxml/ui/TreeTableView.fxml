@@ -13,9 +13,11 @@
 	xmlns="http://javafx.com/javafx/2.2">
 	<VBox maxWidth="600" maxHeight="600" spacing="10">
 		<children>
-			<HBox>
+			<HBox alignment="CENTER">
 				<Label styleClass="title-label">Read Only Tree Table View</Label>
 				<Label styleClass="title-label" fx:id="treeTableViewCount"></Label>
+				<JFXButton fx:id="treeTableViewAdd" buttonType="FLAT" text="+" />
+				<JFXButton fx:id="treeTableViewRemove" buttonType="FLAT" text="-" />
 				<StackPane HBox.hgrow="ALWAYS"><StackPane StackPane.alignment="CENTER_RIGHT" maxWidth="200"><JFXTextField fx:id="searchField" promptText="Search..." ></JFXTextField></StackPane></StackPane>
 			</HBox>
 			<JFXTreeTableView fx:id="treeTableView">
@@ -29,7 +31,7 @@
 				</columns>
 			</JFXTreeTableView>
 
-			<HBox>
+			<HBox alignment="CENTER">
 				<Label styleClass="title-label">Editable Tree Table View</Label>
 				<Label styleClass="title-label" fx:id="editableTreeTableViewCount"></Label>
 				<StackPane HBox.hgrow="ALWAYS"><StackPane StackPane.alignment="CENTER_RIGHT" maxWidth="200"><JFXTextField fx:id="searchField2" promptText="Search..." ></JFXTextField></StackPane></StackPane>

@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -40,6 +41,8 @@ public class TreeTableViewController {
 	@FXML JFXTreeTableColumn<Person, String> lastNameEditableColumn;
 	@FXML JFXTreeTableColumn<Person, Integer> ageEditableColumn;
 	@FXML Label treeTableViewCount;
+	@FXML JFXButton treeTableViewAdd;
+	@FXML JFXButton treeTableViewRemove;
 	@FXML Label editableTreeTableViewCount;
 	@FXML JFXTextField searchField;
 	@FXML JFXTextField searchField2;
@@ -67,11 +70,21 @@ public class TreeTableViewController {
 			else return ageColumn.getComputedValue(param);
 		});		
 		
-		ObservableList<Person> people = FXCollections.observableArrayList();
-		for (int i = 0; i < 100; i++) people.add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100))); 
-		treeTableView.setRoot(new RecursiveTreeItem<Person>(people, RecursiveTreeObject::getChildren));
+		Person root = new Person(null,null,-1);
+		for (int i = 0; i < 100; i++) root.getChildren().add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100))); 
+		treeTableView.setRoot(new RecursiveTreeItem<Person>(root, RecursiveTreeObject::getChildren));
 		treeTableView.setShowRoot(false);
 		treeTableViewCount.textProperty().bind(Bindings.createStringBinding(()-> "( " + treeTableView.getCurrentItemsCount()+" )", treeTableView.currentItemsCountProperty()));
+		treeTableViewAdd.disableProperty().bind(Bindings.notEqual(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
+		treeTableViewRemove.disableProperty().bind(Bindings.equal(-1, treeTableView.getSelectionModel().selectedIndexProperty()));	
+		treeTableViewAdd.setOnMouseClicked((e) -> {
+			root.getChildren().add(new Person(names[random.nextInt(names.length)], names[random.nextInt(names.length)], random.nextInt(100)));
+			treeTableView.currentItemsCountProperty().set(treeTableView.currentItemsCountProperty().get()+1);
+		});
+		treeTableViewRemove.setOnMouseClicked((e) -> {
+			root.getChildren().remove(treeTableView.getSelectionModel().selectedItemProperty().get().getValue());
+			treeTableView.currentItemsCountProperty().set(treeTableView.currentItemsCountProperty().get()-1);
+		});
 		searchField.textProperty().addListener((o,oldVal,newVal)->{
 			treeTableView.setPredicate(person -> person.getValue().firstName.get().contains(newVal) || person.getValue().lastName.get().contains(newVal) || (person.getValue().age.get()+"").contains(newVal));
 		});
