@@ -110,6 +110,7 @@ public class JFXTimePickerContent extends VBox {
 		this.datePicker = (JFXDatePicker) datePicker;
 		LocalTime time = this.datePicker.getTime() == null? LocalTime.now() : this.datePicker.getTime();
 			
+		this.datePicker.timeProperty().addListener((o,oldVal,newVal)-> goToTime(newVal));
 		getStyleClass().add("date-picker-popup");
 
 		// create the header pane
@@ -149,6 +150,10 @@ public class JFXTimePickerContent extends VBox {
 		});
 	}
 
+	void init(){
+		calendarPlaceHolder.setOpacity(1);
+		selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+	}
 
 	/*
 	 * header panel represents the selected Date 
@@ -412,11 +417,17 @@ public class JFXTimePickerContent extends VBox {
 		datePicker.setTime(converter.fromString(selectedHourLabel.getText()+":"+selectedMinLabel.getText()+" "+period.get()));
 	}
 
-	void init(){
-		calendarPlaceHolder.setOpacity(1);
-		selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
-	}
 
+	private void goToTime(LocalTime time) {
+		int hour = time.getHour();
+		selectedHourLabel.setText((hour%12==0?12:hour%12) + "");	
+		selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
+		period.set(hour < 12? "AM" : "PM");
+		minsPointerRotate.setAngle(180 + (time.getMinute()+45)%60 * Math.toDegrees(2 * Math.PI/60));
+		hoursPointerRotate.setAngle(180+ Math.toDegrees(2 * (hour-3) * Math.PI / 12));
+	}
+	
+	
 	void clearFocus() {
 		LocalDate focusDate = datePicker.getValue();
 		if (focusDate == null) focusDate = LocalDate.now();
