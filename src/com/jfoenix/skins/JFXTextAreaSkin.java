@@ -418,6 +418,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 				promptText.visibleProperty().set(true);
 				getSkinnable().textProperty().addListener(textPromptListener);
 				getSkinnable().focusedProperty().addListener(focusPromptTextListener);
+				// override java transparent color for prompt text if the control was focused
+				if(promptTextFill.get().equals(Color.TRANSPARENT) && getSkinnable().isFocused()) promptTextFill.set(Color.valueOf("#b2b2b2"));
+				if(getSkinnable().isFocused()) floatLabel.set(true);
 			}
 
 			mainPane.getChildren().remove(line);

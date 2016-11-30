@@ -374,10 +374,13 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 										promptText.visibleProperty().unbind();
 										promptText.visibleProperty().set(true);
 										
+										// add change listeners to handle the floating label
 										getSkinnable().textProperty().addListener(textPromptListener);
-										getSkinnable().focusedProperty().addListener(focusPromptTextListener);					
-										super.layoutChildren(x, y, w, h);
-										//if(triggerFloatLabel)floatLabel.set(true);
+										getSkinnable().focusedProperty().addListener(focusPromptTextListener);
+										// init the floating label state
+										// override java transparent color for prompt text if the control was focused
+										if(promptTextFill.get().equals(Color.TRANSPARENT) && getSkinnable().isFocused()) promptTextFill.set(Color.valueOf("#b2b2b2"));
+										if(getSkinnable().isFocused()) floatLabel.set(true);
 			}
 
 			textPane.getChildren().remove(line);
