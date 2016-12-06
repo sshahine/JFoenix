@@ -259,7 +259,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			focusedLine.strokeProperty().addListener((o,oldVal,newVal)->{
 				if(((JFXTextField)getSkinnable()).isLabelFloat())
 					promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-							new KeyFrame(Duration.millis(350),new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH))))
+							new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH))))
 					{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
 					protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};	
 			});
@@ -322,7 +322,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 							
 			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-					new KeyFrame(Duration.millis(350),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
 			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
 			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
 
