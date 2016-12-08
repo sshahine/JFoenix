@@ -104,7 +104,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
 	private Timeline hideErrorAnimation;
 	private ParallelTransition transition;
-	private StackPane promptContainer;
+	private Pane promptContainer;
 
 	private Text promptText;
 	private Group promptTextGroup;
@@ -142,7 +142,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 		errorContainer.setVisible(false);		
 		errorContainer.setOpacity(0);
 
-		this.getChildren().setAll(mainPane, new Pane(promptContainer), errorContainer);
+		this.getChildren().setAll(mainPane, promptContainer, errorContainer);
 
 		scrollPane.prefWidthProperty().bind(mainPane.widthProperty());
 		scrollPane.prefHeightProperty().bind(mainPane.heightProperty());
@@ -375,18 +375,19 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 				}
 			}
 
-			promptTextGroup = new Group(promptText);			
+			promptTextGroup = new Group(promptText);
 			promptContainer.getChildren().add(promptTextGroup);
-			promptContainer.setAlignment(Pos.CENTER_LEFT);
-
+			StackPane.setAlignment(promptTextGroup, Pos.TOP_LEFT);
+			// MUST KEEP: having transparent border fix the blurring effect on focus
+			promptContainer.setStyle("-fx-border-color:TRANSPARENT");
+			
 			// create prompt animations
 			promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
 					new KeyFrame(Duration.millis(1300),
 							new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
 							//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-
+							new KeyValue(promptText.scaleXProperty(), 0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 			promptTextColorTransition = new CachedTransition(promptContainer,  new Timeline(
 					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
 			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
