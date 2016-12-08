@@ -95,7 +95,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	private CachedTransition promptTextColorTransition;
 	private Paint oldPromptTextFill;
 
-	private BooleanBinding usePromptText = Bindings.createBooleanBinding(()-> userPromptText(), getSkinnable().textProperty(), getSkinnable().promptTextProperty());
+	private BooleanBinding usePromptText = Bindings.createBooleanBinding(()-> usePromptText(), getSkinnable().textProperty(), getSkinnable().promptTextProperty());
 
 	public JFXTextFieldSkin(JFXTextField field) {
 		super(field);
@@ -154,8 +154,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 
 		field.labelFloatProperty().addListener((o,oldVal,newVal)->{
 			if(newVal){
-				promptText.visibleProperty().unbind();
-				promptText.visibleProperty().set(true);
+				Platform.runLater(()->createFloatingLabel());
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
 			}
@@ -175,11 +174,20 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			}
 		});
 
+		// handle animation on focus gained/lost event
 		field.focusedProperty().addListener((o,oldVal,newVal) -> {
 			if (newVal) focus();
 			else unfocus();	
 		});
 
+		// handle text changing at runtime
+		field.textProperty().addListener((o,oldVal,newVal)->{
+			if(!getSkinnable().isFocused() && ((JFXTextField)getSkinnable()).isLabelFloat()){
+				if(newVal == null || newVal.isEmpty()) animateFLoatingLabel(false);
+				else animateFLoatingLabel(true);
+			}	
+		});
+		
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
 			if(!field.maxWidthProperty().isBound()) field.setMaxWidth(newVal.doubleValue());
 			if(!field.minWidthProperty().isBound()) field.setMinWidth(newVal.doubleValue());
@@ -264,8 +272,9 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 					protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};	
 			});
 			
-			createFloatingLabel(x, y, w, h);
-
+			createFloatingLabel();
+			super.layoutChildren(x, y, w, h);
+			
 			textPane.getChildren().remove(line);
 			textPane.getChildren().add(line);
 
@@ -285,7 +294,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	}
 
 
-	private void createFloatingLabel(final double x, final double y, final double w, final double h) {
+	private void createFloatingLabel() {
 		if(((JFXTextField)getSkinnable()).isLabelFloat()){
 			// get the prompt text node or create it
 			boolean triggerFloatLabel = false;
@@ -320,7 +329,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-							
+
 			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
 					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
 			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
@@ -333,7 +342,12 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
 					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-									
+			promptTextDownTransition.setOnFinished((finish)->{
+				promptText.setTranslateX(0);
+				promptText.setTranslateY(0);
+				promptText.setScaleX(1);
+				promptText.setScaleY(1);
+			});
 			promptContainer.getChildren().add(promptText);	
 
 			if(triggerFloatLabel){
@@ -346,7 +360,6 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			
 			promptText.visibleProperty().unbind();
 			promptText.visibleProperty().set(true);
-			super.layoutChildren(x, y, w, h);				
 		}
 	}
 
@@ -434,11 +447,34 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		focusedLine.setOpacity(0);
 		if(((JFXTextField)getSkinnable()).isLabelFloat()){
 			promptTextFill.set(oldPromptTextFill);
-			if(userPromptText()) promptTextDownTransition.play();
+			if(usePromptText()) promptTextDownTransition.play();
 		}
 	}
 
-	private boolean userPromptText() {
+	/**
+	 * this method is called when the text property is changed when the
+	 * field is not focused (changed in code)
+	 * @param up
+	 */
+	private void animateFLoatingLabel(boolean up){
+		if(promptText == null){
+			Platform.runLater(()-> animateFLoatingLabel(up));
+		}else{
+			if(transition!=null){
+				transition.stop();
+				transition.getChildren().remove(promptTextUpTransition);
+			}
+			if(up && promptText.getTranslateY() == 0){
+				promptTextDownTransition.stop();
+				promptTextUpTransition.play();
+			}else if(!up){
+				promptTextUpTransition.stop();
+				promptTextDownTransition.play();
+			}	
+		}
+	}
+	
+	private boolean usePromptText() {
 		String txt = getSkinnable().getText();
 		String promptTxt = getSkinnable().getPromptText();
 		boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
@@ -484,6 +520,4 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		errorContainer.setVisible(false);
 		errorShowen = false;
 	}
-
-
 }
