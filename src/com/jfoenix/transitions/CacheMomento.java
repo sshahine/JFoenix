@@ -69,5 +69,6 @@ public class CacheMomento{
 			((Region)node).setCacheShape(cacheShape);
 			((Region)node).setSnapToPixel(snapToPixel);
 		}
+		history.remove(node);
 	}
 }
