@@ -18,6 +18,12 @@
  */
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXRippler.RipplerPos;
+import com.jfoenix.controls.JFXToggleNode;
+import com.jfoenix.transitions.JFXFillTransition;
+import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.geometry.Insets;
@@ -28,12 +34,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.controls.JFXRippler.RipplerPos;
-import com.jfoenix.controls.JFXToggleNode;
-import com.jfoenix.transitions.JFXFillTransition;
-import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
 /**
  * @author Shadi Shaheen
@@ -58,7 +58,7 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 		toggleNodeContainer.getChildren().add(getSkinnable().getGraphic());
 		toggleNodeContainer.prefWidthProperty().bind(getSkinnable().widthProperty());
 		toggleNodeContainer.prefHeightProperty().bind(getSkinnable().heightProperty());
-		
+
 		rippler = new JFXRippler(toggleNodeContainer,RipplerPos.FRONT){
 			@Override protected Node getMask(){
 				StackPane mask = new StackPane(); 
@@ -78,10 +78,7 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 			}
 		};			
 		main.getChildren().add(rippler);
-		
-		getSkinnable().setPickOnBounds(false);
-		main.setPickOnBounds(false);
-		
+
 		main.borderProperty().bind(getSkinnable().borderProperty());		
 		ObjectBinding<Background> backgroundBinding = Bindings.createObjectBinding(()->{
 			CornerRadii radii = toggleNode.getBackground()==null ? null : toggleNode.getBackground().getFills().get(0).getRadii();
@@ -89,25 +86,29 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 			return new Background(new BackgroundFill(toggleNode.isSelected()? toggleNode.getSelectedColor() : toggleNode.getUnSelectedColor(), radii, insets));			
 		}, toggleNode.unSelectedColorProperty(), toggleNode.backgroundProperty());
 		main.backgroundProperty().bind(backgroundBinding);
-				
-		
+
 		// listener to change background color 
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal)->{
-			if(ft==null){
-//				unSelectedColor = toggleNode.getBackground()==null? Color.TRANSPARENT : (Color) toggleNode.getBackground().getFills().get(0).getFill();
-//				if(selectedColor==null) selectedColor = new Color(((Color)rippler.getRipplerFill()).getRed(), ((Color)rippler.getRipplerFill()).getGreen(), ((Color)rippler.getRipplerFill()).getBlue(),0.2);
-				ft = new JFXFillTransition(Duration.millis(320), main);
-				ft.toValueProperty().bind(toggleNode.selectedColorProperty());
-				ft.fromValueProperty().bind(toggleNode.unSelectedColorProperty());
-			}
 			main.backgroundProperty().unbind();
-			ft.stop();
-			ft.setRate(newVal?1:-1);
-			ft.play();
-			
+			// show animation only on user action
+			if(!toggleNode.isDisableAnimation()){
+				if(ft==null){
+					ft = new JFXFillTransition(Duration.millis(320), main);
+					ft.toValueProperty().bind(toggleNode.selectedColorProperty());
+					ft.fromValueProperty().bind(toggleNode.unSelectedColorProperty());
+				}
+				ft.stop();
+				ft.setRate(newVal?1:-1);
+				ft.play();
+			}else{
+				// disable animation if the selected property changed from code
+				CornerRadii radii = getSkinnable().getBackground()==null ? CornerRadii.EMPTY : getSkinnable().getBackground().getFills().get(0).getRadii();
+				Insets insets = getSkinnable().getBackground()==null ? Insets.EMPTY : getSkinnable().getBackground().getFills().get(0).getInsets();
+				main.setBackground(new Background(new BackgroundFill(getSkinnable().isSelected()? ((JFXToggleNode)getSkinnable()).getSelectedColor() : ((JFXToggleNode)getSkinnable()).getUnSelectedColor(), radii, insets)));	
+			}
 		});
 	}
-	
+
 	@Override
 	protected void updateChildren() {
 		super.updateChildren();
@@ -119,13 +120,10 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {			
 		if(invalid){
-//			getSkinnable().layoutBoundsProperty().addListener((o,oldVal,newVal)-> main.resize(newVal.getWidth(), newVal.getHeight()));
-//			main.resize(getSkinnable().layoutBoundsProperty().get().getWidth(), getSkinnable().layoutBoundsProperty().get().getHeight());
-			
 			invalid = false;
 		}
 		double shift = 1;		
 		main.resizeRelocate(getSkinnable().getLayoutBounds().getMinX()-shift, getSkinnable().getLayoutBounds().getMinY()-shift, getSkinnable().getWidth()+(2*shift), getSkinnable().getHeight()+(2*shift));
 	}
-	
+
 }

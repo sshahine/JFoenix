@@ -24,8 +24,10 @@ import java.util.List;
 
 import javafx.beans.DefaultProperty;
 import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
@@ -34,6 +36,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 
 import com.jfoenix.skins.JFXToggleNodeSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.ColorConverter;
 
 /**
@@ -113,6 +116,20 @@ public class JFXToggleNode extends ToggleButton {
 	public final void setUnSelectedColor(final Color unSelectedColor) {
 		this.unSelectedColorProperty().set(unSelectedColor);
 	}
+	
+	/**
+	 * disable animation on button action
+	 */
+	private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION, JFXToggleNode.this, "disableAnimation", false);
+	public final StyleableBooleanProperty disableAnimationProperty() {
+		return this.disableAnimation;
+	}
+	public final Boolean isDisableAnimation() {
+		return disableAnimation == null ? false : this.disableAnimationProperty().get();
+	}
+	public final void setDisableAnimation(final Boolean disabled) {
+		this.disableAnimationProperty().set(disabled);
+	}
 
 
 	private static class StyleableProperties {
@@ -141,6 +158,19 @@ public class JFXToggleNode extends ToggleButton {
 				return control.unSelectedColorProperty();
 			}
 		};
+		
+		private static final CssMetaData< JFXToggleNode, Boolean> DISABLE_ANIMATION =
+				new CssMetaData< JFXToggleNode, Boolean>("-fx-disable-animation",
+						BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXToggleNode control) {
+				return control.disableAnimation == null || !control.disableAnimation.isBound();
+			}
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXToggleNode control) {
+				return control.disableAnimationProperty();
+			}
+		};
 
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
@@ -148,7 +178,8 @@ public class JFXToggleNode extends ToggleButton {
 					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
 			Collections.addAll(styleables,
 					SELECTED_COLOR,
-					UNSELECTED_COLOR
+					UNSELECTED_COLOR,
+					DISABLE_ANIMATION
 					);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
