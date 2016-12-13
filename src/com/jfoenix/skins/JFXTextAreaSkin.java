@@ -20,6 +20,7 @@ package com.jfoenix.skins;
 
 import java.lang.reflect.Field;
 
+import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -187,7 +188,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 		textArea.labelFloatProperty().addListener((o,oldVal,newVal)->{
 			if(newVal){
-				Platform.runLater(()->createFloatingLabel());
+				JFXUtilities.runInFX(()->createFloatingLabel());
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
 			}
@@ -259,6 +260,13 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 		errorContainer.resizeRelocate(x, y, w, 20);		
 		promptContainer.relocate(x+2, y);
 
+		// change control properties if and only if animations are stopped 
+		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
+			if(getSkinnable().isFocused()){
+				promptTextFill.set(((JFXTextArea)getSkinnable()).getFocusColor());
+			}
+		}
+		
 		if(invalid){
 			invalid = false;
 			// set the default background of text area viewport to white
@@ -369,43 +377,44 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 						e.printStackTrace();
 					}
 				}
-	
 				promptTextGroup = new Group(promptText);
 				promptContainer.getChildren().add(promptTextGroup);
 				StackPane.setAlignment(promptTextGroup, Pos.TOP_LEFT);
 				// MUST KEEP: having transparent border fix the blurring effect on focus
 				promptContainer.setStyle("-fx-border-color:TRANSPARENT");
 				
-				// create prompt animations
-				promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
-						new KeyFrame(Duration.millis(1300),
-								new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
-								//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleXProperty(), 0.85 , Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleYProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-				promptTextColorTransition = new CachedTransition(promptContainer,  new Timeline(
-						new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};								
-	
-				promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
-						new KeyFrame(Duration.millis(1300), 
-								new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
-								//										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-						)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-				promptTextDownTransition.setOnFinished((finish)->{
-					promptContainer.setTranslateY(0);
-					promptText.setScaleX(1);
-					promptText.setScaleY(1);
-				});
 				if(triggerFloatLabel){
 					promptContainer.setTranslateY(-promptText.getLayoutBounds().getHeight()-5);
 					promptText.setScaleX(0.85);
 					promptText.setScaleY(0.85);								
 				}
 			}
+				
+			// create prompt animations
+			promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
+					new KeyFrame(Duration.millis(1300),
+							new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+							//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(), 0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+			promptTextColorTransition = new CachedTransition(promptContainer,  new Timeline(
+					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};								
+
+			promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
+					new KeyFrame(Duration.millis(1300), 
+							new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
+							//										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+			promptTextDownTransition.setOnFinished((finish)->{
+				promptContainer.setTranslateY(0);
+				promptText.setScaleX(1);
+				promptText.setScaleY(1);
+			});
+			
 			promptText.visibleProperty().unbind();
 			promptText.visibleProperty().set(true);
 		}

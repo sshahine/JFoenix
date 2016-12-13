@@ -20,6 +20,7 @@ package com.jfoenix.android.skins;
 
 import java.lang.reflect.Field;
 
+import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.skins.JFXPasswordFieldSkin;
 import com.jfoenix.transitions.CachedTransition;
@@ -161,7 +162,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
 		field.labelFloatProperty().addListener((o,oldVal,newVal)->{
 			if(newVal){
-				Platform.runLater(()->createFloatingLabel());
+				JFXUtilities.runInFX(()->createFloatingLabel());
 			}else{
 				promptText.visibleProperty().bind(usePromptText);
 			}
@@ -224,6 +225,13 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
 
+		// change control properties if and only if animations are stopped 
+		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
+			if(getSkinnable().isFocused()){
+				promptTextFill.set(((JFXPasswordField)getSkinnable()).getFocusColor());
+			}
+		}
+				
 		if(invalid){	
 			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
@@ -276,7 +284,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 					promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
 							new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH))))
 				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};	
+				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};
 			});
 
 			createFloatingLabel();
@@ -330,34 +338,8 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 						e.printStackTrace();
 					}
 				}
-	
-				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
-						new KeyFrame(Duration.millis(1300),
-								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
-								new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-				
-				promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-						new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
-	
-				promptTextDownTransition = new CachedTransition(textPane, new Timeline(
-						new KeyFrame(Duration.millis(1300), 
-								new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-								new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-						)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-				promptTextDownTransition.setOnFinished((finish)->{
-					promptText.setTranslateX(0);
-					promptText.setTranslateY(0);
-					promptText.setScaleX(1);
-					promptText.setScaleY(1);
-				});
 				promptContainer.getChildren().add(promptText);	
-	
+				
 				if(triggerFloatLabel){
 					promptText.setTranslateY(-textPane.getHeight());
 					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
@@ -366,6 +348,31 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 					promptText.setScaleY(0.85);								
 				}
 			}
+			promptTextUpTransition = new CachedTransition(textPane, new Timeline(
+					new KeyFrame(Duration.millis(1300),
+							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+			
+			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
+					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
+
+			promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+					new KeyFrame(Duration.millis(1300), 
+							new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+			promptTextDownTransition.setOnFinished((finish)->{
+				promptText.setTranslateX(0);
+				promptText.setTranslateY(0);
+				promptText.setScaleX(1);
+				promptText.setScaleY(1);
+			});
 			promptText.visibleProperty().unbind();
 			promptText.visibleProperty().set(true);
 		}
