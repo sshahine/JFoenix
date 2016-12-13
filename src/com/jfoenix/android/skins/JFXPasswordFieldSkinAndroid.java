@@ -303,68 +303,69 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
 	private void createFloatingLabel() {
 		if(((JFXPasswordField)getSkinnable()).isLabelFloat()){
-			// get the prompt text node or create it
-			boolean triggerFloatLabel = false;
-			if(textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
-			else{
-				Field field;
-				try {
-					field = TextFieldSkin.class.getDeclaredField("promptNode");
-					field.setAccessible(true);
-					createPromptNode();
-					field.set(this, promptText);
-					// position the prompt node in its position
-					triggerFloatLabel = true;
-				} catch (NoSuchFieldException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if(promptText == null){
+				// get the prompt text node or create it
+				boolean triggerFloatLabel = false;
+				if(textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
+				else{
+					Field field;
+					try {
+						field = TextFieldSkin.class.getDeclaredField("promptNode");
+						field.setAccessible(true);
+						createPromptNode();
+						field.set(this, promptText);
+						// position the prompt node in its position
+						triggerFloatLabel = true;
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+	
+				promptTextUpTransition = new CachedTransition(textPane, new Timeline(
+						new KeyFrame(Duration.millis(1300),
+								new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
+								new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+				
+				promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
+						new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
+	
+				promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+						new KeyFrame(Duration.millis(1300), 
+								new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+						)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+				promptTextDownTransition.setOnFinished((finish)->{
+					promptText.setTranslateX(0);
+					promptText.setTranslateY(0);
+					promptText.setScaleX(1);
+					promptText.setScaleY(1);
+				});
+				promptContainer.getChildren().add(promptText);	
+	
+				if(triggerFloatLabel){
+					promptText.setTranslateY(-textPane.getHeight());
+					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
+					promptText.setLayoutY(0);
+					promptText.setScaleX(0.85);
+					promptText.setScaleY(0.85);								
 				}
 			}
-
-			promptTextUpTransition = new CachedTransition(textPane, new Timeline(
-					new KeyFrame(Duration.millis(1300),
-							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
-							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			
-			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
-
-			promptTextDownTransition = new CachedTransition(textPane, new Timeline(
-					new KeyFrame(Duration.millis(1300), 
-							new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			promptTextDownTransition.setOnFinished((finish)->{
-				promptText.setTranslateX(0);
-				promptText.setTranslateY(0);
-				promptText.setScaleX(1);
-				promptText.setScaleY(1);
-			});
-			promptContainer.getChildren().add(promptText);	
-
-			if(triggerFloatLabel){
-				promptText.setTranslateY(-textPane.getHeight());
-				promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
-				promptText.setLayoutY(0);
-				promptText.setScaleX(0.85);
-				promptText.setScaleY(0.85);								
-			}
-
 			promptText.visibleProperty().unbind();
 			promptText.visibleProperty().set(true);
 		}

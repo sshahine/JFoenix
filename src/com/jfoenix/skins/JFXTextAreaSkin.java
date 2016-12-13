@@ -341,70 +341,71 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 	private void createFloatingLabel() {
 		if(((JFXTextArea)getSkinnable()).isLabelFloat()){
-			// get the prompt text node or create it
-			boolean triggerFloatLabel = false;
-			if(((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0) instanceof Text) promptText = (Text) ((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0);
-			else{
-				Field field;
-				try {
-					field = TextAreaSkin.class.getDeclaredField("promptNode");
-					field.setAccessible(true);
-					createPromptNode();
-					field.set(this, promptText);
-					// position the prompt node in its position
-					triggerFloatLabel = true;
-					oldPromptTextFill = promptTextFill.get();
-				} catch (NoSuchFieldException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if(promptText == null){
+				// get the prompt text node or create it
+				boolean triggerFloatLabel = false;
+				if(((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0) instanceof Text) promptText = (Text) ((Region)scrollPane.getContent()).getChildrenUnmodifiable().get(0);
+				else{
+					Field field;
+					try {
+						field = TextAreaSkin.class.getDeclaredField("promptNode");
+						field.setAccessible(true);
+						createPromptNode();
+						field.set(this, promptText);
+						// position the prompt node in its position
+						triggerFloatLabel = true;
+						oldPromptTextFill = promptTextFill.get();
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+	
+				promptTextGroup = new Group(promptText);
+				promptContainer.getChildren().add(promptTextGroup);
+				StackPane.setAlignment(promptTextGroup, Pos.TOP_LEFT);
+				// MUST KEEP: having transparent border fix the blurring effect on focus
+				promptContainer.setStyle("-fx-border-color:TRANSPARENT");
+				
+				// create prompt animations
+				promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
+						new KeyFrame(Duration.millis(1300),
+								new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
+								//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(), 0.85 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+				promptTextColorTransition = new CachedTransition(promptContainer,  new Timeline(
+						new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};								
+	
+				promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
+						new KeyFrame(Duration.millis(1300), 
+								new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
+								//										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+								new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+						)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+				promptTextDownTransition.setOnFinished((finish)->{
+					promptContainer.setTranslateY(0);
+					promptText.setScaleX(1);
+					promptText.setScaleY(1);
+				});
+				if(triggerFloatLabel){
+					promptContainer.setTranslateY(-promptText.getLayoutBounds().getHeight()-5);
+					promptText.setScaleX(0.85);
+					promptText.setScaleY(0.85);								
 				}
 			}
-
-			promptTextGroup = new Group(promptText);
-			promptContainer.getChildren().add(promptTextGroup);
-			StackPane.setAlignment(promptTextGroup, Pos.TOP_LEFT);
-			// MUST KEEP: having transparent border fix the blurring effect on focus
-			promptContainer.setStyle("-fx-border-color:TRANSPARENT");
-			
-			// create prompt animations
-			promptTextUpTransition = new CachedTransition(promptContainer, new Timeline(
-					new KeyFrame(Duration.millis(1300),
-							new KeyValue(promptContainer.translateYProperty(), -promptText.getLayoutBounds().getHeight()-5, Interpolator.EASE_BOTH),
-							//								new KeyValue(promptText.translateXProperty(), - promptText.getLayoutBounds().getWidth()*0.15/2, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(), 0.85 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			promptTextColorTransition = new CachedTransition(promptContainer,  new Timeline(
-					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};								
-
-			promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
-					new KeyFrame(Duration.millis(1300), 
-							new KeyValue(promptContainer.translateYProperty(), 0, Interpolator.EASE_BOTH),
-							//										new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			promptTextDownTransition.setOnFinished((finish)->{
-				promptContainer.setTranslateY(0);
-				promptText.setScaleX(1);
-				promptText.setScaleY(1);
-			});
-			if(triggerFloatLabel){
-				promptContainer.setTranslateY(-promptText.getLayoutBounds().getHeight()-5);
-				promptText.setScaleX(0.85);
-				promptText.setScaleY(0.85);								
-			}
-
 			promptText.visibleProperty().unbind();
 			promptText.visibleProperty().set(true);
 		}
