@@ -23,6 +23,7 @@ import com.jfoenix.converters.base.NodeConverter;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
 import javafx.beans.value.WeakChangeListener;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -82,9 +83,11 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
 		// create custom button cell to display a custom node upon selection
 		comboBox.setButtonCell(new ListCell<T>() {
+			private final PseudoClass promptText = PseudoClass.getPseudoClass("prompt");
 			@Override public void updateItem(T item, boolean empty) {
 				super.updateItem(item, empty);
 				updateDisplayText(this, item, empty);
+				this.pseudoClassStateChanged(promptText, empty || item==null);
 			}
 		});
 		
