@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
@@ -220,7 +221,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
-			if(getSkinnable().isFocused()){
+			if(getSkinnable().isFocused() && ((JFXPasswordField)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXPasswordField)getSkinnable()).getFocusColor());
 			}
 		}

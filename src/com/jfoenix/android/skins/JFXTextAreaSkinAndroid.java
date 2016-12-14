@@ -268,7 +268,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
-			if(getSkinnable().isFocused()){
+			if(getSkinnable().isFocused() && ((JFXTextArea)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXTextArea)getSkinnable()).getFocusColor());
 			}
 		}

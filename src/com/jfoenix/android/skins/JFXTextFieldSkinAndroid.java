@@ -227,7 +227,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
-			if(getSkinnable().isFocused()){
+			if(getSkinnable().isFocused() && ((JFXTextField)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXTextField)getSkinnable()).getFocusColor());
 			}
 		}

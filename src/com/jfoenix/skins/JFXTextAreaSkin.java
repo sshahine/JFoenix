@@ -21,6 +21,7 @@ package com.jfoenix.skins;
 import java.lang.reflect.Field;
 
 import com.jfoenix.concurrency.JFXUtilities;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -262,7 +263,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
-			if(getSkinnable().isFocused()){
+			if(getSkinnable().isFocused() && ((JFXTextArea)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXTextArea)getSkinnable()).getFocusColor());
 			}
 		}

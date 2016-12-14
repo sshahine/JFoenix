@@ -227,7 +227,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
-			if(getSkinnable().isFocused()){
+			if(getSkinnable().isFocused() && ((JFXPasswordField)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXPasswordField)getSkinnable()).getFocusColor());
 			}
 		}
