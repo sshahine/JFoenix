@@ -207,6 +207,21 @@ public class JFXTextField extends TextField {
 	public void setFocusColor(Paint color) {
 		this.focusColor.set(color);
 	}
+	
+	/**
+	 * disable animation on validation
+	 */
+	private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION, JFXTextField.this, "disableAnimation", false);
+	public final StyleableBooleanProperty disableAnimationProperty() {
+		return this.disableAnimation;
+	}
+	public final Boolean isDisableAnimation() {
+		return disableAnimation == null ? false : this.disableAnimationProperty().get();
+	}
+	public final void setDisableAnimation(final Boolean disabled) {
+		this.disableAnimationProperty().set(disabled);
+	}
+	
 
 	private static class StyleableProperties {
 		private static final CssMetaData<JFXTextField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.rgb(77, 77, 77)) {
@@ -242,11 +257,25 @@ public class JFXTextField extends TextField {
 				return control.labelFloatProperty();
 			}
 		};
+		
+		private static final CssMetaData< JFXTextField, Boolean> DISABLE_ANIMATION =
+				new CssMetaData< JFXTextField, Boolean>("-fx-disable-animation",
+						BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXTextField control) {
+				return control.disableAnimation == null || !control.disableAnimation.isBound();
+			}
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXTextField control) {
+				return control.disableAnimationProperty();
+			}
+		};
+		
 
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
+			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT, DISABLE_ANIMATION);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}

@@ -201,6 +201,21 @@ public class JFXPasswordField extends PasswordField {
 		this.focusColor.set(color);
 	}
 
+	/**
+	 * disable animation on validation
+	 */
+	private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION, JFXPasswordField.this, "disableAnimation", false);
+	public final StyleableBooleanProperty disableAnimationProperty() {
+		return this.disableAnimation;
+	}
+	public final Boolean isDisableAnimation() {
+		return disableAnimation == null ? false : this.disableAnimationProperty().get();
+	}
+	public final void setDisableAnimation(final Boolean disabled) {
+		this.disableAnimationProperty().set(disabled);
+	}
+	
+	
 	private static class StyleableProperties {
 		private static final CssMetaData<JFXPasswordField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXPasswordField, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.rgb(77, 77, 77)) {
 			@Override
@@ -237,11 +252,24 @@ public class JFXPasswordField extends PasswordField {
 			}
 		};
 
-
+		private static final CssMetaData< JFXPasswordField, Boolean> DISABLE_ANIMATION =
+				new CssMetaData< JFXPasswordField, Boolean>("-fx-disable-animation",
+						BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXPasswordField control) {
+				return control.disableAnimation == null || !control.disableAnimation.isBound();
+			}
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXPasswordField control) {
+				return control.disableAnimationProperty();
+			}
+		};
+		
+		
 		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 		static {
 			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
+			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT, DISABLE_ANIMATION);
 			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
 		}
 	}

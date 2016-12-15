@@ -100,7 +100,6 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 
 	public JFXTextFieldSkin(JFXTextField field) {
 		super(field);
-
 		// initial styles
 		//		field.setStyle("-fx-background-color: transparent ;-fx-font-weight: BOLD;-fx-prompt-text-fill: #808080;-fx-alignment: top-left ;");
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -109,7 +108,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		errorLabel.getStyleClass().add("errorLabel");
 		errorLabel.setWrapText(true);		
 		errorIcon.setTranslateY(3);
-		
+
 		AnchorPane errorLabelContainer = new AnchorPane();
 		errorLabelContainer.getChildren().add(errorLabel);		
 
@@ -162,16 +161,23 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 		});
 
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
-			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
-				hideErrorAnimation.stop();
-			if(newVal!=null){
-				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-				hideErrorAnimation.setOnFinished(finish->{
-					showError(newVal);
-				});
-				hideErrorAnimation.play();
-			}else{				
-				hideError();
+			if(textPane != null){
+				if(!((JFXTextField)getSkinnable()).isDisableAnimation()){
+					if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+						hideErrorAnimation.stop();
+					if(newVal!=null){
+						hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+						hideErrorAnimation.setOnFinished(finish->{
+							JFXUtilities.runInFX(()->showError(newVal));
+						});
+						hideErrorAnimation.play();
+					}else{				
+						JFXUtilities.runInFX(()->hideError());
+					}
+				}else{
+					if(newVal!=null) JFXUtilities.runInFXAndWait(()->showError(newVal));
+					else JFXUtilities.runInFXAndWait(()->hideError());
+				}
 			}
 		});
 
@@ -188,19 +194,19 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 				else animateFLoatingLabel(true);
 			}	
 		});
-		
+
 		field.prefWidthProperty().addListener((o,oldVal,newVal)-> {
 			if(!field.maxWidthProperty().isBound()) field.setMaxWidth(newVal.doubleValue());
 			if(!field.minWidthProperty().isBound()) field.setMinWidth(newVal.doubleValue());
 		});
-		
+
 		// prevent setting prompt text fill to transparent when text field is focused (override java transparent color if the control was focused)
 		promptTextFill.addListener((o,oldVal,newVal)->{
 			if(Color.TRANSPARENT.equals(newVal) && ((JFXTextField)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(oldVal);
 			}
 		});
-		
+
 	}
 
 	@Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
@@ -217,14 +223,14 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 	@Override 
 	protected void layoutChildren(final double x, final double y, final double w, final double h) {
 		super.layoutChildren(x, y, w, h);
-		
+
 		// change control properties if and only if animations are stopped 
 		if((transition == null || transition.getStatus().equals(Status.STOPPED))){
 			if(getSkinnable().isFocused() && ((JFXTextField)getSkinnable()).isLabelFloat()){
 				promptTextFill.set(((JFXTextField)getSkinnable()).getFocusColor());
 			}
 		}
-		
+
 		if(invalid){	
 			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
@@ -234,7 +240,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			errorContainer.translateYProperty().bind(Bindings.createDoubleBinding(()->{
 				return textPane.getHeight() + focusedLine.getStrokeWidth();
 			}, textPane.heightProperty(), focusedLine.strokeWidthProperty()));
-			
+
 			// draw lines
 			line.setStartX(0);
 			line.endXProperty().bind(textPane.widthProperty());
@@ -276,13 +282,13 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 				if(((JFXTextField)getSkinnable()).isLabelFloat())
 					promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
 							new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH))))
-					{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-					protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};	
+				{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+				protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};	
 			});
-			
+
 			createFloatingLabel();
 			super.layoutChildren(x, y, w, h);
-			
+
 			textPane.getChildren().remove(line);
 			textPane.getChildren().add(line);
 
@@ -297,8 +303,19 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
+			if(((JFXTextField)getSkinnable()).getActiveValidator()!=null){
+				if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+					hideErrorAnimation.stop();
+				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+				hideErrorAnimation.setOnFinished(finish->{
+					showError(((JFXTextField)getSkinnable()).getActiveValidator());
+				});
+				hideErrorAnimation.play();
+			}
+
 			if(getSkinnable().isFocused()) focus();			
-		}		
+		}	
+
 	}
 
 
@@ -332,7 +349,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 					}
 				}
 				promptContainer.getChildren().add(promptText);	
-				
+
 				if(triggerFloatLabel){
 					promptText.setTranslateY(-textPane.getHeight());
 					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
@@ -341,7 +358,7 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 					promptText.setScaleY(0.85);								
 				}
 			}
-			
+
 			promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 					new KeyFrame(Duration.millis(1300),
 							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
@@ -349,27 +366,27 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
 
-			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
+							promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
+									new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+							{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+							protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
 
-			promptTextDownTransition = new CachedTransition(textPane, new Timeline(
-					new KeyFrame(Duration.millis(1300), 
-							new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			promptTextDownTransition.setOnFinished((finish)->{
-				promptText.setTranslateX(0);
-				promptText.setTranslateY(0);
-				promptText.setScaleX(1);
-				promptText.setScaleY(1);
-			});
-				
-			promptText.visibleProperty().unbind();
-			promptText.visibleProperty().set(true);
+							promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+									new KeyFrame(Duration.millis(1300), 
+											new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+											new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+											new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+											new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+									)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+									promptTextDownTransition.setOnFinished((finish)->{
+										promptText.setTranslateX(0);
+										promptText.setTranslateY(0);
+										promptText.setScaleX(1);
+										promptText.setScaleY(1);
+									});
+
+									promptText.visibleProperty().unbind();
+									promptText.visibleProperty().set(true);
 		}
 	}
 
@@ -483,14 +500,14 @@ public class JFXTextFieldSkin extends TextFieldSkin{
 			}	
 		}
 	}
-	
+
 	private boolean usePromptText() {
 		String txt = getSkinnable().getText();
 		String promptTxt = getSkinnable().getPromptText();
 		boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
 		return hasPromptText;
 	}
-	
+
 	private void showError(ValidatorBase validator){
 		// set text in error label
 		errorLabel.setText(validator.getMessage());

@@ -18,6 +18,7 @@
  */
 package com.jfoenix.validation;
 
+import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.validation.base.ValidatorBase;
 
 import javafx.animation.Animation.Status;
@@ -44,6 +45,15 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class ValidationFacade extends VBox {
+
+	/**
+	 * Initialize the style class to 'validation-facade'.
+	 *
+	 * This is the selector class from which CSS can be used to style
+	 * this control.
+	 */
+	private static final String DEFAULT_STYLE_CLASS = "validation-facade";
+
 	private Label errorLabel;
 	private StackPane errorIcon;
 	private HBox errorContainer;
@@ -56,13 +66,14 @@ public class ValidationFacade extends VBox {
 	private double errorLabelInitHeight = 0;
 
 	private boolean heightChanged = false;
+	private boolean disableAnimation = false;
 
 	private Timeline hideErrorAnimation;
 
 	public ValidationFacade() {
+		getStyleClass().add(DEFAULT_STYLE_CLASS);
 		setPadding(new Insets(0, 0, 0, 0));
 		setSpacing(0);
-		//setStyle("-fx-padding: 0;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;" + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: blue;");
 
 		errorLabel = new Label();
 		errorLabel.getStyleClass().add("errorLabel");	
@@ -76,11 +87,10 @@ public class ValidationFacade extends VBox {
 
 		HBox.setHgrow(errorLabel, Priority.ALWAYS);
 		errorLabel.setMaxWidth(Double.MAX_VALUE);		
-		
+
 		errorIcon.setTranslateY(3);
 		errorContainer.setSpacing(10);
 		errorContainer.setVisible(false);
-		errorContainer.setManaged(false);
 		errorContainer.setOpacity(0);
 
 		//errorContainer.setStyle("-fx-padding: 0;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;" + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: red;");
@@ -112,16 +122,21 @@ public class ValidationFacade extends VBox {
 		});
 
 		activeValidatorProperty().addListener((o, oldVal, newVal) -> {
-			if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
-				hideErrorAnimation.stop();
-			if (newVal != null) {
-				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-				hideErrorAnimation.setOnFinished(finish -> {
-					showError(newVal);
-				});
-				hideErrorAnimation.play();
-			} else {
-				hideError();
+			if(!isDisableAnimation()){
+				if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+					hideErrorAnimation.stop();
+				if (newVal != null) {
+					hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160), new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+					hideErrorAnimation.setOnFinished(finish -> {
+						JFXUtilities.runInFX(()->showError(newVal));
+					});
+					hideErrorAnimation.play();
+				} else {
+					JFXUtilities.runInFX(()->hideError());
+				}
+			}else{
+				if(newVal!=null) JFXUtilities.runInFXAndWait(()->showError(newVal));
+				else JFXUtilities.runInFXAndWait(()->hideError());
 			}
 		});
 
@@ -181,9 +196,10 @@ public class ValidationFacade extends VBox {
 		facade.activeValidator.set(null);
 		return true;
 	}
-	
+
 	public static void reset(Control control) {
 		ValidationFacade facade = (ValidationFacade) control.getParent();
+		control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR,false);
 		facade.activeValidator.set(null);
 	}
 
@@ -194,14 +210,14 @@ public class ValidationFacade extends VBox {
 	}
 
 	public void setControl(Control control) {		
-		setMaxWidth(control.getMaxWidth());
+		maxWidthProperty().bind(control.maxWidthProperty());
 		prefWidthProperty().bind(control.prefWidthProperty());
 		prefHeightProperty().bind(control.prefHeightProperty());
-		
+
 		errorContainer.setMaxWidth(control.getMaxWidth()>-1? control.getMaxWidth() : control.getPrefWidth());
-		errorContainer.prefWidthProperty().bind(control.prefWidthProperty());
-		errorContainer.prefHeightProperty().bind(control.prefHeightProperty());
-		
+		errorContainer.prefWidthProperty().bind(control.widthProperty());
+		errorContainer.prefHeightProperty().bind(control.heightProperty());
+
 		getChildren().clear();
 		getChildren().add(control);
 		getChildren().add(errorContainer);
@@ -209,7 +225,7 @@ public class ValidationFacade extends VBox {
 	}
 
 	private void showError(ValidatorBase validator) {
-		
+
 		// set text in error label
 		errorLabel.setText(validator.getMessage());
 		// show error icon
@@ -225,9 +241,8 @@ public class ValidationFacade extends VBox {
 			initHeight = getHeight();
 			currentFieldHeight = initHeight;
 		}
-		errorContainer.setManaged(true);
 		errorContainer.setVisible(true);
-	
+
 		errorShown = true;
 
 	}
@@ -247,15 +262,22 @@ public class ValidationFacade extends VBox {
 		// reset the height of the text field
 		currentFieldHeight = initHeight;
 		// hide error container
-		errorContainer.setManaged(false);
 		errorContainer.setVisible(false);
 
 		errorShown = false;
+	}
+
+	public boolean isDisableAnimation() {
+		return disableAnimation;
+	}
+
+	public void setDisableAnimation(boolean disableAnimation) {
+		this.disableAnimation = disableAnimation;
 	}
 
 	/**
 	 * this style class will be activated when a validation error occurs
 	 */
 	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
-	
+
 }

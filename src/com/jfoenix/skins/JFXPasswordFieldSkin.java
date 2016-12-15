@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
@@ -163,16 +162,23 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 		});
 
 		field.activeValidatorProperty().addListener((o,oldVal,newVal)->{
-			if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
-				hideErrorAnimation.stop();
-			if(newVal!=null){
-				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-				hideErrorAnimation.setOnFinished(finish->{
-					showError(newVal);
-				});
-				hideErrorAnimation.play();
-			}else{				
-				hideError();
+			if(textPane != null){
+				if(!((JFXPasswordField)getSkinnable()).isDisableAnimation()){
+					if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+						hideErrorAnimation.stop();
+					if(newVal!=null){
+						hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+						hideErrorAnimation.setOnFinished(finish->{
+							JFXUtilities.runInFX(()->showError(newVal));
+						});
+						hideErrorAnimation.play();
+					}else{				
+						JFXUtilities.runInFX(()->hideError());
+					}
+				}else{
+					if(newVal!=null) JFXUtilities.runInFXAndWait(()->showError(newVal));
+					else JFXUtilities.runInFXAndWait(()->hideError());
+				}	
 			}
 		});
 
@@ -225,7 +231,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 				promptTextFill.set(((JFXPasswordField)getSkinnable()).getFocusColor());
 			}
 		}
-				
+
 		if(invalid){	
 			invalid = false;
 			textPane = ((Pane)this.getChildren().get(0));
@@ -298,6 +304,16 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 			textPane.getChildren().remove(cursorPane);
 			textPane.getChildren().add(cursorPane);
 
+			if(((JFXPasswordField)getSkinnable()).getActiveValidator()!=null){
+				if(hideErrorAnimation!=null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+					hideErrorAnimation.stop();
+				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+				hideErrorAnimation.setOnFinished(finish->{
+					showError(((JFXPasswordField)getSkinnable()).getActiveValidator());
+				});
+				hideErrorAnimation.play();
+			}
+
 			if(getSkinnable().isFocused()) focus();			
 		}		
 	}
@@ -333,7 +349,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 					}
 				}
 				promptContainer.getChildren().add(promptText);	
-				
+
 				if(triggerFloatLabel){
 					promptText.setTranslateY(-textPane.getHeight());
 					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
@@ -348,27 +364,27 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
 							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			
-			promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
-					new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
-			{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
-			protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
 
-			promptTextDownTransition = new CachedTransition(textPane, new Timeline(
-					new KeyFrame(Duration.millis(1300), 
-							new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
-					)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
-			promptTextDownTransition.setOnFinished((finish)->{
-				promptText.setTranslateX(0);
-				promptText.setTranslateY(0);
-				promptText.setScaleX(1);
-				promptText.setScaleY(1);
-			});
-			promptText.visibleProperty().unbind();
-			promptText.visibleProperty().set(true);
+							promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
+									new KeyFrame(Duration.millis(1300),new KeyValue(promptTextFill, focusedLine.getStroke(), Interpolator.EASE_BOTH))))
+							{{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }
+							protected void starting() {super.starting(); oldPromptTextFill = promptTextFill.get();};};			
+
+							promptTextDownTransition = new CachedTransition(textPane, new Timeline(
+									new KeyFrame(Duration.millis(1300), 
+											new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+											new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
+											new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
+											new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))					 
+									)){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(300)); }};
+									promptTextDownTransition.setOnFinished((finish)->{
+										promptText.setTranslateX(0);
+										promptText.setTranslateY(0);
+										promptText.setScaleX(1);
+										promptText.setScaleY(1);
+									});
+									promptText.visibleProperty().unbind();
+									promptText.visibleProperty().set(true);
 		}
 	}
 
@@ -482,7 +498,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin{
 			}	
 		}
 	}
-	
+
 	private boolean usePromptText() {
 		String txt = getSkinnable().getText();
 		String promptTxt = getSkinnable().getPromptText();
