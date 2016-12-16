@@ -18,11 +18,7 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import com.jfoenix.skins.JFXListViewSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
@@ -176,11 +172,11 @@ public class JFXListView<T> extends ListView<T> {
 		// if item from the list is selected
 		if(this.getSelectionModel().getSelectedIndex() != -1 ){
 			int selectedIndex = this.getSelectionModel().getSelectedIndex();
-			Iterator<Integer> itr = sublistsIndices.keySet().iterator();
+			Iterator<Map.Entry<Integer, JFXListView<?>>> itr = sublistsIndices.entrySet().iterator();
 			int preItemsSize = 0;
 			while(itr.hasNext()){
-				Integer key = itr.next();
-				if(key < selectedIndex) preItemsSize += sublistsIndices.get(key).getItems().size()-1;
+				Map.Entry<Integer, JFXListView<?>> entry = itr.next();
+				if(entry.getKey() < selectedIndex) preItemsSize += entry.getValue().getItems().size()-1;
 			}
 //			int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
 			overAllIndexProperty.set(selectedIndex + preItemsSize);

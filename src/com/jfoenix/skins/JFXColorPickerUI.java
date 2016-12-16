@@ -74,8 +74,8 @@ class JFXColorPickerUI extends Pane  {
 		JFXDepthManager.setDepth(this, 1);
 		
 		this.pickerSize = pickerSize;	
-		this.centerX = pickerSize/2;
-		this.centerY = pickerSize/2;
+		this.centerX = (double)pickerSize/2;
+		this.centerY = (double)pickerSize/2;
 		this.pickerRadius = pickerSize/2;
 		this.huesRadius = pickerRadius * 0.9;
 		this.huesSmallR = pickerRadius * 0.8;
@@ -328,7 +328,7 @@ class JFXColorPickerUI extends Pane  {
 	private Image getHuesCircle(int width, int height, List<Stop> stops) {
 		WritableImage raster = new WritableImage(width, height);
 		PixelWriter pixelWriter = raster.getPixelWriter();
-		Point2D center = new Point2D(width / 2, height / 2); 
+		Point2D center = new Point2D((double)width / 2, (double)height / 2);
 		double rsmall = 0.8*width / 2;
 		double rbig = width / 2;
 		for (int y = 0 ; y < height ; y++) {
@@ -351,7 +351,7 @@ class JFXColorPickerUI extends Pane  {
 	private Image getSLCricle(int width, int height, List<Stop> stops) {
 		WritableImage raster = new WritableImage(width, height);
 		PixelWriter pixelWriter = raster.getPixelWriter();
-		Point2D center = new Point2D(width / 2, height / 2); 
+		Point2D center = new Point2D((double)width / 2, (double)height / 2);
 		for (int y = 0 ; y < height ; y++) {
 			for (int x = 0 ; x < width ; x++) {
 				double dy = x - center.getX();
@@ -368,7 +368,7 @@ class JFXColorPickerUI extends Pane  {
 	
 	private Color getColor(double dx, double dy){
 		double distance = Math.sqrt((dx * dx) + (dy * dy));
-		double rverysmall = 0.65*(pickerSize/2);
+		double rverysmall = 0.65*((double)pickerSize/2);
 		Color pixelColor = Color.BLUE;
 
 		if (distance <= rverysmall*1.1) {

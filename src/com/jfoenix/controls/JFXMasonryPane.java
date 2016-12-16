@@ -75,7 +75,7 @@ public class JFXMasonryPane extends Pane {
 	private ParallelTransition trans = new ParallelTransition();
 	private boolean valid = false;
 //	private GridPane root = new GridPane();
-	String[] colors = {"-fx-border-color:#EEEEEE", "-fx-border-color:RED;","-fx-border-color:BLUE; ","-fx-border-color:GREEN;", "-fx-border-color:PURPLE;"};
+//	String[] colors = {"-fx-border-color:#EEEEEE", "-fx-border-color:RED;","-fx-border-color:BLUE; ","-fx-border-color:GREEN;", "-fx-border-color:PURPLE;"};
 	private List<BoundingBox> oldBoxes;
 
 	/***************************************************************************
@@ -167,7 +167,7 @@ public class JFXMasonryPane extends Pane {
 						block.setPrefSize(blockWidth, blockHeight);
 						block.resizeRelocate(blockX, blockY , blockWidth, blockHeight);
 					}else{
-						if(i >= oldBoxes.size() || oldBoxes == null){
+						if(oldBoxes == null || i >= oldBoxes.size()){
 							// handle new children
 							block.setOpacity(0);
 							block.setLayoutX(blockX);
@@ -352,7 +352,7 @@ public class JFXMasonryPane extends Pane {
 	}
 	/**
 	 * sets the horizontal spacing in the grid
-	 * @param hSpacing horizontal spacing
+	 * @param spacing horizontal spacing
 	 */
 	public final void setHSpacing(final double spacing) {
 		this.hSpacingProperty().set(spacing);
@@ -375,7 +375,7 @@ public class JFXMasonryPane extends Pane {
 	}
 	/**
 	 * sets the vertical spacing in the grid
-	 * @param vSpacing vertical spacing
+	 * @param spacing vertical spacing
 	 */
 	public final void setVSpacing(final double spacing) {
 		this.vSpacingProperty().set(spacing);

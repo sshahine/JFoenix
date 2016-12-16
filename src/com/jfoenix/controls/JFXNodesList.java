@@ -117,7 +117,7 @@ public class JFXNodesList extends VBox {
 		if(animateTimeline.getStatus().equals(Status.RUNNING)) animateTimeline.stop();
 		
 		animateTimeline.getKeyFrames().clear();
-		double duration = 120/this.getChildren().size();
+		double duration = 120/(double)this.getChildren().size();
 
 		// show child nodes 
 		if(expanded) this.getChildren().forEach(child->child.setVisible(true));

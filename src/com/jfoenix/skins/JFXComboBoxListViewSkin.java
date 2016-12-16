@@ -136,7 +136,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 				cell.setText(null);
 				cell.setGraphic(node==null? newNode : node);
 			}
-			return newNode == null;
+			return node == null;
 		} else {
 			// run item through StringConverter if it isn't null
 			StringConverter<T> c = ((JFXComboBox<T>)getSkinnable()).getConverter();
