@@ -93,7 +93,7 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 			// show animation only on user action
 			if(!toggleNode.isDisableAnimation()){
 				if(ft==null){
-					ft = new JFXFillTransition(Duration.millis(320), main);
+					ft = new JFXFillTransition(Duration.millis(120), main);
 					ft.toValueProperty().bind(toggleNode.selectedColorProperty());
 					ft.fromValueProperty().bind(toggleNode.unSelectedColorProperty());
 				}

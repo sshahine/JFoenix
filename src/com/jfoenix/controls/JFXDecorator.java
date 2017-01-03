@@ -64,8 +64,8 @@ import javafx.util.Duration;
 
 /**
  * Window Decorator allow to resize/move its content
- * Note: the default close button will call Platform.exit() which will close the 
- * java application, however it can be customized by calling {@link #setOnCloseButtonAction(Runnable)} 
+ * Note: the default close button will call stage.close() which will only close the current stage. 
+ * it will not close the java application, however it can be customized by calling {@link #setOnCloseButtonAction(Runnable)} 
  * 
  * @author  Shadi Shaheen
  * @version 1.0
@@ -87,7 +87,7 @@ public class JFXDecorator extends VBox {
 	private Timeline windowDecoratorAnimation;
 	private StackPane contentPlaceHolder = new StackPane();
 	private HBox buttonsContainer;
-	private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(()->{Platform.exit();});
+	private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(()->{primaryStage.close();});
 
 	private BooleanProperty customMaximize = new SimpleBooleanProperty(false);
 	private boolean maximized = false;
