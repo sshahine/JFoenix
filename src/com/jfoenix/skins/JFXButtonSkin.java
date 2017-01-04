@@ -171,7 +171,9 @@ public class JFXButtonSkin extends ButtonSkin {
 
 	private boolean isJavaDefaultBackground(Background background){
 		try{
-			return background.getFills().get(0).getFill().toString().equals("0xffffffba");	
+			return background.getFills().get(0).getFill().toString().equals("0xffffffba") 
+				|| background.getFills().get(0).getFill().toString().equals("0xffffffbf") 
+				|| background.getFills().get(0).getFill().toString().equals("0xffffffbd");	
 		}catch(Exception e){
 			return false;
 		}

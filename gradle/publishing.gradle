@@ -1,0 +1,182 @@
+import java.text.SimpleDateFormat
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+}
+
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'net.nemerosa.versioning'
+
+jar {
+    manifest {
+        attributes(
+            'Built-By': System.properties['user.name'],
+            'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+            'Build-Date': project.buildDate,
+            'Build-Time': project.buildTime,
+            'Build-Revision': versioning.info.commit,
+            'Specification-Title': project.name,
+            'Specification-Version': project.version,
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+        )
+    }
+}
+
+def pomConfig = {
+	resolveStrategy = Closure.DELEGATE_FIRST
+    name project.name
+    description project.project_description
+    url project.project_url
+    inceptionYear '2015'
+    licenses {
+        license([:]) {
+            name 'Apache Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+    scm {
+        url project.project_scm
+    }
+    developers {    
+    	developer {
+            id 'sshahine'
+            name 'Shadi Shaheen'                
+            roles{role 'Project Lead'}               
+        }
+        developer {
+            id 'belias'
+            name 'Bachir Elias'                
+            roles{role 'Developer'}               
+        }
+        developer {
+            id 'mhelou'
+            name 'Marwan Helou'                
+            roles{role 'Head of Framework Development'}               
+        }
+        developer {
+            id 'gmoubarak'
+            name 'Gerard Moubarak'                
+            roles{role 'Head of IT Section'}               
+        }        
+        developer {
+            id 'rjreije'
+            name 'Rayan Jreije'                
+            roles{role 'Project Manager'}               
+        }
+    }
+}
+
+// sign all artifacts
+task signJars (type : Sign, dependsOn: [jar, javadocJar, sourcesJar, retroSourcesJar]) {
+    sign configurations.archives
+}
+// sign pom
+task signPom(type: Sign) {
+    sign configurations.pom
+}
+// defining which tasks should be called
+if (project.ext.pomFile.exists()) {
+    task preparePublication (dependsOn : [signJars, signPom])
+} else {
+    task preparePublication (dependsOn : signJars)
+}
+// extract signatures and add classifier and extension to them
+def getSignatureFiles = {
+    def allFiles = project.tasks.signJars.signatureFiles.collect { it }
+    def signedSources = allFiles.find { it.name.contains('-sources') }
+    def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
+    def signedRetrolambda = allFiles.find { it.name.contains('-retrolambda') }
+    def signedJar = (allFiles - [signedSources, signedJavadoc, signedRetrolambda])[0]
+    return [
+            [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
+            [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
+            [archive: signedRetrolambda, classifier: 'retrolambda', extension: 'jar.asc'],
+            [archive: signedJar,     classifier: null,      extension: 'jar.asc']
+    ]
+}
+// extract pom signature
+def getPomSignature = {
+    return project.tasks.signPom.signatureFiles.collect{it}[0]
+}
+
+signing {
+    sign configurations.archives
+}
+
+publishing {
+    publications {
+	    gpgJars(MavenPublication) {
+            getSignatureFiles().each {signature ->
+                artifact (signature.archive) {
+                    classifier = signature.classifier
+                    extension  = signature.extension
+                }
+            }
+        }
+        if (project.ext.pomFile.exists()) {
+            gpgPom(MavenPublication) {
+                artifact (getPomSignature()) {
+                    classifier = null
+                    extension  = 'pom.asc'
+                }
+            }
+        }
+    
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            artifact retroSourcesJar
+            pom.withXml {
+                asNode().children().last() + pomConfig
+                 if (!project.ext.pomFile.exists()) {
+                    writeTo (project.ext.pomFile)
+                }
+            }
+        }
+    }
+    repositories {
+    	maven {
+		    if (project.ext.pomFile.exists()) {
+		        credentials {
+		            username project.username
+		            password project.password
+		  		}
+		  		if(project.version.endsWith('-SNAPSHOT')) {
+		            url "https://oss.sonatype.org/content/repositories/snapshots"
+		        } else {
+		            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+		        } 
+		    } else {
+		        url project.local_deploy
+		    }
+	    }
+    }
+}
+
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenJava']
+    pkg {
+        repo = project.project_bintray_repo
+        userOrg = project.project_bintray_org
+        name = project.name
+        desc = project.project_description
+        licenses = ['Apache Version 2.0']
+        labels = ['javafx','material design']
+        websiteUrl = project.project_url
+        issueTrackerUrl = project.project_issues
+        vcsUrl = project.project_scm
+        publicDownloadNumbers = true
+    }
+}
