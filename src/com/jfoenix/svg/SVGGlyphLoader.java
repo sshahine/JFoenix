@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
 
 /**
  * will load icomoon svg font file, it will create a map of the 
- * available svg glyphs. the user can retrive the svg glyph using its name. 
+ * available svg glyphs. the user can retrieve the svg glyph using its name. 
  * 
  * @author  Shadi Shaheen
  * @version 1.0
@@ -63,7 +63,7 @@ public class SVGGlyphLoader {
 	}
 
 	/**
-	 * will retrive icons from the glyphs map for a certain glyphName 
+	 * will retrieve icons from the glyphs map for a certain glyphName 
 	 * 
 	 * @param glyphName the glyph name
 	 * @return SVGGlyph node 
