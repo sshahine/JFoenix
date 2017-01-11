@@ -378,26 +378,24 @@
 	-fx-pref-width: 500.0;
 }
 
-.jfx-progress-bar > .track {
-	-fx-min-width: 500.0;
+.jfx-progress-bar > .track, .jfx-progress-bar > .bar {
+	-fx-background-radius: 0;
+	-fx-background-insets: 0;
+}
+.jfx-progress-bar > .track{
+	-fx-background-color: #E0E0E0;
+}
+.jfx-progress-bar > .bar{
+	-fx-background-color: #0F9D58;
 }
 
-.custom-jfx-progress-bar .track {
-	-fx-stroke: #C8C8C8;
-	-fx-stroke-width: 5.0;
+.custom-jfx-progress-bar > .bar {
+	-fx-background-color: rgb(255.0,128.0,0.0);
 }
 
-.custom-jfx-progress-bar .bar {
-	-fx-stroke: rgb(255.0,128.0,0.0);
-}
-
-.custom-jfx-progress-bar-stroke .track {
-	-fx-stroke: #C8C8C8 ;
-	-fx-stroke-width: 7.0;
-}
-
-.custom-jfx-progress-bar-stroke .bar {
-	-fx-stroke: #5264AE ;
+.custom-jfx-progress-bar-stroke > .bar {
+	-fx-background-color: #5264AE ;
+	-fx-padding:6;
 }
 
 
