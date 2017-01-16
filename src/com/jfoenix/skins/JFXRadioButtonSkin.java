@@ -82,6 +82,14 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 		AnchorPane.setRightAnchor(rippler, labelOffset);
 		updateChildren();
 		
+		// show focused state
+		control.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				if(!getSkinnable().isPressed()) rippler.showOverlay();
+			}else rippler.hideOverlay();
+		});
+		control.pressedProperty().addListener((o,oldVal,newVal)-> rippler.hideOverlay());
+		
 		registerChangeListener(control.selectedColorProperty(), "SELECTED_COLOR");
 		registerChangeListener(control.unSelectedColorProperty(), "UNSELECTED_COLOR");
 		registerChangeListener(control.selectedProperty(), "SELECTED");

@@ -87,8 +87,9 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 		StackPane boxContainer = new StackPane();
 		boxContainer.getChildren().add(box);
 		boxContainer.setPadding(new Insets(padding));
-		rippler = new JFXRippler(boxContainer,RipplerMask.CIRCLE);
-		rippler.setRipplerFill(getSkinnable().isSelected()?control.getUnCheckedColor():control.getCheckedColor());
+		rippler = new JFXRippler(boxContainer,RipplerMask.CIRCLE, JFXRippler.RipplerPos.BACK);
+		updateRippleColor();
+
 		SVGPath shape = new SVGPath();
 		shape.setContent("M384 690l452-452 60 60-512 512-238-238 60-60z");
 		mark.setShape(shape);
@@ -103,14 +104,27 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 		AnchorPane.setRightAnchor(rippler, labelOffset);
 
 		// add listeners
-		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{
-			rippler.setRipplerFill(newVal?control.getUnCheckedColor():control.getCheckedColor());
+		control.selectedProperty().addListener((o,oldVal,newVal) ->{
+			updateRippleColor();
 			playSelectAnimation(newVal);
 		});
-
+		
+		// show focused state
+		control.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				if(!getSkinnable().isPressed()) rippler.showOverlay();
+			}else rippler.hideOverlay();
+		});
+		control.pressedProperty().addListener((o,oldVal,newVal)-> rippler.hideOverlay());
+		
+		
 		updateChildren();
 
 		registerChangeListener(control.checkedColorProperty(), "CHECKED_COLOR");
+	}
+
+	private void updateRippleColor() {
+		rippler.setRipplerFill(getSkinnable().isSelected() ? ((JFXCheckBox)getSkinnable()).getCheckedColor() : ((JFXCheckBox)getSkinnable()).getUnCheckedColor());
 	}
 
 	@Override

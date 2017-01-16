@@ -58,7 +58,7 @@ public class JFXButtonSkin extends ButtonSkin {
 	private final CornerRadii defaultRadii = new CornerRadii(3);
 	
 	private boolean invalid = true;
-
+	private Runnable releaseManualRippler = null;
 	public JFXButtonSkin(JFXButton button) {
 		super(button);
 
@@ -76,10 +76,29 @@ public class JFXButtonSkin extends ButtonSkin {
 			}
 			@Override protected void initListeners(){
 				ripplerPane.setOnMousePressed((event) -> {
+					if(releaseManualRippler!=null) releaseManualRippler.run();
+					releaseManualRippler = null;
 					createRipple(event.getX(),event.getY());
 				});
 			}
 		};
+		
+		getSkinnable().armedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				releaseManualRippler = buttonRippler.createManualRipple();
+				if(clickedAnimation!=null){
+					clickedAnimation.setRate(1);
+					clickedAnimation.play();	
+				}
+			}else{
+				if(releaseManualRippler!=null) releaseManualRippler.run();
+				if(clickedAnimation!=null){
+					clickedAnimation.setRate(-1);
+					clickedAnimation.play();	
+				}
+			}
+		});
+		
 		buttonContainer.getChildren().add(buttonRippler);
 
 
@@ -97,6 +116,14 @@ public class JFXButtonSkin extends ButtonSkin {
 				clickedAnimation.play();
 			}
 		});
+		
+		// show focused state
+		button.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				if(!getSkinnable().isPressed()) buttonRippler.showOverlay();
+			}else buttonRippler.hideOverlay();
+		});
+		button.pressedProperty().addListener((o,oldVal,newVal)-> buttonRippler.hideOverlay());
 		
 		/*
 		 * disable action when clicking on the button shadow 
