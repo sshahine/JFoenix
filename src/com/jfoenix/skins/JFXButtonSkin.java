@@ -71,7 +71,7 @@ public class JFXButtonSkin extends ButtonSkin {
 							buttonContainer.backgroundProperty().get()!=null && buttonContainer.getBackground().getFills().size() > 0 ?buttonContainer.getBackground().getFills().get(0).getRadii() : defaultRadii,
 							buttonContainer.backgroundProperty().get()!=null && buttonContainer.getBackground().getFills().size() > 0 ?buttonContainer.getBackground().getFills().get(0).getInsets() : Insets.EMPTY));
 				}, buttonContainer.backgroundProperty()));				
-				mask.resize(buttonContainer.getWidth(), buttonContainer.getHeight());
+				mask.resize(buttonContainer.getWidth()-buttonContainer.snappedRightInset()-buttonContainer.snappedLeftInset(), buttonContainer.getHeight()-buttonContainer.snappedBottomInset()-buttonContainer.snappedTopInset());
 				return mask;
 			}
 			@Override protected void initListeners(){
