@@ -155,7 +155,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		});
 		errorContainer.visibleProperty().addListener((o,oldVal,newVal)->{
 			// show the error label if it's not shown
-			new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play();
+			if(newVal) new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play();
 		});
 
 
@@ -175,6 +175,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 					if(newVal!=null){
 						hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
 						hideErrorAnimation.setOnFinished(finish->{
+							errorContainer.setVisible(false);
 							JFXUtilities.runInFX(()->showError(newVal));
 						});
 						hideErrorAnimation.play();
@@ -315,6 +316,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 					hideErrorAnimation.stop();
 				hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
 				hideErrorAnimation.setOnFinished(finish->{
+					errorContainer.setVisible(false);
 					showError(((JFXTextField)getSkinnable()).getActiveValidator());
 				});
 				hideErrorAnimation.play();

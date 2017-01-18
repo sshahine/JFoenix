@@ -18,32 +18,24 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.jfoenix.skins.JFXTextFieldSkin;
+import com.jfoenix.validation.base.ValidatorBase;
+import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.PaintConverter;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.CssMetaData;
-import javafx.css.PseudoClass;
-import javafx.css.SimpleStyleableBooleanProperty;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableBooleanProperty;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.jfoenix.skins.JFXTextFieldSkin;
-import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.css.converters.PaintConverter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * JFXTextField is the material design implementation of a text Field.
@@ -138,17 +130,11 @@ public class JFXTextField extends TextField {
 			validator.validate();
 			if (validator.getHasErrors()) {
 				activeValidator.set(validator);
-				pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 				return false;
 			}
 		}
-		reset();
-		return true;
-	}
-	
-	public void reset() {
 		activeValidator.set(null);
-		pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+		return true;
 	}
 
 	/***************************************************************************
@@ -297,11 +283,5 @@ public class JFXTextField extends TextField {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-	
-	
-	/**
-	 * this style class will be activated when a validation error occurs
-	 */
-	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 	
 }
