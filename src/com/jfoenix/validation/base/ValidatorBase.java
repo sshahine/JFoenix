@@ -43,7 +43,7 @@ public abstract class ValidatorBase extends Parent {
 	/**
 	 * this style class will be activated when a validation error occurs
 	 */
-	private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
+	public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 	
     private Tooltip tooltip = null;
     

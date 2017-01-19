@@ -136,6 +136,12 @@ public class JFXPasswordField extends PasswordField {
 		return true;
 	}
 
+	public void resetValidation() {
+		getStyleClass().remove(activeValidator.get() == null? "" : activeValidator.get().getErrorStyleClass());
+		pseudoClassStateChanged(ValidatorBase.PSEUDO_CLASS_ERROR, false);
+		activeValidator.set(null);
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * styleable Properties                                                    *

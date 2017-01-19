@@ -137,6 +137,12 @@ public class JFXTextField extends TextField {
 		return true;
 	}
 
+	public void resetValidation() {
+		getStyleClass().remove(activeValidator.get() == null? "" : activeValidator.get().getErrorStyleClass());
+		pseudoClassStateChanged(ValidatorBase.PSEUDO_CLASS_ERROR, false);
+		activeValidator.set(null);
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * styleable Properties                                                    *
@@ -283,5 +289,4 @@ public class JFXTextField extends TextField {
 	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
 		return StyleableProperties.CHILD_STYLEABLES;
 	}
-	
 }
