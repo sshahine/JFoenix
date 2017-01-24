@@ -448,8 +448,12 @@
 .jfx-list-cell:even {
 	-fx-background-color:  WHITE;
 }
-.jfx-list-cell:filled:hover { 
+.jfx-list-cell:filled:hover{
 	-fx-text-fill: black;
+}
+
+.jfx-list-cell:selected .text{ 
+	-fx-fill: black;
 }
 
 .jfx-list-cell .jfx-rippler {
