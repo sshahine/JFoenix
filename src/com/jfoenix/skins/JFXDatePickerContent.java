@@ -654,7 +654,9 @@ public class JFXDatePickerContent extends VBox {
 			if(tempImageTransition == null || tempImageTransition.getStatus().equals(Status.STOPPED)){
 				Pane monthContent = (Pane) calendarPlaceHolder.getChildren().get(0);
 				this.getParent().setManaged(false);
-				WritableImage temp = monthContent.snapshot(new SnapshotParameters(), new WritableImage((int)monthContent.getWidth(), (int)monthContent.getHeight()));				
+				SnapshotParameters snapShotparams = new SnapshotParameters();
+				snapShotparams.setFill(Color.TRANSPARENT);
+				WritableImage temp = monthContent.snapshot(snapShotparams, new WritableImage((int)monthContent.getWidth(), (int)monthContent.getHeight()));				
 				ImageView tempImage = new ImageView(temp);				
 				calendarPlaceHolder.getChildren().add(calendarPlaceHolder.getChildren().size()-2,tempImage);
 				TranslateTransition imageTransition = new TranslateTransition(Duration.millis(160), tempImage);
