@@ -1,5 +1,6 @@
 apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'osgi'
 
 // pom file name
 ext {
@@ -81,4 +82,9 @@ artifacts {
 
 jar {
     exclude('com/jfoenix/android/**')   
+    manifest {
+        name = 'JFoenix'
+        instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.8'
+        instruction 'Bundle-Description', 'JavaFX Material Design Library'
+    }
 }
