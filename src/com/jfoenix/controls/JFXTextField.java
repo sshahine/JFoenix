@@ -216,7 +216,7 @@ public class JFXTextField extends TextField {
 	
 
 	private static class StyleableProperties {
-		private static final CssMetaData<JFXTextField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.rgb(77, 77, 77)) {
+		private static final CssMetaData<JFXTextField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
 			@Override
 			public boolean isSettable(JFXTextField control) {
 				return control.unFocusColor == null || !control.unFocusColor.isBound();
@@ -227,7 +227,7 @@ public class JFXTextField extends TextField {
 				return control.unFocusColorProperty();
 			}
 		};
-		private static final CssMetaData<JFXTextField, Paint> FOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-focus-color", PaintConverter.getInstance(), Color.valueOf("#4059A9")) {
+		private static final CssMetaData<JFXTextField, Paint> FOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
 			@Override
 			public boolean isSettable(JFXTextField control) {
 				return control.focusColor == null || !control.focusColor.isBound();
