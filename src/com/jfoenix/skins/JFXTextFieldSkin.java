@@ -25,10 +25,13 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
-import com.sun.scenario.animation.SplineInterpolator;
 
-import javafx.animation.*;
 import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -36,7 +39,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -48,7 +61,7 @@ import javafx.util.Duration;
  *
  * @author  Shadi Shaheen
  * @version 1.0
- * @since   2017-25-01
+ * @since   2017-01-25
  */
 public class JFXTextFieldSkin extends TextFieldSkin {
 
@@ -80,6 +93,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 	private CachedTransition promptTextDownTransition;
 	private CachedTransition promptTextColorTransition;
 
+	private Scale promptTextScale = new Scale(1,1,0,0);
     private Scale scale = new Scale(initScale,1);
     private Timeline linesAnimation = new Timeline(
             new KeyFrame(Duration.ZERO,
@@ -98,15 +112,17 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 		super(field);
 		// initial styles
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-
+		field.setPadding(new Insets(4,0,4,0));
+		
 		errorLabel.getStyleClass().add("errorLabel");
         errorLabel.setPadding(new Insets(4,0,0,0));
 		errorLabel.setWrapText(true);
 		errorIcon.setTranslateY(3);
 
-		AnchorPane errorLabelContainer = new AnchorPane();
+		StackPane errorLabelContainer = new StackPane();
 		errorLabelContainer.getChildren().add(errorLabel);
-
+		StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
+		
 		line.getStyleClass().add("textfield-line");
         getChildren().add(line);
         focusedLine.getStyleClass().add("textfield-focused-line");
@@ -242,10 +258,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 
 		if(invalid){
 			invalid = false;
-
 			textPane = ((Pane)this.getChildren().get(0));
-			// bind error container
-			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->textPane.getWidth()/1.14, textPane.widthProperty()));
 
 			// draw lines
 			line.setPrefHeight(1);
@@ -327,23 +340,21 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 						e.printStackTrace();
 					}
 				}
+				promptText.getTransforms().add(promptTextScale);
 				promptContainer.getChildren().add(promptText);
 
 				if(triggerFloatLabel){
 					promptText.setTranslateY(-textPane.getHeight());
-					promptText.setTranslateX(-(promptText.getLayoutBounds().getWidth()*0.15)/2);
-					promptText.setLayoutY(0);
-					promptText.setScaleX(0.85);
-					promptText.setScaleY(0.85);
+					promptTextScale.setX(0.85);
+					promptTextScale.setY(0.85);
 				}
 			}
 
 			promptTextUpTransition = new CachedTransition(textPane, new Timeline(
 					new KeyFrame(Duration.millis(1300),
 							new KeyValue(promptText.translateYProperty(), -textPane.getHeight(), Interpolator.EASE_BOTH),
-							new KeyValue(promptText.translateXProperty(), - (promptText.getLayoutBounds().getWidth()*0.15 )/ 2, Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleXProperty(),0.85 , Interpolator.EASE_BOTH),
-							new KeyValue(promptText.scaleYProperty(),0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(240)); }};
+							new KeyValue(promptTextScale.xProperty(), 0.85 , Interpolator.EASE_BOTH),
+							new KeyValue(promptTextScale.yProperty(), 0.85 , Interpolator.EASE_BOTH)))){{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(240)); }};
 
             promptTextColorTransition = new CachedTransition(textPane,  new Timeline(
                     new KeyFrame(Duration.millis(1300),
@@ -356,15 +367,13 @@ public class JFXTextFieldSkin extends TextFieldSkin {
             promptTextDownTransition = new CachedTransition(textPane, new Timeline(
                     new KeyFrame(Duration.millis(1300),
                             new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                            new KeyValue(promptText.translateXProperty(), 0, Interpolator.EASE_BOTH),
-                            new KeyValue(promptText.scaleXProperty(),1 , Interpolator.EASE_BOTH),
-                            new KeyValue(promptText.scaleYProperty(),1 , Interpolator.EASE_BOTH))))
+                            new KeyValue(promptTextScale.xProperty(), 1 , Interpolator.EASE_BOTH),
+                            new KeyValue(promptTextScale.yProperty(), 1 , Interpolator.EASE_BOTH))))
             {{ setDelay(Duration.millis(0)); setCycleDuration(Duration.millis(240));}};
             promptTextDownTransition.setOnFinished((finish)->{
-                promptText.setTranslateX(0);
                 promptText.setTranslateY(0);
-                promptText.setScaleX(1);
-                promptText.setScaleY(1);
+                promptTextScale.setX(1);
+				promptTextScale.setY(1);
             });
             promptText.visibleProperty().unbind();
             promptText.visibleProperty().set(true);
