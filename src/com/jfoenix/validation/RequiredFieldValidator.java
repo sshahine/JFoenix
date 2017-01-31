@@ -57,7 +57,7 @@ public class RequiredFieldValidator extends ValidatorBase {
 	private void evalComboBoxField(){
 		JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
 		boolean valid = comboField.getValue()!=null;
-		valid |= comboField.isEditable() && comboField.getJFXEditor().getText()!=null && !comboField.getJFXEditor().getText().isEmpty();
+		valid |= comboField.isEditable() && comboField.getEditor().getText()!=null && !comboField.getEditor().getText().isEmpty();
 		if (valid ) hasErrors.set(false);
 		else hasErrors.set(true);
 	}

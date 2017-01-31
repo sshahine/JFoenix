@@ -32,7 +32,7 @@ public class ComboBoxController {
 			}
 		};		
 		jfxEditableComboBox.focusedProperty().addListener(comboBoxFocus);
-		jfxEditableComboBox.getJFXEditor().focusedProperty().addListener(comboBoxFocus);				
+		jfxEditableComboBox.getEditor().focusedProperty().addListener(comboBoxFocus);				
 	}
 	
 }

@@ -401,10 +401,3 @@
 } 
 
 
-
-.jfx-combo-box .combo-box-button-container {
-	-fx-border-color:rgb(180, 180, 180);	
-	-fx-border-width: 0 0 2 0;
-}
-
-

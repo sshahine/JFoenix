@@ -18,27 +18,39 @@
  */
 package com.jfoenix.controls;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.PaintConverter;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -105,27 +117,6 @@ public class JFXComboBox<T> extends ComboBox<T> {
 	 */
 	private static final String DEFAULT_STYLE_CLASS = "jfx-combo-box";
 
-	/**
-	 * JFXTextField is set as the editor for the ComboBox.
-	 * The editor is null if the ComboBox is not
-	 * {@link #editableProperty() editable}. 
-	 */
-	private TextField textField;
-	private ReadOnlyObjectWrapper<TextField> jfxEditor;
-	public final TextField getJFXEditor() { 
-		return jfxEditorProperty().get(); 
-	}
-	public final ReadOnlyObjectProperty<TextField> jfxEditorProperty() { 
-		if (jfxEditor == null) {
-			jfxEditor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
-			// TODO: solve focus issue after selection
-			textField = new JFXTextField();
-			jfxEditor.set(textField);
-		}
-		return jfxEditor.getReadOnlyProperty(); 
-	}
-
-
 	/***************************************************************************
 	 *                                                                         *
 	 * Node Converter Property                                                 *
@@ -168,5 +159,125 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				return object.toString();
 			}
 		};
+	}
+	
+	/***************************************************************************
+	 *                                                                         *
+	 * styleable Properties                                                    *
+	 *                                                                         *
+	 **************************************************************************/
+	
+	/**
+	 * set true to show a float the prompt text when focusing the field
+	 */
+	private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT, JFXComboBox.this, "lableFloat", false);
+	
+	public final StyleableBooleanProperty labelFloatProperty() {
+		return this.labelFloat;
+	}
+
+	public final boolean isLabelFloat() {
+		return this.labelFloatProperty().get();
+	}
+
+	public final void setLabelFloat(final boolean labelFloat) {
+		this.labelFloatProperty().set(labelFloat);
+	}
+	
+	/**
+	 * default color used when the field is unfocused
+	 */
+	private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR, JFXComboBox.this, "unFocusColor", Color.rgb(77, 77, 77));
+
+	public Paint getUnFocusColor() {
+		return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
+	}
+
+	public StyleableObjectProperty<Paint> unFocusColorProperty() {
+		return this.unFocusColor;
+	}
+
+	public void setUnFocusColor(Paint color) {
+		this.unFocusColor.set(color);
+	}
+
+	/**
+	 * default color used when the field is focused
+	 */
+	private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.FOCUS_COLOR, JFXComboBox.this, "focusColor", Color.valueOf("#4059A9"));
+
+	public Paint getFocusColor() {
+		return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();
+	}
+
+	public StyleableObjectProperty<Paint> focusColorProperty() {
+		return this.focusColor;
+	}
+
+	public void setFocusColor(Paint color) {
+		this.focusColor.set(color);
+	}
+	
+	
+	private static class StyleableProperties {
+		private static final CssMetaData<JFXComboBox<?>, Paint> UNFOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
+			@Override
+			public boolean isSettable(JFXComboBox<?> control) {
+				return control.unFocusColor == null || !control.unFocusColor.isBound();
+			}
+
+			@Override
+			public StyleableProperty<Paint> getStyleableProperty(JFXComboBox<?> control) {
+				return control.unFocusColorProperty();
+			}
+		};
+		private static final CssMetaData<JFXComboBox<?>, Paint> FOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-fx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
+			@Override
+			public boolean isSettable(JFXComboBox<?> control) {
+				return control.focusColor == null || !control.focusColor.isBound();
+			}
+
+			@Override
+			public StyleableProperty<Paint> getStyleableProperty(JFXComboBox<?> control) {
+				return control.focusColorProperty();
+			}
+		};
+		private static final CssMetaData<JFXComboBox<?>, Boolean> LABEL_FLOAT = new CssMetaData<JFXComboBox<?>, Boolean>("-fx-label-float", BooleanConverter.getInstance(), false) {
+			@Override
+			public boolean isSettable(JFXComboBox<?> control) {
+				return control.labelFloat == null || !control.labelFloat.isBound();
+			}
+
+			@Override
+			public StyleableBooleanProperty getStyleableProperty(JFXComboBox<?> control) {
+				return control.labelFloatProperty();
+			}
+		};
+		
+
+		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+		static {
+			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+			Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
+			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+		}
+	}
+
+	// inherit the styleable properties from parent
+	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+	@Override
+	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+		if (STYLEABLES == null) {
+			final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+			styleables.addAll(getClassCssMetaData());
+			styleables.addAll(super.getClassCssMetaData());
+			STYLEABLES = Collections.unmodifiableList(styleables);
+		}
+		return STYLEABLES;
+	}
+
+	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+		return StyleableProperties.CHILD_STYLEABLES;
 	}
 }
