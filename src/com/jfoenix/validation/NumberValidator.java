@@ -26,7 +26,7 @@ import javafx.scene.control.TextInputControl;
 import com.jfoenix.validation.base.ValidatorBase;
 
 /**
- * An example of Number field validtaion, that is applied on text input controls
+ * An example of Number field validation, that is applied on text input controls
  * such as {@link TextField} and {@link TextArea}
  * 
  * @author  Shadi Shaheen
