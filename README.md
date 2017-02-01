@@ -5,7 +5,7 @@
 * JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
-* Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix).
+* Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Summary
 JFoenix is an open source Java library, that implements Google Material Design using Java components.
