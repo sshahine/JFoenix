@@ -23,7 +23,6 @@ import java.util.Map;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -35,7 +34,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
-import javafx.scene.control.IndexedCell;
 import javafx.scene.control.TreeTableRow;
 import javafx.util.Duration;
 

@@ -52,7 +52,7 @@ import java.lang.reflect.Field;
  * however it extends the JavaFXPorts text field android skin.
  *
  * @author  Shadi Shaheen
- * @version 1.0
+ * @version 2.0
  * @since   2017-01-25
  */
 public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{

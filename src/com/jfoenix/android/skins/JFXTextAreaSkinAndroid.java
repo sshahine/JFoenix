@@ -68,8 +68,8 @@ import javafx.util.Duration;
  * however it extends the JavaFXPorts text area android skin.
  *
  * @author  Shadi Shaheen
- * @version 1.0
- * @since   2016-01-25
+ * @version 2.0
+ * @since   2017-01-25
  */
 public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 

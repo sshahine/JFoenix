@@ -60,7 +60,7 @@ import javafx.util.Duration;
  * <h1>Material Design PasswordField Skin</h1>
  *
  * @author  Shadi Shaheen
- * @version 1.0
+ * @version 2.0
  * @since   2017-01-25
  */
 public class JFXPasswordFieldSkin extends TextFieldSkin{

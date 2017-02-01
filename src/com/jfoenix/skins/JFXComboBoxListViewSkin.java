@@ -45,7 +45,6 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -58,8 +57,8 @@ import javafx.util.StringConverter;
  * <h1>Material Design ComboBox Skin</h1>
  *
  * @author  Shadi Shaheen
- * @version 1.0
- * @since   2016-03-09
+ * @version 2.0
+ * @since   2017-01-25
  */
 
 public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
