@@ -115,7 +115,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		// create my custom pane for the prompt node
 		promptText.textProperty().bind(comboBox.promptTextProperty());
 		promptText.fillProperty().bind(promptTextFill);
-		promptText.getStyleClass().add("text");
+		promptText.getStyleClass().addAll("text","prompt-text");
 		promptText.getTransforms().add(promptTextScale);
 		if(!comboBox.isLabelFloat()) promptText.visibleProperty().bind(usePromptText);
 
@@ -136,6 +136,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		comboBox.setButtonCell(new ListCell<T>(){
 			protected void updateItem(T item, boolean empty) {
 				updateDisplayText(this,item, empty);
+				this.setVisible(item!=null || !empty);
 			};
 		});
 
@@ -209,14 +210,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 	 * Public API                                                              *
 	 *                                                                         *
 	 **************************************************************************/  
-
-	@Override
-	protected void updateDisplayArea() {
-		super.updateDisplayArea();
-		try{
-			((Text)((Region)getDisplayNode()).getChildrenUnmodifiable().get(0)).setVisible(getSkinnable().getValue() != null);
-		}catch(Exception e){}
-	}
 
 	@Override protected void layoutChildren(final double x, final double y,
 			final double w, final double h) {

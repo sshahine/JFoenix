@@ -448,12 +448,9 @@
 .jfx-list-cell:even {
 	-fx-background-color:  WHITE;
 }
-.jfx-list-cell:filled:hover{
+.jfx-list-cell:filled:hover,
+.jfx-list-cell:selected .label{
 	-fx-text-fill: black;
-}
-
-.jfx-list-cell:selected .text{ 
-	-fx-fill: black;
 }
 
 .jfx-list-cell .jfx-rippler {
@@ -739,13 +736,15 @@
 *                                                                              *
 *******************************************************************************/
 
-.combo-box-popup .list-view .jfx-list-cell .label {
-  	-fx-text-fill: BLACK ;
+.combo-box-popup .list-view .jfx-list-cell .label,
+.combo-box-popup .list-view .jfx-list-cell:filled:hover .label {
+  	-fx-text-fill: BLACK;
 }
-.combo-box-popup .list-view .jfx-list-cell .custom-jfx-list-view-icon {
-	-fx-text-fill: #5264AE;
-	-fx-padding: 0.0 10.0 0.0 5.0  ;
-	-fx-cursor: hand;
+
+.combo-box-popup .list-view .jfx-list-cell .custom-jfx-list-view-icon,
+.combo-box-popup .list-view .jfx-list-cell:filled:hover .custom-jfx-list-view-icon,
+.combo-box-popup .list-view .jfx-list-cell:selected .custom-jfx-list-view-icon{
+  	-fx-text-fill: #5264AE;
 }
 
 .combo-box-popup .list-view .jfx-list-cell:odd:selected > .jfx-rippler > StackPane,
@@ -754,18 +753,12 @@
 }
 .combo-box-popup .list-view .jfx-list-cell {
 	-fx-background-insets: 0.0 ; 
-	-fx-text-fill: BLACK; 
 }
 .combo-box-popup .list-view .jfx-list-cell:odd, 
 .combo-box-popup .list-view .jfx-list-cell:even {
 	-fx-background-color:  WHITE;
 }
-.combo-box-popup .list-view .jfx-list-cell:filled:hover .label{ 
-	-fx-text-fill: black;
-}
-.combo-box-popup .list-view .jfx-list-cell:filled:hover .custom-jfx-list-view-icon {
-	-fx-text-fill: #5264AE;
-}
+
 .combo-box-popup .list-view .jfx-list-cell .jfx-rippler {
 	-fx-rippler-fill: #5264AE;
 }
