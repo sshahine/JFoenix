@@ -204,7 +204,7 @@ public abstract class ValidatorBase extends Parent {
 		}
 	};
 	public void setIcon(Node icon){
-		icon.getStyleClass().add("errorIcon");
+		icon.getStyleClass().add("error-icon");
 		this.icon.set(icon);
 	}
 	public Node getIcon(){

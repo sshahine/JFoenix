@@ -334,7 +334,7 @@ public class JFXListView<T> extends ListView<T> {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXListView<?>, Number> CELL_HORIZONTAL_MARGIN =
-				new CssMetaData< JFXListView<?>, Number>("-fx-cell-horizontal-margin",
+				new CssMetaData< JFXListView<?>, Number>("-jfx-cell-horizontal-margin",
 						SizeConverter.getInstance(), 0) {
 			@Override
 			public boolean isSettable(JFXListView<?> control) {
@@ -346,7 +346,7 @@ public class JFXListView<T> extends ListView<T> {
 			}
 		};
 		private static final CssMetaData< JFXListView<?>, Number> CELL_VERTICAL_MARGIN =
-				new CssMetaData< JFXListView<?>, Number>("-fx-cell-vertical-margin",
+				new CssMetaData< JFXListView<?>, Number>("-jfx-cell-vertical-margin",
 						SizeConverter.getInstance(), 4) {
 			@Override
 			public boolean isSettable(JFXListView<?> control) {
@@ -358,7 +358,7 @@ public class JFXListView<T> extends ListView<T> {
 			}
 		};
 		private static final CssMetaData< JFXListView<?>, Number> VERTICAL_GAP =
-				new CssMetaData< JFXListView<?>, Number>("-fx-vertical-gap",
+				new CssMetaData< JFXListView<?>, Number>("-jfx-vertical-gap",
 						SizeConverter.getInstance(), 0) {
 			@Override
 			public boolean isSettable(JFXListView<?> control) {
@@ -370,7 +370,7 @@ public class JFXListView<T> extends ListView<T> {
 			}
 		};
 		private static final CssMetaData< JFXListView<?>, Boolean> EXPANDED =
-				new CssMetaData< JFXListView<?>, Boolean>("-fx-expanded",
+				new CssMetaData< JFXListView<?>, Boolean>("-jfx-expanded",
 						BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(JFXListView<?> control) {

@@ -130,7 +130,7 @@ public class JFXCheckBox extends CheckBox {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXCheckBox, Paint> CHECKED_COLOR =
-				new CssMetaData< JFXCheckBox, Paint>("-fx-checked-color",
+				new CssMetaData< JFXCheckBox, Paint>("-jfx-checked-color",
 						PaintConverter.getInstance(), Color.valueOf("#0F9D58")) {
 			@Override
 			public boolean isSettable(JFXCheckBox control) {
@@ -142,7 +142,7 @@ public class JFXCheckBox extends CheckBox {
 			}
 		};
 		private static final CssMetaData< JFXCheckBox, Paint> UNCHECKED_COLOR =
-				new CssMetaData< JFXCheckBox, Paint>("-fx-unchecked-color",
+				new CssMetaData< JFXCheckBox, Paint>("-jfx-unchecked-color",
 						PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
 			@Override
 			public boolean isSettable(JFXCheckBox control) {

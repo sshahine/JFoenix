@@ -158,7 +158,7 @@ public class JFXButton extends Button {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXButton, ButtonType> BUTTON_TYPE =
-				new CssMetaData< JFXButton, ButtonType>("-fx-button-type",
+				new CssMetaData< JFXButton, ButtonType>("-jfx-button-type",
 						ButtonTypeConverter.getInstance(), ButtonType.FLAT) {
 			@Override
 			public boolean isSettable(JFXButton control) {

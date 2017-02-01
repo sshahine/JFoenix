@@ -106,7 +106,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 		field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 		field.setPadding(new Insets(4,0,4,0));
 		
-		errorLabel.getStyleClass().add("errorLabel");
+		errorLabel.getStyleClass().add("error-label");
         errorLabel.setPadding(new Insets(4,0,0,0));
 		errorLabel.setWrapText(true);
 		errorIcon.setTranslateY(3);

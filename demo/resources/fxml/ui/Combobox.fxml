@@ -82,12 +82,12 @@
 		</VBox>
 
 
-		<VBox spacing="14">
+		<VBox spacing="20">
 			<Label styleClass="title-label">Editable Box</Label>
 			<ValidationFacade>
 				<control>
 					<JFXComboBox id="jfxEditableComboBox" editable="true"
-						maxWidth="200" promptText="Select/Edit Items">
+						prefWidth="200" promptText="Select/Edit Items">
 						<items>
 							<FXCollections fx:factory="observableArrayList">
 								<Label>

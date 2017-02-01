@@ -76,19 +76,23 @@ public class ValidationFacade extends VBox {
 		setSpacing(0);
 
 		errorLabel = new Label();
-		errorLabel.getStyleClass().add("errorLabel");	
+		errorLabel.getStyleClass().add("error-label");	
 		errorLabel.setWrapText(true);
 
+		StackPane errorLabelContainer = new StackPane();
+		errorLabelContainer.getChildren().add(errorLabel);
+		StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
+		
 		errorIcon = new StackPane();
-
 		errorContainer = new HBox();
-		errorContainer.getChildren().add(errorLabel);				
+		errorContainer.setAlignment(Pos.TOP_LEFT);
+		errorContainer.getChildren().add(errorLabelContainer);				
 		errorContainer.getChildren().add(errorIcon);
 
-		HBox.setHgrow(errorLabel, Priority.ALWAYS);
-		errorLabel.setMaxWidth(Double.MAX_VALUE);		
+		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
+		errorLabelContainer.setMaxWidth(Double.MAX_VALUE);		
 
-		errorIcon.setTranslateY(3);
+		errorIcon.setTranslateY(5);
 		errorContainer.setSpacing(10);
 		errorContainer.setVisible(false);
 		errorContainer.setOpacity(0);

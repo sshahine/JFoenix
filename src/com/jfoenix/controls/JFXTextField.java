@@ -216,7 +216,7 @@ public class JFXTextField extends TextField {
 	
 
 	private static class StyleableProperties {
-		private static final CssMetaData<JFXTextField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
+		private static final CssMetaData<JFXTextField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-jfx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
 			@Override
 			public boolean isSettable(JFXTextField control) {
 				return control.unFocusColor == null || !control.unFocusColor.isBound();
@@ -227,7 +227,7 @@ public class JFXTextField extends TextField {
 				return control.unFocusColorProperty();
 			}
 		};
-		private static final CssMetaData<JFXTextField, Paint> FOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-fx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
+		private static final CssMetaData<JFXTextField, Paint> FOCUS_COLOR = new CssMetaData<JFXTextField, Paint>("-jfx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
 			@Override
 			public boolean isSettable(JFXTextField control) {
 				return control.focusColor == null || !control.focusColor.isBound();
@@ -238,7 +238,7 @@ public class JFXTextField extends TextField {
 				return control.focusColorProperty();
 			}
 		};
-		private static final CssMetaData<JFXTextField, Boolean> LABEL_FLOAT = new CssMetaData<JFXTextField, Boolean>("-fx-label-float", BooleanConverter.getInstance(), false) {
+		private static final CssMetaData<JFXTextField, Boolean> LABEL_FLOAT = new CssMetaData<JFXTextField, Boolean>("-jfx-label-float", BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(JFXTextField control) {
 				return control.labelFloat == null || !control.labelFloat.isBound();
@@ -251,7 +251,7 @@ public class JFXTextField extends TextField {
 		};
 		
 		private static final CssMetaData< JFXTextField, Boolean> DISABLE_ANIMATION =
-				new CssMetaData< JFXTextField, Boolean>("-fx-disable-animation",
+				new CssMetaData< JFXTextField, Boolean>("-jfx-disable-animation",
 						BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(JFXTextField control) {

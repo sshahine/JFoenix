@@ -158,7 +158,7 @@ public class JFXSlider extends Slider {
 	}
 
 	private static class StyleableProperties {
-		private static final CssMetaData<JFXSlider, IndicatorPosition> INDICATOR_POSITION = new CssMetaData<JFXSlider, IndicatorPosition>("-fx-indicator-position", IndicatorPositionConverter.getInstance(),
+		private static final CssMetaData<JFXSlider, IndicatorPosition> INDICATOR_POSITION = new CssMetaData<JFXSlider, IndicatorPosition>("-jfx-indicator-position", IndicatorPositionConverter.getInstance(),
 				IndicatorPosition.LEFT) {
 			@Override
 			public boolean isSettable(JFXSlider control) {

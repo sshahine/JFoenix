@@ -220,7 +220,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 	
 	
 	private static class StyleableProperties {
-		private static final CssMetaData<JFXComboBox<?>, Paint> UNFOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-fx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
+		private static final CssMetaData<JFXComboBox<?>, Paint> UNFOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-jfx-unfocus-color", PaintConverter.getInstance(), Color.valueOf("#A6A6A6")) {
 			@Override
 			public boolean isSettable(JFXComboBox<?> control) {
 				return control.unFocusColor == null || !control.unFocusColor.isBound();
@@ -231,7 +231,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				return control.unFocusColorProperty();
 			}
 		};
-		private static final CssMetaData<JFXComboBox<?>, Paint> FOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-fx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
+		private static final CssMetaData<JFXComboBox<?>, Paint> FOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>("-jfx-focus-color", PaintConverter.getInstance(), Color.valueOf("#3f51b5")) {
 			@Override
 			public boolean isSettable(JFXComboBox<?> control) {
 				return control.focusColor == null || !control.focusColor.isBound();
@@ -242,7 +242,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				return control.focusColorProperty();
 			}
 		};
-		private static final CssMetaData<JFXComboBox<?>, Boolean> LABEL_FLOAT = new CssMetaData<JFXComboBox<?>, Boolean>("-fx-label-float", BooleanConverter.getInstance(), false) {
+		private static final CssMetaData<JFXComboBox<?>, Boolean> LABEL_FLOAT = new CssMetaData<JFXComboBox<?>, Boolean>("-jfx-label-float", BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(JFXComboBox<?> control) {
 				return control.labelFloat == null || !control.labelFloat.isBound();

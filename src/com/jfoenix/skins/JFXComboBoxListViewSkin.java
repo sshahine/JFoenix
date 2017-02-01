@@ -121,7 +121,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
 		customPane = new StackPane();
 		customPane.setMouseTransparent(true);
-		getSkinnable().backgroundProperty().addListener((o,oldVal,newVal)-> customPane.setBackground(newVal));
+//		getSkinnable().backgroundProperty().addListener((o,oldVal,newVal)-> customPane.setBackground(newVal));
 		customPane.getStyleClass().add("combo-box-button-container");
 		customPane.backgroundProperty().bindBidirectional(getSkinnable().backgroundProperty());
 		customPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));

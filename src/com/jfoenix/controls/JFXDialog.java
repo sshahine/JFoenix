@@ -467,7 +467,7 @@ public class JFXDialog extends StackPane {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXDialog, DialogTransition> DIALOG_TRANSITION =
-				new CssMetaData< JFXDialog, DialogTransition>("-fx-dialog-transition",
+				new CssMetaData< JFXDialog, DialogTransition>("-jfx-dialog-transition",
 						DialogTransitionConverter.getInstance(), DialogTransition.CENTER) {
 			@Override
 			public boolean isSettable(JFXDialog control) {

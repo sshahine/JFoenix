@@ -185,7 +185,7 @@ public class JFXSpinner extends StackPane {
 	
 	private static class StyleableProperties {
 		private static final CssMetaData<JFXSpinner, Number> RADIUS =
-				new CssMetaData< JFXSpinner, Number>("-fx-radius",
+				new CssMetaData< JFXSpinner, Number>("-jfx-radius",
 						SizeConverter.getInstance(), 12) {
 			@Override
 			public boolean isSettable(JFXSpinner control) {
@@ -198,7 +198,7 @@ public class JFXSpinner extends StackPane {
 		};
 		
 		private static final CssMetaData<JFXSpinner, Number> STARTING_ANGLE =
-				new CssMetaData< JFXSpinner, Number>("-fx-starting-angle",
+				new CssMetaData< JFXSpinner, Number>("-jfx-starting-angle",
 						SizeConverter.getInstance(), 360 - Math.random()*720) {
 			@Override
 			public boolean isSettable(JFXSpinner control) {

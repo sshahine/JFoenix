@@ -121,7 +121,7 @@ public class JFXRadioButton extends RadioButton {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXRadioButton, Color> SELECTED_COLOR =
-				new CssMetaData< JFXRadioButton, Color>("-fx-selected-color",
+				new CssMetaData< JFXRadioButton, Color>("-jfx-selected-color",
 						ColorConverter.getInstance(), Color.valueOf("#0F9D58")) {
 			@Override
 			public boolean isSettable(JFXRadioButton control) {
@@ -133,7 +133,7 @@ public class JFXRadioButton extends RadioButton {
 			}
 		};
 		private static final CssMetaData< JFXRadioButton, Color> UNSELECTED_COLOR =
-				new CssMetaData< JFXRadioButton, Color>("-fx-unselected-color",
+				new CssMetaData< JFXRadioButton, Color>("-jfx-unselected-color",
 						ColorConverter.getInstance(), Color.valueOf("#5A5A5A")) {
 			@Override
 			public boolean isSettable(JFXRadioButton control) {

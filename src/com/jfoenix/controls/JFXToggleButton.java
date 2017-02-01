@@ -172,7 +172,7 @@ public class JFXToggleButton extends ToggleButton {
 
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXToggleButton, Paint> TOGGLE_COLOR =
-				new CssMetaData< JFXToggleButton, Paint>("-fx-toggle-color",
+				new CssMetaData< JFXToggleButton, Paint>("-jfx-toggle-color",
 						PaintConverter.getInstance(), Color.valueOf("#009688")) {
 			@Override
 			public boolean isSettable(JFXToggleButton control) {
@@ -185,7 +185,7 @@ public class JFXToggleButton extends ToggleButton {
 		};
 
 		private static final CssMetaData< JFXToggleButton, Paint> UNTOGGLE_COLOR =
-				new CssMetaData< JFXToggleButton, Paint>("-fx-untoggle-color",
+				new CssMetaData< JFXToggleButton, Paint>("-jfx-untoggle-color",
 						PaintConverter.getInstance(), Color.valueOf("#FAFAFA")) {
 			@Override
 			public boolean isSettable(JFXToggleButton control) {
@@ -198,7 +198,7 @@ public class JFXToggleButton extends ToggleButton {
 		};
 
 		private static final CssMetaData< JFXToggleButton, Paint> TOGGLE_LINE_COLOR =
-				new CssMetaData< JFXToggleButton, Paint>("-fx-toggle-line-color",
+				new CssMetaData< JFXToggleButton, Paint>("-jfx-toggle-line-color",
 						PaintConverter.getInstance(), Color.valueOf("#77C2BB")) {
 			@Override
 			public boolean isSettable(JFXToggleButton control) {
@@ -211,7 +211,7 @@ public class JFXToggleButton extends ToggleButton {
 		};
 
 		private static final CssMetaData< JFXToggleButton, Paint> UNTOGGLE_LINE_COLOR =
-				new CssMetaData< JFXToggleButton, Paint>("-fx-untoggle-line-color",
+				new CssMetaData< JFXToggleButton, Paint>("-jfx-untoggle-line-color",
 						PaintConverter.getInstance(), Color.valueOf("#999999")) {
 			@Override
 			public boolean isSettable(JFXToggleButton control) {

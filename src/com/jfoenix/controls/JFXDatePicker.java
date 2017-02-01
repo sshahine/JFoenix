@@ -182,7 +182,7 @@ public class JFXDatePicker extends DatePicker {
     
 	private static class StyleableProperties {
 		private static final CssMetaData< JFXDatePicker, Paint> DEFAULT_COLOR =
-				new CssMetaData< JFXDatePicker, Paint>("-fx-default-color",
+				new CssMetaData< JFXDatePicker, Paint>("-jfx-default-color",
 						PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
 			@Override
 			public boolean isSettable(JFXDatePicker control) {
@@ -195,7 +195,7 @@ public class JFXDatePicker extends DatePicker {
 		};
 
 		private static final CssMetaData< JFXDatePicker, Boolean> OVERLAY =
-				new CssMetaData< JFXDatePicker, Boolean>("-fx-overlay",
+				new CssMetaData< JFXDatePicker, Boolean>("-jfx-overlay",
 						BooleanConverter.getInstance(), false) {
 			@Override
 			public boolean isSettable(JFXDatePicker control) {
