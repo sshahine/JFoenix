@@ -69,6 +69,8 @@ public class JFXSnackbar extends StackPane {
 	private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new  ConcurrentLinkedQueue<SnackbarEvent> ();
 	private StackPane actionContainer;
 
+	Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
+	
 	public JFXSnackbar() {
 		this(null);
 	}
@@ -195,43 +197,108 @@ public class JFXSnackbar extends StackPane {
 			actionContainer.setManaged(false);
 			action.setVisible(false);
 		}
-
+		
 		Timeline animation =  new  Timeline(
 				new KeyFrame(
 						Duration.ZERO,  
 						(e)->popup.toBack(),
 						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), Interpolator.EASE_BOTH)
-						//new KeyValue(popup.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
+						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
 						),
 				new KeyFrame(
 						Duration.millis(10),
 						(e)->popup.toFront(),
 						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
 						),
-				new KeyFrame(Duration.millis(350),
-						//new KeyValue(popup.opacityProperty(), 1 ,Interpolator.EASE_BOTH)//,
-						new KeyValue(popup.translateYProperty(), 0, Interpolator.EASE_BOTH)
+				new KeyFrame(Duration.millis(300),
+						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
+						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
 						),
 				new KeyFrame(Duration.millis(timeout/2))
 				);
 		animation.setAutoReverse(true);
 		animation.setCycleCount(2);
-
-
-		animation.setOnFinished((e)->{
-			SnackbarEvent qevent = eventQueue.poll();
-			if (qevent != null) {
-				show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
-			} else {
-				//The enqueue method and this listener should be executed sequentially on the FX Thread so there
-				//should not be a race condition
-				processingQueue.getAndSet(false);
-			}				
-		});
-
+		animation.setOnFinished((e)-> processSnackbars());
 		animation.play();
 	}
+	
+	public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+		toast.setText(message);
+
+		if (actionText != null && !actionText.isEmpty()) {
+			action.setVisible(true);
+			actionContainer.setVisible(true);
+			actionContainer.setManaged(true);
+			// to force updating the layout bounds
+			action.setText("");
+			action.setText(actionText);
+			action.setOnMouseClicked(actionHandler);
+		} else {
+			actionContainer.setVisible(false);
+			actionContainer.setManaged(false);
+			action.setVisible(false);
+		}
+
+		Timeline animation =  new  Timeline(
+				new KeyFrame(
+						Duration.ZERO,  
+						(e)->popup.toBack(),
+						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
+						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
+						),
+				new KeyFrame(
+						Duration.millis(10),
+						(e)->popup.toFront(),
+						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
+						),
+				new KeyFrame(Duration.millis(300),
+						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
+						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+						)
+				);
+		animation.setCycleCount(1);
+		animation.play();
+	}
+	
+	public void close(){
+		Timeline animation =  new  Timeline(
+				new KeyFrame(
+						Duration.ZERO,  
+						(e)->popup.toFront(),
+						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
+						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+						),
+				new KeyFrame(
+						Duration.millis(290),
+						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
+						),
+				new KeyFrame(Duration.millis(300),
+						(e)->popup.toBack(),
+						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
+						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
+						)
+				);
+		animation.setCycleCount(1);
+		animation.setOnFinished((e)-> processSnackbars());
+		animation.play();
+	}
+
+	private void processSnackbars() {
+		SnackbarEvent qevent = eventQueue.poll();
+		if (qevent != null) {
+			if(qevent.isPersistant()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+			else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+		} else {
+			//The enqueue method and this listener should be executed sequentially on the FX Thread so there
+			//should not be a race condition
+			processingQueue.getAndSet(false);
+		}
+	}
+
+	
 
 	public void refreshPopup(){
 		Bounds contentBound = popup.getLayoutBounds();		
@@ -248,7 +315,8 @@ public class JFXSnackbar extends StackPane {
 			Platform.runLater(() -> {
 				SnackbarEvent qevent = eventQueue.poll();
 				if (qevent != null) {
-					show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+					if(qevent.isPersistant()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+					else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
 				}
 			});
 		}
@@ -266,6 +334,7 @@ public class JFXSnackbar extends StackPane {
 		private final String message;		 
 		private final String actionText;
 		private final long timeout;
+		private final boolean persistant;
 		private final EventHandler<? super MouseEvent> actionHandler;
 
 
@@ -288,16 +357,17 @@ public class JFXSnackbar extends StackPane {
 		public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
 
 		public SnackbarEvent(String message) {
-			this(message,null,3000,null);
+			this(message,null,3000, false,null);
 
 		}
 
-		public SnackbarEvent(String message,String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+		public SnackbarEvent(String message,String actionText, long timeout, boolean persistant, EventHandler<? super MouseEvent> actionHandler) {
 			super(SNACKBAR);
 			this.message=message;
 			this.actionText=actionText;
 			this.timeout=timeout < 1 ? 3000:timeout;
 			this.actionHandler=actionHandler;
+			this.persistant = persistant;
 		}
 
 		@Override
@@ -305,6 +375,9 @@ public class JFXSnackbar extends StackPane {
 			return (EventType<? extends SnackbarEvent>) super.getEventType();
 		}
 
+		public boolean isPersistant() {
+			return persistant;
+		}
 	}
 }
 

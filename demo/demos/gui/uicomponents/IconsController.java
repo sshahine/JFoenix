@@ -28,22 +28,22 @@ public class IconsController {
 
 	@FXML
 	private JFXBadge badge1;
-	
+
 	@FXML private StackPane root;
 	@FXML private JFXSnackbar snackbar;
-	int count=0;
-	
-	
+	int count=1;
+
+
 	@PostConstruct
 	public void init() throws FlowException, VetoException {
-		
+
 		bindAction(burger1);
 		bindAction(burger2);
 		bindAction(burger3);
 		bindAction(burger4);
 
 		snackbar.registerSnackbarContainer(root);
-		
+
 		badge1.setOnMouseClicked((e) -> {
 			int value = Integer.parseInt(badge1.getText());
 			if (e.getButton() == MouseButton.PRIMARY) {
@@ -51,19 +51,23 @@ public class IconsController {
 			} else if (e.getButton() == MouseButton.SECONDARY) {
 				value--;
 			}
-			
+
 			if (value == 0) {
 				badge1.setEnabled(false);
 			} else {
 				badge1.setEnabled(true);
 			}
 			badge1.setText(String.valueOf(value));
-			
+
 			// trigger snackbar
 			if (count++%2==0){
 				snackbar.fireEvent(new SnackbarEvent("Toast Message " + count));
 			} else {
-				snackbar.fireEvent(new SnackbarEvent("Snackbar Message "+ count,"UNDO",3000,(b)->{}));
+				if(count%4 == 0){
+					snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistant "+ count,"CLOSE",3000, true,(b)->{snackbar.close();}));
+				}else{
+					snackbar.fireEvent(new SnackbarEvent("Snackbar Message "+ count,"UNDO",3000, false,(b)->{}));
+				}
 			}
 		});
 	}
