@@ -52,10 +52,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -758,8 +761,18 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			setOnMouseClicked((event)->{
 				if (tab.isDisable()) return;
-				setOpacity(1);
-				getBehavior().selectTab(tab);
+				if (event.getButton() == MouseButton.PRIMARY) {
+					setOpacity(1);
+					getBehavior().selectTab(tab);
+				}
+			});
+
+			addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+				ContextMenu contextMenu = tab.getContextMenu();
+				if (contextMenu != null) {
+					contextMenu.show(tabText, event.getScreenX(), event.getScreenY());
+					event.consume();
+				}
 			});
 
 			// initialize pseudo-class state
