@@ -17,6 +17,7 @@
 		<Label fx:id="combobox"> Combo Box </Label>
 		<Label fx:id="dialogs"> Dialogs </Label>
 		<Label fx:id="icons"> Icons </Label>
+		<Label fx:id="scrollpane"> Header Scroll Pane </Label>
 		<Label fx:id="listview"> List View </Label>
 		<Label fx:id="treetableview"> Tree Table View</Label>
 		<Label fx:id="progressbar"> Progress Bar </Label>

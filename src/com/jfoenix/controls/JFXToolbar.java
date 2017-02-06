@@ -59,7 +59,7 @@ public class JFXToolbar extends BorderPane {
 	 **************************************************************************/
 	
 	public void setLeftItems(Node... nodes){
-		this.leftBox.getChildren().addAll(nodes);
+		this.leftBox.getChildren().setAll(nodes);
 	}
 	
 	public ObservableList<Node> getLeftItems(){
@@ -67,7 +67,7 @@ public class JFXToolbar extends BorderPane {
 	}
 	
 	public void setRightItems(Node... nodes){
-		this.rightBox.getChildren().addAll(nodes);
+		this.rightBox.getChildren().setAll(nodes);
 	}
 	
 	public ObservableList<Node> getRightItems(){

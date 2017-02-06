@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import com.jfoenix.controls.JFXScrollPane?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/2.2">
+	<JFXScrollPane fx:id="scroll">
+		<topBar>
+			<children>
+				<JFXButton fx:id="backButton">
+					<StackPane.alignment>CENTER_LEFT</StackPane.alignment>
+					<StackPane.margin>
+						<Insets>
+							<left>
+								20
+							</left>
+						</Insets>
+					</StackPane.margin>
+				</JFXButton>
+			</children>
+		</topBar>
+		<bottomBar>
+			<children>
+				<Label style="-fx-text-fill:WHITE; -fx-font-size: 40;">
+					Store
+					<StackPane.alignment>CENTER_LEFT</StackPane.alignment>
+					<StackPane.margin>
+						<Insets>
+							<left>
+								80
+							</left>
+						</Insets>
+					</StackPane.margin>
+				</Label>
+			</children>
+		</bottomBar>
+		<content>
+			<StackPane style="-fx-padding:24;">
+				<JFXListView fx:id="contentList">
+				</JFXListView>
+			</StackPane>
+		</content>
+	</JFXScrollPane>
+</StackPane>
+

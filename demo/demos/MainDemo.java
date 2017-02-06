@@ -39,7 +39,7 @@ public class MainDemo extends Application {
 		
 		JFXDecorator decorator = new JFXDecorator(stage, container.getView());
 		decorator.setCustomMaximize(true);
-		Scene scene = new Scene(decorator, 800, 800);
+		Scene scene = new Scene(decorator, 800, 850);
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
 		scene.getStylesheets().add(MainDemo.class.getResource("/resources/css/jfoenix-main-demo.css").toExternalForm());

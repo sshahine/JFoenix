@@ -967,3 +967,11 @@
 	-fx-font-size: 1.0em;
 }
 
+
+.jfx-scroll-pane .main-header{
+	-fx-background-image: url("../bg1.jpg");
+}
+
+.jfx-scroll-pane .condensed-header{
+	-fx-background-image: url("../bg4.jpg");
+}
