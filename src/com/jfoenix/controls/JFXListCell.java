@@ -158,11 +158,11 @@ public class JFXListCell<T> extends ListCell<T> {
 				}
 			}else{
 				this.setTranslateY(0);
-				clip.setX(0);
 				clip.setY(0);
 				clip.setHeight(getHeight());
-				clip.setWidth(getWidth());
 			}
+			clip.setX(0);
+			clip.setWidth(getWidth());
 		}
 		if(!getChildren().contains(cellRippler)){
 			makeChildrenTransparent();

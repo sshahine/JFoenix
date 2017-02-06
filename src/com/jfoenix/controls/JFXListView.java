@@ -87,10 +87,10 @@ public class JFXListView<T> extends ListView<T> {
 	public ObjectProperty<Integer> depthProperty(){
 		return depthProperty;
 	}
-	public int getDepthProperty(){
+	public int getDepth(){
 		return depthProperty.get();
 	}
-	public void setDepthProperty(int depth){
+	public void setDepth(int depth){
 		depthProperty.set(depth);
 	}	
 
