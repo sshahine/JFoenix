@@ -145,8 +145,28 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 		
 		promptContainer = new StackPane();
 
-		line.getStyleClass().add("textfield-line");
-		focusedLine.getStyleClass().add("textfield-focused-line");
+		line.getStyleClass().add("input-line");
+		focusedLine.getStyleClass().add("input-focused-line");
+		// draw lines
+		line.setPrefHeight(1);
+		line.setTranslateY(1 + 4 + 2); // translate = prefHeight + init_translation
+		line.setBackground(new Background(new BackgroundFill(((JFXTextArea)getSkinnable()).getUnFocusColor(),
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		if(getSkinnable().isDisabled()) {
+			line.setBorder(new Border(new BorderStroke(((JFXTextArea) getSkinnable()).getUnFocusColor(),
+					BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1))));
+			line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
+					CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+
+		// focused line
+		focusedLine.setPrefHeight(2);
+		focusedLine.setTranslateY(0 + 4 + 2); // translate = prefHeight + init_translation(-1)
+		focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextArea)getSkinnable()).getFocusColor(),
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		focusedLine.setOpacity(0);
+		focusedLine.getTransforms().add(scale);
+		
 		errorContainer = new HBox();
 		errorContainer.getChildren().setAll(errorLabelContainer, errorIcon);
 		HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
@@ -298,32 +318,10 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 			
 //			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->getSkinnable().getWidth()/1.14, getSkinnable().widthProperty()));
 
-			// draw lines
-			line.setPrefHeight(1);
-			line.setTranslateY(1 + 4 + 2); // translate = prefHeight + init_translation
-			line.setBackground(new Background(new BackgroundFill(((JFXTextArea)getSkinnable()).getUnFocusColor(),
-					CornerRadii.EMPTY, Insets.EMPTY)));
-			if(getSkinnable().isDisabled()) {
-				line.setBorder(new Border(new BorderStroke(((JFXTextArea) getSkinnable()).getUnFocusColor(),
-						BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1))));
-				line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-						CornerRadii.EMPTY, Insets.EMPTY)));
-			}
-
-			// focused line
-			focusedLine.setPrefHeight(2);
-			focusedLine.setTranslateY(0 + 4 + 2); // translate = prefHeight + init_translation(-1)
-			focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextArea)getSkinnable()).getFocusColor(),
-					CornerRadii.EMPTY, Insets.EMPTY)));
-			focusedLine.setOpacity(0);
-			focusedLine.getTransforms().add(scale);
-
 			// create floating label
 			createFloatingLabel();
-
             // update validation container
             if(((JFXTextArea)getSkinnable()).getActiveValidator()!=null) updateValidationError();
-
             // focus
             createFocusTransition();
 			if(getSkinnable().isFocused()) focus();

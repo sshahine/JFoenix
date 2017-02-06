@@ -129,9 +129,29 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		StackPane.setAlignment(promptText, Pos.CENTER_LEFT);
 
 		// add lines
+		line.getStyleClass().add("input-line");
+		focusedLine.getStyleClass().add("input-focused-line");
 		getChildren().add(line);
 		getChildren().add(focusedLine);
-
+		line.setPrefHeight(1);
+		line.setTranslateY(1); // translate = prefHeight + init_translation
+		line.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>)getSkinnable()).getUnFocusColor(),
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		if(getSkinnable().isDisabled()) {
+			line.setBorder(new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
+					BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1))));
+			line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
+					CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+		// focused line
+		focusedLine.setPrefHeight(2);
+		focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
+		focusedLine.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>)getSkinnable()).getFocusColor(),
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		focusedLine.setOpacity(0);
+		focusedLine.getTransforms().add(scale);
+		
+		
 		comboBox.setButtonCell(new ListCell<T>(){
 			protected void updateItem(T item, boolean empty) {
 				updateDisplayText(this,item, empty);
@@ -216,26 +236,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		customPane.resizeRelocate(x, y, w , h);
 		if(invalid){
 			invalid = false;
-
-			line.setPrefHeight(1);
-			line.setTranslateY(1); // translate = prefHeight + init_translation
-			line.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>)getSkinnable()).getUnFocusColor(),
-					CornerRadii.EMPTY, Insets.EMPTY)));
-			if(getSkinnable().isDisabled()) {
-				line.setBorder(new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-						BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1))));
-				line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-						CornerRadii.EMPTY, Insets.EMPTY)));
-			}
-
-			// focused line
-			focusedLine.setPrefHeight(2);
-			focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
-			focusedLine.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>)getSkinnable()).getFocusColor(),
-					CornerRadii.EMPTY, Insets.EMPTY)));
-			focusedLine.setOpacity(0);
-			focusedLine.getTransforms().add(scale);
-
 			// create floating label
 			createFloatingAnimation();
 		}
