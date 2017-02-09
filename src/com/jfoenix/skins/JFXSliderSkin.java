@@ -71,13 +71,8 @@ public class JFXSliderSkin extends SliderSkin {
 	public JFXSliderSkin(JFXSlider slider) {
 		super(slider);
 
-		if(!getSkinnable().isShowTickMarks()){
-			track =  (StackPane) getChildren().get(0);
-			thumb =  (StackPane) getChildren().get(1);
-		}else{
-			track =  (StackPane) getChildren().get(1);
-			thumb =  (StackPane) getChildren().get(2);
-		}
+		track = (StackPane) getSkinnable().lookup(".track");
+		thumb = (StackPane) getSkinnable().lookup(".thumb");
 
 		track.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(5), Insets.EMPTY)));
 		thumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(20), Insets.EMPTY)));		
