@@ -50,7 +50,7 @@ import com.jfoenix.transitions.CachedTransition;
 
 
 /**
- * @author Shadi Shaheen & Bassel Mabsout
+ * @author Shadi Shaheen & Bassel El Mabsout
  * this UI allows the user to pick a color using HSL color system
  * 
  */
