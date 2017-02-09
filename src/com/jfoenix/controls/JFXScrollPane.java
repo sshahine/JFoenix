@@ -18,11 +18,16 @@
  */
 package com.jfoenix.controls;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -33,11 +38,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
+import javafx.util.Duration;
 
 /**
  * <h1>Material Design ScrollPane with header </h1>
  *
- * @author  Shadi Shaheen
+ * @author  Shadi Shaheen & Bassel El Mabsout
  * @version 1.0
  * @since   2017-02-06
  */
@@ -204,5 +210,37 @@ public class JFXScrollPane extends StackPane{
 	}
 	public StackPane getCondensedHeader(){
 		return condensedHeaderBG;
+	}
+	
+	public static void smoothScrolling(ScrollPane scrollPane) {
+
+		final double[] frictions = {0.99, 0.1, 0.05, 0.04, 0.03, 0.02, 0.01, 0.04,0.01, 0.008, 0.008, 0.008, 0.008 ,0.0006, 0.0005, 0.00003,0.00001};
+		final double[] pushes = {1};
+		final double[] derivatives = new double[frictions.length];
+
+		Timeline timeline = new Timeline();
+		scrollPane.getContent().addEventHandler(MouseEvent.DRAG_DETECTED, event -> timeline.stop());
+		scrollPane.getContent().addEventHandler(ScrollEvent.ANY, event->{
+			if(event.getEventType().equals(ScrollEvent.SCROLL)){
+				int direction = event.getDeltaY() > 0 ? -1 : 1;
+				for (int i = 0; i < pushes.length; i++)
+					derivatives[i] += direction*pushes[i];
+				if(timeline.getStatus().equals(Animation.Status.STOPPED)) timeline.play();
+				event.consume();
+			}
+		});
+
+		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(3), (event)->{
+			for (int i = 0; i < derivatives.length; i++)
+				derivatives[i] *= frictions[i];
+			for (int i = 1; i < derivatives.length; i++)
+				derivatives[i] += derivatives[i-1];
+			double dy = derivatives[derivatives.length - 1];
+			double height = scrollPane.getContent().getLayoutBounds().getHeight();
+			scrollPane.setVvalue(Math.min(Math.max(scrollPane.getVvalue()+ dy/height,0),1));
+			if(Math.abs(dy) < 0.001)
+				timeline.stop();
+		}));
+		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 }

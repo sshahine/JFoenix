@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -46,6 +47,7 @@ public class ScrollPaneDemo extends Application{
 		Label title = new Label("Title");
 		pane.getBottomBar().getChildren().add(title);
 		title.setStyle("-fx-text-fill:WHITE; -fx-font-size: 40;");
+		JFXScrollPane.smoothScrolling((ScrollPane) pane.getChildren().get(0));
 		
 		StackPane.setMargin(title, new Insets(0,0,0,80));
 		StackPane.setAlignment(title, Pos.CENTER_LEFT);
