@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXButton.ButtonType;
+import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
 
@@ -89,6 +90,8 @@ public class MasonryPaneController {
 		}
 		masonryPane.getChildren().addAll(children);
 		Platform.runLater(()->scrollPane.requestLayout());
+		
+		JFXScrollPane.smoothScrolling(scrollPane);
 	}
 	
 	private String getDefaultColor(int i) {
