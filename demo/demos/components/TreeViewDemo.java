@@ -1,70 +1,92 @@
 package demos.components;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.jfoenix.controls.JFXTreeView;
+
 import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 
 public class TreeViewDemo extends Application {
 
-
-	final TreeItem<User> root = new TreeItem<>(new User("Sales Department", "23"));
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		try {
-
-			root.getChildren().add(new TreeItem<>(new User("Sales Department1", "23")));
-			TreeItem<User> root1 = new TreeItem<>(new User("Sales Department2", "24"));
-			root.getChildren().add(root1);
-			//			root1.getChildren().add(new TreeItem<>(new User("Sales Department3", "25")));
-
-
-			root.getChildren().add(new TreeItem<>(new User("Sales Department4", "22")));
-			TreeItem<User> root2 = new TreeItem<>(new User("Sales Department5", "20"));
-			root.getChildren().add(root2);
-			//			root2.getChildren().add(new TreeItem<>(new User("Sales Department6", "21")));
-
-
-
-			TreeView<User> treeView = new TreeView<User>(root);
-			root.setExpanded(true);
-
-
-			StackPane main = new StackPane();
-
-			main.setPadding(new Insets(10));
-			main.getChildren().add(treeView	);
-			Scene scene = new Scene(main, 600, 400);
-			scene.getStylesheets().add(TreeViewDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.show();
-
-			//			ScenicView.show(scene);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	List<Employee> employees = Arrays.<Employee> asList(new Employee("Ethan Williams", "Sales Department"),
+			new Employee("Emma Jones", "Sales Department"), new Employee("Michael Brown", "Sales Department"),
+			new Employee("Anna Black", "Sales Department"), new Employee("Rodger York", "Sales Department"),
+			new Employee("Susan Collins", "Sales Department"), new Employee("Mike Graham", "IT Support"),
+			new Employee("Judy Mayer", "IT Support"), new Employee("Gregory Smith", "IT Support"),
+			new Employee("Jacob Smith", "Accounts Department"), new Employee("Isabella Johnson", "Accounts Department"));
+	TreeItem<String> rootNode = new TreeItem<>("MyCompany Human Resources");//, rootIcon);    // Set picture
 
 	public static void main(String[] args) {
-		launch(args);
+		Application.launch(args);
 	}
 
-	class User {
-		String userName;
-		String age;
-		public User(String userName, String age) {
-			this.userName = userName;
-			this.age = age;
+	@Override
+	public void start(Stage stage) {
+		rootNode.setExpanded(true);
+
+		JFXTreeView<String> treeView = new JFXTreeView<>(rootNode);
+		for (Employee employee : employees) {
+			TreeItem<String> empLeaf = new TreeItem<>(employee.getName());
+			boolean found = false;
+			for (TreeItem<String> depNode : rootNode.getChildren()) {
+				if (depNode.getValue().contentEquals(employee.getDepartment())) {
+					depNode.getChildren().add(empLeaf);
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				TreeItem<String> depNode = new TreeItem<>(employee.getDepartment()//,new ImageView(depIcon)   // Set picture
+				);
+
+				rootNode.getChildren().add(depNode);
+				depNode.getChildren().add(empLeaf);
+			}
 		}
 
-		public String toString(){
-			return userName + " : " + age;
+		stage.setTitle("Tree View Sample");
+		VBox box = new VBox();
+		final Scene scene = new Scene(box, 400, 300);
+		scene.setFill(Color.LIGHTGRAY);
+
+		box.getChildren().add(treeView);
+		stage.setScene(scene);
+		stage.show();
+
+	}
+
+	public static class Employee {
+
+		private final SimpleStringProperty name;
+		private final SimpleStringProperty department;
+
+		private Employee(String name, String department) {
+			this.name = new SimpleStringProperty(name);
+			this.department = new SimpleStringProperty(department);
 		}
 
+		public String getName() {
+			return name.get();
+		}
+
+		public void setName(String fName) {
+			name.set(fName);
+		}
+
+		public String getDepartment() {
+			return department.get();
+		}
+
+		public void setDepartment(String fName) {
+			department.set(fName);
+		}
 	}
 }

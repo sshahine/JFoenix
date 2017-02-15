@@ -95,7 +95,7 @@ public class TreeTableDemo extends Application {
 			// build tree
 			final TreeItem<User> root = new RecursiveTreeItem<User>(users, RecursiveTreeObject::getChildren);
 			
-			JFXTreeTableView<User> treeView = new JFXTreeTableView<User>(root, users);
+			JFXTreeTableView<User> treeView = new JFXTreeTableView<User>(root);
 			treeView.setShowRoot(false);
 			treeView.setEditable(true);
 			treeView.getColumns().setAll(deptColumn, ageColumn, empColumn);

@@ -70,7 +70,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	/**
 	 * {@inheritDoc}
 	 */
-	public JFXTreeTableView(TreeItem<S> root, ObservableList<S> items) {
+	public JFXTreeTableView(TreeItem<S> root) {
 		super(root);
 		originalRoot = root;
 		init();
