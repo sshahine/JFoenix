@@ -168,8 +168,8 @@ public class JFXRippler extends StackPane {
 			// add listeners
 			initListeners();
 			// if the control got resized the overlay rect must be rest
-			control.layoutBoundsProperty().addListener((o,oldVal,newVal)-> resetOverLay());
-			control.boundsInParentProperty().addListener((o,oldVal,newVal)-> resetOverLay());
+			control.layoutBoundsProperty().addListener((o,oldVal,newVal)-> {resetOverLay(); resetClip();});
+			control.boundsInParentProperty().addListener((o,oldVal,newVal)->{resetOverLay(); resetClip();});
 		}
 	}
 
@@ -288,7 +288,8 @@ public class JFXRippler extends StackPane {
 		private OverLayRipple overlayRect;
 		private AtomicBoolean generating = new AtomicBoolean(false);
 		private boolean cacheRipplerClip = false;
-
+		private boolean resetClip = false;
+		
 		public RippleGenerator() {
 			/* 
 			 * improve in performance, by preventing  
@@ -301,8 +302,9 @@ public class JFXRippler extends StackPane {
 				if(!generating.getAndSet(true)){					
 					// create overlay once then change its color later
 					createOverlay();
-					if(this.getClip() == null || (getChildren().size() == 1 && !cacheRipplerClip)) this.setClip(getMask());
-
+					if(this.getClip() == null || (getChildren().size() == 1 && !cacheRipplerClip) || resetClip) this.setClip(getMask());
+					this.resetClip = false;
+					
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);
 					getChildren().add(ripple);	
@@ -332,8 +334,9 @@ public class JFXRippler extends StackPane {
 				if(!generating.getAndSet(true)){					
 					// create overlay once then change its color later
 					createOverlay();
-					if(this.getClip() == null || (getChildren().size() == 1 && !cacheRipplerClip)) this.setClip(getMask());
-
+					if(this.getClip() == null || (getChildren().size() == 1 && !cacheRipplerClip) || resetClip) this.setClip(getMask());
+					this.resetClip = false;
+					
 					// create the ripple effect
 					final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);
 					getChildren().add(ripple);	
@@ -472,6 +475,10 @@ public class JFXRippler extends StackPane {
 		}
 	}
 
+	private void resetClip(){
+		this.rippler.resetClip = true;
+	}
+	
 	/***************************************************************************
 	 *                                                                         *
 	 * Stylesheet Handling                                                     *
