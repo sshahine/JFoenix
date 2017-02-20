@@ -207,6 +207,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 	}
 
 	private void playSelectAnimation(Boolean selection) {
+		if(selection == null) selection = false;
 		JFXCheckBox control = ((JFXCheckBox) getSkinnable());
 		transition.setRate(selection?1:-1);
 		select.setRate(selection?1:-1);
