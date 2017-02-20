@@ -70,7 +70,7 @@
 	</BorderPane>
 
 	<JFXPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
-		<JFXListView styleClass="option-list-view">
+		<JFXListView styleClass="option-list-view" fx:id="toolbarPopupList">
 			<Label>
 				Contact Us
 				<graphic>

@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
@@ -43,7 +44,8 @@ public class MainController {
 	@FXML private JFXDrawer drawer;
 	@FXML private JFXPopup toolbarPopup;
 	@FXML private Label exit;
-
+	@FXML private JFXListView<?> toolbarPopupList;
+	
 	private FlowHandler flowHandler;
 	private FlowHandler sideMenuFlowHandler;
 
@@ -74,8 +76,8 @@ public class MainController {
 		});
 
 		// close application
-		exit.setOnMouseClicked((e) -> {
-			Platform.exit();
+		toolbarPopupList.setOnMouseClicked(event ->  {
+			if(toolbarPopupList.getSelectionModel().getSelectedIndex() == 1) Platform.exit();
 		});
 
 		// create the inner flow and content
