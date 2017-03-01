@@ -3,6 +3,7 @@ package demos.gui.uicomponents;
 import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
@@ -15,7 +16,7 @@ public class PickersController {
 
 	@FXML private StackPane root;
 	@FXML private JFXDatePicker dateOverlay;
-	@FXML private JFXDatePicker timeOverlay;
+	@FXML private JFXTimePicker timeOverlay;
 	
 	@PostConstruct
 	public void init() throws FlowException, VetoException {

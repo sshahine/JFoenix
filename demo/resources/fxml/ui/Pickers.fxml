@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import com.jfoenix.controls.JFXColorPicker?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTimePicker?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
@@ -17,17 +18,16 @@
 				<children>
 					<JFXColorPicker minWidth="100"></JFXColorPicker>
 					<JFXDatePicker></JFXDatePicker>
-					<JFXDatePicker showTime="true"></JFXDatePicker>
+					<JFXTimePicker></JFXTimePicker>
 				</children>
 			</HBox>
 			<Label styleClass="title-label">Overylays</Label>
 			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
 				<children>
 					<JFXDatePicker fx:id="dateOverlay" overLay="true" defaultColor="#3f51b5"></JFXDatePicker>
-					<JFXDatePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5" showTime="true"></JFXDatePicker>
+					<JFXTimePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5"></JFXTimePicker>
 				</children>
 			</HBox>
-			
 		</children>
 	</VBox>
 </StackPane>

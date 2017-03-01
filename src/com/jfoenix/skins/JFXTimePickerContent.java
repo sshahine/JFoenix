@@ -18,15 +18,11 @@
  */
 package com.jfoenix.skins;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.chrono.Chronology;
 import java.time.format.FormatStyle;
-import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
-import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -43,7 +39,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -75,7 +70,7 @@ public class JFXTimePickerContent extends VBox {
 
 	private static enum TimeUnit{HOURS, MINUTES};
 
-	protected JFXDatePicker datePicker;
+	protected JFXTimePicker timePicker;
 
 	private Color fadedColor = Color.rgb(255, 255, 255, 0.67);
 	private double contentCircleRadius = 100;
@@ -106,11 +101,11 @@ public class JFXTimePickerContent extends VBox {
 		return selectedTime;
 	}
 
-	JFXTimePickerContent(final DatePicker datePicker) {
-		this.datePicker = (JFXDatePicker) datePicker;
-		LocalTime time = this.datePicker.getTime() == null? LocalTime.now() : this.datePicker.getTime();
+	JFXTimePickerContent(final JFXTimePicker jfxTimePicker) {
+		this.timePicker = (JFXTimePicker) jfxTimePicker;
+		LocalTime time = this.timePicker.getValue() == null? LocalTime.now() : this.timePicker.getValue();
 			
-		this.datePicker.timeProperty().addListener((o,oldVal,newVal)-> goToTime(newVal));
+		this.timePicker.valueProperty().addListener((o,oldVal,newVal)-> goToTime(newVal));
 		getStyleClass().add("date-picker-popup");
 
 		// create the header pane
@@ -156,7 +151,7 @@ public class JFXTimePickerContent extends VBox {
 	}
 
 	/*
-	 * header panel represents the selected Date 
+	 * header panel represents the selected Time 
 	 * we keep javaFX original style classes 
 	 */
 	protected StackPane createHeaderPane(LocalTime time) {
@@ -213,7 +208,7 @@ public class JFXTimePickerContent extends VBox {
 
 		StackPane headerPanel = new StackPane();
 		headerPanel.getStyleClass().add("time-pane");
-		headerPanel.setBackground(new Background(new BackgroundFill(this.datePicker.getDefaultColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+		headerPanel.setBackground(new Background(new BackgroundFill(this.timePicker.getDefaultColor(), CornerRadii.EMPTY, Insets.EMPTY)));
 		headerPanel.setPadding(new Insets(8,24,8,24));
 		headerPanel.getChildren().add(selectedTimeContainer);
 		return headerPanel;
@@ -260,7 +255,7 @@ public class JFXTimePickerContent extends VBox {
 		// create minutes content
 		StackPane minsPointer = new StackPane();
 		Circle selectionCircle = new Circle(contentCircleRadius/6);
-		selectionCircle.fillProperty().bind(datePicker.defaultColorProperty());
+		selectionCircle.fillProperty().bind(timePicker.defaultColorProperty());
 
 		Circle minCircle = new Circle(selectionCircle.getRadius()/8);
 		minCircle.setFill(Color.rgb(255, 255, 255, 0.87));
@@ -274,7 +269,7 @@ public class JFXTimePickerContent extends VBox {
 
 		double shift = 9;
 		Line line = new Line(shift,0,contentCircleRadius,0);		
-		line.fillProperty().bind(datePicker.defaultColorProperty());
+		line.fillProperty().bind(timePicker.defaultColorProperty());
 		line.strokeProperty().bind(line.fillProperty());
 		line.setStrokeWidth(1.5);
 		minsPointer.getChildren().addAll(line, selectionCircle, minCircle);
@@ -332,11 +327,11 @@ public class JFXTimePickerContent extends VBox {
 		// create hours content
 		StackPane hoursPointer = new StackPane();
 		Circle selectionCircle = new Circle(contentCircleRadius/6);
-		selectionCircle.fillProperty().bind(datePicker.defaultColorProperty());
+		selectionCircle.fillProperty().bind(timePicker.defaultColorProperty());
 
 		double shift = 9;
 		Line line = new Line(shift,0,contentCircleRadius,0);		
-		line.fillProperty().bind(datePicker.defaultColorProperty());
+		line.fillProperty().bind(timePicker.defaultColorProperty());
 		line.strokeProperty().bind(line.fillProperty());
 		line.setStrokeWidth(1.5);
 		hoursPointer.getChildren().addAll(line, selectionCircle);
@@ -392,13 +387,11 @@ public class JFXTimePickerContent extends VBox {
 		return new StackPane(pointerGroup, clockLabelsContainer);
 	}
 
-
 	private void swapLabelsColor(Label lbl1 , Label lbl2){
 		Paint color = lbl1.getTextFill();
 		lbl1.setTextFill(lbl2.getTextFill());
 		lbl2.setTextFill(color);
 	}
-
 
 	private void switchTimeUnit(TimeUnit newVal){
 		if(newVal == TimeUnit.HOURS){
@@ -414,7 +407,7 @@ public class JFXTimePickerContent extends VBox {
 
 	void updateValue(){
 		LocalTimeStringConverter converter = new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH);
-		datePicker.setTime(converter.fromString(selectedHourLabel.getText()+":"+selectedMinLabel.getText()+" "+period.get()));
+		timePicker.setValue(converter.fromString(selectedHourLabel.getText()+":"+selectedMinLabel.getText()+" "+period.get()));
 	}
 
 
@@ -427,24 +420,8 @@ public class JFXTimePickerContent extends VBox {
 		hoursPointerRotate.setAngle(180+ Math.toDegrees(2 * (hour-3) * Math.PI / 12));
 	}
 	
-	
 	void clearFocus() {
-		LocalDate focusDate = datePicker.getValue();
-		if (focusDate == null) focusDate = LocalDate.now();
-		// if (YearMonth.from(focusDate).equals(selectedYearMonth.get())) goToDate(focusDate, true);
-	}
-
-	protected boolean isValidDate(Chronology chrono, LocalDate date, int offset, ChronoUnit unit) {
-		if (date != null) return isValidDate(chrono, date.plus(offset, unit));
-		return false;
-	}
-
-	protected boolean isValidDate(Chronology chrono, LocalDate date) {
-		try {
-			if (date != null) chrono.date(date);
-			return true;
-		} catch (DateTimeException ex) {
-			return false;
-		}
+		LocalTime focusTime = timePicker.getValue();
+		if (focusTime == null) focusTime = LocalTime.now();
 	}
 }

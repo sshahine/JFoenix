@@ -19,7 +19,6 @@
 package com.jfoenix.controls;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -104,34 +103,6 @@ public class JFXDatePicker extends DatePicker {
 	}
 	public final void setDialogParent(final StackPane dialogParent) {
 		this.dialogParentProperty().set(dialogParent);
-	}
-
-	/**
-	 * property that holds the time value if showing the time picker
-	 */
-    private ObjectProperty<LocalTime> lastValidTime = new SimpleObjectProperty<>();
-    
-	public final ObjectProperty<LocalTime> timeProperty() {
-		return this.lastValidTime;
-	}
-	public final java.time.LocalTime getTime() {
-		return this.timeProperty().get();
-	}
-	public final void setTime(final java.time.LocalTime lastValidTime) {
-		this.timeProperty().set(lastValidTime);
-	}
-
-	private boolean showTime = false;
-    
-	public boolean isShowTime() {
-		return showTime;
-	}
-
-	/**
-	 * indicates whether to pick time or date 
-	 */
-	public void setShowTime(boolean showTime) {
-		this.showTime = showTime;
 	}
 
 	/***************************************************************************
