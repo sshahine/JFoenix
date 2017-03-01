@@ -25,14 +25,12 @@
 <?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
 <?import com.jfoenix.controls.JFXRippler?>
 <?import com.jfoenix.controls.JFXListView?>
-<?import com.jfoenix.controls.JFXPopup?>
 <?import javafx.scene.layout.BorderPane?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
 	xmlns="http://javafx.com/javafx/2.2">
 	<!-- Header -->
 	<BorderPane>
-
 		<top>
 			<VBox spacing="20">
 				<JFXToolbar>
@@ -68,24 +66,4 @@
 			</JFXDrawer>
 		</center>
 	</BorderPane>
-
-	<JFXPopup fx:id="toolbarPopup" styleClass="tool-bar-popup">
-		<JFXListView styleClass="option-list-view" fx:id="toolbarPopupList">
-			<Label>
-				Contact Us
-				<graphic>
-					<Icon awesomeIcon="USER" size="1.5em" style=";"
-						styleClass="option-jfx-list-view-icon" />
-				</graphic>
-			</Label>
-			<Label fx:id="exit">
-				Exit
-				<graphic>
-					<Icon awesomeIcon="REPLY" size="1.5em" style=";"
-						styleClass="option-jfx-list-view-icon" />
-				</graphic>
-			</Label>
-		</JFXListView>
-	</JFXPopup>
-
 </StackPane>

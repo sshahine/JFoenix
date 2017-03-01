@@ -1,13 +1,5 @@
 package demos.components;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPopup;
@@ -16,6 +8,14 @@ import com.jfoenix.controls.JFXPopup.PopupVPosition;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.controls.JFXRippler.RipplerPos;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 public class PopupDemo extends Application {
 
@@ -38,11 +38,8 @@ public class PopupDemo extends Application {
 		StackPane main = new StackPane();
 		main.getChildren().add(container);
 		
-		JFXPopup popup = new JFXPopup();
-		popup.setContent(list);
-		popup.setPopupContainer(main);
-		popup.setSource(r);
-		r.setOnMouseClicked((e)-> popup.show(PopupVPosition.TOP, PopupHPosition.LEFT));
+		JFXPopup popup = new JFXPopup(list);
+		r.setOnMouseClicked((e)-> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
 		
 		final Scene scene = new Scene(main, 800, 800);
 		scene.getStylesheets().add(PopupDemo.class.getResource("/resources/css/jfoenix-components.css").toExternalForm());

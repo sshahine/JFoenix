@@ -1,5 +1,9 @@
 package demos.gui.main;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javax.annotation.PostConstruct;
 
 import com.jfoenix.controls.JFXDrawer;
@@ -23,6 +27,8 @@ import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -34,18 +40,15 @@ public class MainController {
 	private ViewFlowContext context;
 
 	@FXML private StackPane root;
-	
+
 	@FXML private StackPane titleBurgerContainer;
 	@FXML private JFXHamburger titleBurger;
-	
+
 	@FXML private StackPane optionsBurger;	
 	@FXML private JFXRippler optionsRippler;
-	
 	@FXML private JFXDrawer drawer;
-	@FXML private JFXPopup toolbarPopup;
-	@FXML private Label exit;
-	@FXML private JFXListView<?> toolbarPopupList;
-	
+
+	private JFXPopup toolbarPopup;
 	private FlowHandler flowHandler;
 	private FlowHandler sideMenuFlowHandler;
 
@@ -66,18 +69,15 @@ public class MainController {
 			else drawer.close();
 		});
 
-		// init Popup 
-		toolbarPopup.setPopupContainer(root);		
-		toolbarPopup.setSource(optionsRippler);
-		root.getChildren().remove(toolbarPopup);
-		
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/ui/popup/MainPopup.fxml"));
+			loader.setController(new InputController());
+			toolbarPopup = new JFXPopup(loader.load());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		optionsBurger.setOnMouseClicked((e) -> {
-			toolbarPopup.show(PopupVPosition.TOP, PopupHPosition.RIGHT, -12, 15);
-		});
-
-		// close application
-		toolbarPopupList.setOnMouseClicked(event ->  {
-			if(toolbarPopupList.getSelectionModel().getSelectedIndex() == 1) Platform.exit();
+			toolbarPopup.show(optionsBurger, PopupVPosition.TOP, PopupHPosition.RIGHT, -12, 15);
 		});
 
 		// create the inner flow and content
@@ -95,5 +95,13 @@ public class MainController {
 		Flow sideMenuFlow = new Flow(SideMenuController.class);
 		sideMenuFlowHandler = sideMenuFlow.createHandler(context);
 		drawer.setSidePane(sideMenuFlowHandler.start(new AnimatedFlowContainer(Duration.millis(320), ContainerAnimations.SWIPE_LEFT)));
+	}
+
+	public class InputController{
+		@FXML private JFXListView<?> toolbarPopupList;
+		// close application
+		@FXML private void submit() {
+			if(toolbarPopupList.getSelectionModel().getSelectedIndex() == 1) Platform.exit();
+		}
 	}
 }

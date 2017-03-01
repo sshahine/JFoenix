@@ -293,35 +293,6 @@ public class JFXDecorator extends VBox {
 			}
 		});	
 
-
-
-		//		primaryStage.maximizedProperty().addListener((o,oldVal,newVal)->{
-		//			if(newVal){
-		//				resizeBorder = this.getBorder();
-		//				this.setBorder(Border.EMPTY);				
-		//			}else{
-		//				this.setBorder(resizeBorder);
-		//			}
-		//		});		
-		//		this.setPadding(new Insets(0,0,0,0));
-
-		// clip the node in case it has hidden child nodes outside it's bounds (e.g drawer pane)
-		//		Rectangle clip = new Rectangle();
-		//		clip.widthProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getWidth(), ((Region)node).widthProperty()));
-		//		clip.heightProperty().bind(Bindings.createDoubleBinding(()->((Region)node).getHeight(), ((Region)node).heightProperty()));
-		//		node.setClip(clip);
-		//		node.getStyleClass().add("jfx-decorator-content");
-		//		node.setStyle("-fx-border-color:RED;");
-
-		// save the mouse pressed position when clicking on the decorator pane
-		this.addEventFilter(MouseEvent.MOUSE_PRESSED, (mouseEvent) -> {
-			initX = mouseEvent.getScreenX();
-			initY = mouseEvent.getScreenY();
-			xOffset = mouseEvent.getSceneX();
-			yOffset = mouseEvent.getSceneY();
-		});
-
-
 		// show the drag cursor on the borders
 		this.setOnMouseMoved((mouseEvent)->{
 			if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
@@ -358,7 +329,8 @@ public class JFXDecorator extends VBox {
 					this.setCursor(Cursor.S_RESIZE);
 				} else {
 					this.setCursor(Cursor.DEFAULT);
-				}	
+				}
+				updateInitMouseValues(mouseEvent);
 			}
 		});
 
@@ -431,6 +403,13 @@ public class JFXDecorator extends VBox {
 				mouseEvent.consume();
 			}
 		});
+	}
+
+	private void updateInitMouseValues(MouseEvent mouseEvent) {
+		initX = mouseEvent.getScreenX();
+		initY = mouseEvent.getScreenY();
+		xOffset = mouseEvent.getSceneX();
+		yOffset = mouseEvent.getSceneY();
 	}
 
 
