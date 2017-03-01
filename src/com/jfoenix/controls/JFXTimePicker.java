@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.jfoenix.controls;
 
 import java.time.LocalTime;
@@ -38,8 +56,14 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 
+/**
+ * <h1>Material Design Time Picker control</h1>
+ *
+ * @author  Shadi Shaheen
+ * @version 1.0
+ * @since   2017-03-01
+ */
 public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
-
 
 	/**
 	 * {@inheritDoc}
@@ -49,30 +73,19 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
 		initialize();
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public JFXTimePicker(LocalTime localTime) {
 		setValue(localTime);
 		initialize();
 	}
-	
 	
 	private void initialize() {
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
 		setAccessibleRole(AccessibleRole.DATE_PICKER);
 		setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 		setEditable(true);
-		
-//		valueProperty().addListener(observable -> {
-//            LocalTime date = getValue();
-//            converter
-//            if (validateDate(chrono, date)) {
-//                lastValidDate = date;
-//            } else {
-//                System.err.println("Restoring value to " +
-//                            ((lastValidDate == null) ? "null" : getConverter().toString(lastValidDate)));
-//                setValue(lastValidDate);
-//            }
-//        });
 	}
     
 	/**

@@ -35,8 +35,8 @@ import javafx.stage.Window;
  * JFXPopup is the material design implementation of a popup.
  * 
  * @author  Shadi Shaheen
- * @version 1.0
- * @since   2016-03-09
+ * @version 2.0
+ * @since   2017-03-01
  */
 @DefaultProperty(value="popupContent")
 public class JFXPopup extends PopupControl {
