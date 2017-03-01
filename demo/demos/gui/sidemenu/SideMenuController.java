@@ -119,11 +119,13 @@ public class SideMenuController {
 	public void init() throws FlowException, VetoException {
 		FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
 		sideList.propagateMouseEventsToParent();
-		sideList.setOnMouseClicked(event ->  {
-			try {				
-				contentFlowHandler.handle(sideList.getSelectionModel().getSelectedItem().getId());				
-			} catch (Exception e1) {
-				e1.printStackTrace();
+		sideList.getSelectionModel().selectedItemProperty().addListener((o,oldVal,newVal)->{
+			if(newVal!=null){
+				try {
+					contentFlowHandler.handle(newVal.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}			
 			}
 		});
 		Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");

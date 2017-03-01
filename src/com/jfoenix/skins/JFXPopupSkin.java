@@ -12,10 +12,15 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
@@ -32,8 +37,9 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
 		this.control = control;
 		scale = new Scale(1,0,0,0);
 		popupContent = control.getPopupContent();
+		container.getStyleClass().add("jfx-popup-container");
+		container.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		container.getChildren().add(popupContent);
-		container.setStyle("-fx-background-color:WHITE");
 		container.getTransforms().add(scale);
 		container.setOpacity(0);
 		root = JFXDepthManager.createMaterialNode(container, 4);

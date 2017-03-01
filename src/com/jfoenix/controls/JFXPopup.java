@@ -60,7 +60,7 @@ public class JFXPopup extends PopupControl {
 		initialize();
 	}
 	private void initialize() {
-		this.setAutoFix(true);
+		this.setAutoFix(false);
 		this.setAutoHide(true);
 		this.setHideOnEscape(true);	
 		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
