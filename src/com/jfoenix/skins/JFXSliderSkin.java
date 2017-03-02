@@ -28,6 +28,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.input.MouseEvent;
@@ -257,8 +258,10 @@ public class JFXSliderSkin extends SliderSkin {
 			internalChange = true;
 			if(getSkinnable().getMin() == newVal.doubleValue()){
 				thumb.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(20), Insets.EMPTY)));
+				animatedThumb.pseudoClassStateChanged(PseudoClass.getPseudoClass("min"),true);
 			}else if(oldVal.doubleValue() == getSkinnable().getMin()){
 				thumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(20), Insets.EMPTY)));
+				animatedThumb.pseudoClassStateChanged(PseudoClass.getPseudoClass("min"),false);
 			}
 			internalChange = false;
 		});
