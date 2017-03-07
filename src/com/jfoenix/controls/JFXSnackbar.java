@@ -179,10 +179,11 @@ public class JFXSnackbar extends StackPane {
 	public void show(String toastMessage, long timeout) {
 		this.show(toastMessage, null,timeout, null);
 	}
-
+	public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+		this.show(message, actionText,-1, actionHandler);
+	}
 	public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
 		toast.setText(message);
-
 		if (actionText != null && !actionText.isEmpty()) {
 			action.setVisible(true);
 			actionContainer.setVisible(true);
@@ -196,71 +197,60 @@ public class JFXSnackbar extends StackPane {
 			actionContainer.setManaged(false);
 			action.setVisible(false);
 		}
-		
-		Timeline animation =  new  Timeline(
-				new KeyFrame(
-						Duration.ZERO,  
-						(e)->popup.toBack(),
-						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
-						),
-				new KeyFrame(
-						Duration.millis(10),
-						(e)->popup.toFront(),
-						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
-						),
-				new KeyFrame(Duration.millis(300),
-						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
-						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-						),
-				new KeyFrame(Duration.millis(timeout/2))
-				);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(2);
-		animation.setOnFinished((e)-> processSnackbars());
+		Timeline animation = getTimeline(timeout);
 		animation.play();
 	}
-	
-	public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
-		toast.setText(message);
 
-		if (actionText != null && !actionText.isEmpty()) {
-			action.setVisible(true);
-			actionContainer.setVisible(true);
-			actionContainer.setManaged(true);
-			// to force updating the layout bounds
-			action.setText("");
-			action.setText(actionText);
-			action.setOnMouseClicked(actionHandler);
-		} else {
-			actionContainer.setVisible(false);
-			actionContainer.setManaged(false);
-			action.setVisible(false);
+
+	private Timeline getTimeline(long timeout) {
+		Timeline animation;
+		if(timeout <= 0){
+			animation =  new  Timeline(
+					new KeyFrame(
+							Duration.ZERO,
+							(e)->popup.toBack(),
+							new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
+							new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+							new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
+					),
+					new KeyFrame(
+							Duration.millis(10),
+							(e)->popup.toFront(),
+							new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
+					),
+					new KeyFrame(Duration.millis(300),
+							new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
+							new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+					)
+			);
+			animation.setCycleCount(1);
+		}else {
+			animation = new Timeline(
+					new KeyFrame(
+							Duration.ZERO,
+							(e) -> popup.toBack(),
+							new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+							new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+							new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+					),
+					new KeyFrame(
+							Duration.millis(10),
+							(e) -> popup.toFront(),
+							new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+					),
+					new KeyFrame(Duration.millis(300),
+							new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+							new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+					),
+					new KeyFrame(Duration.millis(timeout / 2))
+			);
+			animation.setAutoReverse(true);
+			animation.setCycleCount(2);
+			animation.setOnFinished((e) -> processSnackbars());
 		}
-
-		Timeline animation =  new  Timeline(
-				new KeyFrame(
-						Duration.ZERO,  
-						(e)->popup.toBack(),
-						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
-						),
-				new KeyFrame(
-						Duration.millis(10),
-						(e)->popup.toFront(),
-						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
-						),
-				new KeyFrame(Duration.millis(300),
-						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
-						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-						)
-				);
-		animation.setCycleCount(1);
-		animation.play();
+		return animation;
 	}
-	
+
 	public void close(){
 		Timeline animation =  new  Timeline(
 				new KeyFrame(
