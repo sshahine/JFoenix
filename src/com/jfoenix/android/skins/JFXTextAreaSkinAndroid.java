@@ -320,6 +320,8 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
 			// create floating label
 			createFloatingLabel();
+			// to position the prompt node properly
+			super.layoutChildren(x, y, w, h);
             // update validation container
             if(((JFXTextArea)getSkinnable()).getActiveValidator()!=null) updateValidationError();
             // focus

@@ -274,6 +274,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid{
 			textPane = ((Pane)this.getChildren().get(0));
 			// create floating label
 			createFloatingLabel();
+			// to position the prompt node properly
+			super.layoutChildren(x, y, w, h);
 			// update validation container
 			if(((JFXTextField)getSkinnable()).getActiveValidator()!=null) updateValidationError();
 			// focus

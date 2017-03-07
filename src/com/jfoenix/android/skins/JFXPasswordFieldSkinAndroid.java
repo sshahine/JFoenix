@@ -288,6 +288,8 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 			textPane = ((Pane)this.getChildren().get(0));
 			// create floating label
 			createFloatingLabel();
+			// to position the prompt node properly
+			super.layoutChildren(x, y, w, h);
 			// update validation container
 			if(((JFXPasswordField)getSkinnable()).getActiveValidator()!=null) updateValidationError();
 			// focus
