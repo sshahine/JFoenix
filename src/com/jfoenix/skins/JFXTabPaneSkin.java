@@ -52,6 +52,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -140,7 +141,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			while (change.next()) {
 				if (change.wasPermutated()) {
 					Tab selectedTab = getSkinnable().getSelectionModel().getSelectedItem();
-					List<Tab> permutatedTabs = new ArrayList<Tab>(change.getTo() - change.getFrom());
+					List<Tab> permutatedTabs = new ArrayList<>(change.getTo() - change.getFrom());
 					getSkinnable().getSelectionModel().clearSelection();
 					for (int i = change.getFrom(); i < change.getTo(); i++)
 						permutatedTabs.add(getSkinnable().getTabs().get(i));
@@ -240,7 +241,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 	private void removeTab(Tab tab) {
 		final TabHeaderContainer tabHeaderContainer = headerContainer.getTabHeaderContainer(tab);
-		if (tabHeaderContainer != null) tabHeaderContainer.removeListeners(tab);
+		if (tabHeaderContainer != null) tabHeaderContainer.removeListeners();
 		headerContainer.removeTab(tab);
 		removeTabContentHolder(tab);
 		headerContainer.requestLayout();
@@ -359,7 +360,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 					for (Node child : getChildren()) 
 						if(child instanceof TabHeaderContainer)
 							if (child.isVisible() && (measureClosingTabs || !((TabHeaderContainer) child).isClosing))
-								width += ((TabHeaderContainer) child).prefWidth(height);
+								width += child.prefWidth(height);
 					return snapSize(width) + snappedLeftInset() + snappedRightInset();
 				}
 
@@ -368,7 +369,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 					double height = 0.0F;
 					for (Node child : getChildren()) 
 						if(child instanceof TabHeaderContainer)
-							height = Math.max(height, ((TabHeaderContainer) child).prefHeight(width));
+							height = Math.max(height, child.prefHeight(width));
 					return snapSize(height) + snappedTopInset() + snappedBottomInset();
 				}
 
@@ -515,7 +516,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 					// we need to keep track of the removed tab headers 
 					// to compute scroll offset of the header
 					removedTabsHeaders.add(tabHeaderContainer);
-					tabHeaderContainer.removeListeners(tab);
+					tabHeaderContainer.removeListeners();
 				}
 			}
 		}
@@ -585,7 +586,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			double offset = 0.0;
 			for (Node node : headersRegion.getChildren()) 
 				if(node instanceof TabHeaderContainer){
-					double tabHeaderPrefWidth = snapSize(((TabHeaderContainer) node).prefWidth(-1));
+					double tabHeaderPrefWidth = snapSize(node.prefWidth(-1));
 					offset += tabHeaderPrefWidth;
 				}
 
@@ -693,6 +694,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		private Tooltip oldTooltip;
 		private Tooltip tooltip;
 		private BorderPane inner;
+		private Button closeBtn;
 		private JFXRippler rippler;
 		private boolean systemChange = false;
 		private boolean isClosing = false;
@@ -715,11 +717,24 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			tabText.setPadding(new Insets(5, 10, 5, 10));
 			tabText.getStyleClass().setAll("tab-label");
 
+			closeBtn = new Button("x");
+			closeBtn.getStyleClass().setAll("tab-close-button");
+			closeBtn.setOnMousePressed(event -> {
+				TabPaneBehavior behavior = getBehavior();
+				if (behavior.canCloseTab(tab)) {
+					behavior.closeTab(tab);
+					setOnMousePressed(null);
+				}
+			});
+			closeBtn.setVisible(showCloseButton());
+			closeBtn.setTextFill(tab.isSelected() ? selectedTabText : tempLabelColor.deriveColor(0, 0, 0.9, 1));
+
 			inner = new BorderPane();
 			inner.setCenter(tabText);
 			inner.getStyleClass().add("tab-container");
+			inner.setRight(closeBtn);
 
-			rippler = new JFXRippler(inner, RipplerPos.FRONT);
+			rippler = new JFXRippler(inner, RipplerPos.BACK);
 			rippler.setRipplerFill(ripplerColor);
 			getChildren().addAll(rippler);
 
@@ -739,8 +754,13 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
 			tab.selectedProperty().addListener((o, oldVal, newVal) -> {
 				systemChange = true;
-				if (newVal)  tabText.setTextFill(tempLabelColor);
-				else tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
+				if (newVal)   {
+					tabText.setTextFill(tempLabelColor);
+					closeBtn.setTextFill(tempLabelColor);
+				} else {
+					tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
+					closeBtn.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
+				}
 				systemChange = false;
 			});
 
@@ -751,6 +771,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			listener.registerChangeListener(tab.tooltipProperty(), "TOOLTIP");
 			listener.registerChangeListener(tab.disableProperty(), "DISABLE");
 			listener.registerChangeListener(tab.styleProperty(), "STYLE");
+			listener.registerChangeListener(getSkinnable().tabClosingPolicyProperty(), "TAB_CLOSING_POLICY");
 			listener.registerChangeListener(getSkinnable().tabMinWidthProperty(), "TAB_MIN_WIDTH");
 			listener.registerChangeListener(getSkinnable().tabMaxWidthProperty(), "TAB_MAX_WIDTH");
 			listener.registerChangeListener(getSkinnable().tabMinHeightProperty(), "TAB_MIN_HEIGHT");
@@ -803,6 +824,9 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 				requestLayout();
 			} else if ("STYLE".equals(p)) {
 				setStyle(tab.getStyle());
+			}  else if ("TAB_CLOSING_POLICY".equals(p)) {
+				inner.requestLayout();
+				requestLayout();
 			} else if ("TAB_MIN_WIDTH".equals(p)) {
 				requestLayout();
 				getSkinnable().requestLayout();
@@ -818,10 +842,16 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			}
 		}
 
-		private void removeListeners(Tab tab) {
+		private void removeListeners() {
 			listener.dispose();
 			inner.getChildren().clear();
 			getChildren().clear();
+		}
+
+		private boolean showCloseButton() {
+			return tab.isClosable() &&
+					(TabPane.TabClosingPolicy.ALL_TABS == getSkinnable().getTabClosingPolicy() ||
+					TabPane.TabClosingPolicy.SELECTED_TAB == getSkinnable().getTabClosingPolicy() && tab.isSelected());
 		}
 
 		@Override
@@ -830,7 +860,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 			double maxWidth = snapSize(getSkinnable().getTabMaxWidth());
 			double paddingRight = snappedRightInset();
 			double paddingLeft = snappedLeftInset();
-			double tmpPrefWidth = snapSize(tabText.prefWidth(-1));
+			double tmpPrefWidth = snapSize(tabText.prefWidth(-1)) + snapSize(closeBtn.prefWidth(-1));
 
 			if (tmpPrefWidth > maxWidth) {
 				tmpPrefWidth = maxWidth;
@@ -861,18 +891,9 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 		@Override
 		protected void layoutChildren() {
 			double w = (snapSize(getWidth()) - snappedRightInset() - snappedLeftInset());
+			closeBtn.setVisible(showCloseButton());
 			rippler.resize(w, snapSize(getHeight()) - snappedTopInset() - snappedBottomInset());
 			rippler.relocate(snappedLeftInset(), snappedTopInset());
-		}
-
-		@Override
-		protected void setWidth(double value) {
-			super.setWidth(value);
-		}
-
-		@Override
-		protected void setHeight(double value) {
-			super.setHeight(value);
 		}
 	}
 
@@ -915,7 +936,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 	}
 
 	private enum ArrowPosition {
-		RIGHT, LEFT;
+		RIGHT, LEFT
 	}
 
 	/**************************************************************************
