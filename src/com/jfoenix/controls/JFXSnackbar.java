@@ -288,7 +288,7 @@ public class JFXSnackbar extends StackPane {
 	private void processSnackbars() {
 		SnackbarEvent qevent = eventQueue.poll();
 		if (qevent != null) {
-			if(qevent.isPersistant()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+			if(qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
 			else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
 		} else {
 			//The enqueue method and this listener should be executed sequentially on the FX Thread so there
@@ -314,7 +314,7 @@ public class JFXSnackbar extends StackPane {
 			Platform.runLater(() -> {
 				SnackbarEvent qevent = eventQueue.poll();
 				if (qevent != null) {
-					if(qevent.isPersistant()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+					if(qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
 					else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
 				}
 			});
@@ -328,12 +328,10 @@ public class JFXSnackbar extends StackPane {
 
 	public static class SnackbarEvent extends Event {
 
-		private static final long serialVersionUID = 1L;
-
-		private final String message;		 
+		private final String message;
 		private final String actionText;
 		private final long timeout;
-		private final boolean persistant;
+		private final boolean persistent;
 		private final EventHandler<? super MouseEvent> actionHandler;
 
 
@@ -360,13 +358,13 @@ public class JFXSnackbar extends StackPane {
 
 		}
 
-		public SnackbarEvent(String message,String actionText, long timeout, boolean persistant, EventHandler<? super MouseEvent> actionHandler) {
+		public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
 			super(SNACKBAR);
 			this.message=message;
 			this.actionText=actionText;
 			this.timeout=timeout < 1 ? 3000:timeout;
 			this.actionHandler=actionHandler;
-			this.persistant = persistant;
+			this.persistent = persistent;
 		}
 
 		@Override
@@ -374,8 +372,8 @@ public class JFXSnackbar extends StackPane {
 			return (EventType<? extends SnackbarEvent>) super.getEventType();
 		}
 
-		public boolean isPersistant() {
-			return persistant;
+		public boolean isPersistent() {
+			return persistent;
 		}
 	}
 }
