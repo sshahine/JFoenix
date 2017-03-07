@@ -18,9 +18,9 @@
  */
 package com.jfoenix.concurrency;
 
-import java.util.concurrent.CountDownLatch;
-
 import javafx.application.Platform;
+
+import java.util.concurrent.CountDownLatch;
 
 
 /**

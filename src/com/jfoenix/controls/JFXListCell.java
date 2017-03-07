@@ -19,7 +19,6 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.svg.SVGGlyph;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;

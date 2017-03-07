@@ -1,18 +1,17 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/ui/Icons.fxml", title = "Material Design Example")
 public class IconsController {

@@ -18,23 +18,18 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.jfoenix.skins.JFXToggleButtonSkin;
 import com.sun.javafx.css.converters.PaintConverter;
-
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * JFXToggleButton is the material design implementation of a toggle button. 

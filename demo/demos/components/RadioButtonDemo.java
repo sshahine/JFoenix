@@ -1,5 +1,6 @@
 package demos.components;
 
+import com.jfoenix.controls.JFXRadioButton;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,8 +8,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXRadioButton;
 
 public class RadioButtonDemo extends Application {
 	@Override

@@ -1,8 +1,9 @@
 package demos.components;
 
 
-import java.util.ArrayList;
-
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXButton.ButtonType;
+import com.jfoenix.controls.JFXNodesList;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.application.Application;
@@ -13,9 +14,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXButton.ButtonType;
-import com.jfoenix.controls.JFXNodesList;
+import java.util.ArrayList;
 
 
 public class NodesListDemo extends Application {

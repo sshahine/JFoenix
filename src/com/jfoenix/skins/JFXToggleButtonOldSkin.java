@@ -18,6 +18,11 @@
  */
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXRippler.RipplerMask;
+import com.jfoenix.controls.JFXRippler.RipplerPos;
+import com.jfoenix.controls.JFXToggleButton;
+import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,12 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.controls.JFXRippler.RipplerMask;
-import com.jfoenix.controls.JFXRippler.RipplerPos;
-import com.jfoenix.controls.JFXToggleButton;
-import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
 
 /**
  * @author Shadi Shaheen

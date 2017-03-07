@@ -18,8 +18,8 @@
  */
 package com.jfoenix.skins;
 
-import java.util.ArrayList;
-
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CachedTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -35,19 +35,11 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.CubicCurve;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.PathElement;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CachedTransition;
+import java.util.ArrayList;
 
 
 /**

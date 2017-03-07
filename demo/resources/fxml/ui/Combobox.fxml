@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import com.jfoenix.validation.ValidationFacade?>
-<?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import javafx.collections.*?>
-<?import de.jensd.fx.fontawesome.Icon?>
-
+<?import com.jfoenix.validation.RequiredFieldValidator?>
+<?import com.jfoenix.validation.ValidationFacade?>
+<?import de.jensd.fx.fontawesome.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 	<HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
 		<VBox spacing="20">
 			<children>

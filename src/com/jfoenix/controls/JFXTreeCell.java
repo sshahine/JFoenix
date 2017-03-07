@@ -18,11 +18,8 @@
  */
 package com.jfoenix.controls;
 
-import java.lang.ref.WeakReference;
-
 import com.jfoenix.controls.JFXTreeView.CellAnimation;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -38,6 +35,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+
+import java.lang.ref.WeakReference;
 
 /**
  * JFXTreeCell is the animated material design implementation of a tree cell. 

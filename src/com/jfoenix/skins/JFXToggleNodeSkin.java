@@ -23,7 +23,6 @@ import com.jfoenix.controls.JFXRippler.RipplerPos;
 import com.jfoenix.controls.JFXToggleNode;
 import com.jfoenix.transitions.JFXFillTransition;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.geometry.Insets;

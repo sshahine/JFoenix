@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import com.jfoenix.controls.JFXSlider?>
-<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.geometry.Insets?>
-
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 	<VBox spacing="50" maxWidth="450" maxHeight="600" alignment="CENTER">
 		<children>
 			<HBox spacing="100" alignment="CENTER">

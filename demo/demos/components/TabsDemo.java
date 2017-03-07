@@ -1,8 +1,7 @@
 package demos.components;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTabPane;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -13,8 +12,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTabPane;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class TabsDemo extends Application {
 

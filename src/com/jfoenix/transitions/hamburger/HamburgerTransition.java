@@ -18,9 +18,8 @@
  */
 package com.jfoenix.transitions.hamburger;
 
-import javafx.animation.Transition;
-
 import com.jfoenix.controls.JFXHamburger;
+import javafx.animation.Transition;
 
 /**
  * Transition builder interface of {@link JFXHamburger}

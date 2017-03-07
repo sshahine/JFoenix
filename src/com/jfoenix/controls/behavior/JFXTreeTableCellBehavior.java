@@ -19,7 +19,6 @@
 package com.jfoenix.controls.behavior;
 
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
-
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;

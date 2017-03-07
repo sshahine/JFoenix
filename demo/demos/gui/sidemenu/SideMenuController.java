@@ -1,27 +1,7 @@
 package demos.gui.sidemenu;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXListView;
-
-import demos.gui.uicomponents.ButtonController;
-import demos.gui.uicomponents.CheckboxController;
-import demos.gui.uicomponents.ComboBoxController;
-import demos.gui.uicomponents.DialogController;
-import demos.gui.uicomponents.IconsController;
-import demos.gui.uicomponents.ListViewController;
-import demos.gui.uicomponents.MasonryPaneController;
-import demos.gui.uicomponents.PickersController;
-import demos.gui.uicomponents.PopupController;
-import demos.gui.uicomponents.ProgressBarController;
-import demos.gui.uicomponents.RadioButtonController;
-import demos.gui.uicomponents.SVGLoaderController;
-import demos.gui.uicomponents.ScrollPaneController;
-import demos.gui.uicomponents.SliderController;
-import demos.gui.uicomponents.SpinnerController;
-import demos.gui.uicomponents.TextFieldController;
-import demos.gui.uicomponents.ToggleButtonController;
-import demos.gui.uicomponents.TreeTableViewController;
+import demos.gui.uicomponents.*;
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -33,6 +13,8 @@ import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/SideMenu.fxml", title = "Material Design Example")
 public class SideMenuController {

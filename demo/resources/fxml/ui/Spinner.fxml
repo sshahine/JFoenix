@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.layout.HBox?>
-
+<?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 
 	<StackPane>
 		<JFXSpinner styleClass="materialDesign-purple, first-spinner" startingAngle="-40" />

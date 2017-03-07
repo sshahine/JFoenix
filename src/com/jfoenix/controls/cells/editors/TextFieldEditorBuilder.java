@@ -18,6 +18,8 @@
  */
 package com.jfoenix.controls.cells.editors;
 
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
@@ -25,8 +27,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
 
 /**
  * <h1>Text field cell editor</h1>

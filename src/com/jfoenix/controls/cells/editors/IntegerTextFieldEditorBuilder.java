@@ -21,7 +21,6 @@ package com.jfoenix.controls.cells.editors;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
 import com.jfoenix.validation.NumberValidator;
-
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;

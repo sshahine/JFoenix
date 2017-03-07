@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.controls.*?>
 <?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import de.jensd.fx.fontawesome.Icon?>
-<?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXPasswordField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TextArea?>
-
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 
 	<VBox prefWidth="300" spacing="40" maxWidth="400" alignment="CENTER">
 		<children>

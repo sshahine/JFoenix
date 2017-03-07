@@ -18,11 +18,10 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.skins.JFXColorPickerSkin;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
-
-import com.jfoenix.skins.JFXColorPickerSkin;
 
 /**
  * JFXColorPicker is the metrial design implementation of color picker.

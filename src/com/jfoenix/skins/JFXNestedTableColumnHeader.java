@@ -18,11 +18,10 @@
  */
 package com.jfoenix.skins;
 
-import javafx.scene.control.TableColumnBase;
-
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableViewSkinBase;
+import javafx.scene.control.TableColumnBase;
 
 /**
  * @author Shadi Shaheen

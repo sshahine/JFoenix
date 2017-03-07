@@ -1,11 +1,8 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -13,6 +10,8 @@ import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/ui/Dialog.fxml" , title = "Material Design Example")
 public class DialogController {

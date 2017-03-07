@@ -18,8 +18,6 @@
  */
 package com.jfoenix.skins;
 
-import java.time.LocalTime;
-
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.jfoenix.controls.JFXTextField;
@@ -27,18 +25,15 @@ import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.controls.behavior.JFXTimePickerBehavior;
 import com.jfoenix.svg.SVGGlyph;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
-
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+
+import java.time.LocalTime;
 
 /**
  * <h1>Material Design Time Picker Skin</h1>

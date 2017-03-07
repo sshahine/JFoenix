@@ -18,9 +18,6 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -33,6 +30,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * list of nodes that are toggled On/Off by clicking on the 1st node

@@ -2,7 +2,6 @@ package demos.components;
 
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXToggleNode;
-
 import de.jensd.fx.fontawesome.Icon;
 import javafx.application.Application;
 import javafx.geometry.Insets;

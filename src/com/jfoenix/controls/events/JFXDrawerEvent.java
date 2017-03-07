@@ -19,7 +19,6 @@
 package com.jfoenix.controls.events;
 
 import com.jfoenix.controls.JFXDrawer;
-
 import javafx.event.Event;
 import javafx.event.EventType;
 

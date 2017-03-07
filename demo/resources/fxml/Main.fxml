@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.StackPane?>
-<?import de.jensd.fx.fontawesome.AwesomeIcon?>
-<?import de.jensd.fx.fontawesome.AwesomeIconsStack?>
-<?import de.jensd.fx.fontawesome.Icon?>
-<?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.FlowPane?>
-<?import com.jfoenix.controls.JFXToolbar?>
-<?import com.jfoenix.controls.JFXDrawer?>
-<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.controls.*?>
 <?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
-<?import com.jfoenix.controls.JFXRippler?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import javafx.scene.layout.BorderPane?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 	<!-- Header -->
 	<BorderPane>
 		<top>

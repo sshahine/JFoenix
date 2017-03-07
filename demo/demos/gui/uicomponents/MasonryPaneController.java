@@ -1,16 +1,11 @@
 package demos.gui.uicomponents;
 
-import java.util.ArrayList;
-
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
@@ -30,6 +25,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
 @FXMLController(value = "/resources/fxml/ui/Masonry.fxml" , title = "Material Design Example")
 public class MasonryPaneController {

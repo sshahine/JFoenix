@@ -18,11 +18,8 @@
  */
 package com.jfoenix.controls;
 
-import java.util.function.Predicate;
-
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,6 +30,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
+
+import java.util.function.Predicate;
 
 /**
  * RecursiveTreeItem is used along with RecursiveTreeObject

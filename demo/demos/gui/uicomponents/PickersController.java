@@ -1,15 +1,14 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/ui/Pickers.fxml" , title = "Material Design Example")
 public class PickersController {

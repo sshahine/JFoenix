@@ -1,13 +1,11 @@
 package demos.components;
 
+import com.jfoenix.controls.JFXSpinner;
+import demos.MainDemo;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXSpinner;
-
-import demos.MainDemo;
 
 public class SpinnerDemo extends Application {
 

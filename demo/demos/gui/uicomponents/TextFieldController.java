@@ -1,15 +1,14 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/ui/TextField.fxml", title = "Material Design Example")
 public class TextFieldController {

@@ -24,7 +24,6 @@ import com.jfoenix.controls.JFXRippler.RipplerPos;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

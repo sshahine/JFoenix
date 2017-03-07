@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import com.jfoenix.controls.JFXToggleButton?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.control.Label?>
-<?import com.jfoenix.controls.JFXToggleNode?>
+<?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.fontawesome.Icon?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 
 	<VBox prefWidth="300" spacing="50" maxWidth="400" maxHeight="300">
 		<Label styleClass="title-label">Toggle Buttons</Label>

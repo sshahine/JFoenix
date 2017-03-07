@@ -19,7 +19,6 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXTreeTableRowSkin;
-
 import javafx.scene.control.Skin;
 import javafx.scene.control.TreeTableRow;
 

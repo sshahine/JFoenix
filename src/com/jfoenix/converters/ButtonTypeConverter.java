@@ -18,12 +18,11 @@
  */
 package com.jfoenix.converters;
 
+import com.jfoenix.controls.JFXButton.ButtonType;
+import com.sun.javafx.css.StyleConverterImpl;
 import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
-
-import com.jfoenix.controls.JFXButton.ButtonType;
-import com.sun.javafx.css.StyleConverterImpl;
 
 /**
  * Converts the CSS for -fx-button-type items into ButtonType.

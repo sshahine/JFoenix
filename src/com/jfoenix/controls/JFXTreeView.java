@@ -18,12 +18,12 @@
  */
 package com.jfoenix.controls;
 
-import java.util.HashMap;
-
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+
+import java.util.HashMap;
 
 /**
  * JFXTreeView is the material design implementation of a TreeView

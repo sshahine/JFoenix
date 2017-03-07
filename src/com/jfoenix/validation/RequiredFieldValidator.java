@@ -18,13 +18,12 @@
  */
 package com.jfoenix.validation;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.DefaultProperty;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.validation.base.ValidatorBase;
 
 /**
  * An example of required field validtaion, that is applied on text input controls

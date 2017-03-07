@@ -18,23 +18,18 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import com.jfoenix.skins.JFXCheckBoxSkin;
+import com.sun.javafx.css.converters.PaintConverter;
+import javafx.css.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import com.jfoenix.skins.JFXCheckBoxSkin;
-import com.sun.javafx.css.converters.PaintConverter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * JFXCheckBox is the material design implementation of a checkbox. 

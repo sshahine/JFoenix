@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import com.jfoenix.controls.JFXPopup?>
-<?import com.jfoenix.controls.JFXHamburger?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import de.jensd.fx.fontawesome.Icon?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import com.jfoenix.controls.JFXRippler?>
 
-
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane styleClass="animated-burgers">
 		<JFXRippler fx:id="rippler1" maskType="CIRCLE"

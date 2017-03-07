@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.layout.FlowPane?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import javafx.scene.control.Label?>
-<?import de.jensd.fx.fontawesome.Icon?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.ScrollPane?>
-
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.fontawesome.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 
 	<AnchorPane maxWidth="500">
 		<JFXListView fx:id="list1" styleClass="custom-jfx-list-view"

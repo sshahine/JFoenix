@@ -18,14 +18,14 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-
 import javafx.application.Platform;
 import javafx.beans.DefaultProperty;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
 
 /**
  * DrawersStack is used to show multiple drawers at once

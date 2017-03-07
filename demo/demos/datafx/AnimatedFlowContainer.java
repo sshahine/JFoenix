@@ -1,11 +1,8 @@
 package demos.datafx;
+
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.flow.FlowContainer;
 import io.datafx.controller.flow.container.ContainerAnimations;
-
-import java.util.List;
-import java.util.function.Function;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
@@ -16,6 +13,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
 

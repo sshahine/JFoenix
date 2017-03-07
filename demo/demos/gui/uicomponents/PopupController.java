@@ -1,24 +1,19 @@
 package demos.gui.uicomponents;
 
-import java.io.IOException;
-
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
-
-import demos.gui.main.MainController.InputController;
-
 import com.jfoenix.controls.JFXRippler;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 
 @FXMLController(value = "/resources/fxml/ui/Popup.fxml" , title = "Material Design Example")
 public class PopupController {

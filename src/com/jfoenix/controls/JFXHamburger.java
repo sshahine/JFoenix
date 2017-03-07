@@ -18,17 +18,13 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.transitions.hamburger.HamburgerTransition;
 import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import com.jfoenix.transitions.hamburger.HamburgerTransition;
 
 /**
  * the famous animated hamburger icon used in material design 

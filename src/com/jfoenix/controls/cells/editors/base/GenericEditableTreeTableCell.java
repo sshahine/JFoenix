@@ -18,13 +18,9 @@
  */
 package com.jfoenix.controls.cells.editors.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
@@ -36,6 +32,9 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
  * <h1>Generic Editable Tree Table cell</h1>
  * Provides the base for an editable table cell using a text field. Sub-classes can provide formatters for display and a

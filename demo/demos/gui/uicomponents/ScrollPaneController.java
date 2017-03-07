@@ -1,18 +1,17 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.svg.SVGGlyph;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
+
+import javax.annotation.PostConstruct;
 
 @FXMLController(value = "/resources/fxml/ui/ScrollPane.fxml" , title = "Material Design Example")
 public class ScrollPaneController {

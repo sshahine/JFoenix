@@ -18,14 +18,14 @@
  */
 package com.jfoenix.controls.behavior;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.skins.JFXTimePickerSkin;
 import com.sun.javafx.scene.control.behavior.ComboBoxBaseBehavior;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author  Shadi Shaheen

@@ -18,17 +18,12 @@
  */
 package com.jfoenix.transitions.hamburger;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.CachedTransition;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.CachedTransition;
 
 /**
  * transform {@link JFXHamburger} into close icon

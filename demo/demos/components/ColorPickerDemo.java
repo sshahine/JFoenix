@@ -1,5 +1,6 @@
 package demos.components;
 
+import com.jfoenix.controls.JFXColorPicker;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,8 +8,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXColorPicker;
 
 public class ColorPickerDemo  extends Application {
 

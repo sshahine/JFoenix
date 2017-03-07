@@ -18,17 +18,17 @@
  */
 package com.jfoenix.controls.behavior;
 
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.SPACE;
-import static javafx.scene.input.KeyEvent.KEY_PRESSED;
-import java.util.ArrayList;
-import java.util.List;
 import com.jfoenix.skins.JFXColorPickerSkin;
 import com.sun.javafx.scene.control.behavior.ComboBoxBaseBehavior;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static javafx.scene.input.KeyCode.*;
+import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 /**
  * @author  Shadi Shaheen

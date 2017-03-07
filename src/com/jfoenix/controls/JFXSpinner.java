@@ -18,10 +18,7 @@
  */
 package com.jfoenix.controls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.sun.javafx.css.converters.SizeConverter;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -37,7 +34,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 
-import com.sun.javafx.css.converters.SizeConverter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * JFXSpinner is the material design implementation of a loading spinner. 

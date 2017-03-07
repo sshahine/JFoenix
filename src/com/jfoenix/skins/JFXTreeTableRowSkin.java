@@ -18,24 +18,19 @@
  */
 package com.jfoenix.skins;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
-
-import javafx.animation.Animation;
+import javafx.animation.*;
 import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeTableRow;
 import javafx.util.Duration;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 /**
  * @author Shadi Shaheen

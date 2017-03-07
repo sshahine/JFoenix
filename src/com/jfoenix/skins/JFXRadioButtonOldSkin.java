@@ -21,7 +21,6 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.sun.javafx.scene.control.skin.RadioButtonSkin;
-
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

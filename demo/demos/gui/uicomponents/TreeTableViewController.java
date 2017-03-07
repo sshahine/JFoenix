@@ -1,19 +1,10 @@
 package demos.gui.uicomponents;
 
-import java.util.Random;
-
-import javax.annotation.PostConstruct;
-
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.cells.editors.IntegerTextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
@@ -28,6 +19,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
+
+import javax.annotation.PostConstruct;
+import java.util.Random;
 
 @FXMLController(value = "/resources/fxml/ui/TreeTableView.fxml" , title = "Material Design Example")
 public class TreeTableViewController {

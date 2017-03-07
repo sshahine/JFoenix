@@ -18,16 +18,10 @@
  */
 package com.jfoenix.skins;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.ParallelTransition;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
+import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.CachedTransition;
 import javafx.animation.Animation.Status;
+import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -45,8 +39,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
-import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CachedTransition;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

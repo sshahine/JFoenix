@@ -33,3 +33,4 @@ make/dist/jfoenix.jar
 gradle/secring.gpg
 gradle.properties
 subprojects/jfoenix/tmp
+out

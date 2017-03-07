@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXProgressBar?>
-<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
-
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
 	<VBox spacing="50" alignment="BASELINE_CENTER" maxHeight="250" >
 		<JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>

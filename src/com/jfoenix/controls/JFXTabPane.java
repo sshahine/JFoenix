@@ -18,11 +18,10 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.skins.JFXTabPaneSkin;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
-
-import com.jfoenix.skins.JFXTabPaneSkin;
 
 /**
  * JFXTabPane is the material design implementation of a tab pane. 

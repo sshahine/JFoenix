@@ -18,13 +18,14 @@
  */
 package com.jfoenix.controls.behavior;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import com.jfoenix.skins.JFXDatePickerSkin;
 import com.sun.javafx.scene.control.behavior.ComboBoxBaseBehavior;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import javafx.scene.control.DatePicker;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author  Shadi Shaheen

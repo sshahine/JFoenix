@@ -1,10 +1,6 @@
 package demos.components;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.jfoenix.controls.JFXTreeView;
-
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
@@ -12,6 +8,9 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TreeViewDemo extends Application {
 

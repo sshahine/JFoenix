@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import com.jfoenix.controls.JFXListView?>
-<?import javafx.scene.control.Label?>
-<?import de.jensd.fx.fontawesome.AwesomeIcon?>
-<?import de.jensd.fx.fontawesome.AwesomeIconsStack?>
 <?import de.jensd.fx.fontawesome.Icon?>
-<?import javafx.scene.layout.Pane?>
-
+<?import javafx.scene.control.Label?>
 <JFXListView fx:id="toolbarPopupList" styleClass="option-list-view"
-	onMouseClicked="#submit" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+             onMouseClicked="#submit" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<Label>
 		Contact Us
 		<graphic>

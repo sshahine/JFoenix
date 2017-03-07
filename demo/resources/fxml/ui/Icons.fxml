@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.FlowPane?>
-<?import com.jfoenix.controls.JFXRippler?>
-<?import de.jensd.fx.fontawesome.Icon?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.controls.*?>
 <?import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition?>
-<?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
-<?import com.jfoenix.controls.JFXBadge?>
-<?import com.jfoenix.controls.JFXSnackbar?>
-
+<?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
+<?import de.jensd.fx.fontawesome.Icon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/2.2">
+           xmlns="http://javafx.com/javafx/2.2">
 	<VBox maxWidth="400" maxHeight="400">
 		<children>
 			<Label styleClass="title-label">Font Awesome Icons</Label>

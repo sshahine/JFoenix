@@ -19,7 +19,6 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXProgressBarSkin;
-
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Skin;
 

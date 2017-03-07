@@ -18,11 +18,11 @@
  */
 package com.jfoenix.transitions;
 
-import java.util.HashMap;
-
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
+
+import java.util.HashMap;
 
 public class CacheMomento{
 	private static HashMap<Node, CacheMomento> history = new HashMap<>();

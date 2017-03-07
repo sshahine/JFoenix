@@ -18,12 +18,11 @@
  */
 package com.jfoenix.controls;
 
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-
-import com.jfoenix.effects.JFXDepthManager;
 
 /**
  * JFXToolbar is the material design implementation of a tool bar. 

@@ -18,11 +18,11 @@
  */
 package com.jfoenix.skins;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXSlider.IndicatorPosition;
+import com.sun.javafx.scene.control.behavior.SliderBehavior;
+import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -38,11 +38,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
-import com.jfoenix.controls.JFXSlider;
-import com.jfoenix.controls.JFXSlider.IndicatorPosition;
-import com.sun.javafx.scene.control.behavior.SliderBehavior;
-import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 
 /**
  * @author Bashi Elias & Shadi Shaheen

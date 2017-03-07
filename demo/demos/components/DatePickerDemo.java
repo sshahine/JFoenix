@@ -20,7 +20,6 @@ package demos.components;
 
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-
 import demos.MainDemo;
 import javafx.application.Application;
 import javafx.geometry.Insets;

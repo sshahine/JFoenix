@@ -19,7 +19,6 @@
 package com.jfoenix.controls.cells.editors.base;
 
 import com.jfoenix.skins.JFXTreeTableCellSkin;
-
 import javafx.scene.control.Skin;
 import javafx.scene.control.TreeTableCell;
 
