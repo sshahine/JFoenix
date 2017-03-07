@@ -246,9 +246,9 @@ class JFXColorPalette extends Region {
 
 	class ColorSquare extends StackPane {
 		Rectangle rectangle;
-		int index;
+//		int index;
 		boolean isEmpty;
-		boolean isCustom;
+//		boolean isCustom;
 
 		public ColorSquare() {
 			this(null, -1, false);
@@ -279,8 +279,8 @@ class JFXColorPalette extends Region {
 					}
 				});
 			}
-			this.index = index;
-			this.isCustom = isCustom;
+//			this.index = index;
+//			this.isCustom = isCustom;
 			rectangle = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
 			if (color == null) {
 				rectangle.setFill(Color.WHITE);

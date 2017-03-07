@@ -162,21 +162,21 @@ public class JFXListView<T> extends ListView<T> {
 //			int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
 			overAllIndexProperty.set(selectedIndex + preItemsSize);
 		}else{
-			Iterator<Integer> itr = sublistsIndices.keySet().iterator();
+			Iterator<Map.Entry<Integer, JFXListView<?>>> itr = sublistsIndices.entrySet().iterator();
 			ArrayList<Object> selectedList = new ArrayList<>();
 			while(itr.hasNext()){
-				Integer key = itr.next();
-				if(sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1){
-					selectedList.add(key);
+				Map.Entry<Integer, JFXListView<?>> entry = itr.next();
+				if(entry.getValue().getSelectionModel().getSelectedIndex() != -1){
+					selectedList.add(entry.getKey());
 				}
 			}
 			if(selectedList.size() > 0){
-				itr = sublistsIndices.keySet().iterator();
+				itr = sublistsIndices.entrySet().iterator();
 				int preItemsSize = 0;
 				while(itr.hasNext()){
-					Integer key = itr.next();
-					if(key < ((Integer)selectedList.get(0))){
-						preItemsSize += sublistsIndices.get(key).getItems().size()-1;
+					Map.Entry<Integer, JFXListView<?>> entry = itr.next();
+					if(entry.getKey() < ((Integer)selectedList.get(0))){
+						preItemsSize += entry.getValue().getItems().size()-1;
 					}
 				}
 				overAllIndexProperty.set(preItemsSize + (Integer)selectedList.get(0)+ sublistsIndices.get(selectedList.get(0)).getSelectionModel().getSelectedIndex());

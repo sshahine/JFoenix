@@ -70,7 +70,7 @@ class JFXColorPickerUI extends Pane  {
 		this.pickerSize = pickerSize;	
 		this.centerX = (double)pickerSize/2;
 		this.centerY = (double)pickerSize/2;
-		this.pickerRadius = pickerSize/2;
+		this.pickerRadius = (double)pickerSize/2;
 		this.huesRadius = pickerRadius * 0.9;
 		this.huesSmallR = pickerRadius * 0.8;
 		this.huesLargeR = pickerRadius;
@@ -324,7 +324,7 @@ class JFXColorPickerUI extends Pane  {
 		PixelWriter pixelWriter = raster.getPixelWriter();
 		Point2D center = new Point2D((double)width / 2, (double)height / 2);
 		double rsmall = 0.8*width / 2;
-		double rbig = width / 2;
+		double rbig = (double)width / 2;
 		for (int y = 0 ; y < height ; y++) {
 			for (int x = 0 ; x < width ; x++) {
 				double dx = x - center.getX();
