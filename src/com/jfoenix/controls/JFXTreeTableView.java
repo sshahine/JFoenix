@@ -122,7 +122,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 				break;
 			}
 			// handle group nodes
-			if(((RecursiveTreeObject<?>)parent.getValue()).getGroupedColumn()!=null)
+			if(parent.getValue() !=null
+			&& parent.getValue() instanceof RecursiveTreeObject
+			&& ((RecursiveTreeObject<?>)parent.getValue()).getGroupedColumn()!=null)
 				level--;
 			parent = parent.getParent();
 		}
