@@ -57,12 +57,17 @@ javadoc {
                            'http://docs.oracle.com/javase/8/javafx/api/']
 }
 
+task myJavadocs(type: Javadoc) {
+  source = sourceSets.main.allJava
+}
+ 
 task javadocJar(type: Jar) {
     group 'Build'
     description 'An archive of the javadoc'
     classifier 'javadoc'
     from javadoc.destinationDir
 }
+javadocJar.dependsOn myJavadocs
 
 // execute jar tasks
 jar.finalizedBy retroSourcesJar
@@ -88,3 +93,4 @@ jar {
         instruction 'Bundle-Description', 'JavaFX Material Design Library'
     }
 }
+
