@@ -60,6 +60,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
 	private JFXRippler rippler;
 	private Timeline transition;
+	private Runnable releaseManualRippler = null;
 
 	public JFXToggleButtonSkin(JFXToggleButton toggleButton) {
 		super(toggleButton);
@@ -81,7 +82,15 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 		StackPane circlePane = new StackPane();
 		circlePane.getChildren().add(circle);
 		circlePane.setPadding(new Insets(14));		
-		rippler = new JFXRippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK);		
+		rippler = new JFXRippler(circlePane,RipplerMask.CIRCLE, RipplerPos.BACK){
+			@Override protected void initListeners(){
+				ripplerPane.setOnMousePressed((event) -> {
+					if(releaseManualRippler!=null) releaseManualRippler.run();
+					releaseManualRippler = null;
+					createRipple(event.getX(),event.getY());
+				});
+			}
+		};		
 		rippler.setRipplerFill(toggleButton.getUnToggleLineColor());
 
 		circleContainer.getChildren().add(rippler);
@@ -91,6 +100,17 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 		main.getChildren().add(circleContainer);
 		main.setCursor(Cursor.HAND);
 
+		// show focus traversal effect
+		getSkinnable().armedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal) releaseManualRippler = rippler.createManualRipple();
+			else if(releaseManualRippler!=null) releaseManualRippler.run();
+		});
+		toggleButton.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				if(!getSkinnable().isPressed()) rippler.showOverlay();
+			}else rippler.hideOverlay();
+		});
+		toggleButton.pressedProperty().addListener((o,oldVal,newVal)-> rippler.hideOverlay());
 
 		// add change listener to selected property
 		getSkinnable().selectedProperty().addListener((o,oldVal,newVal) ->{

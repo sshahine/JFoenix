@@ -45,7 +45,8 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 	private boolean invalid = true;
 	private final CornerRadii defaultRadii = new CornerRadii(3);
 	private JFXFillTransition ft;
-
+	private Runnable releaseManualRippler = null;
+	
 	public JFXToggleNodeSkin(JFXToggleNode toggleNode) {
 		super(toggleNode);
 		toggleNode.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
@@ -72,8 +73,11 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 			}
 			@Override protected void initListeners(){
 				ripplerPane.setOnMousePressed((event) -> {
+					if(releaseManualRippler!=null) releaseManualRippler.run();
+					releaseManualRippler = null;
 					createRipple(event.getX(),event.getY());
 				});
+				
 			}
 		};			
 		main.getChildren().add(rippler);
@@ -106,6 +110,18 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 				main.setBackground(new Background(new BackgroundFill(getSkinnable().isSelected()? ((JFXToggleNode)getSkinnable()).getSelectedColor() : ((JFXToggleNode)getSkinnable()).getUnSelectedColor(), radii, insets)));	
 			}
 		});
+		
+		// show focus traversal effect
+		getSkinnable().armedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal) releaseManualRippler = rippler.createManualRipple();
+			else if(releaseManualRippler!=null) releaseManualRippler.run();
+		});
+		toggleNode.focusedProperty().addListener((o,oldVal,newVal)->{
+			if(newVal){
+				if(!getSkinnable().isPressed()) rippler.showOverlay();
+			}else rippler.hideOverlay();
+		});
+		toggleNode.pressedProperty().addListener((o,oldVal,newVal)-> rippler.hideOverlay());
 	}
 
 	@Override
