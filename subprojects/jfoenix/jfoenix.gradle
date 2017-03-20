@@ -1,6 +1,8 @@
 apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'osgi'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.hierynomus.license'
 
 // pom file name
 ext {
