@@ -14,7 +14,7 @@ configurations {
     pom
 }
 dependencies { 
-	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.6@zip'
+	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.8@zip'
  	compile fileTree(dir: "$buildDir/dalvik-sdk/rt/lib/ext/jfxrt.jar", include: 'jfxrt.jar')
 }
 task extractDalvik(type: Copy) {
