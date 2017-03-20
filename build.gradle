@@ -3,27 +3,27 @@ buildscript {
         jcenter()
         mavenCentral()
     }
+}
 
-    dependencies {
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.3.1'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
-        classpath 'net.nemerosa:versioning:1.6.2'
-        //compile fileTree(dir: 'libs', include: ['*.jar'])
-    }
+plugins {
+    id 'com.jfrog.bintray' version '1.7.3' apply false
+    id 'com.github.ben-manes.versions' version '0.14.0' apply false
+    id 'me.tatarka.retrolambda' version '3.6.0' apply false
+    id 'com.github.hierynomus.license' version '0.13.1' apply false
+    id 'net.nemerosa.versioning' version '2.0.0' apply false
 }
 
 
-allprojects {
-    apply plugin: 'base'
+subprojects {
+    apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'com.github.ben-manes.versions'
-	
+    apply plugin: 'net.nemerosa.versioning'
+
+
     repositories {
-    	jcenter()
+        jcenter()
         mavenCentral()
-        flatDir { dir rootProject.file('libs') }
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
@@ -31,44 +31,12 @@ allprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
-}
 
-subprojects { subproj ->
-    apply plugin: 'java'
-    apply from: rootProject.file('gradle/code-coverage.gradle')    
+    apply from: rootProject.file('gradle/code-coverage.gradle')
     apply from: rootProject.file('gradle/javafx.gradle')
 
-    configurations {
-        compileOnly
-        testCompileOnly
-    }
-
-    subproj.tasks.withType(JavaCompile) {
-        sourceCompatibility = subproj.sourceCompatibility
-        targetCompatibility = subproj.targetCompatibility
-    }
-
-    subproj.tasks.withType(GroovyCompile) {
-        sourceCompatibility = subproj.sourceCompatibility
-        targetCompatibility = subproj.targetCompatibility
-    }
-
-    dependencies {    
-        compileOnly project.files(project.jfxrtLocation)
-    }
-
-    sourceSets {
-        main {
-            compileClasspath += [configurations.compileOnly]
-        }
-        test {
-            compileClasspath += [configurations.testCompileOnly]
-        }
-    }
-
-    javadoc {
-        classpath += [configurations.compileOnly]
-    }
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     idea {
         module {
