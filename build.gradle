@@ -16,7 +16,6 @@ plugins {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'net.nemerosa.versioning'
 
@@ -37,11 +36,4 @@ subprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-
-    idea {
-        module {
-            scopes.PROVIDED.plus += [configurations.compileOnly]
-            scopes.PROVIDED.plus += [configurations.testCompileOnly]
-        }
-    }
 }
