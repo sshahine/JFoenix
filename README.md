@@ -11,21 +11,6 @@
 JFoenix is an open source Java library, that implements Google Material Design using Java components.
 
 # Build
-## Ant
-To build JFoenix, we created an Ant file named build.xml and build.bat. JFoenix uses Java version **1.8 u60**. Using the command line, you need to move to the JFoenix/make directory
-and run the batch file build.bat by typing:
-
-    build.bat
-
-To run the main demo, go to the JFoenix/make directory and run the batch file run-demo.bat :
-
-    run-demo.bat
-
-**NOTE** : You need to update the build.bat to point to Java 1.8 and Apache Ant directories.
-
-**NOTE** : Linux is also supported. In the make directory, use `./build.sh` and `./run-demo.sh`, respectively.
-
-## Gradle
 To build JFoenix, execute the following command:
 
     gradlew build
