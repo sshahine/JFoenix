@@ -4,10 +4,14 @@ mainClassName = 'demos.MainDemo'
 
 dependencies {
     compile project(':jfoenix')
-    compile ':datafx:8.0b8'
-    compile ':core:8.0b8'
-    compile ':flow:8.0b8'
-    compile ':fontawesomefx:8.0.10'
+
+    // NOTE: the latest version _is_ 8.0.1!
+    // 8.0.7 was published by mistake
+    compile 'io.datafx:datafx:8.0.1'
+    compile 'io.datafx:flow:8.0.1'
+
+    // FontAwesome (Bintray)
+    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
 }
 
 sourceSets.main.java.srcDirs = [rootProject.file('demo')]
