@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXListView?>
-<?import de.jensd.fx.fontawesome.Icon?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <JFXListView fx:id="toolbarPopupList" styleClass="option-list-view"
              onMouseClicked="#submit" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<Label>
-		Contact Us
-		<graphic>
-			<Icon awesomeIcon="USER" size="1.5em" style=";"
-				styleClass="option-jfx-list-view-icon" />
-		</graphic>
-	</Label>
-	<Label>
-		Exit
-		<graphic>
-			<Icon awesomeIcon="REPLY" size="1.5em" style=";"
-				styleClass="option-jfx-list-view-icon" />
-		</graphic>
-	</Label>
+    <Label>
+        Contact Us
+        <graphic>
+            <FontAwesomeIconView glyphName="USER" size="1.5em" styleClass="option-jfx-list-view-icon"/>
+        </graphic>
+    </Label>
+    <Label>
+        Exit
+        <graphic>
+            <FontAwesomeIconView glyphName="REPLY" size="1.5em" styleClass="option-jfx-list-view-icon"/>
+        </graphic>
+    </Label>
 </JFXListView>

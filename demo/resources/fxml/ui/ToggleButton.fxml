@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
-<?import de.jensd.fx.fontawesome.Icon?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
 
-	<VBox prefWidth="300" spacing="50" maxWidth="400" maxHeight="300">
-		<Label styleClass="title-label">Toggle Buttons</Label>
-		<FlowPane hgap="26" style="-fx-padding:0 0 0 50">
-			<Label styleClass="toggle-label"> Wifi (separate label) </Label>
-			<JFXToggleButton styleClass="custom-jfx-toggle-button-red">
-			</JFXToggleButton>
-		</FlowPane>
-		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-			<JFXToggleButton styleClass="custom-jfx-toggle-button" text="Bluetooth">
-			</JFXToggleButton>
-			
-			<JFXToggleButton text="Wifi">
-			</JFXToggleButton>
-			
-		</FlowPane>
+    <VBox prefWidth="300" spacing="50" maxWidth="400" maxHeight="300">
+        <Label styleClass="title-label">Toggle Buttons</Label>
+        <FlowPane hgap="26" style="-fx-padding:0 0 0 50">
+            <Label styleClass="toggle-label">Wifi (separate label)</Label>
+            <JFXToggleButton styleClass="custom-jfx-toggle-button-red">
+            </JFXToggleButton>
+        </FlowPane>
+        <FlowPane hgap="60" style="-fx-padding:0 0 0 50">
+            <JFXToggleButton styleClass="custom-jfx-toggle-button" text="Bluetooth">
+            </JFXToggleButton>
 
-		<Label styleClass="title-label">Toggle Icons</Label>
+            <JFXToggleButton text="Wifi">
+            </JFXToggleButton>
 
-		<FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-			<JFXToggleNode styleClass="toggle-icon1">
-				<Icon awesomeIcon="PHONE" size="2em" style=";" styleClass="icon" />
-			</JFXToggleNode>
-			<JFXToggleNode styleClass="toggle-icon2">
-				<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
-			</JFXToggleNode>
-			<JFXToggleNode styleClass="toggle-icon3">
-				<Icon awesomeIcon="KEY" size="2em" style=";" styleClass="icon" />
-			</JFXToggleNode>
+        </FlowPane>
 
-		</FlowPane>
+        <Label styleClass="title-label">Toggle Icons</Label>
 
-	</VBox>
+        <FlowPane hgap="60" style="-fx-padding:0 0 0 50">
+            <JFXToggleNode styleClass="toggle-icon1">
+                <FontAwesomeIconView glyphName="PHONE" size="2em" styleClass="icon"/>
+            </JFXToggleNode>
+            <JFXToggleNode styleClass="toggle-icon2">
+                <FontAwesomeIconView glyphName="HEART" size="2em" styleClass="icon"/>
+            </JFXToggleNode>
+            <JFXToggleNode styleClass="toggle-icon3">
+                <FontAwesomeIconView glyphName="KEY" size="2em" styleClass="icon"/>
+            </JFXToggleNode>
+
+        </FlowPane>
+
+    </VBox>
 
 </StackPane>
 

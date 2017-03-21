@@ -3,146 +3,144 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import com.jfoenix.validation.ValidationFacade?>
-<?import de.jensd.fx.fontawesome.*?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
-	<HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
-		<VBox spacing="20">
-			<children>
-				<Label styleClass="title-label">Combo Box</Label>
-				<ValidationFacade>
-					<control>
-						<JFXComboBox id="jfxComboBox" prefWidth="200"
-							promptText="Select Item">
-							<items>
-								<FXCollections fx:factory="observableArrayList">
-									<Label>
-										Item 1
-										<graphic>
-											<StackPane styleClass="custom-jfx-list-view-icon-container">
-												<Icon awesomeIcon="STAR" size="1.5em" style=";"
-													styleClass="custom-jfx-list-view-icon" />
-											</StackPane>
-										</graphic>
-									</Label>
-									<Label>
-										Item 2
-										<graphic>
-											<StackPane styleClass="custom-jfx-list-view-icon-container">
-												<Icon awesomeIcon="HEART" size="1.5em" style=";"
-													styleClass="custom-jfx-list-view-icon" />
-											</StackPane>
-										</graphic>
-									</Label>
-									<Label>
-										Item 3
-										<graphic>
-											<StackPane styleClass="custom-jfx-list-view-icon-container">
-												<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-													styleClass="custom-jfx-list-view-icon" />
-											</StackPane>
-										</graphic>
-									</Label>
-									<Label>
-										Item 4
-										<graphic>
-											<StackPane styleClass="custom-jfx-list-view-icon-container">
-												<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-													styleClass="custom-jfx-list-view-icon" />
-											</StackPane>
-										</graphic>
-									</Label>
-									<Label>
-										Item 5
-										<graphic>
-											<StackPane styleClass="custom-jfx-list-view-icon-container">
-												<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-													styleClass="custom-jfx-list-view-icon" />
-											</StackPane>
-										</graphic>
-									</Label>
-								</FXCollections>
-							</items>
-						</JFXComboBox>
-					</control>
-					<validators>
-						<RequiredFieldValidator message="Input Required!">
-							<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
-						</RequiredFieldValidator>
-					</validators>
-				</ValidationFacade>
-			</children>
-		</VBox>
+    <HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
+        <VBox spacing="20">
+            <Label styleClass="title-label">Combo Box</Label>
+            <ValidationFacade>
+                <control>
+                    <JFXComboBox id="jfxComboBox" prefWidth="200"
+                                 promptText="Select Item">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <Label>
+                                    Item 1
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="STAR" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 2
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="HEART" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 3
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="WARNING" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 4
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 5
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="TABLET" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                            </FXCollections>
+                        </items>
+                    </JFXComboBox>
+                </control>
+                <validators>
+                    <RequiredFieldValidator message="Input Required!">
+                        <FontAwesomeIconView glyphName="WARNING" style="-fx-font-family: FontAwesome;"/>
+                    </RequiredFieldValidator>
+                </validators>
+            </ValidationFacade>
+        </VBox>
 
 
-		<VBox spacing="20">
-			<Label styleClass="title-label">Editable Box</Label>
-			<ValidationFacade>
-				<control>
-					<JFXComboBox id="jfxEditableComboBox" editable="true"
-						prefWidth="200" promptText="Select/Edit Items">
-						<items>
-							<FXCollections fx:factory="observableArrayList">
-								<Label>
-									Item 1
-									<graphic>
-										<StackPane styleClass="custom-jfx-list-view-icon-container">
-											<Icon awesomeIcon="STAR" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
-										</StackPane>
-									</graphic>
-								</Label>
-								<Label>
-									Item 2
-									<graphic>
-										<StackPane styleClass="custom-jfx-list-view-icon-container">
-											<Icon awesomeIcon="HEART" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
-										</StackPane>
-									</graphic>
-								</Label>
-								<Label>
-									Item 3
-									<graphic>
-										<StackPane styleClass="custom-jfx-list-view-icon-container">
-											<Icon awesomeIcon="WARNING" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
-										</StackPane>
-									</graphic>
-								</Label>
-								<Label>
-									Item 4
-									<graphic>
-										<StackPane styleClass="custom-jfx-list-view-icon-container">
-											<Icon awesomeIcon="UNIVERSITY" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
-										</StackPane>
-									</graphic>
-								</Label>
-								<Label>
-									Item 5
-									<graphic>
-										<StackPane styleClass="custom-jfx-list-view-icon-container">
-											<Icon awesomeIcon="TABLET" size="1.5em" style=";"
-												styleClass="custom-jfx-list-view-icon" />
-										</StackPane>
-									</graphic>
-								</Label>
-							</FXCollections>
-						</items>
-					</JFXComboBox>
-				</control>
-				<validators>
-					<RequiredFieldValidator message="Input Required!">
-						<Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
-					</RequiredFieldValidator>
-				</validators>
-			</ValidationFacade>
-		</VBox>
-	</HBox>
+        <VBox spacing="20">
+            <Label styleClass="title-label">Editable Box</Label>
+            <ValidationFacade>
+                <control>
+                    <JFXComboBox id="jfxEditableComboBox" editable="true"
+                                 prefWidth="200" promptText="Select/Edit Items">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <Label>
+                                    Item 1
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="STAR" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 2
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="HEART" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 3
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="WARNING" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 4
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                                <Label>
+                                    Item 5
+                                    <graphic>
+                                        <StackPane styleClass="custom-jfx-list-view-icon-container">
+                                            <FontAwesomeIconView glyphName="TABLET" size="1.5em" style=";"
+                                                  styleClass="custom-jfx-list-view-icon"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Label>
+                            </FXCollections>
+                        </items>
+                    </JFXComboBox>
+                </control>
+                <validators>
+                    <RequiredFieldValidator message="Input Required!">
+                        <FontAwesomeIconView glyphName="WARNING" style="-fx-font-family: FontAwesome;"/>
+                    </RequiredFieldValidator>
+                </validators>
+            </ValidationFacade>
+        </VBox>
+    </HBox>
 
 </StackPane>
 

@@ -5,54 +5,50 @@
 <?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
-<?import de.jensd.fx.fontawesome.Icon?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-           xmlns="http://javafx.com/javafx/2.2">
+		   xmlns="http://javafx.com/javafx/2.2">
 	<VBox maxWidth="400" maxHeight="400">
-		<children>
-			<Label styleClass="title-label">Font Awesome Icons</Label>
-			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
-				<children>
-					<JFXRippler position="BACK" styleClass="icons-rippler">
-						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
-					</JFXRippler>
+		<Label styleClass="title-label">Font Awesome Icons</Label>
+		<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+			<JFXRippler position="BACK" styleClass="icons-rippler">
+				<FontAwesomeIconView glyphName="STAR" size="2em" style=";" styleClass="icon"/>
+			</JFXRippler>
 
-					<JFXRippler position="BACK" styleClass="icons-rippler1">
-						<Icon awesomeIcon="HEART" size="2em" style=";" styleClass="icon" />
-					</JFXRippler>
+			<JFXRippler position="BACK" styleClass="icons-rippler1">
+				<FontAwesomeIconView glyphName="HEART" size="2em" style=";" styleClass="icon"/>
+			</JFXRippler>
 
-				</children>
-			</HBox>
+		</HBox>
 
-			<Label styleClass="title-label">Animated Icons</Label>
-			<HBox spacing="20" style="-fx-padding: 0 0 0 50;" styleClass="animated-burgers">
-				<children>
-					<JFXHamburger fx:id="burger1" style="-fx-padding:20;">					
-						<HamburgerSlideCloseTransition  />
-					</JFXHamburger>
-					<JFXHamburger fx:id="burger2" style="-fx-padding:20;">
-						<HamburgerBackArrowBasicTransition />
-					</JFXHamburger>
-					<JFXHamburger fx:id="burger3" style="-fx-padding:20;">
-						<HamburgerBasicCloseTransition />
-					</JFXHamburger>
-					<JFXHamburger fx:id="burger4" style="-fx-padding:20;">
-						<HamburgerNextArrowBasicTransition />
-					</JFXHamburger>
-				</children>
-			</HBox>
-			
-			<Label styleClass="title-label">Badge Icons</Label>
-			<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
-				<children>
-					<JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1" styleClass="icons-badge">
-						<Icon awesomeIcon="STAR" size="2em" style=";" styleClass="icon" />
-					</JFXBadge>				
-				</children>
-			</HBox>
-		</children>
+		<Label styleClass="title-label">Animated Icons</Label>
+		<HBox spacing="20" style="-fx-padding: 0 0 0 50;" styleClass="animated-burgers">
+			<children>
+				<JFXHamburger fx:id="burger1" style="-fx-padding:20;">
+					<HamburgerSlideCloseTransition/>
+				</JFXHamburger>
+				<JFXHamburger fx:id="burger2" style="-fx-padding:20;">
+					<HamburgerBackArrowBasicTransition/>
+				</JFXHamburger>
+				<JFXHamburger fx:id="burger3" style="-fx-padding:20;">
+					<HamburgerBasicCloseTransition/>
+				</JFXHamburger>
+				<JFXHamburger fx:id="burger4" style="-fx-padding:20;">
+					<HamburgerNextArrowBasicTransition/>
+				</JFXHamburger>
+			</children>
+		</HBox>
+
+		<Label styleClass="title-label">Badge Icons</Label>
+		<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
+			<children>
+				<JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1" styleClass="icons-badge">
+					<FontAwesomeIconView glyphName="STAR" size="2em" style=";" styleClass="icon"/>
+				</JFXBadge>
+			</children>
+		</HBox>
 	</VBox>
 	
 	<JFXSnackbar fx:id="snackbar" prefWidth="300" />
