@@ -20,10 +20,14 @@ package com.jfoenix.skins;
 
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.animation.*;
+
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -31,15 +35,19 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.ListCell;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 /**
  * <h1>Material Design ComboBox Skin</h1>
@@ -108,7 +116,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
 		customPane = new StackPane();
 		customPane.setMouseTransparent(true);
-//		getSkinnable().backgroundProperty().addListener((o,oldVal,newVal)-> customPane.setBackground(newVal));
 		customPane.getStyleClass().add("combo-box-button-container");
 		customPane.backgroundProperty().bindBidirectional(getSkinnable().backgroundProperty());
 		customPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -139,14 +146,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		focusedLine.setOpacity(0);
 		focusedLine.getTransforms().add(scale);
 		
-		
-		comboBox.setButtonCell(new ListCell<T>(){
-			protected void updateItem(T item, boolean empty) {
-				updateDisplayText(this,item, empty);
-				this.setVisible(item!=null || !empty);
-			};
-		});
-
 		if(comboBox.isEditable()){
 			comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 4 0 4 0");
 			comboBox.getEditor().promptTextProperty().unbind();
@@ -318,37 +317,5 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 		String promptTxt = getSkinnable().getPromptText();
 		boolean hasPromptText = (txt == null || txt.toString().isEmpty())  && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
 		return hasPromptText;
-	}
-
-
-	private boolean updateDisplayText(ListCell<T> cell, T item, boolean empty) {
-		if (empty) {
-			// create empty cell
-			if (cell == null) return true;
-			cell.setGraphic(null);
-			cell.setText(null);
-			return true;
-		} else if (item instanceof Node) {
-			Node currentNode = cell.getGraphic();
-			Node newNode = (Node) item;
-			/*
-			 *  create a node from the selected node of the listview
-			 *  using JFXComboBox {@link #nodeConverterProperty() NodeConverter}) 
-			 */
-			NodeConverter<T> nc = ((JFXComboBox<T>)getSkinnable()).getNodeConverter();
-			Node node = nc == null? null : nc.toNode(item);
-			if (currentNode == null || ! currentNode.equals(newNode)) {
-				cell.setText(null);
-				cell.setGraphic(node==null? newNode : node);
-			}
-			return node == null;
-		} else {
-			// run item through StringConverter if it isn't null
-			StringConverter<T> c = ((JFXComboBox<T>)getSkinnable()).getConverter();
-			String s = item == null ? getSkinnable().getPromptText() : (c == null ? item.toString() : c.toString(item));
-			cell.setText(s);
-			cell.setGraphic(null);
-			return s == null || s.isEmpty();
-		}
 	}
 }

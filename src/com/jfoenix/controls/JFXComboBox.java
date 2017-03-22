@@ -18,18 +18,34 @@
  */
 package com.jfoenix.controls;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Skin;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
@@ -37,10 +53,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * JFXComboBox is the material design implementation of a combobox. 
@@ -87,6 +99,16 @@ public class JFXComboBox<T> extends ComboBox<T> {
 			public T fromString(String string) {
 				return (T) string;
 			}
+		});
+		/*
+		 * had to refactor the code out skin class to allow
+		 * customization of the button cell
+		 */
+		this.setButtonCell(new ListCell<T>(){
+			protected void updateItem(T item, boolean empty) {
+				updateDisplayText(this, item, empty);
+				this.setVisible(item!=null || !empty);
+			};
 		});
 	}
 
@@ -147,6 +169,37 @@ public class JFXComboBox<T> extends ComboBox<T> {
 				return object.toString();
 			}
 		};
+	}
+	
+	private boolean updateDisplayText(ListCell<T> cell, T item, boolean empty) {
+		if (empty) {
+			// create empty cell
+			if (cell == null) return true;
+			cell.setGraphic(null);
+			cell.setText(null);
+			return true;
+		} else if (item instanceof Node) {
+			Node currentNode = cell.getGraphic();
+			Node newNode = (Node) item;
+			/*
+			 *  create a node from the selected node of the listview
+			 *  using JFXComboBox {@link #nodeConverterProperty() NodeConverter}) 
+			 */
+			NodeConverter<T> nc = this.getNodeConverter();
+			Node node = nc == null? null : nc.toNode(item);
+			if (currentNode == null || ! currentNode.equals(newNode)) {
+				cell.setText(null);
+				cell.setGraphic(node==null? newNode : node);
+			}
+			return node == null;
+		} else {
+			// run item through StringConverter if it isn't null
+			StringConverter<T> c = this.getConverter();
+			String s = item == null ? this.getPromptText() : (c == null ? item.toString() : c.toString(item));
+			cell.setText(s);
+			cell.setGraphic(null);
+			return s == null || s.isEmpty();
+		}
 	}
 	
 	/***************************************************************************
