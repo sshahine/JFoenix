@@ -118,7 +118,7 @@
  ******************************************************************************/
 
 .icon{
-	-fx-text-fill: #FE774D;
+	-fx-fill: #FE774D;
 	-fx-padding: 10.0;
 	-fx-cursor: hand;
 }
@@ -222,7 +222,7 @@
 }
 
 .option-jfx-list-view-icon {
-	-fx-text-fill: #5264AE;
+	-fx-fill: #5264AE;
 	-fx-padding: 0.0 10.0 0.0 5.0 ;
 	-fx-cursor: hand;
 }
@@ -486,7 +486,8 @@
 
 .custom-jfx-list-view-icon,
 .jfx-list-cell:selected .label .custom-jfx-list-view-icon {
-	-fx-text-fill: #5264AE;
+	/*-fx-text-fill: #5264AE;*/
+	-fx-fill: #5264AE;
 	-fx-padding: 0.0 10.0 0.0 5.0  ;
 	-fx-cursor: hand;
 }
@@ -577,7 +578,7 @@
 }
 
 .toggle-icon1 .icon{
-	-fx-text-fill: #4285F4;
+	-fx-fill: #4285F4;
 	-fx-padding:20.0;
 }
 
@@ -609,14 +610,14 @@
 
 
 .toggle-icon2 .icon{
-	-fx-text-fill: RED;
+	-fx-fill: RED;
 }
 .toggle-icon2 .jfx-rippler{
 	-jfx-rippler-fill: RED;
 	-jfx-mask-type: CIRCLE;
 }
 .toggle-icon3 .icon{
-	-fx-text-fill: rgb(204.0,204.0,51.0);
+	-fx-fill: rgb(204.0, 204.0, 51.0);
 	-fx-padding:10.0;
 }
 .toggle-icon3 .jfx-rippler{
@@ -735,7 +736,7 @@
 .combo-box-popup .list-view .jfx-list-cell .custom-jfx-list-view-icon,
 .combo-box-popup .list-view .jfx-list-cell:filled:hover .custom-jfx-list-view-icon,
 .combo-box-popup .list-view .jfx-list-cell:selected .custom-jfx-list-view-icon{
-  	-fx-text-fill: #5264AE;
+	-fx-fill: #5264AE;
 }
 
 .combo-box-popup .list-view .jfx-list-cell:odd:selected > .jfx-rippler > StackPane,
@@ -866,7 +867,7 @@
 	-fx-font-size: 0.75em;
 }
 .tree-table-row-cell .jfx-text-field .error-icon{
-	-fx-text-fill : #D34336;
+	-fx-fill: #D34336;
 	-fx-font-size: 1.0em;
 }
 
@@ -949,7 +950,7 @@
 	-fx-font-weight: bold;
 }
 .error-icon {
-	-fx-text-fill : #D34336;
+	-fx-fill: #D34336;
 	-fx-font-size: 1.0em;
 }
 
@@ -963,7 +964,7 @@
 	-fx-font-size: 0.75em;
 }
 .jfx-text-field .error-icon, .jfx-password-field .error-icon , .jfx-text-area .error-icon{
-	-fx-text-fill : #D34336;
+	-fx-fill: #D34336;
 	-fx-font-size: 1.0em;
 }
 
