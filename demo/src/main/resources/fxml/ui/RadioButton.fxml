@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2" >
+
+
+	<HBox spacing="100" maxWidth="400" maxHeight="300" alignment="BASELINE_CENTER" >
+		<VBox spacing="40">
+			<children>
+			
+				<Label styleClass="radio-button-title-label">Radio Buttons</Label>
+			
+				<JFXRadioButton fx:id="radio_1" selected="true" text="Radio 1" styleClass="custom-jfx-radio-button">
+					<toggleGroup>
+						<ToggleGroup fx:id="toggleGroup" />
+					</toggleGroup>
+				</JFXRadioButton>
+				<JFXRadioButton fx:id="radio_2" selected="false"
+					text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button"/>
+				<JFXRadioButton fx:id="radio_3" selected="false"
+					text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button"/>
+			</children>
+		</VBox>
+
+
+		<VBox spacing="40">
+			<children>
+				
+				<Label styleClass="radio-button-title-label">Style Options</Label>				
+			
+				<JFXRadioButton fx:id="radio_1" text="Radio 1" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-blue">
+					<toggleGroup>
+						<ToggleGroup fx:id="toggleGroup" />
+					</toggleGroup>
+				</JFXRadioButton>
+				<JFXRadioButton fx:id="radio_2" selected="true" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-red"/>
+				<JFXRadioButton fx:id="radio_3" text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button, custom-jfx-radio-button-green" />
+			</children>
+		</VBox>
+
+	</HBox>
+
+
+
+</StackPane>
+
