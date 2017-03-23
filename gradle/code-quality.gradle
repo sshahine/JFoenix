@@ -3,21 +3,16 @@ apply plugin: 'com.github.hierynomus.license'
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
     apply plugin: 'checkstyle'
 
-    def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
-    ext.checkstyleConfigDir = "$configDir/checkstyle"
-
     checkstyle {
         toolVersion = '6.0'
-        configFile = new File(checkstyleConfigDir, 'checkstyle.xml')
-        configProperties.checkstyleConfigDir = checkstyleConfigDir
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
     }
 }
 
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
     apply plugin: 'findbugs'
     findbugs {
-        toolVersion = '3.0.0'
-        sourceSets = [sourceSets.main]
+        toolVersion = '3.0.1'
         ignoreFailures = true
         reportsDir = file("$project.buildDir/reports/findbugs")
         effort = 'max'
@@ -31,12 +26,7 @@ if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean(
         }
     }
 
-    findbugsTest {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
+    findbugsTest.enabled = false
 }
 
 license {
@@ -44,15 +34,11 @@ license {
     strictCheck = true
     ignoreFailures = true
     mapping {
-        java  = 'SLASHSTAR_STYLE'
-        fxml  = 'XML_STYLE'
+        java = 'SLASHSTAR_STYLE'
+        fxml = 'XML_STYLE'
     }
     ext.year = '2015'
     exclude '**/*.txt'
     exclude '**/*.png'
     exclude '**/*.ttf'
-}
-
-licenseTest {
-     source -= sourceSets.test.resources
 }

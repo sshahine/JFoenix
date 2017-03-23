@@ -1,8 +1,8 @@
 package demos.gui.uicomponents;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 
-@FXMLController(value = "/resources/fxml/ui/ToggleButton.fxml" , title = "Material Design Example")
+@ViewController(value = "/resources/fxml/ui/ToggleButton.fxml", title = "Material Design Example")
 public class ToggleButtonController {
 
 }
