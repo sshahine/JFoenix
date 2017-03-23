@@ -16,20 +16,20 @@
 			
 				<Label styleClass="radio-button-title-label">Radio Buttons</Label>
 			
-				<JFXRadioButton fx:id="radio_1" selected="true" text="Radio 1">
+				<JFXRadioButton fx:id="radio_1" selected="true" text="Radio 1" styleClass="custom-jfx-radio-button">
 					<toggleGroup>
 						<ToggleGroup fx:id="toggleGroup" />
 					</toggleGroup>
 				</JFXRadioButton>
 				<JFXRadioButton fx:id="radio_2" selected="false"
-					text="Radio 2" toggleGroup="$toggleGroup" />
+					text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button"/>
 				<JFXRadioButton fx:id="radio_3" selected="false"
-					text="Radio 2" toggleGroup="$toggleGroup" />
+					text="Radio 2" toggleGroup="$toggleGroup" styleClass="custom-jfx-radio-button"/>
 			</children>
 		</VBox>
 
 
-		<VBox spacing="36">
+		<VBox spacing="40">
 			<children>
 				
 				<Label styleClass="radio-button-title-label">Style Options</Label>				

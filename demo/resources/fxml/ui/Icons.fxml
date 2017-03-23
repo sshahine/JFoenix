@@ -8,17 +8,24 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-		   xmlns="http://javafx.com/javafx/2.2">
+	xmlns="http://javafx.com/javafx/2.2">
 	<VBox maxWidth="400" maxHeight="400">
 		<Label styleClass="title-label">Font Awesome Icons</Label>
 		<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 			<JFXRippler position="BACK" styleClass="icons-rippler">
-				<FontAwesomeIconView glyphName="STAR" size="2em" style=";" styleClass="icon"/>
+				<StackPane style="-fx-padding: 10;">
+					<FontAwesomeIconView glyphName="STAR" size="2em"
+						styleClass="icon" />
+				</StackPane>
 			</JFXRippler>
 
 			<JFXRippler position="BACK" styleClass="icons-rippler1">
-				<FontAwesomeIconView glyphName="HEART" size="2em" style=";" styleClass="icon"/>
+				<StackPane style="-fx-padding: 10;">
+					<FontAwesomeIconView glyphName="HEART" size="2em"
+						styleClass="icon" />
+				</StackPane>
 			</JFXRippler>
 
 		</HBox>
@@ -27,16 +34,16 @@
 		<HBox spacing="20" style="-fx-padding: 0 0 0 50;" styleClass="animated-burgers">
 			<children>
 				<JFXHamburger fx:id="burger1" style="-fx-padding:20;">
-					<HamburgerSlideCloseTransition/>
+					<HamburgerSlideCloseTransition />
 				</JFXHamburger>
 				<JFXHamburger fx:id="burger2" style="-fx-padding:20;">
-					<HamburgerBackArrowBasicTransition/>
+					<HamburgerBackArrowBasicTransition />
 				</JFXHamburger>
 				<JFXHamburger fx:id="burger3" style="-fx-padding:20;">
-					<HamburgerBasicCloseTransition/>
+					<HamburgerBasicCloseTransition />
 				</JFXHamburger>
 				<JFXHamburger fx:id="burger4" style="-fx-padding:20;">
-					<HamburgerNextArrowBasicTransition/>
+					<HamburgerNextArrowBasicTransition />
 				</JFXHamburger>
 			</children>
 		</HBox>
@@ -44,13 +51,17 @@
 		<Label styleClass="title-label">Badge Icons</Label>
 		<HBox spacing="20" style="-fx-padding: 0 0 0 50;">
 			<children>
-				<JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1" styleClass="icons-badge">
-					<FontAwesomeIconView glyphName="STAR" size="2em" style=";" styleClass="icon"/>
+				<JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1"
+					styleClass="icons-badge">
+					<StackPane style="-fx-padding: 10;">
+						<FontAwesomeIconView glyphName="STAR" size="2em"
+							styleClass="icon" />
+					</StackPane>
 				</JFXBadge>
 			</children>
 		</HBox>
 	</VBox>
-	
+
 	<JFXSnackbar fx:id="snackbar" prefWidth="300" />
 </StackPane>
 

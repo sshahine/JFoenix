@@ -5,89 +5,92 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-           xmlns="http://javafx.com/javafx/2.2">
+	xmlns="http://javafx.com/javafx/2.2">
 
-    <AnchorPane maxWidth="500">
-        <JFXListView fx:id="list1" styleClass="custom-jfx-list-view" layoutY="50">
-            <Label>Item 1</Label>
-            <JFXListView fx:id="subList" styleClass="sublist">
-                <groupnode>
-                    <Label styleClass="sub-label">Item 2</Label>
-                </groupnode>
-                <Label>Item 2.1</Label>
-                <Label>Item 2.2</Label>
-            </JFXListView>
-            <Label>Item 3</Label>
-            <Label>Item 4</Label>
-            <Label>Item 5</Label>
-            <JFXListView fx:id="subList1" styleClass="sublist">
-                <groupnode>
-                    <Label styleClass="sub-label">Item 6</Label>
-                </groupnode>
-                <Label>Item 6.1</Label>
-                <Label>Item 6.2</Label>
-            </JFXListView>
-            <Label>Item 7</Label>
-            <Label>Item 8</Label>
-            <Label>Item 9</Label>
-        </JFXListView>
+	<AnchorPane maxWidth="500">
+		<JFXListView fx:id="list1" styleClass="custom-jfx-list-view"
+			layoutY="50">
+			<Label>Item 1</Label>
+			<JFXListView fx:id="subList" styleClass="sublist">
+				<groupnode>
+					<Label styleClass="sub-label">Item 2</Label>
+				</groupnode>
+				<Label>Item 2.1</Label>
+				<Label>Item 2.2</Label>
+			</JFXListView>
+			<Label>Item 3</Label>
+			<Label>Item 4</Label>
+			<Label>Item 5</Label>
+			<JFXListView fx:id="subList1" styleClass="sublist">
+				<groupnode>
+					<Label styleClass="sub-label">Item 6</Label>
+				</groupnode>
+				<Label>Item 6.1</Label>
+				<Label>Item 6.2</Label>
+			</JFXListView>
+			<Label>Item 7</Label>
+			<Label>Item 8</Label>
+			<Label>Item 9</Label>
+		</JFXListView>
 
 
-        <JFXListView fx:id="list2" styleClass="custom-jfx-list-view1"
-                     layoutX="300" layoutY="50">
-            <Label>
-                Item 1
-                <graphic>
-                    <StackPane styleClass="custom-jfx-list-view-icon-container">
-                        <FontAwesomeIconView glyphName="STAR" size="1.5em" style=";"
-                                             styleClass="custom-jfx-list-view-icon"/>
-                    </StackPane>
-                </graphic>
-            </Label>
-            <Label>
-                Item 2
-                <graphic>
-                    <StackPane styleClass="custom-jfx-list-view-icon-container">
-                        <FontAwesomeIconView glyphName="HEART" size="1.5em" style=";"
-                                             styleClass="custom-jfx-list-view-icon"/>
-                    </StackPane>
-                </graphic>
-            </Label>
-            <Label>
-                Item 3
-                <graphic>
-                    <StackPane styleClass="custom-jfx-list-view-icon-container">
-                        <FontAwesomeIconView glyphName="WARNING" size="1.5em" style=";"
-                                             styleClass="custom-jfx-list-view-icon"/>
-                    </StackPane>
-                </graphic>
-            </Label>
-            <Label>
-                Item 4
-                <graphic>
-                    <StackPane styleClass="custom-jfx-list-view-icon-container">
-                        <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em" style=";"
-                                             styleClass="custom-jfx-list-view-icon"/>
-                    </StackPane>
-                </graphic>
-            </Label>
-            <Label>
-                Item 5
-                <graphic>
-                    <StackPane styleClass="custom-jfx-list-view-icon-container">
-                        <FontAwesomeIconView glyphName="TABLET" size="1.5em" style=";"
-                                             styleClass="custom-jfx-list-view-icon"/>
-                    </StackPane>
-                </graphic>
-            </Label>
-        </JFXListView>
+		<JFXListView fx:id="list2" styleClass="custom-jfx-list-view1"
+			layoutX="300" layoutY="50">
+			<Label>
+				Item 1
+				<graphic>
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<FontAwesomeIconView glyphName="STAR" size="1.5em"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
+				</graphic>
+			</Label>
+			<Label>
+				Item 2
+				<graphic>
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<FontAwesomeIconView glyphName="HEART" size="1.5em"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
+				</graphic>
+			</Label>
+			<Label>
+				Item 3
+				<graphic>
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<FontAwesomeIconView glyphName="WARNING" size="1.5em"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
+				</graphic>
+			</Label>
+			<Label>
+				Item 4
+				<graphic>
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<FontAwesomeIconView glyphName="UNIVERSITY"
+							size="1.5em" styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
+				</graphic>
+			</Label>
+			<Label>
+				Item 5
+				<graphic>
+					<StackPane styleClass="custom-jfx-list-view-icon-container">
+						<FontAwesomeIconView glyphName="TABLET" size="1.5em"
+							styleClass="custom-jfx-list-view-icon" />
+					</StackPane>
+				</graphic>
+			</Label>
+		</JFXListView>
 
-        <FlowPane hgap="20" layoutX="80" layoutY="550">
-            <JFXButton fx:id="button3D" prefWidth="100" buttonType="RAISED" text="3D"
-                       style="-fx-background-color:WHITE;"/>
-            <JFXButton fx:id="expand" prefWidth="100" buttonType="FLAT" text="EXPAND"/>
-            <JFXButton fx:id="collapse" prefWidth="100" buttonType="FLAT" text="COLLAPSE"/>
-        </FlowPane>
-    </AnchorPane>
+		<FlowPane hgap="20" layoutX="80" layoutY="550">
+			<JFXButton fx:id="button3D" prefWidth="100" buttonType="RAISED"
+				text="3D" style="-fx-background-color:WHITE;" />
+			<JFXButton fx:id="expand" prefWidth="100" buttonType="FLAT"
+				text="EXPAND" />
+			<JFXButton fx:id="collapse" prefWidth="100" buttonType="FLAT"
+				text="COLLAPSE" />
+		</FlowPane>
+	</AnchorPane>
 
 </StackPane>
