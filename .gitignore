@@ -34,3 +34,7 @@ gradle/secring.gpg
 gradle.properties
 subprojects/jfoenix/tmp
 out
+libs/*
+.classpath
+.project
+JFoenix.eml
