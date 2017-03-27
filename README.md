@@ -36,7 +36,7 @@ To run the main demo, execute the following command:
 Reference the repository from this location using:
 
     dependencies {
-      compile 'com.jfoenix:jfoenix:1.0.0'
+      compile 'com.jfoenix:jfoenix:1.2.0'
     }
 
 # Pics
