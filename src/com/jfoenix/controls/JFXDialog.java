@@ -138,7 +138,7 @@ public class JFXDialog extends StackPane {
 		this.transitionType.addListener((o,oldVal,newVal)->{
 			animation = getShowAnimation(transitionType.get());
 		});
-		
+
 		contentHolder = new StackPane();
 		contentHolder.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), null)));
 		JFXDepthManager.setDepth(contentHolder, 4);
@@ -236,6 +236,10 @@ public class JFXDialog extends StackPane {
 	 * show the dialog inside its parent container
 	 */
 	public void show(){
+		if(dialogContainer == null) {
+			System.err.println("ERROR: JFXDialog container is not set!");
+			return;
+		}
 		this.setDialogContainer(dialogContainer);
 		//		animation = getShowAnimation(transitionType.get());
 		animation.play();		
