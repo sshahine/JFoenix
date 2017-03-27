@@ -14,6 +14,6 @@ test:
   post:
     - ./gradlew assemble
     - mkdir -p $CIRCLE_ARTIFACTS/{jfoenix,demo}/{libs,distributions}
-    - cp subprojects/jfoenix/build/libs/* "$CIRCLE_ARTIFACTS/jfoenix/libs/"
-    - cp subprojects/demo/build/libs/* "$CIRCLE_ARTIFACTS/demo/libs/"
-    - cp subprojects/demo/build/distributions/* "$CIRCLE_ARTIFACTS/demo/distributions/"
+    - cp jfoenix/build/libs/* "$CIRCLE_ARTIFACTS/jfoenix/libs/"
+    - cp demo/build/libs/* "$CIRCLE_ARTIFACTS/demo/libs/"
+    - cp demo/build/distributions/* "$CIRCLE_ARTIFACTS/demo/distributions/"
