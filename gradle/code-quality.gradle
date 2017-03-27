@@ -1,12 +1,10 @@
 apply plugin: 'com.github.hierynomus.license'
 
-if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
-    apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 
-    checkstyle {
-        toolVersion = '6.0'
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-    }
+checkstyle {
+    toolVersion = '6.0'
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
