@@ -1,0 +1,20 @@
+if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
+    apply plugin: 'findbugs'
+    findbugs {
+        toolVersion = '3.0.1'
+        ignoreFailures = true
+        reportsDir = file("$project.buildDir/reports/findbugs")
+        effort = 'max'
+        reportLevel = 'high'
+    }
+
+    findbugsMain {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    findbugsTest.enabled = false
+}
+
