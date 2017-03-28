@@ -15,12 +15,10 @@ import javafx.stage.Stage;
 
 public class ToggleButtonDemo extends Application {
 
-    private VBox pane;
-
     @Override
     public void start(Stage stage) throws Exception {
 
-        pane = new VBox();
+        final VBox pane = new VBox();
         pane.setSpacing(30);
         pane.setStyle("-fx-background-color:#EEE; -fx-padding: 40;");
 

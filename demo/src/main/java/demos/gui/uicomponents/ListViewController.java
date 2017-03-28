@@ -1,12 +1,11 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
+
+import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/ListView.fxml", title = "Material Design Example")
 public class ListViewController {
@@ -28,7 +27,7 @@ public class ListViewController {
     private int counter = 0;
 
     @PostConstruct
-    public void init(){
+    public void init() {
 
         button3D.setOnMouseClicked((e) -> {
             int val = ++counter % 2;

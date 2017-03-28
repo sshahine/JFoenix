@@ -1,16 +1,11 @@
 package demos.gui.uicomponents;
 
-import java.util.ArrayList;
-
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
-
 import io.datafx.controller.ViewController;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -29,6 +24,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+
 @ViewController(value = "/fxml/ui/Masonry.fxml", title = "Material Design Example")
 public class MasonryPaneController {
 
@@ -38,7 +36,7 @@ public class MasonryPaneController {
     JFXMasonryPane masonryPane;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         ArrayList<Node> children = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             StackPane child = new StackPane();
@@ -54,13 +52,13 @@ public class MasonryPaneController {
             children.add(child);
 
             // create content
-            VBox content = new VBox();
             StackPane header = new StackPane();
             String headerColor = getDefaultColor(i % 12);
             header.setStyle("-fx-background-radius: 5 5 0 0; -fx-background-color: " + headerColor);
             VBox.setVgrow(header, Priority.ALWAYS);
             StackPane body = new StackPane();
             body.setMinHeight(Math.random() * 20 + 50);
+            VBox content = new VBox();
             content.getChildren().addAll(header, body);
             body.setStyle("-fx-background-radius: 0 0 5 5; -fx-background-color: rgb(255,255,255,0.87);");
 
@@ -92,7 +90,7 @@ public class MasonryPaneController {
                                                            new KeyValue(button.scaleYProperty(),
                                                                         1,
                                                                         Interpolator.EASE_BOTH)));
-            animation.setDelay(Duration.millis(100 * i + (1000)));
+            animation.setDelay(Duration.millis(100 * i + 1000));
             animation.play();
             child.getChildren().addAll(content, button);
         }
