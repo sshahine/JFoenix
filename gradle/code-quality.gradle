@@ -7,6 +7,20 @@ checkstyle {
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
+checkstyleMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+checkstyleTest.enabled = false
+
+dependencies {
+    checkstyle "com.puppycrawl.tools:checkstyle:$checkstyle.toolVersion"
+    checkstyle 'com.github.sevntu.checkstyle:sevntu-checks:1.23.1'
+}
+
 if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
     apply plugin: 'findbugs'
     findbugs {

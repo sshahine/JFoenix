@@ -23,6 +23,7 @@ subprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url 'http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2' }
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
