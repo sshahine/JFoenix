@@ -2,6 +2,7 @@
 [![][mavenbadge img]][mavenbadge]
 [![][versioneye img]][versioneye]
 [![][sonar img]][sonar]
+[![][sonardebt img]][sonardebt]
 
 Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -85,3 +86,6 @@ Reference the repository from this location using:
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
 [sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root
+
+[sonardebt]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
+[sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
