@@ -305,7 +305,7 @@ public class JFXRippler extends StackPane {
 					ripple.inAnimation.getAnimation().play();
 
 					// create fade out transition for the ripple
-					ripplerPane.setOnMouseReleased((e)->{
+					ripplerPane.setOnMouseReleased(e ->{
 						if(generating.getAndSet(false)){
 							if(overlayRect!=null) overlayRect.inAnimation.stop();
 							ripple.inAnimation.getAnimation().stop();

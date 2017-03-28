@@ -30,13 +30,13 @@ public class ListViewDemo extends Application {
 		pane.setStyle("-fx-background-color:WHITE");
 		
 		JFXButton button3D = new JFXButton("3D");
-		button3D.setOnMouseClicked((e)-> list.depthProperty().set(++counter%2));
+		button3D.setOnMouseClicked(e -> list.depthProperty().set(++counter%2));
 		
 		JFXButton buttonExpand = new JFXButton("EXPAND");
-		buttonExpand.setOnMouseClicked((e)-> {list.depthProperty().set(1);list.setExpanded(true);});
+		buttonExpand.setOnMouseClicked(e -> {list.depthProperty().set(1);list.setExpanded(true);});
 		
 		JFXButton buttonCollapse = new JFXButton("COLLAPSE");
-		buttonCollapse.setOnMouseClicked((e)-> {list.depthProperty().set(1);list.setExpanded(false);});
+		buttonCollapse.setOnMouseClicked(e -> {list.depthProperty().set(1);list.setExpanded(false);});
 		
 		pane.getChildren().add(button3D);
 		pane.getChildren().add(buttonExpand);

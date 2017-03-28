@@ -289,14 +289,14 @@ public class JFXListCell<T> extends ListCell<T> {
 						contentHolder.getStyleClass().add("sublist-container");
 						VBox.setVgrow(groupNode, Priority.ALWAYS);
 						cellContent = contentHolder;						
-						cellRippler.ripplerPane.addEventHandler(MouseEvent.ANY, (e)->e.consume());
-						contentHolder.addEventHandler(MouseEvent.ANY, (e)->{
+						cellRippler.ripplerPane.addEventHandler(MouseEvent.ANY, e ->e.consume());
+						contentHolder.addEventHandler(MouseEvent.ANY, e ->{
 							if(!e.isConsumed()){
 								cellRippler.ripplerPane.fireEvent(e);
 								e.consume();
 							}
 						});
-						cellRippler.ripplerPane.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+						cellRippler.ripplerPane.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
 							if(!e.isConsumed()){
 								e.consume();
 								contentHolder.fireEvent(e);
@@ -305,7 +305,7 @@ public class JFXListCell<T> extends ListCell<T> {
 						// cache rippler clip in subnodes						
 						cellRippler.rippler.cacheRippleClip(true);
 
-						this.setOnMouseClicked((e)->e.consume());
+						this.setOnMouseClicked(e ->e.consume());
 						// Finally, add sublist animation						
 						contentHolder.setOnMouseClicked((click)->{
 							click.consume();

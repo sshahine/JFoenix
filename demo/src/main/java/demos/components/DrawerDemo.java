@@ -82,16 +82,16 @@ public class DrawerDemo extends Application {
 		bottomDrawer.setId("BOT");
 		topDrawer.setId("TOP");
 		
-		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			drawersStack.toggle(leftDrawer);
 		});
-		bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			drawersStack.toggle(bottomDrawer);
 		});		
-		rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			drawersStack.toggle(rightDrawer);
 		});
-		topButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		topButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			drawersStack.toggle(topDrawer);
 		});
 		

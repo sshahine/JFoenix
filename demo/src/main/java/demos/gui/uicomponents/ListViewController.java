@@ -1,13 +1,12 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
-import javafx.fxml.FXML;
 
-import javax.annotation.PostConstruct;
+import io.datafx.controller.ViewController;
+import javafx.fxml.FXML;
 
 @ViewController(value = "/fxml/ui/ListView.fxml", title = "Material Design Example")
 public class ListViewController {
@@ -29,7 +28,7 @@ public class ListViewController {
     private int counter = 0;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
 
         button3D.setOnMouseClicked((e) -> {
             int val = ++counter % 2;

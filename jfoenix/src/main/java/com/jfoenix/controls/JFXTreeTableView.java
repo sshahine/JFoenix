@@ -69,7 +69,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 	 * propagate any mouse event on the tree table view to its parent
 	 */	
 	public void propagateMouseEventsToParent(){
-		this.addEventHandler(MouseEvent.ANY, (e)->{
+		this.addEventHandler(MouseEvent.ANY, e ->{
 			e.consume();
 			this.getParent().fireEvent(e);
 		});

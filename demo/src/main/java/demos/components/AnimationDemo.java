@@ -72,7 +72,7 @@ public class AnimationDemo extends Application {
 		h4.setMaxSize(40, 40);
 		HamburgerBackArrowBasicTransition burgerTask3 = new HamburgerBackArrowBasicTransition(h4);
 		burgerTask3.setRate(-1);
-		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			burgerTask3.setRate(burgerTask3.getRate()*-1);
 			burgerTask3.play();
 		});

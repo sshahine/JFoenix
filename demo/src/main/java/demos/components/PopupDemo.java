@@ -38,7 +38,7 @@ public class PopupDemo extends Application {
 		main.getChildren().add(container);
 		
 		JFXPopup popup = new JFXPopup(list);
-		r.setOnMouseClicked((e)-> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
+		r.setOnMouseClicked(e -> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
 		
 		final Scene scene = new Scene(main, 800, 800);
 		scene.getStylesheets().add(PopupDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());

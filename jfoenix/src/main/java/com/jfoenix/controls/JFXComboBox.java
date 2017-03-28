@@ -44,14 +44,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 /**
@@ -81,17 +79,14 @@ public class JFXComboBox<T> extends ComboBox<T> {
 
 	private void initialize() {
 		getStyleClass().add(DEFAULT_STYLE_CLASS);
-		this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
-			@Override
-			public ListCell<T> call(ListView<T> listView) {
-				return new JFXListCell<T>();
-			}
-		});
+		this.setCellFactory(listView -> new JFXListCell<T>());
 		this.setConverter(new StringConverter<T>() {
 			@Override
 			public String toString(T object) {
-				if(object == null) return null;
-				if(object instanceof Label) return ((Label)object).getText();
+				if(object == null)
+					return null;
+				if(object instanceof Label)
+					return ((Label)object).getText();
 				return object.toString();				
 			}
 			@SuppressWarnings("unchecked")
@@ -105,6 +100,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 		 * customization of the button cell
 		 */
 		this.setButtonCell(new ListCell<T>(){
+			@Override
 			protected void updateItem(T item, boolean empty) {
 				updateDisplayText(this, item, empty);
 				this.setVisible(item!=null || !empty);
@@ -145,13 +141,12 @@ public class JFXComboBox<T> extends ComboBox<T> {
 	private static <T> NodeConverter<T> defaultNodeConverter() {
 		return new NodeConverter<T>() {
 			@Override public Node toNode(T object) {
-				if(object == null) return null;
+				if(object == null)
+					return null;
 				StackPane selectedValueContainer = new StackPane();
 				selectedValueContainer.getStyleClass().add("combo-box-selected-value-container");
 				selectedValueContainer.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-				Label selectedValueLabel;
-				if(object instanceof Label) selectedValueLabel = new Label(((Label)object).getText());	
-				else selectedValueLabel = new Label(object.toString());
+				Label selectedValueLabel = object instanceof Label ? new Label(((Label)object).getText()) : new Label(object.toString());
 				selectedValueLabel.setTextFill(Color.BLACK);
 				selectedValueContainer.getChildren().add(selectedValueLabel);
 				StackPane.setAlignment(selectedValueLabel, Pos.CENTER_LEFT);
@@ -164,8 +159,10 @@ public class JFXComboBox<T> extends ComboBox<T> {
 			}
 			@Override
 			public String toString(T object) {
-				if(object == null) return null;
-				if(object instanceof Label) return ((Label)object).getText();
+				if(object == null)
+					return null;
+				if(object instanceof Label) 
+					return ((Label)object).getText();
 				return object.toString();
 			}
 		};

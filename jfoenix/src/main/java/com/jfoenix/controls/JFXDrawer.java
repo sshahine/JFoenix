@@ -199,7 +199,7 @@ public class JFXDrawer extends StackPane {
 			this.content.removeEventFilter(MouseEvent.MOUSE_DRAGGED,mouseDragHandler);
 		});		
 		
-		holdTimer.setOnFinished((e)->{
+		holdTimer.setOnFinished(e ->{
 			if(!this.getChildren().contains(overlayPane)) this.getChildren().add(overlayPane);
 			if(!this.getChildren().contains(sidePane)) this.getChildren().add(sidePane);
 			partialTransition = new DrawerPartialTransition(initTranslate.doubleValue(), initTranslate.doubleValue()  + initOffset * directionProperty.get().doubleValue() + activeOffset * directionProperty.get().doubleValue());

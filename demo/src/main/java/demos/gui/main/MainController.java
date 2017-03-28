@@ -1,27 +1,31 @@
 package demos.gui.main;
 
-import com.jfoenix.controls.*;
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXRippler;
+
 import demos.datafx.AnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
 import demos.gui.uicomponents.ButtonController;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.Flow;
-import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.container.ContainerAnimations;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
-import io.datafx.controller.util.VetoException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 
 @ViewController(value = "/fxml/Main.fxml", title = "Material Design Example")
 public class MainController {
@@ -49,18 +53,18 @@ public class MainController {
     private FlowHandler sideMenuFlowHandler;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init() throws Exception {
 
         // init the title hamburger icon
-        drawer.setOnDrawerOpening((e) -> {
+        drawer.setOnDrawerOpening(e -> {
             titleBurger.getAnimation().setRate(1);
             titleBurger.getAnimation().play();
         });
-        drawer.setOnDrawerClosing((e) -> {
+        drawer.setOnDrawerClosing(e -> {
             titleBurger.getAnimation().setRate(-1);
             titleBurger.getAnimation().play();
         });
-        titleBurgerContainer.setOnMouseClicked((e) -> {
+        titleBurgerContainer.setOnMouseClicked(e -> {
             if (drawer.isHidden() || drawer.isHidding()) drawer.open();
             else drawer.close();
         });
@@ -72,9 +76,8 @@ public class MainController {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        optionsBurger.setOnMouseClicked((e) -> {
-            toolbarPopup.show(optionsBurger, PopupVPosition.TOP, PopupHPosition.RIGHT, -12, 15);
-        });
+        
+        optionsBurger.setOnMouseClicked(e -> toolbarPopup.show(optionsBurger, PopupVPosition.TOP, PopupHPosition.RIGHT, -12, 15));
 
         // create the inner flow and content
         context = new ViewFlowContext();

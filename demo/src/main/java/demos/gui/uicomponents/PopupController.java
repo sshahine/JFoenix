@@ -1,19 +1,19 @@
 package demos.gui.uicomponents;
 
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
 import com.jfoenix.controls.JFXRippler;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 
 @ViewController(value = "/fxml/ui/Popup.fxml", title = "Material Design Example")
 public class PopupController {
@@ -44,7 +44,7 @@ public class PopupController {
     private JFXPopup popup;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
         try {
             popup = new JFXPopup(FXMLLoader.load(getClass().getResource("/fxml/ui/popup/DemoPopup.fxml")));
         } catch (IOException e1) {

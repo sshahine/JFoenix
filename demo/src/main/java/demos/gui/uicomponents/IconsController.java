@@ -1,17 +1,16 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
-
-import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/Icons.fxml", title = "Material Design Example")
 public class IconsController {
@@ -36,7 +35,7 @@ public class IconsController {
 
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
 
         bindAction(burger1);
         bindAction(burger2);

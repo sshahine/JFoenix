@@ -1,14 +1,13 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.validation.ValidationFacade;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-
-import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/Combobox.fxml", title = "Material Design Example")
 public class ComboBoxController {
@@ -19,7 +18,7 @@ public class ComboBoxController {
     private JFXComboBox<String> jfxEditableComboBox;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
 
         jfxComboBox.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {

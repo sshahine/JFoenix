@@ -99,13 +99,13 @@ public class JFXButtonSkin extends ButtonSkin {
 
 		// add listeners to the button and bind properties
 		button.buttonTypeProperty().addListener((o,oldVal,newVal)->updateButtonType(newVal));
-		button.setOnMousePressed((e)->{
+		button.setOnMousePressed(e ->{
 			if(clickedAnimation!=null){
 				clickedAnimation.setRate(1);
 				clickedAnimation.play();	
 			}
 		});
-		button.setOnMouseReleased((e)->{
+		button.setOnMouseReleased(e ->{
 			if(clickedAnimation!=null){
 				clickedAnimation.setRate(-1);
 				clickedAnimation.play();

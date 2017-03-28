@@ -1,17 +1,16 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.svg.SVGGlyph;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
-
-import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/ScrollPane.fxml", title = "Material Design Example")
 public class ScrollPaneController {
@@ -23,7 +22,7 @@ public class ScrollPaneController {
     private JFXScrollPane scroll;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
 
         for (int i = 0; i < 100; i++)
             contentList.getItems().add("Item " + i);

@@ -64,7 +64,7 @@ public class JFXDialog extends StackPane {
 	private Region content;
 	private Transition animation;
 
-	EventHandler<? super MouseEvent> closeHandler = (e)->close();
+	EventHandler<? super MouseEvent> closeHandler = e ->close();
 
 	/**
 	 * creates empty JFXDialog control with CENTER animation type
@@ -152,7 +152,7 @@ public class JFXDialog extends StackPane {
 		// close the dialog if clicked on the overlay pane
 		if(overlayClose.get()) this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
 		// prevent propagating the events to overlay pane
-		contentHolder.addEventHandler(MouseEvent.ANY, (e)->e.consume());
+		contentHolder.addEventHandler(MouseEvent.ANY, e ->e.consume());
 	}
 
 	/***************************************************************************
@@ -251,7 +251,7 @@ public class JFXDialog extends StackPane {
 	public void close(){
 		animation.setRate(-1);
 		animation.play();
-		animation.setOnFinished((e)->{
+		animation.setOnFinished(e ->{
 			resetProperties();
 			onDialogClosedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.CLOSED));
 			dialogContainer.getChildren().remove(this);

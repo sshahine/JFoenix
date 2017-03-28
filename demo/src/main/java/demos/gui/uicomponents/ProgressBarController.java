@@ -1,16 +1,15 @@
 package demos.gui.uicomponents;
 
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXProgressBar;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.util.Duration;
-
-import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/ProgressBar.fxml", title = "Material Design Example")
 public class ProgressBarController {
@@ -21,7 +20,7 @@ public class ProgressBarController {
     private JFXProgressBar progress2;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
         Timeline task = new Timeline(
                 new KeyFrame(
                         Duration.ZERO,

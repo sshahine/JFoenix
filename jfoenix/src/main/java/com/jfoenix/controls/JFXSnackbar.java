@@ -125,7 +125,7 @@ public class JFXSnackbar extends StackPane {
 		// resize the popup if its layout has been changed
 		popup.layoutBoundsProperty().addListener((o,oldVal,newVal)-> refreshPopup());
 
-		addEventHandler(SnackbarEvent.SNACKBAR, (e)-> enqueue(e));
+		addEventHandler(SnackbarEvent.SNACKBAR, e -> enqueue(e));
 
 		//This control actually orchestrates the popup logic and is never visibly displayed.
 		this.setVisible(false);
@@ -208,14 +208,14 @@ public class JFXSnackbar extends StackPane {
 			animation =  new  Timeline(
 					new KeyFrame(
 							Duration.ZERO,
-							(e)->popup.toBack(),
+							e ->popup.toBack(),
 							new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
 							new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
 							new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
 					),
 					new KeyFrame(
 							Duration.millis(10),
-							(e)->popup.toFront(),
+							e ->popup.toFront(),
 							new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
 					),
 					new KeyFrame(Duration.millis(300),
@@ -255,7 +255,7 @@ public class JFXSnackbar extends StackPane {
 		Timeline animation =  new  Timeline(
 				new KeyFrame(
 						Duration.ZERO,  
-						(e)->popup.toFront(),
+						e ->popup.toFront(),
 						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
 						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
 						),
@@ -264,14 +264,14 @@ public class JFXSnackbar extends StackPane {
 						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
 						),
 				new KeyFrame(Duration.millis(300),
-						(e)->popup.toBack(),
+						e ->popup.toBack(),
 						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
 						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
 						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
 						)
 				);
 		animation.setCycleCount(1);
-		animation.setOnFinished((e)-> processSnackbars());
+		animation.setOnFinished(e -> processSnackbars());
 		animation.play();
 	}
 

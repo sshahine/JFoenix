@@ -1,13 +1,20 @@
 package demos.gui.uicomponents;
 
-import com.jfoenix.controls.*;
+import java.util.Random;
+
+import javax.annotation.PostConstruct;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.cells.editors.IntegerTextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.cells.editors.base.GenericEditableTreeTableCell;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.util.VetoException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -19,9 +26,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
-
-import javax.annotation.PostConstruct;
-import java.util.Random;
 
 @ViewController(value = "/fxml/ui/TreeTableView.fxml", title = "Material Design Example")
 public class TreeTableViewController {
@@ -56,7 +60,7 @@ public class TreeTableViewController {
     JFXTextField searchField2;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
 
         String[] names = {"Morley", "Scott", "Kruger", "Lain",
                 "Kennedy", "Gawron", "Han", "Hall", "Aydogdu", "Grace",

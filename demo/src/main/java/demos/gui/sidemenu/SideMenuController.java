@@ -1,21 +1,38 @@
 package demos.gui.sidemenu;
 
+import java.util.Objects;
+
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXListView;
-import demos.gui.uicomponents.*;
+
+import demos.gui.uicomponents.ButtonController;
+import demos.gui.uicomponents.CheckboxController;
+import demos.gui.uicomponents.ComboBoxController;
+import demos.gui.uicomponents.DialogController;
+import demos.gui.uicomponents.IconsController;
+import demos.gui.uicomponents.ListViewController;
+import demos.gui.uicomponents.MasonryPaneController;
+import demos.gui.uicomponents.PickersController;
+import demos.gui.uicomponents.PopupController;
+import demos.gui.uicomponents.ProgressBarController;
+import demos.gui.uicomponents.RadioButtonController;
+import demos.gui.uicomponents.SVGLoaderController;
+import demos.gui.uicomponents.ScrollPaneController;
+import demos.gui.uicomponents.SliderController;
+import demos.gui.uicomponents.SpinnerController;
+import demos.gui.uicomponents.TextFieldController;
+import demos.gui.uicomponents.ToggleButtonController;
+import demos.gui.uicomponents.TreeTableViewController;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.Flow;
-import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
-import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-
-import javax.annotation.PostConstruct;
-import java.util.Objects;
 
 @ViewController(value = "/fxml/SideMenu.fxml", title = "Material Design Example")
 public class SideMenuController {
@@ -99,7 +116,7 @@ public class SideMenuController {
     private JFXListView<Label> sideList;
 
     @PostConstruct
-    public void init() throws FlowException, VetoException {
+    public void init(){
         Objects.requireNonNull(context, "context");
         FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
         sideList.propagateMouseEventsToParent();

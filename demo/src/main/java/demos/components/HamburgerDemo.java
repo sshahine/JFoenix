@@ -26,7 +26,7 @@ public class HamburgerDemo extends Application {
 		JFXHamburger h1 = new JFXHamburger();
 		HamburgerSlideCloseTransition burgerTask = new HamburgerSlideCloseTransition(h1);
 		burgerTask.setRate(-1);
-		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		h1.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			burgerTask.setRate(burgerTask.getRate()*-1);
 			burgerTask.play();
 		});
@@ -34,7 +34,7 @@ public class HamburgerDemo extends Application {
 		JFXHamburger h2 = new JFXHamburger();
 		HamburgerBasicCloseTransition burgerTask1 = new HamburgerBasicCloseTransition(h2);
 		burgerTask1.setRate(-1);
-		h2.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		h2.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			burgerTask1.setRate(burgerTask1.getRate()*-1);
 			burgerTask1.play();
 		});
@@ -42,7 +42,7 @@ public class HamburgerDemo extends Application {
 		JFXHamburger h3 = new JFXHamburger();
 		HamburgerBackArrowBasicTransition burgerTask2 = new HamburgerBackArrowBasicTransition(h3);
 		burgerTask2.setRate(-1);
-		h3.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		h3.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			burgerTask2.setRate(burgerTask2.getRate()*-1);
 			burgerTask2.play();
 		});
@@ -50,7 +50,7 @@ public class HamburgerDemo extends Application {
 		JFXHamburger h4 = new JFXHamburger();
 		HamburgerNextArrowBasicTransition burgerTask3 = new HamburgerNextArrowBasicTransition(h4);
 		burgerTask3.setRate(-1);
-		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+		h4.addEventHandler(MouseEvent.MOUSE_PRESSED, e ->{
 			burgerTask3.setRate(burgerTask3.getRate()*-1);
 			burgerTask3.play();
 		});
