@@ -1,8 +1,9 @@
 # JFoenix
 
-[![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![CircleCI](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
+[![][mavenbadge img]][mavenbadge]
+
+Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 * JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
@@ -72,3 +73,7 @@ Reference the repository from this location using:
 ![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
 
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
+
+
+[mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
+[mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
