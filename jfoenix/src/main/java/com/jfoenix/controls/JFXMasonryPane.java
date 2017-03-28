@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls;
 
 import com.jfoenix.transitions.CachedTransition;
@@ -37,12 +38,13 @@ import java.util.List;
 /**
  * A JFXMasonryPane implements asymmetrical grid layoutMode, it places the child nodes according to
  * one of the modes:
- * <p>
- * <h3>Masonry Layout</h3> Nodes will be added one after another, first in the horizontal direction
+ *
+ * <p><h3>Masonry Layout</h3> Nodes will be added one after another, first in the horizontal direction
  * , then vertically. sort of like a mason fitting stones in a wall.
- * <p>
- * <h3>Bin Packing Layout(First Fit)</h3> it works similar to masonry layoutMode, however it tries to
+ *
+ * <p><h3>Bin Packing Layout(First Fit)</h3> it works similar to masonry layoutMode, however it tries to
  * fill the empty gaps caused in masonry layoutMode.
+ *
  * <p>
  * <b>Note:</b> childs that doesn't fit in the grid will be hidden.
  *
@@ -52,26 +54,14 @@ import java.util.List;
  */
 public class JFXMasonryPane extends Pane {
 
-    /***************************************************************************
-     *                                                                         *
-     * Private Fields                                                          *
-     *                                                                         *
-     **************************************************************************/
     private boolean performingLayout = false;
     // these variables are computed when layoutChildren is called
     private int[][] matrix;
     private HashMap<Region, Transition> animationMap = null;
     private ParallelTransition trans = new ParallelTransition();
     private boolean valid = false;
-    //	private GridPane root = new GridPane();
-//	String[] colors = {"-fx-border-color:#EEEEEE", "-fx-border-color:RED;","-fx-border-color:BLUE; ","-fx-border-color:GREEN;", "-fx-border-color:PURPLE;"};
     private List<BoundingBox> oldBoxes;
 
-    /***************************************************************************
-     *                                                                         *
-     * Constructor                                                             *
-     *                                                                         *
-     **************************************************************************/
     /**
      * Constructs a new JFXMasonryPane
      */
@@ -98,11 +88,6 @@ public class JFXMasonryPane extends Pane {
             this.requestLayout();
         });
     }
-    /***************************************************************************
-     *                                                                         *
-     * Override/Inherited methods                                              *
-     *                                                                         *
-     **************************************************************************/
     /**
      * {@inheritDoc}
      */

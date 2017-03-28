@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.validation;
 
 import com.jfoenix.controls.JFXComboBox;
@@ -55,11 +56,11 @@ public class RequiredFieldValidator extends ValidatorBase {
 
     private void evalComboBoxField() {
         JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
-        boolean valid = comboField.getValue() != null;
-        valid |= comboField.isEditable() && comboField.getEditor().getText() != null && !comboField.getEditor()
-                                                                                                   .getText()
-                                                                                                   .isEmpty();
-        if (valid) hasErrors.set(false);
-        else hasErrors.set(true);
+        boolean hasValue = comboField.getValue() != null;
+        boolean editorHasNonEmptyText = comboField.isEditable() && comboField.getEditor()
+                                                                             .getText() != null && !comboField.getEditor()
+                                                                                                              .getText()
+                                                                                                              .isEmpty();
+        hasErrors.set(!hasValue && !editorHasNonEmptyText);
     }
 }

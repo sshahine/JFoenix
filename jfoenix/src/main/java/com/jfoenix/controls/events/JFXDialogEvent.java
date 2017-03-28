@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.events;
 
 import com.jfoenix.controls.JFXDialog;

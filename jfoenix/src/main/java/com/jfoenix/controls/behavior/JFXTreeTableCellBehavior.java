@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.behavior;
 
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;

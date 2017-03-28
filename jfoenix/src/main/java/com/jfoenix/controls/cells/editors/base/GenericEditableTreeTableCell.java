@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.cells.editors.base;
 
 import com.jfoenix.controls.JFXTreeTableColumn;

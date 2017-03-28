@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.validation;
 
 import com.jfoenix.concurrency.JFXUtilities;
