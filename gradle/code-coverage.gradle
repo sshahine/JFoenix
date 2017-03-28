@@ -1,15 +1,10 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = '0.7.4.201502262128'
+    toolVersion = '0.7.9'
 }
 
 jacocoTestReport {
-    group = 'Reporting'
-    description = 'Generate Jacoco coverage reports after running tests.'
-    additionalSourceDirs = project.files(sourceSets.main.allSource.srcDirs)
-    sourceDirectories = project.files(sourceSets.main.allSource.srcDirs)
-    classDirectories =  project.files(sourceSets.main.output)
     reports {
         xml.enabled = true
         csv.enabled = false
