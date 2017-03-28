@@ -1,7 +1,6 @@
 [![CircleCI](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
 [![][mavenbadge img]][mavenbadge]
 [![][versioneye img]][versioneye]
-[![][sonar img]][sonar]
 [![][sonardebt img]][sonardebt]
 
 Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
