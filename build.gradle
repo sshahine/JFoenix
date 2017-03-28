@@ -11,8 +11,8 @@ plugins {
     id 'me.tatarka.retrolambda' version '3.6.0' apply false
     id 'com.github.hierynomus.license' version '0.13.1' apply false
     id 'net.nemerosa.versioning' version '2.0.0' apply false
+    id "org.sonarqube" version "2.2"
 }
-
 
 subprojects {
     apply plugin: 'java'
