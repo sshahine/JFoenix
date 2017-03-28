@@ -51,6 +51,9 @@ import java.util.Locale;
 
 public class JFXTimePickerContent extends VBox {
 
+	private static final String ROBOTO = "Roboto";
+	private static final String SPINNER_LABEL = "spinner-label";
+
 	private static enum TimeUnit{HOURS, MINUTES};
 
 	protected JFXTimePicker timePicker;
@@ -141,40 +144,42 @@ public class JFXTimePickerContent extends VBox {
 		int hour = time.getHour();
 
 		selectedHourLabel.setText((hour%12==0?12:hour%12) + "");		
-		selectedHourLabel.getStyleClass().add("spinner-label");
+		selectedHourLabel.getStyleClass().add(SPINNER_LABEL);
 		selectedHourLabel.setTextFill(Color.WHITE);
-		selectedHourLabel.setFont(Font.font("Roboto",FontWeight.BOLD,42));
+		selectedHourLabel.setFont(Font.font(ROBOTO,FontWeight.BOLD,42));
 		selectedHourLabel.setOnMouseClicked((click)-> unit.set(TimeUnit.HOURS));
 		selectedHourLabel.setMinWidth(49);
 		selectedHourLabel.setAlignment(Pos.CENTER_RIGHT);
 		timeLabel.set(selectedHourLabel);
 
 		selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
-		selectedMinLabel.getStyleClass().add("spinner-label");
+		selectedMinLabel.getStyleClass().add(SPINNER_LABEL);
 		selectedMinLabel.setTextFill(fadedColor);
-		selectedMinLabel.setFont(Font.font("Roboto",FontWeight.BOLD,42));
+		selectedMinLabel.setFont(Font.font(ROBOTO,FontWeight.BOLD,42));
 		selectedMinLabel.setOnMouseClicked((click)-> unit.set(TimeUnit.MINUTES));
 
 		Label separatorLabel = new Label(":");
 		separatorLabel.setPadding(new Insets(0, 0, 4, 0));
 		separatorLabel.setTextFill(fadedColor);
-		separatorLabel.setFont(Font.font("Roboto",FontWeight.BOLD,42));
+		separatorLabel.setFont(Font.font(ROBOTO,FontWeight.BOLD,42));
 
 		periodPMLabel = new Label("PM");
-		periodPMLabel.getStyleClass().add("spinner-label");
+		periodPMLabel.getStyleClass().add(SPINNER_LABEL);
 		periodPMLabel.setTextFill(fadedColor);
-		periodPMLabel.setFont(Font.font("Roboto",FontWeight.BOLD,14));
+		periodPMLabel.setFont(Font.font(ROBOTO,FontWeight.BOLD,14));
 		periodPMLabel.setOnMouseClicked((click)-> period.set("PM"));
 
 		periodAMLabel = new Label("AM");
-		periodAMLabel.getStyleClass().add("spinner-label");
+		periodAMLabel.getStyleClass().add(SPINNER_LABEL);
 		periodAMLabel.setTextFill(fadedColor);
-		periodAMLabel.setFont(Font.font("Roboto",FontWeight.BOLD,14));
+		periodAMLabel.setFont(Font.font(ROBOTO,FontWeight.BOLD,14));
 		periodAMLabel.setOnMouseClicked((click)-> period.set("AM"));
 
 		// init period value
-		if(hour < 12) periodAMLabel.setTextFill(Color.WHITE);
-		else periodPMLabel.setTextFill(Color.WHITE);
+		if(hour < 12) 
+			periodAMLabel.setTextFill(Color.WHITE);
+		else 
+			periodPMLabel.setTextFill(Color.WHITE);
 		period.set(hour < 12? "AM" : "PM");
 
 
@@ -209,7 +214,7 @@ public class JFXTimePickerContent extends VBox {
 			pointerRotate.get().setAngle(index*angle.get());
 			int timeValue = (index+9)%12 == 0 ? 12 : (index+9)%12;
 			if(unit.get() == TimeUnit.MINUTES) timeValue = (index+45)%60 == 0 ? 0 : (index+45)%60;
-			timeLabel.get().setText(unit.get() == TimeUnit.MINUTES? unitConverter.toString(timeValue) : timeValue+"");
+			timeLabel.get().setText(unit.get() == TimeUnit.MINUTES? unitConverter.toString(timeValue) : Integer.toString(timeValue));
 			updateValue();
 		};
 
@@ -273,10 +278,9 @@ public class JFXTimePickerContent extends VBox {
 			StackPane labelContainer = new StackPane();
 			int val = ((i+3)*5)%60 == 0 ? 0 : ((i+3)*5)%60;
 			Label label = new Label(unitConverter.toString(val)+"");
-			label.setFont(Font.font("Roboto",FontWeight.BOLD,12));
+			label.setFont(Font.font(ROBOTO,FontWeight.BOLD,12));
 			// init label color
-			if(val == time.getMinute()) label.setTextFill(Color.rgb(255, 255, 255, 0.87));
-			else label.setTextFill(Color.rgb(0, 0, 0, 0.87));
+			label.setTextFill(val == time.getMinute() ? Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
 			selectedMinLabel.textProperty().addListener((o,oldVal,newVal)->{
 				if(Integer.parseInt(newVal) == Integer.parseInt(label.getText())){
 					label.setTextFill(Color.rgb(255, 255, 255, 0.87));
@@ -334,11 +338,11 @@ public class JFXTimePickerContent extends VBox {
 		for (int i = 0 ; i < 12; i++) {
 			// create the label and its container
 			int val = (i+3)%12 == 0 ? 12 : (i+3)%12;
-			Label label = new Label(val+"");
-			label.setFont(Font.font("Roboto",FontWeight.BOLD,12));
+			Label label = new Label(Integer.toString(val));
+			label.setFont(Font.font(ROBOTO,FontWeight.BOLD,12));
 			// init color 
-			if(val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) label.setTextFill(Color.rgb(255, 255, 255, 0.87));
-			else label.setTextFill(Color.rgb(0, 0, 0, 0.87));
+			label.setTextFill((val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) ?
+					Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
 			selectedHourLabel.textProperty().addListener((o,oldVal,newVal)->{
 				if(Integer.parseInt(newVal) == Integer.parseInt(label.getText())){
 					label.setTextFill(Color.rgb(255, 255, 255, 0.87));
@@ -365,7 +369,8 @@ public class JFXTimePickerContent extends VBox {
 			clockLabelsContainer.getChildren().add(labelContainer);
 
 			// init pointer angle
-			if(val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) hoursPointerRotate.setAngle(180+ Math.toDegrees(angle));
+			if(val == time.getHour()%12 ||(val == 12 && time.getHour()%12 == 0)) 
+				hoursPointerRotate.setAngle(180+ Math.toDegrees(angle));
 		}		
 		return new StackPane(pointerGroup, clockLabelsContainer);
 	}
@@ -396,8 +401,8 @@ public class JFXTimePickerContent extends VBox {
 
 	private void goToTime(LocalTime time) {
 		int hour = time.getHour();
-		selectedHourLabel.setText((hour%12==0?12:hour%12) + "");	
-		selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
+		selectedHourLabel.setText(Integer.toString(hour%12==0?12:hour%12));
+		selectedMinLabel.setText(unitConverter.toString(time.getMinute()));
 		period.set(hour < 12? "AM" : "PM");
 		minsPointerRotate.setAngle(180 + (time.getMinute()+45)%60 * Math.toDegrees(2 * Math.PI/60));
 		hoursPointerRotate.setAngle(180+ Math.toDegrees(2 * (hour-3) * Math.PI / 12));
@@ -405,6 +410,7 @@ public class JFXTimePickerContent extends VBox {
 	
 	void clearFocus() {
 		LocalTime focusTime = timePicker.getValue();
-		if (focusTime == null) focusTime = LocalTime.now();
+		if (focusTime == null)
+			focusTime = LocalTime.now();
 	}
 }

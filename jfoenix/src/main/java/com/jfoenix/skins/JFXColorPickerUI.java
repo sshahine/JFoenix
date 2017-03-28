@@ -20,8 +20,14 @@ package com.jfoenix.skins;
 
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
+
 import javafx.animation.Animation.Status;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -34,13 +40,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -77,7 +79,7 @@ class JFXColorPickerUI extends Pane  {
 		this.slRadius = pickerRadius * 0.7;
 		
 		// Create Hues Circle
-		huesCircleView = new ImageView(getHuesCircle(pickerSize,pickerSize,new ArrayList<Stop>()));
+		huesCircleView = new ImageView(getHuesCircle(pickerSize,pickerSize));
 		// clip to smooth the edges
 		Circle outterCircle = new Circle(centerX, centerY, huesLargeR - 2);
 		Circle innterCircle = new Circle(centerX, centerY, huesSmallR + 2);
@@ -92,7 +94,6 @@ class JFXColorPickerUI extends Pane  {
 		colorSelector.setPrefSize(pickerRadius - huesSmallR,pickerRadius - huesSmallR);
 		colorSelector.setShape(Path.subtract(r1, r2));
 		colorSelector.setCache(true);
-//		JFXDepthManager.setDepth(colorSelector, 1);
 		colorSelector.setMouseTransparent(true);
 		colorSelector.setPickOnBounds(false);
 		this.getChildren().add(colorSelector);
@@ -123,7 +124,7 @@ class JFXColorPickerUI extends Pane  {
 
 
 		// Create SL Circle
-		slCircleView = new ImageView(getSLCricle(pickerSize,pickerSize,new ArrayList<Stop>()));
+		slCircleView = new ImageView(getSLCricle(pickerSize,pickerSize));
 		slCircleView.setClip(new Circle(centerX,centerY,  slRadius - 2));
 		slCircleView.setPickOnBounds(false);
 		this.getChildren().add(slCircleView);			
@@ -319,7 +320,7 @@ class JFXColorPickerUI extends Pane  {
 		return getColor(dx, dy);
 	}
 
-	private Image getHuesCircle(int width, int height, List<Stop> stops) {
+	private Image getHuesCircle(int width, int height) {
 		WritableImage raster = new WritableImage(width, height);
 		PixelWriter pixelWriter = raster.getPixelWriter();
 		Point2D center = new Point2D((double)width / 2, (double)height / 2);
@@ -342,7 +343,7 @@ class JFXColorPickerUI extends Pane  {
 		return raster;
 	}
 	
-	private Image getSLCricle(int width, int height, List<Stop> stops) {
+	private Image getSLCricle(int width, int height) {
 		WritableImage raster = new WritableImage(width, height);
 		PixelWriter pixelWriter = raster.getPixelWriter();
 		Point2D center = new Point2D((double)width / 2, (double)height / 2);
