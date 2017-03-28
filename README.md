@@ -1,9 +1,9 @@
-# JFoenix
-
 [![CircleCI](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
 [![][mavenbadge img]][mavenbadge]
 
 Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# JFoenix
 
 * JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
