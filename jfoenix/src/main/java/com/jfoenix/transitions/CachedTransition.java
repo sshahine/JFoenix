@@ -27,76 +27,79 @@ import javafx.util.Duration;
 
 /**
  * applies animation on a cahced node to improve the performance
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class CachedTransition extends Transition {
-	protected final Node node;
-	protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
-	private CacheMomento[] momentos = new CacheMomento[0];
-	private CacheMomento nodeCacheMomento;
+    protected final Node node;
+    protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
+    private CacheMomento[] momentos = new CacheMomento[0];
+    private CacheMomento nodeCacheMomento;
 
-	public CachedTransition(final Node node, final Timeline timeline) {
-		this.node = node;
-		this.timeline.set(timeline);
-		statusProperty().addListener((o,oldStatus,newStatus)->{
-			switch(newStatus) {
-			case RUNNING:
-				starting();
-				break;
-			default:
-				stopping();
-				break;
-			}
-		});
-	}
-	public CachedTransition(final Node node, final Timeline timeline, CacheMomento...cacheMomentos) {
-		this.node = node;
-		this.timeline.set(timeline);
-		this.momentos = cacheMomentos;
-		statusProperty().addListener((o,oldStatus,newStatus)->{
-			switch(newStatus) {
-			case RUNNING:
-				starting();
-				break;
-			default:
-				stopping();
-				break;
-			}
-		});
-	}
+    public CachedTransition(final Node node, final Timeline timeline) {
+        this.node = node;
+        this.timeline.set(timeline);
+        statusProperty().addListener((o, oldStatus, newStatus) -> {
+            switch (newStatus) {
+                case RUNNING:
+                    starting();
+                    break;
+                default:
+                    stopping();
+                    break;
+            }
+        });
+    }
 
-	/**
-	 * Called when the animation is starting
-	 */
-	protected void starting() {
-		nodeCacheMomento = new CacheMomento(node);
-		nodeCacheMomento.cache();
-		if(momentos!=null){
-			for (int i = 0; i < momentos.length; i++) {
-				momentos[i].cache();
-			}
-		}
-	}
-	/**
-	 * Called when the animation is stopping
-	 */
-	protected void stopping() {
-		nodeCacheMomento.restore();
-		if(momentos!=null){
-			for (int i = 0; i < momentos.length; i++) {
-				momentos[i].restore();
-			}
-		}
-	}
+    public CachedTransition(final Node node, final Timeline timeline, CacheMomento... cacheMomentos) {
+        this.node = node;
+        this.timeline.set(timeline);
+        this.momentos = cacheMomentos;
+        statusProperty().addListener((o, oldStatus, newStatus) -> {
+            switch (newStatus) {
+                case RUNNING:
+                    starting();
+                    break;
+                default:
+                    stopping();
+                    break;
+            }
+        });
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override protected void interpolate(double d) {
-		timeline.get().playFrom(Duration.seconds(d));
-		timeline.get().stop();
-	}
+    /**
+     * Called when the animation is starting
+     */
+    protected void starting() {
+        nodeCacheMomento = new CacheMomento(node);
+        nodeCacheMomento.cache();
+        if (momentos != null) {
+            for (int i = 0; i < momentos.length; i++) {
+                momentos[i].cache();
+            }
+        }
+    }
+
+    /**
+     * Called when the animation is stopping
+     */
+    protected void stopping() {
+        nodeCacheMomento.restore();
+        if (momentos != null) {
+            for (int i = 0; i < momentos.length; i++) {
+                momentos[i].restore();
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void interpolate(double d) {
+        timeline.get().playFrom(Duration.seconds(d));
+        timeline.get().stop();
+    }
 }

@@ -23,49 +23,49 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Skin;
 
 /**
- * JFXProgressBar is the material design implementation of a progress bar. 
- * 
- * @author  Shadi Shaheen
+ * JFXProgressBar is the material design implementation of a progress bar.
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXProgressBar extends ProgressBar {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXProgressBar() {
-		super();
-		initialize();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public JFXProgressBar() {
+        super();
+        initialize();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXProgressBar(double progress) {
-		super(progress);
-		initialize();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public JFXProgressBar(double progress) {
+        super(progress);
+        initialize();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new JFXProgressBarSkin(this);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new JFXProgressBarSkin(this);
+    }
 
-	private void initialize() {
-		setPrefWidth(200);
-		getStyleClass().add(DEFAULT_STYLE_CLASS);
-	}
+    private void initialize() {
+        setPrefWidth(200);
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
 
-	/**
-	 * Initialize the style class to 'jfx-progress-bar'.
-	 *
-	 * This is the selector class from which CSS can be used to style
-	 * this control.
-	 */
-	private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
+    /**
+     * Initialize the style class to 'jfx-progress-bar'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
 
 }

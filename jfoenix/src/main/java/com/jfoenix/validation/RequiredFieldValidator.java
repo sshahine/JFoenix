@@ -28,36 +28,38 @@ import javafx.scene.control.TextInputControl;
 /**
  * An example of required field validtaion, that is applied on text input controls
  * such as {@link TextField} and {@link TextArea}
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
-@DefaultProperty(value="icon")
+@DefaultProperty(value = "icon")
 public class RequiredFieldValidator extends ValidatorBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void eval() {
-		if(srcControl.get() instanceof TextInputControl)
-			evalTextInputField();
-		if(srcControl.get() instanceof JFXComboBox<?>)
-			evalComboBoxField();
-	}
-	
-	private void evalTextInputField(){
-		TextInputControl textField = (TextInputControl) srcControl.get();
-		if (textField.getText() == null || textField.getText().equals("")) hasErrors.set(true);
-		else hasErrors.set(false);
-	}
-	
-	private void evalComboBoxField(){
-		JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
-		boolean valid = comboField.getValue()!=null;
-		valid |= comboField.isEditable() && comboField.getEditor().getText()!=null && !comboField.getEditor().getText().isEmpty();
-		if (valid ) hasErrors.set(false);
-		else hasErrors.set(true);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void eval() {
+        if (srcControl.get() instanceof TextInputControl)
+            evalTextInputField();
+        if (srcControl.get() instanceof JFXComboBox<?>)
+            evalComboBoxField();
+    }
+
+    private void evalTextInputField() {
+        TextInputControl textField = (TextInputControl) srcControl.get();
+        if (textField.getText() == null || textField.getText().equals("")) hasErrors.set(true);
+        else hasErrors.set(false);
+    }
+
+    private void evalComboBoxField() {
+        JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
+        boolean valid = comboField.getValue() != null;
+        valid |= comboField.isEditable() && comboField.getEditor().getText() != null && !comboField.getEditor()
+                                                                                                   .getText()
+                                                                                                   .isEmpty();
+        if (valid) hasErrors.set(false);
+        else hasErrors.set(true);
+    }
 }

@@ -31,66 +31,66 @@ import javafx.scene.layout.StackPane;
 
 /**
  * <h1>Text field cell editor (numbers only) </h1>
- * this an example of the cell editor, it creates a JFXTextField node to 
+ * this an example of the cell editor, it creates a JFXTextField node to
  * allow the user to edit the cell value
  * <p>
  *
- * @author  eralpsahin
+ * @author eralpsahin
  * @version 1.0
- * @since   2017-01-27
+ * @since 2017-01-27
  */
 public class DoubleTextFieldEditorBuilder implements EditorNodeBuilder<Double> {
 
-	private JFXTextField textField;
+    private JFXTextField textField;
 
-	@Override
-	public void startEdit() {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void startEdit() {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public void cancelEdit() {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void cancelEdit() {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void updateItem(Double item, boolean empty) {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void updateItem(Double item, boolean empty) {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public Region createNode(Double value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-		StackPane pane = new StackPane();
-		pane.setStyle("-fx-padding:-10 0 -10 0");
-		textField = new JFXTextField(value+"");
-		textField.minWidthProperty().bind(minWidthBinding);
-		textField.setOnKeyPressed(keyEventsHandler);
-		textField.focusedProperty().addListener(focusChangeListener);
-		DoubleValidator validator = new DoubleValidator();
-		validator.setMessage("Value must be a rational number");
-		textField.getValidators().add(validator);
-		pane.getChildren().add(textField);
-		return pane;
-	}
+    @Override
+    public Region createNode(Double value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
+        StackPane pane = new StackPane();
+        pane.setStyle("-fx-padding:-10 0 -10 0");
+        textField = new JFXTextField(value + "");
+        textField.minWidthProperty().bind(minWidthBinding);
+        textField.setOnKeyPressed(keyEventsHandler);
+        textField.focusedProperty().addListener(focusChangeListener);
+        DoubleValidator validator = new DoubleValidator();
+        validator.setMessage("Value must be a rational number");
+        textField.getValidators().add(validator);
+        pane.getChildren().add(textField);
+        return pane;
+    }
 
-	@Override
-	public void setValue(Double value) {
-		textField.setText(value+"");
-	}
+    @Override
+    public void setValue(Double value) {
+        textField.setText(value + "");
+    }
 
-	@Override
-	public Double getValue() {
-		return Double.parseDouble(textField.getText());
-	}
+    @Override
+    public Double getValue() {
+        return Double.parseDouble(textField.getText());
+    }
 
-	@Override
-	public void validateValue() throws Exception {
-		 if(!textField.validate()) throw new Exception();
-	}
+    @Override
+    public void validateValue() throws Exception {
+        if (!textField.validate()) throw new Exception();
+    }
 }

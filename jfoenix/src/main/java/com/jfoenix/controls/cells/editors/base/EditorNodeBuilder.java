@@ -29,59 +29,74 @@ import javafx.scene.layout.Region;
  * this a builder interface to create editors for treetableview/tableview cells
  * <p>
  *
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public interface EditorNodeBuilder<T> {
-	/**
-	 * This method is called when the editor start editing the cell
-	 * @return Nothing
-	 */
-	public void startEdit();
-	/**
-	 * This method is called when the editor cancel editing the cell
-	 * @return Nothing
-	 */
-	public void cancelEdit();
-	/**
-	 * This method is called when the editor updates the visuals of the cell
-	 * 
-	 * @param the new item for the cell
-	 * @param whether or not this cell holds a value
-	 * @return Nothing
-	 */
-	public void updateItem(T item, boolean empty);
-	/**
-	 * This method is will create the editor node to be displayed when 
-	 * editing the cell
-	 * 
-	 * @param value current value of the cell
-	 * @param minWidthBinding {@link javafx.beans.binding.DoubleBinding DoubleBinding} to bind the minimum width of the editor node
-	 * @param keyEventsHandler keyboard events handler for the cell
-	 * @param focusChangeListener focus change listener for the cell
-	 * @return the editor node
-	 */
-	public Region createNode(T value, DoubleBinding minWidthBinding , EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener);
-	/**
-	 * This method is used to update the editor node to corresponde with 
-	 * the new value of the cell 
-	 * 
-	 * @param value the new value of the cell
-	 * @return Nothing
-	 */
-	public void setValue(T value);
-	/**
-	 * This method is used to get the current value from the editor node 
-	 * 
-	 * @return T the value of the editor node
-	 */
-	public T getValue();
-	/**
-	 * This method will be called before committing the new value of the cell 
-	 * 
-	 * @throws Exception
-	 * @return Nothing
-	 */
-	public void validateValue() throws Exception;
+    /**
+     * This method is called when the editor start editing the cell
+     *
+     * @return Nothing
+     */
+    public void startEdit();
+
+    /**
+     * This method is called when the editor cancel editing the cell
+     *
+     * @return Nothing
+     */
+    public void cancelEdit();
+
+    /**
+     * This method is called when the editor updates the visuals of the cell
+     *
+     * @param the
+     *         new item for the cell
+     * @param whether
+     *         or not this cell holds a value
+     * @return Nothing
+     */
+    public void updateItem(T item, boolean empty);
+
+    /**
+     * This method is will create the editor node to be displayed when
+     * editing the cell
+     *
+     * @param value
+     *         current value of the cell
+     * @param minWidthBinding
+     *         {@link javafx.beans.binding.DoubleBinding DoubleBinding} to bind the minimum width of the editor node
+     * @param keyEventsHandler
+     *         keyboard events handler for the cell
+     * @param focusChangeListener
+     *         focus change listener for the cell
+     * @return the editor node
+     */
+    public Region createNode(T value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener);
+
+    /**
+     * This method is used to update the editor node to corresponde with
+     * the new value of the cell
+     *
+     * @param value
+     *         the new value of the cell
+     * @return Nothing
+     */
+    public void setValue(T value);
+
+    /**
+     * This method is used to get the current value from the editor node
+     *
+     * @return T the value of the editor node
+     */
+    public T getValue();
+
+    /**
+     * This method will be called before committing the new value of the cell
+     *
+     * @return Nothing
+     * @throws Exception
+     */
+    public void validateValue() throws Exception;
 }

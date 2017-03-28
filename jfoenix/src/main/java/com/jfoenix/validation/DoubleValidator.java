@@ -27,30 +27,30 @@ import javafx.scene.control.TextInputControl;
 /**
  * Double field validation, that is applied on text input controls
  * such as {@link TextField} and {@link TextArea}
- * 
- * @author  eralpsahin
+ *
+ * @author eralpsahin
  * @version 1.0
- * @since   2017-01-27
+ * @since 2017-01-27
  */
-@DefaultProperty(value="icon")
+@DefaultProperty(value = "icon")
 public class DoubleValidator extends ValidatorBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void eval() {
-		if(srcControl.get() instanceof TextInputControl)
-			evalTextInputField();
-	}
-	
-	private void evalTextInputField(){
-		TextInputControl textField = (TextInputControl) srcControl.get();
-		try {
-			Double.parseDouble(textField.getText());
-			hasErrors.set(false);
-		} catch (Exception e) {
-			hasErrors.set(true);
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void eval() {
+        if (srcControl.get() instanceof TextInputControl)
+            evalTextInputField();
+    }
+
+    private void evalTextInputField() {
+        TextInputControl textField = (TextInputControl) srcControl.get();
+        try {
+            Double.parseDouble(textField.getText());
+            hasErrors.set(false);
+        } catch (Exception e) {
+            hasErrors.set(true);
+        }
+    }
 }

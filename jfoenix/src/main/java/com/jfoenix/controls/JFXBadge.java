@@ -35,57 +35,57 @@ import javafx.util.Duration;
 @DefaultProperty(value = "control")
 public class JFXBadge extends StackPane {
 
-	private Group badge;
-	protected Node control;
-	private boolean enabled = true;
+    private Group badge;
+    protected Node control;
+    private boolean enabled = true;
 
-	public JFXBadge() {
-		this(null);
-	}
+    public JFXBadge() {
+        this(null);
+    }
 
-	public JFXBadge(Node control) {
-		this(control, Pos.TOP_RIGHT);
-	}
+    public JFXBadge(Node control) {
+        this(control, Pos.TOP_RIGHT);
+    }
 
-	public JFXBadge(Node control, Pos pos) {
-		super();
-		initialize();
-		setPosition(pos);
-		setControl(control);
-		position.addListener((o,oldVal,newVal)-> StackPane.setAlignment(badge, newVal));
-	}
+    public JFXBadge(Node control, Pos pos) {
+        super();
+        initialize();
+        setPosition(pos);
+        setControl(control);
+        position.addListener((o, oldVal, newVal) -> StackPane.setAlignment(badge, newVal));
+    }
 
-	/***************************************************************************
-	 * * Setters / Getters * *
-	 **************************************************************************/
+    /***************************************************************************
+     * * Setters / Getters * *
+     **************************************************************************/
 
-	public void setControl(Node control) {
-		if (control != null) {
-			this.control = control;
-			this.badge = new Group();
-			this.getChildren().add(control);
-			this.getChildren().add(badge);
+    public void setControl(Node control) {
+        if (control != null) {
+            this.control = control;
+            this.badge = new Group();
+            this.getChildren().add(control);
+            this.getChildren().add(badge);
 
-			// if the control got resized the badge must be rest
-			if (control instanceof Region) {
-				((Region) control).widthProperty().addListener((o, oldVal, newVal) -> refreshBadge());
-				((Region) control).heightProperty().addListener((o, oldVal, newVal) -> refreshBadge());
-			}			
-			text.addListener((o, oldVal, newVal) -> refreshBadge());
-		}
-	}
+            // if the control got resized the badge must be rest
+            if (control instanceof Region) {
+                ((Region) control).widthProperty().addListener((o, oldVal, newVal) -> refreshBadge());
+                ((Region) control).heightProperty().addListener((o, oldVal, newVal) -> refreshBadge());
+            }
+            text.addListener((o, oldVal, newVal) -> refreshBadge());
+        }
+    }
 
-	public Node getControl() {
-		return this.control;
-	}
+    public Node getControl() {
+        return this.control;
+    }
 
-	public void setEnabled(boolean enable) {
-		this.enabled = enable;
-	}
+    public void setEnabled(boolean enable) {
+        this.enabled = enable;
+    }
 
-	public void refreshBadge() {
-		badge.getChildren().clear();
-		if (enabled) {
+    public void refreshBadge() {
+        badge.getChildren().clear();
+        if (enabled) {
 
 //			final double scaledWidth = control.getLayoutBounds().getWidth() / getBadgeScale().doubleValue();
 //			final double scaledHeight = control.getLayoutBounds().getHeight() / getBadgeScale().doubleValue();
@@ -98,7 +98,7 @@ public class JFXBadge extends StackPane {
 //				background = new Circle(radius);
 //				clip = new Circle(radius);
 //			}
-//			
+//
 //
 //			if (badgeFill.get() instanceof Color) {
 //				Color circleColor = new Color(((Color) badgeFill.get()).getRed(), ((Color) badgeFill.get()).getGreen(),
@@ -110,38 +110,38 @@ public class JFXBadge extends StackPane {
 //				background.setFill(badgeFill.get());
 //			}
 
-			Label labelControl = new Label(text.getValue());
-			
-			StackPane badgePane = new StackPane();			
+            Label labelControl = new Label(text.getValue());
+
+            StackPane badgePane = new StackPane();
 //			badgePane.getChildren().add(background);
-			badgePane.getStyleClass().add("badge-pane");
-			badgePane.getChildren().add(labelControl);
-			//Adding a clip would avoid overlap but this does not work as intended
-			//badgePane.setClip(clip); 
-			badge.getChildren().add(badgePane);
-			StackPane.setAlignment(badge, getPosition());
+            badgePane.getStyleClass().add("badge-pane");
+            badgePane.getChildren().add(labelControl);
+            //Adding a clip would avoid overlap but this does not work as intended
+            //badgePane.setClip(clip);
+            badge.getChildren().add(badgePane);
+            StackPane.setAlignment(badge, getPosition());
 
-			FadeTransition ft = new FadeTransition(Duration.millis(666), badge);
-			ft.setFromValue(0);
-			ft.setToValue(1.0);
-			ft.setCycleCount(1);
-			ft.setAutoReverse(true);
-			ft.play();
+            FadeTransition ft = new FadeTransition(Duration.millis(666), badge);
+            ft.setFromValue(0);
+            ft.setToValue(1.0);
+            ft.setCycleCount(1);
+            ft.setAutoReverse(true);
+            ft.play();
 
-		}
-	}
+        }
+    }
 
-	/***************************************************************************
-	 * * Stylesheet Handling * *
-	 **************************************************************************/
+    /***************************************************************************
+     * * Stylesheet Handling * *
+     **************************************************************************/
 
-	private static final String DEFAULT_STYLE_CLASS = "jfx-badge";
+    private static final String DEFAULT_STYLE_CLASS = "jfx-badge";
 
-	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-	}
+    private void initialize() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
 
-//	private StyleableObjectProperty<Paint> badgeFill = new SimpleStyleableObjectProperty<Paint>(
+    //	private StyleableObjectProperty<Paint> badgeFill = new SimpleStyleableObjectProperty<Paint>(
 //			StyleableProperties.BADGE_FILL, JFXBadge.this, "badgeFill", Color.rgb(0, 200, 255));
 //
 //	public Paint getBadgeFill() {
@@ -171,33 +171,33 @@ public class JFXBadge extends StackPane {
 //		this.badgeScale.set(scale);
 //	}
 //
-	protected ObjectProperty<Pos> position = new SimpleObjectProperty<Pos>();
+    protected ObjectProperty<Pos> position = new SimpleObjectProperty<Pos>();
 
-	public Pos getPosition() {
-		return position == null ? Pos.TOP_RIGHT : position.get();
-	}
+    public Pos getPosition() {
+        return position == null ? Pos.TOP_RIGHT : position.get();
+    }
 
-	public ObjectProperty<Pos> positionProperty() {
-		return this.position;
-	}
-	
-	public void setPosition(Pos position){
-		this.position.set(position);
-	}
+    public ObjectProperty<Pos> positionProperty() {
+        return this.position;
+    }
 
-	private SimpleStringProperty text = new SimpleStringProperty();
+    public void setPosition(Pos position) {
+        this.position.set(position);
+    }
 
-	public final String getText() {
-		return text.get();
-	}
+    private SimpleStringProperty text = new SimpleStringProperty();
 
-	public final void setText(String value) {
-		text.set(value);
-	}
+    public final String getText() {
+        return text.get();
+    }
 
-	public final StringProperty textProperty() {
-		return text;
-	}
+    public final void setText(String value) {
+        text.set(value);
+    }
+
+    public final StringProperty textProperty() {
+        return text;
+    }
 
 //	private static class StyleableProperties {
 //		private static final CssMetaData<JFXBadge, Paint> BADGE_FILL = new CssMetaData<JFXBadge, Paint>(

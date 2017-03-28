@@ -24,49 +24,49 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 
 /**
- * JFXTabPane is the material design implementation of a tab pane. 
- * 
- * @author  Shadi Shaheen
+ * JFXTabPane is the material design implementation of a tab pane.
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXTabPane extends TabPane {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXTabPane() {
-		super();
-		initialize();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public JFXTabPane() {
+        super();
+        initialize();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new JFXTabPaneSkin(this);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new JFXTabPaneSkin(this);
+    }
 
-	private void initialize() {
-		this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
-	}
-	
-	/**
-	 * Initialize the style class to 'jfx-tab-pane'.
-	 *
-	 * This is the selector class from which CSS can be used to style
-	 * this control.
-	 */
-	private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
-	
-	/**
-	 * propagate any mouse events on the tab pane to its parent
-	 */
-	public void propagateMouseEventsToParent(){
-		this.addEventHandler(MouseEvent.ANY, e ->{
-			e.consume();
-			this.getParent().fireEvent(e);
-		});
-	}
+    private void initialize() {
+        this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+    }
+
+    /**
+     * Initialize the style class to 'jfx-tab-pane'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
+
+    /**
+     * propagate any mouse events on the tab pane to its parent
+     */
+    public void propagateMouseEventsToParent() {
+        this.addEventHandler(MouseEvent.ANY, e -> {
+            e.consume();
+            this.getParent().fireEvent(e);
+        });
+    }
 }

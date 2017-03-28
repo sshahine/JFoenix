@@ -41,39 +41,40 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * JFXDatePicker is the material design implementation of a date picker. 
- * 
- * @author  Shadi Shaheen
+ * JFXDatePicker is the material design implementation of a date picker.
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXDatePicker extends DatePicker {
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXDatePicker() {
-		super();		
-		initialize();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-    public JFXDatePicker(LocalDate localDate) {
-       super(localDate);
-       initialize();
+
+    /**
+     * {@inheritDoc}
+     */
+    public JFXDatePicker() {
+        super();
+        initialize();
     }
-	
-	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-		setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-	}
-    
-	/**
-	 * {@inheritDoc}
-	 */
-    @Override protected Skin<?> createDefaultSkin() {
+
+    /**
+     * {@inheritDoc}
+     */
+    public JFXDatePicker(LocalDate localDate) {
+        super(localDate);
+        initialize();
+    }
+
+    private void initialize() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Skin<?> createDefaultSkin() {
         return new JFXDatePickerSkin(this);
     }
 
@@ -84,120 +85,138 @@ public class JFXDatePicker extends DatePicker {
      **************************************************************************/
 
     /**
-	 * the parent node used when showing the data picker content as an overlay,
-	 * intead of a popup
-	 */
-	private ObjectProperty<StackPane> dialogParent = new SimpleObjectProperty<>(null);
-	public final ObjectProperty<StackPane> dialogParentProperty() {
-		return this.dialogParent;
-	}
-	public final StackPane getDialogParent() {
-		return this.dialogParentProperty().get();
-	}
-	public final void setDialogParent(final StackPane dialogParent) {
-		this.dialogParentProperty().set(dialogParent);
-	}
+     * the parent node used when showing the data picker content as an overlay,
+     * intead of a popup
+     */
+    private ObjectProperty<StackPane> dialogParent = new SimpleObjectProperty<>(null);
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Stylesheet Handling                                                     *
-	 *                                                                         *
-	 **************************************************************************/
-	
-	/**
+    public final ObjectProperty<StackPane> dialogParentProperty() {
+        return this.dialogParent;
+    }
+
+    public final StackPane getDialogParent() {
+        return this.dialogParentProperty().get();
+    }
+
+    public final void setDialogParent(final StackPane dialogParent) {
+        this.dialogParentProperty().set(dialogParent);
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
      * Initialize the style class to 'jfx-date-picker'.
-     *
+     * <p>
      * This is the selector class from which CSS can be used to style
      * this control.
      */
-	private static final String DEFAULT_STYLE_CLASS = "jfx-date-picker";
-    
-	/**
-	 * show the popup as an overlay using JFXDialog
-	 * NOTE: to show it properly the scene root must be StackPane, or the user must set
-	 * the dialog parent manually using the property {{@link #dialogParentProperty()}
-	 */
-	private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY, JFXDatePicker.this, "overLay", false);
-	
-	public final StyleableBooleanProperty overLayProperty() {
-		return this.overLay;
-	}
-	public final boolean isOverLay() {
-		return overLay == null ? false : this.overLayProperty().get();
-	}
-	public final void setOverLay(final boolean overLay) {
-		this.overLayProperty().set(overLay);
-	}
-	
-	/**
-	 * the default color used in the data picker content
-	 */
-	private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR, JFXDatePicker.this, "defaultColor", Color.valueOf("#009688"));
+    private static final String DEFAULT_STYLE_CLASS = "jfx-date-picker";
 
-	public Paint getDefaultColor(){
-		return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
-	}
-	public StyleableObjectProperty<Paint> defaultColorProperty(){		
-		return this.defaultColor;
-	}
-	public void setDefaultColor(Paint color){
-		this.defaultColor.set(color);
-	}
-    
-	private static class StyleableProperties {
-		private static final CssMetaData< JFXDatePicker, Paint> DEFAULT_COLOR =
-				new CssMetaData< JFXDatePicker, Paint>("-jfx-default-color",
-						PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
-			@Override
-			public boolean isSettable(JFXDatePicker control) {
-				return control.defaultColor == null || !control.defaultColor.isBound();
-			}
-			@Override
-			public StyleableProperty<Paint> getStyleableProperty(JFXDatePicker control) {
-				return control.defaultColorProperty();
-			}
-		};
+    /**
+     * show the popup as an overlay using JFXDialog
+     * NOTE: to show it properly the scene root must be StackPane, or the user must set
+     * the dialog parent manually using the property {{@link #dialogParentProperty()}
+     */
+    private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY,
+                                                                                  JFXDatePicker.this,
+                                                                                  "overLay",
+                                                                                  false);
 
-		private static final CssMetaData< JFXDatePicker, Boolean> OVERLAY =
-				new CssMetaData< JFXDatePicker, Boolean>("-jfx-overlay",
-						BooleanConverter.getInstance(), false) {
-			@Override
-			public boolean isSettable(JFXDatePicker control) {
-				return control.overLay == null || !control.overLay.isBound();
-			}
-			@Override
-			public StyleableBooleanProperty getStyleableProperty(JFXDatePicker control) {
-				return control.overLayProperty();
-			}
-		};
-		
-		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
-		static {
-			final List<CssMetaData<? extends Styleable, ?>> styleables =
-					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables,
-					DEFAULT_COLOR,
-					OVERLAY);
-			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
-		}
-	}
+    public final StyleableBooleanProperty overLayProperty() {
+        return this.overLay;
+    }
 
-	// inherit the styleable properties from parent
-	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+    public final boolean isOverLay() {
+        return overLay == null ? false : this.overLayProperty().get();
+    }
 
-	@Override
-	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-		if(STYLEABLES == null){
-			final List<CssMetaData<? extends Styleable, ?>> styleables =
-					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			styleables.addAll(getClassCssMetaData());
-			styleables.addAll(super.getClassCssMetaData());
-			STYLEABLES = Collections.unmodifiableList(styleables);
-		}
-		return STYLEABLES;
-	}
-	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-		return StyleableProperties.CHILD_STYLEABLES;
-	}
+    public final void setOverLay(final boolean overLay) {
+        this.overLayProperty().set(overLay);
+    }
+
+    /**
+     * the default color used in the data picker content
+     */
+    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR,
+                                                                                                   JFXDatePicker.this,
+                                                                                                   "defaultColor",
+                                                                                                   Color.valueOf(
+                                                                                                       "#009688"));
+
+    public Paint getDefaultColor() {
+        return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
+    }
+
+    public StyleableObjectProperty<Paint> defaultColorProperty() {
+        return this.defaultColor;
+    }
+
+    public void setDefaultColor(Paint color) {
+        this.defaultColor.set(color);
+    }
+
+    private static class StyleableProperties {
+        private static final CssMetaData<JFXDatePicker, Paint> DEFAULT_COLOR =
+            new CssMetaData<JFXDatePicker, Paint>("-jfx-default-color",
+                                                  PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                @Override
+                public boolean isSettable(JFXDatePicker control) {
+                    return control.defaultColor == null || !control.defaultColor.isBound();
+                }
+
+                @Override
+                public StyleableProperty<Paint> getStyleableProperty(JFXDatePicker control) {
+                    return control.defaultColorProperty();
+                }
+            };
+
+        private static final CssMetaData<JFXDatePicker, Boolean> OVERLAY =
+            new CssMetaData<JFXDatePicker, Boolean>("-jfx-overlay",
+                                                    BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXDatePicker control) {
+                    return control.overLay == null || !control.overLay.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXDatePicker control) {
+                    return control.overLayProperty();
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+            Collections.addAll(styleables,
+                               DEFAULT_COLOR,
+                               OVERLAY);
+            CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+
+    // inherit the styleable properties from parent
+    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        if (STYLEABLES == null) {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+            styleables.addAll(getClassCssMetaData());
+            styleables.addAll(super.getClassCssMetaData());
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+        return STYLEABLES;
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.CHILD_STYLEABLES;
+    }
 
 }

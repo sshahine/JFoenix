@@ -25,65 +25,65 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TreeTableColumn;
 
 /**
- * data model that is used in JFXTreeTableView, it's used to implement 
+ * data model that is used in JFXTreeTableView, it's used to implement
  * the grouping feature.
  * <p>
  * <b>Note:</b> the data object used in JFXTreeTableView <b>must</b> extends this class
  *
- * @author  Shadi Shaheen
+ * @param <T>
+ *         is the concrete object of the Tree table
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
- * 
- * @param <T> is the concrete object of the Tree table
+ * @since 2016-03-09
  */
 public class RecursiveTreeObject<T> {
 
-	/**
-	 * gropued children objects
-	 */
-	ObservableList<T> children = FXCollections.observableArrayList();
-	
-	public ObservableList<T> getChildren(){
-		return children;
-	}	
-	
-	public void setChildren(ObservableList<T> children) {
-		this.children = children;
-	}
+    /**
+     * gropued children objects
+     */
+    ObservableList<T> children = FXCollections.observableArrayList();
 
-	/**
-	 * Whether or not the object is grouped by a specified tree table column 
-	 */
-	ObjectProperty<TreeTableColumn<T, ?>> groupedColumn = new SimpleObjectProperty<>();
+    public ObservableList<T> getChildren() {
+        return children;
+    }
 
-	public final ObjectProperty<TreeTableColumn<T, ?>> groupedColumnProperty() {
-		return this.groupedColumn;
-	}
+    public void setChildren(ObservableList<T> children) {
+        this.children = children;
+    }
 
-	public final TreeTableColumn<T, ?> getGroupedColumn() {
-		return this.groupedColumnProperty().get();
-	}
+    /**
+     * Whether or not the object is grouped by a specified tree table column
+     */
+    ObjectProperty<TreeTableColumn<T, ?>> groupedColumn = new SimpleObjectProperty<>();
 
-	public final void setGroupedColumn(final TreeTableColumn<T, ?> groupedColumn) {
-		this.groupedColumnProperty().set(groupedColumn);
-	}
-	
-	/**
-	 * the value that must be shown when grouped 
-	 */
-	ObjectProperty<Object> groupedValue = new SimpleObjectProperty<>();
+    public final ObjectProperty<TreeTableColumn<T, ?>> groupedColumnProperty() {
+        return this.groupedColumn;
+    }
 
-	public final ObjectProperty<Object> groupedValueProperty() {
-		return this.groupedValue;
-	}
+    public final TreeTableColumn<T, ?> getGroupedColumn() {
+        return this.groupedColumnProperty().get();
+    }
 
-	public final java.lang.Object getGroupedValue() {
-		return this.groupedValueProperty().get();
-	}
+    public final void setGroupedColumn(final TreeTableColumn<T, ?> groupedColumn) {
+        this.groupedColumnProperty().set(groupedColumn);
+    }
 
-	public final void setGroupedValue(final java.lang.Object groupedValue) {
-		this.groupedValueProperty().set(groupedValue);
-	}
-	
-	
+    /**
+     * the value that must be shown when grouped
+     */
+    ObjectProperty<Object> groupedValue = new SimpleObjectProperty<>();
+
+    public final ObjectProperty<Object> groupedValueProperty() {
+        return this.groupedValue;
+    }
+
+    public final java.lang.Object getGroupedValue() {
+        return this.groupedValueProperty().get();
+    }
+
+    public final void setGroupedValue(final java.lang.Object groupedValue) {
+        this.groupedValueProperty().set(groupedValue);
+    }
+
+
 }

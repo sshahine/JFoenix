@@ -31,53 +31,56 @@ import static javafx.scene.input.KeyCode.*;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 /**
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXColorPickerBehavior extends ComboBoxBaseBehavior<Color> {
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Constructors                                                            *
-	 *                                                                         *
-	 **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
 
-	public JFXColorPickerBehavior(final ColorPicker colorPicker) {
-		super(colorPicker, JFX_COLOR_PICKER_BINDINGS);
-	}
+    public JFXColorPickerBehavior(final ColorPicker colorPicker) {
+        super(colorPicker, JFX_COLOR_PICKER_BINDINGS);
+    }
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Key event handling                                                      *
-	 *                                                                         *
-	 **************************************************************************/
-	protected static final String JFX_OPEN_ACTION = "Open";
-	protected static final String JFX_CLOSE_ACTION = "Close";
-	protected static final List<KeyBinding> JFX_COLOR_PICKER_BINDINGS = new ArrayList<KeyBinding>();
-	static {
-		JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(ESCAPE, KEY_PRESSED, JFX_CLOSE_ACTION));
-		JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(SPACE, KEY_PRESSED, JFX_OPEN_ACTION));
-		JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(ENTER, KEY_PRESSED, JFX_OPEN_ACTION));
-	}
+    /***************************************************************************
+     *                                                                         *
+     * Key event handling                                                      *
+     *                                                                         *
+     **************************************************************************/
+    protected static final String JFX_OPEN_ACTION = "Open";
+    protected static final String JFX_CLOSE_ACTION = "Close";
+    protected static final List<KeyBinding> JFX_COLOR_PICKER_BINDINGS = new ArrayList<KeyBinding>();
 
-	@Override protected void callAction(String name) {
-		if (JFX_OPEN_ACTION.equals(name)) show();
-		else if(JFX_CLOSE_ACTION.equals(name)) hide();
-		else super.callAction(name);
-	}
+    static {
+        JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(ESCAPE, KEY_PRESSED, JFX_CLOSE_ACTION));
+        JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(SPACE, KEY_PRESSED, JFX_OPEN_ACTION));
+        JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(ENTER, KEY_PRESSED, JFX_OPEN_ACTION));
+    }
 
-	/**************************************************************************
-	 *                                                                        *
-	 * Mouse Events handling (when losing focus)                              *
-	 *                                                                        *
-	 *************************************************************************/
+    @Override
+    protected void callAction(String name) {
+        if (JFX_OPEN_ACTION.equals(name)) show();
+        else if (JFX_CLOSE_ACTION.equals(name)) hide();
+        else super.callAction(name);
+    }
 
-	@Override public void onAutoHide() {
-		ColorPicker colorPicker = (ColorPicker)getControl();
-		JFXColorPickerSkin cpSkin = (JFXColorPickerSkin)colorPicker.getSkin();
-		cpSkin.syncWithAutoUpdate();
-		if (!colorPicker.isShowing()) super.onAutoHide();
-	}    
+    /**************************************************************************
+     *                                                                        *
+     * Mouse Events handling (when losing focus)                              *
+     *                                                                        *
+     *************************************************************************/
+
+    @Override
+    public void onAutoHide() {
+        ColorPicker colorPicker = (ColorPicker) getControl();
+        JFXColorPickerSkin cpSkin = (JFXColorPickerSkin) colorPicker.getSkin();
+        cpSkin.syncWithAutoUpdate();
+        if (!colorPicker.isShowing()) super.onAutoHide();
+    }
 
 }

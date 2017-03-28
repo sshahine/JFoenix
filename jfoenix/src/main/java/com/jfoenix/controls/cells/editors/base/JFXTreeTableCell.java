@@ -25,13 +25,14 @@ import javafx.scene.control.TreeTableCell;
 /**
  * overrides the cell skin to be able to use the {@link com.jfoenix.controls.JFXTreeTableView JFXTreeTableView}
  * features such as grouping
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXTreeTableCell<S, T> extends TreeTableCell<S, T> {
-    @Override protected Skin<?> createDefaultSkin() {
-        return new JFXTreeTableCellSkin<S,T>(this);
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new JFXTreeTableCellSkin<S, T>(this);
     }
 }

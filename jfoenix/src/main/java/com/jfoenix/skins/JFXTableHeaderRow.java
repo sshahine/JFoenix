@@ -24,25 +24,24 @@ import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 
 /**
  * @author Shadi Shaheen
- *
  */
 public class JFXTableHeaderRow {
 
-	private TableViewSkinBase tableSkin;
-	private TableHeaderRow headerRow;
-	
-	public JFXTableHeaderRow(final TableViewSkinBase skin) {
-		this.tableSkin = skin;
-		headerRow = new TableHeaderRow(skin){
-			 // protected to allow subclasses to provide a custom root header
-		    protected NestedTableColumnHeader createRootHeader() {
-		        return new JFXNestedTableColumnHeader(tableSkin, null);
-		    }
-		};
-	}
-    
-	public TableHeaderRow getHeaderRow(){
-		return headerRow;
-	}
-	
+    private TableViewSkinBase tableSkin;
+    private TableHeaderRow headerRow;
+
+    public JFXTableHeaderRow(final TableViewSkinBase skin) {
+        this.tableSkin = skin;
+        headerRow = new TableHeaderRow(skin) {
+            // protected to allow subclasses to provide a custom root header
+            protected NestedTableColumnHeader createRootHeader() {
+                return new JFXNestedTableColumnHeader(tableSkin, null);
+            }
+        };
+    }
+
+    public TableHeaderRow getHeaderRow() {
+        return headerRow;
+    }
+
 }

@@ -33,63 +33,63 @@ import javafx.util.Duration;
 /**
  * <h1>Material Design ProgressBar Skin</h1>
  *
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXProgressBarSkin extends ProgressBarSkin {
 
-	private static Color indicatorColor = Color.valueOf("#0F9D58");
-	private static Color trackColor = Color.valueOf("#E0E0E0");
-	
+    private static Color indicatorColor = Color.valueOf("#0F9D58");
+    private static Color trackColor = Color.valueOf("#E0E0E0");
+
     private StackPane bar;
     private StackPane track;
     private Region clip;
-	
-	public JFXProgressBarSkin(JFXProgressBar bar) {
-		super(bar);
-	}
 
-	public void initialize() {
-		super.initialize();
-		bar = (StackPane) getChildren().get(1);
-		bar.setBackground(new Background(new BackgroundFill(indicatorColor, CornerRadii.EMPTY, Insets.EMPTY)));		
-		bar.setPadding(new Insets(1.5));
-		track = (StackPane) getChildren().get(0);
-		track.setBackground(new Background(new BackgroundFill(trackColor, CornerRadii.EMPTY, Insets.EMPTY)));
-		clip = new Region();
-		clip.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		getSkinnable().setClip(clip);
-	}
+    public JFXProgressBarSkin(JFXProgressBar bar) {
+        super(bar);
+    }
 
-	@Override
-	protected void layoutChildren(double x, double y, double w, double h) {
-		super.layoutChildren(x, y, w, h);
-		clip.resizeRelocate(x, y, w, h);
-	}
+    public void initialize() {
+        super.initialize();
+        bar = (StackPane) getChildren().get(1);
+        bar.setBackground(new Background(new BackgroundFill(indicatorColor, CornerRadii.EMPTY, Insets.EMPTY)));
+        bar.setPadding(new Insets(1.5));
+        track = (StackPane) getChildren().get(0);
+        track.setBackground(new Background(new BackgroundFill(trackColor, CornerRadii.EMPTY, Insets.EMPTY)));
+        clip = new Region();
+        clip.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        getSkinnable().setClip(clip);
+    }
 
-	@Override
-	protected void createIndeterminateTimeline() {
-		super.createIndeterminateTimeline();
-		 if (indeterminateTransition != null) indeterminateTransition.stop();
-		    ProgressIndicator control = getSkinnable();
-	        final double w = control.getWidth() - (snappedLeftInset() + snappedRightInset());
-	        final double bWidth = bar.getWidth();
-	        indeterminateTransition = new Timeline(new KeyFrame(
-					Duration.ZERO,
-					new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_IN),
-					new KeyValue(bar.translateXProperty(), -bWidth, Interpolator.LINEAR)
-					),
-			new KeyFrame(
-					Duration.seconds(0.5),
-					new KeyValue(bar.scaleXProperty(), 3, Interpolator.LINEAR),
-					new KeyValue(bar.translateXProperty(), w/2, Interpolator.LINEAR)),
-			new KeyFrame(
-					Duration.seconds(1),
-					new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_OUT),
-					new KeyValue(bar.translateXProperty(), w, Interpolator.LINEAR)));
-	        indeterminateTransition.setCycleCount(Timeline.INDEFINITE);
+    @Override
+    protected void layoutChildren(double x, double y, double w, double h) {
+        super.layoutChildren(x, y, w, h);
+        clip.resizeRelocate(x, y, w, h);
+    }
 
-	        
-	}
+    @Override
+    protected void createIndeterminateTimeline() {
+        super.createIndeterminateTimeline();
+        if (indeterminateTransition != null) indeterminateTransition.stop();
+        ProgressIndicator control = getSkinnable();
+        final double w = control.getWidth() - (snappedLeftInset() + snappedRightInset());
+        final double bWidth = bar.getWidth();
+        indeterminateTransition = new Timeline(new KeyFrame(
+            Duration.ZERO,
+            new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_IN),
+            new KeyValue(bar.translateXProperty(), -bWidth, Interpolator.LINEAR)
+        ),
+                                               new KeyFrame(
+                                                   Duration.seconds(0.5),
+                                                   new KeyValue(bar.scaleXProperty(), 3, Interpolator.LINEAR),
+                                                   new KeyValue(bar.translateXProperty(), w / 2, Interpolator.LINEAR)),
+                                               new KeyFrame(
+                                                   Duration.seconds(1),
+                                                   new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_OUT),
+                                                   new KeyValue(bar.translateXProperty(), w, Interpolator.LINEAR)));
+        indeterminateTransition.setCycleCount(Timeline.INDEFINITE);
+
+
+    }
 }

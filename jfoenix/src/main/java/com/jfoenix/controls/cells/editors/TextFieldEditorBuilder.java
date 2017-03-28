@@ -30,64 +30,64 @@ import javafx.scene.layout.StackPane;
 
 /**
  * <h1>Text field cell editor</h1>
- * this an example of the cell editor, it creates a JFXTextField node to 
+ * this an example of the cell editor, it creates a JFXTextField node to
  * allow the user to edit the cell value
  * <p>
  *
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 
-	private JFXTextField textField;
+    private JFXTextField textField;
 
-	@Override
-	public void startEdit() {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void startEdit() {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public void cancelEdit() {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void cancelEdit() {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void updateItem(String item, boolean empty) {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void updateItem(String item, boolean empty) {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public Region createNode(String value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-		StackPane pane = new StackPane();
-		pane.setStyle("-fx-padding:-10 0 -10 0");
-		textField = new JFXTextField(value);
-		textField.setStyle("-fx-background-color:TRANSPARENT;");
-		textField.minWidthProperty().bind(minWidthBinding);
-		textField.setOnKeyPressed(keyEventsHandler);
-		textField.focusedProperty().addListener(focusChangeListener);
-		pane.getChildren().add(textField);
-		return pane;
-	}
+    @Override
+    public Region createNode(String value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
+        StackPane pane = new StackPane();
+        pane.setStyle("-fx-padding:-10 0 -10 0");
+        textField = new JFXTextField(value);
+        textField.setStyle("-fx-background-color:TRANSPARENT;");
+        textField.minWidthProperty().bind(minWidthBinding);
+        textField.setOnKeyPressed(keyEventsHandler);
+        textField.focusedProperty().addListener(focusChangeListener);
+        pane.getChildren().add(textField);
+        return pane;
+    }
 
-	@Override
-	public void setValue(String value) {
-		textField.setText(value);
-	}
+    @Override
+    public void setValue(String value) {
+        textField.setText(value);
+    }
 
-	@Override
-	public String getValue() {
-		return textField.getText();
-	}
+    @Override
+    public String getValue() {
+        return textField.getText();
+    }
 
-	@Override
-	public void validateValue() throws Exception {
-		
-	}
+    @Override
+    public void validateValue() throws Exception {
+
+    }
 }

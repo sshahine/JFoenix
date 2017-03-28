@@ -27,54 +27,55 @@ import java.util.concurrent.CountDownLatch;
  * <h1>JavaFX FX Thread utilities</h1>
  * JFXUtilities allow sync mechanism to the FX thread
  * <p>
- * @author  pmoufarrej
+ *
+ * @author pmoufarrej
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 
 public class JFXUtilities {
 
-	/**
-	 * This method is used to run a specified Runnable in the FX Application thread,
-	 * it returns before the task finished execution
-	 * 
-	 * @param doRun This is the sepcifed task to be excuted by the FX Application thread
-	 * @return Nothing
-	 */
-	public static void runInFX(Runnable doRun) {
-		if (Platform.isFxApplicationThread()) {
-			doRun.run();
-			return;
-		}
-		Platform.runLater(doRun);
-	}
+    /**
+     * This method is used to run a specified Runnable in the FX Application thread,
+     * it returns before the task finished execution
+     *
+     * @param doRun
+     *         This is the sepcifed task to be excuted by the FX Application thread
+     * @return Nothing
+     */
+    public static void runInFX(Runnable doRun) {
+        if (Platform.isFxApplicationThread()) {
+            doRun.run();
+            return;
+        }
+        Platform.runLater(doRun);
+    }
 
-	/**
-	 * This method is used to run a specified Runnable in the FX Application thread,
-	 * it waits for the task to finish before returning to the main thread.
-	 * 
-	 * @param doRun This is the sepcifed task to be excuted by the FX Application thread
-	 * @return Nothing
-	 */
-	public static void runInFXAndWait(Runnable doRun) {
-		if (Platform.isFxApplicationThread()) {
-			doRun.run();
-			return;
-		}
-		final CountDownLatch doneLatch = new CountDownLatch(1);
-		Platform.runLater(() -> {
-			try {
-				doRun.run();
-			}
-			finally {
-				doneLatch.countDown();
-			}
-		});
-		try {
-			doneLatch.await();
-		}
-		catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
+    /**
+     * This method is used to run a specified Runnable in the FX Application thread,
+     * it waits for the task to finish before returning to the main thread.
+     *
+     * @param doRun
+     *         This is the sepcifed task to be excuted by the FX Application thread
+     * @return Nothing
+     */
+    public static void runInFXAndWait(Runnable doRun) {
+        if (Platform.isFxApplicationThread()) {
+            doRun.run();
+            return;
+        }
+        final CountDownLatch doneLatch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            try {
+                doRun.run();
+            } finally {
+                doneLatch.countDown();
+            }
+        });
+        try {
+            doneLatch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
