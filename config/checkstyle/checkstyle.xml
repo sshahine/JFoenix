@@ -169,7 +169,7 @@
         <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false"/>
             <property name="allowedAbbreviationLength" value="1"/>
-            <property name="allowedAbbreviations" value="JFX"/>
+            <property name="allowedAbbreviations" value="JFX,SVG,FX"/>
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
