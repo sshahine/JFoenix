@@ -3,7 +3,7 @@ apply plugin: 'com.github.hierynomus.license'
 apply plugin: 'checkstyle'
 
 checkstyle {
-    toolVersion = '6.0'
+    toolVersion = '7.6.1'
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
