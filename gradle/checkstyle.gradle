@@ -4,6 +4,7 @@ checkstyle {
     toolVersion = '7.6.1'
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
     showViolations = false
+    ignoreFailures = true
 }
 
 checkstyleMain {
