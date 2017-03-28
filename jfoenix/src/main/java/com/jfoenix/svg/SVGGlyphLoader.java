@@ -26,7 +26,6 @@ import javafx.scene.transform.Translate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -65,10 +64,8 @@ public class SVGGlyphLoader {
      */
     public static SVGGlyph getIcoMoonGlyph(String glyphName) {
         SVGGlyph glyph = glyphsMap.get(glyphName).build();
-        /*
-		 * we need to apply transformation to correct the icon since
-		 * its being after importing from icomoon
-		 */
+        // we need to apply transformation to correct the icon since
+        // its being after importing from icomoon
         glyph.getTransforms().add(new Scale(1, -1));
         Translate height = new Translate();
         height.yProperty().bind(Bindings.createDoubleBinding(() -> -glyph.getHeight(), glyph.heightProperty()));
@@ -95,13 +92,9 @@ public class SVGGlyphLoader {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            docBuilder.setEntityResolver(new EntityResolver() {
-                @Override
-                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                    // disable dtd entites at runtime
-//	                System.out.println("Ignoring " + publicId + ", " + systemId);
-                    return new InputSource(new StringReader(""));
-                }
+            docBuilder.setEntityResolver((publicId, systemId) -> {
+                // disable dtd entites at runtime
+                return new InputSource(new StringReader(""));
             });
 
             File svgFontFile = new File(url.toURI());
@@ -118,18 +111,11 @@ public class SVGGlyphLoader {
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
                                                                 glyphId,
                                                                 glyph.getAttributes()
-                                                                              .getNamedItem("d")
-                                                                              .getNodeValue());
+                                                                     .getNamedItem("d")
+                                                                     .getNodeValue());
                 glyphsMap.put(svgFontFile.getName() + "." + glyphId, glyphPane);
             }
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
+        } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
@@ -148,13 +134,9 @@ public class SVGGlyphLoader {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            docBuilder.setEntityResolver(new EntityResolver() {
-                @Override
-                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                    // disable dtd entites at runtime
-//	                System.out.println("Ignoring " + publicId + ", " + systemId);
-                    return new InputSource(new StringReader(""));
-                }
+            docBuilder.setEntityResolver((publicId, systemId) -> {
+                // disable dtd entites at runtime
+                return new InputSource(new StringReader(""));
             });
 
             Document doc = docBuilder.parse(stream);
@@ -170,15 +152,12 @@ public class SVGGlyphLoader {
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
                                                                 glyphId,
                                                                 glyph.getAttributes()
-                                                                              .getNamedItem("d")
-                                                                              .getNodeValue());
+                                                                     .getNamedItem("d")
+                                                                     .getNodeValue());
                 glyphsMap.put(keyPrefix + "." + glyphId, glyphPane);
             }
             stream.close();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -229,12 +208,10 @@ public class SVGGlyphLoader {
 
         String line;
         try {
-
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -248,23 +225,21 @@ public class SVGGlyphLoader {
         }
         return sb.toString();
     }
+
+    private static final class SVGGlyphBuilder {
+        private int glyphId;
+        private String name;
+        private String svgPathContent;
+
+        SVGGlyphBuilder(int glyphId, String name, String svgPathContent) {
+            this.glyphId = glyphId;
+            this.name = name;
+            this.svgPathContent = svgPathContent;
+        }
+
+        SVGGlyph build() {
+            return new SVGGlyph(glyphId, name, svgPathContent, Color.BLACK);
+        }
+    }
 }
 
-
-class SVGGlyphBuilder {
-    int glyphId;
-    String name;
-    String svgPathContent;
-
-    public SVGGlyphBuilder(int glyphId, String name, String svgPathContent) {
-        super();
-        this.glyphId = glyphId;
-        this.name = name;
-        this.svgPathContent = svgPathContent;
-    }
-
-    SVGGlyph build() {
-        return new SVGGlyph(glyphId, name, svgPathContent, Color.BLACK);
-    }
-
-}

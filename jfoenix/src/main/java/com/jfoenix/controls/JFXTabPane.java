@@ -32,12 +32,18 @@ import javafx.scene.input.MouseEvent;
  * @since 2016-03-09
  */
 public class JFXTabPane extends TabPane {
+    /**
+     * Initialize the style class to 'jfx-tab-pane'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
 
     /**
      * {@inheritDoc}
      */
     public JFXTabPane() {
-        super();
         initialize();
     }
 
@@ -52,14 +58,6 @@ public class JFXTabPane extends TabPane {
     private void initialize() {
         this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
     }
-
-    /**
-     * Initialize the style class to 'jfx-tab-pane'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
 
     /**
      * propagate any mouse events on the tab pane to its parent

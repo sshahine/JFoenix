@@ -27,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DrawersStack is used to show multiple drawers at once
@@ -37,16 +38,14 @@ import java.util.ArrayList;
  */
 @DefaultProperty(value = "content")
 public class JFXDrawersStack extends StackPane {
-
-    private ArrayList<JFXDrawer> drawers = new ArrayList<>();
+    private List<JFXDrawer> drawers = new ArrayList<>();
     private Node content;
-    boolean holding = false;
+    private boolean holding = false;
 
     /**
      * creates empty drawers stack
      */
     public JFXDrawersStack() {
-        super();
         final Rectangle clip = new Rectangle();
         clip.widthProperty().bind(this.widthProperty());
         clip.heightProperty().bind(this.heightProperty());
@@ -93,9 +92,9 @@ public class JFXDrawersStack extends StackPane {
             new Thread(() -> {
                 try {
                     Thread.sleep(300);
-                } catch (Exception e) {
+                } catch (InterruptedException intEx) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    intEx.printStackTrace();
                 }
                 if (holding) {
                     holding = false;

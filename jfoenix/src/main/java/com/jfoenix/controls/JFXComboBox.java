@@ -55,7 +55,6 @@ public class JFXComboBox<T> extends ComboBox<T> {
      * {@inheritDoc}
      */
     public JFXComboBox() {
-        super();
         initialize();
     }
 

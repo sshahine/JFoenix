@@ -36,7 +36,6 @@ import java.util.List;
  * @since 2016-03-09
  */
 public class JFXDialogLayout extends StackPane {
-
     private StackPane heading = new StackPane();
     private StackPane body = new StackPane();
     private FlowPane actions = new FlowPane();
@@ -45,7 +44,6 @@ public class JFXDialogLayout extends StackPane {
      * creates empty dialog layout
      */
     public JFXDialogLayout() {
-        super();
         initialize();
         final VBox layout = new VBox();
         layout.getChildren().add(heading);

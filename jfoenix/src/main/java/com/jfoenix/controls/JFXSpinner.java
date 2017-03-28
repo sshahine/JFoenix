@@ -60,7 +60,6 @@ public class JFXSpinner extends StackPane {
      * creates a spinner node
      */
     public JFXSpinner() {
-        super();
         getStyleClass().add(DEFAULT_STYLE_CLASS);
         initialize();
     }

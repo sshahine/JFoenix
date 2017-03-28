@@ -52,7 +52,6 @@ public class JFXToggleNode extends ToggleButton {
      * {@inheritDoc}
      */
     public JFXToggleNode() {
-        super();
         initialize();
     }
 

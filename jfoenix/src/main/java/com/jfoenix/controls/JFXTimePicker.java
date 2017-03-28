@@ -63,7 +63,6 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
      * {@inheritDoc}
      */
     public JFXTimePicker() {
-        super();
         initialize();
     }
 

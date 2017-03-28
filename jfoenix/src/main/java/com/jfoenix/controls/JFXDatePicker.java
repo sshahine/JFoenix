@@ -54,7 +54,6 @@ public class JFXDatePicker extends DatePicker {
      * {@inheritDoc}
      */
     public JFXDatePicker() {
-        super();
         initialize();
     }
 

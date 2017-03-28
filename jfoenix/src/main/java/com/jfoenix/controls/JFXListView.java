@@ -49,13 +49,7 @@ public class JFXListView<T> extends ListView<T> {
      * {@inheritDoc}
      */
     public JFXListView() {
-        super();
-        this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
-            @Override
-            public ListCell<T> call(ListView<T> listView) {
-                return new JFXListCell<>();
-            }
-        });
+        this.setCellFactory(listView -> new JFXListCell<>());
         initialize();
     }
 

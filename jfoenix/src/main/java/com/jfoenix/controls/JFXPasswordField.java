@@ -52,7 +52,6 @@ public class JFXPasswordField extends PasswordField {
      * {@inheritDoc}
      */
     public JFXPasswordField() {
-        super();
         initialize();
     }
 

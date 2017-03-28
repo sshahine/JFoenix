@@ -44,7 +44,6 @@ public class IndicatorPositionConverter extends StyleConverterImpl<String, Indic
     }
 
     private IndicatorPositionConverter() {
-        super();
     }
 
     @Override

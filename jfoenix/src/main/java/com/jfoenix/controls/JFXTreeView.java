@@ -37,7 +37,6 @@ import java.util.HashMap;
 public class JFXTreeView<T> extends TreeView<T> {
 
     public JFXTreeView() {
-        super();
         init();
     }
 
@@ -74,7 +73,6 @@ public class JFXTreeView<T> extends TreeView<T> {
         Animation animation;
 
         public CellAnimation(JFXTreeCell<?> cell, Animation animation) {
-            super();
             this.cell = cell;
             this.animation = animation;
         }

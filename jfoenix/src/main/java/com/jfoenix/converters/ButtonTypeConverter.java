@@ -44,7 +44,6 @@ public class ButtonTypeConverter extends StyleConverterImpl<String, ButtonType> 
     }
 
     private ButtonTypeConverter() {
-        super();
     }
 
     @Override

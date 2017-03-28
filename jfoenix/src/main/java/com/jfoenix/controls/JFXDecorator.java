@@ -112,12 +112,9 @@ public class JFXDecorator extends VBox {
      *         indicates whether to show minimize option or not
      */
     public JFXDecorator(Stage stage, Node node, boolean fullScreen, boolean max, boolean min) {
-        super();
         primaryStage = stage;
-        /*
-		 *  Note that setting the style to TRANSPARENT is causing performance
-		 *  degradation, as an alternative we set it to UNDECORATED instead.
-		 */
+        // Note that setting the style to TRANSPARENT is causing performance
+        // degradation, as an alternative we set it to UNDECORATED instead.
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
         setPickOnBounds(false);
@@ -274,7 +271,7 @@ public class JFXDecorator extends VBox {
             if (newVal) {
                 // remove border
                 contentPlaceHolder.getStyleClass().remove("resize-border");
-				/*
+                /*
 				 *  note the border property MUST NOT be bound to another property
 				 *  when going full screen mode, thus the binding will be lost if exisited
 				 */

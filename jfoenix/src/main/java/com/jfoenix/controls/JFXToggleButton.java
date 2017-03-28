@@ -64,7 +64,6 @@ public class JFXToggleButton extends ToggleButton {
      * {@inheritDoc}
      */
     public JFXToggleButton() {
-        super();
         initialize();
         // init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();

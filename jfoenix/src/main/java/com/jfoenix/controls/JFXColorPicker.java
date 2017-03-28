@@ -37,7 +37,6 @@ public class JFXColorPicker extends ColorPicker {
      * {@inheritDoc}
      */
     public JFXColorPicker() {
-        super();
         initialize();
     }
 

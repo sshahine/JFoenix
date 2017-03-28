@@ -132,7 +132,6 @@ public class JFXRippler extends StackPane {
      *         can be either FRONT/BACK (position the ripple effect infront of or behind the control)
      */
     public JFXRippler(Node control, RipplerMask mask, RipplerPos pos) {
-        super();
         initialize();
         this.maskType.set(mask);
         this.position.set(pos);

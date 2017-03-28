@@ -81,7 +81,6 @@ public class JFXListCell<T> extends ListCell<T> {
      * {@inheritDoc}
      */
     public JFXListCell() {
-        super();
         initialize();
         initListeners();
     }

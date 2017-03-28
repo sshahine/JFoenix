@@ -50,7 +50,6 @@ public class JFXButton extends Button {
      * {@inheritDoc}
      */
     public JFXButton() {
-        super();
         initialize();
         // init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();

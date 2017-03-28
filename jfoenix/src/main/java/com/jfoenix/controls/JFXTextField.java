@@ -46,12 +46,18 @@ import java.util.List;
  * @since 2016-03-09
  */
 public class JFXTextField extends TextField {
+    /**
+     * Initialize the style class to 'jfx-text-field'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
 
     /**
      * {@inheritDoc}
      */
     public JFXTextField() {
-        super();
         initialize();
     }
 
@@ -77,14 +83,6 @@ public class JFXTextField extends TextField {
             this.setStyle("-fx-skin: \"com.jfoenix.android.skins.JFXTextFieldSkinAndroid\";");
         }
     }
-
-    /**
-     * Initialize the style class to 'jfx-text-field'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
 
     /***************************************************************************
      *                                                                         *

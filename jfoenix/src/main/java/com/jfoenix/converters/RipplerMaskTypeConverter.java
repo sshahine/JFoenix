@@ -44,11 +44,10 @@ public final class RipplerMaskTypeConverter extends StyleConverterImpl<String, R
     }
 
     private RipplerMaskTypeConverter() {
-        super();
     }
 
     @Override
-    public RipplerMask convert(ParsedValue<String, RipplerMask> value, Font not_used) {
+    public RipplerMask convert(ParsedValue<String, RipplerMask> value, Font notUsed) {
         String string = value.getValue();
         try {
             return RipplerMask.valueOf(string);

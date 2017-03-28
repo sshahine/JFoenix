@@ -44,7 +44,6 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
      * {@inheritDoc}
      */
     public JFXTreeTableColumn() {
-        super();
         init();
     }
 

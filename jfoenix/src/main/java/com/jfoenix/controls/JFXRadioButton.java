@@ -53,7 +53,6 @@ public class JFXRadioButton extends RadioButton {
      * {@inheritDoc}
      */
     public JFXRadioButton() {
-        super();
         initialize();
         // init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();

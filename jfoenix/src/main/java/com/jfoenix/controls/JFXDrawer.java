@@ -107,7 +107,6 @@ public class JFXDrawer extends StackPane {
      * creates empy drawer node
      */
     public JFXDrawer() {
-        super();
         initialize();
 
         overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1),
@@ -122,7 +121,6 @@ public class JFXDrawer extends StackPane {
                                                                  Insets.EMPTY)));
         sidePane.setPickOnBounds(false);
         // causes performance issue when animating the drawer
-//		JFXDepthManager.setDepth(sidePane, 2);
 
         this.getChildren().add(content);
 
@@ -161,7 +159,6 @@ public class JFXDrawer extends StackPane {
                 long valid = 0;
                 for (int i = 0; i < callBacks.size(); i++)
                     if (!callBacks.get(i).call(null)) valid++;
-                //				long valid = callBacks.stream().filter(callback->!callback.call(null)).count();
                 if (directionProperty.get().equals(DrawerDirection.RIGHT)) size = content.getWidth();
                 else if (directionProperty.get().equals(DrawerDirection.BOTTOM)) size = content.getHeight();
 
@@ -331,7 +328,6 @@ public class JFXDrawer extends StackPane {
 
     private void updateDrawerAnimation(double translation) {
         drawerTransition = new DrawerTransition(translation, 0);
-        //		outTransition = new OutDrawerTransition(translation,0);
         translateProperty.set(translation);
     }
 
@@ -366,7 +362,6 @@ public class JFXDrawer extends StackPane {
         this.addEventFilter(MouseEvent.ANY, eventFilter);
 
         EventHandler<ActionEvent> drawerDrawer = (finish) -> {
-            //			outTransition.setOnFinished(null);
             callback.call(null);
 
             if (this.drawerTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0) {

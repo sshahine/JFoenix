@@ -31,12 +31,18 @@ import javafx.scene.control.Skin;
  * @since 2016-03-09
  */
 public class JFXProgressBar extends ProgressBar {
+    /**
+     * Initialize the style class to 'jfx-progress-bar'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
 
     /**
      * {@inheritDoc}
      */
     public JFXProgressBar() {
-        super();
         initialize();
     }
 
@@ -61,12 +67,5 @@ public class JFXProgressBar extends ProgressBar {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
-    /**
-     * Initialize the style class to 'jfx-progress-bar'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-progress-bar";
 
 }

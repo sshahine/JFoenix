@@ -35,7 +35,6 @@ public class JFXTreeTableRow<T> extends TreeTableRow<T> {
      * {@inheritDoc}
      */
     public JFXTreeTableRow() {
-        super();
     }
 
     /**

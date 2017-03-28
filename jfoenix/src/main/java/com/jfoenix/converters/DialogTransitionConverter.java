@@ -44,7 +44,6 @@ public class DialogTransitionConverter extends StyleConverterImpl<String, Dialog
     }
 
     private DialogTransitionConverter() {
-        super();
     }
 
     @Override
