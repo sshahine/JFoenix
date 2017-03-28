@@ -483,4 +483,12 @@ public class JFXDecorator extends VBox {
 			});
 	}
 
+	/**
+	 * will change the decorator content
+	 * @param content
+	 */
+	public void setContent(Node content){
+		this.contentPlaceHolder.getChildren().setAll(content);
+	}
+	
 } 
