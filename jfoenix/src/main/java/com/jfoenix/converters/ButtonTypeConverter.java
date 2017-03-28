@@ -18,8 +18,11 @@
  */
 package com.jfoenix.converters;
 
+import java.util.logging.Logger;
+
 import com.jfoenix.controls.JFXButton.ButtonType;
 import com.sun.javafx.css.StyleConverterImpl;
+
 import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
@@ -32,30 +35,37 @@ import javafx.scene.text.Font;
  * @version 1.0
  * @since   2016-03-09
  */
-public class ButtonTypeConverter  extends StyleConverterImpl<String , ButtonType> {
-    // lazy, thread-safe instatiation
-    private static class Holder {
-        static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
-    }
-    public static StyleConverter<String, ButtonType> getInstance() {
-        return Holder.INSTANCE;
-    }
-    private ButtonTypeConverter() {
-        super();
-    }
+public class ButtonTypeConverter extends StyleConverterImpl<String, ButtonType> {
 
-    @Override
-    public ButtonType convert(ParsedValue<String,ButtonType> value, Font not_used) {
-        String string = value.getValue();
-        try {
-            return ButtonType.valueOf(string);
-        } catch (IllegalArgumentException | NullPointerException exception) {
-            return ButtonType.FLAT;
-        }
-    }
+	private ButtonTypeConverter() {
+		super();
+	}
 
-    @Override
-    public String toString() {
-        return "ButtonTypeConverter";
-    }
+	// lazy, thread-safe instatiation
+	private static class Holder {
+		static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
+		private Holder() {
+			throw new IllegalAccessError("Holder class");
+		}
+	}
+
+	public static StyleConverter<String, ButtonType> getInstance() {
+		return Holder.INSTANCE;
+	}
+
+	@Override
+	public ButtonType convert(ParsedValue<String, ButtonType> value, Font notUsedFont) {
+		String string = value.getValue();
+		try {
+			return ButtonType.valueOf(string);
+		} catch (IllegalArgumentException | NullPointerException exception) {
+			Logger.getLogger(ButtonTypeConverter.class.getName()).info(String.format("Invalid button type value '%s'", string));
+			return ButtonType.FLAT;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "ButtonTypeConverter";
+	}
 }
