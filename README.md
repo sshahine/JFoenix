@@ -1,6 +1,7 @@
 [![CircleCI](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
 [![][mavenbadge img]][mavenbadge]
 [![][versioneye img]][versioneye]
+[![][sonar img]][sonar]
 
 Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -81,3 +82,6 @@ Reference the repository from this location using:
 
 [versioneye]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361
 [versioneye img]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361/badge.svg
+
+[sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
+[sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root
