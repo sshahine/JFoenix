@@ -88,7 +88,7 @@ public class HamburgerSlideCloseTransition extends CachedTransition implements H
                                                                                                 .getMinY();
 
         double hypotenuse = Math.sqrt(Math.pow(burgerHeight, 2) + Math.pow(burgerWidth, 2));
-        double angle = (Math.toDegrees(Math.asin(burgerWidth / hypotenuse)) + 90);
+        double angle = Math.toDegrees(Math.asin(burgerWidth / hypotenuse)) + 90;
 
         return new Timeline(
             new KeyFrame(

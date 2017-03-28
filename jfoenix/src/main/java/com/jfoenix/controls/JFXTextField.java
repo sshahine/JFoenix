@@ -95,7 +95,7 @@ public class JFXTextField extends TextField {
     /**
      * holds the current active validator on the text field in case of validation error
      */
-    private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
+    private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<>();
 
     public ValidatorBase getActiveValidator() {
         return activeValidator == null ? null : activeValidator.get();
@@ -174,12 +174,12 @@ public class JFXTextField extends TextField {
     /**
      * default color used when the field is unfocused
      */
-    private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR,
-                                                                                                   JFXTextField.this,
-                                                                                                   "unFocusColor",
-                                                                                                   Color.rgb(77,
-                                                                                                             77,
-                                                                                                             77));
+    private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
+                                                                                              JFXTextField.this,
+                                                                                              "unFocusColor",
+                                                                                              Color.rgb(77,
+                                                                                                        77,
+                                                                                                        77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
@@ -196,10 +196,10 @@ public class JFXTextField extends TextField {
     /**
      * default color used when the field is focused
      */
-    private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.FOCUS_COLOR,
-                                                                                                 JFXTextField.this,
-                                                                                                 "focusColor",
-                                                                                                 Color.valueOf("#4059A9"));
+    private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.FOCUS_COLOR,
+                                                                                            JFXTextField.this,
+                                                                                            "focusColor",
+                                                                                            Color.valueOf("#4059A9"));
 
     public Paint getFocusColor() {
         return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();
@@ -226,7 +226,7 @@ public class JFXTextField extends TextField {
     }
 
     public final Boolean isDisableAnimation() {
-        return disableAnimation == null ? false : this.disableAnimationProperty().get();
+        return disableAnimation != null && this.disableAnimationProperty().get();
     }
 
     public final void setDisableAnimation(final Boolean disabled) {
@@ -296,7 +296,7 @@ public class JFXTextField extends TextField {
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT, DISABLE_ANIMATION);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
@@ -309,10 +309,10 @@ public class JFXTextField extends TextField {
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(TextField.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

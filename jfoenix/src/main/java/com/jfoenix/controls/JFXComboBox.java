@@ -69,7 +69,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
 
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        this.setCellFactory(listView -> new JFXListCell<T>());
+        this.setCellFactory(listView -> new JFXListCell<>());
         this.setConverter(new StringConverter<T>() {
             @Override
             public String toString(T object) {
@@ -86,10 +86,8 @@ public class JFXComboBox<T> extends ComboBox<T> {
                 return (T) string;
             }
         });
-        /*
-		 * had to refactor the code out skin class to allow
-		 * customization of the button cell
-		 */
+        // had to refactor the code out skin class to allow
+        // customization of the button cell
         this.setButtonCell(new ListCell<T>() {
             @Override
             protected void updateItem(T item, boolean empty) {
@@ -97,7 +95,6 @@ public class JFXComboBox<T> extends ComboBox<T> {
                 this.setVisible(item != null || !empty);
             }
 
-            ;
         });
     }
 
@@ -106,7 +103,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
      */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXComboBoxListViewSkin<T>(this);
+        return new JFXComboBoxListViewSkin<>(this);
     }
 
     /**
@@ -131,9 +128,8 @@ public class JFXComboBox<T> extends ComboBox<T> {
         return nodeConverter;
     }
 
-    private ObjectProperty<NodeConverter<T>> nodeConverter = new SimpleObjectProperty<NodeConverter<T>>(this,
-                                                                                                        "nodeConverter",
-                                                                                                        JFXComboBox.<T>defaultNodeConverter());
+    private ObjectProperty<NodeConverter<T>> nodeConverter = new SimpleObjectProperty<>(this, "nodeConverter",
+                                                                                        JFXComboBox.<T>defaultNodeConverter());
 
     public final void setNodeConverter(NodeConverter<T> value) {
         nodeConverterProperty().set(value);
@@ -188,10 +184,8 @@ public class JFXComboBox<T> extends ComboBox<T> {
         } else if (item instanceof Node) {
             Node currentNode = cell.getGraphic();
             Node newNode = (Node) item;
-			/*
-			 *  create a node from the selected node of the listview
-			 *  using JFXComboBox {@link #nodeConverterProperty() NodeConverter})
-			 */
+            //  create a node from the selected node of the listview
+            //  using JFXComboBox {@link #nodeConverterProperty() NodeConverter})
             NodeConverter<T> nc = this.getNodeConverter();
             Node node = nc == null ? null : nc.toNode(item);
             if (currentNode == null || !currentNode.equals(newNode)) {
@@ -238,12 +232,12 @@ public class JFXComboBox<T> extends ComboBox<T> {
     /**
      * default color used when the field is unfocused
      */
-    private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNFOCUS_COLOR,
-                                                                                                   JFXComboBox.this,
-                                                                                                   "unFocusColor",
-                                                                                                   Color.rgb(77,
-                                                                                                             77,
-                                                                                                             77));
+    private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
+                                                                                              JFXComboBox.this,
+                                                                                              "unFocusColor",
+                                                                                              Color.rgb(77,
+                                                                                                        77,
+                                                                                                        77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
@@ -260,10 +254,10 @@ public class JFXComboBox<T> extends ComboBox<T> {
     /**
      * default color used when the field is focused
      */
-    private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.FOCUS_COLOR,
-                                                                                                 JFXComboBox.this,
-                                                                                                 "focusColor",
-                                                                                                 Color.valueOf("#4059A9"));
+    private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.FOCUS_COLOR,
+                                                                                            JFXComboBox.this,
+                                                                                            "focusColor",
+                                                                                            Color.valueOf("#4059A9"));
 
     public Paint getFocusColor() {
         return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();
@@ -326,7 +320,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
@@ -339,10 +333,10 @@ public class JFXComboBox<T> extends ComboBox<T> {
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Control.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

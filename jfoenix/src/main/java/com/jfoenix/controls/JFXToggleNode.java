@@ -25,6 +25,7 @@ import com.sun.javafx.css.converters.ColorConverter;
 import javafx.beans.DefaultProperty;
 import javafx.css.*;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
@@ -85,13 +86,13 @@ public class JFXToggleNode extends ToggleButton {
     /**
      * default color used when the node is toggled
      */
-    private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.SELECTED_COLOR,
-                                                                                                    JFXToggleNode.this,
-                                                                                                    "selectedColor",
-                                                                                                    Color.rgb(0,
-                                                                                                              0,
-                                                                                                              0,
-                                                                                                              0.2));
+    private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.SELECTED_COLOR,
+                                                                                               JFXToggleNode.this,
+                                                                                               "selectedColor",
+                                                                                               Color.rgb(0,
+                                                                                                         0,
+                                                                                                         0,
+                                                                                                         0.2));
 
     public final StyleableObjectProperty<Color> selectedColorProperty() {
         return this.selectedColor;
@@ -108,7 +109,7 @@ public class JFXToggleNode extends ToggleButton {
     /**
      * default color used when the node is not toggled
      */
-    private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<Color>(
+    private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<>(
         StyleableProperties.UNSELECTED_COLOR,
         JFXToggleNode.this,
         "unSelectedCOlor",
@@ -139,7 +140,7 @@ public class JFXToggleNode extends ToggleButton {
     }
 
     public final Boolean isDisableAnimation() {
-        return disableAnimation == null ? false : this.disableAnimationProperty().get();
+        return disableAnimation != null && this.disableAnimationProperty().get();
     }
 
     public final void setDisableAnimation(final Boolean disabled) {
@@ -194,7 +195,7 @@ public class JFXToggleNode extends ToggleButton {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                SELECTED_COLOR,
                                UNSELECTED_COLOR,
@@ -211,9 +212,9 @@ public class JFXToggleNode extends ToggleButton {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Labeled.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

@@ -47,7 +47,7 @@ public class JFXTreeView<T> extends TreeView<T> {
     }
 
     private void init() {
-        this.setCellFactory((view) -> new JFXTreeCell<T>());
+        this.setCellFactory((view) -> new JFXTreeCell<>());
     }
 
     double height = 0;

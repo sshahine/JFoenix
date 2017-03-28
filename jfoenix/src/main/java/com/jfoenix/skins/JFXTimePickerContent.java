@@ -54,9 +54,7 @@ public class JFXTimePickerContent extends VBox {
     private static final String ROBOTO = "Roboto";
     private static final String SPINNER_LABEL = "spinner-label";
 
-    private static enum TimeUnit {HOURS, MINUTES}
-
-    ;
+    private enum TimeUnit {HOURS, MINUTES}
 
     protected JFXTimePicker timePicker;
 
@@ -83,14 +81,14 @@ public class JFXTimePickerContent extends VBox {
     private NumberStringConverter unitConverter = new NumberStringConverter("#00");
 
 
-    private ObjectProperty<LocalTime> selectedTime = new SimpleObjectProperty<LocalTime>(this, "selectedTime");
+    private ObjectProperty<LocalTime> selectedTime = new SimpleObjectProperty<>(this, "selectedTime");
 
     ObjectProperty<LocalTime> displayedTimeProperty() {
         return selectedTime;
     }
 
     JFXTimePickerContent(final JFXTimePicker jfxTimePicker) {
-        this.timePicker = (JFXTimePicker) jfxTimePicker;
+        this.timePicker = jfxTimePicker;
         LocalTime time = this.timePicker.getValue() == null ? LocalTime.now() : this.timePicker.getValue();
 
         this.timePicker.valueProperty().addListener((o, oldVal, newVal) -> goToTime(newVal));
@@ -218,7 +216,7 @@ public class JFXTimePickerContent extends VBox {
             int index = (int) Math.round((180 + Math.toDegrees(theta)) / angle.get());
             pointerRotate.get().setAngle(index * angle.get());
             int timeValue = (index + 9) % 12 == 0 ? 12 : (index + 9) % 12;
-            if (unit.get() == TimeUnit.MINUTES) timeValue = (index + 45) % 60 == 0 ? 0 : (index + 45) % 60;
+            if (unit.get() == TimeUnit.MINUTES) timeValue = (index + 45) % 60;
             timeLabel.get()
                      .setText(unit.get() == TimeUnit.MINUTES ? unitConverter.toString(timeValue) : Integer.toString(
                          timeValue));
@@ -283,7 +281,7 @@ public class JFXTimePickerContent extends VBox {
         double radius = contentCircleRadius - shift - selectionCircle.getRadius();
         for (int i = 0; i < 12; i++) {
             StackPane labelContainer = new StackPane();
-            int val = ((i + 3) * 5) % 60 == 0 ? 0 : ((i + 3) * 5) % 60;
+            int val = ((i + 3) * 5) % 60;
             Label label = new Label(unitConverter.toString(val) + "");
             label.setFont(Font.font(ROBOTO, FontWeight.BOLD, 12));
             // init label color

@@ -49,8 +49,6 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 
     private boolean invalid = true;
     private double padding = 15;
-    private double contWidth, contHeight;
-    private double maxHeight, radioRadius = 7;
     private final JFXRippler rippler;
 
     private Circle radio, dot;
@@ -62,6 +60,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
     public JFXRadioButtonSkin(JFXRadioButton control) {
         super(control);
 
+        final double radioRadius = 7;
         radio = new Circle(radioRadius);
         radio.getStyleClass().setAll("radio");
         radio.setStrokeWidth(2);
@@ -140,14 +139,14 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         final RadioButton radioButton = getSkinnable();
-        contWidth = snapSize(container.prefWidth(-1)) + (invalid ? 2 : 0);
-        contHeight = snapSize(container.prefHeight(-1)) + (invalid ? 2 : 0);
+        final double contWidth = snapSize(container.prefWidth(-1)) + (invalid ? 2 : 0);
+        final double contHeight = snapSize(container.prefHeight(-1)) + (invalid ? 2 : 0);
         final double computeWidth = Math.min(radioButton.prefWidth(-1),
                                              radioButton.minWidth(-1)) + labelOffset + 2 * padding;
         final double labelWidth = Math.min(computeWidth - contWidth,
                                            w - snapSize(contWidth)) + labelOffset + 2 * padding;
         final double labelHeight = Math.min(radioButton.prefHeight(labelWidth), h);
-        maxHeight = Math.max(contHeight, labelHeight);
+        final double maxHeight = Math.max(contHeight, labelHeight);
         final double xOffset = computeXOffset(w, labelWidth + contWidth, radioButton.getAlignment().getHpos()) + x;
         final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
 

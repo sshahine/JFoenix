@@ -41,13 +41,9 @@ import javafx.stage.Window;
 @DefaultProperty(value = "popupContent")
 public class JFXPopup extends PopupControl {
 
-    public static enum PopupHPosition {RIGHT, LEFT}
+    public enum PopupHPosition {RIGHT, LEFT}
 
-    ;
-
-    public static enum PopupVPosition {TOP, BOTTOM}
-
-    ;
+    public enum PopupVPosition {TOP, BOTTOM}
 
     /**
      * creates empty popup

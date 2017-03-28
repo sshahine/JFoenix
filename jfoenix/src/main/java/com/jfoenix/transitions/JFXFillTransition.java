@@ -81,7 +81,7 @@ public final class JFXFillTransition extends Transition {
 
     public final ObjectProperty<Region> regionProperty() {
         if (region == null) {
-            region = new SimpleObjectProperty<Region>(this, "region", null);
+            region = new SimpleObjectProperty<>(this, "region", null);
         }
         return region;
     }
@@ -163,7 +163,7 @@ public final class JFXFillTransition extends Transition {
 
     public final ObjectProperty<Color> fromValueProperty() {
         if (fromValue == null) {
-            fromValue = new SimpleObjectProperty<Color>(this, "fromValue", DEFAULT_FROM_VALUE);
+            fromValue = new SimpleObjectProperty<>(this, "fromValue", DEFAULT_FROM_VALUE);
         }
         return fromValue;
     }
@@ -188,7 +188,7 @@ public final class JFXFillTransition extends Transition {
 
     public final ObjectProperty<Color> toValueProperty() {
         if (toValue == null) {
-            toValue = new SimpleObjectProperty<Color>(this, "toValue", DEFAULT_TO_VALUE);
+            toValue = new SimpleObjectProperty<>(this, "toValue", DEFAULT_TO_VALUE);
         }
         return toValue;
     }

@@ -123,7 +123,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     }
 
     private ObjectProperty<StringConverter<LocalTime>> converter =
-        new SimpleObjectProperty<StringConverter<LocalTime>>(this, "converter", null);
+        new SimpleObjectProperty<>(this, "converter", null);
 
     public final void setConverter(StringConverter<LocalTime> value) {
         converterProperty().set(value);
@@ -155,7 +155,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
     public final ReadOnlyObjectProperty<TextField> editorProperty() {
         if (editor == null) {
-            editor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
+            editor = new ReadOnlyObjectWrapper<>(this, "editor");
             editor.set(new ComboBoxListViewSkin.FakeFocusTextField());
         }
         return editor.getReadOnlyProperty();
@@ -173,7 +173,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
      * This is the selector class from which CSS can be used to style
      * this control.
      */
-    private static String DEFAULT_STYLE_CLASS = "jfx-time-picker";
+    private static final String DEFAULT_STYLE_CLASS = "jfx-time-picker";
 
     /**
      * show the popup as an overlay using JFXDialog
@@ -190,7 +190,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     }
 
     public final boolean isOverLay() {
-        return overLay == null ? false : this.overLayProperty().get();
+        return overLay != null && this.overLayProperty().get();
     }
 
     public final void setOverLay(final boolean overLay) {
@@ -200,11 +200,11 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     /**
      * the default color used in the data picker content
      */
-    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR,
-                                                                                                   JFXTimePicker.this,
-                                                                                                   "defaultColor",
-                                                                                                   Color.valueOf(
-                                                                                                       "#009688"));
+    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(StyleableProperties.DEFAULT_COLOR,
+                                                                                              JFXTimePicker.this,
+                                                                                              "defaultColor",
+                                                                                              Color.valueOf(
+                                                                                                  "#009688"));
 
     public Paint getDefaultColor() {
         return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
@@ -251,7 +251,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                DEFAULT_COLOR,
                                OVERLAY);
@@ -266,9 +266,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Control.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

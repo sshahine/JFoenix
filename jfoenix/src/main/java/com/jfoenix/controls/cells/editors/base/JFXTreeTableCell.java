@@ -34,6 +34,6 @@ import javafx.scene.control.TreeTableCell;
 public class JFXTreeTableCell<S, T> extends TreeTableCell<S, T> {
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXTreeTableCellSkin<S, T>(this);
+        return new JFXTreeTableCellSkin<>(this);
     }
 }

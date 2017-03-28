@@ -65,7 +65,9 @@ public class JFXSliderSkin extends SliderSkin {
 
     private Timeline timeline;
 
-    private double indicatorRotation, horizontalRotation, rotationAngle = 45, shifting;
+    private double indicatorRotation;
+    private double horizontalRotation;
+    private double shifting;
     private boolean isValid = false;
 
 
@@ -121,7 +123,7 @@ public class JFXSliderSkin extends SliderSkin {
         }
     }
 
-    private final void refreshSliderValueBinding() {
+    private void refreshSliderValueBinding() {
         sliderValue.textProperty().unbind();
         if (((JFXSlider) getSkinnable()).getValueFactory() != null) {
             sliderValue.textProperty()
@@ -186,6 +188,7 @@ public class JFXSliderSkin extends SliderSkin {
             shifting = -shifting;
         }
 
+        final double rotationAngle = 45;
         sliderValue.setRotate(rotationAngle + indicatorRotation + 3 * horizontalRotation);
 
         animatedThumb.setRotate(-rotationAngle + indicatorRotation + horizontalRotation);

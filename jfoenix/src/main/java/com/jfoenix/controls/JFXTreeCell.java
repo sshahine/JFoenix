@@ -92,13 +92,12 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             if (newTreeItem != null) {
                 newTreeItem.graphicProperty().addListener(weakTreeItemGraphicListener);
                 newTreeItem.expandedProperty().addListener(weakExpandListener);
-                treeItemRef = new WeakReference<TreeItem<T>>(newTreeItem);
+                treeItemRef = new WeakReference<>(newTreeItem);
             }
         }
     };
     private WeakInvalidationListener weakTreeItemGraphicListener = new WeakInvalidationListener(
         treeItemGraphicInvalidationListener);
-    private WeakInvalidationListener weakTreeItemListener = new WeakInvalidationListener(treeItemInvalidationListener);
 
     private ChangeListener<? super Status> weakAnimationListener = (o, oldVal, newVal) -> {
         if (newVal.equals(Status.STOPPED))
@@ -115,11 +114,10 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             JFXTreeView<T> newTreeView = (JFXTreeView<T>) getTreeView();
             if (newTreeView != null) {
                 newTreeView.trans.statusProperty().addListener(weakAnimationListener);
-                treeViewRef = new WeakReference<JFXTreeView<T>>(newTreeView);
+                treeViewRef = new WeakReference<>(newTreeView);
             }
         }
     };
-    private WeakInvalidationListener weakTreeViewListener = new WeakInvalidationListener(treeViewInvalidationListener);
 
     public JFXTreeCell() {
         selectedPane.setStyle("-fx-background-color:RED");
@@ -129,7 +127,9 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             selectedPane.setOpacity(newVal ? 1 : 0);
         });
 
+        final WeakInvalidationListener weakTreeViewListener = new WeakInvalidationListener(treeViewInvalidationListener);
         treeViewProperty().addListener(weakTreeViewListener);
+        final WeakInvalidationListener weakTreeItemListener = new WeakInvalidationListener(treeItemInvalidationListener);
         treeItemProperty().addListener(weakTreeItemListener);
         if (getTreeItem() != null) {
             getTreeItem().graphicProperty().addListener(weakTreeItemGraphicListener);
@@ -274,9 +274,8 @@ public class JFXTreeCell<T> extends TreeCell<T> {
 
     private Timeline createSibAnimation(TreeCell<?> cell, int index) {
         cell.setTranslateY(((JFXTreeView<T>) getTreeView()).height);
-        Timeline f2 = new Timeline(new KeyFrame(Duration.millis(120),
-                                                new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
-        return f2;
+        return new Timeline(new KeyFrame(Duration.millis(120),
+                                         new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
     }
 
     private Timeline createChildAnimation(TreeCell<?> cell, int delay) {

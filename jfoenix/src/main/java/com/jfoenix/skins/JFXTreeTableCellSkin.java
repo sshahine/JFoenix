@@ -38,7 +38,7 @@ public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<
     private final TreeTableColumn<S, T> tableColumn;
 
     public JFXTreeTableCellSkin(TreeTableCell<S, T> treeTableCell) {
-        super(treeTableCell, new JFXTreeTableCellBehavior<S, T>(treeTableCell));
+        super(treeTableCell, new JFXTreeTableCellBehavior<>(treeTableCell));
         tableColumn = treeTableCell.getTableColumn();
         super.init(treeTableCell);
     }

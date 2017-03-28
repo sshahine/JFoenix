@@ -71,11 +71,9 @@ public class JFXSlider extends Slider {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
-    public static enum IndicatorPosition {
+    public enum IndicatorPosition {
         LEFT, RIGHT
     }
-
-    ;
 
     /***************************************************************************
      *                                                                         *
@@ -106,7 +104,7 @@ public class JFXSlider extends Slider {
 
     public final ObjectProperty<Callback<JFXSlider, StringBinding>> valueFactoryProperty() {
         if (valueFactory == null) {
-            valueFactory = new SimpleObjectProperty<Callback<JFXSlider, StringBinding>>(this, "valueFactory");
+            valueFactory = new SimpleObjectProperty<>(this, "valueFactory");
         }
         return valueFactory;
     }
@@ -146,7 +144,7 @@ public class JFXSlider extends Slider {
      * indicates the position of the slider indicator, can be
      * either LEFT or RIGHT
      */
-    private StyleableObjectProperty<IndicatorPosition> indicatorPosition = new SimpleStyleableObjectProperty<IndicatorPosition>(
+    private StyleableObjectProperty<IndicatorPosition> indicatorPosition = new SimpleStyleableObjectProperty<>(
         StyleableProperties.INDICATOR_POSITION,
         JFXSlider.this,
         "indicatorPosition",
@@ -183,7 +181,7 @@ public class JFXSlider extends Slider {
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             Collections.addAll(styleables, INDICATOR_POSITION);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
@@ -196,10 +194,10 @@ public class JFXSlider extends Slider {
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
                 Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Slider.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

@@ -49,7 +49,6 @@ public class JFXScrollPane extends StackPane {
 
     private static final String DEFAULT_STYLE_CLASS = "jfx-scroll-pane";
 
-    private ScrollPane scrollPane = new ScrollPane();
     private VBox contentContainer = new VBox();
     private StackPane headerSpace = new StackPane();
     private StackPane condensedHeaderBG = new StackPane();
@@ -120,6 +119,7 @@ public class JFXScrollPane extends StackPane {
         contentContainer.getChildren().setAll(headerSpace);
 
         contentContainer.localToSceneTransformProperty().addListener((o, oldVal, newVal) -> oldSceneTransform = oldVal);
+        final ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(contentContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.vvalueProperty().addListener((o, oldVal, newVal) -> {

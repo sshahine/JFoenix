@@ -40,27 +40,8 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
 
     static Map<Control, Double> disclosureWidthMap = null;
 
-    //	private JFXRippler rippler;
-    //	private int oldselectedIndex = -1;
-    //	private int maxChildIndex = -1;
-    //	private EventHandler<MouseEvent> ripplerEventPropagator = (event)-> {
-    //		/*
-    //		 * fixed the issue of rippler is being stuck at the pressed state while collapsing
-    //		 * a group that has one of its items selected
-    //		 */
-    //		if(getSkinnable().getTreeItem()!=null && !getSkinnable().getTreeItem().isLeaf()){
-    //			if(!(oldselectedIndex > getSkinnable().getIndex() && oldselectedIndex  < maxChildIndex))
-    //				rippler.fireEventProgrammatically(event);
-    //			oldselectedIndex = getSkinnable().getTreeTableView().getSelectionModel().getSelectedIndex();
-    //		}else{
-    //			rippler.fireEventProgrammatically(event);
-    //		}
-    //	};
-
     // this vairable is used to hold the expanded/collapsed row index
     private static int expandedIndex = -1;
-    // this variable is used to hold the rippler while expanding/collapsing a row
-    //	private static JFXTreeTableRowSkin<?> oldSkin = null;
     // this variable indicates whether an expand/collapse operation is triggered
     private boolean expandTriggered = false;
 
@@ -68,7 +49,6 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
     private ChangeListener<Boolean> expandedListener = (o, oldVal, newVal) -> {
         if (getSkinnable().getTreeItem() != null && !getSkinnable().getTreeItem().isLeaf()) {
             expandedIndex = getSkinnable().getIndex();
-            //			oldSkin = this;
             expandTriggered = true;
         }
     };
@@ -104,42 +84,8 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
         getSkinnable().getTreeTableView().rootProperty().addListener((o, oldVal, newVal) -> {
             disclosureWidthMap.remove(getSkinnable().getTreeTableView());
         });
-
-		/*
-         * fixed the issue of rippler is being stuck at the pressed state while collapsing
-		 * a group that has one of its items selected
-		 */
-        //		getSkinnable().getTreeTableView().getSelectionModel().selectedIndexProperty().addListener((o,oldVal,newVal)->{
-        //			oldselectedIndex = oldVal.intValue();
-        //		});
-        //		getSkinnable().addEventFilter(MouseEvent.MOUSE_PRESSED, (press)->{
-        //			TreeItem<T> temp = getSkinnable().getTreeItem();
-        //			while(temp!=null && temp.nextSibling()==null) temp = temp.getParent();
-        //			maxChildIndex = temp != null ? getSkinnable().getTreeTableView().getRow(temp.nextSibling()) : getSkinnable().getTreeTableView().getExpandedItemCount();
-        //		});
     }
 
-
-    //	@Override protected void updateChildren() {
-    //		super.updateChildren();
-    //		if(getSkinnable().getIndex() > -1){
-    //			if(oldSkin != this){
-    //				if( (!(expandedIndex == getSkinnable().getIndex() || expandTriggered) || rippler == null)
-    //						|| !getSkinnable().isSelected()){
-    //					rippler = new JFXRippler(new StackPane());
-    //				}else{
-    //					this.rippler = oldSkin.rippler;
-    //				}
-    //			}else{
-    //				if(!expandTriggered){
-    //					rippler = new JFXRippler(new StackPane());
-    //				}else if(!getSkinnable().isSelected()){
-    //					rippler = new JFXRippler(new StackPane());
-    //				}
-    //			}
-    //			getChildren().add(0,rippler);
-    //		}
-    //	}
 
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
@@ -156,48 +102,14 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                                                             .getTreeItem(getSkinnable().getIndex()) != null) {
             super.layoutChildren(x, y, w, h);
 
-            //add rippler effects to each row in the table
-            //			rippler.resize(w, h);
-            //			for (int i = 1; i < getChildren().size(); i++) {
-            //				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_PRESSED, ripplerEventPropagator);
-            //				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_RELEASED, ripplerEventPropagator);
-            //				getChildren().get(i).removeEventHandler(MouseEvent.MOUSE_CLICKED, ripplerEventPropagator);
-            //
-            //				getChildren().get(i).addEventHandler(MouseEvent.MOUSE_PRESSED, ripplerEventPropagator);
-            //				getChildren().get(i).addEventHandler(MouseEvent.MOUSE_RELEASED, ripplerEventPropagator);
-            //				getChildren().get(i).addEventHandler(MouseEvent.MOUSE_CLICKED, ripplerEventPropagator);
-            //			}
-
             // disclosure row case
             if (getSkinnable().getTreeItem() != null && !getSkinnable().getTreeItem().isLeaf()) {
-
-//				Control c = getVirtualFlowOwner();
-//				final double defaultDisclosureWidth = disclosureWidthMap.containsKey(c) ? disclosureWidthMap.get(c) : 0;
-//				double disclosureWidth =  getDisclosureNode().prefWidth(h);
-//				if (disclosureWidth > defaultDisclosureWidth) {
-//					disclosureWidthMap.put(c, disclosureWidth);
-//					Parent p = getSkinnable();
-//					while (p != null) {
-//						if (p instanceof VirtualFlow)
-//							break;
-//						p = p.getParent();
-//					}
-//					if(p!=null){
-//						final VirtualFlow<?> flow = (VirtualFlow<?>) p;
-//						for (int i = flow.getFirstVisibleCell().getIndex() ; i <= flow.getLastVisibleCell().getIndex(); i++) {
-//							IndexedCell<?> cell = flow.getCell(i);
-//							if (cell == null || cell.isEmpty() || cell.getIndex() >= getSkinnable().getIndex()) continue;
-//							cell.requestLayout();
-//							cell.layout();
-//						}
-//					}
-//				}
-
                 Node arrow = ((Parent) getDisclosureNode()).getChildrenUnmodifiable().get(0);
                 // relocating the disclosure node according to the grouping column
+                final Parent arrowParent = arrow.getParent();
                 if (((RecursiveTreeObject<?>) getSkinnable().getItem()).getGroupedColumn() != null) {
-                    Node col = getChildren().get((getSkinnable().getTreeTableView()
-                                                                .getTreeItemLevel(getSkinnable().getTreeItem()) + 1));
+                    Node col = getChildren().get(getSkinnable().getTreeTableView()
+                                                               .getTreeItemLevel(getSkinnable().getTreeItem()) + 1);
                     if (getSkinnable().getItem() instanceof RecursiveTreeObject) {
                         int index = getSkinnable().getTreeTableView()
                                                   .getColumns()
@@ -205,11 +117,11 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                         //						getSkinnable().getTreeTableView().getColumns().get(index).getText();
                         col = getChildren().get(index + 1); // index + 2 , if the rippler was added
                     }
-                    arrow.getParent().setTranslateX(col.getBoundsInParent().getMinX());
-                    arrow.getParent().setLayoutX(0);
+                    arrowParent.setTranslateX(col.getBoundsInParent().getMinX());
+                    arrowParent.setLayoutX(0);
                 } else {
-                    arrow.getParent().setTranslateX(0);
-                    arrow.getParent().setLayoutX(0);
+                    arrowParent.setTranslateX(0);
+                    arrowParent.setLayoutX(0);
                 }
 
                 // add disclosure node animation

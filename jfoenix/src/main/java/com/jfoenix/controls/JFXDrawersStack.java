@@ -40,7 +40,6 @@ public class JFXDrawersStack extends StackPane {
 
     private ArrayList<JFXDrawer> drawers = new ArrayList<>();
     private Node content;
-    private Rectangle clip = new Rectangle();
     boolean holding = false;
 
     /**
@@ -48,6 +47,7 @@ public class JFXDrawersStack extends StackPane {
      */
     public JFXDrawersStack() {
         super();
+        final Rectangle clip = new Rectangle();
         clip.widthProperty().bind(this.widthProperty());
         clip.heightProperty().bind(this.heightProperty());
         this.setClip(clip);

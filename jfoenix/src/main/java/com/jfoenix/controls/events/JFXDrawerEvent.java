@@ -53,21 +53,21 @@ public class JFXDrawerEvent extends Event {
      * ( after the exit animation ends )
      */
     public static final EventType<JFXDrawerEvent> CLOSED =
-        new EventType<JFXDrawerEvent>(Event.ANY, "DRAWER_CLOSED");
+        new EventType<>(Event.ANY, "DRAWER_CLOSED");
 
     /**
      * This event occurs when a JFXDrawer is drawn, visible to the user
      * ( after the entrance animation ends )
      */
     public static final EventType<JFXDrawerEvent> OPENED =
-        new EventType<JFXDrawerEvent>(Event.ANY, "DRAWER_OPENED");
+        new EventType<>(Event.ANY, "DRAWER_OPENED");
 
     /**
      * This event occurs when a JFXDrawer is being drawn, visible to the user
      * ( after the entrance animation ends )
      */
     public static final EventType<JFXDrawerEvent> OPENING =
-        new EventType<JFXDrawerEvent>(Event.ANY, "DRAWER_OPENING");
+        new EventType<>(Event.ANY, "DRAWER_OPENING");
 
 
     /**
@@ -76,7 +76,7 @@ public class JFXDrawerEvent extends Event {
      * ( after the entrance animation ends )
      */
     public static final EventType<JFXDrawerEvent> CLOSING =
-        new EventType<JFXDrawerEvent>(Event.ANY, "DRAWER_CLOSING");
+        new EventType<>(Event.ANY, "DRAWER_CLOSING");
 
 
 }

@@ -133,7 +133,10 @@ public class JFXMasonryPane extends Pane {
             for (int i = 0; i < getChildren().size() && i < newBoxes.size(); i++) {
                 Region block = (Region) getChildren().get(i);
                 if (!(block instanceof GridPane)) {
-                    double blockX, blockY, blockWidth, blockHeight;
+                    double blockX;
+                    double blockY;
+                    double blockWidth;
+                    double blockHeight;
                     if (newBoxes.get(i) != null) {
                         blockX = newBoxes.get(i).getMinY() * getCellWidth() + ((newBoxes.get(i)
                                                                                         .getMinY() + 1) * 2 - 1) * getHSpacing();
@@ -168,18 +171,18 @@ public class JFXMasonryPane extends Pane {
 
                         if (newBoxes.get(i) != null) {
                             // handle children repositioning
+                            final KeyFrame keyFrame = new KeyFrame(Duration.millis(2000),
+                                                                   new KeyValue(block.opacityProperty(),
+                                                                                1,
+                                                                                Interpolator.LINEAR),
+                                                                   new KeyValue(block.layoutXProperty(),
+                                                                                blockX,
+                                                                                Interpolator.LINEAR),
+                                                                   new KeyValue(block.layoutYProperty(),
+                                                                                blockY,
+                                                                                Interpolator.LINEAR));
                             animationMap.put(block,
-                                             new CachedTransition(block,
-                                                                  new Timeline(new KeyFrame(Duration.millis(2000),
-                                                                                            new KeyValue(block.opacityProperty(),
-                                                                                                         1,
-                                                                                                         Interpolator.LINEAR),
-                                                                                            new KeyValue(block.layoutXProperty(),
-                                                                                                         blockX,
-                                                                                                         Interpolator.LINEAR),
-                                                                                            new KeyValue(block.layoutYProperty(),
-                                                                                                         blockY,
-                                                                                                         Interpolator.LINEAR)))) {{
+                                             new CachedTransition(block, new Timeline(keyFrame)) {{
                                                  setCycleDuration(Duration.seconds(0.320));
                                                  setDelay(Duration.seconds(0));
                                                  setOnFinished((finish) -> {
@@ -191,18 +194,18 @@ public class JFXMasonryPane extends Pane {
 
                         } else {
                             // handle children is being hidden ( cause it can't fit in the pane )
+                            final KeyFrame keyFrame = new KeyFrame(Duration.millis(2000),
+                                                                   new KeyValue(block.opacityProperty(),
+                                                                                0,
+                                                                                Interpolator.LINEAR),
+                                                                   new KeyValue(block.layoutXProperty(),
+                                                                                blockX,
+                                                                                Interpolator.LINEAR),
+                                                                   new KeyValue(block.layoutYProperty(),
+                                                                                blockY,
+                                                                                Interpolator.LINEAR));
                             animationMap.put(block,
-                                             new CachedTransition(block,
-                                                                  new Timeline(new KeyFrame(Duration.millis(2000),
-                                                                                            new KeyValue(block.opacityProperty(),
-                                                                                                         0,
-                                                                                                         Interpolator.LINEAR),
-                                                                                            new KeyValue(block.layoutXProperty(),
-                                                                                                         blockX,
-                                                                                                         Interpolator.LINEAR),
-                                                                                            new KeyValue(block.layoutYProperty(),
-                                                                                                         blockY,
-                                                                                                         Interpolator.LINEAR)))) {{
+                                             new CachedTransition(block, new Timeline(keyFrame)) {{
                                                  setCycleDuration(Duration.seconds(0.320));
                                                  setDelay(Duration.seconds(0));
                                                  setOnFinished((finish) -> {
@@ -230,32 +233,8 @@ public class JFXMasonryPane extends Pane {
             trans = newTransition;
             oldBoxes = newBoxes;
 
-            // FOR DEGBBUGING
-
-//						root.getChildren().clear();
-//						for(int y = 0; y < matrix.length; y++){
-//							for(int x = 0; x < matrix[0].length; x++){
-//
-//								// Create a new TextField in each Iteration
-//								Label tf = new Label();
-//								tf.setStyle(matrix[y][x] == 0 ? colors[0] : colors[matrix[y][x]%4+1]);
-//								tf.setMinWidth(getCellWidth());
-//								tf.setMinHeight(getCellHeight());
-//								tf.setAlignment(Pos.CENTER);
-//								tf.setText(matrix[y][x] + "");
-//								// Iterate the Index using the loops
-//								root.setRowIndex(tf,y);
-//								root.setColumnIndex(tf,x);
-//								root.setMargin(tf, new Insets(getVSpacing(),getHSpacing(),getVSpacing(),getHSpacing()));
-//								root.getChildren().add(tf);
-//							}
-//						}
             valid = true;
         }
-
-        // FOR DEGBBUGING
-//				if(!getChildren().contains(root)) getChildren().add(root);
-//				root.resizeRelocate(0, 0, this.getWidth(), this.getHeight());
 
         performingLayout = false;
     }
@@ -557,14 +536,10 @@ public class JFXMasonryPane extends Pane {
         }
 
         protected int[][] fillMatrix(int[][] matrix, int id, double row, double col, double width, double height) {
-            //			int maxCol = (int) col;
-            //			int maxRow = (int) row;
             for (int x = (int) row; x < row + height; x++) {
                 for (int y = (int) col; y < col + width; y++) {
                     matrix[x][y] = id;
-                    //					if(++y > maxCol) maxCol = y;
                 }
-                //				if(++x > maxRow) maxRow = x;
             }
             return matrix;
         }
@@ -586,9 +561,7 @@ public class JFXMasonryPane extends Pane {
             List<BoundingBox> boxes = new ArrayList<>();
 
             for (int b = 0; b < children.size(); b++) {
-                Region block = (Region) children.get(b);
-                // for debugging purpose
-//								if(!(block instanceof GridPane)){
+                Region block = children.get(b);
                 for (int i = 0; i < row; i++) {
                     int old = boxes.size();
                     for (int j = 0; j < col; j++) {
@@ -634,7 +607,6 @@ public class JFXMasonryPane extends Pane {
                         boxes.add(null);
                     }
                 }
-//								}
             }
             return boxes;
         }
@@ -655,7 +627,6 @@ public class JFXMasonryPane extends Pane {
 
             for (int b = 0; b < children.size(); b++) {
                 Region block = children.get(b);
-//								if(!(block instanceof GridPane)){
                 for (int i = 0; i < row; i++) {
                     int old = boxes.size();
                     for (int j = 0; j < col; j++) {
@@ -690,7 +661,6 @@ public class JFXMasonryPane extends Pane {
                         boxes.add(null);
                     }
                 }
-//								}
             }
             return boxes;
         }

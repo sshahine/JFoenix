@@ -49,7 +49,10 @@ class JFXColorPickerUI extends Pane {
     private int pickerSize = 400;
     // sl circle selector size
     private int selectorSize = 20;
-    private double centerX, centerY, pickerRadius, huesRadius, huesSmallR, huesLargeR, slRadius;
+    private double centerX;
+    private double centerY;
+    private double huesRadius;
+    private double slRadius;
     double currentHue = 0;
 
     private ImageView huesCircleView;
@@ -65,10 +68,10 @@ class JFXColorPickerUI extends Pane {
         this.pickerSize = pickerSize;
         this.centerX = (double) pickerSize / 2;
         this.centerY = (double) pickerSize / 2;
-        this.pickerRadius = (double) pickerSize / 2;
+        final double pickerRadius = (double) pickerSize / 2;
         this.huesRadius = pickerRadius * 0.9;
-        this.huesSmallR = pickerRadius * 0.8;
-        this.huesLargeR = pickerRadius;
+        final double huesSmallR = pickerRadius * 0.8;
+        final double huesLargeR = pickerRadius;
         this.slRadius = pickerRadius * 0.7;
 
         // Create Hues Circle
@@ -179,11 +182,11 @@ class JFXColorPickerUI extends Pane {
         });
         // add slCircleView listener
         selector.translateXProperty()
-                .addListener((o, oldVal, newVal) -> setColorAtLocation((int) newVal.intValue() + selectorSize / 2,
+                .addListener((o, oldVal, newVal) -> setColorAtLocation(newVal.intValue() + selectorSize / 2,
                                                                        (int) selector.getTranslateY() + selectorSize / 2));
         selector.translateYProperty()
                 .addListener((o, oldVal, newVal) -> setColorAtLocation((int) selector.getTranslateX() + selectorSize / 2,
-                                                                       (int) newVal.intValue() + selectorSize / 2));
+                                                                       newVal.intValue() + selectorSize / 2));
 
 
         // initial color selection
@@ -579,8 +582,7 @@ class JFXColorPickerUI extends Pane {
         dx = ox - ax;
         dy = oy - ay;
         radius = Math.sqrt(dx * dx + dy * dy);
-        double[] circle = {ox, oy, radius};
-        return circle;
+        return new double[]{ox, oy, radius};
     }
 
 

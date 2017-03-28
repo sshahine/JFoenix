@@ -49,7 +49,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     /**
      * predicate used to filter nodes
      */
-    private ObjectProperty<Predicate<TreeItem<T>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<T>>>((TreeItem<T> t) -> true);
+    private ObjectProperty<Predicate<TreeItem<T>>> predicate = new SimpleObjectProperty<>((TreeItem<T> t) -> true);
 
     /**
      * list of original items
@@ -74,7 +74,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
      *         is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
-        this(null, (Node) null, func);
+        this(null, null, func);
     }
 
     /**
@@ -86,7 +86,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
      *         is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(final T value, Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
-        this(value, (Node) null, func);
+        this(value, null, func);
     }
 
     /**
@@ -132,7 +132,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
         });
 
         this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            Predicate<TreeItem<T>> newPredicate = new Predicate<TreeItem<T>>() {
+            return new Predicate<TreeItem<T>>() {
                 @Override
                 public boolean test(TreeItem<T> child) {
                     // Set the predicate of child items to force filtering
@@ -151,15 +151,12 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
                     // If its a group node keep this item if it has children
                     if (child.getValue() instanceof RecursiveTreeObject && child.getValue()
                                                                                 .getClass() == RecursiveTreeObject.class) {
-                        if (child.getChildren().size() == 0)
-                            return false;
-                        return true;
+                        return child.getChildren().size() != 0;
                     }
                     // Otherwise ask the TreeItemPredicate
                     return RecursiveTreeItem.this.predicate.get().test(child);
                 }
             };
-            return newPredicate;
         }, this.predicate));
 
 

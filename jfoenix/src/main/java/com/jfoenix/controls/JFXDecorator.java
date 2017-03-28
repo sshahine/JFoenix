@@ -230,10 +230,6 @@ public class JFXDecorator extends VBox {
                                                                          CornerRadii.EMPTY,
                                                                          Insets.EMPTY)));
         // BINDING
-        //		buttonsContainer.backgroundProperty().bind(Bindings.createObjectBinding(()->{
-        //			return new Background(new BackgroundFill(decoratorColor.get(), CornerRadii.EMPTY, Insets.EMPTY));
-        //		}, decoratorColor));
-
 
         buttonsContainer.setPadding(new Insets(4));
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
@@ -267,9 +263,6 @@ public class JFXDecorator extends VBox {
                                                                  CornerRadii.EMPTY,
                                                                  new BorderWidths(0, 4, 4, 4))));
         // BINDING
-        //		contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-        //			return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-        //		}, decoratorColor));
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(((Region) node).widthProperty());
@@ -315,9 +308,6 @@ public class JFXDecorator extends VBox {
                                                                              CornerRadii.EMPTY,
                                                                              new BorderWidths(0, 4, 4, 4))));
                     contentPlaceHolder.getStyleClass().add("resize-border");
-                    //					contentPlaceHolder.borderProperty().bind(Bindings.createObjectBinding(()->{
-                    //						return new Border(new BorderStroke(decoratorColor.get(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 4, 4, 4)));
-                    //					}, decoratorColor));
                 });
                 windowDecoratorAnimation.play();
             }
@@ -340,7 +330,7 @@ public class JFXDecorator extends VBox {
                 if (isRightEdge(x, y, boundsInParent)) {
                     if (y < borderWidth) {
                         this.setCursor(Cursor.NE_RESIZE);
-                    } else if (y > this.getHeight() - (double) (borderWidth)) {
+                    } else if (y > this.getHeight() - borderWidth) {
                         this.setCursor(Cursor.SE_RESIZE);
                     } else {
                         this.setCursor(Cursor.E_RESIZE);
@@ -348,7 +338,7 @@ public class JFXDecorator extends VBox {
                 } else if (isLeftEdge(x, y, boundsInParent)) {
                     if (y < borderWidth) {
                         this.setCursor(Cursor.NW_RESIZE);
-                    } else if (y > this.getHeight() - (double) (borderWidth)) {
+                    } else if (y > this.getHeight() - borderWidth) {
                         this.setCursor(Cursor.SW_RESIZE);
                     } else {
                         this.setCursor(Cursor.W_RESIZE);
@@ -444,31 +434,19 @@ public class JFXDecorator extends VBox {
 
 
     private boolean isRightEdge(double x, double y, Bounds boundsInParent) {
-        if (x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.snappedLeftInset()) {
-            return true;
-        }
-        return false;
+        return x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.snappedLeftInset();
     }
 
     private boolean isTopEdge(double x, double y, Bounds boundsInParent) {
-        if (y >= 0 && y < contentPlaceHolder.snappedLeftInset()) {
-            return true;
-        }
-        return false;
+        return y >= 0 && y < contentPlaceHolder.snappedLeftInset();
     }
 
     private boolean isBottomEdge(double x, double y, Bounds boundsInParent) {
-        if (y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.snappedLeftInset()) {
-            return true;
-        }
-        return false;
+        return y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.snappedLeftInset();
     }
 
     private boolean isLeftEdge(double x, double y, Bounds boundsInParent) {
-        if (x >= 0 && x < contentPlaceHolder.snappedLeftInset()) {
-            return true;
-        }
-        return false;
+        return x >= 0 && x < contentPlaceHolder.snappedLeftInset();
     }
 
     boolean setStageWidth(double width) {

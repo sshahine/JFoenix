@@ -117,7 +117,7 @@ public class SVGGlyphLoader {
                 String glyphId = glyphName.getNodeValue();
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
                                                                 glyphId,
-                                                                (String) glyph.getAttributes()
+                                                                glyph.getAttributes()
                                                                               .getNamedItem("d")
                                                                               .getNodeValue());
                 glyphsMap.put(svgFontFile.getName() + "." + glyphId, glyphPane);
@@ -169,7 +169,7 @@ public class SVGGlyphLoader {
                 String glyphId = glyphName.getNodeValue();
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
                                                                 glyphId,
-                                                                (String) glyph.getAttributes()
+                                                                glyph.getAttributes()
                                                                               .getNamedItem("d")
                                                                               .getNodeValue());
                 glyphsMap.put(keyPrefix + "." + glyphId, glyphPane);

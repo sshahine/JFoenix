@@ -84,7 +84,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         if (editorNode == null) return;
         try {
             builder.validateValue();
-            commitEdit(((T) builder.getValue()));
+            commitEdit((T) builder.getValue());
         } catch (Exception ex) {
             //Most of the time we don't mind if there is a parse exception as it
             //indicates duff user data but in the case where we are losing focus
@@ -184,37 +184,30 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
     }
 
     private void createEditorNode() {
+        EventHandler<KeyEvent> keyEventsHandler = t -> {
+            if (t.getCode() == KeyCode.ENTER) {
+                commitHelper(false);
+            } else if (t.getCode() == KeyCode.ESCAPE) {
+                cancelEdit();
+            } else if (t.getCode() == KeyCode.TAB) {
+                commitHelper(false);
 
-        EventHandler<KeyEvent> keyEventsHandler = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent t) {
-                if (t.getCode() == KeyCode.ENTER) {
-                    commitHelper(false);
-                } else if (t.getCode() == KeyCode.ESCAPE) {
-                    cancelEdit();
-                } else if (t.getCode() == KeyCode.TAB) {
-                    commitHelper(false);
-
-                    TreeTableColumn nextColumn = getNextColumn(!t.isShiftDown());
-                    if (nextColumn != null) {
-                        getTreeTableView().edit(getIndex(), nextColumn);
-                    }
+                TreeTableColumn nextColumn = getNextColumn(!t.isShiftDown());
+                if (nextColumn != null) {
+                    getTreeTableView().edit(getIndex(), nextColumn);
                 }
             }
         };
 
-        ChangeListener<Boolean> focusChangeListener = new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                //This focus listener fires at the end of cell editing when focus is lost
-                //and when enter is pressed (because that causes the text field to lose focus).
-                //The problem is that if enter is pressed then cancelEdit is called before this
-                //listener runs and therefore the text field has been cleaned up. If the
-                //text field is null we don't commit the edit. This has the useful side effect
-                //of stopping the double commit.
-                if (!newValue && editorNode != null) {
-                    commitHelper(true);
-                }
+        ChangeListener<Boolean> focusChangeListener = (observable, oldValue, newValue) -> {
+            //This focus listener fires at the end of cell editing when focus is lost
+            //and when enter is pressed (because that causes the text field to lose focus).
+            //The problem is that if enter is pressed then cancelEdit is called before this
+            //listener runs and therefore the text field has been cleaned up. If the
+            //text field is null we don't commit the edit. This has the useful side effect
+            //of stopping the double commit.
+            if (!newValue && editorNode != null) {
+                commitHelper(true);
             }
         };
         DoubleBinding minWidthBinding = Bindings.createDoubleBinding(() -> {
@@ -237,8 +230,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         if (columns.size() < 2) {
             return null;
         }
-        int currentIndex = columns.indexOf(getTableColumn());
-        int nextIndex = currentIndex;
+        int nextIndex = columns.indexOf(getTableColumn());
         if (forward) {
             nextIndex++;
             if (nextIndex > columns.size() - 1) {

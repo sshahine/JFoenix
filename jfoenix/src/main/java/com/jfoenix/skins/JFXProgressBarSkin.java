@@ -44,7 +44,6 @@ public class JFXProgressBarSkin extends ProgressBarSkin {
     private static Color trackColor = Color.valueOf("#E0E0E0");
 
     private StackPane bar;
-    private StackPane track;
     private Region clip;
 
     public JFXProgressBarSkin(JFXProgressBar bar) {
@@ -56,7 +55,7 @@ public class JFXProgressBarSkin extends ProgressBarSkin {
         bar = (StackPane) getChildren().get(1);
         bar.setBackground(new Background(new BackgroundFill(indicatorColor, CornerRadii.EMPTY, Insets.EMPTY)));
         bar.setPadding(new Insets(1.5));
-        track = (StackPane) getChildren().get(0);
+        final StackPane track = (StackPane) getChildren().get(0);
         track.setBackground(new Background(new BackgroundFill(trackColor, CornerRadii.EMPTY, Insets.EMPTY)));
         clip = new Region();
         clip.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));

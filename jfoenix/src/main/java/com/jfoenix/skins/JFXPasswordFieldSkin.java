@@ -190,7 +190,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) JFXUtilities.runInFX(() -> createFloatingLabel());
+            if (newVal) JFXUtilities.runInFX(this::createFloatingLabel);
             else promptText.visibleProperty().bind(usePromptText);
             createFocusTransition();
         });
@@ -211,11 +211,11 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                         });
                         hideErrorAnimation.play();
                     } else {
-                        JFXUtilities.runInFX(() -> hideError());
+                        JFXUtilities.runInFX(this::hideError);
                     }
                 } else {
                     if (newVal != null) JFXUtilities.runInFXAndWait(() -> showError(newVal));
-                    else JFXUtilities.runInFXAndWait(() -> hideError());
+                    else JFXUtilities.runInFXAndWait(this::hideError);
                 }
             }
         });
@@ -284,7 +284,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if ((transition == null || transition.getStatus().equals(Status.STOPPED))) {
+        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
             if (getSkinnable().isFocused() && ((JFXPasswordField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXPasswordField) getSkinnable()).getFocusColor());
             }
@@ -292,7 +292,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
         if (invalid) {
             invalid = false;
-            textPane = ((Pane) this.getChildren().get(0));
+            textPane = (Pane) this.getChildren().get(0);
             // create floating label
             createFloatingLabel();
             // to position the prompt node properly
@@ -339,17 +339,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                         field.set(this, promptText);
                         // position the prompt node in its position
                         triggerFloatLabel = true;
-                    } catch (NoSuchFieldException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (SecurityException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
+                    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -389,7 +379,6 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                     oldPromptTextFill = promptTextFill.get();
                 }
 
-                ;
             };
 
             promptTextDownTransition = new CachedTransition(textPane, new Timeline(
@@ -422,12 +411,10 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
     }
 
     private void focus() {
-        /*
-		 * in case the method request layout is not called before focused
-		 * this is bug is reported while editing TreeTableView cells
-		 */
+        // in case the method request layout is not called before focused
+        // this is bug is reported while editing TreeTableView cells
         if (textPane == null) {
-            Platform.runLater(() -> focus());
+            Platform.runLater(this::focus);
         } else {
             // create the focus animations
             if (transition == null) createFocusTransition();
@@ -482,10 +469,9 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
-        boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
+        return (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
             .get()
             .equals(Color.TRANSPARENT);
-        return hasPromptText;
     }
 
     private void showError(ValidatorBase validator) {

@@ -40,14 +40,14 @@ public interface EditorNodeBuilder<T> {
      *
      * @return Nothing
      */
-    public void startEdit();
+    void startEdit();
 
     /**
      * This method is called when the editor cancel editing the cell
      *
      * @return Nothing
      */
-    public void cancelEdit();
+    void cancelEdit();
 
     /**
      * This method is called when the editor updates the visuals of the cell
@@ -58,7 +58,7 @@ public interface EditorNodeBuilder<T> {
      *         or not this cell holds a value
      * @return Nothing
      */
-    public void updateItem(T item, boolean empty);
+    void updateItem(T item, boolean empty);
 
     /**
      * This method is will create the editor node to be displayed when
@@ -74,7 +74,7 @@ public interface EditorNodeBuilder<T> {
      *         focus change listener for the cell
      * @return the editor node
      */
-    public Region createNode(T value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener);
+    Region createNode(T value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener);
 
     /**
      * This method is used to update the editor node to corresponde with
@@ -84,14 +84,14 @@ public interface EditorNodeBuilder<T> {
      *         the new value of the cell
      * @return Nothing
      */
-    public void setValue(T value);
+    void setValue(T value);
 
     /**
      * This method is used to get the current value from the editor node
      *
      * @return T the value of the editor node
      */
-    public T getValue();
+    T getValue();
 
     /**
      * This method will be called before committing the new value of the cell
@@ -99,5 +99,5 @@ public interface EditorNodeBuilder<T> {
      * @return Nothing
      * @throws Exception
      */
-    public void validateValue() throws Exception;
+    void validateValue() throws Exception;
 }

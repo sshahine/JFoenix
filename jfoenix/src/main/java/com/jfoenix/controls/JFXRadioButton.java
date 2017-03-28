@@ -23,6 +23,7 @@ import com.jfoenix.skins.JFXRadioButtonSkin;
 import com.sun.javafx.css.converters.ColorConverter;
 import javafx.css.*;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
@@ -87,11 +88,11 @@ public class JFXRadioButton extends RadioButton {
     /**
      * default color used when the radio button is selected
      */
-    private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<Color>(StyleableProperties.SELECTED_COLOR,
-                                                                                                    JFXRadioButton.this,
-                                                                                                    "selectedColor",
-                                                                                                    Color.valueOf(
-                                                                                                        "#0F9D58"));
+    private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.SELECTED_COLOR,
+                                                                                               JFXRadioButton.this,
+                                                                                               "selectedColor",
+                                                                                               Color.valueOf(
+                                                                                                   "#0F9D58"));
 
     public final StyleableObjectProperty<Color> selectedColorProperty() {
         return this.selectedColor;
@@ -108,7 +109,7 @@ public class JFXRadioButton extends RadioButton {
     /**
      * default color used when the radio button is not selected
      */
-    private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<Color>(
+    private StyleableObjectProperty<Color> unSelectedColor = new SimpleStyleableObjectProperty<>(
         StyleableProperties.UNSELECTED_COLOR,
         JFXRadioButton.this,
         "unSelectedColor",
@@ -159,7 +160,7 @@ public class JFXRadioButton extends RadioButton {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                SELECTED_COLOR,
                                UNSELECTED_COLOR
@@ -175,9 +176,9 @@ public class JFXRadioButton extends RadioButton {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Labeled.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

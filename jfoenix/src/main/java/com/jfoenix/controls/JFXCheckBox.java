@@ -24,6 +24,7 @@ import com.sun.javafx.css.converters.PaintConverter;
 import javafx.css.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -96,11 +97,11 @@ public class JFXCheckBox extends CheckBox {
     /**
      * checkbox color property when selected
      */
-    private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.CHECKED_COLOR,
-                                                                                                   JFXCheckBox.this,
-                                                                                                   "checkedColor",
-                                                                                                   Color.valueOf(
-                                                                                                       "#0F9D58"));
+    private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.CHECKED_COLOR,
+                                                                                              JFXCheckBox.this,
+                                                                                              "checkedColor",
+                                                                                              Color.valueOf(
+                                                                                                  "#0F9D58"));
 
     public Paint getCheckedColor() {
         return checkedColor == null ? Color.valueOf("#0F9D58") : checkedColor.get();
@@ -117,11 +118,11 @@ public class JFXCheckBox extends CheckBox {
     /**
      * checkbox color property when not selected
      */
-    private StyleableObjectProperty<Paint> unCheckedColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.UNCHECKED_COLOR,
-                                                                                                     JFXCheckBox.this,
-                                                                                                     "unCheckedColor",
-                                                                                                     Color.valueOf(
-                                                                                                         "#5A5A5A"));
+    private StyleableObjectProperty<Paint> unCheckedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNCHECKED_COLOR,
+                                                                                                JFXCheckBox.this,
+                                                                                                "unCheckedColor",
+                                                                                                Color.valueOf(
+                                                                                                    "#5A5A5A"));
 
     public Paint getUnCheckedColor() {
         return unCheckedColor == null ? Color.valueOf("#5A5A5A") : unCheckedColor.get();
@@ -168,7 +169,7 @@ public class JFXCheckBox extends CheckBox {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                CHECKED_COLOR,
                                UNCHECKED_COLOR
@@ -184,9 +185,9 @@ public class JFXCheckBox extends CheckBox {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Labeled.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

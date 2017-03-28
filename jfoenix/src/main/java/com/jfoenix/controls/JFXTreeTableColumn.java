@@ -82,12 +82,6 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
 
         Platform.runLater(() -> {
             final ContextMenu contextMenu = new ContextMenu();
-            //			contextMenu.setOnShowing((showing)->{
-            //				System.out.println("showing");
-            //			});
-            //			contextMenu.setOnShown((shown)->{
-            //				System.out.println("shown");
-            //			});
             MenuItem item1 = new MenuItem("Group");
             item1.setOnAction((action) -> {
                 ((JFXTreeTableView) getTreeTableView()).group(this);
@@ -111,15 +105,13 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
      */
     public final boolean validateValue(CellDataFeatures<S, T> param) {
         Object rowObject = param.getValue().getValue();
-        if ((rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class)
+        return !((rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class)
             || (param.getTreeTableView() instanceof JFXTreeTableView
             && ((JFXTreeTableView<?>) param.getTreeTableView()).getGroupOrder().contains(this)
             // make sure the node is a direct child to a group node
             && param.getValue().getParent() != null
             && param.getValue().getParent().getValue().getClass() == RecursiveTreeObject.class
-        ))
-            return false;
-        return true;
+        ));
     }
 
     /**
@@ -141,10 +133,9 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
      * @return true if the column is grouped else false
      */
     public boolean isGrouped() {
-        if (getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>) getTreeTableView()).getGroupOrder()
-                                                                                                        .contains(this))
-            return true;
-        return false;
+        return getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>) getTreeTableView()).getGroupOrder()
+                                                                                                           .contains(
+                                                                                                               this);
     }
 
 }

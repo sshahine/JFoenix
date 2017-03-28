@@ -113,11 +113,11 @@ public class JFXResponsiveHandler {
                 }
             } else if (component instanceof Control) {
                 //if the component is an instance of IInputControl, add to list
-                ((Control) component).pseudoClassStateChanged(PSEUDO_CLASS_EX_SMALL,
-                                                              pseudoClass == PSEUDO_CLASS_EX_SMALL);
-                ((Control) component).pseudoClassStateChanged(PSEUDO_CLASS_SMALL, pseudoClass == PSEUDO_CLASS_SMALL);
-                ((Control) component).pseudoClassStateChanged(PSEUDO_CLASS_MEDIUM, pseudoClass == PSEUDO_CLASS_MEDIUM);
-                ((Control) component).pseudoClassStateChanged(PSEUDO_CLASS_LARGE, pseudoClass == PSEUDO_CLASS_LARGE);
+                component.pseudoClassStateChanged(PSEUDO_CLASS_EX_SMALL,
+                                                  pseudoClass == PSEUDO_CLASS_EX_SMALL);
+                component.pseudoClassStateChanged(PSEUDO_CLASS_SMALL, pseudoClass == PSEUDO_CLASS_SMALL);
+                component.pseudoClassStateChanged(PSEUDO_CLASS_MEDIUM, pseudoClass == PSEUDO_CLASS_MEDIUM);
+                component.pseudoClassStateChanged(PSEUDO_CLASS_LARGE, pseudoClass == PSEUDO_CLASS_LARGE);
             }
         }
     }

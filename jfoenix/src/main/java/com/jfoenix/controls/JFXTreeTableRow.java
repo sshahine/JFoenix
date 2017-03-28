@@ -43,6 +43,6 @@ public class JFXTreeTableRow<T> extends TreeTableRow<T> {
      */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXTreeTableRowSkin<T>(this);
+        return new JFXTreeTableRowSkin<>(this);
     }
 }

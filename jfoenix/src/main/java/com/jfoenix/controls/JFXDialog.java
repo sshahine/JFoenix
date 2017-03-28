@@ -54,11 +54,9 @@ import java.util.List;
 public class JFXDialog extends StackPane {
 
     //	public static enum JFXDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
-    public static enum DialogTransition {
+    public enum DialogTransition {
         CENTER, TOP, RIGHT, BOTTOM, LEFT
     }
-
-    ;
 
     private StackPane contentHolder;
 
@@ -185,16 +183,14 @@ public class JFXDialog extends StackPane {
     public void setDialogContainer(StackPane dialogContainer) {
         if (dialogContainer != null) {
             this.dialogContainer = dialogContainer;
-            if (this.dialogContainer.getChildren().indexOf(this) == -1 || this.dialogContainer.getChildren()
-                                                                                              .indexOf(this) != this.dialogContainer
-                .getChildren()
-                .size() - 1) {
+            if (this.dialogContainer.getChildren().indexOf(this) == -1
+                || this.dialogContainer.getChildren().indexOf(this) != this.dialogContainer.getChildren().size() - 1) {
                 this.dialogContainer.getChildren().remove(this);
                 this.dialogContainer.getChildren().add(this);
             }
             // FIXME: need to be improved to consider only the parent boundary
-            offsetX = (this.getParent().getBoundsInLocal().getWidth());
-            offsetY = (this.getParent().getBoundsInLocal().getHeight());
+            offsetX = this.getParent().getBoundsInLocal().getWidth();
+            offsetY = this.getParent().getBoundsInLocal().getHeight();
             animation = getShowAnimation(transitionType.get());
         }
     }
@@ -257,7 +253,6 @@ public class JFXDialog extends StackPane {
             return;
         }
         this.setDialogContainer(dialogContainer);
-        //		animation = getShowAnimation(transitionType.get());
         animation.play();
     }
 
@@ -462,7 +457,7 @@ public class JFXDialog extends StackPane {
      * <li>LEFT</li>
      * </ul>
      */
-    private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<DialogTransition>(
+    private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<>(
         StyleableProperties.DIALOG_TRANSITION,
         JFXDialog.this,
         "dialogTransition",
@@ -500,7 +495,7 @@ public class JFXDialog extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+                new ArrayList<>(Parent.getClassCssMetaData());
             Collections.addAll(styleables,
                                DIALOG_TRANSITION
             );
@@ -515,9 +510,9 @@ public class JFXDialog extends StackPane {
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+                new ArrayList<>(Parent.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(StackPane.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

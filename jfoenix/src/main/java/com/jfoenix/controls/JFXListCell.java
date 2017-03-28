@@ -123,9 +123,6 @@ public class JFXListCell<T> extends ListCell<T> {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
@@ -218,14 +215,14 @@ public class JFXListCell<T> extends ListCell<T> {
                 Node currentNode = getGraphic();
 
                 Node newNode;
-                if ((item instanceof Region || item instanceof Control)) newNode = (Node) item;
+                if (item instanceof Region || item instanceof Control) newNode = (Node) item;
                 else newNode = new Label(item.toString());
 
 
                 boolean isJFXListView = getListView() instanceof JFXListView;
 
                 // show cell tooltip if its toggled in JFXListView
-                if (isJFXListView && ((JFXListView<?>) getListView()).isShowTooltip() && newNode instanceof Label) {
+                if (isJFXListView && newNode instanceof Label && ((JFXListView<?>) getListView()).isShowTooltip()) {
                     setTooltip(new Tooltip(((Label) newNode).getText()));
                 }
 
@@ -266,10 +263,8 @@ public class JFXListCell<T> extends ListCell<T> {
                         dropIcon.setStyle(
                             "-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
                         dropIcon.getStyleClass().add("drop-icon");
-                        /*
-						 *  alignment of the group node can be changed using the following css selector
-						 *  .jfx-list-view .sublist-header{ }
-						 */
+                        //  alignment of the group node can be changed using the following css selector
+                        //  .jfx-list-view .sublist-header{ }
                         groupNode.getChildren().setAll(((JFXListView<?>) newNode).getGroupnode(), dropIcon);
                         // the margin is needed when rotating the angle
                         StackPane.setMargin(dropIcon, new Insets(0, 19, 0, 0));
@@ -284,22 +279,6 @@ public class JFXListCell<T> extends ListCell<T> {
                         sublistContainer.setOpacity(0);
                         StackPane.setMargin(newNode, new Insets(-1, -1, 0, -1));
 
-                        //						sublistContainer.heightProperty().addListener((o,oldVal,newVal)->{
-                        //							// store the hieght of the sublist and resize it to 0 to make it hidden
-                        //							if(subListHeight == -1){
-                        //								subListHeight = newVal.doubleValue() + this.snappedBottomInset()/2;
-                        //								//								totalSubListsHeight += subListHeight;
-                        //								// set the parent list
-                        //								Platform.runLater(()->{
-                        //									sublistContainer.setMinHeight(0);
-                        //									sublistContainer.setPrefHeight(0);
-                        //									sublistContainer.setMaxHeight(0);
-                        //									//									double currentHeight = ((JFXListView<T>)getListView()).getHeight();
-                        //									// FIXME : THIS SHOULD ONLY CALLED ONCE ( NOW ITS BEING CALLED FOR EVERY SUBLIST)
-                        //									//									updateListViewHeight(currentHeight - totalSubListsHeight);
-                        //								});
-                        //							}
-                        //						});
                         // Third, create container of group title and the sublist
                         VBox contentHolder = new VBox();
                         contentHolder.getChildren().setAll(groupNode, sublistContainer);
@@ -333,7 +312,7 @@ public class JFXListCell<T> extends ListCell<T> {
                             // invert the expand property
                             expandedProperty.set(!expandedProperty.get());
 
-                            double newAnimatedHeight = ((Region) newNode).prefHeight(-1) * (expandedProperty.get() ? 1 : -1);
+                            double newAnimatedHeight = newNode.prefHeight(-1) * (expandedProperty.get() ? 1 : -1);
                             double newHeight = expandedProperty.get() ? this.getHeight() + newAnimatedHeight : this.prefHeight(
                                 -1);
                             // animate showing/hiding the sublist
@@ -381,7 +360,7 @@ public class JFXListCell<T> extends ListCell<T> {
                         });
                     }
 
-                    ((Region) cellContent).setMaxHeight(((Region) cellContent).prefHeight(-1));
+                    ((Region) cellContent).setMaxHeight(cellContent.prefHeight(-1));
                     setGraphic(cellContent);
                     setText(null);
                 }
@@ -416,11 +395,7 @@ public class JFXListCell<T> extends ListCell<T> {
         return expandedProperty.get();
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Stylesheet Handling                                                     *
-     *                                                                         *
-     **************************************************************************/
+    // Stylesheet Handling                                                     *
 
     /**
      * Initialize the style class to 'jfx-list-cell'.
@@ -432,9 +407,7 @@ public class JFXListCell<T> extends ListCell<T> {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        //		this.setPadding(new Insets(4,8,4,8));
         this.setPadding(new Insets(8, 12, 8, 12));
-        //		this.setPadding(new Insets(0));
     }
 
     @Override

@@ -132,7 +132,7 @@ public class JFXDatePicker extends DatePicker {
     }
 
     public final boolean isOverLay() {
-        return overLay == null ? false : this.overLayProperty().get();
+        return overLay != null && this.overLayProperty().get();
     }
 
     public final void setOverLay(final boolean overLay) {
@@ -142,11 +142,11 @@ public class JFXDatePicker extends DatePicker {
     /**
      * the default color used in the data picker content
      */
-    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR,
-                                                                                                   JFXDatePicker.this,
-                                                                                                   "defaultColor",
-                                                                                                   Color.valueOf(
-                                                                                                       "#009688"));
+    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(StyleableProperties.DEFAULT_COLOR,
+                                                                                              JFXDatePicker.this,
+                                                                                              "defaultColor",
+                                                                                              Color.valueOf(
+                                                                                                  "#009688"));
 
     public Paint getDefaultColor() {
         return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
@@ -193,7 +193,7 @@ public class JFXDatePicker extends DatePicker {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                DEFAULT_COLOR,
                                OVERLAY);
@@ -208,9 +208,9 @@ public class JFXDatePicker extends DatePicker {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(DatePicker.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

@@ -86,7 +86,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
     public JFXTabPaneSkin(TabPane tabPane) {
         super(tabPane, new TabPaneBehavior(tabPane));
-        tabContentHolders = FXCollections.<TabContentHolder>observableArrayList();
+        tabContentHolders = FXCollections.observableArrayList();
         headerContainer = new HeaderContainer();
         getChildren().add(headerContainer);
         JFXDepthManager.setDepth(headerContainer, 1);
@@ -130,7 +130,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             while (change.next()) {
                 if (change.wasPermutated()) {
                     Tab selectedTab = getSkinnable().getSelectionModel().getSelectedItem();
-                    List<Tab> permutatedTabs = new ArrayList<Tab>(change.getTo() - change.getFrom());
+                    List<Tab> permutatedTabs = new ArrayList<>(change.getTo() - change.getFrom());
                     getSkinnable().getSelectionModel().clearSelection();
                     for (int i = change.getFrom(); i < change.getTo(); i++)
                         permutatedTabs.add(getSkinnable().getTabs().get(i));
@@ -281,8 +281,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         double contentStartY = 0;
         contentStartX = x;
         contentStartY = y + headerHeight;
-        double contentWidth = w - (0);
-        double contentHeight = h - (headerHeight);
+        double contentWidth = w;
+        double contentHeight = h - headerHeight;
 
         Rectangle clip = new Rectangle(contentWidth, contentHeight);
         tabsContainerHolder.setClip(clip);
@@ -354,7 +354,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                     for (Node child : getChildren())
                         if (child instanceof TabHeaderContainer)
                             if (child.isVisible() && (measureClosingTabs || !((TabHeaderContainer) child).isClosing))
-                                width += ((TabHeaderContainer) child).prefWidth(height);
+                                width += child.prefWidth(height);
                     return snapSize(width) + snappedLeftInset() + snappedRightInset();
                 }
 
@@ -363,7 +363,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                     double height = 0.0F;
                     for (Node child : getChildren())
                         if (child instanceof TabHeaderContainer)
-                            height = Math.max(height, ((TabHeaderContainer) child).prefHeight(width));
+                            height = Math.max(height, child.prefHeight(width));
                     return snapSize(height) + snappedTopInset() + snappedBottomInset();
                 }
 
@@ -475,9 +475,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         }
 
         private void updateHeaderContainerClip() {
-            double x = 0, y = 0, clipWidth = 0, clipHeight = 0;
-            double clipOffset = snappedLeftInset();
-            double maxWidth = 0;
+            final double clipOffset = snappedLeftInset();
             double controlPrefWidth = 2 * snapSize(rightControlButton.prefWidth(-1));
 
             measureClosingTabs = true;
@@ -489,12 +487,12 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             // Add the spacer if the control buttons are shown
             if (controlPrefWidth > 0) controlPrefWidth = controlPrefWidth + SPACER;
 
-            maxWidth = snapSize(getWidth()) - controlPrefWidth - clipOffset;
-            clipWidth = (headersPrefWidth < maxWidth ? headersPrefWidth : maxWidth);
-            clipHeight = headersPrefHeight;
+            double maxWidth = snapSize(getWidth()) - controlPrefWidth - clipOffset;
+            double clipWidth = headersPrefWidth < maxWidth ? headersPrefWidth : maxWidth;
+            double clipHeight = headersPrefHeight;
 
-            headerClip.setX(x);
-            headerClip.setY(y);
+            headerClip.setX(0);
+            headerClip.setY(0);
             headerClip.setWidth(clipWidth + 10);
             headerClip.setHeight(clipHeight);
         }
@@ -598,7 +596,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             double offset = 0.0;
             for (Node node : headersRegion.getChildren())
                 if (node instanceof TabHeaderContainer) {
-                    double tabHeaderPrefWidth = snapSize(((TabHeaderContainer) node).prefWidth(-1));
+                    double tabHeaderPrefWidth = snapSize(node.prefWidth(-1));
                     offset += tabHeaderPrefWidth;
                 }
 
@@ -890,7 +888,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
         @Override
         protected void layoutChildren() {
-            double w = (snapSize(getWidth()) - snappedRightInset() - snappedLeftInset());
+            double w = snapSize(getWidth()) - snappedRightInset() - snappedLeftInset();
             rippler.resize(w, snapSize(getHeight()) - snappedTopInset() - snappedBottomInset());
             rippler.relocate(snappedLeftInset(), snappedTopInset());
         }
@@ -945,7 +943,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
     }
 
     private enum ArrowPosition {
-        RIGHT, LEFT;
+        RIGHT, LEFT
     }
 
     /**************************************************************************

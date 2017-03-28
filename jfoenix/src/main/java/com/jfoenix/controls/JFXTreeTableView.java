@@ -52,7 +52,6 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
      * {@inheritDoc}
      */
     public JFXTreeTableView() {
-        super();
         init();
     }
 
@@ -80,14 +79,14 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
      */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXTreeTableViewSkin<S>(this);
+        return new JFXTreeTableViewSkin<>(this);
     }
 
     protected void init() {
         this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
             @Override
             public TreeTableRow<S> call(TreeTableView<S> param) {
-                return new JFXTreeTableRow<S>();
+                return new JFXTreeTableRow<>();
             }
         });
 
@@ -106,10 +105,6 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
         // compute the current items count
         setCurrentItemsCount(count(getRoot()));
-
-        //		getGroupOrder().addListener((Change<? extends TreeTableColumn<S, ?>> c) ->{
-        //			group();
-        //		});
     }
 
     @Override
@@ -196,7 +191,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             try {
                 if (groupOrder.size() > 0) {
                     groupOrder.removeAll(treeTableColumns);
-                    List<TreeTableColumn<S, ?>> grouped = new ArrayList<TreeTableColumn<S, ?>>();
+                    List<TreeTableColumn<S, ?>> grouped = new ArrayList<>();
                     grouped.addAll(groupOrder);
                     groupOrder.clear();
                     JFXUtilities.runInFXAndWait(() -> {
@@ -244,20 +239,12 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         return parentGroup;
     }
 
-	/*
-     * stream implementation is faster regarding the performance
-	 * however its not compatable when porting to mobile
-	 */
-    //	protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column){
-    //		return items.stream().collect(Collectors.groupingBy(child-> column.getCellData((TreeItem<S>)child)));
-    //	}
-
     protected Map groupByFunction(List<TreeItem<S>> items, TreeTableColumn<S, ?> column) {
-        Map<Object, List<TreeItem<S>>> map = new HashMap<Object, List<TreeItem<S>>>();
+        Map<Object, List<TreeItem<S>>> map = new HashMap<>();
         for (TreeItem<S> child : items) {
             Object key = column.getCellData(child);
             if (map.get(key) == null) {
-                map.put(key, new ArrayList<TreeItem<S>>());
+                map.put(key, new ArrayList<>());
             }
             map.get(key).add(child);
         }
@@ -312,13 +299,14 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     }
 
 
-	/*
-	 * this method will filter the treetable and it
-	 */
+
 
     private Timer t;
 
-    private final void filter(Predicate<TreeItem<S>> predicate) {
+    /**
+     * this method will filter the treetable and it
+     */
+    private void filter(Predicate<TreeItem<S>> predicate) {
         if (originalRoot == null) originalRoot = getRoot();
         if (t != null) {
             t.cancel();
@@ -328,9 +316,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-				/*
-				 *  filter the original root and regroup the data
-				 */
+                //  filter the original root and regroup the data
                 new Thread(() -> {
                     // filter the ungrouped root
                     ((RecursiveTreeItem) originalRoot).setPredicate(predicate);
@@ -353,7 +339,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         }
     }
 
-    private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<Predicate<TreeItem<S>>>((TreeItem<S> t) -> true);
+    private ObjectProperty<Predicate<TreeItem<S>>> predicate = new SimpleObjectProperty<>((TreeItem<S> t) -> true);
 
     public final ObjectProperty<Predicate<TreeItem<S>>> predicateProperty() {
         return this.predicate;

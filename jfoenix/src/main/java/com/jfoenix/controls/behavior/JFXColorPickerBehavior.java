@@ -55,7 +55,7 @@ public class JFXColorPickerBehavior extends ComboBoxBaseBehavior<Color> {
      **************************************************************************/
     protected static final String JFX_OPEN_ACTION = "Open";
     protected static final String JFX_CLOSE_ACTION = "Close";
-    protected static final List<KeyBinding> JFX_COLOR_PICKER_BINDINGS = new ArrayList<KeyBinding>();
+    protected static final List<KeyBinding> JFX_COLOR_PICKER_BINDINGS = new ArrayList<>();
 
     static {
         JFX_COLOR_PICKER_BINDINGS.add(new KeyBinding(ESCAPE, KEY_PRESSED, JFX_CLOSE_ACTION));

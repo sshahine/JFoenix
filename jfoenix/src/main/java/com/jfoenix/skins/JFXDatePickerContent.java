@@ -615,10 +615,9 @@ public class JFXDatePickerContent extends VBox {
                 if (daysInCurMonth == -1)
                     daysInCurMonth = currentYearMonth.lengthOfMonth();
 
-                YearMonth month = currentYearMonth;
                 int dayIndex = i - firstOfMonthIndex + 1;
 
-                LocalDate date = month.atDay(dayIndex);
+                LocalDate date = currentYearMonth.atDay(dayIndex);
                 dayCellDates[i] = date;
 
                 // if it's today
@@ -679,8 +678,7 @@ public class JFXDatePickerContent extends VBox {
         try {
             Chronology chrono = getPrimaryChronology();
             ChronoLocalDate cDate = chrono.date(yearMonth.atDay(1));
-            String str = monthFormatter.withLocale(getLocale()).withChronology(chrono).format(cDate);
-            return str;
+            return monthFormatter.withLocale(getLocale()).withChronology(chrono).format(cDate);
         } catch (DateTimeException ex) {
             // Date is out of range.
             return "";
@@ -691,11 +689,10 @@ public class JFXDatePickerContent extends VBox {
         try {
             Chronology chrono = getPrimaryChronology();
             ChronoLocalDate cDate = chrono.date(yearMonth.atDay(1));
-            String str = yearFormatter.withLocale(getLocale())
-                                      .withChronology(chrono)
-                                      .withDecimalStyle(DecimalStyle.of(getLocale()))
-                                      .format(cDate);
-            return str;
+            return yearFormatter.withLocale(getLocale())
+                                .withChronology(chrono)
+                                .withDecimalStyle(DecimalStyle.of(getLocale()))
+                                .format(cDate);
         } catch (DateTimeException ex) {
             // Date is out of range.
             return "";
@@ -703,7 +700,7 @@ public class JFXDatePickerContent extends VBox {
     }
 
     protected LocalDate dayCellDate(DateCell dateCell) {
-        assert (dayCellDates != null);
+        assert dayCellDates != null;
         return dayCellDates[dayCells.indexOf(dateCell)];
     }
 

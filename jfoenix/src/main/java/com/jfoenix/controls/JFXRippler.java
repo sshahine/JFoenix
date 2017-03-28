@@ -64,20 +64,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @DefaultProperty(value = "control")
 public class JFXRippler extends StackPane {
+    public enum RipplerPos {
+        FRONT, BACK
+    }
 
-    public static enum RipplerPos {FRONT, BACK}
-
-    ;
-
-    public static enum RipplerMask {CIRCLE, RECT}
-
-    ;
+    public enum RipplerMask {
+        CIRCLE, RECT
+    }
 
     protected RippleGenerator rippler;
     protected Pane ripplerPane;
     protected Node control;
+
+    private static final double RIPPLE_MAX_RADIUS = 300;
+
     private boolean enabled = true;
-    private double RIPPLE_MAX_RADIUS = 300;
     private Interpolator rippleInterpolator = Interpolator.SPLINE(0.0825,
                                                                   0.3025,
                                                                   0.0875,
@@ -248,8 +249,7 @@ public class JFXRippler extends StackPane {
     protected double computeRippleRadius() {
         double width2 = control.getLayoutBounds().getWidth() * control.getLayoutBounds().getWidth();
         double height2 = control.getLayoutBounds().getHeight() * control.getLayoutBounds().getHeight();
-        double radius = Math.min(Math.sqrt(width2 + height2), RIPPLE_MAX_RADIUS) * 1.1 + 5;
-        return radius;
+        return Math.min(Math.sqrt(width2 + height2), RIPPLE_MAX_RADIUS) * 1.1 + 5;
     }
 
     /**
@@ -306,7 +306,7 @@ public class JFXRippler extends StackPane {
      * the createRipple method is called. Ripples grow and fade out
      * over 0.6 seconds
      */
-    class RippleGenerator extends Group {
+    final class RippleGenerator extends Group {
 
         private double generatorCenterX = 0;
         private double generatorCenterY = 0;
@@ -315,15 +315,13 @@ public class JFXRippler extends StackPane {
         private boolean cacheRipplerClip = false;
         private boolean resetClip = false;
 
-        public RippleGenerator() {
-            /*
-			 * improve in performance, by preventing
-			 * redrawing the parent when the ripple effect is triggered
-			 */
+        RippleGenerator() {
+            // improve in performance, by preventing
+            // redrawing the parent when the ripple effect is triggered
             this.setManaged(false);
         }
 
-        public void createMouseRipple() {
+        void createMouseRipple() {
             if (enabled) {
                 if (!generating.getAndSet(true)) {
                     // create overlay once then change its color later
@@ -358,7 +356,7 @@ public class JFXRippler extends StackPane {
             }
         }
 
-        public Runnable createManualRipple() {
+        Runnable createManualRipple() {
             if (enabled) {
                 if (!generating.getAndSet(true)) {
                     // create overlay once then change its color later
@@ -399,7 +397,7 @@ public class JFXRippler extends StackPane {
             cacheRipplerClip = cached;
         }
 
-        public void createOverlay() {
+        void createOverlay() {
             if (overlayRect == null) {
                 overlayRect = new OverLayRipple();
                 overlayRect.setClip(getMask());
@@ -411,15 +409,15 @@ public class JFXRippler extends StackPane {
             }
         }
 
-        public void setGeneratorCenterX(double generatorCenterX) {
+        void setGeneratorCenterX(double generatorCenterX) {
             this.generatorCenterX = generatorCenterX;
         }
 
-        public void setGeneratorCenterY(double generatorCenterY) {
+        void setGeneratorCenterY(double generatorCenterY) {
             this.generatorCenterY = generatorCenterY;
         }
 
-        private class OverLayRipple extends Rectangle {
+        private final class OverLayRipple extends Rectangle {
             // Overlay ripple animations
             CachedTransition inAnimation = new CachedTransition(this,
                                                                 new Timeline(new KeyFrame(Duration.millis(1300),
@@ -438,11 +436,9 @@ public class JFXRippler extends StackPane {
                 setCycleDuration(Duration.millis(300));
             }};
 
-            public OverLayRipple() {
+            OverLayRipple() {
                 super(control.getLayoutBounds().getWidth() - 0.1, control.getLayoutBounds().getHeight() - 0.1);
                 this.getStyleClass().add("jfx-rippler-overlay");
-                //				this.widthProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getWidth() - 0.1, control.boundsInParentProperty()));
-                //				this.heightProperty().bind(Bindings.createDoubleBinding(()-> control.getLayoutBounds().getHeight() - 0.1, control.boundsInParentProperty()));
                 // update initial position
                 double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
                 double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
@@ -459,7 +455,7 @@ public class JFXRippler extends StackPane {
             }
         }
 
-        private class Ripple extends Circle {
+        private final class Ripple extends Circle {
 
             KeyValue[] outKeyValues;
             CachedAnimation outAnimation = null;
@@ -575,7 +571,7 @@ public class JFXRippler extends StackPane {
      * the ripple recenter property, by default it's false.
      * if true the ripple effect will show gravitational pull to the center of its control
      */
-    private StyleableObjectProperty<Boolean> ripplerRecenter = new SimpleStyleableObjectProperty<Boolean>(
+    private StyleableObjectProperty<Boolean> ripplerRecenter = new SimpleStyleableObjectProperty<>(
         StyleableProperties.RIPPLER_RECENTER,
         JFXRippler.this,
         "ripplerRecenter",
@@ -596,7 +592,7 @@ public class JFXRippler extends StackPane {
     /**
      * the ripple radius size, by default it will be automatically computed.
      */
-    private StyleableObjectProperty<Number> ripplerRadius = new SimpleStyleableObjectProperty<Number>(
+    private StyleableObjectProperty<Number> ripplerRadius = new SimpleStyleableObjectProperty<>(
         StyleableProperties.RIPPLER_RADIUS,
         JFXRippler.this,
         "ripplerRadius",
@@ -617,12 +613,12 @@ public class JFXRippler extends StackPane {
     /**
      * the default color of the ripple effect
      */
-    private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.RIPPLER_FILL,
-                                                                                                  JFXRippler.this,
-                                                                                                  "ripplerFill",
-                                                                                                  Color.rgb(0,
-                                                                                                            200,
-                                                                                                            255));
+    private StyleableObjectProperty<Paint> ripplerFill = new SimpleStyleableObjectProperty<>(StyleableProperties.RIPPLER_FILL,
+                                                                                             JFXRippler.this,
+                                                                                             "ripplerFill",
+                                                                                             Color.rgb(0,
+                                                                                                       200,
+                                                                                                       255));
 
     public Paint getRipplerFill() {
         return ripplerFill == null ? Color.rgb(0, 200, 255) : ripplerFill.get();
@@ -640,7 +636,7 @@ public class JFXRippler extends StackPane {
      * mask property used for clipping the rippler.
      * can be either CIRCLE/RECT
      */
-    private StyleableObjectProperty<RipplerMask> maskType = new SimpleStyleableObjectProperty<RipplerMask>(
+    private StyleableObjectProperty<RipplerMask> maskType = new SimpleStyleableObjectProperty<>(
         StyleableProperties.MASK_TYPE,
         JFXRippler.this,
         "maskType",
@@ -661,7 +657,7 @@ public class JFXRippler extends StackPane {
     /**
      * indicates whether the ripple effect is infront of or behind the node
      */
-    protected ObjectProperty<RipplerPos> position = new SimpleObjectProperty<RipplerPos>();
+    protected ObjectProperty<RipplerPos> position = new SimpleObjectProperty<>();
 
     public void setPosition(RipplerPos pos) {
         this.position.set(pos);
@@ -676,7 +672,7 @@ public class JFXRippler extends StackPane {
     }
 
 
-    private static class StyleableProperties {
+    private static final class StyleableProperties {
         private static final CssMetaData<JFXRippler, Boolean> RIPPLER_RECENTER =
             new CssMetaData<JFXRippler, Boolean>("-jfx-rippler-recenter",
                                                  BooleanConverter.getInstance(), false) {
@@ -734,7 +730,7 @@ public class JFXRippler extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+                new ArrayList<>(Parent.getClassCssMetaData());
             Collections.addAll(styleables,
                                RIPPLER_RECENTER,
                                RIPPLER_RADIUS,

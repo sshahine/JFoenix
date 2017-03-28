@@ -144,7 +144,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
         // focused line
         focusedLine.setPrefHeight(2);
-        focusedLine.setTranslateY(0 + 4 + 2); // translate = prefHeight + init_translation(-1)
+        focusedLine.setTranslateY(4 + 2); // translate = prefHeight + init_translation(-1)
         focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextArea) getSkinnable()).getFocusColor(),
                                                                     CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
@@ -163,10 +163,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
         getSkinnable().setBackground(transparentBackground);
 
-        //		errorContainer.layoutXProperty().bind(scrollPane.layoutXProperty());
-        //		errorContainer.layoutYProperty().bind(scrollPane.layoutYProperty());
-
-
         // add listeners to show error label
         errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
             if (errorShown) {
@@ -174,19 +170,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                     oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
 
                 heightChanged = true;
-                double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight + newVal.doubleValue();
-                //				// show the error
-                //				Timeline errorAnimation = new Timeline(
-                //						new KeyFrame(Duration.ZERO, new KeyValue(getSkinnable().minHeightProperty(), currentFieldHeight,  Interpolator.EASE_BOTH)),
-                //						new KeyFrame(Duration.millis(160),
-                //								// text pane animation
-                //								new KeyValue(mainPane.translateYProperty(), (initYlayout + mainPane.getMaxHeight()/2) - newHeight/2, Interpolator.EASE_BOTH),
-                //								// animate the height change effect
-                //								new KeyValue(getSkinnable().minHeightProperty(), newHeight, Interpolator.EASE_BOTH)));
-                //				errorAnimation.play();
-                //				// show the error label when finished
-                //				errorAnimation.setOnFinished(finish->new Timeline(new KeyFrame(Duration.millis(160),new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_BOTH))).play());
-                currentFieldHeight = newHeight;
+                currentFieldHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight + newVal.doubleValue();
                 oldErrorLabelHeight = newVal.doubleValue();
             }
         });
@@ -302,7 +286,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if ((transition == null || transition.getStatus().equals(Status.STOPPED))) {
+        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
             if (getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextArea) getSkinnable()).getFocusColor());
             }
@@ -310,15 +294,14 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
         if (invalid) {
             invalid = false;
-//			// set the default background of text area viewport to white
-            Region viewPort = ((Region) scrollPane.getChildrenUnmodifiable().get(0));
+            // set the default background of text area viewport to white
+            Region viewPort = (Region) scrollPane.getChildrenUnmodifiable().get(0);
             viewPort.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
                                                                      CornerRadii.EMPTY,
                                                                      Insets.EMPTY)));
             // reapply css of scroll pane in case set by the user
             viewPort.applyCss();
 
-//			errorLabel.maxWidthProperty().bind(Bindings.createDoubleBinding(()->getSkinnable().getWidth()/1.14, getSkinnable().widthProperty()));
 
             // create floating label
             createFloatingLabel();
@@ -424,7 +407,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                     oldPromptTextFill = promptTextFill.get();
                 }
 
-                ;
             };
 
             promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
@@ -459,10 +441,8 @@ public class JFXTextAreaSkin extends TextAreaSkin {
     }
 
     private void focus() {
-        /*
-		 * in case the method request layout is not called before focused
-		 * this is bug is reported while editing treetableview cells
-		 */
+        // in case the method request layout is not called before focused
+        // this is bug is reported while editing treetableview cells
         if (scrollPane == null) {
             Platform.runLater(() -> focus());
         } else {
@@ -485,7 +465,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         if (transition != null) transition.stop();
         scale.setX(initScale);
         focusedLine.setOpacity(0);
-        if (((JFXTextArea) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
+        if (oldPromptTextFill != null && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
             promptTextFill.set(oldPromptTextFill);
             if (usePromptText()) promptTextDownTransition.play();
         }
@@ -519,10 +499,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
-        boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
+        return (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
             .get()
             .equals(Color.TRANSPARENT);
-        return hasPromptText;
     }
 
     private void showError(ValidatorBase validator) {

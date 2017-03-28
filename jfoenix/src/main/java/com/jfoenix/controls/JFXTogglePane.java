@@ -133,15 +133,13 @@ public class JFXTogglePane extends StackPane {
                 this.getClip().scaleXProperty().bind(Bindings.createDoubleBinding(() -> {
                     double X = this.getWidth() / getClip().getLayoutBounds().getWidth();
                     double Y = this.getHeight() / getClip().getLayoutBounds().getHeight();
-                    double scale = Math.max(X, Y) * getScalingFactor();
-                    return scale;
+                    return Math.max(X, Y) * getScalingFactor();
                 }, this.widthProperty(), this.heightProperty()));
 
                 this.getClip().scaleYProperty().bind(Bindings.createDoubleBinding(() -> {
                     double X = this.getWidth() / getClip().getLayoutBounds().getWidth();
                     double Y = this.getHeight() / getClip().getLayoutBounds().getHeight();
-                    double scale = Math.max(X, Y) * getScalingFactor();
-                    return scale;
+                    return Math.max(X, Y) * getScalingFactor();
                 }, this.widthProperty(), this.heightProperty()));
             }
         });

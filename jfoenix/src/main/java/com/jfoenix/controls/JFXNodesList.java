@@ -110,7 +110,7 @@ public class JFXNodesList extends VBox {
             return initDefaultAnimation(node, expanded);
         };
         else if (animationCallBack == null && this.getChildren().size() == 1) animationCallBack = (expanded) -> {
-            return new ArrayList<KeyValue>();
+            return new ArrayList<>();
         };
         animationsMap.put(node, animationCallBack);
     }

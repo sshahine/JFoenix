@@ -117,7 +117,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         colorLabelVisible.addListener(invalidate -> {
             if (displayNode != null) {
                 if (colorLabelVisible.get()) {
-                    displayNode.setText(colorDisplayName(((ColorPicker) getSkinnable()).getValue()));
+                    displayNode.setText(colorDisplayName(getSkinnable().getValue()));
                 } else {
                     displayNode.setText("");
                 }
@@ -141,16 +141,14 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
 
     static String colorDisplayName(Color c) {
         if (c != null) {
-            String displayName = formatHexString(c);
-            return displayName;
+            return formatHexString(c);
         }
         return null;
     }
 
     static String tooltipString(Color c) {
         if (c != null) {
-            String tooltipStr = formatHexString(c);
-            return tooltipStr;
+            return formatHexString(c);
         }
         return null;
     }
@@ -271,14 +269,14 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
                 @Override
                 public StyleableProperty<Boolean> getStyleableProperty(ColorPicker n) {
                     final JFXColorPickerSkin skin = (JFXColorPickerSkin) n.getSkin();
-                    return (StyleableProperty<Boolean>) (WritableValue<Boolean>) skin.colorLabelVisible;
+                    return skin.colorLabelVisible;
                 }
             };
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(ComboBoxBaseSkin.getClassCssMetaData());
+                new ArrayList<>(ComboBoxBaseSkin.getClassCssMetaData());
             styleables.add(COLOR_LABEL_VISIBLE);
             STYLEABLES = Collections.unmodifiableList(styleables);
         }

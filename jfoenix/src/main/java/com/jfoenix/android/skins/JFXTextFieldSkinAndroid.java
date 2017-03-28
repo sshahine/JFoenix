@@ -291,7 +291,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if ((transition == null || transition.getStatus().equals(Status.STOPPED))) {
+        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
             if (getSkinnable().isFocused() && ((JFXTextField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextField) getSkinnable()).getFocusColor());
             }
@@ -299,7 +299,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
         if (invalid) {
             invalid = false;
-            textPane = ((Pane) this.getChildren().get(0));
+            textPane = (Pane) this.getChildren().get(0);
             // create floating label
             createFloatingLabel();
             // to position the prompt node properly
@@ -396,7 +396,6 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                     oldPromptTextFill = promptTextFill.get();
                 }
 
-                ;
             };
 
             promptTextDownTransition = new CachedTransition(textPane, new Timeline(
@@ -489,10 +488,9 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
-        boolean hasPromptText = (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
+        return (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
             .get()
             .equals(Color.TRANSPARENT);
-        return hasPromptText;
     }
 
     private void showError(ValidatorBase validator) {

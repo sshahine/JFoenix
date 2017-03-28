@@ -49,9 +49,6 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
     private final StackPane mark = new StackPane();
     private double lineThick = 2;
     private double padding = 10;
-    private double boxWidth;
-    private double maxHeight;
-    private double boxHeight;
     private final JFXRippler rippler;
 
 
@@ -158,12 +155,12 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
 
         final CheckBox checkBox = getSkinnable();
-        boxWidth = snapSize(container.prefWidth(-1));
-        boxHeight = snapSize(container.prefHeight(-1));
+        final double boxWidth = snapSize(container.prefWidth(-1));
+        final double boxHeight = snapSize(container.prefHeight(-1));
         final double computeWidth = Math.min(checkBox.prefWidth(-1), checkBox.minWidth(-1)) + labelOffset + 2 * padding;
         final double labelWidth = Math.min(computeWidth - boxWidth, w - snapSize(boxWidth)) + labelOffset + 2 * padding;
         final double labelHeight = Math.min(checkBox.prefHeight(labelWidth), h);
-        maxHeight = Math.max(boxHeight, labelHeight);
+        final double maxHeight = Math.max(boxHeight, labelHeight);
         final double xOffset = computeXOffset(w, labelWidth + boxWidth, checkBox.getAlignment().getHpos()) + x;
         final double yOffset = computeYOffset(h, maxHeight, checkBox.getAlignment().getVpos()) + x;
 
@@ -218,7 +215,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 
     private void playSelectAnimation(Boolean selection) {
         if (selection == null) selection = false;
-        JFXCheckBox control = ((JFXCheckBox) getSkinnable());
+        JFXCheckBox control = (JFXCheckBox) getSkinnable();
         transition.setRate(selection ? 1 : -1);
         select.setRate(selection ? 1 : -1);
         transition.play();
@@ -237,53 +234,25 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         select.setInterpolator(Interpolator.EASE_OUT);
     }
 
-    private class CheckBoxTransition extends CachedTransition {
-
-        public CheckBoxTransition() {
+    private final class CheckBoxTransition extends CachedTransition {
+        CheckBoxTransition() {
             super(mark, new Timeline(
                       new KeyFrame(
                           Duration.ZERO,
-                          //							new KeyValue(rightLine.visibleProperty(), false,Interpolator.EASE_BOTH),
                           new KeyValue(mark.visibleProperty(), false, Interpolator.EASE_BOTH),
                           new KeyValue(mark.scaleXProperty(), 0.5, Interpolator.EASE_OUT),
                           new KeyValue(mark.scaleYProperty(), 0.5, Interpolator.EASE_OUT)
-                          //							new KeyValue(box.rotateProperty(), 0 ,Interpolator.EASE_BOTH),
-                          //							new KeyValue(box.scaleXProperty(), 1 ,Interpolator.EASE_BOTH),
-                          //							new KeyValue(box.scaleYProperty(), 1 ,Interpolator.EASE_BOTH),
-                          //							new KeyValue(box.translateYProperty(), 0 ,Interpolator.EASE_BOTH),
-                          //							new KeyValue(box.translateXProperty(), 0 ,Interpolator.EASE_BOTH),
-                          //							new KeyValue(box.opacityProperty(), 1 ,Interpolator.EASE_BOTH)
                       ),
                       new KeyFrame(Duration.millis(400),
                                    new KeyValue(mark.visibleProperty(), true, Interpolator.EASE_OUT),
                                    new KeyValue(mark.scaleXProperty(), 0.5, Interpolator.EASE_OUT),
                                    new KeyValue(mark.scaleYProperty(), 0.5, Interpolator.EASE_OUT)
-                                   //									new KeyValue(leftLine.visibleProperty(), true,Interpolator.EASE_BOTH),
-                                   //									new KeyValue(rightLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-                                   //									new KeyValue(rightLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH),
-                                   //									new KeyValue(leftLine.endXProperty(), (boxWidth+padding-labelOffset)/2 - boxWidth/5.5 ,Interpolator.EASE_BOTH),
-                                   //									new KeyValue(leftLine.endYProperty(), maxHeight-padding-2*lineThick ,Interpolator.EASE_BOTH)
                       ),
-                      //									new KeyFrame(Duration.millis(500),
-                      //											new KeyValue(box.rotateProperty(), 44 ,Interpolator.EASE_BOTH),
-                      //											new KeyValue(box.scaleXProperty(), 0.3 ,Interpolator.EASE_BOTH),
-                      //											new KeyValue(box.scaleYProperty(), 0.4 ,Interpolator.EASE_BOTH),
-                      //											new KeyValue(box.translateYProperty(), boxHeight/12  ,Interpolator.EASE_BOTH),
-                      //											new KeyValue(box.translateXProperty(), - boxWidth/12 ,Interpolator.EASE_BOTH)
-                      //											),
-                      //											new KeyFrame(Duration.millis(700),
-                      //													new KeyValue(box.opacityProperty(), 0 ,Interpolator.EASE_BOTH)
-                      //													),
                       new KeyFrame(
                           Duration.millis(1000),
                           new KeyValue(mark.scaleXProperty(), 1, Interpolator.EASE_OUT),
                           new KeyValue(mark.scaleYProperty(), 1, Interpolator.EASE_OUT)
-                          //															new KeyValue(rightLine.endXProperty(), boxWidth-padding-labelOffset + lineThick/2 ,Interpolator.EASE_BOTH),
-                          //															new KeyValue(rightLine.endYProperty(), (maxHeight-padding)/2.4 ,Interpolator.EASE_BOTH),
-                          //															new KeyValue(leftLine.endXProperty(), padding + lineThick/4 ,Interpolator.EASE_BOTH),
-                          //															new KeyValue(leftLine.endYProperty(), (maxHeight-padding)/1.4 ,Interpolator.EASE_BOTH)
                       )
-
                   )
             );
             // reduce the number to increase the shifting , increase number to reduce shifting

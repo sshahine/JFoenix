@@ -44,8 +44,6 @@ import java.time.LocalTime;
  * @since 2017-03-01
  */
 public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
-
-
     private JFXTimePicker jfxTimePicker;
     private JFXTextField editorNode;
     // displayNode is the same as editorNode
@@ -121,12 +119,6 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
             getEditableInputNode();
         } else if ("SHOWING".equals(p)) {
             if (jfxTimePicker.isShowing()) {
-//				if (content != null) {
-//					LocalDate date = jfxTimePicker.getValue();
-//					// set the current date / now when showing the date picker content
-//					jfxDatePickerContent.displayedYearMonthProperty().set((date != null) ? YearMonth.from(date) : YearMonth.now());
-//					jfxDatePickerContent.updateValues();
-//				}
                 show();
             } else {
                 hide();
@@ -143,10 +135,8 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
     @Override
     protected TextField getEditor() {
         StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
-        /*
-		 *  added to fix android issue as the stack trace on android is
-		 *  not the same as desktop
-		 */
+        //  added to fix android issue as the stack trace on android is
+        // not the same as desktop
         if (caller.getClassName().equals(this.getClass().getName()))
             caller = Thread.currentThread().getStackTrace()[3];
         boolean parentListenerCall = caller.getMethodName().contains("lambda") && caller.getClassName()

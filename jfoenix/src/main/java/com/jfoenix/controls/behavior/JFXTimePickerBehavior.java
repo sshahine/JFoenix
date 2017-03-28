@@ -51,7 +51,7 @@ public class JFXTimePickerBehavior extends ComboBoxBaseBehavior<LocalTime> {
      *                                                                         *
      **************************************************************************/
 
-    protected static final List<KeyBinding> JFX_TIME_PICKER_BINDINGS = new ArrayList<KeyBinding>();
+    protected static final List<KeyBinding> JFX_TIME_PICKER_BINDINGS = new ArrayList<>();
 
     static {
         JFX_TIME_PICKER_BINDINGS.addAll(COMBO_BOX_BASE_BINDINGS);

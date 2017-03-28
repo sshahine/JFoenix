@@ -170,7 +170,7 @@ public class ValidationFacade extends VBox {
      * holds the current active validator on the text field in case of
      * validation error
      */
-    private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<ValidatorBase>();
+    private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<>();
 
     public ValidatorBase getActiveValidator() {
         return activeValidator == null ? null : activeValidator.get();
@@ -225,7 +225,7 @@ public class ValidationFacade extends VBox {
         facade.activeValidator.set(null);
     }
 
-    private ObjectProperty<Control> controlProperty = new SimpleObjectProperty<Control>();
+    private ObjectProperty<Control> controlProperty = new SimpleObjectProperty<>();
 
     public Control getControl() {
         return controlProperty.get();

@@ -48,7 +48,10 @@ import java.util.List;
  */
 public class JFXSpinner extends StackPane {
 
-    private Color greenColor, redColor, yellowColor, blueColor, initialColor;
+    private Color greenColor;
+    private Color redColor;
+    private Color yellowColor;
+    private Color blueColor;
     private Timeline timeline;
     private Arc arc;
     private boolean initialized;
@@ -127,7 +130,7 @@ public class JFXSpinner extends StackPane {
     protected void layoutChildren() {
         if (!initialized) {
             super.layoutChildren();
-            initialColor = (Color) arc.getStroke();
+            final Color initialColor = (Color) arc.getStroke();
             if (initialColor == null) {
                 arc.setStroke(blueColor);
             }
@@ -259,7 +262,7 @@ public class JFXSpinner extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+                new ArrayList<>(Parent.getClassCssMetaData());
             Collections.addAll(styleables,
                                RADIUS,
                                STARTING_ANGLE
@@ -275,9 +278,9 @@ public class JFXSpinner extends StackPane {
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Parent.getClassCssMetaData());
+                new ArrayList<>(Parent.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(StackPane.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

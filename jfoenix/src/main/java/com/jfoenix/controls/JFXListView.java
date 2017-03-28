@@ -53,7 +53,7 @@ public class JFXListView<T> extends ListView<T> {
         this.setCellFactory(new Callback<ListView<T>, ListCell<T>>() {
             @Override
             public ListCell<T> call(ListView<T> listView) {
-                return new JFXListCell<T>();
+                return new JFXListCell<>();
             }
         });
         initialize();
@@ -64,10 +64,10 @@ public class JFXListView<T> extends ListView<T> {
      */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXListViewSkin<T>(this);
+        return new JFXListViewSkin<>(this);
     }
 
-    private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<Integer>(0);
+    private ObjectProperty<Integer> depthProperty = new SimpleObjectProperty<>(0);
 
     public ObjectProperty<Integer> depthProperty() {
         return depthProperty;
@@ -118,7 +118,7 @@ public class JFXListView<T> extends ListView<T> {
      *                                                                         *
      **************************************************************************/
 
-    private ObjectProperty<Node> groupnode = new SimpleObjectProperty<Node>(new Label("GROUP"));
+    private ObjectProperty<Node> groupnode = new SimpleObjectProperty<>(new Label("GROUP"));
 
     public Node getGroupnode() {
         return groupnode.get();
@@ -131,16 +131,16 @@ public class JFXListView<T> extends ListView<T> {
     /*
      *  selected index property that includes the sublists
      */
-    private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<Integer>(-1);
+    private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<>(-1);
 
     public ReadOnlyObjectProperty<Integer> overAllIndexProperty() {
         return overAllIndexProperty.getReadOnlyProperty();
     }
 
     // private sublists property
-    private ObjectProperty<ObservableList<JFXListView<?>>> sublistsProperty = new SimpleObjectProperty<ObservableList<JFXListView<?>>>(
+    private ObjectProperty<ObservableList<JFXListView<?>>> sublistsProperty = new SimpleObjectProperty<>(
         FXCollections.observableArrayList());
-    private LinkedHashMap<Integer, JFXListView<?>> sublistsIndices = new LinkedHashMap<Integer, JFXListView<?>>();
+    private LinkedHashMap<Integer, JFXListView<?>> sublistsIndices = new LinkedHashMap<>();
 
     // this method shouldn't be called from user
     void addSublist(JFXListView<?> subList, int index) {
@@ -165,7 +165,6 @@ public class JFXListView<T> extends ListView<T> {
                 Map.Entry<Integer, JFXListView<?>> entry = itr.next();
                 if (entry.getKey() < selectedIndex) preItemsSize += entry.getValue().getItems().size() - 1;
             }
-//			int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < selectedIndex).mapToInt(key->sublistsIndices.get(key).getItems().size()-1).sum();
             overAllIndexProperty.set(selectedIndex + preItemsSize);
         } else {
             Iterator<Map.Entry<Integer, JFXListView<?>>> itr = sublistsIndices.entrySet().iterator();
@@ -192,13 +191,6 @@ public class JFXListView<T> extends ListView<T> {
             } else {
                 overAllIndexProperty.set(-1);
             }
-//			Object[] selectedList = sublistsIndices.keySet().stream().filter(key-> sublistsIndices.get(key).getSelectionModel().getSelectedIndex() != -1).toArray();
-//			if(selectedList.length > 0){
-//				int preItemsSize = sublistsIndices.keySet().stream().filter(key-> key < ((Integer)selectedList[0])).mapToInt(key-> sublistsIndices.get(key).getItems().size()-1).sum();
-//				overAllIndexProperty.set(preItemsSize + (Integer)selectedList[0] + sublistsIndices.get(selectedList[0]).getSelectionModel().getSelectedIndex());
-//			}else{
-//				overAllIndexProperty.set(-1);
-//			}
         }
     }
 
@@ -267,7 +259,6 @@ public class JFXListView<T> extends ListView<T> {
             for (int i = 0; i < sublistsProperty.get().size(); i++)
                 if (sublistsProperty.get().get(i) != selectedList)
                     sublistsProperty.get().get(i).getSelectionModel().clearSelection();
-//			sublistsProperty.get().stream().filter(list-> list!=selectedList).forEach(list->list.getSelectionModel().clearSelection());
             allowClear = true;
         }
     }
@@ -339,7 +330,7 @@ public class JFXListView<T> extends ListView<T> {
                                                                                    false);
 
     public Boolean isExpanded() {
-        return expanded == null ? false : expanded.get();
+        return expanded != null && expanded.get();
     }
 
     public StyleableBooleanProperty expandedProperty() {
@@ -408,7 +399,7 @@ public class JFXListView<T> extends ListView<T> {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                CELL_HORIZONTAL_MARGIN,
                                CELL_VERTICAL_MARGIN,
@@ -426,9 +417,9 @@ public class JFXListView<T> extends ListView<T> {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(ListView.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

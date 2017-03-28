@@ -43,12 +43,12 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
     private final StackPane main = new StackPane();
     private JFXRippler rippler;
     private boolean invalid = true;
-    private final CornerRadii defaultRadii = new CornerRadii(3);
     private JFXFillTransition ft;
     private Runnable releaseManualRippler = null;
 
     public JFXToggleNodeSkin(JFXToggleNode toggleNode) {
         super(toggleNode);
+        final CornerRadii defaultRadii = new CornerRadii(3);
         toggleNode.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
         toggleNode.setText(null);
         main.setPickOnBounds(false);

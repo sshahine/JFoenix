@@ -27,6 +27,7 @@ import javafx.css.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Paint;
 
@@ -137,16 +138,14 @@ public class JFXButton extends Button {
     private static final String DEFAULT_STYLE_CLASS = "jfx-button";
 
 
-    public static enum ButtonType {FLAT, RAISED}
-
-    ;
+    public enum ButtonType {FLAT, RAISED}
 
     /**
      * according to material design the button has two types:
      * - flat : only shows the ripple effect upon clicking the button
      * - raised : shows the ripple effect and change in depth upon clicking the button
      */
-    private StyleableObjectProperty<ButtonType> buttonType = new SimpleStyleableObjectProperty<ButtonType>(
+    private StyleableObjectProperty<ButtonType> buttonType = new SimpleStyleableObjectProperty<>(
         StyleableProperties.BUTTON_TYPE,
         JFXButton.this,
         "buttonType",
@@ -183,7 +182,7 @@ public class JFXButton extends Button {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                                BUTTON_TYPE
             );
@@ -198,9 +197,9 @@ public class JFXButton extends Button {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+                new ArrayList<>(Control.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(super.getClassCssMetaData());
+            styleables.addAll(Labeled.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

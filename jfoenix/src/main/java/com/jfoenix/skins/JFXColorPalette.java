@@ -83,7 +83,7 @@ class JFXColorPalette extends Region {
         customColorLink.setFocusTraversable(true);
         customColorLink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent t) {
+            public void handle(ActionEvent ev) {
                 if (customColorDialog == null) {
                     customColorDialog = new JFXCustomColorPickerDialog(popupControl);
                     customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
@@ -342,12 +342,13 @@ class JFXColorPalette extends Region {
         public JFXColorGrid() {
             getStyleClass().add("color-picker-grid");
             setId("ColorCustomizerColorGrid");
-            int columnIndex = 0, rowIndex = 0;
+            int columnIndex = 0;
+            int rowIndex = 0;
             squares = FXCollections.observableArrayList();
             final int numColors = RAW_VALUES.length / 3;
             Color[] colors = new Color[numColors];
             for (int i = 0; i < numColors; i++) {
-                colors[i] = new Color(RAW_VALUES[(i * 3)] / 255,
+                colors[i] = new Color(RAW_VALUES[i * 3] / 255,
                                       RAW_VALUES[(i * 3) + 1] / 255, RAW_VALUES[(i * 3) + 2] / 255,
                                       1.0);
                 ColorSquare cs = new ColorSquare(colors[i], i);

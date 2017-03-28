@@ -79,7 +79,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     private CachedTransition promptTextColorTransition;
     private Scale promptTextScale = new Scale(1, 1, 0, 0);
     private Paint oldPromptTextFill;
-    protected final ObjectProperty<Paint> promptTextFill = new SimpleObjectProperty<Paint>(Color.valueOf("#B2B2B2"));
+    protected final ObjectProperty<Paint> promptTextFill = new SimpleObjectProperty<>(Color.valueOf("#B2B2B2"));
 
     private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
                                                                          ((JFXComboBox<?>) getSkinnable()).valueProperty(),
@@ -261,7 +261,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
                 oldPromptTextFill = promptTextFill.get();
             }
 
-            ;
         };
 
         promptTextDownTransition = new CachedTransition(customPane, new Timeline(
@@ -335,10 +334,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     private boolean usePromptText() {
         Object txt = ((JFXComboBox<?>) getSkinnable()).getValue();
         String promptTxt = getSkinnable().getPromptText();
-        boolean hasPromptText = (txt == null || txt.toString()
-                                                   .isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
+        return (txt == null || txt.toString()
+                                  .isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
             .get()
             .equals(Color.TRANSPARENT);
-        return hasPromptText;
     }
 }

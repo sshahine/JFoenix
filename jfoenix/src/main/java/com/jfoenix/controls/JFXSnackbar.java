@@ -57,12 +57,11 @@ public class JFXSnackbar extends StackPane {
     private JFXButton action;
 
     private Pane snackbarContainer;
-    private BorderPane content;
     private Group popup;
     private ChangeListener<? super Number> sizeListener;
 
     private AtomicBoolean processingQueue = new AtomicBoolean(false);
-    private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new ConcurrentLinkedQueue<SnackbarEvent>();
+    private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new ConcurrentLinkedQueue<>();
     private StackPane actionContainer;
 
     Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
@@ -101,7 +100,7 @@ public class JFXSnackbar extends StackPane {
         //bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
         bPane.prefWidthProperty().bind(this.prefWidthProperty());
 
-        content = bPane;
+        final BorderPane content = bPane;
 
         content.getStyleClass().add("jfx-snackbar-content");
         //setting a shadow enlarges the snackbar height leaving a gap below it
@@ -293,7 +292,7 @@ public class JFXSnackbar extends StackPane {
 
     public void refreshPopup() {
         Bounds contentBound = popup.getLayoutBounds();
-        double offsetX = Math.ceil((snackbarContainer.getWidth() / 2)) - Math.ceil((contentBound.getWidth() / 2));
+        double offsetX = Math.ceil(snackbarContainer.getWidth() / 2) - Math.ceil(contentBound.getWidth() / 2);
         double offsetY = snackbarContainer.getHeight() - contentBound.getHeight();
         popup.setLayoutX(offsetX);
         popup.setLayoutY(offsetY);
@@ -323,6 +322,7 @@ public class JFXSnackbar extends StackPane {
      **************************************************************************/
 
     public static class SnackbarEvent extends Event {
+        public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
 
         private final String message;
         private final String actionText;
@@ -330,6 +330,19 @@ public class JFXSnackbar extends StackPane {
         private final boolean persistent;
         private final EventHandler<? super MouseEvent> actionHandler;
 
+        public SnackbarEvent(String message) {
+            this(message, null, 3000, false, null);
+
+        }
+
+        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+            super(SNACKBAR);
+            this.message = message;
+            this.actionText = actionText;
+            this.timeout = timeout < 1 ? 3000 : timeout;
+            this.actionHandler = actionHandler;
+            this.persistent = persistent;
+        }
 
         public String getMessage() {
             return message;
@@ -345,22 +358,6 @@ public class JFXSnackbar extends StackPane {
 
         public EventHandler<? super MouseEvent> getActionHandler() {
             return actionHandler;
-        }
-
-        public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
-
-        public SnackbarEvent(String message) {
-            this(message, null, 3000, false, null);
-
-        }
-
-        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
-            super(SNACKBAR);
-            this.message = message;
-            this.actionText = actionText;
-            this.timeout = timeout < 1 ? 3000 : timeout;
-            this.actionHandler = actionHandler;
-            this.persistent = persistent;
         }
 
         @Override

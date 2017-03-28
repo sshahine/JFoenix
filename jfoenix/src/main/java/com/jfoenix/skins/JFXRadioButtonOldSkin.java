@@ -48,11 +48,12 @@ public class JFXRadioButtonOldSkin extends RadioButtonSkin {
 
     private boolean invalid = true;
     private double padding = 15;
-    private double contWidth, contHeight;
-    private double maxHeight, radioRadius = 8, minRadius = 0;
+    private double radioRadius = 8;
+    private double minRadius = 0;
     private final JFXRippler rippler;
 
-    private Circle radio, dot;
+    private Circle radio;
+    private Circle dot;
 
     private Color unSelectedColor = Color.valueOf("#5A5A5A");
     private Color selectedColor = Color.valueOf("#0F9D58");
@@ -99,14 +100,14 @@ public class JFXRadioButtonOldSkin extends RadioButtonSkin {
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         final RadioButton radioButton = getSkinnable();
-        contWidth = snapSize(container.prefWidth(-1)) + (invalid ? 2 : 0);
-        contHeight = snapSize(container.prefHeight(-1)) + (invalid ? 2 : 0);
+        final double contWidth = snapSize(container.prefWidth(-1)) + (invalid ? 2 : 0);
+        final double contHeight = snapSize(container.prefHeight(-1)) + (invalid ? 2 : 0);
         final double computeWidth = Math.min(radioButton.prefWidth(-1),
                                              radioButton.minWidth(-1)) + labelOffset + 2 * padding;
         final double labelWidth = Math.min(computeWidth - contWidth,
                                            w - snapSize(contWidth)) + labelOffset + 2 * padding;
         final double labelHeight = Math.min(radioButton.prefHeight(labelWidth), h);
-        maxHeight = Math.max(contHeight, labelHeight);
+        final double maxHeight = Math.max(contHeight, labelHeight);
         final double xOffset = computeXOffset(w, labelWidth + contWidth, radioButton.getAlignment().getHpos()) + x;
         final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
 
@@ -172,7 +173,7 @@ public class JFXRadioButtonOldSkin extends RadioButtonSkin {
                                       leftInset) + snapSize(radio.prefWidth(-1)) + labelOffset + 2 * padding;
     }
 
-    static double computeXOffset(double width, double contentWidth, HPos hpos) {
+    private static double computeXOffset(double width, double contentWidth, HPos hpos) {
         switch (hpos) {
             case LEFT:
                 return 0;
@@ -184,8 +185,7 @@ public class JFXRadioButtonOldSkin extends RadioButtonSkin {
         return 0;
     }
 
-    static double computeYOffset(double height, double contentHeight, VPos vpos) {
-
+    private static double computeYOffset(double height, double contentHeight, VPos vpos) {
         switch (vpos) {
             case TOP:
                 return 0;

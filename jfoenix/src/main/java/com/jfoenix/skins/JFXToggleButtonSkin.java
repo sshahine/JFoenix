@@ -49,11 +49,7 @@ import javafx.util.Duration;
  */
 public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
-    private final StackPane main = new StackPane();
     private Line line;
-    private final int startX = 0;
-    private final int endX = 22;
-    private final int startY = 0;
 
     private Circle circle;
     private final int circleRadius = 10;
@@ -68,6 +64,9 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         // hide the toggle button
         toggleButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
+        final int startY = 0;
+        final int endX = 22;
+        final int startX = 0;
         line = new Line(startX, startY, endX, startY);
 
         line.setStroke(toggleButton.getUnToggleLineColor());
@@ -98,6 +97,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         circleContainer.getChildren().add(rippler);
         circleContainer.setTranslateX(-(line.getLayoutBounds().getWidth() / 2) + circleRadius);
 
+        final StackPane main = new StackPane();
         main.getChildren().add(line);
         main.getChildren().add(circleContainer);
         main.setCursor(Cursor.HAND);
@@ -148,7 +148,6 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
             circleContainer.setTranslateX((line.getLayoutBounds().getWidth() / 2) - circleRadius);
             line.setStroke(((JFXToggleButton) getSkinnable()).getToggleLineColor());
             circle.setFill(((JFXToggleButton) getSkinnable()).getToggleColor());
-//			transition.playFrom(Duration.millis(100));
         }
     }
 
