@@ -6,27 +6,27 @@
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
 
-	<AnchorPane styleClass="animated-burgers">
-		<JFXRippler fx:id="rippler1" maskType="CIRCLE"
-			AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0">
-			<JFXHamburger fx:id="burger1" style="-fx-padding:15;">
-			</JFXHamburger>
-		</JFXRippler>
-		<JFXRippler fx:id="rippler2" maskType="CIRCLE"
-			AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
-			<JFXHamburger fx:id="burger2" style="-fx-padding:15;">
-			</JFXHamburger>
-		</JFXRippler>
-		<JFXRippler fx:id="rippler3" maskType="CIRCLE"
-			AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0">
-			<JFXHamburger fx:id="burger3" style="-fx-padding:15;">
-			</JFXHamburger>
-		</JFXRippler>
-		<JFXRippler fx:id="rippler4" maskType="CIRCLE"
-			AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="100.0">
-			<JFXHamburger fx:id="burger4" style="-fx-padding:15;">
-			</JFXHamburger>
-		</JFXRippler>
-	</AnchorPane>
+    <AnchorPane styleClass="animated-burgers">
+        <JFXRippler fx:id="rippler1" maskType="CIRCLE"
+                    AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0">
+            <JFXHamburger fx:id="burger1" style="-fx-padding:15;">
+            </JFXHamburger>
+        </JFXRippler>
+        <JFXRippler fx:id="rippler2" maskType="CIRCLE"
+                    AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
+            <JFXHamburger fx:id="burger2" style="-fx-padding:15;">
+            </JFXHamburger>
+        </JFXRippler>
+        <JFXRippler fx:id="rippler3" maskType="CIRCLE"
+                    AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0">
+            <JFXHamburger fx:id="burger3" style="-fx-padding:15;">
+            </JFXHamburger>
+        </JFXRippler>
+        <JFXRippler fx:id="rippler4" maskType="CIRCLE"
+                    AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="100.0">
+            <JFXHamburger fx:id="burger4" style="-fx-padding:15;">
+            </JFXHamburger>
+        </JFXRippler>
+    </AnchorPane>
 </StackPane>
 

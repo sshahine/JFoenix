@@ -20,11 +20,15 @@ public class ListViewDemo extends Application {
 
 
         JFXListView<Label> list = new JFXListView<>();
-        for (int i = 0; i < 4; i++) list.getItems().add(new Label("Item " + i));
+        for (int i = 0; i < 4; i++) {
+            list.getItems().add(new Label("Item " + i));
+        }
         list.getStyleClass().add("mylistview");
 
         ListView<String> javaList = new ListView<>();
-        for (int i = 0; i < 4; i++) javaList.getItems().add("Item " + i);
+        for (int i = 0; i < 4; i++) {
+            javaList.getItems().add("Item " + i);
+        }
 
         FlowPane pane = new FlowPane();
         pane.setStyle("-fx-background-color:WHITE");

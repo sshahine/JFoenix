@@ -114,8 +114,7 @@ public class JFXButton extends Button {
     /**
      * set the ripple color
      *
-     * @param ripplerFill
-     *         the color of the ripple effect
+     * @param ripplerFill the color of the ripple effect
      */
     public final void setRipplerFill(final Paint ripplerFill) {
         this.ripplerFillProperty().set(ripplerFill);
@@ -165,7 +164,7 @@ public class JFXButton extends Button {
     private static class StyleableProperties {
         private static final CssMetaData<JFXButton, ButtonType> BUTTON_TYPE =
             new CssMetaData<JFXButton, ButtonType>("-jfx-button-type",
-                                                   ButtonTypeConverter.getInstance(), ButtonType.FLAT) {
+                ButtonTypeConverter.getInstance(), ButtonType.FLAT) {
                 @Override
                 public boolean isSettable(JFXButton control) {
                     return control.buttonType == null || !control.buttonType.isBound();
@@ -183,7 +182,7 @@ public class JFXButton extends Button {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               BUTTON_TYPE
+                BUTTON_TYPE
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

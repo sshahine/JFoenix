@@ -85,10 +85,8 @@ public class JFXDecorator extends VBox {
      * - maximize
      * - minimize
      *
-     * @param stage
-     *         the primary stage used by the application
-     * @param node
-     *         the node to be decorated
+     * @param stage the primary stage used by the application
+     * @param node  the node to be decorated
      */
     public JFXDecorator(Stage stage, Node node) {
         this(stage, node, true, true, true);
@@ -100,16 +98,11 @@ public class JFXDecorator extends VBox {
      * - maximize
      * - minimize
      *
-     * @param stage
-     *         the primary stage used by the application
-     * @param node
-     *         the node to be decorated
-     * @param fullScreen
-     *         indicates whether to show full screen option or not
-     * @param max
-     *         indicates whether to show maximize option or not
-     * @param min
-     *         indicates whether to show minimize option or not
+     * @param stage      the primary stage used by the application
+     * @param node       the node to be decorated
+     * @param fullScreen indicates whether to show full screen option or not
+     * @param max        indicates whether to show maximize option or not
+     * @param min        indicates whether to show minimize option or not
      */
     public JFXDecorator(Stage stage, Node node, boolean fullScreen, boolean max, boolean min) {
         primaryStage = stage;
@@ -121,30 +114,30 @@ public class JFXDecorator extends VBox {
         this.getStyleClass().add("jfx-decorator");
 
         SVGGlyph full = new SVGGlyph(0,
-                                     "FULLSCREEN",
-                                     "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z",
-                                     Color.WHITE);
+            "FULLSCREEN",
+            "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z",
+            Color.WHITE);
         full.setSize(16, 16);
         SVGGlyph minus = new SVGGlyph(0,
-                                      "MINUS",
-                                      "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z",
-                                      Color.WHITE);
+            "MINUS",
+            "M804.571 420.571v109.714q0 22.857-16 38.857t-38.857 16h-694.857q-22.857 0-38.857-16t-16-38.857v-109.714q0-22.857 16-38.857t38.857-16h694.857q22.857 0 38.857 16t16 38.857z",
+            Color.WHITE);
         minus.setSize(12, 2);
         minus.setTranslateY(4);
         SVGGlyph resizeMax = new SVGGlyph(0,
-                                          "RESIZE_MAX",
-                                          "M726 810v-596h-428v596h428zM726 44q34 0 59 25t25 59v768q0 34-25 60t-59 26h-428q-34 0-59-26t-25-60v-768q0-34 25-60t59-26z",
-                                          Color.WHITE);
+            "RESIZE_MAX",
+            "M726 810v-596h-428v596h428zM726 44q34 0 59 25t25 59v768q0 34-25 60t-59 26h-428q-34 0-59-26t-25-60v-768q0-34 25-60t59-26z",
+            Color.WHITE);
         resizeMax.setSize(12, 12);
         SVGGlyph resizeMin = new SVGGlyph(0,
-                                          "RESIZE_MIN",
-                                          "M80.842 943.158v-377.264h565.894v377.264h-565.894zM0 404.21v619.79h727.578v-619.79h-727.578zM377.264 161.684h565.894v377.264h-134.736v80.842h215.578v-619.79h-727.578v323.37h80.842v-161.686z",
-                                          Color.WHITE);
+            "RESIZE_MIN",
+            "M80.842 943.158v-377.264h565.894v377.264h-565.894zM0 404.21v619.79h727.578v-619.79h-727.578zM377.264 161.684h565.894v377.264h-134.736v80.842h215.578v-619.79h-727.578v323.37h80.842v-161.686z",
+            Color.WHITE);
         resizeMin.setSize(12, 12);
         SVGGlyph close = new SVGGlyph(0,
-                                      "CLOSE",
-                                      "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z",
-                                      Color.WHITE);
+            "CLOSE",
+            "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z",
+            Color.WHITE);
         close.setSize(12, 12);
 
         JFXButton btnFull = new JFXButton();
@@ -190,14 +183,14 @@ public class JFXDecorator extends VBox {
                     originalBox = new BoundingBox(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
                     // get the max stage bounds
                     Screen screen = Screen.getScreensForRectangle(stage.getX(),
-                                                                  stage.getY(),
-                                                                  stage.getWidth(),
-                                                                  stage.getHeight()).get(0);
+                        stage.getY(),
+                        stage.getWidth(),
+                        stage.getHeight()).get(0);
                     Rectangle2D bounds = screen.getVisualBounds();
                     maximizedBox = new BoundingBox(bounds.getMinX(),
-                                                   bounds.getMinY(),
-                                                   bounds.getWidth(),
-                                                   bounds.getHeight());
+                        bounds.getMinY(),
+                        bounds.getWidth(),
+                        bounds.getHeight());
                     // maximized the stage
                     stage.setX(maximizedBox.getMinX());
                     stage.setY(maximizedBox.getMinY());
@@ -224,8 +217,8 @@ public class JFXDecorator extends VBox {
         buttonsContainer = new HBox();
         buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
         buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK,
-                                                                         CornerRadii.EMPTY,
-                                                                         Insets.EMPTY)));
+            CornerRadii.EMPTY,
+            Insets.EMPTY)));
         // BINDING
 
         buttonsContainer.setPadding(new Insets(4));
@@ -236,17 +229,25 @@ public class JFXDecorator extends VBox {
             btns.add(btnFull);
             // maximize/restore the window on header double click
             buttonsContainer.setOnMouseClicked((mouseEvent) -> {
-                if (mouseEvent.getClickCount() == 2) btnMax.fire();
+                if (mouseEvent.getClickCount() == 2) {
+                    btnMax.fire();
+                }
             });
         }
-        if (min) btns.add(btnMin);
-        if (max) btns.add(btnMax);
+        if (min) {
+            btns.add(btnMin);
+        }
+        if (max) {
+            btns.add(btnMax);
+        }
         btns.add(btnClose);
 
         buttonsContainer.getChildren().addAll(btns);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter) -> allowMove = true);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter) -> {
-            if (!isDragging) allowMove = false;
+            if (!isDragging) {
+                allowMove = false;
+            }
         });
         buttonsContainer.setMinWidth(180);
         contentPlaceHolder.getStyleClass().add("jfx-decorator-content-container");
@@ -256,9 +257,9 @@ public class JFXDecorator extends VBox {
         VBox.setVgrow(contentPlaceHolder, Priority.ALWAYS);
         contentPlaceHolder.getStyleClass().add("resize-border");
         contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK,
-                                                                 BorderStrokeStyle.SOLID,
-                                                                 CornerRadii.EMPTY,
-                                                                 new BorderWidths(0, 4, 4, 4))));
+            BorderStrokeStyle.SOLID,
+            CornerRadii.EMPTY,
+            new BorderWidths(0, 4, 4, 4))));
         // BINDING
 
         Rectangle clip = new Rectangle();
@@ -272,16 +273,18 @@ public class JFXDecorator extends VBox {
                 // remove border
                 contentPlaceHolder.getStyleClass().remove("resize-border");
                 /*
-				 *  note the border property MUST NOT be bound to another property
+                 *  note the border property MUST NOT be bound to another property
 				 *  when going full screen mode, thus the binding will be lost if exisited
 				 */
                 contentPlaceHolder.borderProperty().unbind();
                 contentPlaceHolder.setBorder(Border.EMPTY);
-                if (windowDecoratorAnimation != null) windowDecoratorAnimation.stop();
+                if (windowDecoratorAnimation != null) {
+                    windowDecoratorAnimation.stop();
+                }
                 windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                                                                     new KeyValue(this.translateYProperty(),
-                                                                                  -buttonsContainer.getHeight(),
-                                                                                  Interpolator.EASE_BOTH)));
+                    new KeyValue(this.translateYProperty(),
+                        -buttonsContainer.getHeight(),
+                        Interpolator.EASE_BOTH)));
                 windowDecoratorAnimation.setOnFinished((finish) -> {
                     this.getChildren().remove(buttonsContainer);
                     this.setTranslateY(0);
@@ -290,20 +293,22 @@ public class JFXDecorator extends VBox {
             } else {
                 // add border
                 if (windowDecoratorAnimation != null) {
-                    if (windowDecoratorAnimation.getStatus().equals(Animation.Status.RUNNING))
+                    if (windowDecoratorAnimation.getStatus().equals(Animation.Status.RUNNING)) {
                         windowDecoratorAnimation.stop();
-                    else this.getChildren().add(0, buttonsContainer);
+                    } else {
+                        this.getChildren().add(0, buttonsContainer);
+                    }
                 }
                 this.setTranslateY(-buttonsContainer.getHeight());
                 windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                                                                     new KeyValue(this.translateYProperty(),
-                                                                                  0,
-                                                                                  Interpolator.EASE_BOTH)));
+                    new KeyValue(this.translateYProperty(),
+                        0,
+                        Interpolator.EASE_BOTH)));
                 windowDecoratorAnimation.setOnFinished((finish) -> {
                     contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK,
-                                                                             BorderStrokeStyle.SOLID,
-                                                                             CornerRadii.EMPTY,
-                                                                             new BorderWidths(0, 4, 4, 4))));
+                        BorderStrokeStyle.SOLID,
+                        CornerRadii.EMPTY,
+                        new BorderWidths(0, 4, 4, 4))));
                     contentPlaceHolder.getStyleClass().add("resize-border");
                 });
                 windowDecoratorAnimation.play();
@@ -473,8 +478,7 @@ public class JFXDecorator extends VBox {
     /**
      * set a speficed runnable when clicking on the close button
      *
-     * @param onCloseButtonAction
-     *         runnable to be executed
+     * @param onCloseButtonAction runnable to be executed
      */
     public void setOnCloseButtonAction(Runnable onCloseButtonAction) {
         this.onCloseButtonAction.set(onCloseButtonAction);
@@ -511,18 +515,20 @@ public class JFXDecorator extends VBox {
      * @param maximized
      */
     public void setMaximized(boolean maximized) {
-        if (this.maximized != maximized)
+        if (this.maximized != maximized) {
             Platform.runLater(() -> {
                 btnMax.fire();
             });
+        }
     }
 
-	/**
-	 * will change the decorator content
-	 * @param content
-	 */
-	public void setContent(Node content){
-		this.contentPlaceHolder.getChildren().setAll(content);
-	}
-	
+    /**
+     * will change the decorator content
+     *
+     * @param content
+     */
+    public void setContent(Node content) {
+        this.contentPlaceHolder.getChildren().setAll(content);
+    }
+
 }

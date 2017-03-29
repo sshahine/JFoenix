@@ -88,10 +88,10 @@ public class JFXRadioButton extends RadioButton {
      * default color used when the radio button is selected
      */
     private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.SELECTED_COLOR,
-                                                                                               JFXRadioButton.this,
-                                                                                               "selectedColor",
-                                                                                               Color.valueOf(
-                                                                                                   "#0F9D58"));
+        JFXRadioButton.this,
+        "selectedColor",
+        Color.valueOf(
+            "#0F9D58"));
 
     public final StyleableObjectProperty<Color> selectedColorProperty() {
         return this.selectedColor;
@@ -130,7 +130,7 @@ public class JFXRadioButton extends RadioButton {
     private static class StyleableProperties {
         private static final CssMetaData<JFXRadioButton, Color> SELECTED_COLOR =
             new CssMetaData<JFXRadioButton, Color>("-jfx-selected-color",
-                                                   ColorConverter.getInstance(), Color.valueOf("#0F9D58")) {
+                ColorConverter.getInstance(), Color.valueOf("#0F9D58")) {
                 @Override
                 public boolean isSettable(JFXRadioButton control) {
                     return control.selectedColor == null || !control.selectedColor.isBound();
@@ -143,7 +143,7 @@ public class JFXRadioButton extends RadioButton {
             };
         private static final CssMetaData<JFXRadioButton, Color> UNSELECTED_COLOR =
             new CssMetaData<JFXRadioButton, Color>("-jfx-unselected-color",
-                                                   ColorConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                ColorConverter.getInstance(), Color.valueOf("#5A5A5A")) {
                 @Override
                 public boolean isSettable(JFXRadioButton control) {
                     return control.unSelectedColor == null || !control.unSelectedColor.isBound();
@@ -161,8 +161,8 @@ public class JFXRadioButton extends RadioButton {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               SELECTED_COLOR,
-                               UNSELECTED_COLOR
+                SELECTED_COLOR,
+                UNSELECTED_COLOR
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

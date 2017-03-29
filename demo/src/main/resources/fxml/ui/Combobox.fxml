@@ -23,7 +23,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="STAR" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -32,7 +32,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="HEART" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -41,7 +41,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="WARNING" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -50,7 +50,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -59,7 +59,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="TABLET" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -89,7 +89,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="STAR" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -98,7 +98,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="HEART" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -107,7 +107,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="WARNING" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -116,7 +116,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>
@@ -125,7 +125,7 @@
                                     <graphic>
                                         <StackPane styleClass="custom-jfx-list-view-icon-container">
                                             <FontAwesomeIconView glyphName="TABLET" size="1.5em"
-                                                  styleClass="custom-jfx-list-view-icon"/>
+                                                                 styleClass="custom-jfx-list-view-icon"/>
                                         </StackPane>
                                     </graphic>
                                 </Label>

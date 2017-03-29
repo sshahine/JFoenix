@@ -57,10 +57,8 @@ public class JFXResponsiveHandler {
      * <b>Note:</b> the css class must be chosen by the user according to a device
      * detection methodology
      *
-     * @param stage
-     *         the JavaFX Application stage
-     * @param pseudoClass
-     *         css class for certain device
+     * @param stage       the JavaFX Application stage
+     * @param pseudoClass css class for certain device
      */
     public JFXResponsiveHandler(Stage stage, PseudoClass pseudoClass) {
         scanAllNodes(stage.getScene().getRoot(), PSEUDO_CLASS_LARGE);
@@ -69,20 +67,22 @@ public class JFXResponsiveHandler {
     /**
      * scans all nodes in the scene and apply the css pseduoClass to them.
      *
-     * @param parent
-     *         stage parent node
-     * @param pseudoClass
-     *         css class for certain device
+     * @param parent      stage parent node
+     * @param pseudoClass css class for certain device
      */
     private void scanAllNodes(Parent parent, PseudoClass pseudoClass) {
         parent.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(javafx.collections.ListChangeListener.Change<? extends Node> c) {
-                while (c.next())
-                    if (!c.wasPermutated() && !c.wasUpdated())
-                        for (Node addedNode : c.getAddedSubList())
-                            if (addedNode instanceof Parent)
+                while (c.next()) {
+                    if (!c.wasPermutated() && !c.wasUpdated()) {
+                        for (Node addedNode : c.getAddedSubList()) {
+                            if (addedNode instanceof Parent) {
                                 scanAllNodes((Parent) addedNode, pseudoClass);
+                            }
+                        }
+                    }
+                }
             }
         });
         for (Node component : parent.getChildrenUnmodifiable()) {
@@ -93,8 +93,9 @@ public class JFXResponsiveHandler {
                         while (c.next()) {
                             if (!c.wasPermutated() && !c.wasUpdated()) {
                                 for (Node addedNode : c.getAddedSubList()) {
-                                    if (addedNode instanceof Parent)
+                                    if (addedNode instanceof Parent) {
                                         scanAllNodes((Parent) addedNode, pseudoClass);
+                                    }
                                 }
                             }
                         }
@@ -114,7 +115,7 @@ public class JFXResponsiveHandler {
             } else if (component instanceof Control) {
                 //if the component is an instance of IInputControl, add to list
                 component.pseudoClassStateChanged(PSEUDO_CLASS_EX_SMALL,
-                                                  pseudoClass == PSEUDO_CLASS_EX_SMALL);
+                    pseudoClass == PSEUDO_CLASS_EX_SMALL);
                 component.pseudoClassStateChanged(PSEUDO_CLASS_SMALL, pseudoClass == PSEUDO_CLASS_SMALL);
                 component.pseudoClassStateChanged(PSEUDO_CLASS_MEDIUM, pseudoClass == PSEUDO_CLASS_MEDIUM);
                 component.pseudoClassStateChanged(PSEUDO_CLASS_LARGE, pseudoClass == PSEUDO_CLASS_LARGE);

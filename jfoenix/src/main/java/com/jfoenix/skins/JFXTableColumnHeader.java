@@ -110,41 +110,45 @@ public class JFXTableColumnHeader extends TableColumnHeader {
                 Label label = (Label) container.getChildren().get(0);
                 oldMargin = StackPane.getMargin(label);
                 StackPane.setMargin(label,
-                                    new Insets(oldMargin == null ? 0 : oldMargin.getTop(),
-                                               oldMargin == null || oldMargin.getRight() < 30 ? 30 : oldMargin.getRight(),
-                                               oldMargin == null ? 0 : oldMargin.getBottom(),
-                                               oldMargin == null || oldMargin.getLeft() < 30 ? 30 : oldMargin.getLeft()));
+                    new Insets(oldMargin == null ? 0 : oldMargin.getTop(),
+                        oldMargin == null || oldMargin.getRight() < 30 ? 30 : oldMargin.getRight(),
+                        oldMargin == null ? 0 : oldMargin.getBottom(),
+                        oldMargin == null || oldMargin.getLeft() < 30 ? 30 : oldMargin.getLeft()));
 
                 // fixed the issue of arrow translate X while resizing the column header
                 arrowContainer.translateXProperty().bind(Bindings.createDoubleBinding(() -> {
-                    if (arrowContainer.getLayoutX() <= 8) return -arrowContainer.getLayoutX() - 2;
+                    if (arrowContainer.getLayoutX() <= 8) {
+                        return -arrowContainer.getLayoutX() - 2;
+                    }
                     return -10.0;
                 }, arrowContainer.layoutXProperty()));
 
 
-                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
+                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) {
+                    arrowAnimation.stop();
+                }
                 if (arrow.getRotate() == 180 && arrow.getRotate() != currentArrowRotation) {
                     arrowContainer.setOpacity(0);
                     arrowContainer.setTranslateY(getHeight() / 4);
                     arrowAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                                                               new KeyValue(arrowContainer.opacityProperty(),
-                                                                            1,
-                                                                            Interpolator.EASE_BOTH),
-                                                               new KeyValue(arrowContainer.translateYProperty(),
-                                                                            0,
-                                                                            Interpolator.EASE_BOTH)));
+                        new KeyValue(arrowContainer.opacityProperty(),
+                            1,
+                            Interpolator.EASE_BOTH),
+                        new KeyValue(arrowContainer.translateYProperty(),
+                            0,
+                            Interpolator.EASE_BOTH)));
                 } else if (arrow.getRotate() == 0 && arrow.getRotate() != currentArrowRotation) {
                     arrow.setRotate(-180);
                     arrowAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                                                               new KeyValue(arrow.rotateProperty(),
-                                                                            0,
-                                                                            Interpolator.EASE_BOTH),
-                                                               new KeyValue(arrowContainer.opacityProperty(),
-                                                                            1,
-                                                                            Interpolator.EASE_BOTH),
-                                                               new KeyValue(arrowContainer.translateYProperty(),
-                                                                            0,
-                                                                            Interpolator.EASE_BOTH)));
+                        new KeyValue(arrow.rotateProperty(),
+                            0,
+                            Interpolator.EASE_BOTH),
+                        new KeyValue(arrowContainer.opacityProperty(),
+                            1,
+                            Interpolator.EASE_BOTH),
+                        new KeyValue(arrowContainer.translateYProperty(),
+                            0,
+                            Interpolator.EASE_BOTH)));
                 }
                 arrowAnimation.setOnFinished((finish) -> currentArrowRotation = arrow.getRotate());
                 arrowAnimation.play();
@@ -152,26 +156,30 @@ public class JFXTableColumnHeader extends TableColumnHeader {
             }
 
             if (arrowContainer != null && arrowPane != null && container.getChildren()
-                                                                        .size() == 1 && !arrowPane.isVisible()) {
-                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) arrowAnimation.stop();
+                .size() == 1 && !arrowPane.isVisible()) {
+                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) {
+                    arrowAnimation.stop();
+                }
                 Label label = (Label) container.getChildren().get(0);
                 // dont change the padding if arrow is not showing
-                if (currentArrowRotation == 0) StackPane.setMargin(label,
-                                                                   new Insets(oldMargin == null ? 0 : oldMargin.getTop(),
-                                                                              oldMargin == null || oldMargin.getRight() < 30 ? 30 : oldMargin
-                                                                                  .getRight(),
-                                                                              oldMargin == null ? 0 : oldMargin.getBottom(),
-                                                                              oldMargin == null || oldMargin.getLeft() < 30 ? 30 : oldMargin
-                                                                                  .getLeft()));
+                if (currentArrowRotation == 0) {
+                    StackPane.setMargin(label,
+                        new Insets(oldMargin == null ? 0 : oldMargin.getTop(),
+                            oldMargin == null || oldMargin.getRight() < 30 ? 30 : oldMargin
+                                .getRight(),
+                            oldMargin == null ? 0 : oldMargin.getBottom(),
+                            oldMargin == null || oldMargin.getLeft() < 30 ? 30 : oldMargin
+                                .getLeft()));
+                }
 
                 container.getChildren().add(arrowContainer);
                 arrowAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                                                           new KeyValue(arrowContainer.opacityProperty(),
-                                                                        0,
-                                                                        Interpolator.EASE_BOTH),
-                                                           new KeyValue(arrowContainer.translateYProperty(),
-                                                                        getHeight() / 4,
-                                                                        Interpolator.EASE_BOTH)));
+                    new KeyValue(arrowContainer.opacityProperty(),
+                        0,
+                        Interpolator.EASE_BOTH),
+                    new KeyValue(arrowContainer.translateYProperty(),
+                        getHeight() / 4,
+                        Interpolator.EASE_BOTH)));
                 arrowAnimation.setOnFinished((finish) -> {
                     currentArrowRotation = -1;
                     StackPane.setMargin(label, null);

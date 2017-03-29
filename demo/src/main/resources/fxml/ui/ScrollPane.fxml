@@ -8,42 +8,42 @@
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
-	<JFXScrollPane fx:id="scroll">
-		<topBar>
-			<children>
-				<JFXButton fx:id="backButton">
-					<StackPane.alignment>CENTER_LEFT</StackPane.alignment>
-					<StackPane.margin>
-						<Insets>
-							<left>
-								20
-							</left>
-						</Insets>
-					</StackPane.margin>
-				</JFXButton>
-			</children>
-		</topBar>
-		<bottomBar>
-			<children>
-				<Label style="-fx-text-fill:WHITE; -fx-font-size: 40;">
-					Store
-					<StackPane.alignment>CENTER_LEFT</StackPane.alignment>
-					<StackPane.margin>
-						<Insets>
-							<left>
-								80
-							</left>
-						</Insets>
-					</StackPane.margin>
-				</Label>
-			</children>
-		</bottomBar>
-		<content>
-			<StackPane style="-fx-padding:24;">
-				<JFXListView fx:id="contentList">
-				</JFXListView>
-			</StackPane>
-		</content>
-	</JFXScrollPane>
+    <JFXScrollPane fx:id="scroll">
+        <topBar>
+            <children>
+                <JFXButton fx:id="backButton">
+                    <StackPane.alignment>CENTER_LEFT</StackPane.alignment>
+                    <StackPane.margin>
+                        <Insets>
+                            <left>
+                                20
+                            </left>
+                        </Insets>
+                    </StackPane.margin>
+                </JFXButton>
+            </children>
+        </topBar>
+        <bottomBar>
+            <children>
+                <Label style="-fx-text-fill:WHITE; -fx-font-size: 40;">
+                    Store
+                    <StackPane.alignment>CENTER_LEFT</StackPane.alignment>
+                    <StackPane.margin>
+                        <Insets>
+                            <left>
+                                80
+                            </left>
+                        </Insets>
+                    </StackPane.margin>
+                </Label>
+            </children>
+        </bottomBar>
+        <content>
+            <StackPane style="-fx-padding:24;">
+                <JFXListView fx:id="contentList">
+                </JFXListView>
+            </StackPane>
+        </content>
+    </JFXScrollPane>
 </StackPane>
 

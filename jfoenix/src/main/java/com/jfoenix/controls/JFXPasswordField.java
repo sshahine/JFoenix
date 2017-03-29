@@ -119,8 +119,9 @@ public class JFXPasswordField extends PasswordField {
      */
     public boolean validate() {
         for (ValidatorBase validator : validators) {
-            if (validator.getSrcControl() == null)
+            if (validator.getSrcControl() == null) {
                 validator.setSrcControl(this);
+            }
             validator.validate();
             if (validator.getHasErrors()) {
                 activeValidator.set(validator);
@@ -147,9 +148,9 @@ public class JFXPasswordField extends PasswordField {
      * set true to show a float the prompt text when focusing the field
      */
     private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT,
-                                                                                     JFXPasswordField.this,
-                                                                                     "lableFloat",
-                                                                                     false);
+        JFXPasswordField.this,
+        "lableFloat",
+        false);
 
     public final StyleableBooleanProperty labelFloatProperty() {
         return this.labelFloat;
@@ -167,11 +168,11 @@ public class JFXPasswordField extends PasswordField {
      * default color used when the field is unfocused
      */
     private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
-                                                                                              JFXPasswordField.this,
-                                                                                              "unFocusColor",
-                                                                                              Color.rgb(77,
-                                                                                                        77,
-                                                                                                        77));
+        JFXPasswordField.this,
+        "unFocusColor",
+        Color.rgb(77,
+            77,
+            77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
@@ -189,9 +190,9 @@ public class JFXPasswordField extends PasswordField {
      * default color used when the field is focused
      */
     private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.FOCUS_COLOR,
-                                                                                            JFXPasswordField.this,
-                                                                                            "focusColor",
-                                                                                            Color.valueOf("#4059A9"));
+        JFXPasswordField.this,
+        "focusColor",
+        Color.valueOf("#4059A9"));
 
     public Paint getFocusColor() {
         return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();
@@ -209,9 +210,9 @@ public class JFXPasswordField extends PasswordField {
      * disable animation on validation
      */
     private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION,
-                                                                                           JFXPasswordField.this,
-                                                                                           "disableAnimation",
-                                                                                           false);
+        JFXPasswordField.this,
+        "disableAnimation",
+        false);
 
     public final StyleableBooleanProperty disableAnimationProperty() {
         return this.disableAnimation;
@@ -273,7 +274,7 @@ public class JFXPasswordField extends PasswordField {
 
         private static final CssMetaData<JFXPasswordField, Boolean> DISABLE_ANIMATION =
             new CssMetaData<JFXPasswordField, Boolean>("-fx-disable-animation",
-                                                       BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXPasswordField control) {
                     return control.disableAnimation == null || !control.disableAnimation.isBound();

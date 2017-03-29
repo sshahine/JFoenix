@@ -78,37 +78,47 @@ public class TreeTableViewController {
 
 
         firstNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, String> param) -> {
-            if (firstNameColumn.validateValue(param)) return param.getValue().getValue().firstName;
-            else return firstNameColumn.getComputedValue(param);
+            if (firstNameColumn.validateValue(param)) {
+                return param.getValue().getValue().firstName;
+            } else {
+                return firstNameColumn.getComputedValue(param);
+            }
         });
         lastNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, String> param) -> {
-            if (lastNameColumn.validateValue(param)) return param.getValue().getValue().lastName;
-            else return lastNameColumn.getComputedValue(param);
+            if (lastNameColumn.validateValue(param)) {
+                return param.getValue().getValue().lastName;
+            } else {
+                return lastNameColumn.getComputedValue(param);
+            }
         });
         ageColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, Integer> param) -> {
-            if (ageColumn.validateValue(param)) return param.getValue().getValue().age.asObject();
-            else return ageColumn.getComputedValue(param);
+            if (ageColumn.validateValue(param)) {
+                return param.getValue().getValue().age.asObject();
+            } else {
+                return ageColumn.getComputedValue(param);
+            }
         });
 
         ObservableList<Person> people = FXCollections.observableArrayList();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++) {
             people.add(new Person(names[random.nextInt(names.length)],
-                                  names[random.nextInt(names.length)],
-                                  random.nextInt(100)));
+                names[random.nextInt(names.length)],
+                random.nextInt(100)));
+        }
         treeTableView.setRoot(new RecursiveTreeItem<>(people, RecursiveTreeObject::getChildren));
 
         treeTableView.setShowRoot(false);
         treeTableViewCount.textProperty()
-                          .bind(Bindings.createStringBinding(() -> "( " + treeTableView.getCurrentItemsCount() + " )",
-                                                             treeTableView.currentItemsCountProperty()));
+            .bind(Bindings.createStringBinding(() -> "( " + treeTableView.getCurrentItemsCount() + " )",
+                treeTableView.currentItemsCountProperty()));
         treeTableViewAdd.disableProperty()
-                        .bind(Bindings.notEqual(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
+            .bind(Bindings.notEqual(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
         treeTableViewRemove.disableProperty()
-                           .bind(Bindings.equal(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
+            .bind(Bindings.equal(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
         treeTableViewAdd.setOnMouseClicked((e) -> {
             people.add(new Person(names[random.nextInt(names.length)],
-                                  names[random.nextInt(names.length)],
-                                  random.nextInt(100)));
+                names[random.nextInt(names.length)],
+                random.nextInt(100)));
             treeTableView.currentItemsCountProperty().set(treeTableView.currentItemsCountProperty().get() + 1);
         });
         treeTableViewRemove.setOnMouseClicked((e) -> {
@@ -117,61 +127,71 @@ public class TreeTableViewController {
         });
         searchField.textProperty().addListener((o, oldVal, newVal) -> {
             treeTableView.setPredicate(person -> person.getValue().firstName.get()
-                                                                            .contains(newVal) || person.getValue().lastName
+                .contains(newVal) || person.getValue().lastName
                 .get()
                 .contains(newVal) || (person.getValue().age.get() + "").contains(newVal));
         });
 
 
         firstNameEditableColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, String> param) -> {
-            if (firstNameEditableColumn.validateValue(param)) return param.getValue().getValue().firstName;
-            else return firstNameEditableColumn.getComputedValue(param);
+            if (firstNameEditableColumn.validateValue(param)) {
+                return param.getValue().getValue().firstName;
+            } else {
+                return firstNameEditableColumn.getComputedValue(param);
+            }
         });
         lastNameEditableColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, String> param) -> {
-            if (lastNameEditableColumn.validateValue(param)) return param.getValue().getValue().lastName;
-            else return lastNameEditableColumn.getComputedValue(param);
+            if (lastNameEditableColumn.validateValue(param)) {
+                return param.getValue().getValue().lastName;
+            } else {
+                return lastNameEditableColumn.getComputedValue(param);
+            }
         });
         ageEditableColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Person, Integer> param) -> {
-            if (ageEditableColumn.validateValue(param)) return param.getValue().getValue().age.asObject();
-            else return ageEditableColumn.getComputedValue(param);
+            if (ageEditableColumn.validateValue(param)) {
+                return param.getValue().getValue().age.asObject();
+            } else {
+                return ageEditableColumn.getComputedValue(param);
+            }
         });
         // add editors
         firstNameEditableColumn.setCellFactory((TreeTableColumn<Person, String> param) -> new GenericEditableTreeTableCell<>(
             new TextFieldEditorBuilder()));
         firstNameEditableColumn.setOnEditCommit((CellEditEvent<Person, String> t) -> t.getTreeTableView()
-                                                                                      .getTreeItem(t.getTreeTablePosition()
-                                                                                                    .getRow())
-                                                                                      .getValue().firstName.set(t.getNewValue()));
+            .getTreeItem(t.getTreeTablePosition()
+                .getRow())
+            .getValue().firstName.set(t.getNewValue()));
         lastNameEditableColumn.setCellFactory((TreeTableColumn<Person, String> param) -> new GenericEditableTreeTableCell<>(
             new TextFieldEditorBuilder()));
         lastNameEditableColumn.setOnEditCommit((CellEditEvent<Person, String> t) -> t.getTreeTableView()
-                                                                                     .getTreeItem(t.getTreeTablePosition()
-                                                                                                   .getRow())
-                                                                                     .getValue().lastName.set(t.getNewValue()));
+            .getTreeItem(t.getTreeTablePosition()
+                .getRow())
+            .getValue().lastName.set(t.getNewValue()));
         ageEditableColumn.setCellFactory((TreeTableColumn<Person, Integer> param) -> new GenericEditableTreeTableCell<>(
             new IntegerTextFieldEditorBuilder()));
         ageEditableColumn.setOnEditCommit((CellEditEvent<Person, Integer> t) -> t.getTreeTableView()
-                                                                                 .getTreeItem(t.getTreeTablePosition()
-                                                                                               .getRow())
-                                                                                 .getValue().age.set(t.getNewValue()));
+            .getTreeItem(t.getTreeTablePosition()
+                .getRow())
+            .getValue().age.set(t.getNewValue()));
 
         ObservableList<Person> people2 = FXCollections.observableArrayList();
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < 200; i++) {
             people2.add(new Person(names[random.nextInt(names.length)],
-                                   names[random.nextInt(names.length)],
-                                   random.nextInt(100)));
+                names[random.nextInt(names.length)],
+                random.nextInt(100)));
+        }
         editableTreeTableView.setRoot(new RecursiveTreeItem<>(people2, RecursiveTreeObject::getChildren));
         editableTreeTableView.setShowRoot(false);
         editableTreeTableView.setEditable(true);
         editableTreeTableViewCount.textProperty()
-                                  .bind(Bindings.createStringBinding(() -> "( " + editableTreeTableView.getCurrentItemsCount() + " )",
-                                                                     editableTreeTableView.currentItemsCountProperty()));
+            .bind(Bindings.createStringBinding(() -> "( " + editableTreeTableView.getCurrentItemsCount() + " )",
+                editableTreeTableView.currentItemsCountProperty()));
         searchField2.textProperty()
-                    .addListener((o, oldVal, newVal) -> editableTreeTableView.setPredicate(person -> person.getValue().firstName
-                        .get()
-                        .contains(newVal) || person.getValue().lastName
-                        .get()
-                        .contains(newVal) || (person.getValue().age.get() + "").contains(newVal)));
+            .addListener((o, oldVal, newVal) -> editableTreeTableView.setPredicate(person -> person.getValue().firstName
+                .get()
+                .contains(newVal) || person.getValue().lastName
+                .get()
+                .contains(newVal) || (person.getValue().age.get() + "").contains(newVal)));
     }
 
     /*

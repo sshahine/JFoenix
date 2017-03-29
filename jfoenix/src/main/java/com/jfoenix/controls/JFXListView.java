@@ -157,7 +157,9 @@ public class JFXListView<T> extends ListView<T> {
             int preItemsSize = 0;
             while (itr.hasNext()) {
                 Map.Entry<Integer, JFXListView<?>> entry = itr.next();
-                if (entry.getKey() < selectedIndex) preItemsSize += entry.getValue().getItems().size() - 1;
+                if (entry.getKey() < selectedIndex) {
+                    preItemsSize += entry.getValue().getItems().size() - 1;
+                }
             }
             overAllIndexProperty.set(selectedIndex + preItemsSize);
         } else {
@@ -179,9 +181,9 @@ public class JFXListView<T> extends ListView<T> {
                     }
                 }
                 overAllIndexProperty.set(preItemsSize + (Integer) selectedList.get(0) + sublistsIndices.get(selectedList
-                                                                                                                .get(0))
-                                                                                                       .getSelectionModel()
-                                                                                                       .getSelectedIndex());
+                    .get(0))
+                    .getSelectionModel()
+                    .getSelectedIndex());
             } else {
                 overAllIndexProperty.set(-1);
             }
@@ -206,13 +208,19 @@ public class JFXListView<T> extends ListView<T> {
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
         expanded.addListener((o, oldVal, newVal) -> {
-            if (newVal) expand();
-            else collapse();
+            if (newVal) {
+                expand();
+            } else {
+                collapse();
+            }
         });
 
         verticalGap.addListener((o, oldVal, newVal) -> {
-            if (isExpanded()) expand();
-            else collapse();
+            if (isExpanded()) {
+                expand();
+            } else {
+                collapse();
+            }
         });
 
         // handle selection model on the list ( FOR NOW : we only support single selection on the list if it contains sublists)
@@ -227,9 +235,9 @@ public class JFXListView<T> extends ListView<T> {
                         this.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
                     }
                     c.getAddedSubList()
-                     .forEach(item -> item.getSelectionModel()
-                                          .selectedItemProperty()
-                                          .addListener((o, oldVal, newVal) -> clearSelection(item)));
+                        .forEach(item -> item.getSelectionModel()
+                            .selectedItemProperty()
+                            .addListener((o, oldVal, newVal) -> clearSelection(item)));
                 }
             }
         });
@@ -249,10 +257,14 @@ public class JFXListView<T> extends ListView<T> {
     private void clearSelection(JFXListView<?> selectedList) {
         if (allowClear) {
             allowClear = false;
-            if (this != selectedList) this.getSelectionModel().clearSelection();
-            for (int i = 0; i < sublistsProperty.get().size(); i++)
-                if (sublistsProperty.get().get(i) != selectedList)
+            if (this != selectedList) {
+                this.getSelectionModel().clearSelection();
+            }
+            for (int i = 0; i < sublistsProperty.get().size(); i++) {
+                if (sublistsProperty.get().get(i) != selectedList) {
                     sublistsProperty.get().get(i).getSelectionModel().clearSelection();
+                }
+            }
             allowClear = true;
         }
     }
@@ -268,9 +280,9 @@ public class JFXListView<T> extends ListView<T> {
     }
 
     private StyleableDoubleProperty cellHorizontalMargin = new SimpleStyleableDoubleProperty(StyleableProperties.CELL_HORIZONTAL_MARGIN,
-                                                                                             JFXListView.this,
-                                                                                             "cellHorizontalMargin",
-                                                                                             0.0);
+        JFXListView.this,
+        "cellHorizontalMargin",
+        0.0);
 
     public Double getCellHorizontalMargin() {
         return cellHorizontalMargin == null ? 0 : cellHorizontalMargin.get();
@@ -285,9 +297,9 @@ public class JFXListView<T> extends ListView<T> {
     }
 
     private StyleableDoubleProperty cellVerticalMargin = new SimpleStyleableDoubleProperty(StyleableProperties.CELL_VERTICAL_MARGIN,
-                                                                                           JFXListView.this,
-                                                                                           "cellVerticalMargin",
-                                                                                           4.0);
+        JFXListView.this,
+        "cellVerticalMargin",
+        4.0);
 
     public Double getCellVerticalMargin() {
         return cellVerticalMargin == null ? 4 : cellVerticalMargin.get();
@@ -302,9 +314,9 @@ public class JFXListView<T> extends ListView<T> {
     }
 
     private StyleableDoubleProperty verticalGap = new SimpleStyleableDoubleProperty(StyleableProperties.VERTICAL_GAP,
-                                                                                    JFXListView.this,
-                                                                                    "verticalGap",
-                                                                                    0.0);
+        JFXListView.this,
+        "verticalGap",
+        0.0);
 
     public Double getVerticalGap() {
         return verticalGap == null ? 0 : verticalGap.get();
@@ -319,9 +331,9 @@ public class JFXListView<T> extends ListView<T> {
     }
 
     private StyleableBooleanProperty expanded = new SimpleStyleableBooleanProperty(StyleableProperties.EXPANDED,
-                                                                                   JFXListView.this,
-                                                                                   "expanded",
-                                                                                   false);
+        JFXListView.this,
+        "expanded",
+        false);
 
     public Boolean isExpanded() {
         return expanded != null && expanded.get();
@@ -338,7 +350,7 @@ public class JFXListView<T> extends ListView<T> {
     private static class StyleableProperties {
         private static final CssMetaData<JFXListView<?>, Number> CELL_HORIZONTAL_MARGIN =
             new CssMetaData<JFXListView<?>, Number>("-jfx-cell-horizontal-margin",
-                                                    SizeConverter.getInstance(), 0) {
+                SizeConverter.getInstance(), 0) {
                 @Override
                 public boolean isSettable(JFXListView<?> control) {
                     return control.cellHorizontalMargin == null || !control.cellHorizontalMargin.isBound();
@@ -351,7 +363,7 @@ public class JFXListView<T> extends ListView<T> {
             };
         private static final CssMetaData<JFXListView<?>, Number> CELL_VERTICAL_MARGIN =
             new CssMetaData<JFXListView<?>, Number>("-jfx-cell-vertical-margin",
-                                                    SizeConverter.getInstance(), 4) {
+                SizeConverter.getInstance(), 4) {
                 @Override
                 public boolean isSettable(JFXListView<?> control) {
                     return control.cellVerticalMargin == null || !control.cellVerticalMargin.isBound();
@@ -364,7 +376,7 @@ public class JFXListView<T> extends ListView<T> {
             };
         private static final CssMetaData<JFXListView<?>, Number> VERTICAL_GAP =
             new CssMetaData<JFXListView<?>, Number>("-jfx-vertical-gap",
-                                                    SizeConverter.getInstance(), 0) {
+                SizeConverter.getInstance(), 0) {
                 @Override
                 public boolean isSettable(JFXListView<?> control) {
                     return control.verticalGap == null || !control.verticalGap.isBound();
@@ -377,7 +389,7 @@ public class JFXListView<T> extends ListView<T> {
             };
         private static final CssMetaData<JFXListView<?>, Boolean> EXPANDED =
             new CssMetaData<JFXListView<?>, Boolean>("-jfx-expanded",
-                                                     BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXListView<?> control) {
                     // it's only settable if the List is not shown yet
@@ -395,10 +407,10 @@ public class JFXListView<T> extends ListView<T> {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               CELL_HORIZONTAL_MARGIN,
-                               CELL_VERTICAL_MARGIN,
-                               VERTICAL_GAP,
-                               EXPANDED
+                CELL_HORIZONTAL_MARGIN,
+                CELL_VERTICAL_MARGIN,
+                VERTICAL_GAP,
+                EXPANDED
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

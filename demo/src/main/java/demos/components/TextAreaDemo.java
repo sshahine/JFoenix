@@ -33,13 +33,15 @@ public class TextAreaDemo extends Application {
         validator.setErrorStyleClass("");
         validator.setMessage("Please type something!");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-                                       .glyph(FontAwesomeIcon.WARNING)
-                                       .size("1em")
-                                       .styleClass("error")
-                                       .build());
+            .glyph(FontAwesomeIcon.WARNING)
+            .size("1em")
+            .styleClass("error")
+            .build());
         jfxTextArea.getValidators().add(validator);
         jfxTextArea.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) jfxTextArea.validate();
+            if (!newVal) {
+                jfxTextArea.validate();
+            }
         });
 
 
@@ -52,7 +54,7 @@ public class TextAreaDemo extends Application {
 
         final Scene scene = new Scene(pane, 800, 600);
         scene.getStylesheets()
-             .add(ButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+            .add(ButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
         stage.setTitle("JFX Button Demo");
         stage.setScene(scene);
         stage.show();

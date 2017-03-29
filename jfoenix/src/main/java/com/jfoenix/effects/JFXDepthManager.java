@@ -35,7 +35,7 @@ import javafx.scene.paint.Color;
  */
 public class JFXDepthManager {
 
-    private static DropShadow[] depth = new DropShadow[]{
+    private static DropShadow[] depth = new DropShadow[] {
         new DropShadow(BlurType.GAUSSIAN, Color.rgb(0, 0, 0, 0), 0, 0, 0, 0),
         new DropShadow(BlurType.GAUSSIAN, Color.rgb(0, 0, 0, 0.26), 10, 0.12, -1, 2),
         new DropShadow(BlurType.GAUSSIAN, Color.rgb(0, 0, 0, 0.26), 15, 0.16, 0, 4),
@@ -53,11 +53,11 @@ public class JFXDepthManager {
         level = level < 0 ? 0 : level;
         level = level > 5 ? 5 : level;
         control.setEffect(new DropShadow(BlurType.GAUSSIAN,
-                                         depth[level].getColor(),
-                                         depth[level].getRadius(),
-                                         depth[level].getSpread(),
-                                         depth[level].getOffsetX(),
-                                         depth[level].getOffsetY()));
+            depth[level].getColor(),
+            depth[level].getRadius(),
+            depth[level].getSpread(),
+            depth[level].getOffsetX(),
+            depth[level].getOffsetY()));
     }
 
     public static int getLevels() {
@@ -79,11 +79,11 @@ public class JFXDepthManager {
         level = level < 0 ? 0 : level;
         level = level > 5 ? 5 : level;
         container.setEffect(new DropShadow(BlurType.GAUSSIAN,
-                                           depth[level].getColor(),
-                                           depth[level].getRadius(),
-                                           depth[level].getSpread(),
-                                           depth[level].getOffsetX(),
-                                           depth[level].getOffsetY()));
+            depth[level].getColor(),
+            depth[level].getRadius(),
+            depth[level].getSpread(),
+            depth[level].getOffsetX(),
+            depth[level].getOffsetY()));
         return container;
     }
 

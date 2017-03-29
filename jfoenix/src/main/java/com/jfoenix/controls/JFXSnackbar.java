@@ -92,7 +92,9 @@ public class JFXSnackbar extends StackPane {
         bPane.setRight(actionContainer);
 
         toast.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> {
-            if (this.getPrefWidth() == -1) return this.getPrefWidth();
+            if (this.getPrefWidth() == -1) {
+                return this.getPrefWidth();
+            }
             double actionWidth = actionContainer.isVisible() ? actionContainer.getWidth() : 0.0;
             return this.prefWidthProperty().get() - actionWidth;
         }, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
@@ -219,8 +221,8 @@ public class JFXSnackbar extends StackPane {
                     new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(300),
-                             new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                             new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
                 )
             );
             animation.setCycleCount(1);
@@ -239,8 +241,8 @@ public class JFXSnackbar extends StackPane {
                     new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(300),
-                             new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                             new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
                 ),
                 new KeyFrame(Duration.millis(timeout / 2))
             );
@@ -264,12 +266,12 @@ public class JFXSnackbar extends StackPane {
                 new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
             ),
             new KeyFrame(Duration.millis(300),
-                         e -> popup.toBack(),
-                         new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                         new KeyValue(popup.translateYProperty(),
-                                      popup.getLayoutBounds().getHeight(),
-                                      easeInterpolator),
-                         new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                e -> popup.toBack(),
+                new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+                new KeyValue(popup.translateYProperty(),
+                    popup.getLayoutBounds().getHeight(),
+                    easeInterpolator),
+                new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
             )
         );
         animation.setCycleCount(1);
@@ -280,8 +282,11 @@ public class JFXSnackbar extends StackPane {
     private void processSnackbars() {
         SnackbarEvent qevent = eventQueue.poll();
         if (qevent != null) {
-            if (qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-            else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+            if (qevent.isPersistent()) {
+                show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+            } else {
+                show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+            }
         } else {
             //The enqueue method and this listener should be executed sequentially on the FX Thread so there
             //should not be a race condition
@@ -305,12 +310,14 @@ public class JFXSnackbar extends StackPane {
             Platform.runLater(() -> {
                 SnackbarEvent qevent = eventQueue.poll();
                 if (qevent != null) {
-                    if (qevent.isPersistent())
+                    if (qevent.isPersistent()) {
                         show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-                    else show(qevent.getMessage(),
-                              qevent.getActionText(),
-                              qevent.getTimeout(),
-                              qevent.getActionHandler());
+                    } else {
+                        show(qevent.getMessage(),
+                            qevent.getActionText(),
+                            qevent.getTimeout(),
+                            qevent.getActionHandler());
+                    }
                 }
             });
         }

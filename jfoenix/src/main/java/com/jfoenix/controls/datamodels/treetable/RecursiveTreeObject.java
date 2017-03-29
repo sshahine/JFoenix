@@ -31,8 +31,7 @@ import javafx.scene.control.TreeTableColumn;
  * <p>
  * <b>Note:</b> the data object used in JFXTreeTableView <b>must</b> extends this class
  *
- * @param <T>
- *         is the concrete object of the Tree table
+ * @param <T> is the concrete object of the Tree table
  * @author Shadi Shaheen
  * @version 1.0
  * @since 2016-03-09

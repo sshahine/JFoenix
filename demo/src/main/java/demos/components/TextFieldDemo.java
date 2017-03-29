@@ -42,13 +42,15 @@ public class TextFieldDemo extends Application {
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("Input Required");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-                                       .glyph(FontAwesomeIcon.WARNING)
-                                       .size("1em")
-                                       .styleClass("error")
-                                       .build());
+            .glyph(FontAwesomeIcon.WARNING)
+            .size("1em")
+            .styleClass("error")
+            .build());
         validationField.getValidators().add(validator);
         validationField.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) validationField.validate();
+            if (!newVal) {
+                validationField.validate();
+            }
         });
         pane.getChildren().add(validationField);
 
@@ -59,19 +61,21 @@ public class TextFieldDemo extends Application {
         validator = new RequiredFieldValidator();
         validator.setMessage("Password Can't be empty");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-                                       .glyph(FontAwesomeIcon.WARNING)
-                                       .size("1em")
-                                       .styleClass("error")
-                                       .build());
+            .glyph(FontAwesomeIcon.WARNING)
+            .size("1em")
+            .styleClass("error")
+            .build());
         passwordField.getValidators().add(validator);
         passwordField.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) passwordField.validate();
+            if (!newVal) {
+                passwordField.validate();
+            }
         });
         pane.getChildren().add(passwordField);
 
         final Scene scene = new Scene(pane, 600, 400, Color.WHITE);
         scene.getStylesheets()
-             .add(TextFieldDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+            .add(TextFieldDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
         stage.setTitle("JFX TextField Demo ");
         stage.setScene(scene);
         stage.setResizable(false);

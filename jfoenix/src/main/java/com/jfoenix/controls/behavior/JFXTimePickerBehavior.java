@@ -68,7 +68,9 @@ public class JFXTimePickerBehavior extends ComboBoxBaseBehavior<LocalTime> {
         JFXTimePicker datePicker = (JFXTimePicker) getControl();
         JFXTimePickerSkin cpSkin = (JFXTimePickerSkin) datePicker.getSkin();
         cpSkin.syncWithAutoUpdate();
-        if (!datePicker.isShowing()) super.onAutoHide();
+        if (!datePicker.isShowing()) {
+            super.onAutoHide();
+        }
     }
 
 }

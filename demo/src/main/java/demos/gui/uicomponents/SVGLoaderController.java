@@ -84,9 +84,9 @@ public class SVGLoaderController {
     private ScrollPane allGlyphs() {
 
         List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs()
-                                              .stream()
-                                              .map(SVGGlyphLoader::getIcoMoonGlyph)
-                                              .collect(Collectors.toList());
+            .stream()
+            .map(SVGGlyphLoader::getIcoMoonGlyph)
+            .collect(Collectors.toList());
         glyphs.sort(Comparator.comparing(SVGGlyph::getName));
 
 
@@ -115,31 +115,32 @@ public class SVGLoaderController {
         glyphDetailViewer.colorPicker.valueProperty().addListener((o, oldVal, newVal) -> {
             String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();
             BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).getBackground()
-                                                                                          .getFills()
-                                                                                          .get(0);
+                .getFills()
+                .get(0);
             ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).setBackground(new Background(new BackgroundFill(
                 Color.valueOf(webColor),
                 fill.getRadii(),
                 fill.getInsets())));
             if (lastClicked != null) {
                 final String currentColor = glyphDetailViewer.colorPicker.getValue()
-                                                                         .toString()
-                                                                         .substring(0, 8);
+                    .toString()
+                    .substring(0, 8);
                 final BackgroundFill backgroundFill = new BackgroundFill(Color.valueOf(currentColor + "33"),
-                                                                         null,
-                                                                         null);
+                    null,
+                    null);
                 lastClicked.setBackground(new Background(backgroundFill));
             }
         });
         button.setOnAction(event -> {
-            if (lastClicked != null)
+            if (lastClicked != null) {
                 lastClicked.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+            }
             final String currentColor = glyphDetailViewer.colorPicker.getValue()
-                                                                     .toString()
-                                                                     .substring(0, 8);
+                .toString()
+                .substring(0, 8);
             button.setBackground(new Background(new BackgroundFill(Color.valueOf(currentColor + "33"),
-                                                                   null,
-                                                                   null)));
+                null,
+                null)));
             lastClicked = button;
             viewGlyphDetail(glyph);
         });

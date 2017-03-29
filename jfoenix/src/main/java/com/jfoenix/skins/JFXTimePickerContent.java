@@ -176,10 +176,11 @@ public class JFXTimePickerContent extends VBox {
         periodAMLabel.setOnMouseClicked((click) -> period.set("AM"));
 
         // init period value
-        if (hour < 12)
+        if (hour < 12) {
             periodAMLabel.setTextFill(Color.WHITE);
-        else
+        } else {
             periodPMLabel.setTextFill(Color.WHITE);
+        }
         period.set(hour < 12 ? "AM" : "PM");
 
 
@@ -191,15 +192,15 @@ public class JFXTimePickerContent extends VBox {
         HBox selectedTimeContainer = new HBox();
         selectedTimeContainer.getStyleClass().add("spinner");
         selectedTimeContainer.getChildren()
-                             .addAll(selectedHourLabel, separatorLabel, selectedMinLabel, periodContainer);
+            .addAll(selectedHourLabel, separatorLabel, selectedMinLabel, periodContainer);
         selectedTimeContainer.setAlignment(Pos.CENTER);
         selectedTimeContainer.setFillHeight(false);
 
         StackPane headerPanel = new StackPane();
         headerPanel.getStyleClass().add("time-pane");
         headerPanel.setBackground(new Background(new BackgroundFill(this.timePicker.getDefaultColor(),
-                                                                    CornerRadii.EMPTY,
-                                                                    Insets.EMPTY)));
+            CornerRadii.EMPTY,
+            Insets.EMPTY)));
         headerPanel.setPadding(new Insets(8, 24, 8, 24));
         headerPanel.getChildren().add(selectedTimeContainer);
         return headerPanel;
@@ -216,10 +217,12 @@ public class JFXTimePickerContent extends VBox {
             int index = (int) Math.round((180 + Math.toDegrees(theta)) / angle.get());
             pointerRotate.get().setAngle(index * angle.get());
             int timeValue = (index + 9) % 12 == 0 ? 12 : (index + 9) % 12;
-            if (unit.get() == TimeUnit.MINUTES) timeValue = (index + 45) % 60;
+            if (unit.get() == TimeUnit.MINUTES) {
+                timeValue = (index + 45) % 60;
+            }
             timeLabel.get()
-                     .setText(unit.get() == TimeUnit.MINUTES ? unitConverter.toString(timeValue) : Integer.toString(
-                         timeValue));
+                .setText(unit.get() == TimeUnit.MINUTES ? unitConverter.toString(timeValue) : Integer.toString(
+                    timeValue));
             updateValue();
         };
 
@@ -255,8 +258,11 @@ public class JFXTimePickerContent extends VBox {
         minCircle.setTranslateX(selectionCircle.getRadius() - minCircle.getRadius());
         minCircle.setVisible(time.getMinute() % 5 != 0);
         selectedMinLabel.textProperty().addListener((o, oldVal, newVal) -> {
-            if (Integer.parseInt(newVal) % 5 == 0) minCircle.setVisible(false);
-            else minCircle.setVisible(true);
+            if (Integer.parseInt(newVal) % 5 == 0) {
+                minCircle.setVisible(false);
+            } else {
+                minCircle.setVisible(true);
+            }
         });
 
 
@@ -347,7 +353,7 @@ public class JFXTimePickerContent extends VBox {
             label.setFont(Font.font(ROBOTO, FontWeight.BOLD, 12));
             // init color
             label.setTextFill((val == time.getHour() % 12 || (val == 12 && time.getHour() % 12 == 0)) ?
-                                  Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
+                Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
             selectedHourLabel.textProperty().addListener((o, oldVal, newVal) -> {
                 if (Integer.parseInt(newVal) == Integer.parseInt(label.getText())) {
                     label.setTextFill(Color.rgb(255, 255, 255, 0.87));
@@ -374,8 +380,9 @@ public class JFXTimePickerContent extends VBox {
             clockLabelsContainer.getChildren().add(labelContainer);
 
             // init pointer angle
-            if (val == time.getHour() % 12 || (val == 12 && time.getHour() % 12 == 0))
+            if (val == time.getHour() % 12 || (val == 12 && time.getHour() % 12 == 0)) {
                 hoursPointerRotate.setAngle(180 + Math.toDegrees(angle));
+            }
         }
         return new StackPane(pointerGroup, clockLabelsContainer);
     }
@@ -389,23 +396,23 @@ public class JFXTimePickerContent extends VBox {
     private void switchTimeUnit(TimeUnit newVal) {
         if (newVal == TimeUnit.HOURS) {
             Timeline fadeout = new Timeline(new KeyFrame(Duration.millis(320),
-                                                         new KeyValue(minutesContent.opacityProperty(),
-                                                                      0,
-                                                                      Interpolator.EASE_BOTH)));
+                new KeyValue(minutesContent.opacityProperty(),
+                    0,
+                    Interpolator.EASE_BOTH)));
             Timeline fadein = new Timeline(new KeyFrame(Duration.millis(320),
-                                                        new KeyValue(hoursContent.opacityProperty(),
-                                                                     1,
-                                                                     Interpolator.EASE_BOTH)));
+                new KeyValue(hoursContent.opacityProperty(),
+                    1,
+                    Interpolator.EASE_BOTH)));
             new ParallelTransition(fadeout, fadein).play();
         } else {
             Timeline fadeout = new Timeline(new KeyFrame(Duration.millis(320),
-                                                         new KeyValue(hoursContent.opacityProperty(),
-                                                                      0,
-                                                                      Interpolator.EASE_BOTH)));
+                new KeyValue(hoursContent.opacityProperty(),
+                    0,
+                    Interpolator.EASE_BOTH)));
             Timeline fadein = new Timeline(new KeyFrame(Duration.millis(320),
-                                                        new KeyValue(minutesContent.opacityProperty(),
-                                                                     1,
-                                                                     Interpolator.EASE_BOTH)));
+                new KeyValue(minutesContent.opacityProperty(),
+                    1,
+                    Interpolator.EASE_BOTH)));
             new ParallelTransition(fadeout, fadein).play();
         }
     }
@@ -428,7 +435,8 @@ public class JFXTimePickerContent extends VBox {
 
     void clearFocus() {
         LocalTime focusTime = timePicker.getValue();
-        if (focusTime == null)
+        if (focusTime == null) {
             focusTime = LocalTime.now();
+        }
     }
 }

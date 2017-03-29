@@ -49,14 +49,10 @@ public class SVGGlyph extends Pane {
      * <b>Note:</b> name and glyphId is not needed when creating a single SVG image,
      * they have been used in {@link SVGGlyphLoader} to load icomoon svg font.
      *
-     * @param glyphId
-     *         integer represents the glyph id
-     * @param name
-     *         glyph name
-     * @param svgPathContent
-     *         svg content
-     * @param fill
-     *         svg color
+     * @param glyphId        integer represents the glyph id
+     * @param name           glyph name
+     * @param svgPathContent svg content
+     * @param fill           svg color
      */
     public SVGGlyph(int glyphId, String name, String svgPathContent, Paint fill) {
         this.glyphId = glyphId;

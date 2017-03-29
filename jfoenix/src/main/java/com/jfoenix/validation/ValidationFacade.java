@@ -102,30 +102,31 @@ public class ValidationFacade extends VBox {
         // add listeners to show error label
         errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
             if (errorShown) {
-                if (oldErrorLabelHeight == -1)
+                if (oldErrorLabelHeight == -1) {
                     oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
+                }
                 heightChanged = true;
                 double newHeight = getHeight() - oldErrorLabelHeight + newVal.doubleValue();
                 // show the error
                 Timeline errorAnimation = new Timeline(new KeyFrame(Duration.ZERO,
-                                                                    new KeyValue(minHeightProperty(),
-                                                                                 currentFieldHeight,
-                                                                                 Interpolator.EASE_BOTH)),
-                                                       new KeyFrame(Duration.millis(160),
-                                                                    // text pane animation
-                                                                    new KeyValue(translateYProperty(),
-                                                                                 (initYlayout + getMaxHeight() / 2) - newHeight / 2,
-                                                                                 Interpolator.EASE_BOTH),
-                                                                    // animate the height change effect
-                                                                    new KeyValue(minHeightProperty(),
-                                                                                 newHeight,
-                                                                                 Interpolator.EASE_BOTH)));
+                    new KeyValue(minHeightProperty(),
+                        currentFieldHeight,
+                        Interpolator.EASE_BOTH)),
+                    new KeyFrame(Duration.millis(160),
+                        // text pane animation
+                        new KeyValue(translateYProperty(),
+                            (initYlayout + getMaxHeight() / 2) - newHeight / 2,
+                            Interpolator.EASE_BOTH),
+                        // animate the height change effect
+                        new KeyValue(minHeightProperty(),
+                            newHeight,
+                            Interpolator.EASE_BOTH)));
                 errorAnimation.play();
                 // show the error label when finished
                 errorAnimation.setOnFinished(finish -> new Timeline(new KeyFrame(Duration.millis(160),
-                                                                                 new KeyValue(errorContainer.opacityProperty(),
-                                                                                              1,
-                                                                                              Interpolator.EASE_BOTH))).play());
+                    new KeyValue(errorContainer.opacityProperty(),
+                        1,
+                        Interpolator.EASE_BOTH))).play());
                 currentFieldHeight = newHeight;
                 oldErrorLabelHeight = newVal.doubleValue();
             }
@@ -133,20 +134,21 @@ public class ValidationFacade extends VBox {
         errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
             // show the error label if it's not shown
             new Timeline(new KeyFrame(Duration.millis(160),
-                                      new KeyValue(errorContainer.opacityProperty(),
-                                                   1,
-                                                   Interpolator.EASE_BOTH))).play();
+                new KeyValue(errorContainer.opacityProperty(),
+                    1,
+                    Interpolator.EASE_BOTH))).play();
         });
 
         activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (!isDisableAnimation()) {
-                if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+                if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
                     hideErrorAnimation.stop();
+                }
                 if (newVal != null) {
                     hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                                                                   new KeyValue(errorContainer.opacityProperty(),
-                                                                                0,
-                                                                                Interpolator.EASE_BOTH)));
+                        new KeyValue(errorContainer.opacityProperty(),
+                            0,
+                            Interpolator.EASE_BOTH)));
                     hideErrorAnimation.setOnFinished(finish -> {
                         JFXUtilities.runInFX(() -> showError(newVal));
                     });
@@ -155,8 +157,11 @@ public class ValidationFacade extends VBox {
                     JFXUtilities.runInFX(() -> hideError());
                 }
             } else {
-                if (newVal != null) JFXUtilities.runInFXAndWait(() -> showError(newVal));
-                else JFXUtilities.runInFXAndWait(() -> hideError());
+                if (newVal != null) {
+                    JFXUtilities.runInFXAndWait(() -> showError(newVal));
+                } else {
+                    JFXUtilities.runInFXAndWait(() -> hideError());
+                }
             }
         });
 
@@ -203,8 +208,9 @@ public class ValidationFacade extends VBox {
     public static boolean validate(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
         for (ValidatorBase validator : facade.validators) {
-            if (validator.getSrcControl() == null)
+            if (validator.getSrcControl() == null) {
                 validator.setSrcControl(facade.controlProperty.get());
+            }
             validator.validate();
             if (validator.getHasErrors()) {
                 facade.activeValidator.set(validator);
@@ -220,7 +226,7 @@ public class ValidationFacade extends VBox {
     public static void reset(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
         control.getStyleClass()
-               .remove(facade.activeValidator.get() == null ? "" : facade.activeValidator.get().getErrorStyleClass());
+            .remove(facade.activeValidator.get() == null ? "" : facade.activeValidator.get().getErrorStyleClass());
         control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
         facade.activeValidator.set(null);
     }
@@ -272,10 +278,10 @@ public class ValidationFacade extends VBox {
     private void hideError() {
         if (heightChanged) {
             new Timeline(new KeyFrame(Duration.millis(160),
-                                      new KeyValue(translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+                new KeyValue(translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
             // reset the height of text field
             new Timeline(new KeyFrame(Duration.millis(160),
-                                      new KeyValue(minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
+                new KeyValue(minHeightProperty(), initHeight, Interpolator.EASE_BOTH))).play();
             heightChanged = false;
         }
         // clear error label text

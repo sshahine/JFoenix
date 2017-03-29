@@ -38,7 +38,7 @@ public class RadioButtonDemo extends Application {
             primaryStage.setHeight(400);
             primaryStage.setTitle("JFX RadioButton Demo ");
             scene.getStylesheets()
-                 .add(RadioButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+                .add(RadioButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
 
             primaryStage.show();
         } catch (Exception e) {

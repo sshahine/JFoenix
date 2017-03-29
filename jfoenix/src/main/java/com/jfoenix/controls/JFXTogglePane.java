@@ -60,13 +60,13 @@ public class JFXTogglePane extends StackPane {
                 if (getToggleNode() != null) {
                     Region toggleNode = getToggleNode();
                     newVal.layoutXProperty()
-                          .bind(Bindings.createDoubleBinding(() -> toggleNode.getLayoutX() + toggleNode.getWidth() / 2,
-                                                             toggleNode.widthProperty(),
-                                                             toggleNode.layoutXProperty()));
+                        .bind(Bindings.createDoubleBinding(() -> toggleNode.getLayoutX() + toggleNode.getWidth() / 2,
+                            toggleNode.widthProperty(),
+                            toggleNode.layoutXProperty()));
                     newVal.layoutYProperty()
-                          .bind(Bindings.createDoubleBinding(() -> toggleNode.getLayoutY() + toggleNode.getHeight() / 2,
-                                                             toggleNode.heightProperty(),
-                                                             toggleNode.layoutYProperty()));
+                        .bind(Bindings.createDoubleBinding(() -> toggleNode.getLayoutY() + toggleNode.getHeight() / 2,
+                            toggleNode.heightProperty(),
+                            toggleNode.layoutYProperty()));
                 }
             }
         });
@@ -80,13 +80,13 @@ public class JFXTogglePane extends StackPane {
                     getClip().layoutXProperty().unbind();
                     getClip().layoutYProperty().unbind();
                     getClip().layoutXProperty()
-                             .bind(Bindings.createDoubleBinding(() -> newVal.getLayoutX() + newVal.getWidth() / 2,
-                                                                newVal.widthProperty(),
-                                                                newVal.layoutXProperty()));
+                        .bind(Bindings.createDoubleBinding(() -> newVal.getLayoutX() + newVal.getWidth() / 2,
+                            newVal.widthProperty(),
+                            newVal.layoutXProperty()));
                     getClip().layoutYProperty()
-                             .bind(Bindings.createDoubleBinding(() -> newVal.getLayoutY() + newVal.getHeight() / 2,
-                                                                newVal.heightProperty(),
-                                                                newVal.layoutYProperty()));
+                        .bind(Bindings.createDoubleBinding(() -> newVal.getLayoutY() + newVal.getHeight() / 2,
+                            newVal.heightProperty(),
+                            newVal.layoutYProperty()));
                 }
             }
             updateToggleAnimation();
@@ -98,18 +98,24 @@ public class JFXTogglePane extends StackPane {
     }
 
     public void togglePane() {
-        if (toggleAnimation == null) updateToggleAnimation();
+        if (toggleAnimation == null) {
+            updateToggleAnimation();
+        }
         this.getClip().scaleXProperty().unbind();
         this.getClip().scaleYProperty().unbind();
         toggleAnimation.setRate(toggleAnimation.getRate() * -1);
-        if (toggleAnimation.getCurrentTime().equals(Duration.millis(0)) && toggleAnimation.getRate() == -1)
+        if (toggleAnimation.getCurrentTime().equals(Duration.millis(0)) && toggleAnimation.getRate() == -1) {
             toggleAnimation.playFrom(Duration.millis(510));
-        else toggleAnimation.play();
+        } else {
+            toggleAnimation.play();
+        }
     }
 
 
     private void updateToggleAnimation() {
-        if (getContentNode() == null) return;
+        if (getContentNode() == null) {
+            return;
+        }
         double rateX = this.getWidth() / getClip().getLayoutBounds().getWidth();
         double rateY = this.getHeight() / getClip().getLayoutBounds().getHeight();
         double newRate = Math.max(rateX, rateY) * getScalingFactor();
@@ -119,15 +125,15 @@ public class JFXTogglePane extends StackPane {
             new KeyFrame(Duration.millis(0), new KeyValue(getClip().scaleXProperty(), 1, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(0), new KeyValue(getClip().scaleYProperty(), 1, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(0),
-                         new KeyValue(getContentNode().opacityProperty(), 0, Interpolator.EASE_BOTH)),
+                new KeyValue(getContentNode().opacityProperty(), 0, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(350),
-                         new KeyValue(getClip().scaleXProperty(), newRate, Interpolator.EASE_BOTH)),
+                new KeyValue(getClip().scaleXProperty(), newRate, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(350),
-                         new KeyValue(getClip().scaleYProperty(), newRate, Interpolator.EASE_BOTH)),
+                new KeyValue(getClip().scaleYProperty(), newRate, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(370),
-                         new KeyValue(getContentNode().opacityProperty(), 0, Interpolator.EASE_BOTH)),
+                new KeyValue(getContentNode().opacityProperty(), 0, Interpolator.EASE_BOTH)),
             new KeyFrame(Duration.millis(510),
-                         new KeyValue(getContentNode().opacityProperty(), 1, Interpolator.EASE_BOTH)));
+                new KeyValue(getContentNode().opacityProperty(), 1, Interpolator.EASE_BOTH)));
         toggleAnimation.setOnFinished((finish) -> {
             if (toggleAnimation.getRate() == 1) {
                 this.getClip().scaleXProperty().bind(Bindings.createDoubleBinding(() -> {

@@ -7,24 +7,24 @@
 <?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
-	<VBox maxWidth="500" maxHeight="400">
-		<children>
-			<Label styleClass="title-label">Popup ups</Label>
-			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
-				<children>
-					<JFXColorPicker minWidth="100"></JFXColorPicker>
-					<JFXDatePicker></JFXDatePicker>
-					<JFXTimePicker></JFXTimePicker>
-				</children>
-			</HBox>
-			<Label styleClass="title-label">Overylays</Label>
-			<HBox spacing="40" style="-fx-padding: 0 0 0 50;">
-				<children>
-					<JFXDatePicker fx:id="dateOverlay" overLay="true" defaultColor="#3f51b5"></JFXDatePicker>
-					<JFXTimePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5"></JFXTimePicker>
-				</children>
-			</HBox>
-		</children>
-	</VBox>
+    <VBox maxWidth="500" maxHeight="400">
+        <children>
+            <Label styleClass="title-label">Popup ups</Label>
+            <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+                <children>
+                    <JFXColorPicker minWidth="100"></JFXColorPicker>
+                    <JFXDatePicker></JFXDatePicker>
+                    <JFXTimePicker></JFXTimePicker>
+                </children>
+            </HBox>
+            <Label styleClass="title-label">Overylays</Label>
+            <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+                <children>
+                    <JFXDatePicker fx:id="dateOverlay" overLay="true" defaultColor="#3f51b5"></JFXDatePicker>
+                    <JFXTimePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5"></JFXTimePicker>
+                </children>
+            </HBox>
+        </children>
+    </VBox>
 </StackPane>
 

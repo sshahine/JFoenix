@@ -53,8 +53,7 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     /**
      * Creates a container with a fade animation and the given duration
      *
-     * @param duration
-     *         the duration of the animation
+     * @param duration the duration of the animation
      */
     public AnimatedFlowContainer(Duration duration) {
         this(duration, ContainerAnimations.FADE);
@@ -63,10 +62,8 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     /**
      * Creates a container with the given animation type and  duration
      *
-     * @param duration
-     *         the duration of the animation
-     * @param animation
-     *         the animation type
+     * @param duration  the duration of the animation
+     * @param animation the animation type
      */
     public AnimatedFlowContainer(Duration duration, ContainerAnimations animation) {
         this(duration, animation.getAnimationProducer());
@@ -75,10 +72,8 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     /**
      * Creates a container with the given animation type and duration
      *
-     * @param duration
-     *         the duration of the animation
-     * @param animationProducer
-     *         the {@link KeyFrame} instances that define the animation
+     * @param duration          the duration of the animation
+     * @param animationProducer the {@link KeyFrame} instances that define the animation
      */
     public AnimatedFlowContainer(Duration duration, Function<io.datafx.controller.flow.container.AnimatedFlowContainer, List<KeyFrame>> animationProducer) {
         this.root = new StackPane();
@@ -142,7 +137,7 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
             SnapshotParameters parameters = new SnapshotParameters();
             parameters.setFill(Color.TRANSPARENT);
             Image placeholderImage = root.snapshot(parameters,
-                                                   new WritableImage((int) root.getWidth(), (int) root.getHeight()));
+                new WritableImage((int) root.getWidth(), (int) root.getHeight()));
             placeholder.setImage(placeholderImage);
             placeholder.setFitWidth(placeholderImage.getWidth());
             placeholder.setFitHeight(placeholderImage.getHeight());

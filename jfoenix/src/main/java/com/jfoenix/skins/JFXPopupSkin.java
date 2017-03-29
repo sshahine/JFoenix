@@ -99,21 +99,21 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
     private class PopupTransition extends CachedTransition {
         public PopupTransition() {
             super(root, new Timeline(
-                      new KeyFrame(
-                          Duration.ZERO,
-                          new KeyValue(popupContent.opacityProperty(), 0, Interpolator.EASE_BOTH),
-                          new KeyValue(scale.xProperty(), 0, Interpolator.EASE_BOTH),
-                          new KeyValue(scale.yProperty(), 0, Interpolator.EASE_BOTH)
-                      ),
-                      new KeyFrame(Duration.millis(700),
-                                   new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH),
-                                   new KeyValue(popupContent.opacityProperty(), 0, Interpolator.EASE_BOTH)
-                      ),
-                      new KeyFrame(Duration.millis(1000),
-                                   new KeyValue(popupContent.opacityProperty(), 1, Interpolator.EASE_BOTH),
-                                   new KeyValue(scale.yProperty(), 1, Interpolator.EASE_BOTH)
-                      )
-                  )
+                    new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(popupContent.opacityProperty(), 0, Interpolator.EASE_BOTH),
+                        new KeyValue(scale.xProperty(), 0, Interpolator.EASE_BOTH),
+                        new KeyValue(scale.yProperty(), 0, Interpolator.EASE_BOTH)
+                    ),
+                    new KeyFrame(Duration.millis(700),
+                        new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH),
+                        new KeyValue(popupContent.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    ),
+                    new KeyFrame(Duration.millis(1000),
+                        new KeyValue(popupContent.opacityProperty(), 1, Interpolator.EASE_BOTH),
+                        new KeyValue(scale.yProperty(), 1, Interpolator.EASE_BOTH)
+                    )
+                )
                 , new CacheMomento(popupContent));
             setCycleDuration(Duration.seconds(.4));
             setDelay(Duration.seconds(0));

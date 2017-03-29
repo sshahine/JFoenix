@@ -72,10 +72,12 @@ public class JFXComboBox<T> extends ComboBox<T> {
         this.setConverter(new StringConverter<T>() {
             @Override
             public String toString(T object) {
-                if (object == null)
+                if (object == null) {
                     return null;
-                if (object instanceof Label)
+                }
+                if (object instanceof Label) {
                     return ((Label) object).getText();
+                }
                 return object.toString();
             }
 
@@ -128,7 +130,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
     }
 
     private ObjectProperty<NodeConverter<T>> nodeConverter = new SimpleObjectProperty<>(this, "nodeConverter",
-                                                                                        JFXComboBox.<T>defaultNodeConverter());
+        JFXComboBox.<T>defaultNodeConverter());
 
     public final void setNodeConverter(NodeConverter<T> value) {
         nodeConverterProperty().set(value);
@@ -142,8 +144,9 @@ public class JFXComboBox<T> extends ComboBox<T> {
         return new NodeConverter<T>() {
             @Override
             public Node toNode(T object) {
-                if (object == null)
+                if (object == null) {
                     return null;
+                }
                 StackPane selectedValueContainer = new StackPane();
                 selectedValueContainer.getStyleClass().add("combo-box-selected-value-container");
                 selectedValueContainer.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
@@ -164,10 +167,12 @@ public class JFXComboBox<T> extends ComboBox<T> {
 
             @Override
             public String toString(T object) {
-                if (object == null)
+                if (object == null) {
                     return null;
-                if (object instanceof Label)
+                }
+                if (object instanceof Label) {
                     return ((Label) object).getText();
+                }
                 return object.toString();
             }
         };
@@ -176,7 +181,9 @@ public class JFXComboBox<T> extends ComboBox<T> {
     private boolean updateDisplayText(ListCell<T> cell, T item, boolean empty) {
         if (empty) {
             // create empty cell
-            if (cell == null) return true;
+            if (cell == null) {
+                return true;
+            }
             cell.setGraphic(null);
             cell.setText(null);
             return true;
@@ -212,9 +219,9 @@ public class JFXComboBox<T> extends ComboBox<T> {
      * set true to show a float the prompt text when focusing the field
      */
     private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT,
-                                                                                     JFXComboBox.this,
-                                                                                     "lableFloat",
-                                                                                     false);
+        JFXComboBox.this,
+        "lableFloat",
+        false);
 
     public final StyleableBooleanProperty labelFloatProperty() {
         return this.labelFloat;
@@ -232,11 +239,11 @@ public class JFXComboBox<T> extends ComboBox<T> {
      * default color used when the field is unfocused
      */
     private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
-                                                                                              JFXComboBox.this,
-                                                                                              "unFocusColor",
-                                                                                              Color.rgb(77,
-                                                                                                        77,
-                                                                                                        77));
+        JFXComboBox.this,
+        "unFocusColor",
+        Color.rgb(77,
+            77,
+            77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
@@ -254,9 +261,9 @@ public class JFXComboBox<T> extends ComboBox<T> {
      * default color used when the field is focused
      */
     private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.FOCUS_COLOR,
-                                                                                            JFXComboBox.this,
-                                                                                            "focusColor",
-                                                                                            Color.valueOf("#4059A9"));
+        JFXComboBox.this,
+        "focusColor",
+        Color.valueOf("#4059A9"));
 
     public Paint getFocusColor() {
         return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();

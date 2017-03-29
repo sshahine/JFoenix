@@ -5,21 +5,21 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
-	<VBox spacing="50" alignment="BASELINE_CENTER" maxHeight="250" >
-		<JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>
-		<JFXProgressBar></JFXProgressBar>
+    <VBox spacing="50" alignment="BASELINE_CENTER" maxHeight="250">
+        <JFXProgressBar fx:id="progress1" progress="100"></JFXProgressBar>
+        <JFXProgressBar></JFXProgressBar>
 
-		<JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="100"></JFXProgressBar>
-		<JFXProgressBar styleClass="custom-jfx-progress-bar"></JFXProgressBar>
+        <JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="100"></JFXProgressBar>
+        <JFXProgressBar styleClass="custom-jfx-progress-bar"></JFXProgressBar>
 
-		<JFXProgressBar styleClass="custom-jfx-progress-bar-stroke"></JFXProgressBar>
-		<StackPane.margin>	
-			<Insets>
-				<left>50</left>
-				<right>50</right>
-				<top>10</top>
-			</Insets>			
-		</StackPane.margin>
-	</VBox>
+        <JFXProgressBar styleClass="custom-jfx-progress-bar-stroke"></JFXProgressBar>
+        <StackPane.margin>
+            <Insets>
+                <left>50</left>
+                <right>50</right>
+                <top>10</top>
+            </Insets>
+        </StackPane.margin>
+    </VBox>
 </StackPane>
-	
+

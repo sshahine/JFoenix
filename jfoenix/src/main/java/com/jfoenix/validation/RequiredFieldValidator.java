@@ -42,25 +42,30 @@ public class RequiredFieldValidator extends ValidatorBase {
      */
     @Override
     protected void eval() {
-        if (srcControl.get() instanceof TextInputControl)
+        if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
-        if (srcControl.get() instanceof JFXComboBox<?>)
+        }
+        if (srcControl.get() instanceof JFXComboBox<?>) {
             evalComboBoxField();
+        }
     }
 
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
-        if (textField.getText() == null || textField.getText().equals("")) hasErrors.set(true);
-        else hasErrors.set(false);
+        if (textField.getText() == null || textField.getText().equals("")) {
+            hasErrors.set(true);
+        } else {
+            hasErrors.set(false);
+        }
     }
 
     private void evalComboBoxField() {
         JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
         boolean hasValue = comboField.getValue() != null;
         boolean editorHasNonEmptyText = comboField.isEditable() && comboField.getEditor()
-                                                                             .getText() != null && !comboField.getEditor()
-                                                                                                              .getText()
-                                                                                                              .isEmpty();
+            .getText() != null && !comboField.getEditor()
+            .getText()
+            .isEmpty();
         hasErrors.set(!hasValue && !editorHasNonEmptyText);
     }
 }

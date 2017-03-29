@@ -64,10 +64,10 @@ public class IconsController {
             } else {
                 if (count % 4 == 0) {
                     snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistant " + count,
-                                                         "CLOSE",
-                                                         3000,
-                                                         true,
-                                                         b -> snackbar.close()));
+                        "CLOSE",
+                        3000,
+                        true,
+                        b -> snackbar.close()));
                 } else {
                     snackbar.fireEvent(new SnackbarEvent("Snackbar Message " + count, "UNDO", 3000, false, (b) -> {
                     }));

@@ -70,8 +70,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     /**
      * creates empty recursive tree item
      *
-     * @param func
-     *         is the callback used to retrieve the children of the current tree item
+     * @param func is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
         this(null, null, func);
@@ -80,10 +79,8 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     /**
      * creates recursive tree item for a specified value
      *
-     * @param value
-     *         of the tree item
-     * @param func
-     *         is the callback used to retrieve the children of the current tree item
+     * @param value of the tree item
+     * @param func  is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(final T value, Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
         this(value, null, func);
@@ -92,12 +89,9 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     /**
      * creates recursive tree item for a specified value and a graphic node
      *
-     * @param value
-     *         of the tree item
-     * @param graphic
-     *         node
-     * @param func
-     *         is the callback used to retrieve the children of the current tree item
+     * @param value   of the tree item
+     * @param graphic node
+     * @param func    is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(final T value, Node graphic, Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
         super(value, graphic);
@@ -108,10 +102,8 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     /**
      * creates recursive tree item from a data list
      *
-     * @param dataList
-     *         of values
-     * @param func
-     *         is the callback used to retrieve the children of the current tree item
+     * @param dataList of values
+     * @param func     is the callback used to retrieve the children of the current tree item
      */
     public RecursiveTreeItem(ObservableList<T> dataList, Callback<RecursiveTreeObject<T>, ObservableList<T>> func) {
         RecursiveTreeObject<T> root = new RecursiveTreeObject<>();
@@ -143,14 +135,16 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
                         }
                     }
                     // If there is no predicate, keep this tree item
-                    if (RecursiveTreeItem.this.predicate.get() == null)
+                    if (RecursiveTreeItem.this.predicate.get() == null) {
                         return true;
+                    }
                     // If there are children, keep this tree item
-                    if (child.getChildren().size() > 0)
+                    if (child.getChildren().size() > 0) {
                         return true;
+                    }
                     // If its a group node keep this item if it has children
                     if (child.getValue() instanceof RecursiveTreeObject && child.getValue()
-                                                                                .getClass() == RecursiveTreeObject.class) {
+                        .getClass() == RecursiveTreeObject.class) {
                         return child.getChildren().size() != 0;
                     }
                     // Otherwise ask the TreeItemPredicate
@@ -172,8 +166,9 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     private void addChildrenListener(RecursiveTreeObject<T> value) {
         final ObservableList<T> children = childrenFactory.call(value);
         originalItems = FXCollections.observableArrayList();
-        for (T child : children)
+        for (T child : children) {
             originalItems.add(new RecursiveTreeItem<>(child, getGraphic(), childrenFactory));
+        }
 
         filteredItems = new FilteredList<>(originalItems, (TreeItem<T> t) -> true);
 

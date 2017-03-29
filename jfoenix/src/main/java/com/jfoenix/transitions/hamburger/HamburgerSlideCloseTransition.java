@@ -45,14 +45,15 @@ public class HamburgerSlideCloseTransition extends CachedTransition implements H
     public HamburgerSlideCloseTransition(JFXHamburger burger) {
         super(burger, createTimeline(burger));
         timeline.bind(Bindings.createObjectBinding(() -> createTimeline(burger),
-                                                   ((Region) burger.getChildren().get(0)).widthProperty(),
-                                                   ((Region) burger.getChildren().get(0)).heightProperty()));
+            ((Region) burger.getChildren().get(0)).widthProperty(),
+            ((Region) burger.getChildren().get(0)).heightProperty()));
         setCycleDuration(Duration.seconds(0.3));
         setDelay(Duration.seconds(0));
 
         setOnFinished((finish) -> {
-            if (this.getRate() == 1)
+            if (this.getRate() == 1) {
                 burger.getChildren().get(1).setVisible(false);
+            }
         });
     }
 
@@ -83,9 +84,9 @@ public class HamburgerSlideCloseTransition extends CachedTransition implements H
     private static Timeline createTimeline(JFXHamburger burger) {
         double burgerWidth = burger.getChildren().get(0).getLayoutBounds().getWidth();
         double burgerHeight = burger.getChildren().get(2).getBoundsInParent().getMaxY() - burger.getChildren()
-                                                                                                .get(0)
-                                                                                                .getBoundsInParent()
-                                                                                                .getMinY();
+            .get(0)
+            .getBoundsInParent()
+            .getMinY();
 
         double hypotenuse = Math.sqrt(Math.pow(burgerHeight, 2) + Math.pow(burgerWidth, 2));
         double angle = Math.toDegrees(Math.asin(burgerWidth / hypotenuse)) + 90;
@@ -102,25 +103,25 @@ public class HamburgerSlideCloseTransition extends CachedTransition implements H
                 new KeyValue(burger.getChildren().get(1).translateXProperty(), 0, Interpolator.EASE_BOTH)
             ),
             new KeyFrame(Duration.millis(1000),
-                         new KeyValue(burger.rotateProperty(), 0, Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(0).rotateProperty(), angle, Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(0).translateYProperty(),
-                                      (burgerHeight / 2) - burger.getChildren()
-                                                                 .get(0)
-                                                                 .getBoundsInLocal()
-                                                                 .getHeight() / 2,
-                                      Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(2).rotateProperty(), -angle, Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(2).translateYProperty(),
-                                      -((burgerHeight / 2) - burger.getChildren()
-                                                                   .get(2)
-                                                                   .getBoundsInLocal()
-                                                                   .getHeight() / 2),
-                                      Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(1).opacityProperty(), 0, Interpolator.EASE_BOTH),
-                         new KeyValue(burger.getChildren().get(1).translateXProperty(),
-                                      -burger.getWidth() / 1.1,
-                                      Interpolator.EASE_BOTH)
+                new KeyValue(burger.rotateProperty(), 0, Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(0).rotateProperty(), angle, Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(0).translateYProperty(),
+                    (burgerHeight / 2) - burger.getChildren()
+                        .get(0)
+                        .getBoundsInLocal()
+                        .getHeight() / 2,
+                    Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(2).rotateProperty(), -angle, Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(2).translateYProperty(),
+                    -((burgerHeight / 2) - burger.getChildren()
+                        .get(2)
+                        .getBoundsInLocal()
+                        .getHeight() / 2),
+                    Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(1).opacityProperty(), 0, Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(1).translateXProperty(),
+                    -burger.getWidth() / 1.1,
+                    Interpolator.EASE_BOTH)
             )
         );
     }

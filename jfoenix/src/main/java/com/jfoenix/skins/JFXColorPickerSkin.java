@@ -58,9 +58,9 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     private StackPane pickerColorClip;
     private JFXColorPalette popupContent;
     StyleableBooleanProperty colorLabelVisible = new SimpleStyleableBooleanProperty(StyleableProperties.COLOR_LABEL_VISIBLE,
-                                                                                    JFXColorPickerSkin.this,
-                                                                                    "colorLabelVisible",
-                                                                                    true);
+        JFXColorPickerSkin.this,
+        "colorLabelVisible",
+        true);
 
     public JFXColorPickerSkin(final ColorPicker colorPicker) {
 
@@ -75,22 +75,22 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         pickerColorBox = new Pane();
         pickerColorBox.getStyleClass().add("picker-color");
         pickerColorBox.setBackground(new Background(new BackgroundFill(Color.valueOf("#fafafa"),
-                                                                       new CornerRadii(3),
-                                                                       Insets.EMPTY)));
+            new CornerRadii(3),
+            Insets.EMPTY)));
         pickerColorClip = new StackPane();
         pickerColorClip.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
             return new Background(new BackgroundFill(Color.WHITE,
-                                                     pickerColorBox.backgroundProperty()
-                                                                   .get() != null ? pickerColorBox.getBackground()
-                                                                                                  .getFills()
-                                                                                                  .get(0)
-                                                                                                  .getRadii() : new CornerRadii(
-                                                         3),
-                                                     pickerColorBox.backgroundProperty()
-                                                                   .get() != null ? pickerColorBox.getBackground()
-                                                                                                  .getFills()
-                                                                                                  .get(0)
-                                                                                                  .getInsets() : Insets.EMPTY));
+                pickerColorBox.backgroundProperty()
+                    .get() != null ? pickerColorBox.getBackground()
+                    .getFills()
+                    .get(0)
+                    .getRadii() : new CornerRadii(
+                    3),
+                pickerColorBox.backgroundProperty()
+                    .get() != null ? pickerColorBox.getBackground()
+                    .getFills()
+                    .get(0)
+                    .getInsets() : Insets.EMPTY));
         }, pickerColorBox.backgroundProperty()));
         pickerColorBox.setClip(pickerColorClip);
         JFXButton button = new JFXButton("");
@@ -156,9 +156,9 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     static String formatHexString(Color c) {
         if (c != null) {
             return String.format((Locale) null, "#%02x%02x%02x",
-                                 Math.round(c.getRed() * 255),
-                                 Math.round(c.getGreen() * 255),
-                                 Math.round(c.getBlue() * 255)).toUpperCase();
+                Math.round(c.getRed() * 255),
+                Math.round(c.getGreen() * 255),
+                Math.round(c.getBlue() * 255)).toUpperCase();
         } else {
             return null;
         }
@@ -188,8 +188,11 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     protected void handleControlPropertyChanged(String p) {
         super.handleControlPropertyChanged(p);
         if ("SHOWING".equals(p)) {
-            if (getSkinnable().isShowing()) show();
-            else if (!popupContent.isCustomColorDialogShowing()) hide();
+            if (getSkinnable().isShowing()) {
+                show();
+            } else if (!popupContent.isCustomColorDialogShowing()) {
+                hide();
+            }
         } else if ("VALUE".equals(p)) {
             // change the selected color
             updateColor();
@@ -210,27 +213,30 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         ColorCircle.setLayoutY(pickerColorBox.getHeight() / 2);
         pickerColorBox.getChildren().add(ColorCircle);
         Timeline animateColor = new Timeline(new KeyFrame(Duration.millis(240),
-                                                          new KeyValue(ColorCircle.radiusProperty(),
-                                                                       200,
-                                                                       Interpolator.EASE_BOTH)));
+            new KeyValue(ColorCircle.radiusProperty(),
+                200,
+                Interpolator.EASE_BOTH)));
         animateColor.setOnFinished((finish) -> {
             pickerColorBox.setBackground(new Background(new BackgroundFill(ColorCircle.getFill(),
-                                                                           pickerColorBox.getBackground()
-                                                                                         .getFills()
-                                                                                         .get(0)
-                                                                                         .getRadii(),
-                                                                           pickerColorBox.getBackground()
-                                                                                         .getFills()
-                                                                                         .get(0)
-                                                                                         .getInsets())));
+                pickerColorBox.getBackground()
+                    .getFills()
+                    .get(0)
+                    .getRadii(),
+                pickerColorBox.getBackground()
+                    .getFills()
+                    .get(0)
+                    .getInsets())));
             pickerColorBox.getChildren().remove(ColorCircle);
         });
         animateColor.play();
         // update label color
         displayNode.setTextFill(colorPicker.getValue().grayscale().getRed() < 0.5 ? Color.valueOf(
             "rgba(255, 255, 255, 0.87)") : Color.valueOf("rgba(0, 0, 0, 0.87)"));
-        if (colorLabelVisible.get()) displayNode.setText(colorDisplayName(colorPicker.getValue()));
-        else displayNode.setText("");
+        if (colorLabelVisible.get()) {
+            displayNode.setText(colorDisplayName(colorPicker.getValue()));
+        } else {
+            displayNode.setText("");
+        }
     }
 
     public void syncWithAutoUpdate() {
@@ -258,7 +264,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     private static class StyleableProperties {
         private static final CssMetaData<ColorPicker, Boolean> COLOR_LABEL_VISIBLE =
             new CssMetaData<ColorPicker, Boolean>("-fx-color-label-visible",
-                                                  BooleanConverter.getInstance(), Boolean.TRUE) {
+                BooleanConverter.getInstance(), Boolean.TRUE) {
 
                 @Override
                 public boolean isSettable(ColorPicker n) {

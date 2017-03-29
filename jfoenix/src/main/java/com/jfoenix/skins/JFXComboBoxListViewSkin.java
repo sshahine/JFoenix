@@ -65,12 +65,12 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     private Scale scale = new Scale(initScale, 1);
     private Timeline linesAnimation = new Timeline(
         new KeyFrame(Duration.ZERO,
-                     new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
-                     new KeyValue(focusedLine.opacityProperty(), 0, Interpolator.EASE_BOTH)),
+            new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
+            new KeyValue(focusedLine.opacityProperty(), 0, Interpolator.EASE_BOTH)),
         new KeyFrame(Duration.millis(1),
-                     new KeyValue(focusedLine.opacityProperty(), 1, Interpolator.EASE_BOTH)),
+            new KeyValue(focusedLine.opacityProperty(), 1, Interpolator.EASE_BOTH)),
         new KeyFrame(Duration.millis(160),
-                     new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH))
+            new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH))
     );
 
     private ParallelTransition transition;
@@ -82,8 +82,8 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     protected final ObjectProperty<Paint> promptTextFill = new SimpleObjectProperty<>(Color.valueOf("#B2B2B2"));
 
     private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
-                                                                         ((JFXComboBox<?>) getSkinnable()).valueProperty(),
-                                                                         getSkinnable().promptTextProperty());
+        ((JFXComboBox<?>) getSkinnable()).valueProperty(),
+        getSkinnable().promptTextProperty());
 
 
     /***************************************************************************
@@ -103,7 +103,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         promptText.fillProperty().bind(promptTextFill);
         promptText.getStyleClass().addAll("text", "prompt-text");
         promptText.getTransforms().add(promptTextScale);
-        if (!comboBox.isLabelFloat()) promptText.visibleProperty().bind(usePromptText);
+        if (!comboBox.isLabelFloat()) {
+            promptText.visibleProperty().bind(usePromptText);
+        }
 
         customPane = new StackPane();
         customPane.setMouseTransparent(true);
@@ -122,20 +124,20 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
         line.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-                                                             CornerRadii.EMPTY, Insets.EMPTY)));
+            CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
             line.setBorder(new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-                                                       BorderStrokeStyle.DASHED,
-                                                       CornerRadii.EMPTY,
-                                                       new BorderWidths(1))));
+                BorderStrokeStyle.DASHED,
+                CornerRadii.EMPTY,
+                new BorderWidths(1))));
             line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-                                                                 CornerRadii.EMPTY, Insets.EMPTY)));
+                CornerRadii.EMPTY, Insets.EMPTY)));
         }
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
         focusedLine.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>) getSkinnable()).getFocusColor(),
-                                                                    CornerRadii.EMPTY, Insets.EMPTY)));
+            CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
 
@@ -154,7 +156,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             if (newVal) {
                 promptText.visibleProperty().unbind();
                 JFXUtilities.runInFX(() -> createFloatingAnimation());
-            } else promptText.visibleProperty().bind(usePromptText);
+            } else {
+                promptText.visibleProperty().bind(usePromptText);
+            }
             createFocusTransition();
         });
 
@@ -164,7 +168,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
                 if (((JFXComboBox<?>) getSkinnable()).isLabelFloat()) {
                     promptTextColorTransition = new CachedTransition(customPane, new Timeline(
                         new KeyFrame(Duration.millis(1300),
-                                     new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
+                            new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
                         {
                             setDelay(Duration.millis(0));
                             setCycleDuration(Duration.millis(160));
@@ -182,31 +186,38 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         });
 
         comboBox.unFocusColorProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null)
+            if (newVal != null) {
                 line.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
+            }
         });
 
         comboBox.disabledProperty().addListener((o, oldVal, newVal) -> {
             line.setBorder(newVal ? new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-                                                                BorderStrokeStyle.DASHED,
-                                                                CornerRadii.EMPTY,
-                                                                new BorderWidths(line.getHeight()))) : Border.EMPTY);
+                BorderStrokeStyle.DASHED,
+                CornerRadii.EMPTY,
+                new BorderWidths(line.getHeight()))) : Border.EMPTY);
             line.setBackground(new Background(new BackgroundFill(newVal ? Color.TRANSPARENT : ((JFXComboBox<?>) getSkinnable())
                 .getUnFocusColor(),
-                                                                 CornerRadii.EMPTY, Insets.EMPTY)));
+                CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
         // handle animation on focus gained/lost event
         comboBox.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) focus();
-            else unFocus();
+            if (newVal) {
+                focus();
+            } else {
+                unFocus();
+            }
         });
 
         // handle animation on value changed
         comboBox.valueProperty().addListener((o, oldVal, newVal) -> {
             if (((JFXComboBox<?>) getSkinnable()).isLabelFloat()) {
-                if (newVal == null || newVal.toString().isEmpty()) animateFloatingLabel(false);
-                else animateFloatingLabel(true);
+                if (newVal == null || newVal.toString().isEmpty()) {
+                    animateFloatingLabel(false);
+                } else {
+                    animateFloatingLabel(true);
+                }
             }
         });
 
@@ -237,20 +248,20 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         // TODO: the 6.05 should be computed, for now its hard coded to keep the alignment with other controls
         promptTextUpTransition = new CachedTransition(customPane, new Timeline(
             new KeyFrame(Duration.millis(1300),
-                         new KeyValue(promptText.translateYProperty(),
-                                      -customPane.getHeight() + 6.05,
-                                      Interpolator.EASE_BOTH),
-                         new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
-                         new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
+                new KeyValue(promptText.translateYProperty(),
+                    -customPane.getHeight() + 6.05,
+                    Interpolator.EASE_BOTH),
+                new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
+                new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
             setDelay(Duration.millis(0));
             setCycleDuration(Duration.millis(240));
         }};
 
         promptTextColorTransition = new CachedTransition(customPane, new Timeline(
             new KeyFrame(Duration.millis(1300),
-                         new KeyValue(promptTextFill,
-                                      ((JFXComboBox<?>) getSkinnable()).getFocusColor(),
-                                      Interpolator.EASE_BOTH)))) {
+                new KeyValue(promptTextFill,
+                    ((JFXComboBox<?>) getSkinnable()).getFocusColor(),
+                    Interpolator.EASE_BOTH)))) {
             {
                 setDelay(Duration.millis(0));
                 setCycleDuration(Duration.millis(160));
@@ -265,9 +276,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
         promptTextDownTransition = new CachedTransition(customPane, new Timeline(
             new KeyFrame(Duration.millis(1300),
-                         new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                         new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
-                         new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
+                new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+                new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
+                new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
             setDelay(Duration.millis(0));
             setCycleDuration(Duration.millis(240));
         }};
@@ -280,7 +291,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
     private void focus() {
         // create the focus animations
-        if (transition == null) createFocusTransition();
+        if (transition == null) {
+            createFocusTransition();
+        }
         transition.play();
     }
 
@@ -303,10 +316,14 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             if (up && promptText.getTranslateY() == 0) {
                 promptTextDownTransition.stop();
                 promptTextUpTransition.play();
-                if (getSkinnable().isFocused()) promptTextColorTransition.play();
+                if (getSkinnable().isFocused()) {
+                    promptTextColorTransition.play();
+                }
             } else if (!up) {
                 promptTextUpTransition.stop();
-                if (getSkinnable().isFocused()) promptTextFill.set(oldPromptTextFill);
+                if (getSkinnable().isFocused()) {
+                    promptTextFill.set(oldPromptTextFill);
+                }
                 promptTextDownTransition.play();
             }
         }
@@ -322,12 +339,16 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     }
 
     private void unFocus() {
-        if (transition != null) transition.stop();
+        if (transition != null) {
+            transition.stop();
+        }
         scale.setX(initScale);
         focusedLine.setOpacity(0);
         if (((JFXComboBox<?>) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
             promptTextFill.set(oldPromptTextFill);
-            if (usePromptText()) promptTextDownTransition.play();
+            if (usePromptText()) {
+                promptTextDownTransition.play();
+            }
         }
     }
 
@@ -335,7 +356,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         Object txt = ((JFXComboBox<?>) getSkinnable()).getValue();
         String promptTxt = getSkinnable().getPromptText();
         return (txt == null || txt.toString()
-                                  .isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
+            .isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
             .get()
             .equals(Color.TRANSPARENT);
     }

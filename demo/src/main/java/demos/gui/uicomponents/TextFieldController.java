@@ -22,13 +22,19 @@ public class TextFieldController {
     @PostConstruct
     public void init() {
         validatedText.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) validatedText.validate();
+            if (!newVal) {
+                validatedText.validate();
+            }
         });
         validatedPassowrd.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) validatedPassowrd.validate();
+            if (!newVal) {
+                validatedPassowrd.validate();
+            }
         });
         jfxTextArea.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) jfxTextArea.validate();
+            if (!newVal) {
+                jfxTextArea.validate();
+            }
         });
     }
 

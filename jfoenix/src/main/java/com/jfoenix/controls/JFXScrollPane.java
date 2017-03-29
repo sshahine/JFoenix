@@ -80,11 +80,11 @@ public class JFXScrollPane extends StackPane {
         condensedHeaderBG.setOpacity(0);
         condensedHeaderBG.getStyleClass().add("condensed-header");
         condensedHeaderBG.setBackground(new Background(new BackgroundFill(Color.valueOf("#1E88E5"),
-                                                                          CornerRadii.EMPTY,
-                                                                          Insets.EMPTY)));
+            CornerRadii.EMPTY,
+            Insets.EMPTY)));
         headerBG.setBackground(new Background(new BackgroundFill(Color.valueOf("#3949AB"),
-                                                                 CornerRadii.EMPTY,
-                                                                 Insets.EMPTY)));
+            CornerRadii.EMPTY,
+            Insets.EMPTY)));
         headerBG.getStyleClass().add("main-header");
         StackPane bgContainer = new StackPane();
         bgContainer.getChildren().setAll(condensedHeaderBG, headerBG);
@@ -154,17 +154,24 @@ public class JFXScrollPane extends StackPane {
                 double diff = oldTy - ty;
 
                 if (newVal.doubleValue() < oldVal.doubleValue() && -dy > minHeight) {
-                    if (-(header.getTranslateY() - diff) > minHeight)
+                    if (-(header.getTranslateY() - diff) > minHeight) {
                         header.setTranslateY(header.getTranslateY() - diff);
-                    else header.setTranslateY(-minHeight);
+                    } else {
+                        header.setTranslateY(-minHeight);
+                    }
                 } else {
                     if (-dy > maxHeight) {
-                        if (-(header.getTranslateY() - diff) < maxHeight)
+                        if (-(header.getTranslateY() - diff) < maxHeight) {
                             header.setTranslateY(header.getTranslateY() - diff);
-                        else header.setTranslateY(-maxHeight);
+                        } else {
+                            header.setTranslateY(-maxHeight);
+                        }
                     } else {
-                        if (diff > maxHeight) header.setTranslateY(-maxHeight);
-                        else header.setTranslateY(dy);
+                        if (diff > maxHeight) {
+                            header.setTranslateY(-maxHeight);
+                        } else {
+                            header.setTranslateY(dy);
+                        }
                     }
                 }
             }
@@ -181,11 +188,13 @@ public class JFXScrollPane extends StackPane {
     }
 
     public void setContent(Node content) {
-        if (contentContainer.getChildren().size() == 2)
+        if (contentContainer.getChildren().size() == 2) {
             contentContainer.getChildren().set(1, content);
-        else if (contentContainer.getChildren().size() == 1)
+        } else if (contentContainer.getChildren().size() == 1) {
             contentContainer.getChildren().add(content);
-        else contentContainer.getChildren().setAll(headerSpace, content);
+        } else {
+            contentContainer.getChildren().setAll(headerSpace, content);
+        }
         VBox.setVgrow(content, Priority.ALWAYS);
     }
 
@@ -224,23 +233,29 @@ public class JFXScrollPane extends StackPane {
         scrollPane.getContent().addEventHandler(ScrollEvent.ANY, event -> {
             if (event.getEventType().equals(ScrollEvent.SCROLL)) {
                 int direction = event.getDeltaY() > 0 ? -1 : 1;
-                for (int i = 0; i < pushes.length; i++)
+                for (int i = 0; i < pushes.length; i++) {
                     derivatives[i] += direction * pushes[i];
-                if (timeline.getStatus().equals(Animation.Status.STOPPED)) timeline.play();
+                }
+                if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
+                    timeline.play();
+                }
                 event.consume();
             }
         });
 
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(3), (event) -> {
-            for (int i = 0; i < derivatives.length; i++)
+            for (int i = 0; i < derivatives.length; i++) {
                 derivatives[i] *= frictions[i];
-            for (int i = 1; i < derivatives.length; i++)
+            }
+            for (int i = 1; i < derivatives.length; i++) {
                 derivatives[i] += derivatives[i - 1];
+            }
             double dy = derivatives[derivatives.length - 1];
             double height = scrollPane.getContent().getLayoutBounds().getHeight();
             scrollPane.setVvalue(Math.min(Math.max(scrollPane.getVvalue() + dy / height, 0), 1));
-            if (Math.abs(dy) < 0.001)
+            if (Math.abs(dy) < 0.001) {
                 timeline.stop();
+            }
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
     }

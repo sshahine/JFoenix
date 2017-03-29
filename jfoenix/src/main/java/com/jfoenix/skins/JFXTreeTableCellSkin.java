@@ -59,9 +59,13 @@ public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<
         double leftPadding = super.leftLabelPadding();
         final double height = getCellSize();
         TreeTableColumn<S, T> tableColumn = getSkinnable().getTableColumn();
-        if (tableColumn == null) return leftPadding;
+        if (tableColumn == null) {
+            return leftPadding;
+        }
         TreeTableView<S> treeTable = getSkinnable().getTreeTableView();
-        if (treeTable == null) return leftPadding;
+        if (treeTable == null) {
+            return leftPadding;
+        }
         int columnIndex = treeTable.getVisibleLeafIndex(tableColumn);
 
         TreeTableColumn<S, ?> treeColumn = treeTable.getTreeColumn();
@@ -72,18 +76,25 @@ public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<
         }
 
         TreeTableRow<S> treeTableRow = getSkinnable().getTreeTableRow();
-        if (treeTableRow == null) return leftPadding;
+        if (treeTableRow == null) {
+            return leftPadding;
+        }
         TreeItem<S> treeItem = getSkinnable().getTreeTableRow().getTreeItem();
-        if (treeItem == null) return leftPadding;
+        if (treeItem == null) {
+            return leftPadding;
+        }
 
         // getTreeItemLevel ignore the group nodes level
         treeColumn = treeTable.getTreeColumn() == null ? treeTable.getVisibleLeafColumn(0) : treeTable.getTreeColumn();
         if (tableColumn == treeColumn) {
             int nodeLevel = treeTable.getTreeItemLevel(treeItem);
-            if (!treeTable.isShowRoot()) nodeLevel--;
+            if (!treeTable.isShowRoot()) {
+                nodeLevel--;
+            }
             double indentPerLevel = 10;
-            if (treeTableRow.getSkin() instanceof JFXTreeTableRowSkin)
+            if (treeTableRow.getSkin() instanceof JFXTreeTableRowSkin) {
                 indentPerLevel = ((JFXTreeTableRowSkin<?>) treeTableRow.getSkin()).getIndentationPerLevel();
+            }
             leftPadding += nodeLevel * indentPerLevel;
         }
 

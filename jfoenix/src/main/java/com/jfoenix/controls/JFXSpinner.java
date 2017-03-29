@@ -99,26 +99,26 @@ public class JFXSpinner extends StackPane {
     private KeyFrame[] getKeyFrames(double angle, double duration, Color color) {
         KeyFrame[] frames = new KeyFrame[4];
         frames[0] = new KeyFrame(Duration.seconds(duration),
-                                 new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
-                                 new KeyValue(arc.startAngleProperty(),
-                                              angle + 45 + getStartingAngle(),
-                                              Interpolator.LINEAR));
+            new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
+            new KeyValue(arc.startAngleProperty(),
+                angle + 45 + getStartingAngle(),
+                Interpolator.LINEAR));
         frames[1] = new KeyFrame(Duration.seconds(duration + 0.4),
-                                 new KeyValue(arc.lengthProperty(), 250, Interpolator.LINEAR),
-                                 new KeyValue(arc.startAngleProperty(),
-                                              angle + 90 + getStartingAngle(),
-                                              Interpolator.LINEAR));
+            new KeyValue(arc.lengthProperty(), 250, Interpolator.LINEAR),
+            new KeyValue(arc.startAngleProperty(),
+                angle + 90 + getStartingAngle(),
+                Interpolator.LINEAR));
         frames[2] = new KeyFrame(Duration.seconds(duration + 0.7),
-                                 new KeyValue(arc.lengthProperty(), 250, Interpolator.LINEAR),
-                                 new KeyValue(arc.startAngleProperty(),
-                                              angle + 135 + getStartingAngle(),
-                                              Interpolator.LINEAR));
+            new KeyValue(arc.lengthProperty(), 250, Interpolator.LINEAR),
+            new KeyValue(arc.startAngleProperty(),
+                angle + 135 + getStartingAngle(),
+                Interpolator.LINEAR));
         frames[3] = new KeyFrame(Duration.seconds(duration + 1.1),
-                                 new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
-                                 new KeyValue(arc.startAngleProperty(),
-                                              angle + 435 + getStartingAngle(),
-                                              Interpolator.LINEAR),
-                                 new KeyValue(arc.strokeProperty(), color, Interpolator.EASE_BOTH));
+            new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
+            new KeyValue(arc.startAngleProperty(),
+                angle + 435 + getStartingAngle(),
+                Interpolator.LINEAR),
+            new KeyValue(arc.strokeProperty(), color, Interpolator.EASE_BOTH));
         return frames;
     }
 
@@ -140,29 +140,31 @@ public class JFXSpinner extends StackPane {
             KeyFrame[] greenFrame = getKeyFrames(1350, 4.2, initialColor == null ? greenColor : initialColor);
 
             KeyFrame endingFrame = new KeyFrame(Duration.seconds(5.6),
-                                                new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
-                                                new KeyValue(arc.startAngleProperty(),
-                                                             1845 + getStartingAngle(),
-                                                             Interpolator.LINEAR));
+                new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
+                new KeyValue(arc.startAngleProperty(),
+                    1845 + getStartingAngle(),
+                    Interpolator.LINEAR));
 
-            if (timeline != null) timeline.stop();
+            if (timeline != null) {
+                timeline.stop();
+            }
             timeline = new Timeline(blueFrame[0],
-                                    blueFrame[1],
-                                    blueFrame[2],
-                                    blueFrame[3],
-                                    redFrame[0],
-                                    redFrame[1],
-                                    redFrame[2],
-                                    redFrame[3],
-                                    yellowFrame[0],
-                                    yellowFrame[1],
-                                    yellowFrame[2],
-                                    yellowFrame[3],
-                                    greenFrame[0],
-                                    greenFrame[1],
-                                    greenFrame[2],
-                                    greenFrame[3],
-                                    endingFrame);
+                blueFrame[1],
+                blueFrame[2],
+                blueFrame[3],
+                redFrame[0],
+                redFrame[1],
+                redFrame[2],
+                redFrame[3],
+                yellowFrame[0],
+                yellowFrame[1],
+                yellowFrame[2],
+                yellowFrame[3],
+                greenFrame[0],
+                greenFrame[1],
+                greenFrame[2],
+                greenFrame[3],
+                endingFrame);
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.setRate(1);
             timeline.play();
@@ -191,9 +193,9 @@ public class JFXSpinner extends StackPane {
      * specifies the radius of the spinner node
      */
     private StyleableDoubleProperty radius = new SimpleStyleableDoubleProperty(StyleableProperties.RADIUS,
-                                                                               JFXSpinner.this,
-                                                                               "radius",
-                                                                               12.0);
+        JFXSpinner.this,
+        "radius",
+        12.0);
 
     public final StyleableDoubleProperty radiusProperty() {
         return this.radius;
@@ -211,9 +213,9 @@ public class JFXSpinner extends StackPane {
      * specifies from which angle the spinner should start spinning
      */
     private StyleableDoubleProperty startingAngle = new SimpleStyleableDoubleProperty(StyleableProperties.STARTING_ANGLE,
-                                                                                      JFXSpinner.this,
-                                                                                      "starting_angle",
-                                                                                      360 - Math.random() * 720);
+        JFXSpinner.this,
+        "starting_angle",
+        360 - Math.random() * 720);
 
     public final StyleableDoubleProperty startingAngleProperty() {
         return this.startingAngle;
@@ -230,7 +232,7 @@ public class JFXSpinner extends StackPane {
     private static class StyleableProperties {
         private static final CssMetaData<JFXSpinner, Number> RADIUS =
             new CssMetaData<JFXSpinner, Number>("-jfx-radius",
-                                                SizeConverter.getInstance(), 12) {
+                SizeConverter.getInstance(), 12) {
                 @Override
                 public boolean isSettable(JFXSpinner control) {
                     return control.radius == null || !control.radius.isBound();
@@ -244,7 +246,7 @@ public class JFXSpinner extends StackPane {
 
         private static final CssMetaData<JFXSpinner, Number> STARTING_ANGLE =
             new CssMetaData<JFXSpinner, Number>("-jfx-starting-angle",
-                                                SizeConverter.getInstance(), 360 - Math.random() * 720) {
+                SizeConverter.getInstance(), 360 - Math.random() * 720) {
                 @Override
                 public boolean isSettable(JFXSpinner control) {
                     return control.startingAngle == null || !control.startingAngle.isBound();
@@ -263,8 +265,8 @@ public class JFXSpinner extends StackPane {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Parent.getClassCssMetaData());
             Collections.addAll(styleables,
-                               RADIUS,
-                               STARTING_ANGLE
+                RADIUS,
+                STARTING_ANGLE
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

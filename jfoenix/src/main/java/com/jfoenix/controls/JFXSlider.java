@@ -119,8 +119,7 @@ public class JFXSlider extends Slider {
     /**
      * sets custom string binding for the slider text value
      *
-     * @param valueFactory
-     *         a callback to create the string value binding
+     * @param valueFactory a callback to create the string value binding
      */
     public final void setValueFactory(final Callback<JFXSlider, StringBinding> valueFactory) {
         this.valueFactoryProperty().set(valueFactory);

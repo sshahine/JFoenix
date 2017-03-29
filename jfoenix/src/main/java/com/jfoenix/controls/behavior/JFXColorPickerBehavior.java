@@ -65,9 +65,13 @@ public class JFXColorPickerBehavior extends ComboBoxBaseBehavior<Color> {
 
     @Override
     protected void callAction(String name) {
-        if (JFX_OPEN_ACTION.equals(name)) show();
-        else if (JFX_CLOSE_ACTION.equals(name)) hide();
-        else super.callAction(name);
+        if (JFX_OPEN_ACTION.equals(name)) {
+            show();
+        } else if (JFX_CLOSE_ACTION.equals(name)) {
+            hide();
+        } else {
+            super.callAction(name);
+        }
     }
 
     /**************************************************************************
@@ -81,7 +85,9 @@ public class JFXColorPickerBehavior extends ComboBoxBaseBehavior<Color> {
         ColorPicker colorPicker = (ColorPicker) getControl();
         JFXColorPickerSkin cpSkin = (JFXColorPickerSkin) colorPicker.getSkin();
         cpSkin.syncWithAutoUpdate();
-        if (!colorPicker.isShowing()) super.onAutoHide();
+        if (!colorPicker.isShowing()) {
+            super.onAutoHide();
+        }
     }
 
 }

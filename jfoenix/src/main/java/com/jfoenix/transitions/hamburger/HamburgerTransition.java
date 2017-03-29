@@ -34,8 +34,7 @@ public interface HamburgerTransition {
     /**
      * build a transition to animate the hamburger node
      *
-     * @param burger
-     *         the node to be animated
+     * @param burger the node to be animated
      * @return animation transition
      */
     Transition getAnimation(JFXHamburger burger);

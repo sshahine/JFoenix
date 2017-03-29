@@ -61,8 +61,8 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
         if (disclosureWidthMap == null) {
             try {
                 Field declaredField = getClass().getSuperclass()
-                                                .getSuperclass()
-                                                .getDeclaredField("maxDisclosureWidthMap");
+                    .getSuperclass()
+                    .getDeclaredField("maxDisclosureWidthMap");
                 declaredField.setAccessible(true);
                 disclosureWidthMap = (Map<Control, Double>) declaredField.get(this);
             } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
@@ -92,14 +92,15 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
         // allow custom skin to grouped rows
         getSkinnable().getStyleClass().remove("tree-table-row-group");
         if (getSkinnable().getTreeItem() != null && getSkinnable().getTreeItem()
-                                                                  .getValue() instanceof RecursiveTreeObject && getSkinnable()
+            .getValue() instanceof RecursiveTreeObject && getSkinnable()
             .getTreeItem()
             .getValue()
-            .getClass() == RecursiveTreeObject.class)
+            .getClass() == RecursiveTreeObject.class) {
             getSkinnable().getStyleClass().add("tree-table-row-group");
+        }
 
         if (getSkinnable().getIndex() > -1 && getSkinnable().getTreeTableView()
-                                                            .getTreeItem(getSkinnable().getIndex()) != null) {
+            .getTreeItem(getSkinnable().getIndex()) != null) {
             super.layoutChildren(x, y, w, h);
 
             // disclosure row case
@@ -109,11 +110,11 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                 final Parent arrowParent = arrow.getParent();
                 if (((RecursiveTreeObject<?>) getSkinnable().getItem()).getGroupedColumn() != null) {
                     Node col = getChildren().get(getSkinnable().getTreeTableView()
-                                                               .getTreeItemLevel(getSkinnable().getTreeItem()) + 1);
+                        .getTreeItemLevel(getSkinnable().getTreeItem()) + 1);
                     if (getSkinnable().getItem() instanceof RecursiveTreeObject) {
                         int index = getSkinnable().getTreeTableView()
-                                                  .getColumns()
-                                                  .indexOf(((RecursiveTreeObject<?>) getSkinnable().getItem()).getGroupedColumn());
+                            .getColumns()
+                            .indexOf(((RecursiveTreeObject<?>) getSkinnable().getItem()).getGroupedColumn());
                         //						getSkinnable().getTreeTableView().getColumns().get(index).getText();
                         col = getChildren().get(index + 1); // index + 2 , if the rippler was added
                     }
@@ -127,16 +128,16 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                 // add disclosure node animation
                 if (expandedAnimation == null || !expandedAnimation.getStatus().equals(Status.RUNNING)) {
                     expandedAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                                                                  new KeyValue(arrow.rotateProperty(),
-                                                                               90,
-                                                                               Interpolator.EASE_BOTH)));
+                        new KeyValue(arrow.rotateProperty(),
+                            90,
+                            Interpolator.EASE_BOTH)));
                     expandedAnimation.setOnFinished((finish) -> arrow.setRotate(90));
                 }
                 if (collapsedAnimation == null || !collapsedAnimation.getStatus().equals(Status.RUNNING)) {
                     collapsedAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                                                                   new KeyValue(arrow.rotateProperty(),
-                                                                                0,
-                                                                                Interpolator.EASE_BOTH)));
+                        new KeyValue(arrow.rotateProperty(),
+                            0,
+                            Interpolator.EASE_BOTH)));
                     collapsedAnimation.setOnFinished((finish) -> arrow.setRotate(0));
                 }
                 getSkinnable().getTreeItem().expandedProperty().removeListener(expandedListener);
@@ -153,11 +154,13 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                     expandTriggered = false;
                 } else {
                     if (getSkinnable().getTreeTableView().getTreeItem(getSkinnable().getIndex()).isExpanded()) {
-                        if (!expandedAnimation.getStatus().equals(Status.RUNNING))
+                        if (!expandedAnimation.getStatus().equals(Status.RUNNING)) {
                             arrow.setRotate(90);
+                        }
                     } else {
-                        if (!collapsedAnimation.getStatus().equals(Status.RUNNING))
+                        if (!collapsedAnimation.getStatus().equals(Status.RUNNING)) {
                             arrow.setRotate(0);
+                        }
                     }
                 }
             }

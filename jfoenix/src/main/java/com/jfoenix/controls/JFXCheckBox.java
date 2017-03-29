@@ -97,10 +97,10 @@ public class JFXCheckBox extends CheckBox {
      * checkbox color property when selected
      */
     private StyleableObjectProperty<Paint> checkedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.CHECKED_COLOR,
-                                                                                              JFXCheckBox.this,
-                                                                                              "checkedColor",
-                                                                                              Color.valueOf(
-                                                                                                  "#0F9D58"));
+        JFXCheckBox.this,
+        "checkedColor",
+        Color.valueOf(
+            "#0F9D58"));
 
     public Paint getCheckedColor() {
         return checkedColor == null ? Color.valueOf("#0F9D58") : checkedColor.get();
@@ -118,10 +118,10 @@ public class JFXCheckBox extends CheckBox {
      * checkbox color property when not selected
      */
     private StyleableObjectProperty<Paint> unCheckedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNCHECKED_COLOR,
-                                                                                                JFXCheckBox.this,
-                                                                                                "unCheckedColor",
-                                                                                                Color.valueOf(
-                                                                                                    "#5A5A5A"));
+        JFXCheckBox.this,
+        "unCheckedColor",
+        Color.valueOf(
+            "#5A5A5A"));
 
     public Paint getUnCheckedColor() {
         return unCheckedColor == null ? Color.valueOf("#5A5A5A") : unCheckedColor.get();
@@ -139,7 +139,7 @@ public class JFXCheckBox extends CheckBox {
     private static class StyleableProperties {
         private static final CssMetaData<JFXCheckBox, Paint> CHECKED_COLOR =
             new CssMetaData<JFXCheckBox, Paint>("-jfx-checked-color",
-                                                PaintConverter.getInstance(), Color.valueOf("#0F9D58")) {
+                PaintConverter.getInstance(), Color.valueOf("#0F9D58")) {
                 @Override
                 public boolean isSettable(JFXCheckBox control) {
                     return control.checkedColor == null || !control.checkedColor.isBound();
@@ -152,7 +152,7 @@ public class JFXCheckBox extends CheckBox {
             };
         private static final CssMetaData<JFXCheckBox, Paint> UNCHECKED_COLOR =
             new CssMetaData<JFXCheckBox, Paint>("-jfx-unchecked-color",
-                                                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
                 @Override
                 public boolean isSettable(JFXCheckBox control) {
                     return control.unCheckedColor == null || !control.unCheckedColor.isBound();
@@ -170,8 +170,8 @@ public class JFXCheckBox extends CheckBox {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               CHECKED_COLOR,
-                               UNCHECKED_COLOR
+                CHECKED_COLOR,
+                UNCHECKED_COLOR
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

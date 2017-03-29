@@ -41,8 +41,9 @@ public class NumberValidator extends ValidatorBase {
      */
     @Override
     protected void eval() {
-        if (srcControl.get() instanceof TextInputControl)
+        if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
+        }
     }
 
     private void evalTextInputField() {

@@ -90,18 +90,18 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
     private Scale scale = new Scale(initScale, 1);
     private Timeline linesAnimation = new Timeline(
         new KeyFrame(Duration.ZERO,
-                     new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
-                     new KeyValue(focusedLine.opacityProperty(), 0, Interpolator.EASE_BOTH)),
+            new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
+            new KeyValue(focusedLine.opacityProperty(), 0, Interpolator.EASE_BOTH)),
         new KeyFrame(Duration.millis(1),
-                     new KeyValue(focusedLine.opacityProperty(), 1, Interpolator.EASE_BOTH)),
+            new KeyValue(focusedLine.opacityProperty(), 1, Interpolator.EASE_BOTH)),
         new KeyFrame(Duration.millis(160),
-                     new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH))
+            new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH))
     );
 
     private Paint oldPromptTextFill;
     private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
-                                                                         getSkinnable().textProperty(),
-                                                                         getSkinnable().promptTextProperty());
+        getSkinnable().textProperty(),
+        getSkinnable().promptTextProperty());
 
     public JFXPasswordFieldSkinAndroid(JFXPasswordField field) {
         super(field);
@@ -127,21 +127,21 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
         line.setBackground(new Background(new BackgroundFill(((JFXPasswordField) getSkinnable()).getUnFocusColor(),
-                                                             CornerRadii.EMPTY, Insets.EMPTY)));
+            CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
             line.setBorder(new Border(new BorderStroke(((JFXPasswordField) getSkinnable()).getUnFocusColor(),
-                                                       BorderStrokeStyle.DASHED,
-                                                       CornerRadii.EMPTY,
-                                                       new BorderWidths(1))));
+                BorderStrokeStyle.DASHED,
+                CornerRadii.EMPTY,
+                new BorderWidths(1))));
             line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-                                                                 CornerRadii.EMPTY, Insets.EMPTY)));
+                CornerRadii.EMPTY, Insets.EMPTY)));
         }
 
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
         focusedLine.setBackground(new Background(new BackgroundFill(((JFXPasswordField) getSkinnable()).getFocusColor(),
-                                                                    CornerRadii.EMPTY, Insets.EMPTY)));
+            CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
 
@@ -159,58 +159,65 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
         // add listeners to show error label
         errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
             if (errorShown) {
-                if (oldErrorLabelHeight == -1)
+                if (oldErrorLabelHeight == -1) {
                     oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
+                }
                 heightChanged = true;
                 double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight + newVal.doubleValue();
                 // show the error
                 Timeline errorAnimation = new Timeline(
                     new KeyFrame(Duration.ZERO,
-                                 new KeyValue(getSkinnable().minHeightProperty(),
-                                              currentFieldHeight,
-                                              Interpolator.EASE_BOTH)),
+                        new KeyValue(getSkinnable().minHeightProperty(),
+                            currentFieldHeight,
+                            Interpolator.EASE_BOTH)),
                     new KeyFrame(Duration.millis(160),
-                                 // text pane animation
-                                 new KeyValue(textPane.translateYProperty(),
-                                              (initYLayout + textPane.getMaxHeight() / 2) - newHeight / 2,
-                                              Interpolator.EASE_BOTH),
-                                 // animate the height change effect
-                                 new KeyValue(getSkinnable().minHeightProperty(), newHeight, Interpolator.EASE_BOTH)));
+                        // text pane animation
+                        new KeyValue(textPane.translateYProperty(),
+                            (initYLayout + textPane.getMaxHeight() / 2) - newHeight / 2,
+                            Interpolator.EASE_BOTH),
+                        // animate the height change effect
+                        new KeyValue(getSkinnable().minHeightProperty(), newHeight, Interpolator.EASE_BOTH)));
                 errorAnimation.play();
                 // show the error label when finished
                 errorAnimation.setOnFinished(finish -> new Timeline(new KeyFrame(Duration.millis(160),
-                                                                                 new KeyValue(errorContainer.opacityProperty(),
-                                                                                              1,
-                                                                                              Interpolator.EASE_BOTH))).play());
+                    new KeyValue(errorContainer.opacityProperty(),
+                        1,
+                        Interpolator.EASE_BOTH))).play());
                 currentFieldHeight = newHeight;
                 oldErrorLabelHeight = newVal.doubleValue();
             }
         });
         errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
             // show the error label if it's not shown
-            if (newVal) new Timeline(new KeyFrame(Duration.millis(160),
-                                                  new KeyValue(errorContainer.opacityProperty(),
-                                                               1,
-                                                               Interpolator.EASE_BOTH))).play();
+            if (newVal) {
+                new Timeline(new KeyFrame(Duration.millis(160),
+                    new KeyValue(errorContainer.opacityProperty(),
+                        1,
+                        Interpolator.EASE_BOTH))).play();
+            }
         });
 
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) JFXUtilities.runInFX(() -> createFloatingLabel());
-            else promptText.visibleProperty().bind(usePromptText);
+            if (newVal) {
+                JFXUtilities.runInFX(() -> createFloatingLabel());
+            } else {
+                promptText.visibleProperty().bind(usePromptText);
+            }
             createFocusTransition();
         });
 
         field.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (textPane != null) {
                 if (!((JFXPasswordField) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
                         hideErrorAnimation.stop();
+                    }
                     if (newVal != null) {
                         hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                                                                       new KeyValue(errorContainer.opacityProperty(),
-                                                                                    0,
-                                                                                    Interpolator.EASE_BOTH)));
+                            new KeyValue(errorContainer.opacityProperty(),
+                                0,
+                                Interpolator.EASE_BOTH)));
                         hideErrorAnimation.setOnFinished(finish -> {
                             errorContainer.setVisible(false);
                             JFXUtilities.runInFX(() -> showError(newVal));
@@ -220,8 +227,11 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
                         JFXUtilities.runInFX(() -> hideError());
                     }
                 } else {
-                    if (newVal != null) JFXUtilities.runInFXAndWait(() -> showError(newVal));
-                    else JFXUtilities.runInFXAndWait(() -> hideError());
+                    if (newVal != null) {
+                        JFXUtilities.runInFXAndWait(() -> showError(newVal));
+                    } else {
+                        JFXUtilities.runInFXAndWait(() -> hideError());
+                    }
                 }
             }
         });
@@ -232,7 +242,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
                 if (((JFXPasswordField) getSkinnable()).isLabelFloat()) {
                     promptTextColorTransition = new CachedTransition(textPane, new Timeline(
                         new KeyFrame(Duration.millis(1300),
-                                     new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
+                            new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
                         {
                             setDelay(Duration.millis(0));
                             setCycleDuration(Duration.millis(160));
@@ -249,38 +259,46 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
             }
         });
         field.unFocusColorProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null)
+            if (newVal != null) {
                 line.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
+            }
         });
 
         // handle animation on focus gained/lost event
         field.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) focus();
-            else unFocus();
+            if (newVal) {
+                focus();
+            } else {
+                unFocus();
+            }
         });
 
         // handle text changing at runtime
         field.textProperty().addListener((o, oldVal, newVal) -> {
             if (!getSkinnable().isFocused() && ((JFXPasswordField) getSkinnable()).isLabelFloat()) {
-                if (newVal == null || newVal.isEmpty()) animateFloatingLabel(false);
-                else animateFloatingLabel(true);
+                if (newVal == null || newVal.isEmpty()) {
+                    animateFloatingLabel(false);
+                } else {
+                    animateFloatingLabel(true);
+                }
             }
         });
 
         field.disabledProperty().addListener((o, oldVal, newVal) -> {
             line.setBorder(newVal ? new Border(new BorderStroke(((JFXPasswordField) getSkinnable()).getUnFocusColor(),
-                                                                BorderStrokeStyle.DASHED,
-                                                                CornerRadii.EMPTY,
-                                                                new BorderWidths(line.getHeight()))) : Border.EMPTY);
+                BorderStrokeStyle.DASHED,
+                CornerRadii.EMPTY,
+                new BorderWidths(line.getHeight()))) : Border.EMPTY);
             line.setBackground(new Background(new BackgroundFill(newVal ? Color.TRANSPARENT : ((JFXPasswordField) getSkinnable())
                 .getUnFocusColor(),
-                                                                 CornerRadii.EMPTY, Insets.EMPTY)));
+                CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
         // prevent setting prompt text fill to transparent when text field is focused (override java transparent color if the control was focused)
         promptTextFill.addListener((o, oldVal, newVal) -> {
-            if (Color.TRANSPARENT.equals(newVal) && ((JFXPasswordField) getSkinnable()).isLabelFloat())
+            if (Color.TRANSPARENT.equals(newVal) && ((JFXPasswordField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(oldVal);
+            }
         });
 
     }
@@ -304,10 +322,14 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
             // to position the prompt node properly
             super.layoutChildren(x, y, w, h);
             // update validation container
-            if (((JFXPasswordField) getSkinnable()).getActiveValidator() != null) updateValidationError();
+            if (((JFXPasswordField) getSkinnable()).getActiveValidator() != null) {
+                updateValidationError();
+            }
             // focus
             createFocusTransition();
-            if (getSkinnable().isFocused()) focus();
+            if (getSkinnable().isFocused()) {
+                focus();
+            }
         }
 
         focusedLine.resizeRelocate(x, getSkinnable().getHeight(), w, focusedLine.prefHeight(-1));
@@ -317,11 +339,12 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING))
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
             hideErrorAnimation.stop();
+        }
         hideErrorAnimation = new Timeline(
             new KeyFrame(Duration.millis(160),
-                         new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+                new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
         hideErrorAnimation.setOnFinished(finish -> {
             errorContainer.setVisible(false);
             showError(((JFXPasswordField) getSkinnable()).getActiveValidator());
@@ -335,8 +358,9 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
             if (promptText == null) {
                 // get the prompt text node or create it
                 boolean triggerFloatLabel = false;
-                if (textPane.getChildren().get(0) instanceof Text) promptText = (Text) textPane.getChildren().get(0);
-                else {
+                if (textPane.getChildren().get(0) instanceof Text) {
+                    promptText = (Text) textPane.getChildren().get(0);
+                } else {
                     Field field;
                     try {
                         field = TextFieldSkin.class.getDeclaredField("promptNode");
@@ -371,20 +395,20 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
             promptTextUpTransition = new CachedTransition(textPane, new Timeline(
                 new KeyFrame(Duration.millis(1300),
-                             new KeyValue(promptText.translateYProperty(),
-                                          -textPane.getHeight(),
-                                          Interpolator.EASE_BOTH),
-                             new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
-                             new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
+                    new KeyValue(promptText.translateYProperty(),
+                        -textPane.getHeight(),
+                        Interpolator.EASE_BOTH),
+                    new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
+                    new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
                 setDelay(Duration.millis(0));
                 setCycleDuration(Duration.millis(240));
             }};
 
             promptTextColorTransition = new CachedTransition(textPane, new Timeline(
                 new KeyFrame(Duration.millis(1300),
-                             new KeyValue(promptTextFill,
-                                          ((JFXPasswordField) getSkinnable()).getFocusColor(),
-                                          Interpolator.EASE_BOTH)))) {
+                    new KeyValue(promptTextFill,
+                        ((JFXPasswordField) getSkinnable()).getFocusColor(),
+                        Interpolator.EASE_BOTH)))) {
                 {
                     setDelay(Duration.millis(0));
                     setCycleDuration(Duration.millis(160));
@@ -399,9 +423,9 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
             promptTextDownTransition = new CachedTransition(textPane, new Timeline(
                 new KeyFrame(Duration.millis(1300),
-                             new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
-                             new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
+                    new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
+                    new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
                 setDelay(Duration.millis(0));
                 setCycleDuration(Duration.millis(240));
             }};
@@ -428,14 +452,16 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
 
     private void focus() {
         /*
-		 * in case the method request layout is not called before focused
+         * in case the method request layout is not called before focused
 		 * this is bug is reported while editing TreeTableView cells
 		 */
         if (textPane == null) {
             Platform.runLater(() -> focus());
         } else {
             // create the focus animations
-            if (transition == null) createFocusTransition();
+            if (transition == null) {
+                createFocusTransition();
+            }
             transition.play();
         }
     }
@@ -450,12 +476,16 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void unFocus() {
-        if (transition != null) transition.stop();
+        if (transition != null) {
+            transition.stop();
+        }
         scale.setX(initScale);
         focusedLine.setOpacity(0);
         if (((JFXPasswordField) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
             promptTextFill.set(oldPromptTextFill);
-            if (usePromptText()) promptTextDownTransition.play();
+            if (usePromptText()) {
+                promptTextDownTransition.play();
+            }
         }
     }
 
@@ -516,12 +546,12 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
     private void hideError() {
         if (heightChanged) {
             new Timeline(new KeyFrame(Duration.millis(160),
-                                      new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
+                new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
             // reset the height of text field
             new Timeline(new KeyFrame(Duration.millis(160),
-                                      new KeyValue(getSkinnable().minHeightProperty(),
-                                                   initHeight,
-                                                   Interpolator.EASE_BOTH))).play();
+                new KeyValue(getSkinnable().minHeightProperty(),
+                    initHeight,
+                    Interpolator.EASE_BOTH))).play();
             heightChanged = false;
         }
         // clear error label text

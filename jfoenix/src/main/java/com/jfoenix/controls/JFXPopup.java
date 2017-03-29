@@ -55,8 +55,7 @@ public class JFXPopup extends PopupControl {
     /**
      * creates popup with a specified container and content
      *
-     * @param content
-     *         the node that will be shown in the popup
+     * @param content the node that will be shown in the popup
      */
     public JFXPopup(Region content) {
         setPopupContent(content);
@@ -111,10 +110,8 @@ public class JFXPopup extends PopupControl {
     /**
      * show the popup according to the specified position
      *
-     * @param vAlign
-     *         can be TOP/BOTTOM
-     * @param hAlign
-     *         can be LEFT/RIGHT
+     * @param vAlign can be TOP/BOTTOM
+     * @param hAlign can be LEFT/RIGHT
      */
     public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign) {
         this.show(node, vAlign, hAlign, 0, 0);
@@ -123,25 +120,22 @@ public class JFXPopup extends PopupControl {
     /**
      * show the popup according to the specified position with a certain offset
      *
-     * @param vAlign
-     *         can be TOP/BOTTOM
-     * @param hAlign
-     *         can be LEFT/RIGHT
-     * @param initOffsetX
-     *         on the x axis
-     * @param initOffsetY
-     *         on the y axis
+     * @param vAlign      can be TOP/BOTTOM
+     * @param hAlign      can be LEFT/RIGHT
+     * @param initOffsetX on the x axis
+     * @param initOffsetY on the y axis
      */
     public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY) {
         if (!isShowing()) {
-            if (node.getScene() == null || node.getScene().getWindow() == null)
+            if (node.getScene() == null || node.getScene().getWindow() == null) {
                 throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
+            }
             Window parent = node.getScene().getWindow();
             this.show(parent, parent.getX() + node.localToScene(0, 0).getX() +
-                          node.getScene().getX() + (PopupHPosition.RIGHT.equals(hAlign) ? ((Region) node).getWidth() : 0),
-                      parent.getY() + node.localToScene(0, 0).getY() +
-                          node.getScene()
-                              .getY() + (PopupVPosition.BOTTOM.equals(vAlign) ? ((Region) node).getHeight() : 0));
+                    node.getScene().getX() + (PopupHPosition.RIGHT.equals(hAlign) ? ((Region) node).getWidth() : 0),
+                parent.getY() + node.localToScene(0, 0).getY() +
+                    node.getScene()
+                        .getY() + (PopupVPosition.BOTTOM.equals(vAlign) ? ((Region) node).getHeight() : 0));
             ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
             Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());
         }

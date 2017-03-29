@@ -138,7 +138,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     }
 
     private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT,
-                                                                                       Locale.ENGLISH);
+        Locale.ENGLISH);
 
 
     /**
@@ -180,9 +180,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
      * the dialog parent manually using the property {{@link #dialogParentProperty()}
      */
     private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY,
-                                                                                  JFXTimePicker.this,
-                                                                                  "overLay",
-                                                                                  false);
+        JFXTimePicker.this,
+        "overLay",
+        false);
 
     public final StyleableBooleanProperty overLayProperty() {
         return this.overLay;
@@ -200,10 +200,10 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
      * the default color used in the data picker content
      */
     private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(StyleableProperties.DEFAULT_COLOR,
-                                                                                              JFXTimePicker.this,
-                                                                                              "defaultColor",
-                                                                                              Color.valueOf(
-                                                                                                  "#009688"));
+        JFXTimePicker.this,
+        "defaultColor",
+        Color.valueOf(
+            "#009688"));
 
     public Paint getDefaultColor() {
         return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
@@ -220,7 +220,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     private static class StyleableProperties {
         private static final CssMetaData<JFXTimePicker, Paint> DEFAULT_COLOR =
             new CssMetaData<JFXTimePicker, Paint>("-jfx-default-color",
-                                                  PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
                 @Override
                 public boolean isSettable(JFXTimePicker control) {
                     return control.defaultColor == null || !control.defaultColor.isBound();
@@ -234,7 +234,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
         private static final CssMetaData<JFXTimePicker, Boolean> OVERLAY =
             new CssMetaData<JFXTimePicker, Boolean>("-jfx-overlay",
-                                                    BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXTimePicker control) {
                     return control.overLay == null || !control.overLay.isBound();
@@ -252,8 +252,8 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               DEFAULT_COLOR,
-                               OVERLAY);
+                DEFAULT_COLOR,
+                OVERLAY);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }

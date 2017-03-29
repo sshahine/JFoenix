@@ -102,9 +102,9 @@ public class JFXListCell<T> extends ListCell<T> {
                             double gap = clip.getY() * 2;
                             gapAnimation = new Timeline(
                                 new KeyFrame(Duration.millis(240),
-                                             new KeyValue(this.translateYProperty(),
-                                                          -gap / 2 - (gap * (getIndex())),
-                                                          Interpolator.EASE_BOTH)
+                                    new KeyValue(this.translateYProperty(),
+                                        -gap / 2 - (gap * (getIndex())),
+                                        Interpolator.EASE_BOTH)
                                 ));
                             gapAnimation.play();
                             gapAnimation.setOnFinished((finish) -> {
@@ -115,7 +115,9 @@ public class JFXListCell<T> extends ListCell<T> {
                     });
 
                     selectedProperty().addListener((o, oldVal, newVal) -> {
-                        if (newVal) selectionChanged = true;
+                        if (newVal) {
+                            selectionChanged = true;
+                        }
                     });
                 }
             }
@@ -140,24 +142,26 @@ public class JFXListCell<T> extends ListCell<T> {
                         clip.setY(gap / 2);
                         clip.setHeight(getHeight() - gap);
                         gapAnimation = new Timeline(new KeyFrame(Duration.millis(240),
-                                                                 new KeyValue(this.translateYProperty(),
-                                                                              0,
-                                                                              Interpolator.EASE_BOTH)));
+                            new KeyValue(this.translateYProperty(),
+                                0,
+                                Interpolator.EASE_BOTH)));
                         playExpandAnimation = false;
                     } else if (selectionChanged) {
                         clip.setY(0);
                         clip.setHeight(getHeight());
                         gapAnimation = new Timeline(
                             new KeyFrame(Duration.millis(240),
-                                         new KeyValue(clip.yProperty(), gap / 2, Interpolator.EASE_BOTH),
-                                         new KeyValue(clip.heightProperty(), getHeight() - gap, Interpolator.EASE_BOTH)
+                                new KeyValue(clip.yProperty(), gap / 2, Interpolator.EASE_BOTH),
+                                new KeyValue(clip.heightProperty(), getHeight() - gap, Interpolator.EASE_BOTH)
                             ));
                     }
                     playExpandAnimation = false;
                     selectionChanged = false;
                     gapAnimation.play();
                 } else {
-                    if (gapAnimation != null) gapAnimation.stop();
+                    if (gapAnimation != null) {
+                        gapAnimation.stop();
+                    }
                     this.setTranslateY(0);
                     clip.setY(gap / 2);
                     clip.setHeight(getHeight() - gap);
@@ -177,9 +181,11 @@ public class JFXListCell<T> extends ListCell<T> {
         }
 
         // refresh sublist style class
-        if (this.getGraphic() != null && this.getGraphic().getStyleClass().contains("sublist-container"))
+        if (this.getGraphic() != null && this.getGraphic().getStyleClass().contains("sublist-container")) {
             this.getStyleClass().add("sublist-item");
-        else this.getStyleClass().remove("sublist-item");
+        } else {
+            this.getStyleClass().remove("sublist-item");
+        }
     }
 
     /**
@@ -187,9 +193,11 @@ public class JFXListCell<T> extends ListCell<T> {
      * so clicking on them will trigger the ripple effect.
      */
     protected void makeChildrenTransparent() {
-        for (Node child : getChildren())
-            if (child instanceof Label || child instanceof Shape)
+        for (Node child : getChildren()) {
+            if (child instanceof Label || child instanceof Shape) {
                 child.setMouseTransparent(true);
+            }
+        }
     }
 
     /**
@@ -214,8 +222,11 @@ public class JFXListCell<T> extends ListCell<T> {
                 Node currentNode = getGraphic();
 
                 Node newNode;
-                if (item instanceof Region || item instanceof Control) newNode = (Node) item;
-                else newNode = new Label(item.toString());
+                if (item instanceof Region || item instanceof Control) {
+                    newNode = (Node) item;
+                } else {
+                    newNode = new Label(item.toString());
+                }
 
 
                 boolean isJFXListView = getListView() instanceof JFXListView;
@@ -247,18 +258,20 @@ public class JFXListCell<T> extends ListCell<T> {
                         ((JFXListView<?>) getListView()).addSublist((JFXListView<?>) newNode, this.getIndex());
                         this.getStyleClass().add("sublist-item");
 
-                        if (this.getPadding() != null) this.setPadding(new Insets(this.getPadding().getTop(),
-                                                                                  0,
-                                                                                  this.getPadding().getBottom(),
-                                                                                  0));
+                        if (this.getPadding() != null) {
+                            this.setPadding(new Insets(this.getPadding().getTop(),
+                                0,
+                                this.getPadding().getBottom(),
+                                0));
+                        }
 
                         // First build the group item used to expand / hide the sublist
                         StackPane groupNode = new StackPane();
                         groupNode.getStyleClass().add("sublist-header");
                         SVGGlyph dropIcon = new SVGGlyph(0,
-                                                         "ANGLE_RIGHT",
-                                                         "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z",
-                                                         Color.BLACK);
+                            "ANGLE_RIGHT",
+                            "M340 548.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-28.571-28.571q-5.714-5.714-5.714-13.143t5.714-13.143l224.571-224.571-224.571-224.571q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l266.286 266.286q5.714 5.714 5.714 13.143z",
+                            Color.BLACK);
                         dropIcon.setStyle(
                             "-fx-min-width:0.4em;-fx-max-width:0.4em;-fx-min-height:0.6em;-fx-max-height:0.6em;");
                         dropIcon.getStyleClass().add("drop-icon");
@@ -305,8 +318,9 @@ public class JFXListCell<T> extends ListCell<T> {
                         contentHolder.setOnMouseClicked((click) -> {
                             click.consume();
                             // stop the animation or change the list height
-                            if (expandAnimation != null && expandAnimation.getStatus().equals(Status.RUNNING))
+                            if (expandAnimation != null && expandAnimation.getStatus().equals(Status.RUNNING)) {
                                 expandAnimation.stop();
+                            }
 
                             // invert the expand property
                             expandedProperty.set(!expandedProperty.get());
@@ -326,15 +340,15 @@ public class JFXListCell<T> extends ListCell<T> {
 
                             int opacity = expandedProperty.get() ? 1 : 0;
                             expandAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                                                                        new KeyValue(sublistContainer.minHeightProperty(),
-                                                                                     contentHeight,
-                                                                                     Interpolator.EASE_BOTH),
-                                                                        new KeyValue(sublistContainer.maxHeightProperty(),
-                                                                                     contentHeight,
-                                                                                     Interpolator.EASE_BOTH),
-                                                                        new KeyValue(sublistContainer.opacityProperty(),
-                                                                                     opacity,
-                                                                                     Interpolator.EASE_BOTH)));
+                                new KeyValue(sublistContainer.minHeightProperty(),
+                                    contentHeight,
+                                    Interpolator.EASE_BOTH),
+                                new KeyValue(sublistContainer.maxHeightProperty(),
+                                    contentHeight,
+                                    Interpolator.EASE_BOTH),
+                                new KeyValue(sublistContainer.opacityProperty(),
+                                    opacity,
+                                    Interpolator.EASE_BOTH)));
 
                             if (!expandedProperty.get()) {
                                 expandAnimation.setOnFinished((finish) -> {
@@ -348,14 +362,17 @@ public class JFXListCell<T> extends ListCell<T> {
 
                         // animate arrow
                         expandedProperty.addListener((o, oldVal, newVal) -> {
-                            if (newVal) new Timeline(new KeyFrame(Duration.millis(160),
-                                                                  new KeyValue(dropIcon.rotateProperty(),
-                                                                               90,
-                                                                               Interpolator.EASE_BOTH))).play();
-                            else new Timeline(new KeyFrame(Duration.millis(160),
-                                                           new KeyValue(dropIcon.rotateProperty(),
-                                                                        0,
-                                                                        Interpolator.EASE_BOTH))).play();
+                            if (newVal) {
+                                new Timeline(new KeyFrame(Duration.millis(160),
+                                    new KeyValue(dropIcon.rotateProperty(),
+                                        90,
+                                        Interpolator.EASE_BOTH))).play();
+                            } else {
+                                new Timeline(new KeyFrame(Duration.millis(160),
+                                    new KeyValue(dropIcon.rotateProperty(),
+                                        0,
+                                        Interpolator.EASE_BOTH))).play();
+                            }
                         });
                     }
 

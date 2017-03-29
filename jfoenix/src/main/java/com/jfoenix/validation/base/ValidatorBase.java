@@ -85,12 +85,13 @@ public abstract class ValidatorBase extends Parent {
         Node control = getSrcControl();
         if (hasErrors.get()) {
             /*
-			 * TODO
+             * TODO
 			 * NOTE: NEED TO FIX adding error style class to text area
 			 * is causing the caret to disappear
 			 */
-            if (!control.getStyleClass().contains(errorStyleClass.get()))
+            if (!control.getStyleClass().contains(errorStyleClass.get())) {
                 control.getStyleClass().add(errorStyleClass.get());
+            }
 
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 

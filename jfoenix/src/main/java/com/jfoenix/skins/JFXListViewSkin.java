@@ -51,14 +51,18 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        if (getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0)
+        if (getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0) {
             return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
-        if (getSkinnable().getMaxHeight() > 0) return getSkinnable().getMaxHeight();
+        }
+        if (getSkinnable().getMaxHeight() > 0) {
+            return getSkinnable().getMaxHeight();
+        }
 
         double computedHeight = estimateHeight();
         double height = super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
-        if (height > computedHeight)
+        if (height > computedHeight) {
             height = computedHeight;
+        }
 
         return height;
     }
@@ -70,7 +74,7 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
         JFXListView<T> listview = (JFXListView<T>) getSkinnable();
         double gap = listview.isExpanded() ? ((JFXListView<T>) getSkinnable()).getVerticalGap() * (getSkinnable().getItems()
-                                                                                                                 .size()) : 0;
+            .size()) : 0;
         // compute the height of each list cell
         double cellsHeight = 0;
         for (int i = 0; i < flow.getCellCount(); i++) {

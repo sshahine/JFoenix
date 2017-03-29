@@ -32,8 +32,11 @@ public class RipplerDemo extends Application {
         main.getChildren().add(lrippler);
 
         l.setOnMousePressed((e) -> {
-            if (i == 5) step = -1;
-            else if (i == 0) step = 1;
+            if (i == 5) {
+                step = -1;
+            } else if (i == 0) {
+                step = 1;
+            }
             JFXDepthManager.setDepth(l, i += step % JFXDepthManager.getLevels());
         });
 

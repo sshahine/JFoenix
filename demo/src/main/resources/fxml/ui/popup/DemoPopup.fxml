@@ -5,50 +5,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.StackPane?>
 <JFXListView fx:id="popupList" styleClass="popup-list-view"
-	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<Label>
-		Item 1
-		<graphic>
-			<StackPane styleClass="custom-jfx-list-view-icon-container">
-				<FontAwesomeIconView glyphName="STAR" size="1.5em"
-					styleClass="custom-jfx-list-view-icon" />
-			</StackPane>
-		</graphic>
-	</Label>
-	<Label>
-		Item 2
-		<graphic>
-			<StackPane styleClass="custom-jfx-list-view-icon-container">
-				<FontAwesomeIconView glyphName="HEART" size="1.5em"
-					styleClass="custom-jfx-list-view-icon" />
-			</StackPane>
-		</graphic>
-	</Label>
-	<Label>
-		Item 3
-		<graphic>
-			<StackPane styleClass="custom-jfx-list-view-icon-container">
-				<FontAwesomeIconView glyphName="WARNING" size="1.5em"
-					styleClass="custom-jfx-list-view-icon" />
-			</StackPane>
-		</graphic>
-	</Label>
-	<Label>
-		Item 4
-		<graphic>
-			<StackPane styleClass="custom-jfx-list-view-icon-container">
-				<FontAwesomeIconView glyphName="UNIVERSITY"
-					size="1.5em" styleClass="custom-jfx-list-view-icon" />
-			</StackPane>
-		</graphic>
-	</Label>
-	<Label>
-		Item 5
-		<graphic>
-			<StackPane styleClass="custom-jfx-list-view-icon-container">
-				<FontAwesomeIconView glyphName="TABLET" size="1.5em"
-					styleClass="custom-jfx-list-view-icon" />
-			</StackPane>
-		</graphic>
-	</Label>
+             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <Label>
+        Item 1
+        <graphic>
+            <StackPane styleClass="custom-jfx-list-view-icon-container">
+                <FontAwesomeIconView glyphName="STAR" size="1.5em"
+                                     styleClass="custom-jfx-list-view-icon"/>
+            </StackPane>
+        </graphic>
+    </Label>
+    <Label>
+        Item 2
+        <graphic>
+            <StackPane styleClass="custom-jfx-list-view-icon-container">
+                <FontAwesomeIconView glyphName="HEART" size="1.5em"
+                                     styleClass="custom-jfx-list-view-icon"/>
+            </StackPane>
+        </graphic>
+    </Label>
+    <Label>
+        Item 3
+        <graphic>
+            <StackPane styleClass="custom-jfx-list-view-icon-container">
+                <FontAwesomeIconView glyphName="WARNING" size="1.5em"
+                                     styleClass="custom-jfx-list-view-icon"/>
+            </StackPane>
+        </graphic>
+    </Label>
+    <Label>
+        Item 4
+        <graphic>
+            <StackPane styleClass="custom-jfx-list-view-icon-container">
+                <FontAwesomeIconView glyphName="UNIVERSITY"
+                                     size="1.5em" styleClass="custom-jfx-list-view-icon"/>
+            </StackPane>
+        </graphic>
+    </Label>
+    <Label>
+        Item 5
+        <graphic>
+            <StackPane styleClass="custom-jfx-list-view-icon-container">
+                <FontAwesomeIconView glyphName="TABLET" size="1.5em"
+                                     styleClass="custom-jfx-list-view-icon"/>
+            </StackPane>
+        </graphic>
+    </Label>
 </JFXListView>

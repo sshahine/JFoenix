@@ -85,10 +85,14 @@ public class JFXNodesList extends VBox {
         node.setVisible(false);
         node.minWidthProperty().bind(node.prefWidthProperty());
         node.minHeightProperty().bind(node.prefHeightProperty());
-        if (this.getChildren().size() > 0) initNode(node);
-        else {
-            if (node instanceof Button) ((Button) node).setOnAction((action) -> this.animateList());
-            else node.setOnMouseClicked((click) -> this.animateList());
+        if (this.getChildren().size() > 0) {
+            initNode(node);
+        } else {
+            if (node instanceof Button) {
+                ((Button) node).setOnAction((action) -> this.animateList());
+            } else {
+                node.setOnMouseClicked((click) -> this.animateList());
+            }
             node.getStyleClass().add("trigger-node");
         }
 
@@ -106,12 +110,15 @@ public class JFXNodesList extends VBox {
         this.rotateProperty()
             .addListener((o, oldVal, newVal) -> node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal
                 .doubleValue()));
-        if (animationCallBack == null && this.getChildren().size() != 1) animationCallBack = (expanded) -> {
-            return initDefaultAnimation(node, expanded);
-        };
-        else if (animationCallBack == null && this.getChildren().size() == 1) animationCallBack = (expanded) -> {
-            return new ArrayList<>();
-        };
+        if (animationCallBack == null && this.getChildren().size() != 1) {
+            animationCallBack = (expanded) -> {
+                return initDefaultAnimation(node, expanded);
+            };
+        } else if (animationCallBack == null && this.getChildren().size() == 1) {
+            animationCallBack = (expanded) -> {
+                return new ArrayList<>();
+            };
+        }
         animationsMap.put(node, animationCallBack);
     }
 
@@ -121,32 +128,37 @@ public class JFXNodesList extends VBox {
     public void animateList() {
         expanded = !expanded;
 
-        if (animateTimeline.getStatus().equals(Status.RUNNING)) animateTimeline.stop();
+        if (animateTimeline.getStatus().equals(Status.RUNNING)) {
+            animateTimeline.stop();
+        }
 
         animateTimeline.getKeyFrames().clear();
         double duration = 120 / (double) this.getChildren().size();
 
         // show child nodes
-        if (expanded) this.getChildren().forEach(child -> child.setVisible(true));
+        if (expanded) {
+            this.getChildren().forEach(child -> child.setVisible(true));
+        }
 
         // add child nodes animation
         for (int i = 1; i < this.getChildren().size(); i++) {
             Node child = this.getChildren().get(i);
             ArrayList<KeyValue> keyValues = animationsMap.get(child).call(expanded);
             animateTimeline.getKeyFrames()
-                           .add(new KeyFrame(Duration.millis(i * duration),
-                                             keyValues.toArray(new KeyValue[keyValues.size()])));
+                .add(new KeyFrame(Duration.millis(i * duration),
+                    keyValues.toArray(new KeyValue[keyValues.size()])));
         }
         // add 1st element animation
         ArrayList<KeyValue> keyValues = animationsMap.get(this.getChildren().get(0)).call(expanded);
         animateTimeline.getKeyFrames()
-                       .add(new KeyFrame(Duration.millis(160), keyValues.toArray(new KeyValue[keyValues.size()])));
+            .add(new KeyFrame(Duration.millis(160), keyValues.toArray(new KeyValue[keyValues.size()])));
 
         // hide child nodes to allow mouse events on the nodes behind them
         if (!expanded) {
             animateTimeline.setOnFinished((finish) -> {
-                for (int i = 1; i < this.getChildren().size(); i++)
+                for (int i = 1; i < this.getChildren().size(); i++) {
                     this.getChildren().get(i).setVisible(false);
+                }
             });
         } else {
             animateTimeline.setOnFinished(null);

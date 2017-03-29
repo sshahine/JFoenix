@@ -71,7 +71,9 @@ public class JFXProgressBarSkin extends ProgressBarSkin {
     @Override
     protected void createIndeterminateTimeline() {
         super.createIndeterminateTimeline();
-        if (indeterminateTransition != null) indeterminateTransition.stop();
+        if (indeterminateTransition != null) {
+            indeterminateTransition.stop();
+        }
         ProgressIndicator control = getSkinnable();
         final double w = control.getWidth() - (snappedLeftInset() + snappedRightInset());
         final double bWidth = bar.getWidth();
@@ -80,14 +82,14 @@ public class JFXProgressBarSkin extends ProgressBarSkin {
             new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_IN),
             new KeyValue(bar.translateXProperty(), -bWidth, Interpolator.LINEAR)
         ),
-                                               new KeyFrame(
-                                                   Duration.seconds(0.5),
-                                                   new KeyValue(bar.scaleXProperty(), 3, Interpolator.LINEAR),
-                                                   new KeyValue(bar.translateXProperty(), w / 2, Interpolator.LINEAR)),
-                                               new KeyFrame(
-                                                   Duration.seconds(1),
-                                                   new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_OUT),
-                                                   new KeyValue(bar.translateXProperty(), w, Interpolator.LINEAR)));
+            new KeyFrame(
+                Duration.seconds(0.5),
+                new KeyValue(bar.scaleXProperty(), 3, Interpolator.LINEAR),
+                new KeyValue(bar.translateXProperty(), w / 2, Interpolator.LINEAR)),
+            new KeyFrame(
+                Duration.seconds(1),
+                new KeyValue(bar.scaleXProperty(), 0, Interpolator.EASE_OUT),
+                new KeyValue(bar.translateXProperty(), w, Interpolator.LINEAR)));
         indeterminateTransition.setCycleCount(Timeline.INDEFINITE);
 
 

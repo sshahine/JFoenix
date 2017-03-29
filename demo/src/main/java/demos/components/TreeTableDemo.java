@@ -30,45 +30,54 @@ public class TreeTableDemo extends Application {
             JFXTreeTableColumn<User, String> deptColumn = new JFXTreeTableColumn<>("Department");
             deptColumn.setPrefWidth(150);
             deptColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) -> {
-                if (deptColumn.validateValue(param)) return param.getValue().getValue().department;
-                else return deptColumn.getComputedValue(param);
+                if (deptColumn.validateValue(param)) {
+                    return param.getValue().getValue().department;
+                } else {
+                    return deptColumn.getComputedValue(param);
+                }
             });
 
             JFXTreeTableColumn<User, String> empColumn = new JFXTreeTableColumn<>("Employee");
             empColumn.setPrefWidth(150);
             empColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) -> {
-                if (empColumn.validateValue(param)) return param.getValue().getValue().userName;
-                else return empColumn.getComputedValue(param);
+                if (empColumn.validateValue(param)) {
+                    return param.getValue().getValue().userName;
+                } else {
+                    return empColumn.getComputedValue(param);
+                }
             });
 
             JFXTreeTableColumn<User, String> ageColumn = new JFXTreeTableColumn<>("Age");
             ageColumn.setPrefWidth(150);
             ageColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<User, String> param) -> {
-                if (ageColumn.validateValue(param)) return param.getValue().getValue().age;
-                else return ageColumn.getComputedValue(param);
+                if (ageColumn.validateValue(param)) {
+                    return param.getValue().getValue().age;
+                } else {
+                    return ageColumn.getComputedValue(param);
+                }
             });
 
 
             ageColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
                 new TextFieldEditorBuilder()));
             ageColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-                                                                          .getTreeItem(t.getTreeTablePosition()
-                                                                                        .getRow())
-                                                                          .getValue().age.set(t.getNewValue()));
+                .getTreeItem(t.getTreeTablePosition()
+                    .getRow())
+                .getValue().age.set(t.getNewValue()));
 
             empColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
                 new TextFieldEditorBuilder()));
             empColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-                                                                          .getTreeItem(t.getTreeTablePosition()
-                                                                                        .getRow())
-                                                                          .getValue().userName.set(t.getNewValue()));
+                .getTreeItem(t.getTreeTablePosition()
+                    .getRow())
+                .getValue().userName.set(t.getNewValue()));
 
             deptColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
                 new TextFieldEditorBuilder()));
             deptColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-                                                                           .getTreeItem(t.getTreeTablePosition()
-                                                                                         .getRow())
-                                                                           .getValue().department.set(t.getNewValue()));
+                .getTreeItem(t.getTreeTablePosition()
+                    .getRow())
+                .getValue().department.set(t.getNewValue()));
 
 
             // data
@@ -121,15 +130,15 @@ public class TreeTableDemo extends Application {
 
             filterField.textProperty().addListener((o, oldVal, newVal) -> {
                 treeView.setPredicate(user -> user.getValue().age.get()
-                                                                 .contains(newVal) || user.getValue().department.get()
-                                                                                                                .contains(
-                                                                                                                    newVal) || user
+                    .contains(newVal) || user.getValue().department.get()
+                    .contains(
+                        newVal) || user
                     .getValue().userName.get().contains(newVal));
             });
 
             size.textProperty()
                 .bind(Bindings.createStringBinding(() -> treeView.getCurrentItemsCount() + "",
-                                                   treeView.currentItemsCountProperty()));
+                    treeView.currentItemsCountProperty()));
             main.getChildren().add(size);
 
             Scene scene = new Scene(main, 475, 500);

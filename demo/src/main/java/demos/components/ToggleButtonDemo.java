@@ -31,8 +31,8 @@ public class ToggleButtonDemo extends Application {
 
         JFXToggleNode node = new JFXToggleNode();
         final GlyphIcon heartIcon = GlyphsBuilder.create(FontAwesomeIconView.class)
-                                                 .glyph(FontAwesomeIcon.HEART)
-                                                 .build();
+            .glyph(FontAwesomeIcon.HEART)
+            .build();
         heartIcon.setStyle("-fx-padding: 10");
         node.setGraphic(heartIcon);
 
@@ -42,7 +42,7 @@ public class ToggleButtonDemo extends Application {
         final Scene scene = new Scene(pane, 600, 400, Color.valueOf("#EEE"));
         stage.setTitle("JFX Toggle Button Demo ");
         scene.getStylesheets()
-             .add(ToggleButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+            .add(ToggleButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

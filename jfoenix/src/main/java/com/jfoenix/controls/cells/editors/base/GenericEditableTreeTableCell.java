@@ -77,11 +77,12 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
      * commit the cell with bad data we can happily cancel the commit and force them to enter a real value. If they
      * click away from the cell though we want to give them their old value back.
      *
-     * @param losingFocus
-     *         true if the reason for the call was because the field is losing focus.
+     * @param losingFocus true if the reason for the call was because the field is losing focus.
      */
     protected void commitHelper(boolean losingFocus) {
-        if (editorNode == null) return;
+        if (editorNode == null) {
+            return;
+        }
         try {
             builder.validateValue();
             commitEdit((T) builder.getValue());
@@ -147,8 +148,9 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
                 if (getTableColumn() instanceof JFXTreeTableColumn && ((JFXTreeTableColumn) getTableColumn()).isGrouped()) {
                     // make sure that the object is a direct child to a group node
                     if (getTreeTableRow().getTreeItem().getParent() != null &&
-                        getTreeTableRow().getTreeItem().getParent().getValue().getClass() == RecursiveTreeObject.class)
+                        getTreeTableRow().getTreeItem().getParent().getValue().getClass() == RecursiveTreeObject.class) {
                         allowEdit = false;
+                    }
                 }
             }
         }
@@ -217,8 +219,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
     }
 
     /**
-     * @param forward
-     *         true gets the column to the right, false the column to the left of the current column
+     * @param forward true gets the column to the right, false the column to the left of the current column
      * @return
      */
     private TreeTableColumn<S, ?> getNextColumn(boolean forward) {

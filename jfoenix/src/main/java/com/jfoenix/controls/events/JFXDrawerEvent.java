@@ -41,8 +41,7 @@ public class JFXDrawerEvent extends Event {
     /**
      * Construct a new JFXDrawer {@code Event} with the specified event type
      *
-     * @param eventType
-     *         the event type
+     * @param eventType the event type
      */
     public JFXDrawerEvent(EventType<? extends Event> eventType) {
         super(eventType);

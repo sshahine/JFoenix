@@ -196,14 +196,10 @@ public final class JFXFillTransition extends Transition {
     /**
      * The constructor of {@code JFXFillTransition}
      *
-     * @param duration
-     *         The duration of the {@code JFXFillTransition}
-     * @param region
-     *         The {@code region} which filling will be animated
-     * @param fromValue
-     *         The start value of the color-animation
-     * @param toValue
-     *         The end value of the color-animation
+     * @param duration  The duration of the {@code JFXFillTransition}
+     * @param region    The {@code region} which filling will be animated
+     * @param fromValue The start value of the color-animation
+     * @param toValue   The end value of the color-animation
      */
     public JFXFillTransition(Duration duration, Region shape, Color fromValue,
                              Color toValue) {
@@ -230,12 +226,9 @@ public final class JFXFillTransition extends Transition {
     /**
      * The constructor of {@code JFXFillTransition}
      *
-     * @param duration
-     *         The duration of the {@code JFXFillTransition}
-     * @param fromValue
-     *         The start value of the color-animation
-     * @param toValue
-     *         The end value of the color-animation
+     * @param duration  The duration of the {@code JFXFillTransition}
+     * @param fromValue The start value of the color-animation
+     * @param toValue   The end value of the color-animation
      */
     public JFXFillTransition(Duration duration, Color fromValue, Color toValue) {
         this(duration, null, fromValue, toValue);
@@ -244,10 +237,8 @@ public final class JFXFillTransition extends Transition {
     /**
      * The constructor of {@code JFXFillTransition}
      *
-     * @param duration
-     *         The duration of the {@code JFXFillTransition}
-     * @param region
-     *         The {@code region} which filling will be animated
+     * @param duration The duration of the {@code JFXFillTransition}
+     * @param region   The {@code region} which filling will be animated
      */
     public JFXFillTransition(Duration duration, Region shape) {
         this(duration, shape, null, null);
@@ -256,8 +247,7 @@ public final class JFXFillTransition extends Transition {
     /**
      * The constructor of {@code JFXFillTransition}
      *
-     * @param duration
-     *         The duration of the {@code FadeTransition}
+     * @param duration The duration of the {@code FadeTransition}
      */
     public JFXFillTransition(Duration duration) {
         this(duration, null, null, null);
@@ -282,15 +272,15 @@ public final class JFXFillTransition extends Transition {
             oldCache = region.get().isCache();
             oldCacheHint = region.get().getCacheHint();
             radii = region.get().getBackground() == null ? null : region.get()
-                                                                        .getBackground()
-                                                                        .getFills()
-                                                                        .get(0)
-                                                                        .getRadii();
+                .getBackground()
+                .getFills()
+                .get(0)
+                .getRadii();
             insets = region.get().getBackground() == null ? null : region.get()
-                                                                         .getBackground()
-                                                                         .getFills()
-                                                                         .get(0)
-                                                                         .getInsets();
+                .getBackground()
+                .getFills()
+                .get(0)
+                .getInsets();
             start = fromValue.get();
             end = toValue.get();
             region.get().setCache(true);
@@ -311,10 +301,13 @@ public final class JFXFillTransition extends Transition {
      */
     @Override
     protected void interpolate(double frac) {
-        if (start == null) starting();
+        if (start == null) {
+            starting();
+        }
         Color newColor = start.interpolate(end, frac);
-        if (Color.TRANSPARENT.equals(start))
+        if (Color.TRANSPARENT.equals(start)) {
             newColor = new Color(end.getRed(), end.getGreen(), end.getBlue(), newColor.getOpacity());
+        }
         region.get().setBackground(new Background(new BackgroundFill(newColor, radii, insets)));
     }
 }

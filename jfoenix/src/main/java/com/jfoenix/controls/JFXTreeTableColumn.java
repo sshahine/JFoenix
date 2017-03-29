@@ -62,7 +62,9 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
                 return new JFXTreeTableCell<S, T>() {
                     @Override
                     protected void updateItem(T item, boolean empty) {
-                        if (item == getItem()) return;
+                        if (item == getItem()) {
+                            return;
+                        }
                         super.updateItem(item, empty);
                         if (item == null) {
                             super.setText(null);
@@ -98,8 +100,7 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
      * validates the value of the tree item,
      * this method also hides the column value for the grouped nodes
      *
-     * @param param
-     *         tree item
+     * @param param tree item
      * @return true if the value is valid else false
      */
     public final boolean validateValue(CellDataFeatures<S, T> param) {
@@ -114,16 +115,16 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
     }
 
     /**
-     * @param param
-     *         tree item
+     * @param param tree item
      * @return the data represented by the tree item
      */
     public final ObservableValue<T> getComputedValue(CellDataFeatures<S, T> param) {
         Object rowObject = param.getValue().getValue();
         if (rowObject instanceof RecursiveTreeObject) {
             RecursiveTreeObject<?> item = (RecursiveTreeObject<?>) rowObject;
-            if (item.getGroupedColumn() == this)
+            if (item.getGroupedColumn() == this) {
                 return new ReadOnlyObjectWrapper(item.getGroupedValue());
+            }
         }
         return null;
     }
@@ -133,8 +134,8 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
      */
     public boolean isGrouped() {
         return getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>) getTreeTableView()).getGroupOrder()
-                                                                                                           .contains(
-                                                                                                               this);
+            .contains(
+                this);
     }
 
 }

@@ -86,12 +86,12 @@ public class JFXToggleNode extends ToggleButton {
      * default color used when the node is toggled
      */
     private StyleableObjectProperty<Color> selectedColor = new SimpleStyleableObjectProperty<>(StyleableProperties.SELECTED_COLOR,
-                                                                                               JFXToggleNode.this,
-                                                                                               "selectedColor",
-                                                                                               Color.rgb(0,
-                                                                                                         0,
-                                                                                                         0,
-                                                                                                         0.2));
+        JFXToggleNode.this,
+        "selectedColor",
+        Color.rgb(0,
+            0,
+            0,
+            0.2));
 
     public final StyleableObjectProperty<Color> selectedColorProperty() {
         return this.selectedColor;
@@ -130,9 +130,9 @@ public class JFXToggleNode extends ToggleButton {
      * disable animation on button action
      */
     private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION,
-                                                                                           JFXToggleNode.this,
-                                                                                           "disableAnimation",
-                                                                                           false);
+        JFXToggleNode.this,
+        "disableAnimation",
+        false);
 
     public final StyleableBooleanProperty disableAnimationProperty() {
         return this.disableAnimation;
@@ -150,7 +150,7 @@ public class JFXToggleNode extends ToggleButton {
     private static class StyleableProperties {
         private static final CssMetaData<JFXToggleNode, Color> SELECTED_COLOR =
             new CssMetaData<JFXToggleNode, Color>("-jfx-toggle-color",
-                                                  ColorConverter.getInstance(), Color.rgb(255, 255, 255, 0.87)) {
+                ColorConverter.getInstance(), Color.rgb(255, 255, 255, 0.87)) {
                 @Override
                 public boolean isSettable(JFXToggleNode control) {
                     return control.selectedColor == null || !control.selectedColor.isBound();
@@ -164,7 +164,7 @@ public class JFXToggleNode extends ToggleButton {
 
         private static final CssMetaData<JFXToggleNode, Color> UNSELECTED_COLOR =
             new CssMetaData<JFXToggleNode, Color>("-jfx-untoggle-color",
-                                                  ColorConverter.getInstance(), Color.TRANSPARENT) {
+                ColorConverter.getInstance(), Color.TRANSPARENT) {
                 @Override
                 public boolean isSettable(JFXToggleNode control) {
                     return control.unSelectedColor == null || !control.unSelectedColor.isBound();
@@ -178,7 +178,7 @@ public class JFXToggleNode extends ToggleButton {
 
         private static final CssMetaData<JFXToggleNode, Boolean> DISABLE_ANIMATION =
             new CssMetaData<JFXToggleNode, Boolean>("-jfx-disable-animation",
-                                                    BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXToggleNode control) {
                     return control.disableAnimation == null || !control.disableAnimation.isBound();
@@ -196,9 +196,9 @@ public class JFXToggleNode extends ToggleButton {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               SELECTED_COLOR,
-                               UNSELECTED_COLOR,
-                               DISABLE_ANIMATION
+                SELECTED_COLOR,
+                UNSELECTED_COLOR,
+                DISABLE_ANIMATION
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

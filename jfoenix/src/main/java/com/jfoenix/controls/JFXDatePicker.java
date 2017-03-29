@@ -122,9 +122,9 @@ public class JFXDatePicker extends DatePicker {
      * the dialog parent manually using the property {{@link #dialogParentProperty()}
      */
     private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY,
-                                                                                  JFXDatePicker.this,
-                                                                                  "overLay",
-                                                                                  false);
+        JFXDatePicker.this,
+        "overLay",
+        false);
 
     public final StyleableBooleanProperty overLayProperty() {
         return this.overLay;
@@ -142,10 +142,10 @@ public class JFXDatePicker extends DatePicker {
      * the default color used in the data picker content
      */
     private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(StyleableProperties.DEFAULT_COLOR,
-                                                                                              JFXDatePicker.this,
-                                                                                              "defaultColor",
-                                                                                              Color.valueOf(
-                                                                                                  "#009688"));
+        JFXDatePicker.this,
+        "defaultColor",
+        Color.valueOf(
+            "#009688"));
 
     public Paint getDefaultColor() {
         return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
@@ -162,7 +162,7 @@ public class JFXDatePicker extends DatePicker {
     private static class StyleableProperties {
         private static final CssMetaData<JFXDatePicker, Paint> DEFAULT_COLOR =
             new CssMetaData<JFXDatePicker, Paint>("-jfx-default-color",
-                                                  PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
                 @Override
                 public boolean isSettable(JFXDatePicker control) {
                     return control.defaultColor == null || !control.defaultColor.isBound();
@@ -176,7 +176,7 @@ public class JFXDatePicker extends DatePicker {
 
         private static final CssMetaData<JFXDatePicker, Boolean> OVERLAY =
             new CssMetaData<JFXDatePicker, Boolean>("-jfx-overlay",
-                                                    BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXDatePicker control) {
                     return control.overLay == null || !control.overLay.isBound();
@@ -194,8 +194,8 @@ public class JFXDatePicker extends DatePicker {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                               DEFAULT_COLOR,
-                               OVERLAY);
+                DEFAULT_COLOR,
+                OVERLAY);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }

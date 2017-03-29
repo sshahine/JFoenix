@@ -78,7 +78,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     };
 
     private InvalidationListener treeItemGraphicInvalidationListener = observable -> updateDisplay(getItem(),
-                                                                                                   isEmpty());
+        isEmpty());
     private InvalidationListener treeItemInvalidationListener = new InvalidationListener() {
         @Override
         public void invalidated(Observable observable) {
@@ -100,8 +100,9 @@ public class JFXTreeCell<T> extends TreeCell<T> {
         treeItemGraphicInvalidationListener);
 
     private ChangeListener<? super Status> weakAnimationListener = (o, oldVal, newVal) -> {
-        if (newVal.equals(Status.STOPPED))
+        if (newVal.equals(Status.STOPPED)) {
             clearCellAnimation();
+        }
     };
 
     private WeakReference<JFXTreeView<T>> treeViewRef;
@@ -109,8 +110,9 @@ public class JFXTreeCell<T> extends TreeCell<T> {
         @Override
         public void invalidated(Observable observable) {
             JFXTreeView<T> oldTreeView = treeViewRef == null ? null : treeViewRef.get();
-            if (oldTreeView != null)
+            if (oldTreeView != null) {
                 oldTreeView.trans.statusProperty().removeListener(weakAnimationListener);
+            }
             JFXTreeView<T> newTreeView = (JFXTreeView<T>) getTreeView();
             if (newTreeView != null) {
                 newTreeView.trans.statusProperty().addListener(weakAnimationListener);
@@ -146,10 +148,11 @@ public class JFXTreeCell<T> extends TreeCell<T> {
                     if (jfxTreeView.getTreeItem(i) != null && jfxTreeView.getTreeItem(jfxTreeView.animateRow) != null
                         && i > jfxTreeView.animateRow
                         && jfxTreeView.getTreeItem(i).getParent() == jfxTreeView.getTreeItem(jfxTreeView.animateRow)
-                                                                                .getParent()) {
+                        .getParent()) {
                         jfxTreeView.sibRow = i;
-                        if (jfxTreeView.expand)
+                        if (jfxTreeView.expand) {
                             jfxTreeView.height = -(jfxTreeView.sibRow - jfxTreeView.animateRow - 1) * getHeight();
+                        }
                     }
                 }
                 if (jfxTreeView.getTreeItem(i) != null && jfxTreeView.getTreeItem(i) == jfxTreeView.getTreeItem(
@@ -159,7 +162,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
                         for (int index : jfxTreeView.sibAnimationMap.keySet()) {
                             if (index > i) {
                                 jfxTreeView.trans.getChildren()
-                                                 .remove(jfxTreeView.sibAnimationMap.get(index).getAnimation());
+                                    .remove(jfxTreeView.sibAnimationMap.get(index).getAnimation());
                                 jfxTreeView.sibAnimationMap.get(index).getCell().clearCellAnimation();
                             }
                         }
@@ -169,11 +172,13 @@ public class JFXTreeCell<T> extends TreeCell<T> {
                 if (i > jfxTreeView.animateRow) {
                     if (jfxTreeView.expand) {
                         // animate siblings
-                        if (i >= jfxTreeView.sibRow && jfxTreeView.sibRow != -1)
+                        if (i >= jfxTreeView.sibRow && jfxTreeView.sibRow != -1) {
                             animateSibling(i, jfxTreeView);
-                            // animate children
-                        else
+                        }
+                        // animate children
+                        else {
                             animateChild(i, jfxTreeView);
+                        }
                     } else {
                         // animate siblings
                         animateSibling(i, jfxTreeView);
@@ -191,10 +196,11 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             getChildren().add(0, cellRippler);
             getChildren().add(0, selectedPane);
         }
-        if (isEmpty())
+        if (isEmpty()) {
             cellRippler.resizeRelocate(0, 0, 0, 0);
-        else
+        } else {
             cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
+        }
 
         selectedPane.resizeRelocate(0, 0, selectedPane.prefWidth(-1), getHeight());
         selectedPane.setOpacity(isSelected() ? 1 : 0);
@@ -275,15 +281,15 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     private Timeline createSibAnimation(TreeCell<?> cell, int index) {
         cell.setTranslateY(((JFXTreeView<T>) getTreeView()).height);
         return new Timeline(new KeyFrame(Duration.millis(120),
-                                         new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
+            new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
     }
 
     private Timeline createChildAnimation(TreeCell<?> cell, int delay) {
         cell.setOpacity(0);
         cell.setTranslateY(-1);
         Timeline f1 = new Timeline(new KeyFrame(Duration.millis(120),
-                                                new KeyValue(cell.opacityProperty(), 1, Interpolator.EASE_BOTH),
-                                                new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
+            new KeyValue(cell.opacityProperty(), 1, Interpolator.EASE_BOTH),
+            new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
         f1.setDelay(Duration.millis(20 + delay * 10));
         return f1;
     }

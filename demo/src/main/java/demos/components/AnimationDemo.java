@@ -119,22 +119,22 @@ public class AnimationDemo extends Application {
             public Animation animateExit() {
                 return new Timeline(
                     new KeyFrame(Duration.millis(300),
-                                 new KeyValue(main.opacityProperty(), 0, Interpolator.EASE_BOTH)),
+                        new KeyValue(main.opacityProperty(), 0, Interpolator.EASE_BOTH)),
                     new KeyFrame(Duration.millis(520),
-                                 new KeyValue(colorPane1.translateXProperty(), 0, Interpolator.EASE_BOTH),
-                                 new KeyValue(colorPane1.translateYProperty(), 0, Interpolator.EASE_BOTH)),
+                        new KeyValue(colorPane1.translateXProperty(), 0, Interpolator.EASE_BOTH),
+                        new KeyValue(colorPane1.translateYProperty(), 0, Interpolator.EASE_BOTH)),
                     new KeyFrame(Duration.millis(200),
-                                 new KeyValue(colorPane1.scaleXProperty(), 1, Interpolator.EASE_BOTH),
-                                 new KeyValue(colorPane1.scaleYProperty(), 1, Interpolator.EASE_BOTH)),
+                        new KeyValue(colorPane1.scaleXProperty(), 1, Interpolator.EASE_BOTH),
+                        new KeyValue(colorPane1.scaleYProperty(), 1, Interpolator.EASE_BOTH)),
                     new KeyFrame(Duration.millis(1000),
-                                 new KeyValue(colorPane1.scaleXProperty(), 40, Interpolator.EASE_BOTH),
-                                 new KeyValue(colorPane1.scaleYProperty(), 40, Interpolator.EASE_BOTH)));
+                        new KeyValue(colorPane1.scaleXProperty(), 40, Interpolator.EASE_BOTH),
+                        new KeyValue(colorPane1.scaleYProperty(), 40, Interpolator.EASE_BOTH)));
             }
 
             @Override
             public Animation animateEntrance() {
                 return new Timeline(new KeyFrame(Duration.millis(320),
-                                                 new KeyValue(nextPage.opacityProperty(), 1, Interpolator.EASE_BOTH)));
+                    new KeyValue(nextPage.opacityProperty(), 1, Interpolator.EASE_BOTH)));
             }
 
         };

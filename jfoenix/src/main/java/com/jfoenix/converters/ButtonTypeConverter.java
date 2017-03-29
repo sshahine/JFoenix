@@ -38,36 +38,37 @@ import javafx.scene.text.Font;
  */
 public class ButtonTypeConverter extends StyleConverterImpl<String, ButtonType> {
 
-	private ButtonTypeConverter() {
-		super();
-	}
+    private ButtonTypeConverter() {
+        super();
+    }
 
-	// lazy, thread-safe instatiation
-	private static class Holder {
-		static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
-		private Holder() {
-			throw new IllegalAccessError("Holder class");
-		}
-	}
+    // lazy, thread-safe instatiation
+    private static class Holder {
+        static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
 
-	public static StyleConverter<String, ButtonType> getInstance() {
-		return Holder.INSTANCE;
-	}
+        private Holder() {
+            throw new IllegalAccessError("Holder class");
+        }
+    }
+
+    public static StyleConverter<String, ButtonType> getInstance() {
+        return Holder.INSTANCE;
+    }
 
 
-	@Override
-	public ButtonType convert(ParsedValue<String, ButtonType> value, Font notUsedFont) {
-		String string = value.getValue();
-		try {
-			return ButtonType.valueOf(string);
-		} catch (IllegalArgumentException | NullPointerException exception) {
-			Logger.getLogger(ButtonTypeConverter.class.getName()).info(String.format("Invalid button type value '%s'", string));
-			return ButtonType.FLAT;
-		}
-	}
+    @Override
+    public ButtonType convert(ParsedValue<String, ButtonType> value, Font notUsedFont) {
+        String string = value.getValue();
+        try {
+            return ButtonType.valueOf(string);
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            Logger.getLogger(ButtonTypeConverter.class.getName()).info(String.format("Invalid button type value '%s'", string));
+            return ButtonType.FLAT;
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "ButtonTypeConverter";
-	}
+    @Override
+    public String toString() {
+        return "ButtonTypeConverter";
+    }
 }

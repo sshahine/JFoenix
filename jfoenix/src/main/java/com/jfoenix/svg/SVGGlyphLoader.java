@@ -58,8 +58,7 @@ public class SVGGlyphLoader {
     /**
      * will retrieve icons from the glyphs map for a certain glyphName
      *
-     * @param glyphName
-     *         the glyph name
+     * @param glyphName the glyph name
      * @return SVGGlyph node
      */
     public static SVGGlyph getIcoMoonGlyph(String glyphName) {
@@ -83,8 +82,7 @@ public class SVGGlyphLoader {
     /**
      * will load SVG icons from icomoon font file (e.g font.svg)
      *
-     * @param url
-     *         of the svg font file
+     * @param url of the svg font file
      * @throws IOException
      */
     public static void loadGlyphsFont(URL url) throws IOException {
@@ -105,14 +103,16 @@ public class SVGGlyphLoader {
             for (int i = 0; i < glyphsList.getLength(); i++) {
                 Node glyph = glyphsList.item(i);
                 Node glyphName = glyph.getAttributes().getNamedItem("glyph-name");
-                if (glyphName == null) continue;
+                if (glyphName == null) {
+                    continue;
+                }
 
                 String glyphId = glyphName.getNodeValue();
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
-                                                                glyphId,
-                                                                glyph.getAttributes()
-                                                                     .getNamedItem("d")
-                                                                     .getNodeValue());
+                    glyphId,
+                    glyph.getAttributes()
+                        .getNamedItem("d")
+                        .getNodeValue());
                 glyphsMap.put(svgFontFile.getName() + "." + glyphId, glyphPane);
             }
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
@@ -123,10 +123,8 @@ public class SVGGlyphLoader {
     /**
      * will load SVG icons from input stream
      *
-     * @param stream
-     *         input stream of svg font file
-     * @param keyPrefix
-     *         will be used as a prefix when storing SVG icons in the map
+     * @param stream    input stream of svg font file
+     * @param keyPrefix will be used as a prefix when storing SVG icons in the map
      * @throws IOException
      */
     public static void loadGlyphsFont(InputStream stream, String keyPrefix) throws IOException {
@@ -146,14 +144,16 @@ public class SVGGlyphLoader {
             for (int i = 0; i < glyphsList.getLength(); i++) {
                 Node glyph = glyphsList.item(i);
                 Node glyphName = glyph.getAttributes().getNamedItem("glyph-name");
-                if (glyphName == null) continue;
+                if (glyphName == null) {
+                    continue;
+                }
 
                 String glyphId = glyphName.getNodeValue();
                 SVGGlyphBuilder glyphPane = new SVGGlyphBuilder(i,
-                                                                glyphId,
-                                                                glyph.getAttributes()
-                                                                     .getNamedItem("d")
-                                                                     .getNodeValue());
+                    glyphId,
+                    glyph.getAttributes()
+                        .getNamedItem("d")
+                        .getNodeValue());
                 glyphsMap.put(keyPrefix + "." + glyphId, glyphPane);
             }
             stream.close();
@@ -166,8 +166,7 @@ public class SVGGlyphLoader {
     /**
      * load a single svg icon from a file
      *
-     * @param url
-     *         of the svg icon
+     * @param url of the svg icon
      * @return SVGGLyph node
      * @throws IOException
      */

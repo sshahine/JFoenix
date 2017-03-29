@@ -57,8 +57,11 @@ public class MainController {
             titleBurger.getAnimation().play();
         });
         titleBurgerContainer.setOnMouseClicked(e -> {
-            if (drawer.isHidden() || drawer.isHidding()) drawer.open();
-            else drawer.close();
+            if (drawer.isHidden() || drawer.isHidding()) {
+                drawer.open();
+            } else {
+                drawer.close();
+            }
         });
 
         try {
@@ -70,10 +73,10 @@ public class MainController {
         }
 
         optionsBurger.setOnMouseClicked(e -> toolbarPopup.show(optionsBurger,
-                                                               PopupVPosition.TOP,
-                                                               PopupHPosition.RIGHT,
-                                                               -12,
-                                                               15));
+            PopupVPosition.TOP,
+            PopupHPosition.RIGHT,
+            -12,
+            15));
 
         // create the inner flow and content
         context = new ViewFlowContext();
@@ -84,14 +87,14 @@ public class MainController {
         context.register("ContentFlowHandler", flowHandler);
         context.register("ContentFlow", innerFlow);
         drawer.setContent(flowHandler.start(new AnimatedFlowContainer(Duration.millis(320),
-                                                                      ContainerAnimations.SWIPE_LEFT)));
+            ContainerAnimations.SWIPE_LEFT)));
         context.register("ContentPane", drawer.getContent().get(0));
 
         // side controller will add links to the content flow
         Flow sideMenuFlow = new Flow(SideMenuController.class);
         final FlowHandler sideMenuFlowHandler = sideMenuFlow.createHandler(context);
         drawer.setSidePane(sideMenuFlowHandler.start(new AnimatedFlowContainer(Duration.millis(320),
-                                                                               ContainerAnimations.SWIPE_LEFT)));
+            ContainerAnimations.SWIPE_LEFT)));
     }
 
     public static final class InputController {
@@ -101,7 +104,9 @@ public class MainController {
         // close application
         @FXML
         private void submit() {
-            if (toolbarPopupList.getSelectionModel().getSelectedIndex() == 1) Platform.exit();
+            if (toolbarPopupList.getSelectionModel().getSelectedIndex() == 1) {
+                Platform.exit();
+            }
         }
     }
 }

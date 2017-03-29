@@ -69,7 +69,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
 
     public JFXCustomColorPickerDialog(Window owner) {
         getStyleClass().add("custom-color-dialog");
-        if (owner != null) dialog.initOwner(owner);
+        if (owner != null) {
+            dialog.initOwner(owner);
+        }
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initStyle(StageStyle.TRANSPARENT);
         dialog.setResizable(false);
@@ -81,8 +83,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
         customScene = new Scene(pickerDecorator, Color.TRANSPARENT);
         final Scene ownerScene = owner.getScene();
         if (ownerScene != null) {
-            if (ownerScene.getUserAgentStylesheet() != null)
+            if (ownerScene.getUserAgentStylesheet() != null) {
                 customScene.setUserAgentStylesheet(ownerScene.getUserAgentStylesheet());
+            }
             customScene.getStylesheets().addAll(ownerScene.getStylesheets());
         }
         curvedColorPicker = new JFXCustomColorPicker();
@@ -129,18 +132,20 @@ public class JFXCustomColorPickerDialog extends StackPane {
         tabs.getTabs().add(hexTab);
 
         curvedColorPicker.selectedPath.addListener((o, oldVal, newVal) -> {
-            if (paraTransition != null) paraTransition.stop();
+            if (paraTransition != null) {
+                paraTransition.stop();
+            }
             Region tabsHeader = (Region) tabs.lookup(".tab-header-background");
             pane.backgroundProperty().unbind();
             tabsHeader.backgroundProperty().unbind();
             JFXFillTransition fillTransition = new JFXFillTransition(Duration.millis(240),
-                                                                     pane,
-                                                                     (Color) oldVal.getFill(),
-                                                                     (Color) newVal.getFill());
+                pane,
+                (Color) oldVal.getFill(),
+                (Color) newVal.getFill());
             JFXFillTransition tabsFillTransition = new JFXFillTransition(Duration.millis(240),
-                                                                         tabsHeader,
-                                                                         (Color) oldVal.getFill(),
-                                                                         (Color) newVal.getFill());
+                tabsHeader,
+                (Color) oldVal.getFill(),
+                (Color) newVal.getFill());
             paraTransition = new ParallelTransition(fillTransition, tabsFillTransition);
             paraTransition.setOnFinished((finish) -> {
                 tabsHeader.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
@@ -158,14 +163,14 @@ public class JFXCustomColorPickerDialog extends StackPane {
             pane.backgroundProperty().addListener((o, oldVal, newVal) -> {
                 if (concurrencyController.getAndSet(1) == -1) {
                     Color fontColor = ((Color) newVal.getFills().get(0).getFill()).grayscale()
-                                                                                  .getRed() > 0.5 ? Color.valueOf(
+                        .getRed() > 0.5 ? Color.valueOf(
                         "rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");
                     tabs.lookupAll(".tab")
                         .forEach(tabNode -> tabNode.lookupAll(".tab-label")
-                                                   .forEach(node -> ((Label) node).setTextFill(fontColor)));
+                            .forEach(node -> ((Label) node).setTextFill(fontColor)));
                     tabs.lookupAll(".tab")
                         .forEach(tabNode -> tabNode.lookupAll(".jfx-rippler")
-                                                   .forEach(node -> ((JFXRippler) node).setRipplerFill(fontColor)));
+                            .forEach(node -> ((JFXRippler) node).setRipplerFill(fontColor)));
                     ((Line) tabs.lookup(".tab-selected-line")).setStroke(fontColor);
                     pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button -> {
                         ((JFXButton) button).setRipplerFill(fontColor);
@@ -174,17 +179,17 @@ public class JFXCustomColorPickerDialog extends StackPane {
 
                     Color newColor = (Color) newVal.getFills().get(0).getFill();
                     String hex = String.format("#%02X%02X%02X",
-                                               (int) (newColor.getRed() * 255),
-                                               (int) (newColor.getGreen() * 255),
-                                               (int) (newColor.getBlue() * 255));
+                        (int) (newColor.getRed() * 255),
+                        (int) (newColor.getGreen() * 255),
+                        (int) (newColor.getBlue() * 255));
                     String rgb = String.format("rgba(%d, %d, %d, 1)",
-                                               (int) (newColor.getRed() * 255),
-                                               (int) (newColor.getGreen() * 255),
-                                               (int) (newColor.getBlue() * 255));
+                        (int) (newColor.getRed() * 255),
+                        (int) (newColor.getGreen() * 255),
+                        (int) (newColor.getBlue() * 255));
                     String hsb = String.format("hsl(%d, %d%%, %d%%)",
-                                               (int) (newColor.getHue()),
-                                               (int) (newColor.getSaturation() * 100),
-                                               (int) (newColor.getBrightness() * 100));
+                        (int) (newColor.getHue()),
+                        (int) (newColor.getSaturation() * 100),
+                        (int) (newColor.getBrightness() * 100));
 
                     if (!userChange) {
                         systemChange = true;
@@ -200,8 +205,8 @@ public class JFXCustomColorPickerDialog extends StackPane {
             // initial selected colors
             Platform.runLater(() -> {
                 pane.setBackground(new Background(new BackgroundFill(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()),
-                                                                     CornerRadii.EMPTY,
-                                                                     Insets.EMPTY)));
+                    CornerRadii.EMPTY,
+                    Insets.EMPTY)));
                 ((Region) tabs.lookup(".tab-header-background")).setBackground(new Background(new BackgroundFill(
                     curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()),
                     CornerRadii.EMPTY,
@@ -211,13 +216,13 @@ public class JFXCustomColorPickerDialog extends StackPane {
                 tabsHeader.backgroundProperty().unbind();
                 tabsHeader.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
                     return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(),
-                                                             CornerRadii.EMPTY,
-                                                             Insets.EMPTY));
+                        CornerRadii.EMPTY,
+                        Insets.EMPTY));
                 }, curvedColorPicker.selectedPath.get().fillProperty()));
                 pane.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
                     return new Background(new BackgroundFill(curvedColorPicker.selectedPath.get().getFill(),
-                                                             CornerRadii.EMPTY,
-                                                             Insets.EMPTY));
+                        CornerRadii.EMPTY,
+                        Insets.EMPTY));
                 }, curvedColorPicker.selectedPath.get().fillProperty()));
 
                 // bind text field line color
@@ -233,30 +238,30 @@ public class JFXCustomColorPickerDialog extends StackPane {
 
 
                 ((Pane) pickerDecorator.lookup(".jfx-decorator-buttons-container")).backgroundProperty()
-                                                                                   .bind(Bindings.createObjectBinding(() -> {
-                                                                                       return new Background(new BackgroundFill(
-                                                                                           pane.getBackground()
-                                                                                                       .getFills()
-                                                                                                       .get(0)
-                                                                                                       .getFill(),
-                                                                                           CornerRadii.EMPTY,
-                                                                                           Insets.EMPTY));
-                                                                                   }, pane.backgroundProperty()));
+                    .bind(Bindings.createObjectBinding(() -> {
+                        return new Background(new BackgroundFill(
+                            pane.getBackground()
+                                .getFills()
+                                .get(0)
+                                .getFill(),
+                            CornerRadii.EMPTY,
+                            Insets.EMPTY));
+                    }, pane.backgroundProperty()));
 
                 ((Pane) pickerDecorator.lookup(".jfx-decorator-content-container")).borderProperty()
-                                                                                   .bind(Bindings.createObjectBinding(() -> {
-                                                                                       return new Border(new BorderStroke(
-                                                                                           pane.getBackground()
-                                                                                                       .getFills()
-                                                                                                       .get(0)
-                                                                                                       .getFill(),
-                                                                                           BorderStrokeStyle.SOLID,
-                                                                                           CornerRadii.EMPTY,
-                                                                                           new BorderWidths(0,
-                                                                                                            4,
-                                                                                                            4,
-                                                                                                            4)));
-                                                                                   }, pane.backgroundProperty()));
+                    .bind(Bindings.createObjectBinding(() -> {
+                        return new Border(new BorderStroke(
+                            pane.getBackground()
+                                .getFills()
+                                .get(0)
+                                .getFill(),
+                            BorderStrokeStyle.SOLID,
+                            CornerRadii.EMPTY,
+                            new BorderWidths(0,
+                                4,
+                                4,
+                                4)));
+                    }, pane.backgroundProperty()));
             });
         };
 
@@ -341,7 +346,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
             dialog.heightProperty().addListener(positionAdjuster);
             positionAdjuster.invalidated(null);
         }
-        if (dialog.getScene() == null) dialog.setScene(customScene);
+        if (dialog.getScene() == null) {
+            dialog.setScene(customScene);
+        }
         curvedColorPicker.preAnimate();
         dialog.show();
         if (initOnce) {
@@ -350,9 +357,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
         }
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(120),
-                                                      new KeyValue(dialog.opacityProperty(),
-                                                                   1,
-                                                                   Interpolator.EASE_BOTH)));
+            new KeyValue(dialog.opacityProperty(),
+                1,
+                Interpolator.EASE_BOTH)));
         timeline.setOnFinished((finish) -> curvedColorPicker.animate());
         timeline.play();
     }
@@ -362,7 +369,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
     private InvalidationListener positionAdjuster = new InvalidationListener() {
         @Override
         public void invalidated(Observable ignored) {
-            if (Double.isNaN(dialog.getWidth()) || Double.isNaN(dialog.getHeight())) return;
+            if (Double.isNaN(dialog.getWidth()) || Double.isNaN(dialog.getHeight())) {
+                return;
+            }
             dialog.widthProperty().removeListener(positionAdjuster);
             dialog.heightProperty().removeListener(positionAdjuster);
             fixPosition();
@@ -377,9 +386,13 @@ public class JFXCustomColorPickerDialog extends StackPane {
         double xL = w.getX() - dialog.getWidth();
         double x;
         double y;
-        if (sb.getMaxX() >= xR + dialog.getWidth()) x = xR;
-        else if (sb.getMinX() <= xL) x = xL;
-        else x = Math.max(sb.getMinX(), sb.getMaxX() - dialog.getWidth());
+        if (sb.getMaxX() >= xR + dialog.getWidth()) {
+            x = xR;
+        } else if (sb.getMinX() <= xL) {
+            x = xL;
+        } else {
+            x = Math.max(sb.getMinX(), sb.getMaxX() - dialog.getWidth());
+        }
         y = Math.max(sb.getMinY(), Math.min(sb.getMaxY() - dialog.getHeight(), w.getY()));
         dialog.setX(x);
         dialog.setY(y);
@@ -388,7 +401,9 @@ public class JFXCustomColorPickerDialog extends StackPane {
     @Override
     public void layoutChildren() {
         super.layoutChildren();
-        if (dialog.getMinWidth() > 0 && dialog.getMinHeight() > 0) return;
+        if (dialog.getMinWidth() > 0 && dialog.getMinHeight() > 0) {
+            return;
+        }
         double minWidth = Math.max(0, computeMinWidth(getHeight()) + (dialog.getWidth() - customScene.getWidth()));
         double minHeight = Math.max(0, computeMinHeight(getWidth()) + (dialog.getHeight() - customScene.getHeight()));
         dialog.setMinWidth(minWidth);

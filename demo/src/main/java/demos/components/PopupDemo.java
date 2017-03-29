@@ -27,7 +27,9 @@ public class PopupDemo extends Application {
         JFXRippler r = new JFXRippler(show, RipplerMask.CIRCLE, RipplerPos.BACK);
 
         JFXListView<Label> list = new JFXListView<>();
-        for (int i = 1; i < 5; i++) list.getItems().add(new Label("Item " + i));
+        for (int i = 1; i < 5; i++) {
+            list.getItems().add(new Label("Item " + i));
+        }
 
         AnchorPane container = new AnchorPane();
         container.getChildren().add(r);

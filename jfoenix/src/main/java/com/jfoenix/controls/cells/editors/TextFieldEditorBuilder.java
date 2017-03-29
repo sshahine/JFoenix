@@ -53,7 +53,7 @@ public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 
     @Override
     public void cancelEdit() {
-		
+
     }
 
     @Override
@@ -89,6 +89,6 @@ public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
 
     @Override
     public void validateValue() throws Exception {
-		// Do nothing because there is no validation constraints
+        // Do nothing because there is no validation constraints
     }
 }

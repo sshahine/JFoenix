@@ -99,10 +99,14 @@ class JFXColorPalette extends Region {
                     });
                 }
                 customColorDialog.setCurrentColor(colorPicker.valueProperty().get());
-                if (popupControl != null) popupControl.setAutoHide(false);
+                if (popupControl != null) {
+                    popupControl.setAutoHide(false);
+                }
                 customColorDialog.show();
                 customColorDialog.setOnHidden(event -> {
-                    if (popupControl != null) popupControl.setAutoHide(true);
+                    if (popupControl != null) {
+                        popupControl.setAutoHide(true);
+                    }
                 });
             }
         });
@@ -118,9 +122,9 @@ class JFXColorPalette extends Region {
         paletteBox.getStyleClass().add("color-palette");
         paletteBox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         paletteBox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
-                                                         BorderStrokeStyle.SOLID,
-                                                         CornerRadii.EMPTY,
-                                                         BorderWidths.DEFAULT)));
+            BorderStrokeStyle.SOLID,
+            CornerRadii.EMPTY,
+            BorderWidths.DEFAULT)));
         paletteBox.getChildren().addAll(colorPickerGrid, customColorLabel, customColorGrid, customColorLink);
 
         hoverSquare.setMouseTransparent(true);
@@ -228,7 +232,9 @@ class JFXColorPalette extends Region {
                 case SPACE:
                 case ENTER:
                     // select the focused color
-                    if (focusedSquare != null) focusedSquare.selectColor(ke);
+                    if (focusedSquare != null) {
+                        focusedSquare.selectColor(ke);
+                    }
                     ke.consume();
                     break;
                 default: // no-op
@@ -245,7 +251,9 @@ class JFXColorPalette extends Region {
     }
 
     public boolean isCustomColorDialogShowing() {
-        if (customColorDialog != null) return customColorDialog.isVisible();
+        if (customColorDialog != null) {
+            return customColorDialog.isVisible();
+        }
         return false;
     }
 
@@ -349,8 +357,8 @@ class JFXColorPalette extends Region {
             Color[] colors = new Color[numColors];
             for (int i = 0; i < numColors; i++) {
                 colors[i] = new Color(RAW_VALUES[i * 3] / 255,
-                                      RAW_VALUES[(i * 3) + 1] / 255, RAW_VALUES[(i * 3) + 2] / 255,
-                                      1.0);
+                    RAW_VALUES[(i * 3) + 1] / 255, RAW_VALUES[(i * 3) + 2] / 255,
+                    1.0);
                 ColorSquare cs = new ColorSquare(colors[i], i);
                 squares.add(cs);
             }
@@ -369,9 +377,9 @@ class JFXColorPalette extends Region {
                     mouseDragColor = colorPicker.getValue();
                 }
                 int xIndex = clamp(0,
-                                   (int) t.getX() / (SQUARE_SIZE + 1), NUM_OF_COLUMNS - 1);
+                    (int) t.getX() / (SQUARE_SIZE + 1), NUM_OF_COLUMNS - 1);
                 int yIndex = clamp(0,
-                                   (int) t.getY() / (SQUARE_SIZE + 1), NUM_OF_ROWS - 1);
+                    (int) t.getY() / (SQUARE_SIZE + 1), NUM_OF_ROWS - 1);
                 int index = xIndex + yIndex * NUM_OF_COLUMNS;
                 colorPicker.setValue((Color) squares.get(index).rectangle.getFill());
                 updateSelection(colorPicker.getValue());
@@ -630,8 +638,12 @@ class JFXColorPalette extends Region {
     private static final int NUM_OF_ROWS = NUM_OF_COLORS / NUM_OF_COLUMNS;
 
     private static int clamp(int min, int value, int max) {
-        if (value < min) return min;
-        if (value > max) return max;
+        if (value < min) {
+            return min;
+        }
+        if (value > max) {
+            return max;
+        }
         return value;
     }
 }

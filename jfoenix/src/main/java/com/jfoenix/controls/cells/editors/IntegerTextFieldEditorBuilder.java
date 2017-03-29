@@ -92,6 +92,8 @@ public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer>
 
     @Override
     public void validateValue() throws Exception {
-        if (!textField.validate()) throw new Exception();
+        if (!textField.validate()) {
+            throw new Exception();
+        }
     }
 }

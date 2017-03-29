@@ -87,12 +87,9 @@ public class JFXDialog extends StackPane {
      * <li>LEFT</li>
      * </ul>
      *
-     * @param dialogContainer
-     *         is the parent of the dialog, it
-     * @param content
-     *         the content of dialog
-     * @param transitionType
-     *         the animation type
+     * @param dialogContainer is the parent of the dialog, it
+     * @param content         the content of dialog
+     * @param transitionType  the animation type
      */
 
     public JFXDialog(StackPane dialogContainer, Region content, DialogTransition transitionType) {
@@ -133,8 +130,11 @@ public class JFXDialog extends StackPane {
 
     private void initChangeListeners() {
         overlayCloseProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
-            else this.removeEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+            if (newVal) {
+                this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+            } else {
+                this.removeEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+            }
         });
     }
 
@@ -156,7 +156,9 @@ public class JFXDialog extends StackPane {
         StackPane.setAlignment(contentHolder, Pos.CENTER);
         this.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1), null, null)));
         // close the dialog if clicked on the overlay pane
-        if (overlayClose.get()) this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+        if (overlayClose.get()) {
+            this.addEventHandler(MouseEvent.MOUSE_PRESSED, closeHandler);
+        }
         // prevent propagating the events to overlay pane
         contentHolder.addEventHandler(MouseEvent.ANY, e -> e.consume());
     }
@@ -310,9 +312,11 @@ public class JFXDialog extends StackPane {
                     break;
             }
         }
-        if (animation != null) animation.setOnFinished((finish) -> onDialogOpenedProperty.get()
-                                                                                         .handle(new JFXDialogEvent(
-                                                                                             JFXDialogEvent.OPENED)));
+        if (animation != null) {
+            animation.setOnFinished((finish) -> onDialogOpenedProperty.get()
+                .handle(new JFXDialogEvent(
+                    JFXDialogEvent.OPENED)));
+        }
         return animation;
     }
 
@@ -328,16 +332,16 @@ public class JFXDialog extends StackPane {
         public LeftTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
-                             new KeyValue(contentHolder.translateXProperty(), -offsetX, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.translateXProperty(), -offsetX, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(10),
-                             new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(1000),
-                             new KeyValue(contentHolder.translateXProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.translateXProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)
                 ))
             );
             // reduce the number to increase the shifting , increase number to reduce shifting
@@ -350,16 +354,16 @@ public class JFXDialog extends StackPane {
         public RightTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
-                             new KeyValue(contentHolder.translateXProperty(), offsetX, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.translateXProperty(), offsetX, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(10),
-                             new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(1000),
-                             new KeyValue(contentHolder.translateXProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
+                    new KeyValue(contentHolder.translateXProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
             );
             // reduce the number to increase the shifting , increase number to reduce shifting
             setCycleDuration(Duration.seconds(0.4));
@@ -371,16 +375,16 @@ public class JFXDialog extends StackPane {
         public TopTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
-                             new KeyValue(contentHolder.translateYProperty(), -offsetY, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.translateYProperty(), -offsetY, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(10),
-                             new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(1000),
-                             new KeyValue(contentHolder.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
+                    new KeyValue(contentHolder.translateYProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
             );
             // reduce the number to increase the shifting , increase number to reduce shifting
             setCycleDuration(Duration.seconds(0.4));
@@ -392,16 +396,16 @@ public class JFXDialog extends StackPane {
         public BottomTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
-                             new KeyValue(contentHolder.translateYProperty(), offsetY, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.translateYProperty(), offsetY, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(10),
-                             new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(1000),
-                             new KeyValue(contentHolder.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
+                    new KeyValue(contentHolder.translateYProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)))
             );
             // reduce the number to increase the shifting , increase number to reduce shifting
             setCycleDuration(Duration.seconds(0.4));
@@ -413,18 +417,18 @@ public class JFXDialog extends StackPane {
         public CenterTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
-                             new KeyValue(contentHolder.scaleXProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(contentHolder.scaleYProperty(), 0, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.scaleXProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(contentHolder.scaleYProperty(), 0, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.visibleProperty(), false, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(10),
-                             new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                    new KeyValue(JFXDialog.this.visibleProperty(), true, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 0, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(1000),
-                             new KeyValue(contentHolder.scaleXProperty(), 1, Interpolator.EASE_BOTH),
-                             new KeyValue(contentHolder.scaleYProperty(), 1, Interpolator.EASE_BOTH),
-                             new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)
+                    new KeyValue(contentHolder.scaleXProperty(), 1, Interpolator.EASE_BOTH),
+                    new KeyValue(contentHolder.scaleYProperty(), 1, Interpolator.EASE_BOTH),
+                    new KeyValue(JFXDialog.this.opacityProperty(), 1, Interpolator.EASE_BOTH)
                 ))
             );
             // reduce the number to increase the shifting , increase number to reduce shifting
@@ -478,8 +482,8 @@ public class JFXDialog extends StackPane {
     private static class StyleableProperties {
         private static final CssMetaData<JFXDialog, DialogTransition> DIALOG_TRANSITION =
             new CssMetaData<JFXDialog, DialogTransition>("-jfx-dialog-transition",
-                                                         DialogTransitionConverter.getInstance(),
-                                                         DialogTransition.CENTER) {
+                DialogTransitionConverter.getInstance(),
+                DialogTransition.CENTER) {
                 @Override
                 public boolean isSettable(JFXDialog control) {
                     return control.transitionType == null || !control.transitionType.isBound();
@@ -497,7 +501,7 @@ public class JFXDialog extends StackPane {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Parent.getClassCssMetaData());
             Collections.addAll(styleables,
-                               DIALOG_TRANSITION
+                DIALOG_TRANSITION
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

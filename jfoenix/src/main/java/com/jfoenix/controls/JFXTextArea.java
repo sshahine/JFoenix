@@ -125,8 +125,9 @@ public class JFXTextArea extends TextArea {
      */
     public boolean validate() {
         for (ValidatorBase validator : validators) {
-            if (validator.getSrcControl() == null)
+            if (validator.getSrcControl() == null) {
                 validator.setSrcControl(this);
+            }
             validator.validate();
             if (validator.getHasErrors()) {
                 activeValidator.set(validator);
@@ -153,9 +154,9 @@ public class JFXTextArea extends TextArea {
      * set true to show a float the prompt text when focusing the field
      */
     private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT,
-                                                                                     JFXTextArea.this,
-                                                                                     "lableFloat",
-                                                                                     false);
+        JFXTextArea.this,
+        "lableFloat",
+        false);
 
     public final StyleableBooleanProperty labelFloatProperty() {
         return this.labelFloat;
@@ -173,11 +174,11 @@ public class JFXTextArea extends TextArea {
      * default color used when the text area is unfocused
      */
     private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
-                                                                                              JFXTextArea.this,
-                                                                                              "unFocusColor",
-                                                                                              Color.rgb(77,
-                                                                                                        77,
-                                                                                                        77));
+        JFXTextArea.this,
+        "unFocusColor",
+        Color.rgb(77,
+            77,
+            77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();
@@ -195,9 +196,9 @@ public class JFXTextArea extends TextArea {
      * default color used when the text area is focused
      */
     private StyleableObjectProperty<Paint> focusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.FOCUS_COLOR,
-                                                                                            JFXTextArea.this,
-                                                                                            "focusColor",
-                                                                                            Color.valueOf("#4059A9"));
+        JFXTextArea.this,
+        "focusColor",
+        Color.valueOf("#4059A9"));
 
     public Paint getFocusColor() {
         return focusColor == null ? Color.valueOf("#4059A9") : focusColor.get();
@@ -215,9 +216,9 @@ public class JFXTextArea extends TextArea {
      * disable animation on validation
      */
     private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION,
-                                                                                           JFXTextArea.this,
-                                                                                           "disableAnimation",
-                                                                                           false);
+        JFXTextArea.this,
+        "disableAnimation",
+        false);
 
     public final StyleableBooleanProperty disableAnimationProperty() {
         return this.disableAnimation;
@@ -277,7 +278,7 @@ public class JFXTextArea extends TextArea {
 
         private static final CssMetaData<JFXTextArea, Boolean> DISABLE_ANIMATION =
             new CssMetaData<JFXTextArea, Boolean>("-jfx-disable-animation",
-                                                  BooleanConverter.getInstance(), false) {
+                BooleanConverter.getInstance(), false) {
                 @Override
                 public boolean isSettable(JFXTextArea control) {
                     return control.disableAnimation == null || !control.disableAnimation.isBound();

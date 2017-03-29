@@ -16,16 +16,16 @@ import static java.util.Arrays.asList;
 public class TreeViewDemo extends Application {
 
     private final List<Employee> employees = asList(new Employee("Ethan Williams", "Sales Department"),
-                                                    new Employee("Emma Jones", "Sales Department"),
-                                                    new Employee("Michael Brown", "Sales Department"),
-                                                    new Employee("Anna Black", "Sales Department"),
-                                                    new Employee("Rodger York", "Sales Department"),
-                                                    new Employee("Susan Collins", "Sales Department"),
-                                                    new Employee("Mike Graham", "IT Support"),
-                                                    new Employee("Judy Mayer", "IT Support"),
-                                                    new Employee("Gregory Smith", "IT Support"),
-                                                    new Employee("Jacob Smith", "Accounts Department"),
-                                                    new Employee("Isabella Johnson", "Accounts Department"));
+        new Employee("Emma Jones", "Sales Department"),
+        new Employee("Michael Brown", "Sales Department"),
+        new Employee("Anna Black", "Sales Department"),
+        new Employee("Rodger York", "Sales Department"),
+        new Employee("Susan Collins", "Sales Department"),
+        new Employee("Mike Graham", "IT Support"),
+        new Employee("Judy Mayer", "IT Support"),
+        new Employee("Gregory Smith", "IT Support"),
+        new Employee("Jacob Smith", "Accounts Department"),
+        new Employee("Isabella Johnson", "Accounts Department"));
     private final TreeItem<String> rootNode = new TreeItem<>("MyCompany Human Resources");//, rootIcon);    // Set picture
 
     public static void main(String[] args) {

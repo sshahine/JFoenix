@@ -41,8 +41,7 @@ public class JFXDialogEvent extends Event {
     /**
      * Construct a new JFXDialog {@code Event} with the specified event type
      *
-     * @param eventType
-     *         the event type
+     * @param eventType the event type
      */
     public JFXDialogEvent(EventType<? extends Event> eventType) {
         super(eventType);

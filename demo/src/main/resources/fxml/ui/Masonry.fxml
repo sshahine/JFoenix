@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
-		<ScrollPane fitToHeight="true" fitToWidth="true" fx:id="scrollPane" hbarPolicy="NEVER">
-			<JFXMasonryPane fx:id="masonryPane">
-			</JFXMasonryPane>
-		</ScrollPane>
+    <ScrollPane fitToHeight="true" fitToWidth="true" fx:id="scrollPane" hbarPolicy="NEVER">
+        <JFXMasonryPane fx:id="masonryPane">
+        </JFXMasonryPane>
+    </ScrollPane>
 </StackPane>
 
