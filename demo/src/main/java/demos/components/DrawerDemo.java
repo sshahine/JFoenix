@@ -5,11 +5,13 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
 import com.jfoenix.controls.JFXDrawersStack;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
 public class DrawerDemo extends Application {
 
@@ -19,8 +21,7 @@ public class DrawerDemo extends Application {
     private static final String BOTTOM = "BOTTOM";
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-
+    public void start(Stage stage) {
         FlowPane content = new FlowPane();
         JFXButton leftButton = new JFXButton(LEFT);
         JFXButton topButton = new JFXButton(TOP);
@@ -36,7 +37,6 @@ public class DrawerDemo extends Application {
         leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
         leftDrawer.setSidePane(leftDrawerPane);
         leftDrawer.setDefaultDrawerSize(150);
-        //leftDrawer.setContent(content);
         leftDrawer.setOverLayVisible(false);
         leftDrawer.setResizableOnDrag(true);
 
@@ -48,7 +48,6 @@ public class DrawerDemo extends Application {
         bottomDrawer.setDefaultDrawerSize(150);
         bottomDrawer.setDirection(DrawerDirection.BOTTOM);
         bottomDrawer.setSidePane(bottomDrawerPane);
-        //      bottomDrawer.setContent(leftDrawer);
         bottomDrawer.setOverLayVisible(false);
         bottomDrawer.setResizableOnDrag(true);
 
@@ -60,7 +59,6 @@ public class DrawerDemo extends Application {
         rightDrawer.setDirection(DrawerDirection.RIGHT);
         rightDrawer.setDefaultDrawerSize(150);
         rightDrawer.setSidePane(rightDrawerPane);
-        //      rightDrawer.setContent(bottomDrawer);
         rightDrawer.setOverLayVisible(false);
         rightDrawer.setResizableOnDrag(true);
 
@@ -72,7 +70,6 @@ public class DrawerDemo extends Application {
         topDrawer.setDirection(DrawerDirection.TOP);
         topDrawer.setDefaultDrawerSize(150);
         topDrawer.setSidePane(topDrawerPane);
-        //      topDrawer.setContent(rightDrawer);
         topDrawer.setOverLayVisible(false);
         topDrawer.setResizableOnDrag(true);
 
@@ -85,26 +82,25 @@ public class DrawerDemo extends Application {
         bottomDrawer.setId(BOTTOM);
         topDrawer.setId(TOP);
 
-        leftButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> drawersStack.toggle(leftDrawer));
-        bottomButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> drawersStack.toggle(bottomDrawer));
-        rightButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> drawersStack.toggle(rightDrawer));
-        topButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> drawersStack.toggle(topDrawer));
+        leftButton.addEventHandler(MOUSE_PRESSED, e -> drawersStack.toggle(leftDrawer));
+        bottomButton.addEventHandler(MOUSE_PRESSED, e -> drawersStack.toggle(bottomDrawer));
+        rightButton.addEventHandler(MOUSE_PRESSED, e -> drawersStack.toggle(rightDrawer));
+        topButton.addEventHandler(MOUSE_PRESSED, e -> drawersStack.toggle(topDrawer));
 
 
         final Scene scene = new Scene(drawersStack, 800, 800);
-        scene.getStylesheets().add(DrawerDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
-        scene.getStylesheets().add(DrawerDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
+        final ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.addAll(DrawerDemo.class.getResource("/css/jfoenix-components.css").toExternalForm(),
+                           DrawerDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
 
-        primaryStage.setTitle("JFX Drawer Demo");
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
-        primaryStage.show();
-
+        stage.setTitle("JFX Drawer Demo");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 
 }

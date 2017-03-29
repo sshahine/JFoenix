@@ -22,6 +22,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import demos.MainDemo;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
@@ -60,8 +61,9 @@ public class DatePickerDemo extends Application {
         pane.setStyle("-fx-background-color:WHITE");
 
         final Scene scene = new Scene(pane, 400, 700);
-        scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm());
-        scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
+        final ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.addAll(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                           MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
         stage.setTitle("JFX Date Picker Demo");
         stage.setScene(scene);
         stage.show();

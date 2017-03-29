@@ -159,7 +159,7 @@ public class SVGLoaderController {
         glyphDetailViewer.setGlyph(SVGGlyphLoader.getIcoMoonGlyph(fileName + "." + glyph.getName()));
     }
 
-    class GlyphDetailViewer extends VBox {
+    private static final class GlyphDetailViewer extends VBox {
         private static final int MIN_ICON_SIZE = 8;
         private static final int DEFAULT_ICON_SIZE = 128;
         private static final int MAX_ICON_SIZE = 256;
@@ -244,18 +244,17 @@ public class SVGLoaderController {
             centeredGlyph.getChildren().setAll(glyph.get());
         }
 
-        public SVGGlyph getGlyph() {
+        public final SVGGlyph getGlyph() {
             return glyph.get();
         }
 
-        public ObjectProperty<SVGGlyph> glyphProperty() {
+        final ObjectProperty<SVGGlyph> glyphProperty() {
             return glyph;
         }
 
-        public void setGlyph(SVGGlyph glyph) {
+        final void setGlyph(SVGGlyph glyph) {
             this.glyph.set(glyph);
         }
-
     }
 
 }

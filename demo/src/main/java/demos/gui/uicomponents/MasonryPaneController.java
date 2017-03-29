@@ -7,7 +7,6 @@ import com.jfoenix.controls.JFXScrollPane;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
 import io.datafx.controller.ViewController;
-import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -26,6 +25,8 @@ import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+
+import static javafx.animation.Interpolator.EASE_BOTH;
 
 @ViewController(value = "/fxml/ui/Masonry.fxml", title = "Material Design Example")
 public class MasonryPaneController {
@@ -91,12 +92,12 @@ public class MasonryPaneController {
             StackPane.setAlignment(button, Pos.TOP_RIGHT);
 
             Timeline animation = new Timeline(new KeyFrame(Duration.millis(240),
-                new KeyValue(button.scaleXProperty(),
-                    1,
-                    Interpolator.EASE_BOTH),
-                new KeyValue(button.scaleYProperty(),
-                    1,
-                    Interpolator.EASE_BOTH)));
+                                                           new KeyValue(button.scaleXProperty(),
+                                                                        1,
+                                                                        EASE_BOTH),
+                                                           new KeyValue(button.scaleYProperty(),
+                                                                        1,
+                                                                        EASE_BOTH)));
             animation.setDelay(Duration.millis(100 * i + 1000));
             animation.play();
             child.getChildren().addAll(content, button);

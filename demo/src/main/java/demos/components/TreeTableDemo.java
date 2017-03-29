@@ -19,10 +19,7 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-
 public class TreeTableDemo extends Application {
-
-
     private static final String COMPUTER_DEPARTMENT = "Computer Department";
     private static final String SALES_DEPARTMENT = "Sales Department";
     private static final String IT_DEPARTMENT = "IT Department";
@@ -65,23 +62,23 @@ public class TreeTableDemo extends Application {
         ageColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
             new TextFieldEditorBuilder()));
         ageColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-            .getTreeItem(t.getTreeTablePosition()
-                .getRow())
-            .getValue().age.set(t.getNewValue()));
+                                                                      .getTreeItem(t.getTreeTablePosition()
+                                                                                    .getRow())
+                                                                      .getValue().age.set(t.getNewValue()));
 
         empColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
             new TextFieldEditorBuilder()));
         empColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-            .getTreeItem(t.getTreeTablePosition()
-                .getRow())
-            .getValue().userName.set(t.getNewValue()));
+                                                                      .getTreeItem(t.getTreeTablePosition()
+                                                                                    .getRow())
+                                                                      .getValue().userName.set(t.getNewValue()));
 
         deptColumn.setCellFactory((TreeTableColumn<User, String> param) -> new GenericEditableTreeTableCell<>(
             new TextFieldEditorBuilder()));
         deptColumn.setOnEditCommit((CellEditEvent<User, String> t) -> t.getTreeTableView()
-            .getTreeItem(t.getTreeTablePosition()
-                .getRow())
-            .getValue().department.set(t.getNewValue()));
+                                                                       .getTreeItem(t.getTreeTablePosition()
+                                                                                     .getRow())
+                                                                       .getValue().department.set(t.getNewValue()));
 
 
         // data
@@ -96,14 +93,14 @@ public class TreeTableDemo extends Application {
         users.add(new User(HR_DEPARTMENT, "28", "HR 2"));
 
         for (int i = 0; i < 40000; i++) {
-            users.add(new User(HR_DEPARTMENT, i % 10 + "", "HR 3" + i));
+            users.add(new User(HR_DEPARTMENT, Integer.toString(i % 10), "HR 3" + i));
         }
         for (int i = 0; i < 40000; i++) {
-            users.add(new User(COMPUTER_DEPARTMENT, i % 20 + "", "CD 2" + i));
+            users.add(new User(COMPUTER_DEPARTMENT, Integer.toString(i % 20), "CD 2" + i));
         }
 
         for (int i = 0; i < 40000; i++) {
-            users.add(new User(IT_DEPARTMENT, i % 5 + "", "HR 4" + i));
+            users.add(new User(IT_DEPARTMENT, Integer.toString(i % 5), "HR 4" + i));
         }
 
         // build tree
@@ -133,16 +130,17 @@ public class TreeTableDemo extends Application {
         Label size = new Label();
 
         filterField.textProperty().addListener((o, oldVal, newVal) -> {
-            treeView.setPredicate(user -> user.getValue().age.get()
-                .contains(newVal) || user.getValue().department.get()
-                .contains(
-                    newVal) || user
-                .getValue().userName.get().contains(newVal));
+            treeView.setPredicate(userProp -> {
+                final User user = userProp.getValue();
+                return user.age.get().contains(newVal)
+                    || user.department.get().contains(newVal)
+                    || user.userName.get().contains(newVal);
+            });
         });
 
         size.textProperty()
-            .bind(Bindings.createStringBinding(() -> treeView.getCurrentItemsCount() + "",
-                treeView.currentItemsCountProperty()));
+            .bind(Bindings.createStringBinding(() -> String.valueOf(treeView.getCurrentItemsCount()),
+                                               treeView.currentItemsCountProperty()));
         main.getChildren().add(size);
 
         Scene scene = new Scene(main, 475, 500);
@@ -155,8 +153,7 @@ public class TreeTableDemo extends Application {
         launch(args);
     }
 
-    class User extends RecursiveTreeObject<User> {
-
+    private static final class User extends RecursiveTreeObject<User> {
         final StringProperty userName;
         final StringProperty age;
         final StringProperty department;
@@ -166,8 +163,5 @@ public class TreeTableDemo extends Application {
             this.userName = new SimpleStringProperty(userName);
             this.age = new SimpleStringProperty(age);
         }
-
     }
-
-
 }

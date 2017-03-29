@@ -3,7 +3,6 @@ package demos.components;
 
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -20,8 +19,7 @@ import javafx.stage.StageStyle;
 public class SliderDemo extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-
+    public void start(Stage stage) {
         JFXSlider horLeftSlider = new JFXSlider();
         horLeftSlider.setMinWidth(500);
 
@@ -51,15 +49,15 @@ public class SliderDemo extends Application {
         Scene scene = new Scene(new Group());
         ((Group) scene.getRoot()).getChildren().add(vbox);
         scene.getStylesheets().add(SliderDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.setWidth(900);
-        primaryStage.setHeight(900);
-        primaryStage.show();
-        primaryStage.setTitle("JFX Slider Demo");
+        stage.setScene(scene);
+        stage.setWidth(900);
+        stage.setHeight(900);
+        stage.show();
+        stage.setTitle("JFX Slider Demo");
 
-        MyDialog dilaog = new MyDialog(primaryStage);
+        MyDialog dilaog = new MyDialog(stage);
         dilaog.initStyle(StageStyle.UNDECORATED);
-        dilaog.initOwner(primaryStage);
+        dilaog.initOwner(stage);
         dilaog.initModality(Modality.NONE);
         click.setOnAction((action) -> dilaog.show());
     }
@@ -68,7 +66,7 @@ public class SliderDemo extends Application {
         launch(args);
     }
 
-    class MyDialog extends Dialog {
+    private static final class MyDialog extends Dialog {
         MyDialog(Stage stage) {
             stage.getScene().widthProperty().addListener((o, oldVal, newVal) -> {
                 setWidth(newVal.doubleValue());
@@ -84,5 +82,4 @@ public class SliderDemo extends Application {
             });
         }
     }
-
 }
