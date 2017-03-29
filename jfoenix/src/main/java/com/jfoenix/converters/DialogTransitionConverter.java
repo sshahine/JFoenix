@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.converters;
 
 import com.jfoenix.controls.JFXDialog.DialogTransition;
@@ -27,25 +28,26 @@ import javafx.scene.text.Font;
 /**
  * Converts the CSS for -fx-dialog-transition items into DialogTransition.
  * it's used in JFXDialog.
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
-public class DialogTransitionConverter  extends StyleConverterImpl<String , DialogTransition> {
+public class DialogTransitionConverter extends StyleConverterImpl<String, DialogTransition> {
     // lazy, thread-safe instatiation
     private static class Holder {
         static final DialogTransitionConverter INSTANCE = new DialogTransitionConverter();
     }
+
     public static StyleConverter<String, DialogTransition> getInstance() {
         return Holder.INSTANCE;
     }
+
     private DialogTransitionConverter() {
-        super();
     }
 
     @Override
-    public DialogTransition convert(ParsedValue<String,DialogTransition> value, Font not_used) {
+    public DialogTransition convert(ParsedValue<String, DialogTransition> value, Font not_used) {
         String string = value.getValue();
         try {
             return DialogTransition.valueOf(string);
@@ -53,6 +55,7 @@ public class DialogTransitionConverter  extends StyleConverterImpl<String , Dial
             return DialogTransition.CENTER;
         }
     }
+
     @Override
     public String toString() {
         return "DialogTransitionConverter";

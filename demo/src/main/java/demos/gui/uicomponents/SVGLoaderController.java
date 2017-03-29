@@ -1,20 +1,10 @@
 package demos.gui.uicomponents;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
-
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
@@ -25,23 +15,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ViewController(value = "/fxml/ui/SVGLoader.fxml", title = "Material Design Example")
 public class SVGLoaderController {
@@ -56,7 +41,9 @@ public class SVGLoaderController {
     @FXML
     private StackPane iconsContainer;
 
-    private String fileName = "icomoon.svg";
+    private JFXButton lastClicked = null;
+
+    private final String fileName = "icomoon.svg";
     private GlyphDetailViewer glyphDetailViewer;
 
     @PostConstruct
@@ -91,18 +78,16 @@ public class SVGLoaderController {
                 }
             }
         });
-
-
     }
 
 
-    private ScrollPane allGlyphs() throws IOException {
+    private ScrollPane allGlyphs() {
 
         List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs()
                                               .stream()
-                                              .map(item -> SVGGlyphLoader.getIcoMoonGlyph(item))
+                                              .map(SVGGlyphLoader::getIcoMoonGlyph)
                                               .collect(Collectors.toList());
-        Collections.sort(glyphs, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        glyphs.sort(Comparator.comparing(SVGGlyph::getName));
 
 
         glyphs.forEach(glyph -> glyph.setSize(16, 16));
@@ -124,8 +109,6 @@ public class SVGLoaderController {
         return scrollableGlyphs;
     }
 
-    private JFXButton lastClicked = null;
-
     private Button createIconButton(SVGGlyph glyph) {
         JFXButton button = new JFXButton(null, glyph);
         button.ripplerFillProperty().bind(glyphDetailViewer.colorPicker.valueProperty());
@@ -135,27 +118,26 @@ public class SVGLoaderController {
                                                                                           .getFills()
                                                                                           .get(0);
             ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).setBackground(new Background(new BackgroundFill(
-                    Color.valueOf(webColor),
-                    fill.getRadii(),
-                    fill.getInsets())));
-//			glyphDetailViewer.sizeSlider.lookup(".thumb").setStyle("-fx-background-color: "+webColor+"; -fx-fill: "+webColor+";");
-            if (lastClicked != null)
-                lastClicked.setBackground(new Background(new BackgroundFill(Color.valueOf(glyphDetailViewer.colorPicker.getValue()
-                                                                                                                       .toString()
-                                                                                                                       .substring(
-                                                                                                                               0,
-                                                                                                                               8) + "33"),
-                                                                            null,
-                                                                            null)));
+                Color.valueOf(webColor),
+                fill.getRadii(),
+                fill.getInsets())));
+            if (lastClicked != null) {
+                final String currentColor = glyphDetailViewer.colorPicker.getValue()
+                                                                         .toString()
+                                                                         .substring(0, 8);
+                final BackgroundFill backgroundFill = new BackgroundFill(Color.valueOf(currentColor + "33"),
+                                                                         null,
+                                                                         null);
+                lastClicked.setBackground(new Background(backgroundFill));
+            }
         });
         button.setOnAction(event -> {
             if (lastClicked != null)
                 lastClicked.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-            button.setBackground(new Background(new BackgroundFill(Color.valueOf(glyphDetailViewer.colorPicker.getValue()
-                                                                                                              .toString()
-                                                                                                              .substring(
-                                                                                                                      0,
-                                                                                                                      8) + "33"),
+            final String currentColor = glyphDetailViewer.colorPicker.getValue()
+                                                                     .toString()
+                                                                     .substring(0, 8);
+            button.setBackground(new Background(new BackgroundFill(Color.valueOf(currentColor + "33"),
                                                                    null,
                                                                    null)));
             lastClicked = button;
@@ -180,9 +162,9 @@ public class SVGLoaderController {
         private final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
         private final JFXSlider sizeSlider = new JFXSlider(MIN_ICON_SIZE, MAX_ICON_SIZE, DEFAULT_ICON_SIZE);
         private final Label sizeLabel = new Label();
-        private StackPane centeredGlyph = new StackPane();
+        private final StackPane centeredGlyph = new StackPane();
 
-        public GlyphDetailViewer() {
+        GlyphDetailViewer() {
             GridPane details = new GridPane();
             details.setHgap(10);
             details.setVgap(10);

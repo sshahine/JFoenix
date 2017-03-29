@@ -13,59 +13,67 @@ import javafx.stage.Stage;
 
 public class ListViewDemo extends Application {
 
-	int counter = 0 ;
-	
-	@Override
-	public void start(Stage stage) throws Exception {
+    int counter = 0;
 
-		
-		JFXListView<Label> list = new JFXListView<Label>();		
-		for(int i = 0 ; i < 4 ; i++) list.getItems().add(new Label("Item " + i));
-		list.getStyleClass().add("mylistview");
-		
-		ListView<String> javaList = new ListView<String>();
-		for(int i = 0 ; i < 4 ; i++) javaList.getItems().add("Item " + i);
-						
-		FlowPane pane = new FlowPane();
-		pane.setStyle("-fx-background-color:WHITE");
-		
-		JFXButton button3D = new JFXButton("3D");
-		button3D.setOnMouseClicked(e -> list.depthProperty().set(++counter%2));
-		
-		JFXButton buttonExpand = new JFXButton("EXPAND");
-		buttonExpand.setOnMouseClicked(e -> {list.depthProperty().set(1);list.setExpanded(true);});
-		
-		JFXButton buttonCollapse = new JFXButton("COLLAPSE");
-		buttonCollapse.setOnMouseClicked(e -> {list.depthProperty().set(1);list.setExpanded(false);});
-		
-		pane.getChildren().add(button3D);
-		pane.getChildren().add(buttonExpand);
-		pane.getChildren().add(buttonCollapse);
-		
-		AnchorPane listsPane = new AnchorPane();
-		listsPane.getChildren().add(list);
-		AnchorPane.setLeftAnchor(list, 20.0);
-		listsPane.getChildren().add(javaList);
-		AnchorPane.setLeftAnchor(javaList, 300.0);
-		
-		VBox box = new VBox();
-		box.getChildren().add(pane);
-		box.getChildren().add(listsPane);
-		box.setSpacing(40);
-		
-		StackPane main = new StackPane();
-		main.getChildren().add(box);
-		main.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		StackPane.setMargin(pane, new Insets(20,0,0,20));
+    @Override
+    public void start(Stage stage) throws Exception {
 
-		final Scene scene = new Scene(main, 600, 600, Color.WHITE);
-		stage.setTitle("JFX ListView Demo ");
-		scene.getStylesheets().add(ListViewDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
-		stage.setScene(scene);
-		stage.setResizable(false);
-		stage.show();
-	}
-	
-	public static void main(String[] args) { launch(args); }
+
+        JFXListView<Label> list = new JFXListView<>();
+        for (int i = 0; i < 4; i++) list.getItems().add(new Label("Item " + i));
+        list.getStyleClass().add("mylistview");
+
+        ListView<String> javaList = new ListView<>();
+        for (int i = 0; i < 4; i++) javaList.getItems().add("Item " + i);
+
+        FlowPane pane = new FlowPane();
+        pane.setStyle("-fx-background-color:WHITE");
+
+        JFXButton button3D = new JFXButton("3D");
+        button3D.setOnMouseClicked(e -> list.depthProperty().set(++counter % 2));
+
+        JFXButton buttonExpand = new JFXButton("EXPAND");
+        buttonExpand.setOnMouseClicked(e -> {
+            list.depthProperty().set(1);
+            list.setExpanded(true);
+        });
+
+        JFXButton buttonCollapse = new JFXButton("COLLAPSE");
+        buttonCollapse.setOnMouseClicked(e -> {
+            list.depthProperty().set(1);
+            list.setExpanded(false);
+        });
+
+        pane.getChildren().add(button3D);
+        pane.getChildren().add(buttonExpand);
+        pane.getChildren().add(buttonCollapse);
+
+        AnchorPane listsPane = new AnchorPane();
+        listsPane.getChildren().add(list);
+        AnchorPane.setLeftAnchor(list, 20.0);
+        listsPane.getChildren().add(javaList);
+        AnchorPane.setLeftAnchor(javaList, 300.0);
+
+        VBox box = new VBox();
+        box.getChildren().add(pane);
+        box.getChildren().add(listsPane);
+        box.setSpacing(40);
+
+        StackPane main = new StackPane();
+        main.getChildren().add(box);
+        main.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        StackPane.setMargin(pane, new Insets(20, 0, 0, 20));
+
+        final Scene scene = new Scene(main, 600, 600, Color.WHITE);
+        stage.setTitle("JFX ListView Demo ");
+        scene.getStylesheets().add(ListViewDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

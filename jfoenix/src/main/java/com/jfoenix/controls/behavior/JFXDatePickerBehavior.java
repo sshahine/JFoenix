@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.behavior;
 
 import com.jfoenix.skins.JFXDatePickerSkin;
@@ -28,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXDatePickerBehavior extends ComboBoxBaseBehavior<LocalDate> {
 
@@ -50,20 +51,22 @@ public class JFXDatePickerBehavior extends ComboBoxBaseBehavior<LocalDate> {
      *                                                                         *
      **************************************************************************/
 
-    protected static final List<KeyBinding> JFX_DATE_PICKER_BINDINGS = new ArrayList<KeyBinding>();
+    protected static final List<KeyBinding> JFX_DATE_PICKER_BINDINGS = new ArrayList<>();
+
     static {
         JFX_DATE_PICKER_BINDINGS.addAll(COMBO_BOX_BASE_BINDINGS);
     }
-    
-	/**************************************************************************
+
+    /**************************************************************************
      *                                                                        *
      * Mouse Events handling (when losing focus)                              *
      *                                                                        *
      *************************************************************************/
 
-	@Override public void onAutoHide() {
-        DatePicker datePicker = (DatePicker)getControl();
-        JFXDatePickerSkin cpSkin = (JFXDatePickerSkin)datePicker.getSkin();
+    @Override
+    public void onAutoHide() {
+        DatePicker datePicker = (DatePicker) getControl();
+        JFXDatePickerSkin cpSkin = (JFXDatePickerSkin) datePicker.getSkin();
         cpSkin.syncWithAutoUpdate();
         if (!datePicker.isShowing()) super.onAutoHide();
     }

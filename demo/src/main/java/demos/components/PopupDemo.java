@@ -18,37 +18,39 @@ import javafx.stage.Stage;
 
 public class PopupDemo extends Application {
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 
-		
-		JFXHamburger show = new JFXHamburger();
-		show.setPadding(new Insets(10,5,10,5));
-		JFXRippler r = new JFXRippler(show,RipplerMask.CIRCLE,RipplerPos.BACK);
 
-		JFXListView<Label> list = new JFXListView<Label>();
-		for(int i = 1 ; i < 5 ; i++) list.getItems().add(new Label("Item " + i));
-		
-		AnchorPane container = new AnchorPane();
-		container.getChildren().add(r);
-		AnchorPane.setLeftAnchor(r, 200.0);
-		AnchorPane.setTopAnchor(r, 210.0);
-		
-		StackPane main = new StackPane();
-		main.getChildren().add(container);
-		
-		JFXPopup popup = new JFXPopup(list);
-		r.setOnMouseClicked(e -> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
-		
-		final Scene scene = new Scene(main, 800, 800);
-		scene.getStylesheets().add(PopupDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+        JFXHamburger show = new JFXHamburger();
+        show.setPadding(new Insets(10, 5, 10, 5));
+        JFXRippler r = new JFXRippler(show, RipplerMask.CIRCLE, RipplerPos.BACK);
 
-		primaryStage.setTitle("JFX Popup Demo");
-		primaryStage.setScene(scene);
-		primaryStage.setResizable(false);
-		primaryStage.show();		
-	}
+        JFXListView<Label> list = new JFXListView<>();
+        for (int i = 1; i < 5; i++) list.getItems().add(new Label("Item " + i));
 
-	public static void main(String[] args) { launch(args); }
+        AnchorPane container = new AnchorPane();
+        container.getChildren().add(r);
+        AnchorPane.setLeftAnchor(r, 200.0);
+        AnchorPane.setTopAnchor(r, 210.0);
+
+        StackPane main = new StackPane();
+        main.getChildren().add(container);
+
+        JFXPopup popup = new JFXPopup(list);
+        r.setOnMouseClicked(e -> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
+
+        final Scene scene = new Scene(main, 800, 800);
+        scene.getStylesheets().add(PopupDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+
+        primaryStage.setTitle("JFX Popup Demo");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

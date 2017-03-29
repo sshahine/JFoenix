@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.skins;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -24,18 +25,17 @@ import javafx.scene.control.TreeTableView;
 
 /**
  * @author Shadi Shaheen
- *
  */
 public class JFXTreeTableViewSkin<S> extends TreeTableViewSkin<S> {
 
-	public JFXTreeTableViewSkin(TreeTableView<S> treeTableView) {
-		super(treeTableView);
-	}
-	
-    protected TableHeaderRow createTableHeaderRow() {
-    	JFXTableHeaderRow jfxHeaderRow = new JFXTableHeaderRow(this);
-    	return jfxHeaderRow.getHeaderRow();
+    public JFXTreeTableViewSkin(TreeTableView<S> treeTableView) {
+        super(treeTableView);
     }
 
-	
+    protected TableHeaderRow createTableHeaderRow() {
+        JFXTableHeaderRow jfxHeaderRow = new JFXTableHeaderRow(this);
+        return jfxHeaderRow.getHeaderRow();
+    }
+
+
 }

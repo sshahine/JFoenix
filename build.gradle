@@ -23,6 +23,7 @@ subprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url 'http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2' }
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
@@ -32,6 +33,8 @@ subprojects {
     }
 
     apply from: rootProject.file('gradle/code-coverage.gradle')
+    apply from: rootProject.file('gradle/checkstyle.gradle')
+    apply from: rootProject.file('gradle/findbugs.gradle')
     apply from: rootProject.file('gradle/javafx.gradle')
 
     sourceCompatibility = 1.8

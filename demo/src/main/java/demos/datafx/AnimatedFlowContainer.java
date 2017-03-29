@@ -18,31 +18,30 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-import io.datafx.controller.context.ViewContext;
-import io.datafx.controller.flow.FlowContainer;
-
-import java.util.List;
-import java.util.function.Function;
-
-/**
+ * import javafx.animation.KeyFrame;
+ * import javafx.animation.Timeline;
+ * import javafx.scene.Node;
+ * import javafx.scene.image.Image;
+ * import javafx.scene.image.ImageView;
+ * import javafx.scene.image.WritableImage;
+ * import javafx.scene.layout.StackPane;
+ * import javafx.util.Duration;
+ * import io.datafx.controller.context.ViewContext;
+ * import io.datafx.controller.flow.FlowContainer;
+ * <p>
+ * import java.util.List;
+ * import java.util.function.Function;
+ * <p>
+ * /**
  * A {@link FlowContainer} that supports animation for the view change.
  */
 public class AnimatedFlowContainer extends io.datafx.controller.flow.container.AnimatedFlowContainer implements FlowContainer<StackPane> {
 
-    private StackPane root;
-    private Duration duration;
+    private final StackPane root;
+    private final Duration duration;
     private Function<io.datafx.controller.flow.container.AnimatedFlowContainer, List<KeyFrame>> animationProducer;
     private Timeline animation;
-    private ImageView placeholder;
+    private final ImageView placeholder;
 
     /**
      * Defaults constructor that creates a container with a fade animation that last 320 ms.
@@ -52,28 +51,34 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     }
 
     /**
-     *  Creates a container with a fade animation and the given duration
+     * Creates a container with a fade animation and the given duration
      *
-     * @param duration the duration of the animation
+     * @param duration
+     *         the duration of the animation
      */
     public AnimatedFlowContainer(Duration duration) {
         this(duration, ContainerAnimations.FADE);
     }
 
     /**
-     *  Creates a container with the given animation type and  duration
+     * Creates a container with the given animation type and  duration
      *
-     * @param duration the duration of the animation
-     * @param animation the animation type
+     * @param duration
+     *         the duration of the animation
+     * @param animation
+     *         the animation type
      */
     public AnimatedFlowContainer(Duration duration, ContainerAnimations animation) {
         this(duration, animation.getAnimationProducer());
     }
 
     /**
-     *    Creates a container with the given animation type and duration
-     * @param duration  the duration of the animation
-     * @param animationProducer   the {@link KeyFrame} instances that define the animation
+     * Creates a container with the given animation type and duration
+     *
+     * @param duration
+     *         the duration of the animation
+     * @param animationProducer
+     *         the {@link KeyFrame} instances that define the animation
      */
     public AnimatedFlowContainer(Duration duration, Function<io.datafx.controller.flow.container.AnimatedFlowContainer, List<KeyFrame>> animationProducer) {
         this.root = new StackPane();
@@ -83,9 +88,9 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
         placeholder.setPreserveRatio(true);
         placeholder.setSmooth(true);
     }
-    
-    public void changeAnimation(ContainerAnimations animation){
-    	this.animationProducer = animation.getAnimationProducer();
+
+    public void changeAnimation(ContainerAnimations animation) {
+        this.animationProducer = animation.getAnimationProducer();
     }
 
     @Override
@@ -101,7 +106,9 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     }
 
     /**
-     * Returns the {@link ImageView} instance that is used as a placeholder for the old view in each navigation animation.
+     * Returns the {@link ImageView} instance that is used as a placeholder for the old view in each navigation
+     * animation.
+     *
      * @return
      */
     public ImageView getPlaceholder() {
@@ -110,6 +117,7 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
 
     /**
      * Returns the duration for the animation
+     *
      * @return the duration for the animation
      */
     public Duration getDuration() {
@@ -120,9 +128,9 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
     public StackPane getView() {
         return root;
     }
-    
+
     private void clearPlaceholder() {
-    	root.getChildren().remove(placeholder);
+        root.getChildren().remove(placeholder);
 //        placeholder.setImage(null);
 //        placeholder.setVisible(false);
 //        placeholder.setFitHeight(1);
@@ -131,9 +139,10 @@ public class AnimatedFlowContainer extends io.datafx.controller.flow.container.A
 
     private void updatePlaceholder(Node newView) {
         if (root.getWidth() > 0 && root.getHeight() > 0) {
-        	SnapshotParameters parameters = new SnapshotParameters();
-        	parameters.setFill(Color.TRANSPARENT);
-            Image placeholderImage = root.snapshot(parameters, new WritableImage((int) root.getWidth(), (int) root.getHeight()));
+            SnapshotParameters parameters = new SnapshotParameters();
+            parameters.setFill(Color.TRANSPARENT);
+            Image placeholderImage = root.snapshot(parameters,
+                                                   new WritableImage((int) root.getWidth(), (int) root.getHeight()));
             placeholder.setImage(placeholderImage);
             placeholder.setFitWidth(placeholderImage.getWidth());
             placeholder.setFitHeight(placeholderImage.getHeight());

@@ -1,0 +1,15 @@
+apply plugin: 'com.github.hierynomus.license'
+
+license {
+    header = rootProject.file('config/HEADER')
+    strictCheck = true
+    ignoreFailures = true
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+        fxml = 'XML_STYLE'
+    }
+    ext.year = '2015'
+    exclude '**/*.txt'
+    exclude '**/*.png'
+    exclude '**/*.ttf'
+}
