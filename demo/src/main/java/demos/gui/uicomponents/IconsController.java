@@ -33,6 +33,9 @@ public class IconsController {
     int count = 1;
 
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
 
@@ -43,11 +46,11 @@ public class IconsController {
 
         snackbar.registerSnackbarContainer(root);
 
-        badge1.setOnMouseClicked((e) -> {
+        badge1.setOnMouseClicked((click) -> {
             int value = Integer.parseInt(badge1.getText());
-            if (e.getButton() == MouseButton.PRIMARY) {
+            if (click.getButton() == MouseButton.PRIMARY) {
                 value++;
-            } else if (e.getButton() == MouseButton.SECONDARY) {
+            } else if (click.getButton() == MouseButton.SECONDARY) {
                 value--;
             }
 

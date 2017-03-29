@@ -21,10 +21,9 @@ public class PopupDemo extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
         JFXHamburger show = new JFXHamburger();
         show.setPadding(new Insets(10, 5, 10, 5));
-        JFXRippler r = new JFXRippler(show, RipplerMask.CIRCLE, RipplerPos.BACK);
+        JFXRippler rippler = new JFXRippler(show, RipplerMask.CIRCLE, RipplerPos.BACK);
 
         JFXListView<Label> list = new JFXListView<>();
         for (int i = 1; i < 5; i++) {
@@ -32,15 +31,15 @@ public class PopupDemo extends Application {
         }
 
         AnchorPane container = new AnchorPane();
-        container.getChildren().add(r);
-        AnchorPane.setLeftAnchor(r, 200.0);
-        AnchorPane.setTopAnchor(r, 210.0);
+        container.getChildren().add(rippler);
+        AnchorPane.setLeftAnchor(rippler, 200.0);
+        AnchorPane.setTopAnchor(rippler, 210.0);
 
         StackPane main = new StackPane();
         main.getChildren().add(container);
 
         JFXPopup popup = new JFXPopup(list);
-        r.setOnMouseClicked(e -> popup.show(r, PopupVPosition.TOP, PopupHPosition.LEFT));
+        rippler.setOnMouseClicked(e -> popup.show(rippler, PopupVPosition.TOP, PopupHPosition.LEFT));
 
         final Scene scene = new Scene(main, 800, 800);
         scene.getStylesheets().add(PopupDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());

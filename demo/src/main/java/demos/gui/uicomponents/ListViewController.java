@@ -16,7 +16,6 @@ public class ListViewController {
     private JFXListView<?> list2;
     @FXML
     private JFXListView<?> subList;
-
     @FXML
     private JFXButton button3D;
     @FXML
@@ -26,6 +25,9 @@ public class ListViewController {
 
     private int counter = 0;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
 

@@ -13,12 +13,14 @@ public class TextFieldController {
 
     @FXML
     private JFXTextField validatedText;
-
     @FXML
     private JFXPasswordField validatedPassowrd;
     @FXML
     private JFXTextArea jfxTextArea;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
         validatedText.focusedProperty().addListener((o, oldVal, newVal) -> {

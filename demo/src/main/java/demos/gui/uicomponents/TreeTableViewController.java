@@ -24,56 +24,48 @@ import java.util.Random;
 @ViewController(value = "/fxml/ui/TreeTableView.fxml", title = "Material Design Example")
 public class TreeTableViewController {
 
-    @FXML
-    private
-    JFXTreeTableView<Person> treeTableView;
-    @FXML
-    private
-    JFXTreeTableView<Person> editableTreeTableView;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, String> firstNameColumn;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, String> lastNameColumn;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, Integer> ageColumn;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, String> firstNameEditableColumn;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, String> lastNameEditableColumn;
-    @FXML
-    private
-    JFXTreeTableColumn<Person, Integer> ageEditableColumn;
-    @FXML
-    private
-    Label treeTableViewCount;
-    @FXML
-    private
-    JFXButton treeTableViewAdd;
-    @FXML
-    private
-    JFXButton treeTableViewRemove;
-    @FXML
-    private
-    Label editableTreeTableViewCount;
-    @FXML
-    private
-    JFXTextField searchField;
-    @FXML
-    private
-    JFXTextField searchField2;
+    private static final String PREFIX = "( ";
+    private static final String POSTFIX = " )";
 
+    @FXML
+    private JFXTreeTableView<Person> treeTableView;
+    @FXML
+    private JFXTreeTableView<Person> editableTreeTableView;
+    @FXML
+    private JFXTreeTableColumn<Person, String> firstNameColumn;
+    @FXML
+    private JFXTreeTableColumn<Person, String> lastNameColumn;
+    @FXML
+    private JFXTreeTableColumn<Person, Integer> ageColumn;
+    @FXML
+    private JFXTreeTableColumn<Person, String> firstNameEditableColumn;
+    @FXML
+    private JFXTreeTableColumn<Person, String> lastNameEditableColumn;
+    @FXML
+    private JFXTreeTableColumn<Person, Integer> ageEditableColumn;
+    @FXML
+    private Label treeTableViewCount;
+    @FXML
+    private JFXButton treeTableViewAdd;
+    @FXML
+    private JFXButton treeTableViewRemove;
+    @FXML
+    private Label editableTreeTableViewCount;
+    @FXML
+    private JFXTextField searchField;
+    @FXML
+    private JFXTextField searchField2;
+
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
 
         String[] names = {"Morley", "Scott", "Kruger", "Lain",
             "Kennedy", "Gawron", "Han", "Hall", "Aydogdu", "Grace",
             "Spiers", "Perera", "Smith", "Connoly",
-            "Sokolowski", "Chaow", "James", "June"};
+            "Sokolowski", "Chaow", "James", "June",};
         Random random = new Random();
 
 
@@ -109,7 +101,7 @@ public class TreeTableViewController {
 
         treeTableView.setShowRoot(false);
         treeTableViewCount.textProperty()
-            .bind(Bindings.createStringBinding(() -> "( " + treeTableView.getCurrentItemsCount() + " )",
+            .bind(Bindings.createStringBinding(() -> PREFIX + treeTableView.getCurrentItemsCount() + POSTFIX,
                 treeTableView.currentItemsCountProperty()));
         treeTableViewAdd.disableProperty()
             .bind(Bindings.notEqual(-1, treeTableView.getSelectionModel().selectedIndexProperty()));
@@ -127,9 +119,9 @@ public class TreeTableViewController {
         });
         searchField.textProperty().addListener((o, oldVal, newVal) -> {
             treeTableView.setPredicate(person -> person.getValue().firstName.get()
-                .contains(newVal) || person.getValue().lastName
-                .get()
-                .contains(newVal) || (person.getValue().age.get() + "").contains(newVal));
+                                                     .contains(newVal) || person.getValue().lastName
+                                                     .get()
+                                                     .contains(newVal) || (person.getValue().age.get() + "").contains(newVal));
         });
 
 
@@ -184,14 +176,13 @@ public class TreeTableViewController {
         editableTreeTableView.setShowRoot(false);
         editableTreeTableView.setEditable(true);
         editableTreeTableViewCount.textProperty()
-            .bind(Bindings.createStringBinding(() -> "( " + editableTreeTableView.getCurrentItemsCount() + " )",
+            .bind(Bindings.createStringBinding(() -> PREFIX + editableTreeTableView.getCurrentItemsCount() + POSTFIX,
                 editableTreeTableView.currentItemsCountProperty()));
         searchField2.textProperty()
-            .addListener((o, oldVal, newVal) -> editableTreeTableView.setPredicate(person -> person.getValue().firstName
-                .get()
-                .contains(newVal) || person.getValue().lastName
-                .get()
-                .contains(newVal) || (person.getValue().age.get() + "").contains(newVal)));
+            .addListener((o, oldVal, newVal) ->
+                editableTreeTableView.setPredicate(person -> person.getValue().firstName.get().contains(newVal)
+                                                             || person.getValue().lastName.get().contains(newVal)
+                                                             || (person.getValue().age.get() + "").contains(newVal)));
     }
 
     /*

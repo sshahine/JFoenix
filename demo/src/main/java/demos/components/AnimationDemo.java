@@ -18,6 +18,8 @@ import javafx.util.Duration;
 public class AnimationDemo extends Application {
 
 
+    public static final String STYLE = "-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;";
+
     @Override
     public void start(Stage stage) {
 
@@ -26,32 +28,32 @@ public class AnimationDemo extends Application {
         main.setHgap(20);
 
         StackPane colorPane = new StackPane();
-        colorPane.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        colorPane.setStyle(STYLE);
         colorPane.getStyleClass().add("red-500");
         main.getChildren().add(colorPane);
 
         StackPane colorPane1 = new StackPane();
-        colorPane1.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        colorPane1.setStyle(STYLE);
         colorPane1.getStyleClass().add("blue-500");
 
         StackPane placeHolder = new StackPane(colorPane1);
-        placeHolder.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        placeHolder.setStyle(STYLE);
         main.getChildren().add(placeHolder);
 
 
         StackPane colorPane2 = new StackPane();
-        colorPane2.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        colorPane2.setStyle(STYLE);
         colorPane2.getStyleClass().add("green-500");
         main.getChildren().add(colorPane2);
 
         StackPane colorPane3 = new StackPane();
-        colorPane3.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        colorPane3.setStyle(STYLE);
         colorPane3.getStyleClass().add("yellow-500");
         main.getChildren().add(colorPane3);
 
 
         StackPane colorPane4 = new StackPane();
-        colorPane4.setStyle("-fx-background-radius:50; -fx-min-width:50; -fx-min-height:50;");
+        colorPane4.setStyle(STYLE);
         colorPane4.getStyleClass().add("purple-500");
         main.getChildren().add(colorPane4);
 
@@ -86,23 +88,19 @@ public class AnimationDemo extends Application {
 
             private final Pane tempPage = new Pane();
 
-            double x = 0;
-            double y = 0;
+            private double newX = 0;
+            private double newY = 0;
 
             @Override
             public void init() {
                 nextPage.setOpacity(0);
                 wizard.getChildren().add(tempPage);
                 wizard.getChildren().add(nextPage);
-
-                x = colorPane1.localToScene(colorPane1.getBoundsInLocal()).getMinX();
-                y = colorPane1.localToScene(colorPane1.getBoundsInLocal()).getMinY();
-
+                newX = colorPane1.localToScene(colorPane1.getBoundsInLocal()).getMinX();
+                newY = colorPane1.localToScene(colorPane1.getBoundsInLocal()).getMinY();
                 tempPage.getChildren().add(colorPane1);
-                colorPane1.setTranslateX(x);
-                colorPane1.setTranslateY(y);
-
-
+                colorPane1.setTranslateX(newX);
+                colorPane1.setTranslateY(newY);
             }
 
             @Override

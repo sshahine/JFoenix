@@ -1,61 +1,88 @@
+
 package demos.components;
 
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class SliderDemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        try {
-            JFXSlider hor_left = new JFXSlider();
-            hor_left.setMinWidth(500);
 
-            JFXSlider hor_right = new JFXSlider();
-            hor_left.setMinWidth(500);
-            hor_left.setIndicatorPosition(IndicatorPosition.RIGHT);
+        JFXSlider horLeftSlider = new JFXSlider();
+        horLeftSlider.setMinWidth(500);
 
-            JFXSlider ver_left = new JFXSlider();
-            ver_left.setMinHeight(500);
-            ver_left.setOrientation(Orientation.VERTICAL);
+        JFXSlider horRightSlider = new JFXSlider();
+        horRightSlider.setMinWidth(500);
+        horRightSlider.setIndicatorPosition(IndicatorPosition.RIGHT);
 
-            JFXSlider ver_right = new JFXSlider();
-            ver_right.setMinHeight(500);
-            ver_right.setOrientation(Orientation.VERTICAL);
-            ver_right.setIndicatorPosition(IndicatorPosition.RIGHT);
+        JFXSlider verLeftSlider = new JFXSlider();
+        verLeftSlider.setMinHeight(500);
+        verLeftSlider.setOrientation(Orientation.VERTICAL);
 
-            HBox hbox = new HBox();
-            hbox.setSpacing(450);
-            hbox.getChildren().addAll(ver_right, ver_left);
+        JFXSlider verRightSlider = new JFXSlider();
+        verRightSlider.setMinHeight(500);
+        verRightSlider.setOrientation(Orientation.VERTICAL);
+        verRightSlider.setIndicatorPosition(IndicatorPosition.RIGHT);
 
-            VBox vbox = new VBox();
-            vbox.getChildren().addAll(hor_right, hor_left, hbox);
-            vbox.setSpacing(100);
-            vbox.setPadding(new Insets(100, 50, 50, 150));
+        HBox hbox = new HBox();
+        hbox.setSpacing(450);
+        hbox.getChildren().addAll(verRightSlider, verLeftSlider);
 
-            Scene scene = new Scene(new Group());
-            ((Group) scene.getRoot()).getChildren().add(vbox);
-            scene.getStylesheets().add(SliderDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
-            primaryStage.setScene(scene);
-            primaryStage.setWidth(900);
-            primaryStage.setHeight(900);
-            primaryStage.show();
-            primaryStage.setTitle("JFX Slider Demo");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        VBox vbox = new VBox();
+        Button click = new Button("Click");
+        vbox.getChildren().addAll(horRightSlider, horLeftSlider, hbox, click);
+        vbox.setSpacing(100);
+        vbox.setPadding(new Insets(100, 50, 50, 150));
+
+        Scene scene = new Scene(new Group());
+        ((Group) scene.getRoot()).getChildren().add(vbox);
+        scene.getStylesheets().add(SliderDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(900);
+        primaryStage.setHeight(900);
+        primaryStage.show();
+        primaryStage.setTitle("JFX Slider Demo");
+
+        MyDialog dilaog = new MyDialog(primaryStage);
+        dilaog.initStyle(StageStyle.UNDECORATED);
+        dilaog.initOwner(primaryStage);
+        dilaog.initModality(Modality.NONE);
+        click.setOnAction((action) -> dilaog.show());
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    class MyDialog extends Dialog {
+        MyDialog(Stage stage) {
+            stage.getScene().widthProperty().addListener((o, oldVal, newVal) -> {
+                setWidth(newVal.doubleValue());
+            });
+            stage.getScene().heightProperty().addListener((o, oldVal, newVal) -> {
+                setHeight(newVal.doubleValue());
+            });
+            stage.xProperty().addListener((o, oldVal, newVal) -> {
+                setX(newVal.doubleValue());
+            });
+            stage.yProperty().addListener((o, oldVal, newVal) -> {
+                setY(newVal.doubleValue());
+            });
+        }
     }
 
 }

@@ -44,9 +44,11 @@ public class MainController {
 
     private JFXPopup toolbarPopup;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() throws Exception {
-
         // init the title hamburger icon
         drawer.setOnDrawerOpening(e -> {
             titleBurger.getAnimation().setRate(1);

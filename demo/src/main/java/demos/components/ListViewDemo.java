@@ -13,21 +13,21 @@ import javafx.stage.Stage;
 
 public class ListViewDemo extends Application {
 
-    int counter = 0;
+    private static final String ITEM = "Item ";
+    private int counter = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
 
-
         JFXListView<Label> list = new JFXListView<>();
         for (int i = 0; i < 4; i++) {
-            list.getItems().add(new Label("Item " + i));
+            list.getItems().add(new Label(ITEM + i));
         }
         list.getStyleClass().add("mylistview");
 
         ListView<String> javaList = new ListView<>();
         for (int i = 0; i < 4; i++) {
-            javaList.getItems().add("Item " + i);
+            javaList.getItems().add(ITEM + i);
         }
 
         FlowPane pane = new FlowPane();

@@ -15,6 +15,10 @@ import javafx.stage.Stage;
 
 public class TextFieldDemo extends Application {
 
+    private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
+    private static final String EM1 = "1em";
+    private static final String ERROR = "error";
+
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -31,7 +35,7 @@ public class TextFieldDemo extends Application {
 
 
         JFXTextField disabledField = new JFXTextField();
-        disabledField.setStyle("-fx-label-float:true;");
+        disabledField.setStyle(FX_LABEL_FLOAT_TRUE);
         disabledField.setPromptText("I'm disabled..");
         disabledField.setDisable(true);
         pane.getChildren().add(disabledField);
@@ -43,8 +47,8 @@ public class TextFieldDemo extends Application {
         validator.setMessage("Input Required");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
             .glyph(FontAwesomeIcon.WARNING)
-            .size("1em")
-            .styleClass("error")
+            .size(EM1)
+            .styleClass(ERROR)
             .build());
         validationField.getValidators().add(validator);
         validationField.focusedProperty().addListener((o, oldVal, newVal) -> {
@@ -56,14 +60,14 @@ public class TextFieldDemo extends Application {
 
 
         JFXPasswordField passwordField = new JFXPasswordField();
-        passwordField.setStyle("-fx-label-float:true;");
+        passwordField.setStyle(FX_LABEL_FLOAT_TRUE);
         passwordField.setPromptText("Password");
         validator = new RequiredFieldValidator();
         validator.setMessage("Password Can't be empty");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
             .glyph(FontAwesomeIcon.WARNING)
-            .size("1em")
-            .styleClass("error")
+            .size(EM1)
+            .styleClass(ERROR)
             .build());
         passwordField.getValidators().add(validator);
         passwordField.focusedProperty().addListener((o, oldVal, newVal) -> {

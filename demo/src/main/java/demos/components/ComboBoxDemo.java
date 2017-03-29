@@ -12,18 +12,18 @@ public class ComboBoxDemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        JFXComboBox<Label> c = new JFXComboBox<>();
-        c.getItems().add(new Label("Java 1.8"));
-        c.getItems().add(new Label("Java 1.7"));
-        c.getItems().add(new Label("Java 1.6"));
-        c.getItems().add(new Label("Java 1.5"));
-        c.setEditable(true);
-        c.setPromptText("Select Java Version");
+        JFXComboBox<Label> combo = new JFXComboBox<>();
+        combo.getItems().add(new Label("Java 1.8"));
+        combo.getItems().add(new Label("Java 1.7"));
+        combo.getItems().add(new Label("Java 1.6"));
+        combo.getItems().add(new Label("Java 1.5"));
+        combo.setEditable(true);
+        combo.setPromptText("Select Java Version");
 
         HBox pane = new HBox(100);
-        HBox.setMargin(c, new Insets(20));
+        HBox.setMargin(combo, new Insets(20));
         pane.setStyle("-fx-background-color:WHITE");
-        pane.getChildren().add(c);
+        pane.getChildren().add(combo);
 
         final Scene scene = new Scene(pane, 300, 300);
         scene.getStylesheets().add(ComboBoxDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());

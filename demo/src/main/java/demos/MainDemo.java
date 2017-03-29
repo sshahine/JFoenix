@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class MainDemo extends Application {
 
     @FXMLViewFlowContext
@@ -20,15 +22,14 @@ public class MainDemo extends Application {
         launch(args);
     }
 
+    @Override
     public void start(Stage stage) throws Exception {
-
         new Thread(() -> {
             try {
                 SVGGlyphLoader.loadGlyphsFont(MainDemo.class.getResourceAsStream("/fonts/icomoon.svg"),
                     "icomoon.svg");
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            } catch (IOException ioExc) {
+                ioExc.printStackTrace();
             }
         }).start();
 
@@ -44,8 +45,6 @@ public class MainDemo extends Application {
         scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm());
         scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
         scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
-        //		stage.initStyle(StageStyle.UNDECORATED);
-        //		stage.setFullScreen(true);
         stage.setMinWidth(700);
         stage.setMinHeight(800);
         stage.setScene(scene);

@@ -15,17 +15,22 @@ import static java.util.Arrays.asList;
 
 public class TreeViewDemo extends Application {
 
-    private final List<Employee> employees = asList(new Employee("Ethan Williams", "Sales Department"),
-        new Employee("Emma Jones", "Sales Department"),
-        new Employee("Michael Brown", "Sales Department"),
-        new Employee("Anna Black", "Sales Department"),
-        new Employee("Rodger York", "Sales Department"),
-        new Employee("Susan Collins", "Sales Department"),
-        new Employee("Mike Graham", "IT Support"),
-        new Employee("Judy Mayer", "IT Support"),
-        new Employee("Gregory Smith", "IT Support"),
-        new Employee("Jacob Smith", "Accounts Department"),
-        new Employee("Isabella Johnson", "Accounts Department"));
+    private static final String SALES_DEPARTMENT = "Sales Department";
+    private static final String IT_SUPPORT = "IT Support";
+    private static final String ACCOUNTS_DEPARTMENT = "Accounts Department";
+
+    private final List<Employee> employees = asList(new Employee("Ethan Williams", SALES_DEPARTMENT),
+        new Employee("Emma Jones", SALES_DEPARTMENT),
+        new Employee("Michael Brown", SALES_DEPARTMENT),
+        new Employee("Anna Black", SALES_DEPARTMENT),
+        new Employee("Rodger York", SALES_DEPARTMENT),
+        new Employee("Susan Collins", SALES_DEPARTMENT),
+        new Employee("Mike Graham", IT_SUPPORT),
+        new Employee("Judy Mayer", IT_SUPPORT),
+        new Employee("Gregory Smith", IT_SUPPORT),
+        new Employee("Jacob Smith", ACCOUNTS_DEPARTMENT),
+        new Employee("Isabella Johnson", ACCOUNTS_DEPARTMENT));
+
     private final TreeItem<String> rootNode = new TreeItem<>("MyCompany Human Resources");//, rootIcon);    // Set picture
 
     public static void main(String[] args) {
@@ -36,7 +41,7 @@ public class TreeViewDemo extends Application {
     public void start(Stage stage) {
         rootNode.setExpanded(true);
 
-        JFXTreeView<String> treeView = new JFXTreeView<>(rootNode);
+        final JFXTreeView<String> treeView = new JFXTreeView<>(rootNode);
         for (Employee employee : employees) {
             TreeItem<String> empLeaf = new TreeItem<>(employee.getName());
             boolean found = false;
@@ -49,10 +54,7 @@ public class TreeViewDemo extends Application {
             }
 
             if (!found) {
-                TreeItem<String> depNode = new TreeItem<>(employee.getDepartment()
-//,new ImageView(depIcon)   // Set picture
-                );
-
+                TreeItem<String> depNode = new TreeItem<>(employee.getDepartment());
                 rootNode.getChildren().add(depNode);
                 depNode.getChildren().add(empLeaf);
             }
@@ -83,16 +85,16 @@ public class TreeViewDemo extends Application {
             return name.get();
         }
 
-        public void setName(String fName) {
-            name.set(fName);
+        public void setName(String firstName) {
+            name.set(firstName);
         }
 
         public String getDepartment() {
             return department.get();
         }
 
-        public void setDepartment(String fName) {
-            department.set(fName);
+        public void setDepartment(String firstName) {
+            department.set(firstName);
         }
     }
 }

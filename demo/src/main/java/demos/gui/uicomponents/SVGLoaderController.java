@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,9 +32,12 @@ import java.util.stream.Collectors;
 @ViewController(value = "/fxml/ui/SVGLoader.fxml", title = "Material Design Example")
 public class SVGLoaderController {
 
+    private static final String FX_BACKGROUND_INSETS_0 = "-fx-background-insets: 0;";
+    private static final String DEFAULT_OPACITY = "33";
+    private static final String THUMB = ".thumb";
+
     @FXMLViewFlowContext
     private ViewFlowContext context;
-
     @FXML
     private StackPane detailsContainer;
     @FXML
@@ -42,10 +46,12 @@ public class SVGLoaderController {
     private StackPane iconsContainer;
 
     private JFXButton lastClicked = null;
-
     private final String fileName = "icomoon.svg";
     private GlyphDetailViewer glyphDetailViewer;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() throws Exception {
         final Stage stage = (Stage) context.getRegisteredObject("Stage");
@@ -53,8 +59,9 @@ public class SVGLoaderController {
         glyphDetailViewer = new GlyphDetailViewer();
         detailsContainer.getChildren().add(glyphDetailViewer);
 
+
         ScrollPane scrollableGlyphs = allGlyphs();
-        scrollableGlyphs.setStyle("-fx-background-insets: 0;");
+        scrollableGlyphs.setStyle(FX_BACKGROUND_INSETS_0);
 
         iconsContainer.getChildren().add(scrollableGlyphs);
 
@@ -68,13 +75,13 @@ public class SVGLoaderController {
                 try {
                     SVGGlyphLoader.loadGlyphsFont(new FileInputStream(file), file.getName());
                     ScrollPane newglyphs = allGlyphs();
-                    newglyphs.setStyle("-fx-background-insets: 0;");
+                    newglyphs.setStyle(FX_BACKGROUND_INSETS_0);
 
                     iconsContainer.getChildren().clear();
                     iconsContainer.getChildren().add(newglyphs);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (IOException ioExc) {
+                    ioExc.printStackTrace();
                 }
             }
         });
@@ -114,10 +121,10 @@ public class SVGLoaderController {
         button.ripplerFillProperty().bind(glyphDetailViewer.colorPicker.valueProperty());
         glyphDetailViewer.colorPicker.valueProperty().addListener((o, oldVal, newVal) -> {
             String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();
-            BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).getBackground()
+            BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(THUMB)).getBackground()
                 .getFills()
                 .get(0);
-            ((Region) glyphDetailViewer.sizeSlider.lookup(".thumb")).setBackground(new Background(new BackgroundFill(
+            ((Region) glyphDetailViewer.sizeSlider.lookup(THUMB)).setBackground(new Background(new BackgroundFill(
                 Color.valueOf(webColor),
                 fill.getRadii(),
                 fill.getInsets())));
@@ -125,7 +132,7 @@ public class SVGLoaderController {
                 final String currentColor = glyphDetailViewer.colorPicker.getValue()
                     .toString()
                     .substring(0, 8);
-                final BackgroundFill backgroundFill = new BackgroundFill(Color.valueOf(currentColor + "33"),
+                final BackgroundFill backgroundFill = new BackgroundFill(Color.valueOf(currentColor + DEFAULT_OPACITY),
                     null,
                     null);
                 lastClicked.setBackground(new Background(backgroundFill));
@@ -138,7 +145,7 @@ public class SVGLoaderController {
             final String currentColor = glyphDetailViewer.colorPicker.getValue()
                 .toString()
                 .substring(0, 8);
-            button.setBackground(new Background(new BackgroundFill(Color.valueOf(currentColor + "33"),
+            button.setBackground(new Background(new BackgroundFill(Color.valueOf(currentColor + DEFAULT_OPACITY),
                 null,
                 null)));
             lastClicked = button;
@@ -153,9 +160,9 @@ public class SVGLoaderController {
     }
 
     class GlyphDetailViewer extends VBox {
-        private final int MIN_ICON_SIZE = 8;
-        private final int DEFAULT_ICON_SIZE = 128;
-        private final int MAX_ICON_SIZE = 256;
+        private static final int MIN_ICON_SIZE = 8;
+        private static final int DEFAULT_ICON_SIZE = 128;
+        private static final int MAX_ICON_SIZE = 256;
 
         private final ObjectProperty<SVGGlyph> glyph = new SimpleObjectProperty<>();
         private final Label idLabel = new Label();

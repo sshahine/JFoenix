@@ -18,6 +18,9 @@ public class ProgressBarController {
     @FXML
     private JFXProgressBar progress2;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
         Timeline task = new Timeline(

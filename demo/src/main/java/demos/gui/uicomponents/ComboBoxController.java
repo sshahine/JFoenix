@@ -16,6 +16,9 @@ public class ComboBoxController {
     @FXML
     private JFXComboBox<String> jfxEditableComboBox;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
 

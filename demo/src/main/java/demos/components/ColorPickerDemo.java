@@ -21,7 +21,7 @@ public class ColorPickerDemo extends Application {
 
         javafx.scene.control.ColorPicker picker = new javafx.scene.control.ColorPicker(Color.RED);
         picker.getStyleClass().add("button");
-//		picker.getStyleClass().add("split-button");
+        //      picker.getStyleClass().add("split-button");
         main.getChildren().add(picker);
 
         main.getChildren().add(new JFXColorPicker());
@@ -32,7 +32,7 @@ public class ColorPickerDemo extends Application {
         pane.setStyle("-fx-background-color:WHITE");
 
         final Scene scene = new Scene(pane, 800, 200);
-//		scene.getStylesheets().add(ButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
+        //      scene.getStylesheets().add(ButtonDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
         stage.setTitle("JFX Button Demo");
         stage.setScene(scene);
         stage.show();

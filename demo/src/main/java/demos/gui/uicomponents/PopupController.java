@@ -18,7 +18,6 @@ public class PopupController {
 
     @FXML
     private StackPane root;
-
     @FXML
     private JFXRippler rippler1;
     @FXML
@@ -27,7 +26,6 @@ public class PopupController {
     private JFXRippler rippler3;
     @FXML
     private JFXRippler rippler4;
-
     @FXML
     private JFXHamburger burger1;
     @FXML
@@ -41,12 +39,15 @@ public class PopupController {
 
     private JFXPopup popup;
 
+    /**
+     * init fxml when loaded.
+     */
     @PostConstruct
     public void init() {
         try {
             popup = new JFXPopup(FXMLLoader.load(getClass().getResource("/fxml/ui/popup/DemoPopup.fxml")));
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException ioExc) {
+            ioExc.printStackTrace();
         }
         burger1.setOnMouseClicked((e) -> popup.show(rippler1, PopupVPosition.TOP, PopupHPosition.LEFT));
         burger2.setOnMouseClicked((e) -> popup.show(rippler2, PopupVPosition.TOP, PopupHPosition.RIGHT));

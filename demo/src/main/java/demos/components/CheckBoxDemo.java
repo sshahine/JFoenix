@@ -11,8 +11,7 @@ import javafx.stage.Stage;
 
 public class CheckBoxDemo extends Application {
 
-    public int i = 0;
-    public int step = 1;
+    private static int step = 1;
 
     @Override
     public void start(Stage stage) {
@@ -23,7 +22,7 @@ public class CheckBoxDemo extends Application {
 
         CheckBox cb = new CheckBox("CheckBox");
         JFXCheckBox jfxCheckBox = new JFXCheckBox("JFX CheckBox");
-        JFXCheckBox customJFXCheckBox = new JFXCheckBox("JFX CheckBox");
+        JFXCheckBox customJFXCheckBox = new JFXCheckBox("Custom JFX CheckBox");
         customJFXCheckBox.getStyleClass().add("custom-jfx-check-box");
 
         main.getChildren().add(cb);
