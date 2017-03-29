@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.transitions;
 
 import javafx.scene.CacheHint;
@@ -24,51 +25,52 @@ import javafx.scene.layout.Region;
 
 import java.util.HashMap;
 
-public class CacheMomento{
-	private static HashMap<Node, CacheMomento> history = new HashMap<>();
-	
-	private boolean cache;
-	private boolean cacheShape;
-	private boolean snapToPixel;
-	private CacheHint cacheHint = CacheHint.DEFAULT;
-	private Node node;
-	
-	public CacheMomento(Node node) {
-		this.node = node;
-	}
-	/**
-	 * this method will cache the node only if it wasn't cached before
-	 */
-	public void cache(){
-		if(!history.containsKey(node)){
-			this.cache = node.isCache();
-			this.cacheHint = node.getCacheHint();
-			node.setCache(true);
-			node.setCacheHint(CacheHint.SPEED);
-			if(node instanceof Region){
-				this.cacheShape = ((Region)node).isCacheShape();
-				this.snapToPixel = ((Region)node).isSnapToPixel();
-				((Region)node).setCacheShape(true);
-				((Region)node).setSnapToPixel(true);
-			}
-			history.put(node, this);
-		}else{
-			CacheMomento cached = new CacheMomento(node);
-			this.cache = cached.cache;
-			this.cacheHint = cached.cacheHint;
-			this.cacheShape = cached.cacheShape;
-			this.snapToPixel = cached.snapToPixel;
-		}
-		
-	}
-	
-	public void restore(){
-		node.setCache(cache);
-		node.setCacheHint(cacheHint);
-		if(node instanceof Region){
-			((Region)node).setCacheShape(cacheShape);
-			((Region)node).setSnapToPixel(snapToPixel);
-		}
-		history.remove(node);
-	}
+public class CacheMomento {
+    private static HashMap<Node, CacheMomento> history = new HashMap<>();
+
+    private boolean cache;
+    private boolean cacheShape;
+    private boolean snapToPixel;
+    private CacheHint cacheHint = CacheHint.DEFAULT;
+    private Node node;
+
+    public CacheMomento(Node node) {
+        this.node = node;
+    }
+
+    /**
+     * this method will cache the node only if it wasn't cached before
+     */
+    public void cache() {
+        if (!history.containsKey(node)) {
+            this.cache = node.isCache();
+            this.cacheHint = node.getCacheHint();
+            node.setCache(true);
+            node.setCacheHint(CacheHint.SPEED);
+            if (node instanceof Region) {
+                this.cacheShape = ((Region) node).isCacheShape();
+                this.snapToPixel = ((Region) node).isSnapToPixel();
+                ((Region) node).setCacheShape(true);
+                ((Region) node).setSnapToPixel(true);
+            }
+            history.put(node, this);
+        } else {
+            CacheMomento cached = new CacheMomento(node);
+            this.cache = cached.cache;
+            this.cacheHint = cached.cacheHint;
+            this.cacheShape = cached.cacheShape;
+            this.snapToPixel = cached.snapToPixel;
+        }
+
+    }
+
+    public void restore() {
+        node.setCache(cache);
+        node.setCacheHint(cacheHint);
+        if (node instanceof Region) {
+            ((Region) node).setCacheShape(cacheShape);
+            ((Region) node).setSnapToPixel(snapToPixel);
+        }
+        history.remove(node);
+    }
 }

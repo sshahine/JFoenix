@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.behavior;
 
 import com.jfoenix.controls.JFXTimePicker;
@@ -28,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2017-03-01
+ * @since 2017-03-01
  */
 public class JFXTimePickerBehavior extends ComboBoxBaseBehavior<LocalTime> {
 
@@ -50,20 +51,22 @@ public class JFXTimePickerBehavior extends ComboBoxBaseBehavior<LocalTime> {
      *                                                                         *
      **************************************************************************/
 
-    protected static final List<KeyBinding> JFX_TIME_PICKER_BINDINGS = new ArrayList<KeyBinding>();
+    protected static final List<KeyBinding> JFX_TIME_PICKER_BINDINGS = new ArrayList<>();
+
     static {
-    	JFX_TIME_PICKER_BINDINGS.addAll(COMBO_BOX_BASE_BINDINGS);
+        JFX_TIME_PICKER_BINDINGS.addAll(COMBO_BOX_BASE_BINDINGS);
     }
-    
-	/**************************************************************************
+
+    /**************************************************************************
      *                                                                        *
      * Mouse Events handling (when losing focus)                              *
      *                                                                        *
      *************************************************************************/
 
-	@Override public void onAutoHide() {
-		JFXTimePicker datePicker = (JFXTimePicker)getControl();
-        JFXTimePickerSkin cpSkin = (JFXTimePickerSkin)datePicker.getSkin();
+    @Override
+    public void onAutoHide() {
+        JFXTimePicker datePicker = (JFXTimePicker) getControl();
+        JFXTimePickerSkin cpSkin = (JFXTimePickerSkin) datePicker.getSkin();
         cpSkin.syncWithAutoUpdate();
         if (!datePicker.isShowing()) super.onAutoHide();
     }

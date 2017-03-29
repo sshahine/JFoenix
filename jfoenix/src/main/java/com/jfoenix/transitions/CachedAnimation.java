@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.transitions;
 
 import javafx.animation.Animation;
@@ -25,60 +26,62 @@ import javafx.scene.Node;
 
 /**
  * applies animation on a cahced node to improve the performance
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class CachedAnimation {
-	protected ObjectProperty<Animation> animation = new SimpleObjectProperty<>();
-	private CacheMomento[] momentos = null;
+    protected ObjectProperty<Animation> animation = new SimpleObjectProperty<>();
+    private CacheMomento[] momentos = null;
 
-	public CachedAnimation(final Animation animation, Node...cachedNodes) {
-		if(cachedNodes != null){
-			momentos = new CacheMomento[cachedNodes.length];	
-			for (int i = 0; i < cachedNodes.length; i++) {
-				momentos[i] = new CacheMomento(cachedNodes[i]);
-			}
-		}
-		this.animation.set(animation);
-		this.animation.get().statusProperty().addListener((o,oldStatus,newStatus)->{
-			switch(newStatus) {
-			case RUNNING:
-				starting();
-				break;
-			default:
-				stopping();
-				break;
-			}
-		});
-	}
+    public CachedAnimation(final Animation animation, Node... cachedNodes) {
+        if (cachedNodes != null) {
+            momentos = new CacheMomento[cachedNodes.length];
+            for (int i = 0; i < cachedNodes.length; i++) {
+                momentos[i] = new CacheMomento(cachedNodes[i]);
+            }
+        }
+        this.animation.set(animation);
+        this.animation.get().statusProperty().addListener((o, oldStatus, newStatus) -> {
+            switch (newStatus) {
+                case RUNNING:
+                    starting();
+                    break;
+                default:
+                    stopping();
+                    break;
+            }
+        });
+    }
 
-	/**
-	 * Called when the animation is starting
-	 */
-	protected void starting() {
-		if(momentos!=null){
-			for (int i = 0; i < momentos.length; i++) {
-				momentos[i].cache();
-			}
-		}
-	}
-	/**
-	 * Called when the animation is stopping
-	 */
-	protected void stopping() {
-		if(momentos!=null){
-			for (int i = 0; i < momentos.length; i++) {
-				momentos[i].restore();
-			}
-		}
-	}
-	/**
-	 * @return the animation object
-	 */
-	public Animation getAnimation() {
-		return animation.get();
-	}
-	
+    /**
+     * Called when the animation is starting
+     */
+    protected void starting() {
+        if (momentos != null) {
+            for (int i = 0; i < momentos.length; i++) {
+                momentos[i].cache();
+            }
+        }
+    }
+
+    /**
+     * Called when the animation is stopping
+     */
+    protected void stopping() {
+        if (momentos != null) {
+            for (int i = 0; i < momentos.length; i++) {
+                momentos[i].restore();
+            }
+        }
+    }
+
+    /**
+     * @return the animation object
+     */
+    public Animation getAnimation() {
+        return animation.get();
+    }
+
 }

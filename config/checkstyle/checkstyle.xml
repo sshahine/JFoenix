@@ -1,82 +1,427 @@
-<!--
-  ~ Copyright 2014 the original author or authors.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!--
+    Checkstyle configuration that checks the Google coding conventions from Google Java Style
+    that can be found at https://google.github.io/styleguide/javaguide.html.
+
+    Checkstyle is very configurable. Be sure to read the documentation at
+    http://checkstyle.sf.net (or in your downloaded distribution).
+
+    To completely disable a check, just comment it out or delete it from the file.
+
+    Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
+ -->
+
 <module name="Checker">
+    <property name="charset" value="UTF-8"/>
+
+    <property name="severity" value="error"/>
+
+    <property name="fileExtensions" value="java, properties, xml"/>
+    <!-- Checks for whitespace                               -->
+    <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
     <module name="TreeWalker">
-        <!-- Blocks -->
+        <module name="OuterTypeFilename"/>
+        <module name="IllegalTokenText">
+            <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
+            <property name="format"
+                      value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
+            <property name="message" value="Avoid using corresponding octal or Unicode escape."/>
+        </module>
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowEscapesForControlCharacters" value="true"/>
+            <property name="allowByTailComment" value="true"/>
+            <property name="allowNonPrintableEscapes" value="true"/>
+        </module>
+        <module name="LineLength">
+            <property name="max" value="140"/>
+            <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+        </module>
+        <module name="OneTopLevelClass"/>
+        <module name="NoLineWrap"/>
         <module name="EmptyBlock">
-            <property name="option" value="stmt"/>
-            <property name="tokens" value="LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_IF,LITERAL_FOR,LITERAL_TRY,LITERAL_WHILE,INSTANCE_INIT,STATIC_INIT"/>
+            <property name="option" value="TEXT"/>
+            <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
         </module>
-        <module name="EmptyBlock">
-            <property name="option" value="text"/>
-            <property name="tokens" value="LITERAL_CATCH"/>
+        <module name="LeftCurly"/>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlySame"/>
+            <property name="tokens"
+                      value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
         </module>
-        <module name="AvoidNestedBlocks"/>
-
-        <!-- Braces -->
-        <!--<module name="NeedBraces"/>-->
-
-        <!-- Coding -->
-        <module name="CovariantEquals"/>
-        <module name="DefaultComesLast"/>
-        <module name="EmptyStatement"/>
-        <module name="EqualsHashCode"/>
-        <!--<module name="ExplicitInitialization"/>-->
-        <!--<module name="MultipleVariableDeclarations"/>-->
-        <module name="NoClone"/>
-        <module name="NoFinalizer"/>
-        <module name="RedundantThrows">
-            <property name="allowUnchecked" value="true"/>
+        <module name="RightCurly">
+            <property name="id" value="RightCurlyAlone"/>
+            <property name="option" value="alone"/>
+            <property name="tokens"
+                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
         </module>
-        <module name="SimplifyBooleanExpression"/>
-        <module name="SimplifyBooleanReturn"/>
-        <module name="StringLiteralEquality"/>
-        <!--<module name="UnnecessaryParentheses"/>-->
-
-        <!-- Design -->
-        <!--<module name="InterfaceIsType"/>-->
-
-        <!-- Imports -->
-        <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
-
-        <!-- Naming -->
-        <module name="ClassTypeParameterName">
-            <property name="format" value="^[A-Z]+([A-Z_]*)*$"/>
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+            <property name="allowEmptyLoops" value="true"/>
+            <message key="ws.notFollowed"
+                     value="WhitespaceAround: ''{0}'' is not followed by whitespace. Empty blocks may only be represented as '{}' when not part of a multi-block statement (4.1.3)"/>
+            <message key="ws.notPreceded"
+                     value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
         </module>
-        <!--<module name="ConstantName"/> -->
-        <module name="LocalFinalVariableName"/>
-        <!--<module name="LocalVariableName"/>-->
-        <module name="MemberName"/>
-        <module name="MethodName">
-            <property name="format" value="^(\$)?[a-z]?([a-zA-Z0-9_]*)*$"/>
+        <module name="OneStatementPerLine"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="FallThrough"/>
+        <module name="UpperEll"/>
+        <module name="ModifierOrder"/>
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
         </module>
-        <module name="MethodTypeParameterName">
-            <property name="format" value="^[A-Z]+([A-Z_]*)*$"/>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapDot"/>
+            <property name="tokens" value="DOT"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapComma"/>
+            <property name="tokens" value="COMMA"/>
+            <property name="option" value="EOL"/>
         </module>
         <module name="PackageName">
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+            <message key="name.invalidPattern"
+                     value="Package name ''{0}'' must match pattern ''{1}''."/>
         </module>
-        <module name="ParameterName"/>
-        <!--<module name="StaticVariableName"/>-->
-        <module name="TypeName"/>
+        <module name="TypeName">
+            <message key="name.invalidPattern"
+                     value="Type name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+            <message key="name.invalidPattern"
+                     value="Member name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="ParameterName">
+            <property name="id" value="ParameterNameNonPublic"/>
+            <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
+            <property name="accessModifiers" value="protected, package, private"/>
+            <message key="name.invalidPattern"
+                     value="Parameter name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="ParameterName">
+            <property name="id" value="ParameterNamePublic"/>
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+            <property name="accessModifiers" value="public"/>
+            <message key="name.invalidPattern"
+                     value="Parameter name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="CatchParameterName">
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+            <message key="name.invalidPattern"
+                     value="Catch parameter name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+            <property name="allowOneCharVarInForLoop" value="true"/>
+            <message key="name.invalidPattern"
+                     value="Local variable name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="ClassTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+            <message key="name.invalidPattern"
+                     value="Class type name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="MethodTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+            <message key="name.invalidPattern"
+                     value="Method type name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="InterfaceTypeParameterName">
+            <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
+            <message key="name.invalidPattern"
+                     value="Interface type name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="NoFinalizer"/>
+        <module name="GenericWhitespace">
+            <message key="ws.followed"
+                     value="GenericWhitespace ''{0}'' is followed by whitespace."/>
+            <message key="ws.preceded"
+                     value="GenericWhitespace ''{0}'' is preceded with whitespace."/>
+            <message key="ws.illegalFollow"
+                     value="GenericWhitespace ''{0}'' should followed by whitespace."/>
+            <message key="ws.notPreceded"
+                     value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
+        </module>
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+            <property name="braceAdjustment" value="0"/>
+            <property name="caseIndent" value="4"/>
+            <property name="throwsIndent" value="4"/>
+            <property name="lineWrappingIndentation" value="4"/>
+            <property name="arrayInitIndent" value="2"/>
+        </module>
+        <module name="AbbreviationAsWordInName">
+            <property name="ignoreFinal" value="false"/>
+            <property name="allowedAbbreviationLength" value="1"/>
+            <property name="allowedAbbreviations" value="JFX,SVG,FX"/>
+        </module>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="VariableDeclarationUsageDistance"/>
+        <module name="CustomImportOrder">
+            <property name="separateLineBetweenGroups" value="true"/>
+            <property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###STATIC"/>
+        </module>
+        <module name="MethodParamPad"/>
+        <module name="ParenPad"/>
+        <module name="OperatorWrap">
+            <property name="option" value="NL"/>
+            <property name="tokens"
+                      value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF "/>
+        </module>
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationMostCases"/>
+            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF"/>
+        </module>
+        <module name="AnnotationLocation">
+            <property name="id" value="AnnotationLocationVariables"/>
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="allowSamelineMultipleAnnotations" value="true"/>
+        </module>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="JavadocTagContinuationIndentation"/>
+        <module name="SummaryJavadoc">
+            <property name="forbiddenSummaryFragments"
+                      value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
+        </module>
+        <module name="JavadocParagraph"/>
+        <module name="AtclauseOrder">
+            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
+            <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
+        </module>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="allowMissingThrowsTags" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <property name="minLineCount" value="7"/>
+            <property name="allowedAnnotations" value="Override, Test"/>
+            <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <property name="tokens" value="METHOD_DEF"/> <!-- do not check constructors or annotation fields -->
+        </module>
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
+            <message key="name.invalidPattern"
+                     value="Method name ''{0}'' must match pattern ''{1}''."/>
+        </module>
+        <module name="SingleLineJavadoc">
+            <property name="ignoreInlineTags" value="false"/>
+        </module>
+        <module name="EmptyCatchBlock">
+            <property name="exceptionVariableName" value="expected"/>
+        </module>
+        <module name="CommentsIndentation"/>
 
+        <!-- sevntu additions -->
+
+        <property name="tabWidth" value="4"/>
+
+        <!-- Misc -->
+        <module name="FileContentsHolder"/>
+
+        <!-- Annotation -->
+        <module name="com.github.sevntu.checkstyle.checks.annotation.ForbidAnnotationElementValue">
+            <property name="annotationName" value="Test"/>
+            <property name="elementName" value="expected"/>
+            <property name="forbiddenElementValueRegexp" value=".*"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.annotation.ForbidAnnotation">
+            <property name="annotationNames" value="Ignore, VisibleForTesting"/>
+            <property name="annotationTargets" value="METHOD_DEF"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.annotation.RequiredParameterForAnnotation"/>
+        <module name="com.github.sevntu.checkstyle.checks.annotation.RequiredParameterForAnnotation">
+            <property name="annotationName" value="Generated"/>
+            <property name="requiredParameters" value="value"/>
+        </module>
+
+        <!-- Coding -->
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidCCommentsInMethods"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.NoNullForCollectionReturn">
+            <property name="collectionList"
+                      value="AbstractCollection AbstractList AbstractQueue AbstractSequentialList AbstractSet ArrayBlockingQueue ArrayDeque ArrayList AttributeList BeanContextServicesSupport BeanContextSupport ConcurrentLinkedDeque ConcurrentLinkedQueue ConcurrentSkipListSet CopyOnWriteArrayList CopyOnWriteArraySet DelayQueue EnumSet HashSet JobStateReasons LinkedBlockingDeque LinkedBlockingQueue LinkedHashSet LinkedList LinkedTransferQueue PriorityBlockingQueue PriorityQueue RoleList RoleUnresolvedList Stack SynchronousQueue TreeSet Vector Collection List Map Set"/>
+            <property name="searchThroughMethodBody" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.CustomDeclarationOrder">
+            <property name="customDeclarationOrder"
+                      value="Field(public) ### Field(protected) ### Field(private) ### CTOR(.*) ### Method(.*)### InnerClass()"/>
+            <property name="caseSensitive" value="true"/>
+            <property name="fieldPrefix" value=""/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidReturnInFinallyBlock"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.MultipleStringLiteralsExtended">
+            <property name="allowedDuplicates" value="1"/>
+            <property name="ignoreOccurrenceContext" value="ANNOTATION"/>
+            <property name="ignoreStringsRegexp" value="^&quot;&quot;$"/>
+            <property name="highlightAllDuplicates" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.AvoidDefaultSerializableInInnerClasses">
+            <property name="allowPartialImplementation" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ConfusingCondition">
+            <property name="multiplyFactorForElseBlocks" value="4"/>
+            <property name="ignoreInnerIf" value="true"/>
+            <property name="ignoreSequentialIf" value="true"/>
+            <property name="ignoreNullCaseInIf" value="true"/>
+            <property name="ignoreThrowInElse" value="true"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.LogicConditionNeedOptimization"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ReturnBooleanFromTernary"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ReturnNullInsteadOfBoolean"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidCertainImports"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.AvoidModifiersForTypes">
+            <property name="forbiddenClassesRegexpFinal" value=""/>
+            <property name="forbiddenClassesRegexpStatic" value="ULC.+"/>
+            <property name="forbiddenClassesRegexpTransient" value=""/>
+            <property name="forbiddenClassesRegexpVolatile" value=""/>
+            <property name="forbiddenClassesRegexpAnnotation" value=""/>
+            <property name="forbiddenClassesRegexpPrivate" value=""/>
+            <property name="forbiddenClassesRegexpPackagePrivate" value=""/>
+            <property name="forbiddenClassesRegexpProtected" value=""/>
+            <property name="forbiddenClassesRegexpPublic" value=""/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.OverridableMethodInConstructor">
+            <property name="checkCloneMethod" value="false"/>
+            <property name="checkReadObjectMethod" value="false"/>
+            <property name="matchMethodsByArgCount" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.AvoidNotShortCircuitOperatorsForBoolean"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.MultipleVariableDeclarationsExtended">
+            <property name="ignoreCycles" value="false"/>
+            <property name="ignoreMethods" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.EitherLogOrThrow">
+            <property name="loggerFullyQualifiedClassName" value="org.slf4j.Logger"/>
+            <property name="loggingMethodNames" value="debug, error, info, trace, warn"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.AvoidHidingCauseException"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.IllegalCatchExtended">
+            <property name="allowThrow" value="true"/>
+            <property name="allowRethrow" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ReturnCountExtended">
+            <property name="maxReturnCount" value="1"/>
+            <property name="ignoreMethodLinesCount" value="20"/>
+            <property name="minIgnoreReturnDepth" value="4"/>
+            <property name="ignoreEmptyReturns" value="true"/>
+            <property name="topLinesToIgnoreCount" value="5"/>
+            <property name="ignoreMethodsNames" value="equals"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.SimpleAccessorNameNotation"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.UnnecessaryParenthesesExtended">
+            <property name="ignoreCalculationOfBooleanVariables" value="false"/>
+            <property name="ignoreCalculationOfBooleanVariablesWithReturn" value="false"/>
+            <property name="ignoreCalculationOfBooleanVariablesWithAssert" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidInstantiation">
+            <property name="forbiddenClasses" value="java.lang.NullPointerException"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.AvoidConstantAsFirstOperandInCondition">
+            <property name="targetConstantTypes"
+                      value="LITERAL_NULL,LITERAL_TRUE,LITERAL_FALSE,NUM_INT,NUM_DOUBLE,NUM_LONG,NUM_FLOAT"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.FinalizeImplementation"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidThrowAnonymousExceptions">
+            <property name="exceptionClassNameRegex" value="^.*Exception"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.MapIterationInForEachLoop">
+            <property name="proposeValuesUsage" value="true"/>
+            <property name="proposeKeySetUsage" value="false"/>
+            <property name="proposeEntrySetUsage" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.TernaryPerExpressionCount">
+            <property name="maxTernaryPerExpressionCount" value="1"/>
+            <property name="ignoreTernaryOperatorsInBraces" value="true"/>
+            <property name="ignoreIsolatedTernaryOnLine" value="true"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.RedundantReturn">
+            <property name="allowReturnInEmptyMethodsAndConstructors" value="false"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.SingleBreakOrContinue"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.NumericLiteralNeedsUnderscore">
+            <property name="minDecimalSymbolLength" value="7"/>
+            <property name="maxDecimalSymbolsUntilUnderscore" value="3"/>
+            <property name="minHexSymbolLength" value="5"/>
+            <property name="maxHexSymbolsUntilUnderscore" value="4"/>
+            <property name="minBinarySymbolLength" value="9"/>
+            <property name="maxBinarySymbolsUntilUnderscore" value="8"/>
+            <property name="ignoreFieldNamePattern" value="serialVersionUID"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.EmptyPublicCtorInClass"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.DiamondOperatorForVariableDefinition"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.NameConventionForJunit4TestClasses"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.UselessSuperCtorCall"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.UselessSingleCatch"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.WhitespaceBeforeArrayInitializer"/>
+
+        <!-- Design -->
+        <module name="com.github.sevntu.checkstyle.checks.design.ChildBlockLength">
+            <property name="blockTypes"
+                      value="LITERAL_IF,LITERAL_ELSE,LITERAL_WHILE,LITERAL_DO,LITERAL_FOR,LITERAL_SWITCH,LITERAL_TRY,LITERAL_CATCH"/>
+            <property name="maxChildBlockPercentage" value="90"/>
+            <property name="ignoreBlockLinesCount" value="50"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.design.ForbidWildcardAsReturnType">
+            <property name="checkPublicMethods" value="true"/>
+            <property name="checkPackageMethods" value="true"/>
+            <property name="checkProtectedMethods" value="true"/>
+            <property name="checkPrivateMethods" value="false"/>
+            <property name="checkOverrideMethods" value="false"/>
+            <property name="checkDeprecatedMethods" value="false"/>
+            <property name="allowReturnWildcardWithSuper" value="false"/>
+            <property name="allowReturnWildcardWithExtends" value="false"/>
+            <property name="returnTypeClassNamesIgnoreRegex" value="^(Comparator|Comparable)$"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.design.NoMainMethodInAbstractClass"/>
+        <module name="com.github.sevntu.checkstyle.checks.design.PublicReferenceToPrivateType"/>
+        <module name="com.github.sevntu.checkstyle.checks.design.ConstructorWithoutParams">
+            <property name="classNameFormat" value=".*Exception$"/>
+            <property name="ignoredClassNameFormat" value="UnsupportedOperationException"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.design.InnerClass"/>
+        <module name="com.github.sevntu.checkstyle.checks.design.NestedSwitch"/>
+        <module name="com.github.sevntu.checkstyle.checks.design.AvoidConditionInversion"/>
+        <module name="com.github.sevntu.checkstyle.checks.design.CauseParameterInException"/>
+
+        <!-- Naming -->
+        <module name="com.github.sevntu.checkstyle.checks.naming.EnumValueName">
+            <property name="objFormat" value="^[A-Z][a-zA-Z0-9]*$"/>
+            <property name="constFormat" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+            <property name="excludes" value="toString"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.naming.UniformEnumConstantName">
+            <property name="formats" value="^[A-Z][a-zA-Z0-9]*$,^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
+
+        <!-- own additions -->
+        <module name="ArrayTrailingComma"/>
+
+        <module name="MissingOverride"/>
+        <module name="UnusedImports"/>
     </module>
-    <module name="FileTabCharacter"/>
+
+    <!-- sevntu additions -->
+
+    <!-- Filters -->
+    <module name="SuppressionCommentFilter"/>
+    <module name="SuppressWithNearbyCommentFilter">
+        <property name="commentFormat" value="-@cs\[(\w{8,})\] \w[\(\)\-\.\'\`\,\:\;\w ]{10,}"/>
+        <property name="checkFormat" value="$1"/>
+        <property name="influenceFormat" value="3"/>
+    </module>
 </module>

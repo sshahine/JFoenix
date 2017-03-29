@@ -1,16 +1,15 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
-
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/Dialog.fxml", title = "Material Design Example")
 public class DialogController {
@@ -43,7 +42,7 @@ public class DialogController {
     private JFXDialog dialog;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         root.getChildren().remove(dialog);
 
         centerButton.setOnMouseClicked((e) -> {
@@ -71,9 +70,7 @@ public class DialogController {
             dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
         });
 
-        acceptButton.setOnMouseClicked((e) -> {
-            dialog.close();
-        });
+        acceptButton.setOnMouseClicked((e) -> dialog.close());
     }
 
 }

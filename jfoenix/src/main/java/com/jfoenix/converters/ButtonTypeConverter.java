@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.converters;
 
 import java.util.logging.Logger;
@@ -30,10 +31,10 @@ import javafx.scene.text.Font;
 /**
  * Converts the CSS for -fx-button-type items into ButtonType.
  * it's used in JFXButton
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class ButtonTypeConverter extends StyleConverterImpl<String, ButtonType> {
 
@@ -52,6 +53,7 @@ public class ButtonTypeConverter extends StyleConverterImpl<String, ButtonType> 
 	public static StyleConverter<String, ButtonType> getInstance() {
 		return Holder.INSTANCE;
 	}
+
 
 	@Override
 	public ButtonType convert(ParsedValue<String, ButtonType> value, Font notUsedFont) {

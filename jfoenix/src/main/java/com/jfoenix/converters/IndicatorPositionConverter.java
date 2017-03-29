@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.converters;
 
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
@@ -27,38 +28,37 @@ import javafx.scene.text.Font;
 /**
  * Converts the CSS for -fx-indicator-position items into IndicatorPosition.
  * it's used in JFXSlider.
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class IndicatorPositionConverter extends StyleConverterImpl<String, IndicatorPosition> {
-	// lazy, thread-safe instatiation
-	private static class Holder {
-		static final IndicatorPositionConverter INSTANCE = new IndicatorPositionConverter();
-	}
+    // lazy, thread-safe instatiation
+    private static class Holder {
+        static final IndicatorPositionConverter INSTANCE = new IndicatorPositionConverter();
+    }
 
-	public static StyleConverter<String, IndicatorPosition> getInstance() {
-		return Holder.INSTANCE;
-	}
+    public static StyleConverter<String, IndicatorPosition> getInstance() {
+        return Holder.INSTANCE;
+    }
 
-	private IndicatorPositionConverter() {
-		super();
-	}
+    private IndicatorPositionConverter() {
+    }
 
-	@Override
-	public IndicatorPosition convert(ParsedValue<String, IndicatorPosition> value, Font not_used) {
-		String string = value.getValue().toUpperCase();
-		try {
-			return IndicatorPosition.valueOf(string);
-		} catch (IllegalArgumentException | NullPointerException exception) {
-			return IndicatorPosition.LEFT;
-		}
-	}
+    @Override
+    public IndicatorPosition convert(ParsedValue<String, IndicatorPosition> value, Font not_used) {
+        String string = value.getValue().toUpperCase();
+        try {
+            return IndicatorPosition.valueOf(string);
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            return IndicatorPosition.LEFT;
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "IndicatorPositionConverter";
-	}
+    @Override
+    public String toString() {
+        return "IndicatorPositionConverter";
+    }
 
 }

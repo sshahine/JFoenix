@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.behavior;
 
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
@@ -24,29 +25,30 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 
 /**
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
-public class JFXTreeTableCellBehavior<S,T> extends TreeTableCellBehavior<S,T>{
+public class JFXTreeTableCellBehavior<S, T> extends TreeTableCellBehavior<S, T> {
 
-	public JFXTreeTableCellBehavior(TreeTableCell<S, T> control) {
-		super(control);
-	}
+    public JFXTreeTableCellBehavior(TreeTableCell<S, T> control) {
+        super(control);
+    }
 
-	@Override protected boolean handleDisclosureNode(double x, double y) {
-		final TreeItem<S> treeItem = getControl().getTreeTableRow().getTreeItem();
-		if(!treeItem.isLeaf()){
-			final Node disclosureNode = getControl().getTreeTableRow().getDisclosureNode();
-			if (disclosureNode != null) {  
-				if (disclosureNode.getBoundsInParent().contains(x+disclosureNode.getTranslateX(), y)) {
-					if (treeItem != null) {
-						treeItem.setExpanded(!treeItem.isExpanded());
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    protected boolean handleDisclosureNode(double x, double y) {
+        final TreeItem<S> treeItem = getControl().getTreeTableRow().getTreeItem();
+        if (!treeItem.isLeaf()) {
+            final Node disclosureNode = getControl().getTreeTableRow().getDisclosureNode();
+            if (disclosureNode != null) {
+                if (disclosureNode.getBoundsInParent().contains(x + disclosureNode.getTranslateX(), y)) {
+                    if (treeItem != null) {
+                        treeItem.setExpanded(!treeItem.isExpanded());
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

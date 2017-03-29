@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls;
 
 import com.jfoenix.controls.JFXButton.ButtonType;
@@ -44,327 +45,329 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 
- * @see <a href=
- *      "http://www.google.com/design/spec/components/snackbars-toasts.html#">
- *      Snackbars & toasts</a>
- *      
- *      The use of a javafx Popup or PopupContainer for notifications would seem intuitive but Popups are 
- *      displayed in their own dedicated windows and alligning the popup window and handling window on top
- *      layering is more trouble then it is worth. 
- *
+ * @see <a href= "http://www.google.com/design/spec/components/snackbars-toasts.html#"> Snackbars & toasts</a>
+ * <p>
+ * The use of a javafx Popup or PopupContainer for notifications would seem intuitive but Popups are displayed in their
+ * own dedicated windows and alligning the popup window and handling window on top layering is more trouble then it is
+ * worth.
  */
 public class JFXSnackbar extends StackPane {
 
-	private Label toast;
-	private JFXButton action;
+    private Label toast;
+    private JFXButton action;
 
-	private Pane snackbarContainer;
-	private BorderPane content;
-	private Group popup;
-	private ChangeListener<? super Number> sizeListener;
+    private Pane snackbarContainer;
+    private Group popup;
+    private ChangeListener<? super Number> sizeListener;
 
-	private AtomicBoolean processingQueue = new AtomicBoolean(false);
-	private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new  ConcurrentLinkedQueue<SnackbarEvent> ();
-	private StackPane actionContainer;
+    private AtomicBoolean processingQueue = new AtomicBoolean(false);
+    private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new ConcurrentLinkedQueue<>();
+    private StackPane actionContainer;
 
-	Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
-	
-	public JFXSnackbar() {
-		this(null);
-	}
+    Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
 
-	public JFXSnackbar(Pane snackbarContainer) {
+    public JFXSnackbar() {
+        this(null);
+    }
 
-		BorderPane bPane = new BorderPane();
-		toast = new Label();
-		toast.setMinWidth(Control.USE_PREF_SIZE);
-		toast.getStyleClass().add("jfx-snackbar-toast");
-		toast.setWrapText(true);
-		StackPane toastContainer = new StackPane(toast);
-		toastContainer.setPadding(new Insets(20));
-		bPane.setLeft(toastContainer);
+    public JFXSnackbar(Pane snackbarContainer) {
 
-		action = new JFXButton();
-		action.setMinWidth(Control.USE_PREF_SIZE);
-		action.setButtonType(ButtonType.FLAT);
-		action.getStyleClass().add("jfx-snackbar-action");
+        BorderPane bPane = new BorderPane();
+        toast = new Label();
+        toast.setMinWidth(Control.USE_PREF_SIZE);
+        toast.getStyleClass().add("jfx-snackbar-toast");
+        toast.setWrapText(true);
+        StackPane toastContainer = new StackPane(toast);
+        toastContainer.setPadding(new Insets(20));
+        bPane.setLeft(toastContainer);
 
-		// actions will be added upon showing the snackbar if needed
-		actionContainer = new StackPane(action);
-		actionContainer.setPadding(new Insets(0,10,0,0));
-		bPane.setRight(actionContainer);
+        action = new JFXButton();
+        action.setMinWidth(Control.USE_PREF_SIZE);
+        action.setButtonType(ButtonType.FLAT);
+        action.getStyleClass().add("jfx-snackbar-action");
 
-		toast.prefWidthProperty().bind(Bindings.createDoubleBinding(()->{
-			if(this.getPrefWidth() == -1) return this.getPrefWidth();
-			double actionWidth = actionContainer.isVisible()?actionContainer.getWidth():0.0;
-			return this.prefWidthProperty().get() - actionWidth;
-		}, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
+        // actions will be added upon showing the snackbar if needed
+        actionContainer = new StackPane(action);
+        actionContainer.setPadding(new Insets(0, 10, 0, 0));
+        bPane.setRight(actionContainer);
 
-		//bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
-		bPane.prefWidthProperty().bind(this.prefWidthProperty());
+        toast.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> {
+            if (this.getPrefWidth() == -1) return this.getPrefWidth();
+            double actionWidth = actionContainer.isVisible() ? actionContainer.getWidth() : 0.0;
+            return this.prefWidthProperty().get() - actionWidth;
+        }, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
 
-		content = bPane;
+        //bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
+        bPane.prefWidthProperty().bind(this.prefWidthProperty());
 
-		content.getStyleClass().add("jfx-snackbar-content");
-		//setting a shadow enlarges the snackbar height leaving a gap below it
-		//JFXDepthManager.setDepth(content, 4);		
+        final BorderPane content = bPane;
 
-		//wrap the content in a group so that the content is managed inside its own container
-		//but the group is not managed in the snackbarContainer so it does not affect any layout calculations
-		popup= new Group();		
-		popup.getChildren().add(content);
-		popup.setManaged(false);
-		popup.setVisible(false);
+        content.getStyleClass().add("jfx-snackbar-content");
+        //setting a shadow enlarges the snackbar height leaving a gap below it
+        //JFXDepthManager.setDepth(content, 4);
 
-		sizeListener = (o, oldVal, newVal) ->{refreshPopup();};
-		
-		// register the container before resizing it
-		registerSnackbarContainer(snackbarContainer);
-		
-		// resize the popup if its layout has been changed
-		popup.layoutBoundsProperty().addListener((o,oldVal,newVal)-> refreshPopup());
+        //wrap the content in a group so that the content is managed inside its own container
+        //but the group is not managed in the snackbarContainer so it does not affect any layout calculations
+        popup = new Group();
+        popup.getChildren().add(content);
+        popup.setManaged(false);
+        popup.setVisible(false);
 
-		addEventHandler(SnackbarEvent.SNACKBAR, e -> enqueue(e));
+        sizeListener = (o, oldVal, newVal) -> {
+            refreshPopup();
+        };
 
-		//This control actually orchestrates the popup logic and is never visibly displayed.
-		this.setVisible(false);
-		this.setManaged(false);
+        // register the container before resizing it
+        registerSnackbarContainer(snackbarContainer);
 
-	}
+        // resize the popup if its layout has been changed
+        popup.layoutBoundsProperty().addListener((o, oldVal, newVal) -> refreshPopup());
 
-	/***************************************************************************
-	 * * Setters / Getters * *
-	 **************************************************************************/
+        addEventHandler(SnackbarEvent.SNACKBAR, e -> enqueue(e));
 
-	public Pane getPopupContainer() {
-		return snackbarContainer;
-	}
+        //This control actually orchestrates the popup logic and is never visibly displayed.
+        this.setVisible(false);
+        this.setManaged(false);
 
+    }
 
-	/***************************************************************************
-	 * * Public API * *
-	 **************************************************************************/
+    /***************************************************************************
+     * * Setters / Getters * *
+     **************************************************************************/
 
-	public void registerSnackbarContainer(Pane snackbarContainer) {
-
-		if (snackbarContainer != null) {
-			if (this.snackbarContainer!=null){
-				//since listeners are added the container should be properly registered/unregistered 
-				throw new IllegalArgumentException("Snackbar Container already set");
-			}
-
-			this.snackbarContainer = snackbarContainer;
-			this.snackbarContainer.getChildren().add(popup);
-			this.snackbarContainer.heightProperty().addListener(sizeListener);
-			this.snackbarContainer.widthProperty().addListener(sizeListener);
-		}
-
-	}
-
-	public void unregisterSnackbarContainer(Pane snackbarContainer) {
-
-		if (snackbarContainer != null) {
-			if (this.snackbarContainer==null){
-				throw new IllegalArgumentException("Snackbar Container not set");
-			}
-
-			this.snackbarContainer.getChildren().remove(popup);
-			this.snackbarContainer.heightProperty().removeListener(sizeListener);
-			this.snackbarContainer.widthProperty().removeListener(sizeListener);
-			this.snackbarContainer = null;
-		}
-	}
-
-	public void show(String toastMessage, long timeout) {
-		this.show(toastMessage, null,timeout, null);
-	}
-	public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
-		this.show(message, actionText,-1, actionHandler);
-	}
-	public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
-		toast.setText(message);
-		if (actionText != null && !actionText.isEmpty()) {
-			action.setVisible(true);
-			actionContainer.setVisible(true);
-			actionContainer.setManaged(true);
-			// to force updating the layout bounds
-			action.setText("");
-			action.setText(actionText);
-			action.setOnMouseClicked(actionHandler);
-		} else {
-			actionContainer.setVisible(false);
-			actionContainer.setManaged(false);
-			action.setVisible(false);
-		}
-		Timeline animation = getTimeline(timeout);
-		animation.play();
-	}
+    public Pane getPopupContainer() {
+        return snackbarContainer;
+    }
 
 
-	private Timeline getTimeline(long timeout) {
-		Timeline animation;
-		if(timeout <= 0){
-			animation =  new  Timeline(
-					new KeyFrame(
-							Duration.ZERO,
-							e ->popup.toBack(),
-							new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
-							new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-							new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
-					),
-					new KeyFrame(
-							Duration.millis(10),
-							e ->popup.toFront(),
-							new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
-					),
-					new KeyFrame(Duration.millis(300),
-							new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
-							new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-					)
-			);
-			animation.setCycleCount(1);
-		}else {
-			animation = new Timeline(
-					new KeyFrame(
-							Duration.ZERO,
-							(e) -> popup.toBack(),
-							new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-							new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-							new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
-					),
-					new KeyFrame(
-							Duration.millis(10),
-							(e) -> popup.toFront(),
-							new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
-					),
-					new KeyFrame(Duration.millis(300),
-							new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-							new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-					),
-					new KeyFrame(Duration.millis(timeout / 2))
-			);
-			animation.setAutoReverse(true);
-			animation.setCycleCount(2);
-			animation.setOnFinished((e) -> processSnackbars());
-		}
-		return animation;
-	}
+    /***************************************************************************
+     * * Public API * *
+     **************************************************************************/
 
-	public void close(){
-		Timeline animation =  new  Timeline(
-				new KeyFrame(
-						Duration.ZERO,  
-						e ->popup.toFront(),
-						new KeyValue(popup.opacityProperty(), 1 , easeInterpolator),
-						new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-						),
-				new KeyFrame(
-						Duration.millis(290),
-						new KeyValue(popup.visibleProperty(), true ,Interpolator.EASE_BOTH)
-						),
-				new KeyFrame(Duration.millis(300),
-						e ->popup.toBack(),
-						new KeyValue(popup.visibleProperty(), false ,Interpolator.EASE_BOTH),
-						new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-						new KeyValue(popup.opacityProperty(), 0 , easeInterpolator)
-						)
-				);
-		animation.setCycleCount(1);
-		animation.setOnFinished(e -> processSnackbars());
-		animation.play();
-	}
+    public void registerSnackbarContainer(Pane snackbarContainer) {
 
-	private void processSnackbars() {
-		SnackbarEvent qevent = eventQueue.poll();
-		if (qevent != null) {
-			if(qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-			else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
-		} else {
-			//The enqueue method and this listener should be executed sequentially on the FX Thread so there
-			//should not be a race condition
-			processingQueue.getAndSet(false);
-		}
-	}
+        if (snackbarContainer != null) {
+            if (this.snackbarContainer != null) {
+                //since listeners are added the container should be properly registered/unregistered
+                throw new IllegalArgumentException("Snackbar Container already set");
+            }
 
-	
+            this.snackbarContainer = snackbarContainer;
+            this.snackbarContainer.getChildren().add(popup);
+            this.snackbarContainer.heightProperty().addListener(sizeListener);
+            this.snackbarContainer.widthProperty().addListener(sizeListener);
+        }
 
-	public void refreshPopup(){
-		Bounds contentBound = popup.getLayoutBounds();		
-		double offsetX = Math.ceil((snackbarContainer.getWidth()/2)) - Math.ceil((contentBound.getWidth()/2)) ;
-		double offsetY = snackbarContainer.getHeight()-contentBound.getHeight();
-		popup.setLayoutX(offsetX);
-		popup.setLayoutY(offsetY);
+    }
 
-	}
+    public void unregisterSnackbarContainer(Pane snackbarContainer) {
 
-	public void enqueue(SnackbarEvent event) {
-		eventQueue.add(event);
-		if (processingQueue.compareAndSet(false, true)){
-			Platform.runLater(() -> {
-				SnackbarEvent qevent = eventQueue.poll();
-				if (qevent != null) {
-					if(qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-					else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
-				}
-			});
-		}
-	}
+        if (snackbarContainer != null) {
+            if (this.snackbarContainer == null) {
+                throw new IllegalArgumentException("Snackbar Container not set");
+            }
+
+            this.snackbarContainer.getChildren().remove(popup);
+            this.snackbarContainer.heightProperty().removeListener(sizeListener);
+            this.snackbarContainer.widthProperty().removeListener(sizeListener);
+            this.snackbarContainer = null;
+        }
+    }
+
+    public void show(String toastMessage, long timeout) {
+        this.show(toastMessage, null, timeout, null);
+    }
+
+    public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+        this.show(message, actionText, -1, actionHandler);
+    }
+
+    public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+        toast.setText(message);
+        if (actionText != null && !actionText.isEmpty()) {
+            action.setVisible(true);
+            actionContainer.setVisible(true);
+            actionContainer.setManaged(true);
+            // to force updating the layout bounds
+            action.setText("");
+            action.setText(actionText);
+            action.setOnMouseClicked(actionHandler);
+        } else {
+            actionContainer.setVisible(false);
+            actionContainer.setManaged(false);
+            action.setVisible(false);
+        }
+        Timeline animation = getTimeline(timeout);
+        animation.play();
+    }
 
 
-	/***************************************************************************
-	 * * Event API * *
-	 **************************************************************************/
+    private Timeline getTimeline(long timeout) {
+        Timeline animation;
+        if (timeout <= 0) {
+            animation = new Timeline(
+                new KeyFrame(
+                    Duration.ZERO,
+                    e -> popup.toBack(),
+                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                ),
+                new KeyFrame(
+                    Duration.millis(10),
+                    e -> popup.toFront(),
+                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                ),
+                new KeyFrame(Duration.millis(300),
+                             new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                             new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                )
+            );
+            animation.setCycleCount(1);
+        } else {
+            animation = new Timeline(
+                new KeyFrame(
+                    Duration.ZERO,
+                    (e) -> popup.toBack(),
+                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
+                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                ),
+                new KeyFrame(
+                    Duration.millis(10),
+                    (e) -> popup.toFront(),
+                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                ),
+                new KeyFrame(Duration.millis(300),
+                             new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                             new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                ),
+                new KeyFrame(Duration.millis(timeout / 2))
+            );
+            animation.setAutoReverse(true);
+            animation.setCycleCount(2);
+            animation.setOnFinished((e) -> processSnackbars());
+        }
+        return animation;
+    }
 
-	public static class SnackbarEvent extends Event {
+    public void close() {
+        Timeline animation = new Timeline(
+            new KeyFrame(
+                Duration.ZERO,
+                e -> popup.toFront(),
+                new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+            ),
+            new KeyFrame(
+                Duration.millis(290),
+                new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+            ),
+            new KeyFrame(Duration.millis(300),
+                         e -> popup.toBack(),
+                         new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+                         new KeyValue(popup.translateYProperty(),
+                                      popup.getLayoutBounds().getHeight(),
+                                      easeInterpolator),
+                         new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+            )
+        );
+        animation.setCycleCount(1);
+        animation.setOnFinished(e -> processSnackbars());
+        animation.play();
+    }
 
-		private final String message;
-		private final String actionText;
-		private final long timeout;
-		private final boolean persistent;
-		private final EventHandler<? super MouseEvent> actionHandler;
+    private void processSnackbars() {
+        SnackbarEvent qevent = eventQueue.poll();
+        if (qevent != null) {
+            if (qevent.isPersistent()) show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+            else show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+        } else {
+            //The enqueue method and this listener should be executed sequentially on the FX Thread so there
+            //should not be a race condition
+            processingQueue.getAndSet(false);
+        }
+    }
 
 
-		public String getMessage() {
-			return message;
-		}
+    public void refreshPopup() {
+        Bounds contentBound = popup.getLayoutBounds();
+        double offsetX = Math.ceil(snackbarContainer.getWidth() / 2) - Math.ceil(contentBound.getWidth() / 2);
+        double offsetY = snackbarContainer.getHeight() - contentBound.getHeight();
+        popup.setLayoutX(offsetX);
+        popup.setLayoutY(offsetY);
 
-		public String getActionText() {
-			return actionText;
-		}
+    }
 
-		public long getTimeout() {
-			return timeout;
-		}
+    public void enqueue(SnackbarEvent event) {
+        eventQueue.add(event);
+        if (processingQueue.compareAndSet(false, true)) {
+            Platform.runLater(() -> {
+                SnackbarEvent qevent = eventQueue.poll();
+                if (qevent != null) {
+                    if (qevent.isPersistent())
+                        show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+                    else show(qevent.getMessage(),
+                              qevent.getActionText(),
+                              qevent.getTimeout(),
+                              qevent.getActionHandler());
+                }
+            });
+        }
+    }
 
-		public EventHandler<? super MouseEvent> getActionHandler() {
-			return actionHandler;
-		}
 
-		public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
+    /***************************************************************************
+     * * Event API * *
+     **************************************************************************/
 
-		public SnackbarEvent(String message) {
-			this(message,null,3000, false,null);
+    public static class SnackbarEvent extends Event {
+        public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
 
-		}
+        private final String message;
+        private final String actionText;
+        private final long timeout;
+        private final boolean persistent;
+        private final EventHandler<? super MouseEvent> actionHandler;
 
-		public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
-			super(SNACKBAR);
-			this.message=message;
-			this.actionText=actionText;
-			this.timeout=timeout < 1 ? 3000:timeout;
-			this.actionHandler=actionHandler;
-			this.persistent = persistent;
-		}
+        public SnackbarEvent(String message) {
+            this(message, null, 3000, false, null);
 
-		@Override
-		public EventType<? extends SnackbarEvent> getEventType() {
-			return (EventType<? extends SnackbarEvent>) super.getEventType();
-		}
+        }
 
-		public boolean isPersistent() {
-			return persistent;
-		}
-	}
+        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+            super(SNACKBAR);
+            this.message = message;
+            this.actionText = actionText;
+            this.timeout = timeout < 1 ? 3000 : timeout;
+            this.actionHandler = actionHandler;
+            this.persistent = persistent;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getActionText() {
+            return actionText;
+        }
+
+        public long getTimeout() {
+            return timeout;
+        }
+
+        public EventHandler<? super MouseEvent> getActionHandler() {
+            return actionHandler;
+        }
+
+        @Override
+        public EventType<? extends SnackbarEvent> getEventType() {
+            return (EventType<? extends SnackbarEvent>) super.getEventType();
+        }
+
+        public boolean isPersistent() {
+            return persistent;
+        }
+    }
 }
 

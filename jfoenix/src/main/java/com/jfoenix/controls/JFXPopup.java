@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXPopupSkin;
@@ -32,125 +33,137 @@ import javafx.stage.Window;
 
 /**
  * JFXPopup is the material design implementation of a popup.
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 2.0
- * @since   2017-03-01
+ * @since 2017-03-01
  */
-@DefaultProperty(value="popupContent")
+@DefaultProperty(value = "popupContent")
 public class JFXPopup extends PopupControl {
 
-	public static enum PopupHPosition{ RIGHT, LEFT };
-	public static enum PopupVPosition{ TOP, BOTTOM };
+    public enum PopupHPosition {RIGHT, LEFT}
 
-	/**
-	 * creates empty popup
-	 */
-	public JFXPopup(){
-		this(null);
-	}
+    public enum PopupVPosition {TOP, BOTTOM}
 
-	/**
-	 * creates popup with a specified container and content 
-	 * @param content the node that will be shown in the popup
-	 */
-	public JFXPopup(Region content) {
-		setPopupContent(content);
-		initialize();
-	}
-	private void initialize() {
-		this.setAutoFix(false);
-		this.setAutoHide(true);
-		this.setHideOnEscape(true);	
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);        
-	}
-	
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new JFXPopupSkin(this);
-	}
+    /**
+     * creates empty popup
+     */
+    public JFXPopup() {
+        this(null);
+    }
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Setters / Getters                                                       *
-	 *                                                                         *
-	 **************************************************************************/
-
-	private ObjectProperty<Region> popupContent = new SimpleObjectProperty<>(new Pane());
-
-	public final ObjectProperty<Region> popupContentProperty() {
-		return this.popupContent;
-	}
-
-	public final Region getPopupContent() {
-		return this.popupContentProperty().get();
-	}
-	
-	public final void setPopupContent(final Region popupContent) {
-		this.popupContentProperty().set(popupContent);
-	}
-	
-	/***************************************************************************
-	 *                                                                         *
-	 * Public API                                                              *
-	 *                                                                         *
-	 **************************************************************************/
-
-	/**
-	 * show the popup using the default position
-	 */
-	public void show(Node node){
-		this.show(node, PopupVPosition.TOP, PopupHPosition.LEFT, 0, 0);
-	}
-	
-	/**
-	 * show the popup according to the specified position
-	 * 
-	 * @param vAlign can be TOP/BOTTOM
-	 * @param hAlign can be LEFT/RIGHT
-	 */
-	public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign ){
-		this.show(node, vAlign, hAlign, 0, 0);
-	}
-
-	/**
-	 * show the popup according to the specified position with a certain offset
-	 * 
-	 * @param vAlign can be TOP/BOTTOM
-	 * @param hAlign can be LEFT/RIGHT
-	 * @param initOffsetX on the x axis
-	 * @param initOffsetY on the y axis
-	 */
-	public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY ){
-		if(!isShowing()){
-			if(node.getScene() == null || node.getScene().getWindow() == null)
-				throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
-			Window parent = node.getScene().getWindow();
-			this.show(parent, parent.getX() + node.localToScene(0, 0).getX() +
-					node.getScene().getX() + (PopupHPosition.RIGHT.equals(hAlign)? ((Region)node).getWidth() : 0),
-					parent.getY() + node.localToScene(0, 0).getY() +
-					node.getScene().getY() + (PopupVPosition.BOTTOM.equals(vAlign)? ((Region)node).getHeight() : 0) );
-			((JFXPopupSkin)getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
-			Platform.runLater(()->((JFXPopupSkin)getSkin()).animate());
-		}
-	}
-	@Override
-	public void hide() {
-		super.hide();
-		((JFXPopupSkin)getSkin()).init();
-	}
-
-	/***************************************************************************
-	 *                                                                         *
-	 * Stylesheet Handling                                                     *
-	 *                                                                         *
-	 **************************************************************************/
-
-	 /**
-     * Initialize the style class to 'jfx-popup'.
+    /**
+     * creates popup with a specified container and content
      *
+     * @param content
+     *         the node that will be shown in the popup
+     */
+    public JFXPopup(Region content) {
+        setPopupContent(content);
+        initialize();
+    }
+
+    private void initialize() {
+        this.setAutoFix(false);
+        this.setAutoHide(true);
+        this.setHideOnEscape(true);
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
+
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new JFXPopupSkin(this);
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Setters / Getters                                                       *
+     *                                                                         *
+     **************************************************************************/
+
+    private ObjectProperty<Region> popupContent = new SimpleObjectProperty<>(new Pane());
+
+    public final ObjectProperty<Region> popupContentProperty() {
+        return this.popupContent;
+    }
+
+    public final Region getPopupContent() {
+        return this.popupContentProperty().get();
+    }
+
+    public final void setPopupContent(final Region popupContent) {
+        this.popupContentProperty().set(popupContent);
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * show the popup using the default position
+     */
+    public void show(Node node) {
+        this.show(node, PopupVPosition.TOP, PopupHPosition.LEFT, 0, 0);
+    }
+
+    /**
+     * show the popup according to the specified position
+     *
+     * @param vAlign
+     *         can be TOP/BOTTOM
+     * @param hAlign
+     *         can be LEFT/RIGHT
+     */
+    public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign) {
+        this.show(node, vAlign, hAlign, 0, 0);
+    }
+
+    /**
+     * show the popup according to the specified position with a certain offset
+     *
+     * @param vAlign
+     *         can be TOP/BOTTOM
+     * @param hAlign
+     *         can be LEFT/RIGHT
+     * @param initOffsetX
+     *         on the x axis
+     * @param initOffsetY
+     *         on the y axis
+     */
+    public void show(Node node, PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY) {
+        if (!isShowing()) {
+            if (node.getScene() == null || node.getScene().getWindow() == null)
+                throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
+            Window parent = node.getScene().getWindow();
+            this.show(parent, parent.getX() + node.localToScene(0, 0).getX() +
+                          node.getScene().getX() + (PopupHPosition.RIGHT.equals(hAlign) ? ((Region) node).getWidth() : 0),
+                      parent.getY() + node.localToScene(0, 0).getY() +
+                          node.getScene()
+                              .getY() + (PopupVPosition.BOTTOM.equals(vAlign) ? ((Region) node).getHeight() : 0));
+            ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
+            Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());
+        }
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        ((JFXPopupSkin) getSkin()).init();
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Initialize the style class to 'jfx-popup'.
+     * <p>
      * This is the selector class from which CSS can be used to style
      * this control.
      */
-	private static final String DEFAULT_STYLE_CLASS = "jfx-popup";
+    private static final String DEFAULT_STYLE_CLASS = "jfx-popup";
 }

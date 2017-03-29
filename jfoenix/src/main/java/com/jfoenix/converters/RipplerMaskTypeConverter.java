@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.converters;
 
 import com.jfoenix.controls.JFXRippler.RipplerMask;
@@ -27,25 +28,26 @@ import javafx.scene.text.Font;
 /**
  * Converts the CSS for -fx-mask-type items into RipplerMask.
  * it's used in JFXRippler.
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
-public final class RipplerMaskTypeConverter extends StyleConverterImpl<String , RipplerMask> {
+public final class RipplerMaskTypeConverter extends StyleConverterImpl<String, RipplerMask> {
     // lazy, thread-safe instatiation
     private static class Holder {
         static final RipplerMaskTypeConverter INSTANCE = new RipplerMaskTypeConverter();
     }
+
     public static StyleConverter<String, RipplerMask> getInstance() {
         return Holder.INSTANCE;
     }
+
     private RipplerMaskTypeConverter() {
-        super();
     }
 
     @Override
-    public RipplerMask convert(ParsedValue<String,RipplerMask> value, Font not_used) {
+    public RipplerMask convert(ParsedValue<String, RipplerMask> value, Font notUsed) {
         String string = value.getValue();
         try {
             return RipplerMask.valueOf(string);

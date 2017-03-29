@@ -1,16 +1,15 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXBadge;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
-
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/Icons.fxml", title = "Material Design Example")
 public class IconsController {
@@ -35,7 +34,7 @@ public class IconsController {
 
 
     @PostConstruct
-    public void init(){
+    public void init() {
 
         bindAction(burger1);
         bindAction(burger2);
@@ -68,9 +67,7 @@ public class IconsController {
                                                          "CLOSE",
                                                          3000,
                                                          true,
-                                                         (b) -> {
-                                                             snackbar.close();
-                                                         }));
+                                                         b -> snackbar.close()));
                 } else {
                     snackbar.fireEvent(new SnackbarEvent("Snackbar Message " + count, "UNDO", 3000, false, (b) -> {
                     }));

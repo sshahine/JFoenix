@@ -1,13 +1,12 @@
 package demos.gui.uicomponents;
 
-import javax.annotation.PostConstruct;
-
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+
+import javax.annotation.PostConstruct;
 
 @ViewController(value = "/fxml/ui/Pickers.fxml", title = "Material Design Example")
 public class PickersController {
@@ -20,7 +19,7 @@ public class PickersController {
     private JFXTimePicker timeOverlay;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         dateOverlay.setDialogParent(root);
         timeOverlay.setDialogParent(root);
     }

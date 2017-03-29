@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.events;
 
 import com.jfoenix.controls.JFXDrawer;
@@ -25,55 +26,57 @@ import javafx.event.EventType;
 /**
  * JFXDrawer events, used exclusively by the following methods:
  * <ul>
- *   <li>{@link JFXDrawer#open()}
- *   <li>{@link JFXDrawer#close()}
+ * <li>{@link JFXDrawer#open()}
+ * <li>{@link JFXDrawer#close()}
  * </ul>
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXDrawerEvent extends Event {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct a new JFXDrawer {@code Event} with the specified event type
-	 * @param eventType the event type
-	 */
-	public JFXDrawerEvent(EventType<? extends Event> eventType) {
-		super(eventType);
-	}
+    /**
+     * Construct a new JFXDrawer {@code Event} with the specified event type
+     *
+     * @param eventType
+     *         the event type
+     */
+    public JFXDrawerEvent(EventType<? extends Event> eventType) {
+        super(eventType);
+    }
 
-	/**
-	 * This event occurs when a JFXDrawer is closed, no longer visible to the user
-	 * ( after the exit animation ends )
-	 */
-	public static final EventType<JFXDrawerEvent> CLOSED =
-			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_CLOSED");
+    /**
+     * This event occurs when a JFXDrawer is closed, no longer visible to the user
+     * ( after the exit animation ends )
+     */
+    public static final EventType<JFXDrawerEvent> CLOSED =
+        new EventType<>(Event.ANY, "DRAWER_CLOSED");
 
-	/**
-	 * This event occurs when a JFXDrawer is drawn, visible to the user
-	 * ( after the entrance animation ends )
-	 */
-	public static final EventType<JFXDrawerEvent> OPENED =
-			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_OPENED");
-	
-	/**
-	 * This event occurs when a JFXDrawer is being drawn, visible to the user
-	 * ( after the entrance animation ends )
-	 */
-	public static final EventType<JFXDrawerEvent> OPENING =
-			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_OPENING");
-	
-	
-	/**
-	 * This event occurs when a JFXDrawer is being closed, will become invisible to the user
-	 * at the end of the animation
-	 * ( after the entrance animation ends )
-	 */
-	public static final EventType<JFXDrawerEvent> CLOSING =
-			new EventType<JFXDrawerEvent> (Event.ANY, "DRAWER_CLOSING");
+    /**
+     * This event occurs when a JFXDrawer is drawn, visible to the user
+     * ( after the entrance animation ends )
+     */
+    public static final EventType<JFXDrawerEvent> OPENED =
+        new EventType<>(Event.ANY, "DRAWER_OPENED");
+
+    /**
+     * This event occurs when a JFXDrawer is being drawn, visible to the user
+     * ( after the entrance animation ends )
+     */
+    public static final EventType<JFXDrawerEvent> OPENING =
+        new EventType<>(Event.ANY, "DRAWER_OPENING");
+
+
+    /**
+     * This event occurs when a JFXDrawer is being closed, will become invisible to the user
+     * at the end of the animation
+     * ( after the entrance animation ends )
+     */
+    public static final EventType<JFXDrawerEvent> CLOSING =
+        new EventType<>(Event.ANY, "DRAWER_CLOSING");
 
 
 }

@@ -1,8 +1,8 @@
-apply from: rootProject.file('gradle/code-quality.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'osgi'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.hierynomus.license'
+
+apply from: rootProject.file('gradle/license.gradle')
 
 // pom file name
 ext {
@@ -13,13 +13,13 @@ configurations {
     dalvikSDK
     pom
 }
-dependencies { 
+dependencies {
 	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.8@zip'
  	compile fileTree(dir: "$buildDir/dalvik-sdk/rt/lib/ext/jfxrt.jar", include: 'jfxrt.jar')
 }
 task extractDalvik(type: Copy) {
     from { configurations.dalvikSDK.collect { zipTree(it) }}
-    into "$buildDir/"   
+    into "$buildDir/"
 }
 compileJava.dependsOn extractDalvik
 
@@ -27,16 +27,16 @@ compileJava.dependsOn extractDalvik
 task sourcesJar(type: Jar) {
     group 'Build'
     description 'An archive of the source code'
-    classifier 'sources'    
+    classifier 'sources'
     from sourceSets.main.allSource
 }
 
 task retroSourcesJar(type: Jar){
 	String str = sourceSets.main.output.classesDir;
-	sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"	
+	sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"
    	group 'Build'
     description 'JFoenix compiled using retro-lambda'
-    classifier 'retrolambda'    
+    classifier 'retrolambda'
     from sourceSets.main.output
     sourceSets.main.output.classesDir = str
 }
@@ -59,7 +59,7 @@ javadoc {
 task myJavadocs(type: Javadoc) {
   source = sourceSets.main.allJava
 }
- 
+
 task javadocJar(type: Jar) {
     group 'Build'
     description 'An archive of the javadoc'
@@ -85,7 +85,7 @@ artifacts {
 }
 
 jar {
-    exclude('com/jfoenix/android/**')   
+    exclude('com/jfoenix/android/**')
     manifest {
         name = 'JFoenix'
         instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.8'

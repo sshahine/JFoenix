@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls;
 
 import com.jfoenix.effects.JFXDepthManager;
@@ -25,71 +26,71 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 /**
- * JFXToolbar is the material design implementation of a tool bar. 
+ * JFXToolbar is the material design implementation of a tool bar.
  * toolbar is a borderpane, where the right/left content are HBoxs
- * 
- * @author  Shadi Shaheen
+ *
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class JFXToolbar extends BorderPane {
-	
-	private HBox leftBox = new HBox();
-	private HBox rightBox = new HBox();
 
-	/**
-	 * creates empty tool bar
-	 */
-	public JFXToolbar() {
-		initialize();
-		this.setLeft(leftBox);
-		leftBox.getStyleClass().add("tool-bar-left-box");
-		leftBox.setPickOnBounds(false);
-		this.setRight(rightBox);
-		rightBox.getStyleClass().add("tool-bar-right-box");
-		rightBox.setPickOnBounds(false);
-		JFXDepthManager.setDepth(this, 1);
-	}
-	
-	/***************************************************************************
-	 *                                                                         *
-	 * Setters / Getters                                                       *
-	 *                                                                         *
-	 **************************************************************************/
-	
-	public void setLeftItems(Node... nodes){
-		this.leftBox.getChildren().setAll(nodes);
-	}
-	
-	public ObservableList<Node> getLeftItems(){
-		return this.leftBox.getChildren();
-	}
-	
-	public void setRightItems(Node... nodes){
-		this.rightBox.getChildren().setAll(nodes);
-	}
-	
-	public ObservableList<Node> getRightItems(){
-		return this.rightBox.getChildren();
-	}
-	
-	/***************************************************************************
-	 *                                                                         *
-	 * Stylesheet Handling                                                     *
-	 *                                                                         *
-	 **************************************************************************/
+    private HBox leftBox = new HBox();
+    private HBox rightBox = new HBox();
 
-	/**
-	 * Initialize the style class to 'jfx-tool-bar'.
-	 *
-	 * This is the selector class from which CSS can be used to style
-	 * this control.
-	 */
-	private static final String DEFAULT_STYLE_CLASS = "jfx-tool-bar";
+    /**
+     * creates empty tool bar
+     */
+    public JFXToolbar() {
+        initialize();
+        this.setLeft(leftBox);
+        leftBox.getStyleClass().add("tool-bar-left-box");
+        leftBox.setPickOnBounds(false);
+        this.setRight(rightBox);
+        rightBox.getStyleClass().add("tool-bar-right-box");
+        rightBox.setPickOnBounds(false);
+        JFXDepthManager.setDepth(this, 1);
+    }
 
-	private void initialize() {
-		this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-	}
-	
+    /***************************************************************************
+     *                                                                         *
+     * Setters / Getters                                                       *
+     *                                                                         *
+     **************************************************************************/
+
+    public void setLeftItems(Node... nodes) {
+        this.leftBox.getChildren().setAll(nodes);
+    }
+
+    public ObservableList<Node> getLeftItems() {
+        return this.leftBox.getChildren();
+    }
+
+    public void setRightItems(Node... nodes) {
+        this.rightBox.getChildren().setAll(nodes);
+    }
+
+    public ObservableList<Node> getRightItems() {
+        return this.rightBox.getChildren();
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Initialize the style class to 'jfx-tool-bar'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-tool-bar";
+
+    private void initialize() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
+
 
 }

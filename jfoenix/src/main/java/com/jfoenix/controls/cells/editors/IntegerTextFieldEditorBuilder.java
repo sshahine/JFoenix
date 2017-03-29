@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls.cells.editors;
 
 import com.jfoenix.controls.JFXTextField;
@@ -31,66 +32,66 @@ import javafx.scene.layout.StackPane;
 
 /**
  * <h1>Text field cell editor (numbers only) </h1>
- * this an example of the cell editor, it creates a JFXTextField node to 
+ * this an example of the cell editor, it creates a JFXTextField node to
  * allow the user to edit the cell value
  * <p>
  *
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2016-03-09
+ * @since 2016-03-09
  */
 public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer> {
 
-	private JFXTextField textField;
+    private JFXTextField textField;
 
-	@Override
-	public void startEdit() {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void startEdit() {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public void cancelEdit() {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void cancelEdit() {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void updateItem(Integer item, boolean empty) {
-		Platform.runLater(()->{
-			textField.selectAll();
-			textField.requestFocus();
-		});
-	}
+    @Override
+    public void updateItem(Integer item, boolean empty) {
+        Platform.runLater(() -> {
+            textField.selectAll();
+            textField.requestFocus();
+        });
+    }
 
-	@Override
-	public Region createNode(Integer value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-		StackPane pane = new StackPane();
-		pane.setStyle("-fx-padding:-10 0 -10 0");
-		textField = new JFXTextField(value+"");
-		textField.minWidthProperty().bind(minWidthBinding);
-		textField.setOnKeyPressed(keyEventsHandler);
-		textField.focusedProperty().addListener(focusChangeListener);
-		NumberValidator validator = new NumberValidator();
-		validator.setMessage("Value must be a number");
-		textField.getValidators().add(validator);
-		pane.getChildren().add(textField);
-		return pane;
-	}
+    @Override
+    public Region createNode(Integer value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
+        StackPane pane = new StackPane();
+        pane.setStyle("-fx-padding:-10 0 -10 0");
+        textField = new JFXTextField(value + "");
+        textField.minWidthProperty().bind(minWidthBinding);
+        textField.setOnKeyPressed(keyEventsHandler);
+        textField.focusedProperty().addListener(focusChangeListener);
+        NumberValidator validator = new NumberValidator();
+        validator.setMessage("Value must be a number");
+        textField.getValidators().add(validator);
+        pane.getChildren().add(textField);
+        return pane;
+    }
 
-	@Override
-	public void setValue(Integer value) {
-		textField.setText(value+"");
-	}
+    @Override
+    public void setValue(Integer value) {
+        textField.setText(value + "");
+    }
 
-	@Override
-	public Integer getValue() {
-		return Integer.parseInt(textField.getText());
-	}
+    @Override
+    public Integer getValue() {
+        return Integer.parseInt(textField.getText());
+    }
 
-	@Override
-	public void validateValue() throws Exception {
-		 if(!textField.validate()) throw new Exception();
-	}
+    @Override
+    public void validateValue() throws Exception {
+        if (!textField.validate()) throw new Exception();
+    }
 }

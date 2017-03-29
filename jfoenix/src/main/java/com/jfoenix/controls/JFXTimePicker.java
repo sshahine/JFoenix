@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXTimePickerSkin;
@@ -52,39 +53,39 @@ import java.util.Locale;
 /**
  * <h1>Material Design Time Picker control</h1>
  *
- * @author  Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since   2017-03-01
+ * @since 2017-03-01
  */
-public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
+public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXTimePicker() {
-		super();		
-		initialize();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public JFXTimePicker(LocalTime localTime) {
-		setValue(localTime);
-		initialize();
-	}
-	
-	private void initialize() {
-		getStyleClass().add(DEFAULT_STYLE_CLASS);
-		setAccessibleRole(AccessibleRole.DATE_PICKER);
-		setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-		setEditable(true);
-	}
-    
-	/**
-	 * {@inheritDoc}
-	 */
-    @Override protected Skin<?> createDefaultSkin() {
+    /**
+     * {@inheritDoc}
+     */
+    public JFXTimePicker() {
+        initialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public JFXTimePicker(LocalTime localTime) {
+        setValue(localTime);
+        initialize();
+    }
+
+    private void initialize() {
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
+        setAccessibleRole(AccessibleRole.DATE_PICKER);
+        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        setEditable(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Skin<?> createDefaultSkin() {
         return new JFXTimePickerSkin(this);
     }
 
@@ -95,28 +96,38 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
      **************************************************************************/
 
     /**
-	 * the parent node used when showing the data picker content as an overlay,
-	 * intead of a popup
-	 */
-	private ObjectProperty<StackPane> dialogParent = new SimpleObjectProperty<>(null);
-	public final ObjectProperty<StackPane> dialogParentProperty() {
-		return this.dialogParent;
-	}
-	public final StackPane getDialogParent() {
-		return this.dialogParentProperty().get();
-	}
-	public final void setDialogParent(final StackPane dialogParent) {
-		this.dialogParentProperty().set(dialogParent);
-	}
-	
+     * the parent node used when showing the data picker content as an overlay,
+     * intead of a popup
+     */
+    private ObjectProperty<StackPane> dialogParent = new SimpleObjectProperty<>(null);
+
+    public final ObjectProperty<StackPane> dialogParentProperty() {
+        return this.dialogParent;
+    }
+
+    public final StackPane getDialogParent() {
+        return this.dialogParentProperty().get();
+    }
+
+    public final void setDialogParent(final StackPane dialogParent) {
+        this.dialogParentProperty().set(dialogParent);
+    }
+
     /**
      * Converts the input text to an object of type LocalTime and vice
      * versa.
      */
-	public final ObjectProperty<StringConverter<LocalTime>> converterProperty() { return converter; }
+    public final ObjectProperty<StringConverter<LocalTime>> converterProperty() {
+        return converter;
+    }
+
     private ObjectProperty<StringConverter<LocalTime>> converter =
-            new SimpleObjectProperty<StringConverter<LocalTime>>(this, "converter", null);
-    public final void setConverter(StringConverter<LocalTime> value) { converterProperty().set(value); }
+        new SimpleObjectProperty<>(this, "converter", null);
+
+    public final void setConverter(StringConverter<LocalTime> value) {
+        converterProperty().set(value);
+    }
+
     public final StringConverter<LocalTime> getConverter() {
         StringConverter<LocalTime> converter = converterProperty().get();
         if (converter != null) {
@@ -125,7 +136,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
             return defaultConverter;
         }
     }
-    private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH);
+
+    private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT,
+                                                                                       Locale.ENGLISH);
 
 
     /**
@@ -134,118 +147,135 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime>  {
      * @see javafx.scene.control.ComboBox#editorProperty
      */
     private ReadOnlyObjectWrapper<TextField> editor;
+
     public final TextField getEditor() {
         return editorProperty().get();
     }
+
     public final ReadOnlyObjectProperty<TextField> editorProperty() {
         if (editor == null) {
-            editor = new ReadOnlyObjectWrapper<TextField>(this, "editor");
+            editor = new ReadOnlyObjectWrapper<>(this, "editor");
             editor.set(new ComboBoxListViewSkin.FakeFocusTextField());
         }
         return editor.getReadOnlyProperty();
     }
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Stylesheet Handling                                                     *
-	 *                                                                         *
-	 **************************************************************************/
-	
-	/**
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
      * Initialize the style class to 'jfx-date-picker'.
-     *
+     * <p>
      * This is the selector class from which CSS can be used to style
      * this control.
      */
-	private static String DEFAULT_STYLE_CLASS = "jfx-time-picker";
-    
-	/**
-	 * show the popup as an overlay using JFXDialog
-	 * NOTE: to show it properly the scene root must be StackPane, or the user must set
-	 * the dialog parent manually using the property {{@link #dialogParentProperty()}
-	 */
-	private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY, JFXTimePicker.this, "overLay", false);
-	
-	public final StyleableBooleanProperty overLayProperty() {
-		return this.overLay;
-	}
-	public final boolean isOverLay() {
-		return overLay == null ? false : this.overLayProperty().get();
-	}
-	public final void setOverLay(final boolean overLay) {
-		this.overLayProperty().set(overLay);
-	}
-	
-	/**
-	 * the default color used in the data picker content
-	 */
-	private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<Paint>(StyleableProperties.DEFAULT_COLOR, JFXTimePicker.this, "defaultColor", Color.valueOf("#009688"));
+    private static final String DEFAULT_STYLE_CLASS = "jfx-time-picker";
 
-	public Paint getDefaultColor(){
-		return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
-	}
-	public StyleableObjectProperty<Paint> defaultColorProperty(){		
-		return this.defaultColor;
-	}
-	public void setDefaultColor(Paint color){
-		this.defaultColor.set(color);
-	}
-    
-	private static class StyleableProperties {
-		private static final CssMetaData< JFXTimePicker, Paint> DEFAULT_COLOR =
-				new CssMetaData< JFXTimePicker, Paint>("-jfx-default-color",
-						PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
-			@Override
-			public boolean isSettable(JFXTimePicker control) {
-				return control.defaultColor == null || !control.defaultColor.isBound();
-			}
-			@Override
-			public StyleableProperty<Paint> getStyleableProperty(JFXTimePicker control) {
-				return control.defaultColorProperty();
-			}
-		};
+    /**
+     * show the popup as an overlay using JFXDialog
+     * NOTE: to show it properly the scene root must be StackPane, or the user must set
+     * the dialog parent manually using the property {{@link #dialogParentProperty()}
+     */
+    private StyleableBooleanProperty overLay = new SimpleStyleableBooleanProperty(StyleableProperties.OVERLAY,
+                                                                                  JFXTimePicker.this,
+                                                                                  "overLay",
+                                                                                  false);
 
-		private static final CssMetaData< JFXTimePicker, Boolean> OVERLAY =
-				new CssMetaData< JFXTimePicker, Boolean>("-jfx-overlay",
-						BooleanConverter.getInstance(), false) {
-			@Override
-			public boolean isSettable(JFXTimePicker control) {
-				return control.overLay == null || !control.overLay.isBound();
-			}
-			@Override
-			public StyleableBooleanProperty getStyleableProperty(JFXTimePicker control) {
-				return control.overLayProperty();
-			}
-		};
-		
-		private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
-		static {
-			final List<CssMetaData<? extends Styleable, ?>> styleables =
-					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			Collections.addAll(styleables,
-					DEFAULT_COLOR,
-					OVERLAY);
-			CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
-		}
-	}
+    public final StyleableBooleanProperty overLayProperty() {
+        return this.overLay;
+    }
 
-	// inherit the styleable properties from parent
-	private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+    public final boolean isOverLay() {
+        return overLay != null && this.overLayProperty().get();
+    }
 
-	@Override
-	public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-		if(STYLEABLES == null){
-			final List<CssMetaData<? extends Styleable, ?>> styleables =
-					new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
-			styleables.addAll(getClassCssMetaData());
-			styleables.addAll(super.getClassCssMetaData());
-			STYLEABLES = Collections.unmodifiableList(styleables);
-		}
-		return STYLEABLES;
-	}
-	public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-		return StyleableProperties.CHILD_STYLEABLES;
-	}
+    public final void setOverLay(final boolean overLay) {
+        this.overLayProperty().set(overLay);
+    }
 
-	
+    /**
+     * the default color used in the data picker content
+     */
+    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(StyleableProperties.DEFAULT_COLOR,
+                                                                                              JFXTimePicker.this,
+                                                                                              "defaultColor",
+                                                                                              Color.valueOf(
+                                                                                                  "#009688"));
+
+    public Paint getDefaultColor() {
+        return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
+    }
+
+    public StyleableObjectProperty<Paint> defaultColorProperty() {
+        return this.defaultColor;
+    }
+
+    public void setDefaultColor(Paint color) {
+        this.defaultColor.set(color);
+    }
+
+    private static class StyleableProperties {
+        private static final CssMetaData<JFXTimePicker, Paint> DEFAULT_COLOR =
+            new CssMetaData<JFXTimePicker, Paint>("-jfx-default-color",
+                                                  PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                @Override
+                public boolean isSettable(JFXTimePicker control) {
+                    return control.defaultColor == null || !control.defaultColor.isBound();
+                }
+
+                @Override
+                public StyleableProperty<Paint> getStyleableProperty(JFXTimePicker control) {
+                    return control.defaultColorProperty();
+                }
+            };
+
+        private static final CssMetaData<JFXTimePicker, Boolean> OVERLAY =
+            new CssMetaData<JFXTimePicker, Boolean>("-jfx-overlay",
+                                                    BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXTimePicker control) {
+                    return control.overLay == null || !control.overLay.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXTimePicker control) {
+                    return control.overLayProperty();
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(Control.getClassCssMetaData());
+            Collections.addAll(styleables,
+                               DEFAULT_COLOR,
+                               OVERLAY);
+            CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+
+    // inherit the styleable properties from parent
+    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        if (STYLEABLES == null) {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(Control.getClassCssMetaData());
+            styleables.addAll(getClassCssMetaData());
+            styleables.addAll(Control.getClassCssMetaData());
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+        return STYLEABLES;
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.CHILD_STYLEABLES;
+    }
+
+
 }
