@@ -5,6 +5,7 @@ findbugs {
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'low'
+    excludeFilter = rootProject.file('config/findbugs-exclude.xml')
 }
 
 findbugsMain {
