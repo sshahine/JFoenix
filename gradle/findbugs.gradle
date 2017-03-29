@@ -1,8 +1,8 @@
 apply plugin: 'findbugs'
+
 findbugs {
     toolVersion = '3.0.1'
     ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/findbugs")
     effort = 'max'
     reportLevel = 'low'
 }
