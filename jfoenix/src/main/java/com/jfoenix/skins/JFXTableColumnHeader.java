@@ -124,7 +124,7 @@ public class JFXTableColumnHeader extends TableColumnHeader {
                 }, arrowContainer.layoutXProperty()));
 
 
-                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) {
+                if (arrowAnimation != null && arrowAnimation.getStatus() == Status.RUNNING) {
                     arrowAnimation.stop();
                 }
                 if (arrow.getRotate() == 180 && arrow.getRotate() != currentArrowRotation) {
@@ -157,7 +157,7 @@ public class JFXTableColumnHeader extends TableColumnHeader {
 
             if (arrowContainer != null && arrowPane != null && container.getChildren()
                 .size() == 1 && !arrowPane.isVisible()) {
-                if (arrowAnimation != null && arrowAnimation.getStatus().equals(Status.RUNNING)) {
+                if (arrowAnimation != null && arrowAnimation.getStatus() == Status.RUNNING) {
                     arrowAnimation.stop();
                 }
                 Label label = (Label) container.getChildren().get(0);

@@ -162,15 +162,14 @@ public class JFXDrawer extends StackPane {
                         valid++;
                     }
                 }
-                if (directionProperty.get().equals(DrawerDirection.RIGHT)) {
+                if (directionProperty.get() == DrawerDirection.RIGHT) {
                     size = content.getWidth();
-                } else if (directionProperty.get().equals(DrawerDirection.BOTTOM)) {
+                } else if (directionProperty.get() == DrawerDirection.BOTTOM) {
                     size = content.getHeight();
                 }
 
                 double eventPoint = 0;
-                if (directionProperty.get().equals(DrawerDirection.RIGHT) || directionProperty.get()
-                    .equals(DrawerDirection.LEFT)) {
+                if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
                     eventPoint = e.getX();
                 } else {
                     eventPoint = e.getY();
@@ -281,7 +280,7 @@ public class JFXDrawer extends StackPane {
         maxSizeProperty.get().set(-1);
         prefSizeProperty.get().set(-1);
 
-        if (dir.equals(DrawerDirection.LEFT)) {
+        if (dir == DrawerDirection.LEFT) {
             // change the pane position
             StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
             // reset old translation
@@ -301,7 +300,7 @@ public class JFXDrawer extends StackPane {
             this.sceneProperty().removeListener(sceneHeightListener);
             this.sceneProperty().removeListener(sceneWidthListener);
             this.sceneProperty().addListener(sceneWidthListener);
-        } else if (dir.equals(DrawerDirection.RIGHT)) {
+        } else if (dir == DrawerDirection.RIGHT) {
             StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
             translateProperty.set(0);
             translateProperty = sidePane.translateXProperty();
@@ -317,7 +316,7 @@ public class JFXDrawer extends StackPane {
             this.sceneProperty().removeListener(sceneHeightListener);
             this.sceneProperty().removeListener(sceneWidthListener);
             this.sceneProperty().addListener(sceneWidthListener);
-        } else if (dir.equals(DrawerDirection.TOP)) {
+        } else if (dir == DrawerDirection.TOP) {
             StackPane.setAlignment(sidePane, Pos.TOP_CENTER);
             translateProperty.set(0);
             translateProperty = sidePane.translateYProperty();
@@ -333,7 +332,7 @@ public class JFXDrawer extends StackPane {
             this.sceneProperty().removeListener(sceneHeightListener);
             this.sceneProperty().removeListener(sceneWidthListener);
             this.sceneProperty().addListener(sceneHeightListener);
-        } else if (dir.equals(DrawerDirection.BOTTOM)) {
+        } else if (dir == DrawerDirection.BOTTOM) {
             StackPane.setAlignment(sidePane, Pos.BOTTOM_CENTER);
             translateProperty.set(0);
             translateProperty = sidePane.translateYProperty();
@@ -382,7 +381,7 @@ public class JFXDrawer extends StackPane {
      */
     void bringToFront(Callback<Void, Void> callback) {
 
-        EventHandler<? super MouseEvent> eventFilter = (event) -> event.consume();
+        EventHandler<? super MouseEvent> eventFilter = Event::consume;
         final boolean bindSize = prefSizeProperty.get().isBound();
         prefSizeProperty.get().unbind();
         maxSizeProperty.get().unbind();
@@ -392,7 +391,7 @@ public class JFXDrawer extends StackPane {
         EventHandler<ActionEvent> drawerDrawer = (finish) -> {
             callback.call(null);
 
-            if (this.drawerTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() != 0) {
+            if (isTransitionStopped(this.drawerTransition) && translateProperty.get() != 0) {
                 drawerTransition.setRate(1);
                 if (tempDrawerSize > getDefaultDrawerSize()) {
                     ParallelTransition parallelTransition = new ParallelTransition(new InDrawerSizeTransition(),
@@ -430,7 +429,7 @@ public class JFXDrawer extends StackPane {
             parallelTransition.setOnFinished(drawerDrawer);
             parallelTransition.play();
         } else {
-            if (drawerTransition.getStatus().equals(Status.STOPPED) && translateProperty.get() == 0) {
+            if (isTransitionStopped(drawerTransition) && translateProperty.get() == 0) {
                 drawerTransition.setRate(-1);
                 drawerTransition.setOnFinished(drawerDrawer);
                 drawerTransition.play();
@@ -454,7 +453,7 @@ public class JFXDrawer extends StackPane {
     }
 
     private boolean isRunningTransition(Transition transition) {
-        return transition.getStatus().equals(Status.RUNNING);
+        return transition.getStatus() == Status.RUNNING;
     }
 
     public boolean isHidding() {
@@ -488,7 +487,7 @@ public class JFXDrawer extends StackPane {
     }
 
     private boolean isTransitionStopped(Transition transition) {
-        return transition.getStatus().equals(Status.STOPPED);
+        return transition.getStatus() == Status.STOPPED;
     }
 
     /**
@@ -675,9 +674,9 @@ public class JFXDrawer extends StackPane {
             mouseEvent.consume();
             double size = 0;
             Bounds sceneBounds = content.localToScene(content.getLayoutBounds());
-            if (directionProperty.get().equals(DrawerDirection.RIGHT)) {
+            if (directionProperty.get() == DrawerDirection.RIGHT) {
                 size = sceneBounds.getMinX() + sceneBounds.getWidth();
-            } else if (directionProperty.get().equals(DrawerDirection.BOTTOM)) {
+            } else if (directionProperty.get() == DrawerDirection.BOTTOM) {
                 size = sceneBounds.getMinY() + sceneBounds.getHeight();
             }
 
@@ -686,15 +685,14 @@ public class JFXDrawer extends StackPane {
             }
 
             double eventPoint = 0;
-            if (directionProperty.get().equals(DrawerDirection.RIGHT) || directionProperty.get()
-                .equals(DrawerDirection.LEFT)) {
+            if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
                 eventPoint = mouseEvent.getSceneX();
             } else {
                 eventPoint = mouseEvent.getSceneY();
             }
 
             if (((size + (directionProperty.get()
-                .doubleValue() * eventPoint)) >= activeOffset) && (partialTransition != null)) {
+                                           .doubleValue() * eventPoint)) >= activeOffset) && (partialTransition != null)) {
                 partialTransition = null;
             } else if (partialTransition == null) {
                 double currentTranslate;
@@ -758,8 +756,7 @@ public class JFXDrawer extends StackPane {
     };
 
     private EventHandler<MouseEvent> mousePressedHandler = (mouseEvent) -> {
-        if (directionProperty.get().equals(DrawerDirection.RIGHT) || directionProperty.get()
-            .equals(DrawerDirection.LEFT)) {
+        if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
             startMouse = mouseEvent.getSceneX();
         } else {
             startMouse = mouseEvent.getSceneY();

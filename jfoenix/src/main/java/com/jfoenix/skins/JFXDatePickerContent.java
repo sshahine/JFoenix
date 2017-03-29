@@ -589,7 +589,7 @@ public class JFXDatePickerContent extends VBox {
         updateValues();
     }
 
-    void updateDayNameCells() {
+    private void updateDayNameCells() {
         int weekFirstDay = WeekFields.of(getLocale()).getFirstDayOfWeek().getValue();
         LocalDate date = LocalDate.of(2009, 7, 12 + weekFirstDay);
         for (int i = 0; i < daysPerWeek; i++) {
@@ -624,7 +624,7 @@ public class JFXDatePickerContent extends VBox {
         }
     }
 
-    void updateDayCells() {
+    private void updateDayCells() {
         Locale locale = getLocale();
         Chronology chrono = getPrimaryChronology();
         // get the index of the first day of the month
@@ -745,7 +745,7 @@ public class JFXDatePickerContent extends VBox {
 
     protected void forward(int offset, ChronoUnit unit, boolean focusDayCell, boolean withAnimation) {
         if (withAnimation) {
-            if (tempImageTransition == null || tempImageTransition.getStatus().equals(Status.STOPPED)) {
+            if (tempImageTransition == null || tempImageTransition.getStatus() == Status.STOPPED) {
                 Pane monthContent = (Pane) calendarPlaceHolder.getChildren().get(0);
                 this.getParent().setManaged(false);
                 SnapshotParameters snapShotparams = new SnapshotParameters();
@@ -772,7 +772,7 @@ public class JFXDatePickerContent extends VBox {
         }
         YearMonth yearMonth = selectedYearMonth.get();
         DateCell dateCell = currentFocusedDayCell;
-        if (dateCell == null || !dayCellDate(dateCell).getMonth().equals(yearMonth.getMonth())) {
+        if (dateCell == null || !(dayCellDate(dateCell).getMonth() == yearMonth.getMonth())) {
             dateCell = findDayCellOfDate(yearMonth.atDay(1));
         }
         goToDayCell(dateCell, offset, unit, focusDayCell);
@@ -892,10 +892,7 @@ public class JFXDatePickerContent extends VBox {
     }
 
     protected boolean isValidDate(Chronology chrono, LocalDate date, int offset, ChronoUnit unit) {
-        if (date != null) {
-            return isValidDate(chrono, date.plus(offset, unit));
-        }
-        return false;
+        return date != null && isValidDate(chrono, date.plus(offset, unit));
     }
 
     protected boolean isValidDate(Chronology chrono, LocalDate date) {

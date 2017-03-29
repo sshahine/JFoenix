@@ -318,7 +318,7 @@ public class JFXListCell<T> extends ListCell<T> {
                         contentHolder.setOnMouseClicked((click) -> {
                             click.consume();
                             // stop the animation or change the list height
-                            if (expandAnimation != null && expandAnimation.getStatus().equals(Status.RUNNING)) {
+                            if (expandAnimation != null && expandAnimation.getStatus() == Status.RUNNING) {
                                 expandAnimation.stop();
                             }
 

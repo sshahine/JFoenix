@@ -84,7 +84,7 @@ public class JFXDrawersStack extends StackPane {
             return;
         }
 
-        if (drawers.size() == 0) {
+        if (drawers.isEmpty()) {
             if (content != null) {
                 drawer.setContent(content);
             }

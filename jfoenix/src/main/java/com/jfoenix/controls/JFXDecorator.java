@@ -293,7 +293,7 @@ public class JFXDecorator extends VBox {
             } else {
                 // add border
                 if (windowDecoratorAnimation != null) {
-                    if (windowDecoratorAnimation.getStatus().equals(Animation.Status.RUNNING)) {
+                    if (windowDecoratorAnimation.getStatus() == Animation.Status.RUNNING) {
                         windowDecoratorAnimation.stop();
                     } else {
                         this.getChildren().add(0, buttonsContainer);

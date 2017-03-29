@@ -92,9 +92,9 @@ public class JFXTextFieldSkin extends TextFieldSkin {
     );
 
     private Paint oldPromptTextFill;
-    private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
-        getSkinnable().textProperty(),
-        getSkinnable().promptTextProperty());
+    private BooleanBinding usePromptText = Bindings.createBooleanBinding(this::usePromptText,
+                                                                         getSkinnable().textProperty(),
+                                                                         getSkinnable().promptTextProperty());
 
     public JFXTextFieldSkin(JFXTextField field) {
         super(field);
@@ -194,7 +194,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                JFXUtilities.runInFX(() -> createFloatingLabel());
+                JFXUtilities.runInFX(this::createFloatingLabel);
             } else {
                 promptText.visibleProperty().bind(usePromptText);
             }
@@ -204,7 +204,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
         field.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (textPane != null) {
                 if (!((JFXTextField) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                         hideErrorAnimation.stop();
                     }
                     if (newVal != null) {
@@ -218,13 +218,13 @@ public class JFXTextFieldSkin extends TextFieldSkin {
                         });
                         hideErrorAnimation.play();
                     } else {
-                        JFXUtilities.runInFX(() -> hideError());
+                        JFXUtilities.runInFX(this::hideError);
                     }
                 } else {
                     if (newVal != null) {
                         JFXUtilities.runInFXAndWait(() -> showError(newVal));
                     } else {
-                        JFXUtilities.runInFXAndWait(() -> hideError());
+                        JFXUtilities.runInFXAndWait(this::hideError);
                     }
                 }
             }
@@ -302,7 +302,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
+        if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXTextField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextField) getSkinnable()).getFocusColor());
             }
@@ -333,7 +333,7 @@ public class JFXTextFieldSkin extends TextFieldSkin {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
             hideErrorAnimation.stop();
         }
         hideErrorAnimation = new Timeline(
@@ -363,18 +363,8 @@ public class JFXTextFieldSkin extends TextFieldSkin {
                         field.set(this, promptText);
                         // position the prompt node in its position
                         triggerFloatLabel = true;
-                    } catch (NoSuchFieldException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (SecurityException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    } catch (NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException ex) {
+                        ex.printStackTrace();
                     }
                 }
                 promptText.getTransforms().add(promptTextScale);
@@ -445,12 +435,10 @@ public class JFXTextFieldSkin extends TextFieldSkin {
     }
 
     private void focus() {
-        /*
-         * in case the method request layout is not called before focused
-		 * this is bug is reported while editing TreeTableView cells
-		 */
+        // in case the method request layout is not called before focused
+        // this is bug is reported while editing TreeTableView cells
         if (textPane == null) {
-            Platform.runLater(() -> focus());
+            Platform.runLater(this::focus);
         } else {
             // create the focus animations
             if (transition == null) {

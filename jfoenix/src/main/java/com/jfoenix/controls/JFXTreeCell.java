@@ -47,16 +47,16 @@ import java.lang.ref.WeakReference;
  * @since 2017-02-15
  */
 public class JFXTreeCell<T> extends TreeCell<T> {
-
-    private HBox hbox;
-    private StackPane selectedPane = new StackPane();
-
     protected JFXRippler cellRippler = new JFXRippler(new StackPane()) {
         @Override
         protected void initListeners() {
             ripplerPane.setOnMousePressed((event) -> createRipple(event.getX(), event.getY()));
         }
     };
+
+    private HBox hbox;
+    private StackPane selectedPane = new StackPane();
+
 
     private WeakReference<TreeItem<T>> treeItemRef;
 
@@ -79,9 +79,39 @@ public class JFXTreeCell<T> extends TreeCell<T> {
 
     private InvalidationListener treeItemGraphicInvalidationListener = observable -> updateDisplay(getItem(),
         isEmpty());
-    private InvalidationListener treeItemInvalidationListener = new InvalidationListener() {
-        @Override
-        public void invalidated(Observable observable) {
+    private WeakInvalidationListener weakTreeItemGraphicListener = new WeakInvalidationListener(
+        treeItemGraphicInvalidationListener);
+
+    private ChangeListener<? super Status> weakAnimationListener = (o, oldVal, newVal) -> {
+        if (newVal == Status.STOPPED) {
+            clearCellAnimation();
+        }
+    };
+
+    private WeakReference<JFXTreeView<T>> treeViewRef;
+
+    public JFXTreeCell() {
+        selectedPane.setStyle("-fx-background-color:RED");
+        selectedPane.setPrefWidth(3);
+        selectedPane.setMouseTransparent(true);
+        selectedProperty().addListener((o, oldVal, newVal) -> {
+            selectedPane.setOpacity(newVal ? 1 : 0);
+        });
+
+        final InvalidationListener treeViewInvalidationListener = observable -> {
+            JFXTreeView<T> oldTreeView = treeViewRef == null ? null : treeViewRef.get();
+            if (oldTreeView != null) {
+                oldTreeView.trans.statusProperty().removeListener(weakAnimationListener);
+            }
+            JFXTreeView<T> newTreeView = (JFXTreeView<T>) getTreeView();
+            if (newTreeView != null) {
+                newTreeView.trans.statusProperty().addListener(weakAnimationListener);
+                treeViewRef = new WeakReference<>(newTreeView);
+            }
+        };
+        final WeakInvalidationListener weakTreeViewListener = new WeakInvalidationListener(treeViewInvalidationListener);
+        treeViewProperty().addListener(weakTreeViewListener);
+        final InvalidationListener treeItemInvalidationListener = observable -> {
             TreeItem<T> oldTreeItem = treeItemRef == null ? null : treeItemRef.get();
             if (oldTreeItem != null) {
                 oldTreeItem.graphicProperty().removeListener(weakTreeItemGraphicListener);
@@ -94,43 +124,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
                 newTreeItem.expandedProperty().addListener(weakExpandListener);
                 treeItemRef = new WeakReference<>(newTreeItem);
             }
-        }
-    };
-    private WeakInvalidationListener weakTreeItemGraphicListener = new WeakInvalidationListener(
-        treeItemGraphicInvalidationListener);
-
-    private ChangeListener<? super Status> weakAnimationListener = (o, oldVal, newVal) -> {
-        if (newVal.equals(Status.STOPPED)) {
-            clearCellAnimation();
-        }
-    };
-
-    private WeakReference<JFXTreeView<T>> treeViewRef;
-    private InvalidationListener treeViewInvalidationListener = new InvalidationListener() {
-        @Override
-        public void invalidated(Observable observable) {
-            JFXTreeView<T> oldTreeView = treeViewRef == null ? null : treeViewRef.get();
-            if (oldTreeView != null) {
-                oldTreeView.trans.statusProperty().removeListener(weakAnimationListener);
-            }
-            JFXTreeView<T> newTreeView = (JFXTreeView<T>) getTreeView();
-            if (newTreeView != null) {
-                newTreeView.trans.statusProperty().addListener(weakAnimationListener);
-                treeViewRef = new WeakReference<>(newTreeView);
-            }
-        }
-    };
-
-    public JFXTreeCell() {
-        selectedPane.setStyle("-fx-background-color:RED");
-        selectedPane.setPrefWidth(3);
-        selectedPane.setMouseTransparent(true);
-        selectedProperty().addListener((o, oldVal, newVal) -> {
-            selectedPane.setOpacity(newVal ? 1 : 0);
-        });
-
-        final WeakInvalidationListener weakTreeViewListener = new WeakInvalidationListener(treeViewInvalidationListener);
-        treeViewProperty().addListener(weakTreeViewListener);
+        };
         final WeakInvalidationListener weakTreeItemListener = new WeakInvalidationListener(treeItemInvalidationListener);
         treeItemProperty().addListener(weakTreeItemListener);
         if (getTreeItem() != null) {
@@ -207,7 +201,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
         if (((JFXTreeView<T>) getTreeView()).trans.getChildren().isEmpty()) {
             clearCellAnimation();
             ((JFXTreeView<T>) getTreeView()).animateRow = -1;
-        } else if (((JFXTreeView<T>) getTreeView()).trans.getStatus().equals(Status.STOPPED)) {
+        } else if (((JFXTreeView<T>) getTreeView()).trans.getStatus() == Status.STOPPED) {
             ((JFXTreeView<T>) getTreeView()).trans.setOnFinished((finish) -> {
                 ((JFXTreeView<T>) getTreeView()).trans.getChildren().clear();
                 ((JFXTreeView<T>) getTreeView()).animateRow = -1;
@@ -216,7 +210,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
         }
     }
 
-    void updateDisplay(T item, boolean empty) {
+    private void updateDisplay(T item, boolean empty) {
         if (item == null || empty) {
             hbox = null;
             setText(null);

@@ -65,8 +65,8 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                     .getDeclaredField("maxDisclosureWidthMap");
                 declaredField.setAccessible(true);
                 disclosureWidthMap = (Map<Control, Double>) declaredField.get(this);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-                e.printStackTrace();
+            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                ex.printStackTrace();
             }
         }
         getSkinnable().indexProperty().addListener((o, oldVal, newVal) -> {
@@ -126,14 +126,14 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                 }
 
                 // add disclosure node animation
-                if (expandedAnimation == null || !expandedAnimation.getStatus().equals(Status.RUNNING)) {
+                if (expandedAnimation == null || !(expandedAnimation.getStatus() == Status.RUNNING)) {
                     expandedAnimation = new Timeline(new KeyFrame(Duration.millis(160),
                         new KeyValue(arrow.rotateProperty(),
                             90,
                             Interpolator.EASE_BOTH)));
                     expandedAnimation.setOnFinished((finish) -> arrow.setRotate(90));
                 }
-                if (collapsedAnimation == null || !collapsedAnimation.getStatus().equals(Status.RUNNING)) {
+                if (collapsedAnimation == null || !(collapsedAnimation.getStatus() == Status.RUNNING)) {
                     collapsedAnimation = new Timeline(new KeyFrame(Duration.millis(160),
                         new KeyValue(arrow.rotateProperty(),
                             0,
@@ -154,11 +154,11 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
                     expandTriggered = false;
                 } else {
                     if (getSkinnable().getTreeTableView().getTreeItem(getSkinnable().getIndex()).isExpanded()) {
-                        if (!expandedAnimation.getStatus().equals(Status.RUNNING)) {
+                        if (expandedAnimation.getStatus() != Status.RUNNING) {
                             arrow.setRotate(90);
                         }
                     } else {
-                        if (!collapsedAnimation.getStatus().equals(Status.RUNNING)) {
+                        if (collapsedAnimation.getStatus() != Status.RUNNING) {
                             arrow.setRotate(0);
                         }
                     }

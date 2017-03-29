@@ -53,7 +53,7 @@ class JFXColorPickerUI extends Pane {
     private double centerY;
     private double huesRadius;
     private double slRadius;
-    double currentHue = 0;
+    private double currentHue = 0;
 
     private ImageView huesCircleView;
     private ImageView slCircleView;
@@ -145,7 +145,6 @@ class JFXColorPickerUI extends Pane {
         selector.setPrefSize(selectorSize, selectorSize);
         selector.setMinSize(selectorSize, selectorSize);
         selector.setMaxSize(selectorSize, selectorSize);
-//		JFXDepthManager.setDepth(selector, 1);
         selector.setCache(true);
         selector.setMouseTransparent(true);
         this.getChildren().add(selector);
@@ -204,9 +203,7 @@ class JFXColorPickerUI extends Pane {
         colorSelector.setTranslateY(y - colorSelector.getPrefHeight() / 2);
         selector.setTranslateX(centerX - selector.getPrefWidth() / 2);
         selector.setTranslateY(centerY - selector.getPrefHeight() / 2);
-
     }
-
 
     /**
      * List of Color Nodes that needs to be updated when picking a color
@@ -224,10 +221,8 @@ class JFXColorPickerUI extends Pane {
     private void updateHSLCircleColor(int x, int y) {
         // transform color to HSL space
         Color color = huesCircleView.getImage().getPixelReader().getColor(x, y);
-        double max = Math.max(color.getRed(),
-            Math.max(color.getGreen(), color.getBlue())), min = Math.min(color.getRed(),
-            Math.min(color.getGreen(),
-                color.getBlue()));
+        double max = Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue()));
+        double min = Math.min(color.getRed(), Math.min(color.getGreen(), color.getBlue()));
         double hue = 0;
         if (max != min) {
             double d = max - min;
@@ -332,7 +327,7 @@ class JFXColorPickerUI extends Pane {
         }
         pTrans = new ParallelTransition(colorsTransition, selectorTransition);
         pTrans.setOnFinished((finish) -> {
-            if (pTrans.getStatus().equals(Status.STOPPED)) {
+            if (pTrans.getStatus() == Status.STOPPED) {
                 allowColorChange = true;
             }
         });

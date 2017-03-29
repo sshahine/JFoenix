@@ -201,7 +201,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                JFXUtilities.runInFX(() -> createFloatingLabel());
+                JFXUtilities.runInFX(this::createFloatingLabel);
             } else {
                 promptText.visibleProperty().bind(usePromptText);
             }
@@ -211,7 +211,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         field.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (textPane != null) {
                 if (!((JFXTextField) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                         hideErrorAnimation.stop();
                     }
                     if (newVal != null) {
@@ -225,13 +225,13 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                         });
                         hideErrorAnimation.play();
                     } else {
-                        JFXUtilities.runInFX(() -> hideError());
+                        JFXUtilities.runInFX(this::hideError);
                     }
                 } else {
                     if (newVal != null) {
                         JFXUtilities.runInFXAndWait(() -> showError(newVal));
                     } else {
-                        JFXUtilities.runInFXAndWait(() -> hideError());
+                        JFXUtilities.runInFXAndWait(this::hideError);
                     }
                 }
             }
@@ -309,7 +309,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
+        if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXTextField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextField) getSkinnable()).getFocusColor());
             }
@@ -340,7 +340,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
             hideErrorAnimation.stop();
         }
         hideErrorAnimation = new Timeline(
@@ -452,12 +452,10 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void focus() {
-        /*
-         * in case the method request layout is not called before focused
-		 * this is bug is reported while editing TreeTableView cells
-		 */
+        // in case the method request layout is not called before focused
+        // this is bug is reported while editing TreeTableView cells
         if (textPane == null) {
-            Platform.runLater(() -> focus());
+            Platform.runLater(this::focus);
         } else {
             // create the focus animations
             if (transition == null) {
