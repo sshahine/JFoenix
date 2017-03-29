@@ -4,7 +4,7 @@ findbugs {
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/findbugs")
     effort = 'max'
-    reportLevel = 'high'
+    reportLevel = 'low'
 }
 
 findbugsMain {
