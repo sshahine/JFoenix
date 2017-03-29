@@ -15,3 +15,7 @@ findbugsMain {
 }
 
 findbugsTest.enabled = false
+
+dependencies {
+    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:6.8.4'
+}
