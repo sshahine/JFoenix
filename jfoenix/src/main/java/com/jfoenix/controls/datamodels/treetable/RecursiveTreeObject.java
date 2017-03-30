@@ -39,7 +39,7 @@ import javafx.scene.control.TreeTableColumn;
 public class RecursiveTreeObject<T> {
 
     /**
-     * gropued children objects
+     * grouped children objects
      */
     ObservableList<T> children = FXCollections.observableArrayList();
 
