@@ -81,34 +81,31 @@ class JFXColorPalette extends Region {
         customColorLink.setPrefWidth(colorPickerGrid.prefWidth(-1));
         customColorLink.setAlignment(Pos.CENTER);
         customColorLink.setFocusTraversable(true);
-        customColorLink.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent ev) {
-                if (customColorDialog == null) {
-                    customColorDialog = new JFXCustomColorPickerDialog(popupControl);
-                    customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
-                        colorPicker.setValue(customColorDialog.customColorProperty().get());
-                    });
-                    customColorDialog.setOnSave(() -> {
-                        Color customColor = customColorDialog.customColorProperty().get();
-                        buildCustomColors();
-                        colorPicker.getCustomColors().add(customColor);
-                        updateSelection(customColor);
-                        Event.fireEvent(colorPicker, new ActionEvent());
-                        colorPicker.hide();
-                    });
-                }
-                customColorDialog.setCurrentColor(colorPicker.valueProperty().get());
-                if (popupControl != null) {
-                    popupControl.setAutoHide(false);
-                }
-                customColorDialog.show();
-                customColorDialog.setOnHidden(event -> {
-                    if (popupControl != null) {
-                        popupControl.setAutoHide(true);
-                    }
+        customColorLink.setOnAction(ev -> {
+            if (customColorDialog == null) {
+                customColorDialog = new JFXCustomColorPickerDialog(popupControl);
+                customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
+                    colorPicker.setValue(customColorDialog.customColorProperty().get());
+                });
+                customColorDialog.setOnSave(() -> {
+                    Color customColor = customColorDialog.customColorProperty().get();
+                    buildCustomColors();
+                    colorPicker.getCustomColors().add(customColor);
+                    updateSelection(customColor);
+                    Event.fireEvent(colorPicker, new ActionEvent());
+                    colorPicker.hide();
                 });
             }
+            customColorDialog.setCurrentColor(colorPicker.valueProperty().get());
+            if (popupControl != null) {
+                popupControl.setAutoHide(false);
+            }
+            customColorDialog.show();
+            customColorDialog.setOnHidden(event -> {
+                if (popupControl != null) {
+                    popupControl.setAutoHide(true);
+                }
+            });
         });
 
         initNavigation();
@@ -251,17 +248,12 @@ class JFXColorPalette extends Region {
     }
 
     public boolean isCustomColorDialogShowing() {
-        if (customColorDialog != null) {
-            return customColorDialog.isVisible();
-        }
-        return false;
+        return customColorDialog != null && customColorDialog.isVisible();
     }
 
     class ColorSquare extends StackPane {
         Rectangle rectangle;
-        //		int index;
         boolean isEmpty;
-//		boolean isCustom;
 
         public ColorSquare() {
             this(null, -1, false);
@@ -292,8 +284,6 @@ class JFXColorPalette extends Region {
                     }
                 });
             }
-//			this.index = index;
-//			this.isCustom = isCustom;
             rectangle = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
             if (color == null) {
                 rectangle.setFill(Color.WHITE);
@@ -305,7 +295,7 @@ class JFXColorPalette extends Region {
             rectangle.setStrokeType(StrokeType.INSIDE);
 
             String tooltipStr = JFXColorPickerSkin.tooltipString(color);
-            Tooltip.install(this, new Tooltip((tooltipStr == null) ? "".toUpperCase() : tooltipStr.toUpperCase()));
+            Tooltip.install(this, new Tooltip((tooltipStr == null) ? "" : tooltipStr.toUpperCase()));
 
             rectangle.getStyleClass().add("color-rect");
             getChildren().add(rectangle);

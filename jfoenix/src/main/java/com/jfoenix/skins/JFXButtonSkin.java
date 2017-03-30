@@ -188,14 +188,14 @@ public class JFXButtonSkin extends ButtonSkin {
                         .get(
                             0)
                         .getFill() : Color.TRANSPARENT,
-                        getSkinnable().getBackground() != null ? getSkinnable().getBackground()
+                                                             getSkinnable().getBackground() != null ? getSkinnable().getBackground()
                             .getFills()
                             .get(
                                 0)
                             .getRadii() : defaultRadii,
-                        Insets.EMPTY/*getSkinnable().backgroundProperty().get()!=null?getSkinnable().getBackground().getFills().get(0).getInsets() : Insets.EMPTY*/));
+                                                             Insets.EMPTY));
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 return getSkinnable().getBackground();
             }
         }, getSkinnable().backgroundProperty()));
@@ -257,18 +257,19 @@ public class JFXButtonSkin extends ButtonSkin {
 
     private boolean isJavaDefaultBackground(Background background) {
         try {
-            return background.getFills().get(0).getFill().toString().equals("0xffffffba")
-                || background.getFills().get(0).getFill().toString().equals("0xffffffbf")
-                || background.getFills().get(0).getFill().toString().equals("0xffffffbd");
-        } catch (Exception e) {
+            final String firstFill = background.getFills().get(0).getFill().toString();
+            return "0xffffffba".equals(firstFill)
+                || "0xffffffbf".equals(firstFill)
+                || "0xffffffbd".equals(firstFill);
+        } catch (Exception ignored) {
             return false;
         }
     }
 
     private boolean isJavaDefaultClickedBackground(Background background) {
         try {
-            return background.getFills().get(0).getFill().toString().equals("0x039ed3ff");
-        } catch (Exception e) {
+            return "0x039ed3ff".equals(background.getFills().get(0).getFill().toString());
+        } catch (Exception ignored) {
             return false;
         }
     }

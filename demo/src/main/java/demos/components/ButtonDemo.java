@@ -9,12 +9,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class ButtonDemo extends Application {
-
+public final class ButtonDemo extends Application {
 
     @Override
     public void start(Stage stage) {
-
         FlowPane main = new FlowPane();
         main.setVgap(20);
         main.setHgap(20);
@@ -23,7 +21,7 @@ public class ButtonDemo extends Application {
         JFXButton jfoenixButton = new JFXButton("JFoenix Button");
         main.getChildren().add(jfoenixButton);
 
-        JFXButton button = new JFXButton("Raised Button".toUpperCase());
+        JFXButton button = new JFXButton("RAISED BUTTON");
         button.getStyleClass().add("button-raised");
         main.getChildren().add(button);
 
@@ -41,7 +39,6 @@ public class ButtonDemo extends Application {
         stage.setTitle("JFX Button Demo");
         stage.setScene(scene);
         stage.show();
-
     }
 
     public static void main(String[] args) {

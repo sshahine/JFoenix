@@ -1,20 +1,22 @@
-if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
-    apply plugin: 'findbugs'
-    findbugs {
-        toolVersion = '3.0.1'
-        ignoreFailures = true
-        reportsDir = file("$project.buildDir/reports/findbugs")
-        effort = 'max'
-        reportLevel = 'high'
-    }
+apply plugin: 'findbugs'
 
-    findbugsMain {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
-
-    findbugsTest.enabled = false
+findbugs {
+    toolVersion = '3.0.1'
+    ignoreFailures = true
+    effort = 'max'
+    reportLevel = 'low'
+    excludeFilter = rootProject.file('config/findbugs-exclude.xml')
 }
 
+findbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugsTest.enabled = false
+
+dependencies {
+    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:6.8.4'
+}

@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
 import io.datafx.controller.ViewController;
+import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
@@ -30,7 +31,7 @@ public class IconsController {
     private StackPane root;
     @FXML
     private JFXSnackbar snackbar;
-    int count = 1;
+    private int count = 1;
 
 
     /**
@@ -67,10 +68,10 @@ public class IconsController {
             } else {
                 if (count % 4 == 0) {
                     snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistant " + count,
-                        "CLOSE",
-                        3000,
-                        true,
-                        b -> snackbar.close()));
+                                                         "CLOSE",
+                                                         3000,
+                                                         true,
+                                                         b -> snackbar.close()));
                 } else {
                     snackbar.fireEvent(new SnackbarEvent("Snackbar Message " + count, "UNDO", 3000, false, (b) -> {
                     }));
@@ -81,8 +82,9 @@ public class IconsController {
 
     private void bindAction(JFXHamburger burger) {
         burger.setOnMouseClicked((e) -> {
-            burger.getAnimation().setRate(burger.getAnimation().getRate() * -1);
-            burger.getAnimation().play();
+            final Transition burgerAnimation = burger.getAnimation();
+            burgerAnimation.setRate(burgerAnimation.getRate() * -1);
+            burgerAnimation.play();
         });
     }
 

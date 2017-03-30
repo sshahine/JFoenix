@@ -24,6 +24,7 @@ import javafx.application.Platform;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.PopupControl;
 import javafx.scene.control.Skin;
@@ -41,12 +42,16 @@ import javafx.stage.Window;
 @DefaultProperty(value = "popupContent")
 public class JFXPopup extends PopupControl {
 
-    public enum PopupHPosition {RIGHT, LEFT}
+    public enum PopupHPosition {
+        RIGHT, LEFT
+    }
 
-    public enum PopupVPosition {TOP, BOTTOM}
+    public enum PopupVPosition {
+        TOP, BOTTOM
+    }
 
     /**
-     * creates empty popup
+     * Creates empty popup.
      */
     public JFXPopup() {
         this(null);
@@ -131,11 +136,13 @@ public class JFXPopup extends PopupControl {
                 throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
             }
             Window parent = node.getScene().getWindow();
-            this.show(parent, parent.getX() + node.localToScene(0, 0).getX() +
-                    node.getScene().getX() + (PopupHPosition.RIGHT.equals(hAlign) ? ((Region) node).getWidth() : 0),
-                parent.getY() + node.localToScene(0, 0).getY() +
-                    node.getScene()
-                        .getY() + (PopupVPosition.BOTTOM.equals(vAlign) ? ((Region) node).getHeight() : 0));
+            final Point2D origin = node.localToScene(0, 0);
+            final double anchorX = parent.getX() + origin.getX()
+                + node.getScene().getX() + (hAlign == PopupHPosition.RIGHT ? ((Region) node).getWidth() : 0);
+            final double anchorY = parent.getY() + origin.getY()
+                + node.getScene()
+                      .getY() + (vAlign == PopupVPosition.BOTTOM ? ((Region) node).getHeight() : 0);
+            this.show(parent, anchorX, anchorY);
             ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
             Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());
         }

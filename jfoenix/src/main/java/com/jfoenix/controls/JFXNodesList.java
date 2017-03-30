@@ -33,6 +33,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -44,12 +45,12 @@ import java.util.HashMap;
  */
 public class JFXNodesList extends VBox {
 
-    HashMap<Node, Callback<Boolean, ArrayList<KeyValue>>> animationsMap = new HashMap<>();
+    private final HashMap<Node, Callback<Boolean, Collection<KeyValue>>> animationsMap = new HashMap<>();
     private boolean expanded = false;
-    private Timeline animateTimeline = new Timeline();
+    private final Timeline animateTimeline = new Timeline();
 
     /**
-     * creates empty nodes list
+     * Creates empty nodes list.
      */
     public JFXNodesList() {
         this.setPickOnBounds(false);
@@ -57,10 +58,10 @@ public class JFXNodesList extends VBox {
     }
 
     /**
-     * add node to list.
+     * Adds node to list.
      * Note: this method must be called instead of getChildren().add().
      *
-     * @param node
+     * @param node {@link Region} to add
      */
     public void addAnimatedNode(Region node) {
         addAnimatedNode(node, null);
@@ -70,9 +71,9 @@ public class JFXNodesList extends VBox {
      * add node to list with a specified callback that is triggered after the node animation is finished.
      * Note: this method must be called instead of getChildren().add().
      *
-     * @param node
+     * @param node {@link Region} to add
      */
-    public void addAnimatedNode(Region node, Callback<Boolean, ArrayList<KeyValue>> animationCallBack) {
+    public void addAnimatedNode(Region node, Callback<Boolean, Collection<KeyValue>> animationCallBack) {
         // create container for the node if it's a sub nodes list
         if (node instanceof JFXNodesList) {
             StackPane container = new StackPane(node);
@@ -111,24 +112,20 @@ public class JFXNodesList extends VBox {
             .addListener((o, oldVal, newVal) -> node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal
                 .doubleValue()));
         if (animationCallBack == null && this.getChildren().size() != 1) {
-            animationCallBack = (expanded) -> {
-                return initDefaultAnimation(node, expanded);
-            };
+            animationCallBack = (expanded) -> initDefaultAnimation(node, expanded);
         } else if (animationCallBack == null && this.getChildren().size() == 1) {
-            animationCallBack = (expanded) -> {
-                return new ArrayList<>();
-            };
+            animationCallBack = (expanded) -> new ArrayList<>();
         }
         animationsMap.put(node, animationCallBack);
     }
 
     /**
-     * animates the list to show/hide the nodes
+     * Animates the list to show/hide the nodes.
      */
     public void animateList() {
         expanded = !expanded;
 
-        if (animateTimeline.getStatus().equals(Status.RUNNING)) {
+        if (animateTimeline.getStatus() == Status.RUNNING) {
             animateTimeline.stop();
         }
 
@@ -143,13 +140,13 @@ public class JFXNodesList extends VBox {
         // add child nodes animation
         for (int i = 1; i < this.getChildren().size(); i++) {
             Node child = this.getChildren().get(i);
-            ArrayList<KeyValue> keyValues = animationsMap.get(child).call(expanded);
+            Collection<KeyValue> keyValues = animationsMap.get(child).call(expanded);
             animateTimeline.getKeyFrames()
                 .add(new KeyFrame(Duration.millis(i * duration),
                     keyValues.toArray(new KeyValue[keyValues.size()])));
         }
         // add 1st element animation
-        ArrayList<KeyValue> keyValues = animationsMap.get(this.getChildren().get(0)).call(expanded);
+        Collection<KeyValue> keyValues = animationsMap.get(this.getChildren().get(0)).call(expanded);
         animateTimeline.getKeyFrames()
             .add(new KeyFrame(Duration.millis(160), keyValues.toArray(new KeyValue[keyValues.size()])));
 

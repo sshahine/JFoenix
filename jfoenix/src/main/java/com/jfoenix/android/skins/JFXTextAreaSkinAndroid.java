@@ -204,7 +204,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         textArea.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (scrollPane != null) {
                 if (!((JFXTextArea) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                         hideErrorAnimation.stop();
                     }
                     if (newVal != null) {
@@ -309,7 +309,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
+        if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextArea) getSkinnable()).getFocusColor());
             }
@@ -349,7 +349,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
             hideErrorAnimation.stop();
         }
         hideErrorAnimation = new Timeline(

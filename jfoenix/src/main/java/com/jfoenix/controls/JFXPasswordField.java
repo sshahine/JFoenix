@@ -65,7 +65,7 @@ public class JFXPasswordField extends PasswordField {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        if (System.getProperty("java.vm.name").toLowerCase().equals("dalvik")) {
+        if ("dalvik".equals(System.getProperty("java.vm.name").toLowerCase())) {
             this.setStyle("-fx-skin: \"com.jfoenix.android.skins.JFXPasswordFieldSkinAndroid\";");
         }
     }
