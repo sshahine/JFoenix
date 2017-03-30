@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg)](https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master)
+
+[![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
 [![][versioneye img]][versioneye]
 [![][sonardebt img]][sonardebt]
@@ -88,3 +89,6 @@ Reference the repository from this location using:
 
 [sonardebt]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
 [sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
+
+[CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
+[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg
