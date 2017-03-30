@@ -97,8 +97,6 @@ public class ValidationFacade extends VBox {
         errorContainer.setVisible(false);
         errorContainer.setOpacity(0);
 
-        //errorContainer.setStyle("-fx-padding: 0;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;" + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: red;");
-
         // add listeners to show error label
         errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
             if (errorShown) {
@@ -141,7 +139,7 @@ public class ValidationFacade extends VBox {
 
         activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (!isDisableAnimation()) {
-                if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                     hideErrorAnimation.stop();
                 }
                 if (newVal != null) {
@@ -154,13 +152,13 @@ public class ValidationFacade extends VBox {
                     });
                     hideErrorAnimation.play();
                 } else {
-                    JFXUtilities.runInFX(() -> hideError());
+                    JFXUtilities.runInFX(this::hideError);
                 }
             } else {
                 if (newVal != null) {
                     JFXUtilities.runInFXAndWait(() -> showError(newVal));
                 } else {
-                    JFXUtilities.runInFXAndWait(() -> hideError());
+                    JFXUtilities.runInFXAndWait(this::hideError);
                 }
             }
         });

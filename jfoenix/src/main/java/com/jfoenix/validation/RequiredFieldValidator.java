@@ -52,7 +52,7 @@ public class RequiredFieldValidator extends ValidatorBase {
 
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
-        if (textField.getText() == null || textField.getText().equals("")) {
+        if (textField.getText() == null || textField.getText().isEmpty()) {
             hasErrors.set(true);
         } else {
             hasErrors.set(false);

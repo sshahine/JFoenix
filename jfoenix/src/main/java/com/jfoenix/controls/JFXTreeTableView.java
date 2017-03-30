@@ -83,12 +83,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     }
 
     protected void init() {
-        this.setRowFactory(new Callback<TreeTableView<S>, TreeTableRow<S>>() {
-            @Override
-            public TreeTableRow<S> call(TreeTableView<S> param) {
-                return new JFXTreeTableRow<>();
-            }
-        });
+        this.setRowFactory(param -> new JFXTreeTableRow<>());
 
         this.getSelectionModel().selectedItemProperty().addListener((o, oldVal, newVal) -> {
             if (newVal != null && newVal.getValue() != null) {
@@ -259,9 +254,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         Map<Object, List<TreeItem<S>>> map = new HashMap<>();
         for (TreeItem<S> child : items) {
             Object key = column.getCellData(child);
-            if (map.get(key) == null) {
-                map.put(key, new ArrayList<>());
-            }
+            map.computeIfAbsent(key, k -> new ArrayList<>());
             map.get(key).add(child);
         }
         return map;

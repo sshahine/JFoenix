@@ -210,7 +210,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
         field.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (textPane != null) {
                 if (!((JFXPasswordField) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                         hideErrorAnimation.stop();
                     }
                     if (newVal != null) {
@@ -224,13 +224,13 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
                         });
                         hideErrorAnimation.play();
                     } else {
-                        JFXUtilities.runInFX(() -> hideError());
+                        JFXUtilities.runInFX(this::hideError);
                     }
                 } else {
                     if (newVal != null) {
                         JFXUtilities.runInFXAndWait(() -> showError(newVal));
                     } else {
-                        JFXUtilities.runInFXAndWait(() -> hideError());
+                        JFXUtilities.runInFXAndWait(this::hideError);
                     }
                 }
             }
@@ -308,7 +308,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
+        if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXPasswordField) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXPasswordField) getSkinnable()).getFocusColor());
             }
@@ -339,7 +339,7 @@ public class JFXPasswordFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
             hideErrorAnimation.stop();
         }
         hideErrorAnimation = new Timeline(

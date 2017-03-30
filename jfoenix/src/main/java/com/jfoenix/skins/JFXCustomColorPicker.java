@@ -453,8 +453,7 @@ class JFXCustomColorPicker extends Pane {
         Point2D diff = perp.subtract(end);
         diff = diff.normalize();
         diff = scale(diff, controlPointDistance);
-        perp = end.add(diff);
-        return perp;
+        return end.add(diff);
     }
 
     private Point2D scale(final Point2D a, final double scale) {

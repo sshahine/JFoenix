@@ -15,14 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ScrollPaneDemo extends Application {
-
-
-    int counter = 0;
-
     @Override
-    public void start(Stage stage) throws Exception {
-
-
+    public void start(Stage stage) {
         JFXListView<Label> list = new JFXListView<>();
         for (int i = 0; i < 100; i++) {
             list.getItems().add(new Label("Item " + i));

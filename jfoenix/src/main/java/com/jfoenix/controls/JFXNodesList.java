@@ -125,7 +125,7 @@ public class JFXNodesList extends VBox {
     public void animateList() {
         expanded = !expanded;
 
-        if (animateTimeline.getStatus().equals(Status.RUNNING)) {
+        if (animateTimeline.getStatus() == Status.RUNNING) {
             animateTimeline.stop();
         }
 

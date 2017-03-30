@@ -49,22 +49,21 @@ public class JFXScrollPane extends StackPane {
 
     private static final String DEFAULT_STYLE_CLASS = "jfx-scroll-pane";
 
-    private VBox contentContainer = new VBox();
-    private StackPane headerSpace = new StackPane();
-    private StackPane condensedHeaderBG = new StackPane();
-    private StackPane headerBG = new StackPane();
+    private final VBox contentContainer = new VBox();
+    private final StackPane headerSpace = new StackPane();
+    private final StackPane condensedHeaderBackground = new StackPane();
+    private final StackPane headerBackground = new StackPane();
 
     private double initY = -1;
     private double maxHeight = -1;
     private double minHeight = -1;
 
-    private StackPane bottomBar;
-    Scale scale = new Scale(1, 1, 0, 0);
-    Transform oldSceneTransform = null;
+    private final StackPane bottomBar;
+    private final Scale scale = new Scale(1, 1, 0, 0);
+    private Transform oldSceneTransform = null;
 
-    //	private Timeline animation;
-    private StackPane midBar;
-    private StackPane topBar;
+    private final StackPane midBar;
+    private final StackPane topBar;
 
     public JFXScrollPane() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
@@ -76,18 +75,17 @@ public class JFXScrollPane extends StackPane {
         clip.heightProperty().bind(this.heightProperty());
 
 
-        StackPane header = new StackPane();
-        condensedHeaderBG.setOpacity(0);
-        condensedHeaderBG.getStyleClass().add("condensed-header");
-        condensedHeaderBG.setBackground(new Background(new BackgroundFill(Color.valueOf("#1E88E5"),
-            CornerRadii.EMPTY,
-            Insets.EMPTY)));
-        headerBG.setBackground(new Background(new BackgroundFill(Color.valueOf("#3949AB"),
-            CornerRadii.EMPTY,
-            Insets.EMPTY)));
-        headerBG.getStyleClass().add("main-header");
+        condensedHeaderBackground.setOpacity(0);
+        condensedHeaderBackground.getStyleClass().add("condensed-header");
+        condensedHeaderBackground.setBackground(new Background(new BackgroundFill(Color.valueOf("#1E88E5"),
+                                                                                  CornerRadii.EMPTY,
+                                                                                  Insets.EMPTY)));
+        headerBackground.setBackground(new Background(new BackgroundFill(Color.valueOf("#3949AB"),
+                                                                         CornerRadii.EMPTY,
+                                                                         Insets.EMPTY)));
+        headerBackground.getStyleClass().add("main-header");
         StackPane bgContainer = new StackPane();
-        bgContainer.getChildren().setAll(condensedHeaderBG, headerBG);
+        bgContainer.getChildren().setAll(condensedHeaderBackground, headerBackground);
         bgContainer.setMouseTransparent(true);
 
         topBar = new StackPane();
@@ -104,10 +102,11 @@ public class JFXScrollPane extends StackPane {
         scale.pivotYProperty().bind(bottomBar.heightProperty().divide(2));
         bottomBar.setPickOnBounds(false);
 
-        StackPane barsContainer = new StackPane(topBar, midBar, bottomBar);
+        final StackPane barsContainer = new StackPane(topBar, midBar, bottomBar);
         StackPane.setAlignment(topBar, Pos.TOP_CENTER);
         StackPane.setAlignment(bottomBar, Pos.BOTTOM_CENTER);
 
+        StackPane header = new StackPane();
         header.setPrefHeight(64 * 3);
         header.maxHeightProperty().bind(header.prefHeightProperty());
         header.getChildren().setAll(bgContainer, barsContainer);
@@ -137,8 +136,8 @@ public class JFXScrollPane extends StackPane {
             opacity = opacity > 1 ? 1 : (opacity < 0) ? 0 : opacity;
             // update properties according to the scroll value
             // opacity
-            headerBG.setOpacity(1 - opacity);
-            condensedHeaderBG.setOpacity(opacity);
+            headerBackground.setOpacity(1 - opacity);
+            condensedHeaderBackground.setOpacity(opacity);
 
             if (newVal.doubleValue() == 0) {
                 header.setTranslateY(0);
@@ -153,7 +152,7 @@ public class JFXScrollPane extends StackPane {
                 double oldTy = oldSceneTransform.getTy();
                 double diff = oldTy - ty;
 
-                if (newVal.doubleValue() < oldVal.doubleValue() && -dy > minHeight) {
+                if (-dy > minHeight && newVal.doubleValue() < oldVal.doubleValue()) {
                     if (-(header.getTranslateY() - diff) > minHeight) {
                         header.setTranslateY(header.getTranslateY() - diff);
                     } else {
@@ -215,11 +214,11 @@ public class JFXScrollPane extends StackPane {
     }
 
     public StackPane getMainHeader() {
-        return headerBG;
+        return headerBackground;
     }
 
     public StackPane getCondensedHeader() {
-        return condensedHeaderBG;
+        return condensedHeaderBackground;
     }
 
     public static void smoothScrolling(ScrollPane scrollPane) {
@@ -231,12 +230,12 @@ public class JFXScrollPane extends StackPane {
         Timeline timeline = new Timeline();
         scrollPane.getContent().addEventHandler(MouseEvent.DRAG_DETECTED, event -> timeline.stop());
         scrollPane.getContent().addEventHandler(ScrollEvent.ANY, event -> {
-            if (event.getEventType().equals(ScrollEvent.SCROLL)) {
+            if (event.getEventType() == ScrollEvent.SCROLL) {
                 int direction = event.getDeltaY() > 0 ? -1 : 1;
                 for (int i = 0; i < pushes.length; i++) {
                     derivatives[i] += direction * pushes[i];
                 }
-                if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
+                if (timeline.getStatus() == Animation.Status.STOPPED) {
                     timeline.play();
                 }
                 event.consume();

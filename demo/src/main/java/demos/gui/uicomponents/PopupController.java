@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 @ViewController(value = "/fxml/ui/Popup.fxml", title = "Material Design Example")
-public class PopupController {
+public final class PopupController {
 
     @FXML
     private StackPane root;

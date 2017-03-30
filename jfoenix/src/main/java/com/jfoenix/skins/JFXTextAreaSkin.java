@@ -70,7 +70,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
 
     private double initScale = 0.05;
     private double oldErrorLabelHeight = -1;
-    //	private Region textPane;
     private double initYLayout = -1;
     private double initHeight = -1;
     private boolean errorShown = false;
@@ -198,7 +197,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         textArea.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (scrollPane != null) {
                 if (!((JFXTextArea) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
                         hideErrorAnimation.stop();
                     }
                     if (newVal != null) {
@@ -303,7 +302,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         super.layoutChildren(x, y, w, h);
 
         // change control properties if and only if animations are stopped
-        if (transition == null || transition.getStatus().equals(Status.STOPPED)) {
+        if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
                 promptTextFill.set(((JFXTextArea) getSkinnable()).getFocusColor());
             }
@@ -343,7 +342,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
     }
 
     private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus().equals(Status.RUNNING)) {
+        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
             hideErrorAnimation.stop();
         }
         hideErrorAnimation = new Timeline(

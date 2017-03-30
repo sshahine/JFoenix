@@ -70,14 +70,14 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
 
     public void reset(PopupVPosition vAlign, PopupHPosition hAlign, double offsetX, double offsetY) {
         // postion the popup according to its animation
-        scale.setPivotX(hAlign.equals(PopupHPosition.RIGHT) ? container.getWidth() : 0);
-        scale.setPivotY(vAlign.equals(PopupVPosition.BOTTOM) ? container.getHeight() : 0);
-        root.setTranslateX(hAlign.equals(PopupHPosition.RIGHT) ? -container.getWidth() + offsetX : offsetX);
-        root.setTranslateY(vAlign.equals(PopupVPosition.BOTTOM) ? -container.getHeight() + offsetY : offsetY);
+        scale.setPivotX(hAlign == PopupHPosition.RIGHT ? container.getWidth() : 0);
+        scale.setPivotY(vAlign == PopupVPosition.BOTTOM ? container.getHeight() : 0);
+        root.setTranslateX(hAlign == PopupHPosition.RIGHT ? -container.getWidth() + offsetX : offsetX);
+        root.setTranslateY(vAlign == PopupVPosition.BOTTOM ? -container.getHeight() + offsetY : offsetY);
     }
 
     public void animate() {
-        if (t.getStatus().equals(Status.STOPPED)) {
+        if (t.getStatus() == Status.STOPPED) {
             t.play();
         }
     }
@@ -96,8 +96,8 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
     public void dispose() {
     }
 
-    private class PopupTransition extends CachedTransition {
-        public PopupTransition() {
+    private final class PopupTransition extends CachedTransition {
+        PopupTransition() {
             super(root, new Timeline(
                     new KeyFrame(
                         Duration.ZERO,

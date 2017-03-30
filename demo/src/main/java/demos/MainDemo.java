@@ -8,6 +8,7 @@ import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -42,9 +43,10 @@ public class MainDemo extends Application {
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
         Scene scene = new Scene(decorator, 800, 850);
-        scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm());
-        scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm());
-        scene.getStylesheets().add(MainDemo.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
+        final ObservableList<String> stylesheets = scene.getStylesheets();
+        stylesheets.addAll(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
+                           MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm(),
+                           MainDemo.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
         stage.setMinWidth(700);
         stage.setMinHeight(800);
         stage.setScene(scene);
