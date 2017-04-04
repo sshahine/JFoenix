@@ -112,12 +112,15 @@ public class JFXListView<T> extends ListView<T> {
      *                                                                         *
      **************************************************************************/
 
+    @Deprecated
     private ObjectProperty<Node> groupnode = new SimpleObjectProperty<>(new Label("GROUP"));
 
+    @Deprecated
     public Node getGroupnode() {
         return groupnode.get();
     }
 
+    @Deprecated
     public void setGroupnode(Node node) {
         this.groupnode.set(node);
     }
@@ -125,18 +128,23 @@ public class JFXListView<T> extends ListView<T> {
     /*
      *  selected index property that includes the sublists
      */
+    @Deprecated
     private ReadOnlyObjectWrapper<Integer> overAllIndexProperty = new ReadOnlyObjectWrapper<>(-1);
 
+    @Deprecated
     public ReadOnlyObjectProperty<Integer> overAllIndexProperty() {
         return overAllIndexProperty.getReadOnlyProperty();
     }
 
     // private sublists property
+    @Deprecated
     private ObjectProperty<ObservableList<JFXListView<?>>> sublistsProperty = new SimpleObjectProperty<>(
         FXCollections.observableArrayList());
+    @Deprecated
     private LinkedHashMap<Integer, JFXListView<?>> sublistsIndices = new LinkedHashMap<>();
 
     // this method shouldn't be called from user
+    @Deprecated
     void addSublist(JFXListView<?> subList, int index) {
         if (!sublistsProperty.get().contains(subList)) {
             sublistsProperty.get().add(subList);

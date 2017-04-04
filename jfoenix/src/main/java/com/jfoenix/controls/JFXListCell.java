@@ -397,16 +397,17 @@ public class JFXListCell<T> extends ListCell<T> {
      **************************************************************************/
 
     // indicate whether the sub list is expanded or not
+    @Deprecated
     private BooleanProperty expandedProperty = new SimpleBooleanProperty(false);
-
+    @Deprecated
     public BooleanProperty expandedProperty() {
         return expandedProperty;
     }
-
+    @Deprecated
     public void setExpanded(boolean expand) {
         expandedProperty.set(expand);
     }
-
+    @Deprecated
     public boolean isExpanded() {
         return expandedProperty.get();
     }
