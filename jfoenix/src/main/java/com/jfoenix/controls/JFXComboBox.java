@@ -87,9 +87,18 @@ public class JFXComboBox<T> extends ComboBox<T> {
                 return (T) string;
             }
         });
-        // had to refactor the code out skin class to allow
+        // had to refactor the code out of the skin class to allow
         // customization of the button cell
         this.setButtonCell(new ListCell<T>() {
+            {
+                // fixed clearing the combo box value is causing
+                // java prompt text to be shown because the button cell is not updated
+                JFXComboBox.this.valueProperty().addListener(observable -> {
+                  if(JFXComboBox.this.getValue() == null){
+                      updateItem(null, true );
+                  }
+                });
+            }
             @Override
             protected void updateItem(T item, boolean empty) {
                 updateDisplayText(this, item, empty);

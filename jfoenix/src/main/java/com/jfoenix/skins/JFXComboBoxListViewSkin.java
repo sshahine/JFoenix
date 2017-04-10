@@ -95,7 +95,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     public JFXComboBoxListViewSkin(final JFXComboBox<T> comboBox) {
 
         super(comboBox);
-        // customize combox box
+        // customize combo box
         arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
         // create my custom pane for the prompt node
@@ -145,9 +145,8 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 4 0 4 0");
             comboBox.getEditor().promptTextProperty().unbind();
             comboBox.getEditor().setPromptText(null);
-            comboBox.getEditor().textProperty().addListener((o, oldVal, newVal) -> usePromptText.invalidate());
-
             comboBox.getEditor().textProperty().addListener((o, oldVal, newVal) -> {
+                usePromptText.invalidate();
                 comboBox.setValue(getConverter().fromString(newVal));
             });
         }
