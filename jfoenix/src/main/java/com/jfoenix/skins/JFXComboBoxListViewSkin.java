@@ -119,10 +119,12 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         // add lines
         line.getStyleClass().add("input-line");
         focusedLine.getStyleClass().add("input-focused-line");
+
         getChildren().add(line);
         getChildren().add(focusedLine);
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
+        line.setManaged(false);
         line.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
@@ -140,6 +142,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
+        focusedLine.setManaged(false);
 
         if (comboBox.isEditable()) {
             comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 4 0 4 0");
