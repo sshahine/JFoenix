@@ -23,10 +23,7 @@ import com.jfoenix.skins.JFXTimePickerSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.css.*;
 import javafx.geometry.Insets;
 import javafx.scene.AccessibleRole;
@@ -139,6 +136,20 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
     private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT,
         Locale.ENGLISH);
+
+    private BooleanProperty _24HourView = new SimpleBooleanProperty(false);
+
+    public final BooleanProperty _24HourViewProperty() {
+        return this._24HourView;
+    }
+
+    public final boolean is24HourView() {
+        return _24HourViewProperty().get();
+    }
+
+    public final void setIs24HourView(final boolean value) {
+        _24HourViewProperty().setValue(value);
+    }
 
 
     /**
