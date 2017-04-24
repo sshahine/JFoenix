@@ -65,11 +65,13 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         this.jfxDatePicker = datePicker;
         editorNode = new JFXTextField();
         editorNode.focusColorProperty().bind(datePicker.defaultColorProperty());
+        editorNode.setOnAction(action -> action.consume());
         editorNode.focusedProperty().addListener((obj, oldVal, newVal) -> {
             if (!newVal) {
                 setTextFromTextFieldIntoComboBoxValue();
             }
         });
+
 
         // create calender or clock button
         arrow = new SVGGlyph(0,
