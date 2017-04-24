@@ -56,6 +56,7 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
         this.jfxTimePicker = timePicker;
         editorNode = new JFXTextField();
         editorNode.focusColorProperty().bind(timePicker.defaultColorProperty());
+        editorNode.setOnAction(action -> action.consume());
         editorNode.focusedProperty().addListener((obj, oldVal, newVal) -> {
             if (!newVal) {
                 setTextFromTextFieldIntoComboBoxValue();
