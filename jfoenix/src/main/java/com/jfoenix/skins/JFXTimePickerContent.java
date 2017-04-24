@@ -425,12 +425,14 @@ public class JFXTimePickerContent extends VBox {
 
 
     private void goToTime(LocalTime time) {
-        int hour = time.getHour();
-        selectedHourLabel.setText(Integer.toString(hour % 12 == 0 ? 12 : hour % 12));
-        selectedMinLabel.setText(unitConverter.toString(time.getMinute()));
-        period.set(hour < 12 ? "AM" : "PM");
-        minsPointerRotate.setAngle(180 + (time.getMinute() + 45) % 60 * Math.toDegrees(2 * Math.PI / 60));
-        hoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
+        if(time!=null){
+            int hour = time.getHour();
+            selectedHourLabel.setText(Integer.toString(hour % 12 == 0 ? 12 : hour % 12));
+            selectedMinLabel.setText(unitConverter.toString(time.getMinute()));
+            period.set(hour < 12 ? "AM" : "PM");
+            minsPointerRotate.setAngle(180 + (time.getMinute() + 45) % 60 * Math.toDegrees(2 * Math.PI / 60));
+            hoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
+        }
     }
 
     void clearFocus() {
