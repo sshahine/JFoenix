@@ -52,9 +52,12 @@ import java.util.Locale;
 
 public class JFXTimePickerContent extends VBox {
 
+    private enum TimeUnit {HOURS, MINUTES}
+
     private static final String ROBOTO = "Roboto";
     private static final String SPINNER_LABEL = "spinner-label";
     protected JFXTimePicker timePicker;
+
     private Color fadedColor = Color.rgb(255, 255, 255, 0.67);
     private boolean is24HourView = false;
     private double contentCircleRadius = 100;
@@ -78,7 +81,8 @@ public class JFXTimePickerContent extends VBox {
 
     JFXTimePickerContent(final JFXTimePicker jfxTimePicker) {
         this.timePicker = jfxTimePicker;
-        LocalTime time = this.timePicker.getValue() == null ? LocalTime.now() : this.timePicker.getValue();
+        LocalTime time = this.timePicker.getValue() == null ?
+            LocalTime.now() : this.timePicker.getValue();
         is24HourView = this.timePicker.is24HourView();
 
         this.timePicker.valueProperty().addListener((o, oldVal, newVal) -> goToTime(newVal));
@@ -129,13 +133,6 @@ public class JFXTimePickerContent extends VBox {
                 swapLabelsColor(periodPMLabel, periodAMLabel);
                 updateValue();
             });
-        }
-    }
-
-    void clearFocus() {
-        LocalTime focusTime = timePicker.getValue();
-        if (focusTime == null) {
-            focusTime = LocalTime.now();
         }
     }
 
@@ -252,8 +249,9 @@ public class JFXTimePickerContent extends VBox {
         selectedTimeContainer.getStyleClass().add("spinner");
         selectedTimeContainer.getChildren()
             .addAll(selectedHourLabel, separatorLabel, selectedMinLabel);
-        if (!_24HourView)
+        if (!_24HourView) {
             selectedTimeContainer.getChildren().add(periodContainer);
+        }
         selectedTimeContainer.setAlignment(Pos.CENTER);
         selectedTimeContainer.setFillHeight(false);
 
@@ -446,7 +444,8 @@ public class JFXTimePickerContent extends VBox {
             Label label = new Label(unitConverter.toString(val) + "");
             label.setFont(Font.font(ROBOTO, FontWeight.BOLD, 12));
             // init label color
-            label.setTextFill(val == time.getMinute() ? Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
+            label.setTextFill(val == time.getMinute() ?
+                Color.rgb(255, 255, 255, 0.87) : Color.rgb(0, 0, 0, 0.87));
             selectedMinLabel.textProperty().addListener((o, oldVal, newVal) -> {
                 if (Integer.parseInt(newVal) == Integer.parseInt(label.getText())) {
                     label.setTextFill(Color.rgb(255, 255, 255, 0.87));
@@ -516,27 +515,43 @@ public class JFXTimePickerContent extends VBox {
     }
 
     void updateValue() {
-
         if (is24HourView) {
-            timePicker.setValue((new LocalTimeStringConverter(FormatStyle.SHORT, Locale.GERMAN)).fromString(selectedHourLabel.getText() + ":" + selectedMinLabel.getText()));
+            LocalTimeStringConverter localTimeStringConverter =
+                new LocalTimeStringConverter(FormatStyle.SHORT, Locale.GERMAN);
+            timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
+                                                                    + ":" + selectedMinLabel.getText()));
         } else {
-            timePicker.setValue((new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH)).fromString(selectedHourLabel.getText() + ":" + selectedMinLabel.getText() + " " + period.get()));
-
+            LocalTimeStringConverter localTimeStringConverter =
+                new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH);
+            timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
+                                                                    + ":" + selectedMinLabel.getText() + " " + period.get()));
+        }
     }
 
 
     private void goToTime(LocalTime time) {
-        if(time!=null){
-           int hour = time.getHour();
-        selectedHourLabel.setText(Integer.toString(hour % (is24HourView ? 24 : 12) == 0 ? (is24HourView ? 0 : 12) : hour % (is24HourView ? 24 : 12)));
-        selectedMinLabel.setText(unitConverter.toString(time.getMinute()));
-        if (!is24HourView)
-            period.set(hour < 12 ? "AM" : "PM");
-        minsPointerRotate.setAngle(180 + (time.getMinute() + 45) % 60 * Math.toDegrees(2 * Math.PI / 60));
-        hoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
-        _24HourHoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
+        if (time != null) {
+            int hour = time.getHour();
+            selectedHourLabel.setText(Integer.toString(hour % (is24HourView ? 24 : 12) == 0 ?
+                (is24HourView ? 0 : 12) : hour % (is24HourView ? 24 : 12)));
+            selectedMinLabel.setText(unitConverter.toString(time.getMinute()));
+            if (!is24HourView) {
+                period.set(hour < 12 ? "AM" : "PM");
+            }
+            minsPointerRotate.setAngle(180 + (time.getMinute() + 45) % 60 * Math.toDegrees(2 * Math.PI / 60));
+            hoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
+            _24HourHoursPointerRotate.setAngle(180 + Math.toDegrees(2 * (hour - 3) * Math.PI / 12));
         }
     }
 
-    private enum TimeUnit {HOURS, MINUTES}
+    void clearFocus() {
+        LocalTime focusTime = timePicker.getValue();
+        if (focusTime == null) {
+            focusTime = LocalTime.now();
+        }
+        goToTime(focusTime);
+    }
+
+
+
 }
