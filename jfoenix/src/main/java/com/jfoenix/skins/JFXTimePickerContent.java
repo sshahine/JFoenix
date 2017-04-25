@@ -520,7 +520,7 @@ public class JFXTimePickerContent extends VBox {
             LocalTimeStringConverter localTimeStringConverter =
                 new LocalTimeStringConverter(FormatStyle.SHORT, Locale.GERMAN);
             timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
-                                                                    + ":" + selectedMinLabel.getText()));
+                + ":" + selectedMinLabel.getText()));
         } else {
             String input = selectedHourLabel.getText() + ":" + selectedMinLabel.getText() + " " + period.get();
             timePicker.setValue(LocalTime.parse(input, DateTimeFormatter.ofPattern("h:mm a").withLocale(Locale.ENGLISH)));
