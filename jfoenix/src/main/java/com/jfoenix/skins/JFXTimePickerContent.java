@@ -43,6 +43,7 @@ import javafx.util.converter.NumberStringConverter;
 
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
@@ -521,10 +522,8 @@ public class JFXTimePickerContent extends VBox {
             timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
                                                                     + ":" + selectedMinLabel.getText()));
         } else {
-            LocalTimeStringConverter localTimeStringConverter =
-                new LocalTimeStringConverter(FormatStyle.SHORT, Locale.ENGLISH);
-            timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
-                                                                    + ":" + selectedMinLabel.getText() + " " + period.get()));
+            String input = selectedHourLabel.getText() + ":" + selectedMinLabel.getText() + " " + period.get();
+            timePicker.setValue(LocalTime.parse(input, DateTimeFormatter.ofPattern("h:mm a").withLocale(Locale.ENGLISH)));
         }
     }
 
