@@ -99,7 +99,7 @@ public class JFXMasonryPane extends Pane {
 
             int col, row;
             col = (int) Math.floor(this.getWidth() / (getCellWidth() + 2 * getHSpacing()));
-            col = getLimitColumn() != -1 && col > getLimitColumn() ? getLimitColumn() : col;
+            col = getLimitColumn() != -1 && col < getLimitColumn() ? getLimitColumn() : col;
 
             if (matrix != null && col == matrix[0].length) {
                 performingLayout = false;
@@ -107,7 +107,7 @@ public class JFXMasonryPane extends Pane {
             }
             //(int) Math.floor(this.getHeight() / (cellH + 2*vSpacing));
             row = 100;
-            row = getLimitRow() != -1 && row > getLimitRow() ? getLimitRow() : row;
+            row = getLimitRow() != -1 && row < getLimitRow() ? getLimitRow() : row;
 
             matrix = new int[row][col];
             double minWidth = -1;
