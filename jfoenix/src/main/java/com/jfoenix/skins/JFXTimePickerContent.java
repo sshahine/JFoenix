@@ -522,8 +522,7 @@ public class JFXTimePickerContent extends VBox {
             timePicker.setValue(localTimeStringConverter.fromString(selectedHourLabel.getText()
                                                                     + ":" + selectedMinLabel.getText()));
         } else {
-            String input = selectedHourLabel.getText() + ":" + selectedMinLabel.getText() + " " + period.get();
-            timePicker.setValue(LocalTime.parse(input, DateTimeFormatter.ofPattern("h:mm a").withLocale(Locale.ENGLISH)));
+            timePicker.setValue(LocalTime.parse(selectedHourLabel.getText() + ":" + selectedMinLabel.getText() + " " + period.get(), DateTimeFormatter.ofPattern("h:mm a").withLocale(Locale.ENGLISH)));
         }
     }
 
