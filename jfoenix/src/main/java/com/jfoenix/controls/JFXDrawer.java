@@ -455,8 +455,14 @@ public class JFXDrawer extends StackPane {
     private boolean isRunningTransition(Transition transition) {
         return transition.getStatus() == Status.RUNNING;
     }
-
+    
+    @Deprecated		//wrong spelling
     public boolean isHidding() {
+        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
+            || (partialTransition instanceof DrawerPartialTransitionHide && isRunningTransition(partialTransition));
+    }
+    
+    public boolean isHiding() {
         return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
             || (partialTransition instanceof DrawerPartialTransitionHide && isRunningTransition(partialTransition));
     }
