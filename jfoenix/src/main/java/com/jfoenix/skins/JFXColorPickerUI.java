@@ -340,7 +340,8 @@ class JFXColorPickerUI extends Pane {
         if (allowColorChange) {
             Color color = getColorAtLocation(x, y);
             String colorString = "rgb(" + color.getRed() * 255 + "," + color.getGreen() * 255 + "," + color.getBlue() * 255 + ");";
-            colorNodes.forEach(node -> node.setStyle("-fx-background-color:" + colorString + "; -fx-fill:" + colorString + ";"));
+            for (Node node : colorNodes)
+                node.setStyle("-fx-background-color:" + colorString + "; -fx-fill:" + colorString+";");
         }
     }
 
