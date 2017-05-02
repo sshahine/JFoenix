@@ -27,6 +27,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -114,7 +115,17 @@ public class JFXSnackbar extends StackPane {
         popup.getChildren().add(content);
         popup.setManaged(false);
         popup.setVisible(false);
-
+        popup.idProperty().bind(this.idProperty());
+        this.getStyleClass().addListener((ListChangeListener<String>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    popup.getStyleClass().addAll(c.getAddedSubList());
+                }
+                if (c.wasRemoved()) {
+                    popup.getStyleClass().removeAll(c.getRemoved());
+                }
+            }
+        });
         sizeListener = (o, oldVal, newVal) -> {
             refreshPopup();
         };
