@@ -222,7 +222,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
                 }
             }
         });
-
     }
 
     /***************************************************************************
@@ -240,6 +239,8 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             invalid = false;
             // create floating label
             createFloatingAnimation();
+            if(getSkinnable().getValue()!=null)
+                animateFloatingLabel(true);
         }
         focusedLine.resizeRelocate(x, getSkinnable().getHeight(), w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, getSkinnable().getHeight(), w, line.prefHeight(-1));
