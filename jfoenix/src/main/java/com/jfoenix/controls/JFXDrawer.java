@@ -93,11 +93,16 @@ public class JFXDrawer extends StackPane {
     private boolean closeCalled = true;
 
     private DoubleProperty defaultSizeProperty = new SimpleDoubleProperty();
-    private ObjectProperty<DoubleProperty> maxSizeProperty = new SimpleObjectProperty<>(sidePane.maxWidthProperty());
-    private ObjectProperty<DoubleProperty> minSizeProperty = new SimpleObjectProperty<>(sidePane.minWidthProperty());
-    private ObjectProperty<DoubleProperty> prefSizeProperty = new SimpleObjectProperty<>(sidePane.prefWidthProperty());
-    private ObjectProperty<ReadOnlyDoubleProperty> sizeProperty = new SimpleObjectProperty<>(sidePane.widthProperty());
-    private ObjectProperty<ReadOnlyDoubleProperty> parentSizeProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<DoubleProperty> maxSizeProperty =
+        new SimpleObjectProperty<>(sidePane.maxWidthProperty());
+    private ObjectProperty<DoubleProperty> minSizeProperty =
+        new SimpleObjectProperty<>(sidePane.minWidthProperty());
+    private ObjectProperty<DoubleProperty> prefSizeProperty =
+        new SimpleObjectProperty<>(sidePane.prefWidthProperty());
+    private ObjectProperty<ReadOnlyDoubleProperty> sizeProperty =
+        new SimpleObjectProperty<>(sidePane.widthProperty());
+    private ObjectProperty<ReadOnlyDoubleProperty> parentSizeProperty =
+        new SimpleObjectProperty<>();
     private ObjectProperty<Node> boundedNode = new SimpleObjectProperty<>();
 
     private SimpleObjectProperty<DrawerDirection> directionProperty = new SimpleObjectProperty<>(
@@ -138,9 +143,10 @@ public class JFXDrawer extends StackPane {
 
     private void initListeners() {
         updateDirection(directionProperty.get());
-        initTranslate.bind(Bindings.createDoubleBinding(() -> -1 * directionProperty.get()
-            .doubleValue() * defaultSizeProperty
-            .getValue() - initOffset * directionProperty.get().doubleValue(), defaultSizeProperty, directionProperty));
+        initTranslate.bind(Bindings.createDoubleBinding(() ->
+                -1 * directionProperty.get().doubleValue() * defaultSizeProperty.getValue()
+                - initOffset * directionProperty.get().doubleValue(),
+            defaultSizeProperty, directionProperty));
 
         // add listeners to update drawer properties
         overLayVisibleProperty().addListener((o, oldVal, newVal) -> {
@@ -169,15 +175,16 @@ public class JFXDrawer extends StackPane {
                 }
 
                 double eventPoint = 0;
-                if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
+                if (directionProperty.get() == DrawerDirection.RIGHT
+                    || directionProperty.get() == DrawerDirection.LEFT) {
                     eventPoint = e.getX();
                 } else {
                     eventPoint = e.getY();
                 }
 
-                if (size + directionProperty.get()
-                    .doubleValue() * eventPoint < activeOffset && (content.getCursor() == Cursor.DEFAULT || content
-                    .getCursor() == null) && valid == 0) {
+                if (size + directionProperty.get().doubleValue() * eventPoint < activeOffset
+                    && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null)
+                    && valid == 0) {
                     holdTimer.play();
                     e.consume();
                 }
@@ -192,20 +199,18 @@ public class JFXDrawer extends StackPane {
 
         // add opening/closing action listeners
         translateProperty.addListener((o, oldVal, newVal) -> {
-            if (!openCalled && closeCalled && directionProperty.get()
-                .doubleValue() * newVal.doubleValue() > directionProperty
-                .get()
-                .doubleValue() * initTranslate.doubleValue() / 2) {
+            if (!openCalled && closeCalled
+                && directionProperty.get().doubleValue() * newVal.doubleValue() >
+                   directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
                 openCalled = true;
                 closeCalled = false;
                 onDrawerOpeningProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENING));
             }
         });
         translateProperty.addListener((o, oldVal, newVal) -> {
-            if (openCalled && !closeCalled && directionProperty.get()
-                .doubleValue() * newVal.doubleValue() < directionProperty
-                .get()
-                .doubleValue() * initTranslate.doubleValue() / 2) {
+            if (openCalled && !closeCalled
+                && directionProperty.get().doubleValue() * newVal.doubleValue() <
+                   directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
                 closeCalled = true;
                 openCalled = false;
                 onDrawerClosingProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSING));
@@ -394,10 +399,9 @@ public class JFXDrawer extends StackPane {
             if (isTransitionStopped(this.drawerTransition) && translateProperty.get() != 0) {
                 drawerTransition.setRate(1);
                 if (tempDrawerSize > getDefaultDrawerSize()) {
-                    ParallelTransition parallelTransition = new ParallelTransition(new InDrawerSizeTransition(),
-                        new DrawerTransition(
-                            translateProperty.get(),
-                            0));
+                    ParallelTransition parallelTransition = new ParallelTransition(
+                        new InDrawerSizeTransition(),
+                        new DrawerTransition(translateProperty.get(), 0));
                     parallelTransition.setOnFinished((finish1) -> {
                         if (bindSize) {
                             prefSizeProperty.get().bind(parentSizeProperty.get());
@@ -423,9 +427,9 @@ public class JFXDrawer extends StackPane {
 
         if (sizeProperty.get().get() > getDefaultDrawerSize()) {
             tempDrawerSize = sizeProperty.get().get();
-            ParallelTransition parallelTransition = new ParallelTransition(new OutDrawerSizeTransition(),
-                new DrawerTransition(translateProperty.get(),
-                    initTranslate.doubleValue()));
+            ParallelTransition parallelTransition = new ParallelTransition(
+                new OutDrawerSizeTransition(),
+                new DrawerTransition(translateProperty.get(), initTranslate.doubleValue()));
             parallelTransition.setOnFinished(drawerDrawer);
             parallelTransition.play();
         } else {
@@ -449,7 +453,8 @@ public class JFXDrawer extends StackPane {
 
     public boolean isShowing() {
         return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() > 0)
-            || (partialTransition instanceof DrawerPartialTransitionDraw && isRunningTransition(partialTransition));
+               || (partialTransition instanceof DrawerPartialTransitionDraw
+                   && isRunningTransition(partialTransition));
     }
 
     private boolean isRunningTransition(Transition transition) {
@@ -458,7 +463,8 @@ public class JFXDrawer extends StackPane {
 
     public boolean isHidding() {
         return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
-            || (partialTransition instanceof DrawerPartialTransitionHide && isRunningTransition(partialTransition));
+               || (partialTransition instanceof DrawerPartialTransitionHide
+                   && isRunningTransition(partialTransition));
     }
 
     public boolean isHidden() {
@@ -500,9 +506,9 @@ public class JFXDrawer extends StackPane {
 
         if (sizeProperty.get().get() > getDefaultDrawerSize()) {
             tempDrawerSize = prefSizeProperty.get().get();
-            ParallelTransition parallelTransition = new ParallelTransition(new OutDrawerSizeTransition(),
-                new DrawerTransition(translateProperty.get(),
-                    initTranslate.doubleValue()));
+            ParallelTransition parallelTransition = new ParallelTransition(
+                new OutDrawerSizeTransition(),
+                new DrawerTransition(translateProperty.get(), initTranslate.doubleValue()));
             parallelTransition.setOnFinished((finish) -> {
                 onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
             });
@@ -611,8 +617,9 @@ public class JFXDrawer extends StackPane {
      *                                                                         *
      **************************************************************************/
 
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosedProperty = new SimpleObjectProperty<>((closed) -> {
-    });
+    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosedProperty =
+        new SimpleObjectProperty<>((closed) -> {
+        });
 
     public void setOnDrawerClosed(EventHandler<? super JFXDrawerEvent> handler) {
         onDrawerClosedProperty.set(handler);
@@ -625,8 +632,9 @@ public class JFXDrawer extends StackPane {
     /**
      * Defines a function to be called when the drawer is closing.
      */
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosingProperty = new SimpleObjectProperty<>((closing) -> {
-    });
+    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosingProperty =
+        new SimpleObjectProperty<>((closing) -> {
+        });
 
     public void setOnDrawerClosing(EventHandler<? super JFXDrawerEvent> handler) {
         onDrawerClosingProperty.set(handler);
@@ -637,8 +645,9 @@ public class JFXDrawer extends StackPane {
     }
 
 
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpenedProperty = new SimpleObjectProperty<>((opened) -> {
-    });
+    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpenedProperty =
+        new SimpleObjectProperty<>((opened) -> {
+        });
 
     public void setOnDrawerOpened(EventHandler<? super JFXDrawerEvent> handler) {
         onDrawerOpenedProperty.set(handler);
@@ -651,8 +660,9 @@ public class JFXDrawer extends StackPane {
     /**
      * Defines a function to be called when the drawer is opening.
      */
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpeningProperty = new SimpleObjectProperty<>((opening) -> {
-    });
+    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpeningProperty =
+        new SimpleObjectProperty<>((opening) -> {
+        });
 
     public void setOnDrawerOpening(EventHandler<? super JFXDrawerEvent> handler) {
         onDrawerOpeningProperty.set(handler);
@@ -685,25 +695,28 @@ public class JFXDrawer extends StackPane {
             }
 
             double eventPoint = 0;
-            if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
+            if (directionProperty.get() == DrawerDirection.RIGHT
+                || directionProperty.get() == DrawerDirection.LEFT) {
                 eventPoint = mouseEvent.getSceneX();
             } else {
                 eventPoint = mouseEvent.getSceneY();
             }
 
-            if (((size + (directionProperty.get()
-                                           .doubleValue() * eventPoint)) >= activeOffset) && (partialTransition != null)) {
+            if (((size + (directionProperty.get().doubleValue() * eventPoint)) >= activeOffset)
+                && (partialTransition != null)) {
                 partialTransition = null;
             } else if (partialTransition == null) {
                 double currentTranslate;
                 if (startMouse < 0) {
-                    currentTranslate = initTranslate.doubleValue() + directionProperty.get()
-                        .doubleValue() * initOffset + directionProperty
-                        .get()
-                        .doubleValue() * (size + directionProperty.get().doubleValue() * eventPoint);
+                    currentTranslate = initTranslate.doubleValue()
+                                       + directionProperty.get().doubleValue() * initOffset
+                                       + directionProperty.get().doubleValue()
+                                         * (size + directionProperty.get().doubleValue()
+                                                   * eventPoint);
                 } else {
-                    currentTranslate = directionProperty.get().doubleValue() * (startTranslate + directionProperty.get()
-                        .doubleValue() * (eventPoint - startMouse));
+                    currentTranslate = directionProperty.get().doubleValue()
+                                       * (startTranslate + directionProperty.get().doubleValue()
+                                                           * (eventPoint - startMouse));
                 }
 
                 if (directionProperty.get().doubleValue() * currentTranslate <= 0) {
@@ -711,8 +724,8 @@ public class JFXDrawer extends StackPane {
                     if (resizable) {
                         maxSizeProperty.get().unbind();
                         prefSizeProperty.get().unbind();
-                        if ((startSize - getDefaultDrawerSize()) + directionProperty.get()
-                            .doubleValue() * currentTranslate > 0) {
+                        if ((startSize - getDefaultDrawerSize())
+                            + directionProperty.get().doubleValue() * currentTranslate > 0) {
                             // change the side drawer size if dragging from hidden
                             maxSizeProperty.get()
                                 .set(startSize + directionProperty.get().doubleValue() * currentTranslate);
@@ -722,10 +735,10 @@ public class JFXDrawer extends StackPane {
                             // if the side drawer is not fully shown perform translation to show it , and set its default size
                             maxSizeProperty.get().set(defaultSizeProperty.get());
                             maxSizeProperty.get().set(defaultSizeProperty.get());
-                            translateProperty.set(directionProperty.get()
-                                .doubleValue() * ((startSize - getDefaultDrawerSize()) + directionProperty
-                                .get()
-                                .doubleValue() * currentTranslate));
+                            translateProperty.set(directionProperty.get().doubleValue()
+                                                  * ((startSize - getDefaultDrawerSize())
+                                                     + directionProperty.get().doubleValue()
+                                                       * currentTranslate));
                         }
                     } else {
                         translateProperty.set(currentTranslate);
@@ -734,8 +747,7 @@ public class JFXDrawer extends StackPane {
                     // the drawer is already shown
                     if (resizable) {
                         if (startSize + directionProperty.get()
-                            .doubleValue() * currentTranslate <= parentSizeProperty.get()
-                            .get()) {
+                                            .doubleValue() * currentTranslate <= parentSizeProperty.get().get()) {
                             // change the side drawer size after being shown
                             maxSizeProperty.get().unbind();
                             prefSizeProperty.get().unbind();
@@ -756,7 +768,8 @@ public class JFXDrawer extends StackPane {
     };
 
     private EventHandler<MouseEvent> mousePressedHandler = (mouseEvent) -> {
-        if (directionProperty.get() == DrawerDirection.RIGHT || directionProperty.get() == DrawerDirection.LEFT) {
+        if (directionProperty.get() == DrawerDirection.RIGHT
+            || directionProperty.get() == DrawerDirection.LEFT) {
             startMouse = mouseEvent.getSceneX();
         } else {
             startMouse = mouseEvent.getSceneY();
@@ -767,9 +780,8 @@ public class JFXDrawer extends StackPane {
     };
 
     private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent) -> {
-        if (directionProperty.get().doubleValue() * translateProperty.get() > directionProperty.get()
-            .doubleValue() * initTranslate
-            .doubleValue() / 2) {
+        if (directionProperty.get().doubleValue() * translateProperty.get()
+            > directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
             // show side pane
             partialOpen();
         } else {
@@ -786,7 +798,8 @@ public class JFXDrawer extends StackPane {
         if (partialTransition != null) {
             partialTransition.stop();
         }
-        partialTransition = new DrawerPartialTransitionHide(translateProperty.get(), initTranslate.doubleValue());
+        partialTransition = new DrawerPartialTransitionHide(translateProperty.get(),
+            initTranslate.doubleValue());
         partialTransition.setOnFinished((event) -> {
             this.getChildren().remove(overlayPane);
             this.getChildren().remove(sidePane);
