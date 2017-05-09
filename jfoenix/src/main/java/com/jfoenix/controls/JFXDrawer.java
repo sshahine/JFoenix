@@ -461,7 +461,7 @@ public class JFXDrawer extends StackPane {
         return transition.getStatus() == Status.RUNNING;
     }
 
-    public boolean isHidding() {
+    public boolean isHiding() {
         return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
                || (partialTransition instanceof DrawerPartialTransitionHide
                    && isRunningTransition(partialTransition));

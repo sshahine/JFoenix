@@ -62,7 +62,7 @@ public final class MainController {
             animation.play();
         });
         titleBurgerContainer.setOnMouseClicked(e -> {
-            if (drawer.isHidden() || drawer.isHidding()) {
+            if (drawer.isHidden() || drawer.isHiding()) {
                 drawer.open();
             } else {
                 drawer.close();
