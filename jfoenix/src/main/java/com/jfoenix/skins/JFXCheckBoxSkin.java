@@ -109,10 +109,13 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         });
         control.pressedProperty().addListener((o, oldVal, newVal) -> rippler.hideOverlay());
 
-
         updateChildren();
 
         registerChangeListener(control.checkedColorProperty(), "CHECKED_COLOR");
+
+        // create animation
+        transition = new CheckBoxTransition();
+        createFillTransition();
     }
 
     private void updateRippleColor() {
@@ -169,8 +172,6 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         final double yOffset = computeYOffset(h, maxHeight, checkBox.getAlignment().getVpos()) + x;
 
         if (invalid) {
-            transition = new CheckBoxTransition();
-            createFillTransition();
             if (getSkinnable().isSelected()) {
                 playSelectAnimation(true);
             }
