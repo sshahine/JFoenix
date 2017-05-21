@@ -32,7 +32,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 import java.util.*;
 
@@ -151,13 +150,13 @@ public class JFXListView<T> extends ListView<T> {
             sublistsIndices.put(index, subList);
             subList.getSelectionModel().selectedIndexProperty().addListener((o, oldVal, newVal) -> {
                 if (newVal.intValue() != -1) {
-                    udpateOverAllSelectedIndex();
+                    updateOverAllSelectedIndex();
                 }
             });
         }
     }
 
-    private void udpateOverAllSelectedIndex() {
+    private void updateOverAllSelectedIndex() {
         // if item from the list is selected
         if (this.getSelectionModel().getSelectedIndex() != -1) {
             int selectedIndex = this.getSelectionModel().getSelectedIndex();
@@ -253,7 +252,7 @@ public class JFXListView<T> extends ListView<T> {
         // listen to index changes
         this.getSelectionModel().selectedIndexProperty().addListener((o, oldVal, newVal) -> {
             if (newVal.intValue() != -1) {
-                udpateOverAllSelectedIndex();
+                updateOverAllSelectedIndex();
             }
         });
     }
