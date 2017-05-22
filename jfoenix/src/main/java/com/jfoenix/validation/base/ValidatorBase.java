@@ -44,10 +44,10 @@ public abstract class ValidatorBase extends Parent {
     private Tooltip tooltip = null;
 
     public ValidatorBase(String message) {
-        this.setMessage(message);
         this();
+        this.setMessage(message);
     }
-    
+
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
     }
