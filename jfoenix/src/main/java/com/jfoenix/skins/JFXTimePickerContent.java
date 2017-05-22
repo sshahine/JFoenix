@@ -110,12 +110,14 @@ public class JFXTimePickerContent extends VBox {
             if (newVal == TimeUnit.HOURS) {
                 angle.set(Math.toDegrees(2 * Math.PI / 12));
                 int tmp = Integer.parseInt(selectedHourLabel.getText());
-                if (tmp == 0 || tmp > 12) {
-                    hoursContent.getChildren().get(0).setVisible(false);
-                    hoursContent.getChildren().get(1).setVisible(true);
-                } else {
-                    hoursContent.getChildren().get(1).setVisible(false);
-                    hoursContent.getChildren().get(0).setVisible(true);
+                if (is24HourView) {
+                    if (tmp == 0 || tmp > 12) {
+                        hoursContent.getChildren().get(0).setVisible(false);
+                        hoursContent.getChildren().get(1).setVisible(true);
+                    } else {
+                        hoursContent.getChildren().get(1).setVisible(false);
+                        hoursContent.getChildren().get(0).setVisible(true);
+                    }
                 }
                 pointerRotate.set(_24HourHoursPointerRotate);
                 _24HourPointerRotate.set(_24HourHoursPointerRotate);
@@ -482,7 +484,11 @@ public class JFXTimePickerContent extends VBox {
 
     void init() {
         calendarPlaceHolder.setOpacity(1);
-        selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        if(unit.get() == TimeUnit.HOURS){
+            selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        }else{
+            selectedMinLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        }
     }
 
     private void swapLabelsColor(Label lbl1, Label lbl2) {
