@@ -1,16 +1,14 @@
-
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
 [![][versioneye img]][versioneye]
 [![][sonardebt img]][sonardebt]
-
-Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![][gitter img]][gitter]
 
 # JFoenix
 
-* JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
-* JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
+* JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
+* JFoenix Android Build [download jar](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Summary
@@ -24,27 +22,37 @@ To build JFoenix, execute the following command:
 To run the main demo, execute the following command:
 
     gradlew run
-    
+
 **NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
 
 **NOTE** : JFoenix requires **Java 1.8 u60** and above.
 
 # How Can I Use JFoenix?
  You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix.jar under the build/dist folder. To use JFoenix, import jfoenix.jar into your project and start using the new material design Java components :).
- 
+
 ## Gradle
 ### How to Include In Gradle Project
-
-    repositories {
-        mavenCentral()
-    }
-
+```
+repositories {
+    mavenCentral()
+}
+```
 Reference the repository from this location using:
+```
+dependencies {
+    compile 'com.jfoenix:jfoenix:1.4.0'
+}
+```
 
-    dependencies {
-      compile 'com.jfoenix:jfoenix:1.2.0'
-    }
-
+## Maven
+### How to Include In Maven Project
+```xml
+<dependency>
+    <groupId>com.jfoenix</groupId>
+    <artifactId>jfoenix</artifactId>
+    <version>1.4.0</version>
+</dependency>
+```
 # Pics
 
 ![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
@@ -91,4 +99,7 @@ Reference the repository from this location using:
 [sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
 
 [CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
-[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg
+[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=shield
+
+[gitter]:https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
