@@ -63,7 +63,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author Shadi Shaheen only support the default side of the tab pane (Side.Top)
+ * <h1>Material Design TabPane Skin</h1>
+ *
+ * @author Shadi Shaheen
  */
 public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
 
