@@ -223,16 +223,16 @@ public class JFXDecorator extends VBox {
 
         buttonsContainer.setPadding(new Insets(4));
         buttonsContainer.setAlignment(Pos.CENTER_RIGHT);
+        // maximize/restore the window on header double click
+        buttonsContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, (mouseEvent) -> {
+            if (mouseEvent.getClickCount() == 2) {
+                btnMax.fire();
+            }
+        });
         // customize decorator buttons
         List<JFXButton> btns = new ArrayList<>();
         if (fullScreen) {
             btns.add(btnFull);
-            // maximize/restore the window on header double click
-            buttonsContainer.setOnMouseClicked((mouseEvent) -> {
-                if (mouseEvent.getClickCount() == 2) {
-                    btnMax.fire();
-                }
-            });
         }
         if (min) {
             btns.add(btnMin);
