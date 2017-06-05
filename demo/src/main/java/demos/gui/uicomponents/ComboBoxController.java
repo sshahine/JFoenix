@@ -5,6 +5,8 @@ import com.jfoenix.validation.ValidationFacade;
 import io.datafx.controller.ViewController;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.util.StringConverter;
 
 import javax.annotation.PostConstruct;
 
@@ -12,9 +14,9 @@ import javax.annotation.PostConstruct;
 public class ComboBoxController {
 
     @FXML
-    private JFXComboBox<String> jfxComboBox;
+    private JFXComboBox<Label> jfxComboBox;
     @FXML
-    private JFXComboBox<String> jfxEditableComboBox;
+    private JFXComboBox<Label> jfxEditableComboBox;
 
     /**
      * init fxml when loaded.
@@ -35,6 +37,16 @@ public class ComboBoxController {
         };
         jfxEditableComboBox.focusedProperty().addListener(comboBoxFocus);
         jfxEditableComboBox.getEditor().focusedProperty().addListener(comboBoxFocus);
+        jfxEditableComboBox.setConverter(new StringConverter<Label>() {
+            @Override
+            public String toString(Label object) {
+                return object==null? "" : object.getText();
+            }
+            @Override
+            public Label fromString(String string) {
+                return new Label(string);
+            }
+        });
     }
 
 }

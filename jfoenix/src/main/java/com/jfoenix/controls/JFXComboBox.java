@@ -68,25 +68,14 @@ public class JFXComboBox<T> extends ComboBox<T> {
 
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        this.setCellFactory(listView -> new JFXListCell<>());
-        this.setConverter(new StringConverter<T>() {
+        this.setCellFactory(listView -> new JFXListCell<T>(){
             @Override
-            public String toString(T object) {
-                if (object == null) {
-                    return null;
-                }
-                if (object instanceof Label) {
-                    return ((Label) object).getText();
-                }
-                return object.toString();
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public T fromString(String string) {
-                return (T) string;
+            public void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                updateDisplayText(this,item,empty);
             }
         });
+
         // had to refactor the code out of the skin class to allow
         // customization of the button cell
         this.setButtonCell(new ListCell<T>() {
