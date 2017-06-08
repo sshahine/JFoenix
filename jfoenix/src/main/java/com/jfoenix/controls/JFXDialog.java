@@ -213,7 +213,7 @@ public class JFXDialog extends StackPane {
         if (content != null) {
             this.content = content;
             this.content.setPickOnBounds(false);
-            contentHolder.getChildren().add(content);
+            contentHolder.getChildren().setAll(content);
         }
     }
 
