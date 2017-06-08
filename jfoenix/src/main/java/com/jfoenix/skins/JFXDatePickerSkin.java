@@ -22,10 +22,12 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
-import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.behavior.JFXDatePickerBehavior;
 import com.jfoenix.svg.SVGGlyph;
+import com.sun.javafx.binding.ExpressionHelper;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
+import com.sun.javafx.scene.control.skin.DatePickerSkin;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -35,6 +37,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
@@ -52,7 +55,6 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
      * 1. Handle different Chronology
      */
     private JFXDatePicker jfxDatePicker;
-    private JFXTextField editorNode;
 
     // displayNode is the same as editorNode
     private TextField displayNode;
@@ -63,20 +65,36 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     public JFXDatePickerSkin(final JFXDatePicker datePicker) {
         super(datePicker, new JFXDatePickerBehavior(datePicker));
         this.jfxDatePicker = datePicker;
-        editorNode = new JFXTextField();
-        editorNode.focusColorProperty().bind(datePicker.defaultColorProperty());
-        editorNode.setOnAction(action -> action.consume());
-        editorNode.focusedProperty().addListener((obj, oldVal, newVal) -> {
-            if (!newVal) {
+        try {
+            Field helper = datePicker.focusedProperty().getClass().getSuperclass()
+                .getDeclaredField("helper");
+            helper.setAccessible(true);
+            ExpressionHelper value = (ExpressionHelper) helper.get(datePicker.focusedProperty());
+            Field changeListenersField = value.getClass().getDeclaredField("changeListeners");
+            changeListenersField.setAccessible(true);
+            ChangeListener[] changeListeners = (ChangeListener[]) changeListenersField.get(value);
+            // remove parent focus listener to prevent editor class cast exception
+            datePicker.focusedProperty().removeListener(changeListeners[changeListeners.length-1]);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        // add focus listener on editor node
+        datePicker.focusedProperty().addListener((obj, oldVal, newVal) -> {
+            if (getEditor() != null && !newVal) {
                 setTextFromTextFieldIntoComboBoxValue();
             }
         });
 
-
         // create calender or clock button
         arrow = new SVGGlyph(0,
             "calendar",
-            "M320 384h128v128h-128zM512 384h128v128h-128zM704 384h128v128h-128zM128 768h128v128h-128zM320 768h128v128h-128zM512 768h128v128h-128zM320 576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896 960h-832v-704h832v704z",
+            "M320 384h128v128h-128zM512 384h128v128h-128zM704 384h128v128h-128zM128 "
+            + "768h128v128h-128zM320 768h128v128h-128zM512 768h128v128h-128zM320 "
+            + "576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 "
+            + "576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896"
+            + " 960h-832v-704h832v704z",
             Color.BLACK);
         ((SVGGlyph) arrow).fillProperty().bind(jfxDatePicker.defaultColorProperty());
         ((SVGGlyph) arrow).setSize(20, 20);
@@ -84,6 +102,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
             CornerRadii.EMPTY,
             Insets.EMPTY)));
+        arrowButton.setPadding(new Insets(1,8,1,8));
 
         registerChangeListener(datePicker.converterProperty(), "CONVERTER");
         registerChangeListener(datePicker.dayCellFactoryProperty(), "DAY_CELL_FACTORY");
@@ -129,6 +148,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         }
     }
 
+
     @Override
     protected void handleControlPropertyChanged(String p) {
         if ("DAY_CELL_FACTORY".equals(p)) {
@@ -144,7 +164,8 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
                 if (content != null) {
                     LocalDate date = jfxDatePicker.getValue();
                     // set the current date / now when showing the date picker content
-                    content.displayedYearMonthProperty().set((date != null) ? YearMonth.from(date) : YearMonth.now());
+                    content.displayedYearMonthProperty().set((date != null) ?
+                        YearMonth.from(date) : YearMonth.now());
                     content.updateValues();
                 }
                 show();
@@ -161,7 +182,8 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             updateDisplayNode();
             if (content != null) {
                 LocalDate date = jfxDatePicker.getValue();
-                content.displayedYearMonthProperty().set((date != null) ? YearMonth.from(date) : YearMonth.now());
+                content.displayedYearMonthProperty().set((date != null) ?
+                    YearMonth.from(date) : YearMonth.now());
                 content.updateValues();
             }
             jfxDatePicker.fireEvent(new ActionEvent());
@@ -172,22 +194,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
 
     @Override
     protected TextField getEditor() {
-        StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
-        /*
-         *  added to fix android issue as the stack trace on android is
-		 *  not the same as desktop
-		 */
-        if (caller.getClassName().equals(this.getClass().getName())) {
-            caller = Thread.currentThread().getStackTrace()[3];
-        }
-        boolean parentListenerCall = caller.getMethodName().contains("lambda") && caller.getClassName()
-            .equals(this.getClass()
-                .getSuperclass()
-                .getName());
-        if (parentListenerCall) {
-            return null;
-        }
-        return editorNode;
+        return ((DatePicker) getSkinnable()).getEditor();
     }
 
     @Override

@@ -23,12 +23,14 @@ import com.jfoenix.skins.JFXDatePickerSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Skin;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -36,6 +38,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +71,22 @@ public class JFXDatePicker extends DatePicker {
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
         setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        try {
+            editorProperty();
+            Field editorField = getClass().getSuperclass().getDeclaredField("editor");
+            editorField.setAccessible(true);
+            ReadOnlyObjectWrapper<TextField> editor = (ReadOnlyObjectWrapper<TextField>) editorField.get(this);
+            final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
+            editorNode.focusColorProperty().bind(this.defaultColorProperty());
+            this.focusedProperty().addListener((obj, oldVal, newVal) -> {
+                if (getEditor() != null) {
+                    editorNode.setFakeFocus(newVal);
+                }
+            });
+            editor.set(editorNode);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
     }
 
     /**

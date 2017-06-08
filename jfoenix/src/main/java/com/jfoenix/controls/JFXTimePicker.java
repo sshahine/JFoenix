@@ -40,6 +40,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 
+import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -166,7 +167,14 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     public final ReadOnlyObjectProperty<TextField> editorProperty() {
         if (editor == null) {
             editor = new ReadOnlyObjectWrapper<>(this, "editor");
-            editor.set(new ComboBoxListViewSkin.FakeFocusTextField());
+            final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
+            editorNode.focusColorProperty().bind(this.defaultColorProperty());
+            this.focusedProperty().addListener((obj, oldVal, newVal) -> {
+                if (getEditor() != null) {
+                    editorNode.setFakeFocus(newVal);
+                }
+            });
+            editor.set(editorNode);
         }
         return editor.getReadOnlyProperty();
     }
