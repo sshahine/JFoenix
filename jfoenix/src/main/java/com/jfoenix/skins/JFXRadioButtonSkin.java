@@ -133,6 +133,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
                 radio.strokeProperty().set(unSelectedColor);
             }
         } else if ("SELECTED".equals(p)) {
+            // update animation
+            updateAnimation();
             // update ripple color
             boolean isSelected = getSkinnable().isSelected();
             Color unSelectedColor = ((JFXRadioButton) getSkinnable()).getUnSelectedColor();
