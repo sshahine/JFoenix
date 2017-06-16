@@ -109,7 +109,7 @@ public class JFXDrawer extends StackPane {
         DrawerDirection.LEFT);
 
     /**
-     * creates empy drawer node
+     * creates empty drawer node
      */
     public JFXDrawer() {
         initialize();
@@ -125,8 +125,6 @@ public class JFXDrawer extends StackPane {
             CornerRadii.EMPTY,
             Insets.EMPTY)));
         sidePane.setPickOnBounds(false);
-        // causes performance issue when animating the drawer
-
         this.getChildren().add(content);
 
         // add listeners

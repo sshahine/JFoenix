@@ -123,35 +123,31 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
             }
         });
 
-        this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            return new Predicate<TreeItem<T>>() {
-                @Override
-                public boolean test(TreeItem<T> child) {
-                    // Set the predicate of child items to force filtering
-                    if (child instanceof RecursiveTreeItem) {
-                        if (!((RecursiveTreeItem) child).originalItems.isEmpty()) {
-                            RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
-                            filterableChild.setPredicate(RecursiveTreeItem.this.predicate.get());
-                        }
+        this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() ->
+            (Predicate<TreeItem<T>>) child -> {
+                // Set the predicate of child items to force filtering
+                if (child instanceof RecursiveTreeItem) {
+                    if (!((RecursiveTreeItem) child).originalItems.isEmpty()) {
+                        RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
+                        filterableChild.setPredicate(RecursiveTreeItem.this.predicate.get());
                     }
-                    // If there is no predicate, keep this tree item
-                    if (RecursiveTreeItem.this.predicate.get() == null) {
-                        return true;
-                    }
-                    // If there are children, keep this tree item
-                    if (child.getChildren().size() > 0) {
-                        return true;
-                    }
-                    // If its a group node keep this item if it has children
-                    if (child.getValue() instanceof RecursiveTreeObject && child.getValue()
-                        .getClass() == RecursiveTreeObject.class) {
-                        return child.getChildren().size() != 0;
-                    }
-                    // Otherwise ask the TreeItemPredicate
-                    return RecursiveTreeItem.this.predicate.get().test(child);
                 }
-            };
-        }, this.predicate));
+                // If there is no predicate, keep this tree item
+                if (RecursiveTreeItem.this.predicate.get() == null) {
+                    return true;
+                }
+                // If there are children, keep this tree item
+                if (child.getChildren().size() > 0) {
+                    return true;
+                }
+                // If its a group node keep this item if it has children
+                if (child.getValue() instanceof RecursiveTreeObject &&
+                    child.getValue().getClass() == RecursiveTreeObject.class) {
+                    return child.getChildren().size() != 0;
+                }
+                // Otherwise ask the TreeItemPredicate
+                return RecursiveTreeItem.this.predicate.get().test(child);
+            }, this.predicate));
 
 
         this.filteredItems.predicateProperty().addListener((o, oldVal, newVal) -> {

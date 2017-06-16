@@ -171,7 +171,7 @@ public class JFXCustomColorPickerDialog extends StackPane {
                     tabs.lookupAll(".tab")
                         .forEach(tabNode -> tabNode.lookupAll(".jfx-rippler")
                             .forEach(node -> ((JFXRippler) node).setRipplerFill(fontColor)));
-                    ((Line) tabs.lookup(".tab-selected-line")).setStroke(fontColor);
+                    ((Pane) tabs.lookup(".tab-selected-line")).setBackground(new Background(new BackgroundFill(fontColor,CornerRadii.EMPTY,Insets.EMPTY)));
                     pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button -> {
                         ((JFXButton) button).setRipplerFill(fontColor);
                         ((SVGGlyph) ((JFXButton) button).getGraphic()).setFill(fontColor);

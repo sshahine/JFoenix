@@ -75,7 +75,6 @@ public class JFXAlert<R> extends Dialog<R> {
                 closeButton.managedProperty().bind(closeButton.visibleProperty());
                 closeButton.setVisible(false);
             }
-
             @Override
             protected Node createButtonBar() {
                 return null;
@@ -86,13 +85,12 @@ public class JFXAlert<R> extends Dialog<R> {
         // init style for the content container
         contentContainer = new StackPane();
         contentContainer.getStyleClass().add("jfx-alert-content-container");
-        contentContainer.setPrefSize(300, 250);
         contentContainer.setStyle("-fx-background-color: WHITE;");
 
         // customize dialogPane
         final DialogPane dialogPane = getDialogPane();
         dialogPane.getScene().setFill(Color.TRANSPARENT);
-        dialogPane.setStyle("-fx-background-color: TRANSPARENT;");
+        dialogPane.setStyle("-fx-background-color: transparent;");
         dialogPane.prefWidthProperty().bind(stage.getScene().widthProperty());
         dialogPane.prefHeightProperty().bind(stage.getScene().heightProperty());
 
@@ -111,20 +109,14 @@ public class JFXAlert<R> extends Dialog<R> {
         container.setPadding(new Insets(0));
         dialogPane.setContent(container);
 
+        updateX(stage, dialogPane);
+        updateY(stage, dialogPane);
 
         // bind dialog position to stage position
         stage.getScene().widthProperty().addListener(observable -> updateSize(dialogPane));
         stage.getScene().heightProperty().addListener(observable -> updateSize(dialogPane));
-        stage.xProperty().addListener((observable, oldValue, newValue) -> {
-            final Parent root = stage.getScene().getRoot();
-            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
-            setX(screenBounds.getMinX());
-        });
-        stage.yProperty().addListener((observable, oldValue, newValue) -> {
-            final Parent root = stage.getScene().getRoot();
-            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
-            setY(screenBounds.getMinY());
-        });
+        stage.xProperty().addListener((observable, oldValue, newValue) -> updateX(stage, dialogPane));
+        stage.yProperty().addListener((observable, oldValue, newValue) -> updateY(stage, dialogPane));
 
         // handle animation
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
@@ -147,19 +139,43 @@ public class JFXAlert<R> extends Dialog<R> {
         });
     }
 
+    private void updateY(Stage stage, DialogPane dialogPane) {
+        if(dialogPane.getScene()!=null) {
+            final Parent root = stage.getScene().getRoot();
+            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
+            dialogPane.getScene().getWindow().setY(screenBounds.getMinY());
+        }
+    }
+
+    private void updateX(Stage stage, DialogPane dialogPane) {
+        if(dialogPane.getScene()!=null) {
+            final Parent root = stage.getScene().getRoot();
+            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
+            dialogPane.getScene().getWindow().setX(screenBounds.getMinX());
+        }
+    }
+
+
+    private Animation transition = null;
 
     /**
      * play the hide animation for the dialog, as the java hide method is set to final
      * can not be overridden
      */
     public void hideWithAnimation() {
-        if (getAnimation() != null) {
-            Animation animation = getAnimation().createHidingAnimation(contentGroup, overlay);
-            if (animation != null) {
-                animation.setOnFinished(finish -> this.hide());
-                animation.play();
-            } else {
-                Platform.runLater(this::hide);
+        if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
+            if (getAnimation() != null) {
+                Animation animation = getAnimation().createHidingAnimation(contentGroup, overlay);
+                if (animation != null) {
+                    transition = animation;
+                    animation.setOnFinished(finish -> {
+                        this.hide();
+                        this.transition = null;
+                    });
+                    animation.play();
+                } else {
+                    Platform.runLater(this::hide);
+                }
             }
         }
     }
@@ -219,5 +235,9 @@ public class JFXAlert<R> extends Dialog<R> {
 
     public void setAnimation(JFXAlertAnimation animation) {
         this.animation.set(animation);
+    }
+
+    public void setSize(double prefWidth, double prefHeight){
+        contentContainer.setPrefSize(prefWidth, prefHeight);
     }
 }

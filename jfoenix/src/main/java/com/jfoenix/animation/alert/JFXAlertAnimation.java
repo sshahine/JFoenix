@@ -24,6 +24,8 @@ import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 
+import java.util.function.Function;
+
 /**
  * JFXAlertAnimation object is used to to create showing/hiding animation for
  * {@link JFXAlert} control
@@ -33,6 +35,12 @@ import javafx.scene.Node;
  * @since 2017-05-26
  */
 public interface JFXAlertAnimation {
+
+    Function<Transition, Transition> inverseAnimation = transition -> {
+        transition.jumpTo(transition.getCycleDuration());
+        transition.setRate(-1);
+        return transition;
+    };
 
     public void initAnimation(Node contentContainer, Node overlay);
 
@@ -55,7 +63,7 @@ public interface JFXAlertAnimation {
 
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
-            return inverseAnimation(new HorizontalTransition(true, contentContainer, overlay));
+            return inverseAnimation.apply(new HorizontalTransition(true, contentContainer, overlay));
         }
     };
 
@@ -74,7 +82,7 @@ public interface JFXAlertAnimation {
 
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
-            return inverseAnimation(new HorizontalTransition(false, contentContainer, overlay));
+            return inverseAnimation.apply(new HorizontalTransition(false, contentContainer, overlay));
         }
     };
 
@@ -93,7 +101,7 @@ public interface JFXAlertAnimation {
 
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
-            return inverseAnimation(new VerticalTransition(true, contentContainer, overlay));
+            return inverseAnimation.apply(new VerticalTransition(true, contentContainer, overlay));
         }
     };
 
@@ -112,7 +120,7 @@ public interface JFXAlertAnimation {
 
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
-            return inverseAnimation(new VerticalTransition(false, contentContainer, overlay));
+            return inverseAnimation.apply(new VerticalTransition(false, contentContainer, overlay));
         }
     };
 
@@ -131,14 +139,8 @@ public interface JFXAlertAnimation {
 
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
-            return inverseAnimation(new CenterTransition(contentContainer, overlay));
+            return inverseAnimation.apply(new CenterTransition(contentContainer, overlay));
         }
     };
-
-    static Transition inverseAnimation(Transition centerTransition) {
-        centerTransition.jumpTo(centerTransition.getCycleDuration());
-        centerTransition.setRate(-1);
-        return centerTransition;
-    }
-
 }
+
