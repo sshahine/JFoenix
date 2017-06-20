@@ -55,23 +55,13 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
     private StackPane line = new StackPane();
     private StackPane focusedLine = new StackPane();
-
     private Label errorLabel = new Label();
     private StackPane errorIcon = new StackPane();
-    private HBox errorContainer;
-    private Pane textPane;
+    private HBox errorContainer = new HBox();
+    private StackPane promptContainer = new StackPane();
 
-    private double initScale = 0.05;
-    private double oldErrorLabelHeight = -1;
-    private double initYLayout = -1;
-    private double initHeight = -1;
-    private boolean errorShown = false;
-    private double currentFieldHeight = -1;
-    private double errorLabelInitHeight = 0;
-
-    private boolean heightChanged = false;
-    private StackPane promptContainer;
     private Text promptText;
+    private Pane textPane;
 
     private ParallelTransition transition;
     private Timeline hideErrorAnimation;
@@ -79,6 +69,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
     private CachedTransition promptTextDownTransition;
     private CachedTransition promptTextColorTransition;
 
+    private double initScale = 0.05;
     private Scale promptTextScale = new Scale(1, 1, 0, 0);
     private Scale scale = new Scale(initScale, 1);
     private Timeline linesAnimation = new Timeline(
@@ -93,28 +84,19 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
     private Paint oldPromptTextFill;
     private BooleanBinding usePromptText = Bindings.createBooleanBinding(this::usePromptText,
-                                                                         getSkinnable().textProperty(),
-                                                                         getSkinnable().promptTextProperty());
+        getSkinnable().textProperty(),
+        getSkinnable().promptTextProperty());
 
     public JFXPasswordFieldSkin(JFXPasswordField field) {
         super(field);
         // initial styles
-        field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+        field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
         field.setPadding(new Insets(4, 0, 4, 0));
 
+        // add style classes
         errorLabel.getStyleClass().add("error-label");
-        errorLabel.setPadding(new Insets(4, 0, 0, 0));
-        errorLabel.setWrapText(true);
-        errorIcon.setTranslateY(3);
-
-        StackPane errorLabelContainer = new StackPane();
-        errorLabelContainer.getChildren().add(errorLabel);
-        StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
-
         line.getStyleClass().add("input-line");
-        getChildren().add(line);
         focusedLine.getStyleClass().add("input-focused-line");
-        getChildren().add(focusedLine);
 
         // draw lines
         line.setPrefHeight(1);
@@ -138,49 +120,21 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
 
-
-        promptContainer = new StackPane();
-        getChildren().add(promptContainer);
-
-        errorContainer = new HBox();
-        errorContainer.getChildren().setAll(errorLabelContainer, errorIcon);
-        HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
-        errorContainer.setSpacing(10);
+        // error container
+        errorContainer.getChildren().setAll(new StackPane(errorLabel), errorIcon);
+        errorContainer.setAlignment(Pos.CENTER_LEFT);
+        errorContainer.setPadding(new Insets(4,0,0,0));
+        errorContainer.setSpacing(8);
         errorContainer.setVisible(false);
         errorContainer.setOpacity(0);
-        getChildren().add(errorContainer);
+        StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
+        HBox.setHgrow(errorLabel.getParent(), Priority.ALWAYS);
 
-        // add listeners to show error label
-        errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
-            if (errorShown) {
-                if (oldErrorLabelHeight == -1) {
-                    oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
-                }
-                heightChanged = true;
-                double newHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight + newVal.doubleValue();
-                // show the error
-                Timeline errorAnimation = new Timeline(
-                    new KeyFrame(Duration.ZERO,
-                        new KeyValue(getSkinnable().minHeightProperty(),
-                            currentFieldHeight,
-                            Interpolator.EASE_BOTH)),
-                    new KeyFrame(Duration.millis(160),
-                        // text pane animation
-                        new KeyValue(textPane.translateYProperty(),
-                            (initYLayout + textPane.getMaxHeight() / 2) - newHeight / 2,
-                            Interpolator.EASE_BOTH),
-                        // animate the height change effect
-                        new KeyValue(getSkinnable().minHeightProperty(), newHeight, Interpolator.EASE_BOTH)));
-                errorAnimation.play();
-                // show the error label when finished
-                errorAnimation.setOnFinished(finish -> new Timeline(new KeyFrame(Duration.millis(160),
-                    new KeyValue(errorContainer.opacityProperty(),
-                        1,
-                        Interpolator.EASE_BOTH))).play());
-                currentFieldHeight = newHeight;
-                oldErrorLabelHeight = newVal.doubleValue();
-            }
-        });
+
+        getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
+
+
+        // add listeners
         errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
             // show the error label if it's not shown
             if (newVal) {
@@ -190,7 +144,6 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                         Interpolator.EASE_BOTH))).play();
             }
         });
-
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -328,7 +281,12 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
         focusedLine.resizeRelocate(x, getSkinnable().getHeight(), w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, getSkinnable().getHeight(), w, line.prefHeight(-1));
-        errorContainer.relocate(x, getSkinnable().getHeight() + focusedLine.getHeight());
+
+        final double errorContainerWidth = w - errorIcon.prefWidth(-1);
+        errorContainer.resizeRelocate(x,getSkinnable().getHeight() + focusedLine.getHeight(),
+            w,errorLabel.prefHeight(errorContainerWidth)
+              + errorContainer.snappedBottomInset()
+              + errorContainer.snappedTopInset());
         scale.setPivotX(w / 2);
     }
 
@@ -361,10 +319,10 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                         field.setAccessible(true);
                         createPromptNode();
                         field.set(this, promptText);
-                        // position the prompt node in its position
+                        // replace parent promptNode with promptText field
                         triggerFloatLabel = true;
-                    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-                        e.printStackTrace();
+                    } catch (NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException ex) {
+                        ex.printStackTrace();
                     }
                 }
                 promptText.getTransforms().add(promptTextScale);
@@ -436,7 +394,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
 
     private void focus() {
         // in case the method request layout is not called before focused
-        // this is bug is reported while editing TreeTableView cells
+        // this bug is reported while editing TreeTableView cells
         if (textPane == null) {
             Platform.runLater(this::focus);
         } else {
@@ -499,52 +457,30 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
-        return (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
-            .get()
-            .equals(Color.TRANSPARENT);
+        return (txt == null || txt.isEmpty()) && promptTxt != null
+               && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
     }
 
     private void showError(ValidatorBase validator) {
         // set text in error label
         errorLabel.setText(validator.getMessage());
         // show error icon
-        Node awsomeIcon = validator.getIcon();
+        Node icon = validator.getIcon();
         errorIcon.getChildren().clear();
-        if (awsomeIcon != null) {
-            errorIcon.getChildren().add(awsomeIcon);
-            StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);
-        }
-        // init only once, to fix the text pane from resizing
-        if (initYLayout == -1) {
-            textPane.setMaxHeight(textPane.getHeight());
-            initYLayout = textPane.getBoundsInParent().getMinY();
-            initHeight = getSkinnable().getHeight();
-            currentFieldHeight = initHeight;
+        if (icon != null) {
+            errorIcon.getChildren().setAll(icon);
+            StackPane.setAlignment(icon, Pos.CENTER_RIGHT);
         }
         errorContainer.setVisible(true);
-        errorShown = true;
     }
 
     private void hideError() {
-        if (heightChanged) {
-            new Timeline(new KeyFrame(Duration.millis(160),
-                new KeyValue(textPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
-            // reset the height of text field
-            new Timeline(new KeyFrame(Duration.millis(160),
-                new KeyValue(getSkinnable().minHeightProperty(),
-                    initHeight,
-                    Interpolator.EASE_BOTH))).play();
-            heightChanged = false;
-        }
         // clear error label text
         errorLabel.setText(null);
-        oldErrorLabelHeight = errorLabelInitHeight;
         // clear error icon
         errorIcon.getChildren().clear();
         // reset the height of the text field
-        currentFieldHeight = initHeight;
         // hide error container
         errorContainer.setVisible(false);
-        errorShown = false;
     }
 }

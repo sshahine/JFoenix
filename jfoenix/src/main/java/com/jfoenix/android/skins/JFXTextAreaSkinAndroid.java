@@ -68,32 +68,21 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
     private StackPane line = new StackPane();
     private StackPane focusedLine = new StackPane();
-
     private Label errorLabel = new Label();
     private StackPane errorIcon = new StackPane();
-    private HBox errorContainer;
+    private HBox errorContainer = new HBox();
+    private Pane promptContainer = new StackPane();
+
     private ScrollPane scrollPane;
-
-    private double initScale = 0.05;
-    private double oldErrorLabelHeight = -1;
-    //	private Region textPane;
-    private double initYLayout = -1;
-    private double initHeight = -1;
-    private boolean errorShown = false;
-    private double currentFieldHeight = -1;
-    private double errorLabelInitHeight = 0;
-    private boolean heightChanged = false;
-
-    private Pane promptContainer;
     private Text promptText;
 
     private CachedTransition promptTextUpTransition;
     private CachedTransition promptTextDownTransition;
     private CachedTransition promptTextColorTransition;
-
     private Timeline hideErrorAnimation;
     private ParallelTransition transition;
 
+    private double initScale = 0.05;
     private Scale promptTextScale = new Scale(1, 1, 0, 0);
     private Scale scale = new Scale(initScale, 1);
     private Timeline linesAnimation = new Timeline(
@@ -107,7 +96,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
     );
 
     private Paint oldPromptTextFill;
-    private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
+    private BooleanBinding usePromptText = Bindings.createBooleanBinding(this::usePromptText,
         getSkinnable().textProperty(),
         getSkinnable().promptTextProperty());
 
@@ -122,18 +111,11 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         getSkinnable().setBackground(transparentBackground);
         textArea.setWrapText(true);
 
+        // add style classes
         errorLabel.getStyleClass().add("error-label");
-        errorLabel.setPadding(new Insets(4, 0, 0, 0));
-        errorLabel.setWrapText(true);
-        errorIcon.setTranslateY(3);
-        StackPane errorLabelContainer = new StackPane();
-        errorLabelContainer.getChildren().add(errorLabel);
-        StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
-
-        promptContainer = new StackPane();
-
         line.getStyleClass().add("input-line");
         focusedLine.getStyleClass().add("input-focused-line");
+
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1 + 4 + 2); // translate = prefHeight + init_translation
@@ -156,31 +138,19 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
 
-        errorContainer = new HBox();
-        errorContainer.getChildren().setAll(errorLabelContainer, errorIcon);
-        HBox.setHgrow(errorLabelContainer, Priority.ALWAYS);
-
-        errorContainer.setSpacing(10);
+        // error container
+        errorContainer.getChildren().setAll(new StackPane(errorLabel), errorIcon);
+        errorContainer.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(errorLabel.getParent(), Priority.ALWAYS);
+        StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
+        errorContainer.setPadding(new Insets(4,0,0,0));
+        errorContainer.setSpacing(8);
         errorContainer.setVisible(false);
         errorContainer.setOpacity(0);
 
         getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
 
-        getSkinnable().setBackground(transparentBackground);
 
-
-        // add listeners to show error label
-        errorLabel.heightProperty().addListener((o, oldVal, newVal) -> {
-            if (errorShown) {
-                if (oldErrorLabelHeight == -1) {
-                    oldErrorLabelHeight = errorLabelInitHeight = oldVal.doubleValue();
-                }
-
-                heightChanged = true;
-                currentFieldHeight = this.getSkinnable().getHeight() - oldErrorLabelHeight + newVal.doubleValue();
-                oldErrorLabelHeight = newVal.doubleValue();
-            }
-        });
         errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
             // show the error label if it's not shown
             if (newVal) {
@@ -194,7 +164,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
         textArea.labelFloatProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                JFXUtilities.runInFX(() -> createFloatingLabel());
+                JFXUtilities.runInFX(this::createFloatingLabel);
             } else {
                 promptText.visibleProperty().bind(usePromptText);
             }
@@ -218,13 +188,13 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
                         });
                         hideErrorAnimation.play();
                     } else {
-                        JFXUtilities.runInFX(() -> hideError());
+                        JFXUtilities.runInFX(this::hideError);
                     }
                 } else {
                     if (newVal != null) {
                         JFXUtilities.runInFXAndWait(() -> showError(newVal));
                     } else {
-                        JFXUtilities.runInFXAndWait(() -> hideError());
+                        JFXUtilities.runInFXAndWait(this::hideError);
                     }
                 }
             }
@@ -343,8 +313,15 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
         focusedLine.resizeRelocate(x, h - focusedLine.prefHeight(-1), w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, h - focusedLine.prefHeight(-1), w, line.prefHeight(-1));
-        errorContainer.resizeRelocate(x, y, w, -1);
+//        errorContainer.resizeRelocate(x, y, w, -1);
+
+        final double errorContainerWidth = w - errorIcon.prefWidth(-1);
+        errorContainer.resizeRelocate(x, y,
+            w,errorLabel.prefHeight(errorContainerWidth)
+              + errorContainer.snappedBottomInset()
+              + errorContainer.snappedTopInset());
         errorContainer.setTranslateY(h + focusedLine.getHeight() + 4);
+
         scale.setPivotX(w / 2);
     }
 
@@ -376,7 +353,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
                         field.setAccessible(true);
                         createPromptNode();
                         field.set(this, promptText);
-                        // position the prompt node in its position
+                        // replace parent promptNode with promptText field
                         triggerFloatLabel = true;
                         oldPromptTextFill = promptTextFill.get();
                     } catch (NoSuchFieldException e) {
@@ -471,7 +448,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
     private void focus() {
         // in case the method request layout is not called before focused
-        // this is bug is reported while editing treetableview cells
+        // this bug is reported while editing treetableview cells
         if (scrollPane == null) {
             Platform.runLater(() -> focus());
         } else {
@@ -534,52 +511,29 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
-        return (txt == null || txt.isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
-            .get()
-            .equals(Color.TRANSPARENT);
+        return (txt == null || txt.isEmpty()) && promptTxt != null &&
+               !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
     }
 
     private void showError(ValidatorBase validator) {
         // set text in error label
         errorLabel.setText(validator.getMessage());
         // show error icon
-        Node awsomeIcon = validator.getIcon();
+        Node icon = validator.getIcon();
         errorIcon.getChildren().clear();
-        if (awsomeIcon != null) {
-            errorIcon.getChildren().add(awsomeIcon);
-            StackPane.setAlignment(awsomeIcon, Pos.TOP_RIGHT);
-        }
-        // init only once, to fix the text pane from resizing
-        if (initYLayout == -1) {
-            scrollPane.setMaxHeight(scrollPane.getHeight());
-            initYLayout = scrollPane.getBoundsInParent().getMinY();
-            initHeight = getSkinnable().getHeight();
-            currentFieldHeight = initHeight;
+        if (icon != null) {
+            errorIcon.getChildren().add(icon);
+            StackPane.setAlignment(icon, Pos.CENTER_RIGHT);
         }
         errorContainer.setVisible(true);
-        errorShown = true;
     }
 
     private void hideError() {
-        if (heightChanged) {
-            new Timeline(new KeyFrame(Duration.millis(160),
-                new KeyValue(scrollPane.translateYProperty(), 0, Interpolator.EASE_BOTH))).play();
-            // reset the height of text field
-            new Timeline(new KeyFrame(Duration.millis(160),
-                new KeyValue(getSkinnable().minHeightProperty(),
-                    initHeight,
-                    Interpolator.EASE_BOTH))).play();
-            heightChanged = false;
-        }
         // clear error label text
         errorLabel.setText(null);
-        oldErrorLabelHeight = errorLabelInitHeight;
         // clear error icon
         errorIcon.getChildren().clear();
-        // reset the height of the text field
-        currentFieldHeight = initHeight;
         // hide error container
         errorContainer.setVisible(false);
-        errorShown = false;
     }
 }
