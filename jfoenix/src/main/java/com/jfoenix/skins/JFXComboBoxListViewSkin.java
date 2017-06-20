@@ -31,6 +31,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -238,6 +239,10 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         if (invalid) {
             invalid = false;
             // create floating label
+            // set initial prompt text fill using javafx prompt node fill
+            if(!getSkinnable().isEditable()){
+                promptTextFill.set(((Text)((ListCell<T>)super.getDisplayNode()).lookup(".text")).getFill());
+            }
             createFloatingAnimation();
             if(getSkinnable().getValue()!=null)
                 animateFloatingLabel(true);
