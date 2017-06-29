@@ -322,6 +322,7 @@ public class JFXDecorator extends VBox {
                 return; // maximized mode does not support resize
             }
             if (!primaryStage.isResizable()) {
+                updateInitMouseValues(mouseEvent);
                 return;
             }
             double x = mouseEvent.getX();
