@@ -223,8 +223,6 @@ public class ValidationFacade extends VBox {
 
     public static void reset(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
-        control.getStyleClass()
-            .remove(facade.activeValidator.get() == null ? "" : facade.activeValidator.get().getErrorStyleClass());
         control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
         facade.activeValidator.set(null);
     }

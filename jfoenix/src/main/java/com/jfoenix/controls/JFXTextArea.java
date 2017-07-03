@@ -139,7 +139,6 @@ public class JFXTextArea extends TextArea {
     }
 
     public void resetValidation() {
-        getStyleClass().remove(activeValidator.get() == null ? "" : activeValidator.get().getErrorStyleClass());
         pseudoClassStateChanged(ValidatorBase.PSEUDO_CLASS_ERROR, false);
         activeValidator.set(null);
     }

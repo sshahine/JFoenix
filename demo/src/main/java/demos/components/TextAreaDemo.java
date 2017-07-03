@@ -30,7 +30,6 @@ public class TextAreaDemo extends Application {
 
         RequiredFieldValidator validator = new RequiredFieldValidator();
         // NOTE adding error class to text area is causing the cursor to disapper
-        validator.setErrorStyleClass("");
         validator.setMessage("Please type something!");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
             .glyph(FontAwesomeIcon.WARNING)

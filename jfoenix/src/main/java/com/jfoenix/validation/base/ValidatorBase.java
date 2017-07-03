@@ -27,7 +27,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
 /**
- * An abstract class that defines the basic validation functionalities for a certain control.
+ * An abstract class that defines the basic validation functionality for a certain control.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -35,7 +35,6 @@ import javafx.scene.control.Tooltip;
  */
 public abstract class ValidatorBase extends Parent {
 
-    public static final String DEFAULT_ERROR_STYLE_CLASS = "error";
     /**
      * this style class will be activated when a validation error occurs
      */
@@ -89,15 +88,6 @@ public abstract class ValidatorBase extends Parent {
     protected void onEval() {
         Node control = getSrcControl();
         if (hasErrors.get()) {
-            /*
-             * TODO
-			 * NOTE: NEED TO FIX adding error style class to text area
-			 * is causing the caret to disappear
-			 */
-            if (!control.getStyleClass().contains(errorStyleClass.get())) {
-                control.getStyleClass().add(errorStyleClass.get());
-            }
-
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 
             if (control instanceof Control) {
@@ -120,7 +110,6 @@ public abstract class ValidatorBase extends Parent {
                 tooltip = null;
             }
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
-            control.getStyleClass().remove(errorStyleClass.get());
         }
     }
 
@@ -218,21 +207,4 @@ public abstract class ValidatorBase extends Parent {
     public SimpleObjectProperty<Node> iconProperty() {
         return this.icon;
     }
-
-
-    /***** error style class *****/
-    protected SimpleStringProperty errorStyleClass = new SimpleStringProperty(DEFAULT_ERROR_STYLE_CLASS);
-
-    public void setErrorStyleClass(String styleClass) {
-        this.errorStyleClass.set(styleClass);
-    }
-
-    public String getErrorStyleClass() {
-        return this.errorStyleClass.get();
-    }
-
-    public StringProperty errorStyleClassProperty() {
-        return this.errorStyleClass;
-    }
-
 }
