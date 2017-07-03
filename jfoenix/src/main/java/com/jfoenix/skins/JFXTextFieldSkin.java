@@ -29,6 +29,7 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -64,14 +66,13 @@ public class JFXTextFieldSkin extends TextFieldSkin {
     private Pane textPane;
 
     private ParallelTransition transition;
-    private Timeline hideErrorAnimation;
     private CachedTransition promptTextUpTransition;
     private CachedTransition promptTextDownTransition;
     private CachedTransition promptTextColorTransition;
 
     private double initScale = 0.05;
-    private Scale promptTextScale = new Scale(1, 1, 0, 0);
-    private Scale scale = new Scale(initScale, 1);
+    private final Scale promptTextScale = new Scale(1, 1, 0, 0);
+    private final Scale scale = new Scale(initScale, 1);
     private Timeline linesAnimation = new Timeline(
         new KeyFrame(Duration.ZERO,
             new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
@@ -84,8 +85,18 @@ public class JFXTextFieldSkin extends TextFieldSkin {
 
     private Paint oldPromptTextFill;
     private BooleanBinding usePromptText = Bindings.createBooleanBinding(this::usePromptText,
-                                                                         getSkinnable().textProperty(),
-                                                                         getSkinnable().promptTextProperty());
+        getSkinnable().textProperty(),
+        getSkinnable().promptTextProperty());
+
+
+    private final Rectangle errorContainerClip = new Rectangle();
+    private final Scale errorClipScale = new Scale(1, 0, 0, 0);
+    private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80), new
+        KeyValue(errorContainer.opacityProperty(), 0, Interpolator.LINEAR)));
+    private Timeline errorShowTransition = new Timeline(new KeyFrame(Duration.millis(80), new
+        KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_OUT)));
+    private Timeline scale1 = new Timeline();
+    private Timeline scaleLess1 = new Timeline();
 
     public JFXTextFieldSkin(JFXTextField field) {
         super(field);
@@ -123,27 +134,17 @@ public class JFXTextFieldSkin extends TextFieldSkin {
         // error container
         errorContainer.getChildren().setAll(new StackPane(errorLabel), errorIcon);
         errorContainer.setAlignment(Pos.CENTER_LEFT);
-        errorContainer.setPadding(new Insets(4,0,0,0));
         errorContainer.setSpacing(8);
+        errorContainer.setPadding(new Insets(4, 0, 0, 0));
         errorContainer.setVisible(false);
         errorContainer.setOpacity(0);
-        StackPane.setAlignment(errorLabel, Pos.CENTER_LEFT);
+        errorContainer.setManaged(false);
+        StackPane.setAlignment(errorLabel, Pos.TOP_LEFT);
         HBox.setHgrow(errorLabel.getParent(), Priority.ALWAYS);
-
+        errorContainerClip.getTransforms().add(errorClipScale);
+        errorContainer.setClip(field.isDisableAnimation() ? null : errorContainerClip);
 
         getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
-
-
-        // add listeners
-        errorContainer.visibleProperty().addListener((o, oldVal, newVal) -> {
-            // show the error label if it's not shown
-            if (newVal) {
-                new Timeline(new KeyFrame(Duration.millis(160),
-                    new KeyValue(errorContainer.opacityProperty(),
-                        1,
-                        Interpolator.EASE_BOTH))).play();
-            }
-        });
 
         field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -154,24 +155,63 @@ public class JFXTextFieldSkin extends TextFieldSkin {
             createFocusTransition();
         });
 
-        field.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
+        field.activeValidatorProperty().addListener((ObservableValue<? extends ValidatorBase> o, ValidatorBase oldVal, ValidatorBase newVal) -> {
             if (textPane != null) {
                 if (!((JFXTextField) getSkinnable()).isDisableAnimation()) {
-                    if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
-                        hideErrorAnimation.stop();
-                    }
                     if (newVal != null) {
-                        hideErrorAnimation = new Timeline(new KeyFrame(Duration.millis(160),
-                            new KeyValue(errorContainer.opacityProperty(),
-                                0,
-                                Interpolator.EASE_BOTH)));
-                        hideErrorAnimation.setOnFinished(finish -> {
-                            errorContainer.setVisible(false);
-                            JFXUtilities.runInFX(() -> showError(newVal));
+                        errorHideTransition.setOnFinished(finish -> {
+                            showError(newVal);
+                            final double w = getSkinnable().getWidth();
+                            double errorContainerHeight = computeErrorHeight(computeErrorWidth(w));
+                            if(errorLabel.isWrapText()){
+                                // animate opacity + scale
+                                if (errorContainerHeight < errorContainer.getHeight()) {
+                                    // update animation frames
+                                    scaleLess1.getKeyFrames().setAll(createSmallerScaleFrame(errorContainerHeight));
+                                    scaleLess1.setOnFinished(event -> {
+                                        updateErrorContainerSize(w, errorContainerHeight);
+                                        errorClipScale.setY(1);
+                                    });
+                                    SequentialTransition transition = new SequentialTransition(scaleLess1,
+                                        errorShowTransition);
+                                    transition.play();
+                                } else {
+                                    errorClipScale.setY(oldVal == null ? 0 :
+                                        errorContainer.getHeight() / errorContainerHeight);
+                                    updateErrorContainerSize(w, errorContainerHeight);
+                                    // update animation frames
+                                    scale1.getKeyFrames().setAll(createScaleToOneFrames());
+                                    // play animation
+                                    ParallelTransition parallelTransition = new ParallelTransition();
+                                    parallelTransition.getChildren().addAll(scale1, errorShowTransition);
+                                    parallelTransition.play();
+                                }
+                            }else{
+                                // animate opacity only
+                                errorClipScale.setY(1);
+                                updateErrorContainerSize(w, errorContainerHeight);
+                                ParallelTransition parallelTransition = new ParallelTransition(errorShowTransition);
+                                parallelTransition.play();
+                            }
                         });
-                        hideErrorAnimation.play();
+                        errorHideTransition.play();
                     } else {
-                        JFXUtilities.runInFX(this::hideError);
+                        errorHideTransition.setOnFinished(null);
+                        if(errorLabel.isWrapText()){
+                            // animate scale only
+                            scaleLess1.getKeyFrames().setAll(new KeyFrame(Duration.millis(100),
+                                new KeyValue(errorClipScale.yProperty(), 0, Interpolator.EASE_BOTH)));
+                            scaleLess1.setOnFinished(event -> {
+                                hideError();
+                                errorClipScale.setY(0);
+                            });
+                            SequentialTransition transition = new SequentialTransition(scaleLess1);
+                            transition.play();
+                        }else{
+                            errorClipScale.setY(0);
+                        }
+                        // animate opacity only
+                        errorHideTransition.play();
                     }
                 } else {
                     if (newVal != null) {
@@ -248,6 +288,18 @@ public class JFXTextFieldSkin extends TextFieldSkin {
             }
         });
 
+        registerChangeListener(field.disableAnimationProperty(), "DISABLE_ANIMATION");
+    }
+
+    @Override
+    protected void handleControlPropertyChanged(String propertyReference) {
+        if ("DISABLE_ANIMATION".equals(propertyReference)) {
+            // remove error clip if animation is disabled
+            errorContainer.setClip(((JFXTextField) getSkinnable()).isDisableAnimation() ?
+                null : errorContainerClip);
+        } else {
+            super.handleControlPropertyChanged(propertyReference);
+        }
     }
 
     @Override
@@ -266,12 +318,19 @@ public class JFXTextFieldSkin extends TextFieldSkin {
             textPane = (Pane) this.getChildren().get(0);
             // create floating label
             createFloatingLabel();
+            // update validation container
+            final ValidatorBase activeValidator = ((JFXTextField) getSkinnable()).getActiveValidator();
+            if (activeValidator != null) {
+                showError(activeValidator);
+                final double errorContainerWidth = w - errorIcon.prefWidth(-1);
+                errorContainer.setOpacity(1);
+                errorContainer.resize(w, computeErrorHeight(errorContainerWidth));
+                errorContainerClip.setWidth(w);
+                errorContainerClip.setHeight(errorContainer.getHeight());
+                errorClipScale.setY(1);
+            }
             // to position the prompt node properly
             super.layoutChildren(x, y, w, h);
-            // update validation container
-            if (((JFXTextField) getSkinnable()).getActiveValidator() != null) {
-                updateValidationError();
-            }
             // focus
             createFocusTransition();
             if (getSkinnable().isFocused()) {
@@ -279,31 +338,59 @@ public class JFXTextFieldSkin extends TextFieldSkin {
             }
         }
 
-        focusedLine.resizeRelocate(x, getSkinnable().getHeight(), w, focusedLine.prefHeight(-1));
-        line.resizeRelocate(x, getSkinnable().getHeight(), w, line.prefHeight(-1));
-
-        final double errorContainerWidth = w - errorIcon.prefWidth(-1);
-        errorContainer.resizeRelocate(x,getSkinnable().getHeight() + focusedLine.getHeight(),
-            w,errorLabel.prefHeight(errorContainerWidth)
-               + errorContainer.snappedBottomInset()
-               + errorContainer.snappedTopInset());
+        final double height = getSkinnable().getHeight();
+        final double focusedLineHeight = focusedLine.prefHeight(-1);
+        focusedLine.resizeRelocate(x, height, w, focusedLineHeight);
+        line.resizeRelocate(x, height, w, line.prefHeight(-1));
+        errorContainer.relocate(x, height + focusedLineHeight);
+        // resize error container if animation is disabled
+        if (((JFXTextField) getSkinnable()).isDisableAnimation()) {
+            errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
+        }
         scale.setPivotX(w / 2);
     }
 
-    private void updateValidationError() {
-        if (hideErrorAnimation != null && hideErrorAnimation.getStatus() == Status.RUNNING) {
-            hideErrorAnimation.stop();
-        }
-        hideErrorAnimation = new Timeline(
-            new KeyFrame(Duration.millis(160),
-                new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-        hideErrorAnimation.setOnFinished(finish -> {
-            errorContainer.setVisible(false);
-            showError(((JFXTextField) getSkinnable()).getActiveValidator());
-        });
-        hideErrorAnimation.play();
+    private double computeErrorWidth(double w) {
+        return w - errorIcon.prefWidth(-1);
     }
 
+    private double computeErrorHeight(double errorContainerWidth) {
+        return errorLabel.prefHeight(errorContainerWidth)
+               + errorContainer.snappedBottomInset()
+               + errorContainer.snappedTopInset();
+    }
+
+    /**
+     * update the size of error container and its clip
+     * @param w
+     * @param errorContainerHeight
+     */
+    private void updateErrorContainerSize(double w, double errorContainerHeight) {
+        errorContainerClip.setWidth(w);
+        errorContainerClip.setHeight(errorContainerHeight);
+        errorContainer.resize(w, errorContainerHeight);
+    }
+
+    /**
+     * creates error animation frames when moving from large -> small error container
+     * @param errorContainerHeight
+     * @return
+     */
+    private KeyFrame createSmallerScaleFrame(double errorContainerHeight) {
+        return new KeyFrame(Duration.millis(100),
+            new KeyValue(errorClipScale.yProperty(),
+                errorContainerHeight / errorContainer.getHeight(),
+                Interpolator.EASE_BOTH));
+    }
+
+    /**
+     * creates error animation frames when moving from small -> large error container
+     * @return
+     */
+    private KeyFrame createScaleToOneFrames() {
+        return new KeyFrame(Duration.millis(100), new
+            KeyValue(errorClipScale.yProperty(), 1, Interpolator.EASE_BOTH));
+    }
 
     private void createFloatingLabel() {
         if (((JFXTextField) getSkinnable()).isLabelFloat()) {
@@ -483,4 +570,5 @@ public class JFXTextFieldSkin extends TextFieldSkin {
         // hide error container
         errorContainer.setVisible(false);
     }
+
 }
