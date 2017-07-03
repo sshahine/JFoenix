@@ -138,6 +138,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             Color unSelectedColor = ((JFXRadioButton) getSkinnable()).getUnSelectedColor();
             Color selectedColor = ((JFXRadioButton) getSkinnable()).getSelectedColor();
             rippler.setRipplerFill(isSelected ? selectedColor : unSelectedColor);
+            if(timeline == null) updateAnimation();
             // play selection animation
             playAnimation();
         }
@@ -159,7 +160,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
 
         if (invalid) {
-            initializeComponents(x, y, w, h);
+            initializeComponents();
             invalid = false;
         }
         layoutLabelInArea(xOffset + contWidth, yOffset, labelWidth, maxHeight, radioButton.getAlignment());
@@ -177,7 +178,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             radioButton.getAlignment().getVpos());
     }
 
-    private void initializeComponents(final double x, final double y, final double w, final double h) {
+    private void initializeComponents() {
         Color unSelectedColor = ((JFXRadioButton) getSkinnable()).getUnSelectedColor();
         Color selectedColor = ((JFXRadioButton) getSkinnable()).getSelectedColor();
         radio.setStroke(unSelectedColor);
