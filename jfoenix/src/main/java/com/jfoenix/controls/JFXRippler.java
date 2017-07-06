@@ -279,9 +279,11 @@ public class JFXRippler extends StackPane {
      * creates Ripple effect
      */
     protected void createRipple(double x, double y) {
-        rippler.setGeneratorCenterX(x);
-        rippler.setGeneratorCenterY(y);
-        rippler.createMouseRipple();
+        if(!isRipplerDisabled()) {
+            rippler.setGeneratorCenterX(x);
+            rippler.setGeneratorCenterY(y);
+            rippler.createMouseRipple();
+        }
     }
 
     /**
@@ -675,6 +677,31 @@ public class JFXRippler extends StackPane {
         this.maskType.set(type);
     }
 
+
+    /**
+     * the ripple disable, by default it's false.
+     * if true the ripple effect will be hidden
+     */
+    private StyleableBooleanProperty ripplerDisabled = new SimpleStyleableBooleanProperty(
+        StyleableProperties.RIPPLER_DISABLED,
+        JFXRippler.this,
+        "ripplerDisabled",
+        false);
+
+    public Boolean isRipplerDisabled() {
+        return ripplerDisabled == null ? false : ripplerDisabled.get();
+    }
+
+    public StyleableBooleanProperty ripplerDisabledProperty() {
+        return this.ripplerDisabled;
+    }
+
+    public void setRipplerDisabled(Boolean disabled) {
+        this.ripplerDisabled.set(disabled);
+    }
+
+
+
     /**
      * indicates whether the ripple effect is infront of or behind the node
      */
@@ -705,6 +732,19 @@ public class JFXRippler extends StackPane {
                 @Override
                 public StyleableProperty<Boolean> getStyleableProperty(JFXRippler control) {
                     return control.ripplerRecenterProperty();
+                }
+            };
+        private static final CssMetaData<JFXRippler, Boolean> RIPPLER_DISABLED =
+            new CssMetaData<JFXRippler, Boolean>("-jfx-rippler-disabled",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXRippler control) {
+                    return control.ripplerDisabled == null || !control.ripplerDisabled.isBound();
+                }
+
+                @Override
+                public StyleableProperty<Boolean> getStyleableProperty(JFXRippler control) {
+                    return control.ripplerDisabledProperty();
                 }
             };
         private static final CssMetaData<JFXRippler, Paint> RIPPLER_FILL =
@@ -756,7 +796,8 @@ public class JFXRippler extends StackPane {
                 RIPPLER_RECENTER,
                 RIPPLER_RADIUS,
                 RIPPLER_FILL,
-                MASK_TYPE
+                MASK_TYPE,
+                RIPPLER_DISABLED
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
