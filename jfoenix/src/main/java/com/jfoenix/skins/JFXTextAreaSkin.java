@@ -251,7 +251,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                         }
                     };
                     // reset transition
-                    transition = null;
+                    resetFocusTransition();
                 }
             }
         });
@@ -567,11 +567,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         if (promptText == null) {
             Platform.runLater(() -> animateFLoatingLabel(up));
         } else {
-            if (transition != null) {
-                transition.stop();
-                transition.getChildren().remove(promptTextUpTransition);
-                transition = null;
-            }
+            resetFocusTransition();
             if (up && promptContainer.getTranslateY() == 0) {
                 promptTextDownTransition.stop();
                 promptTextUpTransition.play();
@@ -579,6 +575,14 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                 promptTextUpTransition.stop();
                 promptTextDownTransition.play();
             }
+        }
+    }
+
+    private void resetFocusTransition() {
+        if (transition != null) {
+            transition.stop();
+            transition.getChildren().remove(promptTextUpTransition);
+            transition = null;
         }
     }
 

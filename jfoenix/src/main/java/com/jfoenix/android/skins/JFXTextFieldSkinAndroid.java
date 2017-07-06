@@ -248,7 +248,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                         }
                     };
                     // reset transition
-                    transition = null;
+                    resetFocusTransition();
                 }
             }
         });
@@ -533,11 +533,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         if (promptText == null) {
             Platform.runLater(() -> animateFloatingLabel(up));
         } else {
-            if (transition != null) {
-                transition.stop();
-                transition.getChildren().remove(promptTextUpTransition);
-                transition = null;
-            }
+            resetFocusTransition();
             if (up && promptText.getTranslateY() == 0) {
                 promptTextDownTransition.stop();
                 promptTextUpTransition.play();
@@ -545,6 +541,14 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                 promptTextUpTransition.stop();
                 promptTextDownTransition.play();
             }
+        }
+    }
+
+    private void resetFocusTransition() {
+        if (transition != null) {
+            transition.stop();
+            transition.getChildren().remove(promptTextUpTransition);
+            transition = null;
         }
     }
 

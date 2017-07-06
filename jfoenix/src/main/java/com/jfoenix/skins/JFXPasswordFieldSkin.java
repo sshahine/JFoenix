@@ -243,7 +243,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                         }
                     };
                     // reset transition
-                    transition = null;
+                    resetFocusTransition();
                 }
             }
         });
@@ -530,11 +530,7 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
         if (promptText == null) {
             Platform.runLater(() -> animateFloatingLabel(up));
         } else {
-            if (transition != null) {
-                transition.stop();
-                transition.getChildren().remove(promptTextUpTransition);
-                transition = null;
-            }
+            resetFocusTransition();
             if (up && promptText.getTranslateY() == 0) {
                 promptTextDownTransition.stop();
                 promptTextUpTransition.play();
@@ -542,6 +538,14 @@ public class JFXPasswordFieldSkin extends TextFieldSkin {
                 promptTextUpTransition.stop();
                 promptTextDownTransition.play();
             }
+        }
+    }
+
+    private void resetFocusTransition() {
+        if (transition != null) {
+            transition.stop();
+            transition.getChildren().remove(promptTextUpTransition);
+            transition = null;
         }
     }
 
