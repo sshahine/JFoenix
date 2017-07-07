@@ -28,6 +28,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -65,7 +66,9 @@ public class JFXSnackbar extends StackPane {
     private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new ConcurrentLinkedQueue<>();
     private StackPane actionContainer;
 
-    Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
+    private Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
+    private BorderPane content;
+    private String activePseudoClass = null;
 
     public JFXSnackbar() {
         this(null);
@@ -73,14 +76,14 @@ public class JFXSnackbar extends StackPane {
 
     public JFXSnackbar(Pane snackbarContainer) {
 
-        BorderPane bPane = new BorderPane();
+        content = new BorderPane();
         toast = new Label();
         toast.setMinWidth(Control.USE_PREF_SIZE);
         toast.getStyleClass().add("jfx-snackbar-toast");
         toast.setWrapText(true);
         StackPane toastContainer = new StackPane(toast);
         toastContainer.setPadding(new Insets(20));
-        bPane.setLeft(toastContainer);
+        content.setLeft(toastContainer);
 
         action = new JFXButton();
         action.setMinWidth(Control.USE_PREF_SIZE);
@@ -90,7 +93,7 @@ public class JFXSnackbar extends StackPane {
         // actions will be added upon showing the snackbar if needed
         actionContainer = new StackPane(action);
         actionContainer.setPadding(new Insets(0, 10, 0, 0));
-        bPane.setRight(actionContainer);
+        content.setRight(actionContainer);
 
         toast.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> {
             if (this.getPrefWidth() == -1) {
@@ -101,10 +104,7 @@ public class JFXSnackbar extends StackPane {
         }, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
 
         //bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
-        bPane.prefWidthProperty().bind(this.prefWidthProperty());
-
-        final BorderPane content = bPane;
-
+        content.prefWidthProperty().bind(this.prefWidthProperty());
         content.getStyleClass().add("jfx-snackbar-content");
         //setting a shadow enlarges the snackbar height leaving a gap below it
         //JFXDepthManager.setDepth(content, 4);
@@ -126,9 +126,7 @@ public class JFXSnackbar extends StackPane {
                 }
             }
         });
-        sizeListener = (o, oldVal, newVal) -> {
-            refreshPopup();
-        };
+        sizeListener = (o, oldVal, newVal) -> refreshPopup();
 
         // register the container before resizing it
         registerSnackbarContainer(snackbarContainer);
@@ -195,7 +193,19 @@ public class JFXSnackbar extends StackPane {
         this.show(message, actionText, -1, actionHandler);
     }
 
-    public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+    public void show(String toastMessage, String pseudoClass, long timeout) {
+        this.show(toastMessage, pseudoClass,null, timeout, null);
+    }
+
+    public void show(String message, String pseudoClass, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+        this.show(message, pseudoClass, actionText, -1, actionHandler);
+    }
+
+    public void show(String message,  String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler){
+        this.show(message,null,  actionText, -1, actionHandler);
+    }
+
+    public void show(String message, String pseudoClass, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
         toast.setText(message);
         if (actionText != null && !actionText.isEmpty()) {
             action.setVisible(true);
@@ -211,9 +221,12 @@ public class JFXSnackbar extends StackPane {
             action.setVisible(false);
         }
         Timeline animation = getTimeline(timeout);
+        if(pseudoClass!=null){
+            activePseudoClass = pseudoClass;
+            content.pseudoClassStateChanged(PseudoClass.getPseudoClass(activePseudoClass), true);
+        }
         animation.play();
     }
-
 
     private Timeline getTimeline(long timeout) {
         Timeline animation;
@@ -259,7 +272,10 @@ public class JFXSnackbar extends StackPane {
             );
             animation.setAutoReverse(true);
             animation.setCycleCount(2);
-            animation.setOnFinished((e) -> processSnackbars());
+            animation.setOnFinished((e) -> {
+                resetPseudoClass();
+                processSnackbars();
+            });
         }
         return animation;
     }
@@ -286,17 +302,27 @@ public class JFXSnackbar extends StackPane {
             )
         );
         animation.setCycleCount(1);
-        animation.setOnFinished(e -> processSnackbars());
+        animation.setOnFinished(e -> {
+            resetPseudoClass();
+            processSnackbars();
+        });
         animation.play();
+    }
+
+    private void resetPseudoClass() {
+        if(activePseudoClass!=null) {
+            content.pseudoClassStateChanged(PseudoClass.getPseudoClass(activePseudoClass), false);
+            activePseudoClass = null;
+        }
     }
 
     private void processSnackbars() {
         SnackbarEvent qevent = eventQueue.poll();
         if (qevent != null) {
             if (qevent.isPersistent()) {
-                show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+                show(qevent.getMessage(), qevent.getpseudoClass(), qevent.getActionText(), qevent.getActionHandler());
             } else {
-                show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+                show(qevent.getMessage(), qevent.getpseudoClass(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
             }
         } else {
             //The enqueue method and this listener should be executed sequentially on the FX Thread so there
@@ -322,9 +348,13 @@ public class JFXSnackbar extends StackPane {
                 SnackbarEvent qevent = eventQueue.poll();
                 if (qevent != null) {
                     if (qevent.isPersistent()) {
-                        show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
+                        show(qevent.getMessage(),
+                            qevent.getpseudoClass(),
+                            qevent.getActionText(),
+                            qevent.getActionHandler());
                     } else {
                         show(qevent.getMessage(),
+                            qevent.getpseudoClass(),
                             qevent.getActionText(),
                             qevent.getTimeout(),
                             qevent.getActionHandler());
@@ -344,18 +374,24 @@ public class JFXSnackbar extends StackPane {
 
         private final String message;
         private final String actionText;
+        private final String pseudoClass;
         private final long timeout;
         private final boolean persistent;
         private final EventHandler<? super MouseEvent> actionHandler;
 
         public SnackbarEvent(String message) {
             this(message, null, 3000, false, null);
-
         }
-
+        public SnackbarEvent(String message, String pseudoClass) {
+            this(message, pseudoClass,null, 3000, false, null);
+        }
         public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+            this(message, null,null, 3000, false, null);
+        }
+        public SnackbarEvent(String message,String pseudoClass, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
             super(SNACKBAR);
             this.message = message;
+            this.pseudoClass = pseudoClass;
             this.actionText = actionText;
             this.timeout = timeout < 1 ? 3000 : timeout;
             this.actionHandler = actionHandler;
@@ -385,6 +421,10 @@ public class JFXSnackbar extends StackPane {
 
         public boolean isPersistent() {
             return persistent;
+        }
+
+        public String getpseudoClass() {
+            return pseudoClass;
         }
     }
 }
