@@ -65,7 +65,7 @@ public class SVGGlyphLoader {
     public static SVGGlyph getIcoMoonGlyph(String glyphName) {
         SVGGlyph glyph = glyphsMap.get(glyphName).build();
         // we need to apply transformation to correct the icon since
-        // its being after importing from icomoon
+        // its being inverted after importing from icomoon
         glyph.getTransforms().add(new Scale(1, -1));
         Translate height = new Translate();
         height.yProperty().bind(Bindings.createDoubleBinding(() -> -glyph.getHeight(), glyph.heightProperty()));

@@ -10,6 +10,7 @@ import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -88,15 +89,19 @@ public class SideMenuController {
         FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
         sideList.propagateMouseEventsToParent();
         sideList.getSelectionModel().selectedItemProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null) {
-                try {
-                    contentFlowHandler.handle(newVal.getId());
-                } catch (VetoException exc) {
-                    exc.printStackTrace();
-                } catch (FlowException exc) {
-                    exc.printStackTrace();
-                }
-            }
+            new Thread(()->{
+                Platform.runLater(()->{
+                    if (newVal != null) {
+                        try {
+                            contentFlowHandler.handle(newVal.getId());
+                        } catch (VetoException exc) {
+                            exc.printStackTrace();
+                        } catch (FlowException exc) {
+                            exc.printStackTrace();
+                        }
+                    }
+                });
+            }).start();
         });
         Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
         bindNodeToController(button, ButtonController.class, contentFlow, contentFlowHandler);

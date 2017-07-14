@@ -8,6 +8,7 @@ import com.jfoenix.svg.SVGGlyphLoader;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -97,11 +98,11 @@ public class SVGLoaderController {
         glyphs.sort(Comparator.comparing(SVGGlyph::getName));
 
 
-        glyphs.forEach(glyph -> glyph.setSize(16, 16));
+        glyphs.forEach(glyph -> glyph.setSizeRatio(16));
         List<Button> iconButtons = glyphs.stream().map(this::createIconButton).collect(Collectors.toList());
         // important to improve the performance of animation in scroll pane so buttons are treated as images
         iconButtons.forEach(button -> button.setCache(true));
-        iconButtons.get(0).fire();
+        Platform.runLater(()->iconButtons.get(0).fire());
 
         FlowPane glyphLayout = new FlowPane();
         glyphLayout.setHgap(10);
@@ -118,6 +119,9 @@ public class SVGLoaderController {
 
     private Button createIconButton(SVGGlyph glyph) {
         JFXButton button = new JFXButton(null, glyph);
+        button.setPrefSize(30,30);
+        button.setMinSize(30,30);
+        button.setMaxSize(30,30);
         button.ripplerFillProperty().bind(glyphDetailViewer.colorPicker.valueProperty());
         glyphDetailViewer.colorPicker.valueProperty().addListener((o, oldVal, newVal) -> {
             String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();
@@ -133,20 +137,21 @@ public class SVGLoaderController {
                     .toString()
                     .substring(0, 8);
                 final BackgroundFill backgroundFill = new BackgroundFill(Color.valueOf(currentColor + DEFAULT_OPACITY),
-                    null,
+                    lastClicked.getBackground().getFills().get(0).getRadii(),
                     null);
                 lastClicked.setBackground(new Background(backgroundFill));
             }
         });
         button.setOnAction(event -> {
             if (lastClicked != null) {
-                lastClicked.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+                lastClicked.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, lastClicked.getBackground().getFills().get(0).getRadii(), null)));
             }
             final String currentColor = glyphDetailViewer.colorPicker.getValue()
                 .toString()
                 .substring(0, 8);
+
             button.setBackground(new Background(new BackgroundFill(Color.valueOf(currentColor + DEFAULT_OPACITY),
-                null,
+                button.getBackground() == null ? null : button.getBackground().getFills().get(0).getRadii(),
                 null)));
             lastClicked = button;
             viewGlyphDetail(glyph);
@@ -228,19 +233,11 @@ public class SVGLoaderController {
                 return;
             }
 
-            glyph.get().setMinSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
-            glyph.get().setPrefSize(sizeSlider.getValue(), sizeSlider.getValue());
-            glyph.get().setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
-            glyph.get().prefWidthProperty().bind(sizeSlider.valueProperty());
-            glyph.get().prefHeightProperty().bind(sizeSlider.valueProperty());
-
+            sizeSlider.valueProperty().addListener(observable -> glyph.get().setSizeRatio(sizeSlider.getValue()));
             idLabel.setText(String.format("%04d", glyph.get().getGlyphId()));
-
             nameLabel.setText(glyph.get().getName());
-
             glyph.get().setFill(colorPicker.getValue());
             glyph.get().fillProperty().bind(colorPicker.valueProperty());
-
             centeredGlyph.getChildren().setAll(glyph.get());
         }
 
@@ -253,6 +250,7 @@ public class SVGLoaderController {
         }
 
         final void setGlyph(SVGGlyph glyph) {
+            glyph.setSizeRatio(sizeSlider.getValue());
             this.glyph.set(glyph);
         }
     }

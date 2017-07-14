@@ -41,7 +41,7 @@ public class SVGGlyph extends Pane {
     private final int glyphId;
     private final String name;
     private static final int DEFAULT_PREF_SIZE = 64;
-
+    private double widthHeightRatio = 1;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 
     /**
@@ -67,7 +67,7 @@ public class SVGGlyph extends Pane {
         shape.setContent(svgPathContent);
         setShape(shape);
         setFill(fill);
-
+        widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
         setPrefSize(DEFAULT_PREF_SIZE, DEFAULT_PREF_SIZE);
     }
 
@@ -110,5 +110,22 @@ public class SVGGlyph extends Pane {
         this.setMinSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
         this.setPrefSize(width, height);
         this.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
+    }
+
+    /**
+     * resize the svg to this size while keeping the width/height ratio
+     * 
+     * @param size in pixel
+     */
+    public void setSizeRatio(double size){
+        double width = widthHeightRatio * size;
+        double height = size / widthHeightRatio;
+        if(width <= size){
+            setSize(width , size);
+        }else if(height <= size){
+            setSize(size, height);
+        }else{
+            setSize(size, size);
+        }
     }
 }
