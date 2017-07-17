@@ -20,7 +20,7 @@
 package com.jfoenix.android.skins;
 
 import com.jfoenix.concurrency.JFXUtilities;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.IFXTextInputControl;
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -31,11 +31,14 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -58,7 +61,7 @@ import java.lang.reflect.Field;
  * @version 2.0
  * @since 2017-01-25
  */
-public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
+public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> extends TextFieldSkinAndroid {
 
     private boolean invalid = true;
 
@@ -95,7 +98,6 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         getSkinnable().textProperty(),
         getSkinnable().promptTextProperty());
 
-
     private final Rectangle errorContainerClip = new Rectangle();
     private final Scale errorClipScale = new Scale(1, 0, 0, 0);
     private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80), new
@@ -105,7 +107,11 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     private Timeline scale1 = new Timeline();
     private Timeline scaleLess1 = new Timeline();
 
-    public JFXTextFieldSkinAndroid(JFXTextField field) {
+
+    protected final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
+
+
+    public JFXTextFieldSkinAndroid(T field) {
         super(field);
         // initial styles
         field.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -119,10 +125,10 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
-        line.setBackground(new Background(new BackgroundFill(((JFXTextField) getSkinnable()).getUnFocusColor(),
+        line.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
-            line.setBorder(new Border(new BorderStroke(((JFXTextField) getSkinnable()).getUnFocusColor(),
+            line.setBorder(new Border(new BorderStroke(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
                 BorderStrokeStyle.DASHED,
                 CornerRadii.EMPTY,
                 new BorderWidths(1))));
@@ -133,7 +139,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
-        focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextField) getSkinnable()).getFocusColor(),
+        focusedLine.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
@@ -153,18 +159,9 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
         getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
 
-        field.labelFloatProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                JFXUtilities.runInFX(this::createFloatingLabel);
-            } else {
-                promptText.visibleProperty().bind(usePromptText);
-            }
-            createFocusTransition();
-        });
-
         field.activeValidatorProperty().addListener((ObservableValue<? extends ValidatorBase> o, ValidatorBase oldVal, ValidatorBase newVal) -> {
             if (textPane != null) {
-                if (!((JFXTextField) getSkinnable()).isDisableAnimation()) {
+                if (!((IFXTextInputControl) getSkinnable()).isDisableAnimation()) {
                     if (newVal != null) {
                         errorHideTransition.setOnFinished(finish -> {
                             showError(newVal);
@@ -233,20 +230,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         field.focusColorProperty().addListener((o, oldVal, newVal) -> {
             if (newVal != null) {
                 focusedLine.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
-                if (((JFXTextField) getSkinnable()).isLabelFloat()) {
-                    promptTextColorTransition = new CachedTransition(textPane, new Timeline(
-                        new KeyFrame(Duration.millis(1300),
-                            new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
-                        {
-                            setDelay(Duration.millis(0));
-                            setCycleDuration(Duration.millis(160));
-                        }
-
-                        protected void starting() {
-                            super.starting();
-                            oldPromptTextFill = promptTextFill.get();
-                        }
-                    };
+                if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
+                    promptTextColorTransition = createColorTransition(newVal);
                     // reset transition
                     resetFocusTransition();
                 }
@@ -269,7 +254,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
         // handle text changing at runtime
         field.textProperty().addListener((o, oldVal, newVal) -> {
-            if (!getSkinnable().isFocused() && ((JFXTextField) getSkinnable()).isLabelFloat()) {
+            if (!getSkinnable().isFocused() && ((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
                 if (newVal == null || newVal.isEmpty()) {
                     animateFloatingLabel(false);
                 } else {
@@ -279,30 +264,60 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         });
 
         field.disabledProperty().addListener((o, oldVal, newVal) -> {
-            line.setBorder(newVal ? new Border(new BorderStroke(((JFXTextField) getSkinnable()).getUnFocusColor(),
+            line.setBorder(newVal ? new Border(new BorderStroke(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
                 BorderStrokeStyle.DASHED,
                 CornerRadii.EMPTY,
                 new BorderWidths(line.getHeight()))) : Border.EMPTY);
-            line.setBackground(new Background(new BackgroundFill(newVal ? Color.TRANSPARENT : ((JFXTextField) getSkinnable())
+            line.setBackground(new Background(new BackgroundFill(newVal ? Color.TRANSPARENT : ((IFXTextInputControl) getSkinnable())
                 .getUnFocusColor(),
                 CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
-        // prevent setting prompt text fill to transparent when text field is focused (override java transparent color if the control was focused)
         promptTextFill.addListener((o, oldVal, newVal) -> {
-            if (Color.TRANSPARENT.equals(newVal) && ((JFXTextField) getSkinnable()).isLabelFloat()) {
+            if (!Color.TRANSPARENT.equals(newVal)) {
+                animatedPromptTextFill.set(newVal);
+            }else {
                 promptTextFill.set(oldVal);
             }
         });
 
         registerChangeListener(field.disableAnimationProperty(), "DISABLE_ANIMATION");
+        registerChangeListener(field.labelFloatProperty(), "LABEL_FLOAT");
+    }
+
+    public CachedTransition createColorTransition(Paint newVal) {
+        return new CachedTransition(textPane, new Timeline(
+            new KeyFrame(Duration.millis(1300),
+                new KeyValue(animatedPromptTextFill, newVal, Interpolator.EASE_BOTH)))) {
+            {
+                setDelay(Duration.millis(0));
+                setCycleDuration(Duration.millis(160));
+            }
+            protected void starting() {
+                super.starting();
+                oldPromptTextFill = animatedPromptTextFill.get();
+            }
+        };
     }
 
     @Override
     protected void handleControlPropertyChanged(String propertyReference) {
-        if ("DISABLE_ANIMATION".equals(propertyReference)) {
+        if("LABEL_FLOAT".equals(propertyReference)){
+            boolean isLabelFloat = ((IFXTextInputControl) getSkinnable()).isLabelFloat();
+            if (isLabelFloat) {
+                JFXUtilities.runInFX(this::createFloatingLabel);
+            } else {
+                if(promptText!=null){
+                    // remove parent focus listener to prevent editor class cast exception
+                    promptText.visibleProperty().bind(usePromptText);
+                }
+            }
+            createFocusTransition();
+            // update prompt text position
+            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+        }else if ("DISABLE_ANIMATION".equals(propertyReference)) {
             // remove error clip if animation is disabled
-            errorContainer.setClip(((JFXTextField) getSkinnable()).isDisableAnimation() ?
+            errorContainer.setClip(((IFXTextInputControl) getSkinnable()).isDisableAnimation() ?
                 null : errorContainerClip);
         } else {
             super.handleControlPropertyChanged(propertyReference);
@@ -315,18 +330,19 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
         // change control properties if and only if animations are stopped
         if (transition == null || transition.getStatus() == Status.STOPPED) {
-            if (getSkinnable().isFocused() && ((JFXTextField) getSkinnable()).isLabelFloat()) {
-                promptTextFill.set(((JFXTextField) getSkinnable()).getFocusColor());
+            if (getSkinnable().isFocused() && ((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
+                animatedPromptTextFill.set(((IFXTextInputControl) getSkinnable()).getFocusColor());
             }
         }
 
         if (invalid) {
             invalid = false;
+            animatedPromptTextFill.set(promptTextFill.get());
             textPane = (Pane) this.getChildren().get(0);
             // create floating label
             createFloatingLabel();
             // update validation container
-            final ValidatorBase activeValidator = ((JFXTextField) getSkinnable()).getActiveValidator();
+            final ValidatorBase activeValidator = ((IFXTextInputControl) getSkinnable()).getActiveValidator();
             if (activeValidator != null) {
                 showError(activeValidator);
                 final double errorContainerWidth = w - errorIcon.prefWidth(-1);
@@ -351,7 +367,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         line.resizeRelocate(x, height, w, line.prefHeight(-1));
         errorContainer.relocate(x, height + focusedLineHeight);
         // resize error container if animation is disabled
-        if (((JFXTextField) getSkinnable()).isDisableAnimation()) {
+        if (((IFXTextInputControl) getSkinnable()).isDisableAnimation()) {
             errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
         }
         scale.setPivotX(w / 2);
@@ -400,7 +416,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     }
 
     private void createFloatingLabel() {
-        if (((JFXTextField) getSkinnable()).isLabelFloat()) {
+        if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
             if (promptText == null) {
                 // get the prompt text node or create it
                 boolean triggerFloatLabel = false;
@@ -419,9 +435,9 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                         ex.printStackTrace();
                     }
                 }
+                promptText.fillProperty().bind(animatedPromptTextFill);
                 promptText.getTransforms().add(promptTextScale);
                 promptContainer.getChildren().add(promptText);
-
                 if (triggerFloatLabel) {
                     promptText.setTranslateY(-textPane.getHeight());
                     promptTextScale.setX(0.85);
@@ -435,41 +451,43 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
                         -textPane.getHeight(),
                         Interpolator.EASE_BOTH),
                     new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
-                    new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(240));
-            }};
-
-            promptTextColorTransition = new CachedTransition(textPane, new Timeline(
-                new KeyFrame(Duration.millis(1300),
-                    new KeyValue(promptTextFill,
-                        ((JFXTextField) getSkinnable()).getFocusColor(),
-                        Interpolator.EASE_BOTH)))) {
+                    new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH))))
+            {
+                private double finalHeight = textPane.getHeight();
                 {
                     setDelay(Duration.millis(0));
-                    setCycleDuration(Duration.millis(160));
+                    setCycleDuration(Duration.millis(240));
                 }
 
-                protected void starting() {
-                    super.starting();
-                    oldPromptTextFill = promptTextFill.get();
+                @Override
+                protected void stopping() {
+                    super.stopping();
+                    promptText.setTranslateY(-finalHeight);
+                    promptTextScale.setX(0.85);
+                    promptTextScale.setY(0.85);
                 }
-
             };
+
+            promptTextColorTransition = createColorTransition(((IFXTextInputControl) getSkinnable()).getFocusColor());
 
             promptTextDownTransition = new CachedTransition(textPane, new Timeline(
                 new KeyFrame(Duration.millis(1300),
                     new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
                     new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
-                    new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(240));
-            }};
-            promptTextDownTransition.setOnFinished((finish) -> {
-                promptText.setTranslateY(0);
-                promptTextScale.setX(1);
-                promptTextScale.setY(1);
-            });
+                    new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH))))
+            {
+                {
+                    setDelay(Duration.millis(0));
+                    setCycleDuration(Duration.millis(240));
+                }
+                @Override
+                protected void stopping() {
+                    super.stopping();
+                    promptText.setTranslateY(0);
+                    promptTextScale.setX(1);
+                    promptTextScale.setY(1);
+                }
+            };
             promptText.visibleProperty().unbind();
             promptText.visibleProperty().set(true);
         }
@@ -482,7 +500,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         promptText.visibleProperty().bind(usePromptText);
         promptText.fontProperty().bind(getSkinnable().fontProperty());
         promptText.textProperty().bind(getSkinnable().promptTextProperty());
-        promptText.fillProperty().bind(promptTextFill);
+        promptText.fillProperty().bind(animatedPromptTextFill);
         promptText.setLayoutX(1);
     }
 
@@ -502,7 +520,7 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
 
     private void createFocusTransition() {
         transition = new ParallelTransition();
-        if (((JFXTextField) getSkinnable()).isLabelFloat()) {
+        if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
             transition.getChildren().add(promptTextUpTransition);
             transition.getChildren().add(promptTextColorTransition);
         }
@@ -515,8 +533,8 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
         }
         scale.setX(initScale);
         focusedLine.setOpacity(0);
-        if (((JFXTextField) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
-            promptTextFill.set(oldPromptTextFill);
+        if (((IFXTextInputControl) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
+            animatedPromptTextFill.set(oldPromptTextFill);
             if (usePromptText()) {
                 promptTextDownTransition.play();
             }
@@ -555,8 +573,9 @@ public class JFXTextFieldSkinAndroid extends TextFieldSkinAndroid {
     private boolean usePromptText() {
         String txt = getSkinnable().getText();
         String promptTxt = getSkinnable().getPromptText();
+        boolean isLabelFloat = ((IFXTextInputControl) getSkinnable()).isLabelFloat();
         return (txt == null || txt.isEmpty()) && promptTxt != null
-               && !promptTxt.isEmpty() && !promptTextFill.get().equals(Color.TRANSPARENT);
+               && !promptTxt.isEmpty() && (!promptTextFill.get().equals(Color.TRANSPARENT) || isLabelFloat);
     }
 
     private void showError(ValidatorBase validator) {
