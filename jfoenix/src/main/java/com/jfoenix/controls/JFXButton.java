@@ -89,6 +89,14 @@ public class JFXButton extends Button {
         return new JFXButtonSkin(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFXButton.class.getResource("/css/jfx-button.css").toExternalForm();
+    }
+
 
     /***************************************************************************
      *                                                                         *

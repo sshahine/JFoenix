@@ -354,22 +354,24 @@ public class JFXRippler extends StackPane {
                     ripple.inAnimation.getAnimation().play();
 
                     // create fade out transition for the ripple
-                    ripplerPane.setOnMouseReleased(e -> {
-                        if (generating.getAndSet(false)) {
-                            if (overlayRect != null) {
-                                overlayRect.inAnimation.stop();
-                            }
-                            ripple.inAnimation.getAnimation().stop();
-                            ripple.outAnimation = new CachedAnimation(new Timeline(new KeyFrame(Duration.millis(Math.min(
-                                800,
-                                (0.9 * 500) / ripple.getScaleX())), ripple.outKeyValues)), this);
-                            ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
-                            ripple.outAnimation.getAnimation().play();
-                            if (overlayRect != null) {
-                                overlayRect.outAnimation.play();
-                            }
-                        }
-                    });
+                    ripplerPane.setOnMouseReleased(e -> releaseRipple(ripple));
+                }
+            }
+        }
+
+        private void releaseRipple(Ripple ripple) {
+            if (generating.getAndSet(false)) {
+                if (overlayRect != null) {
+                    overlayRect.inAnimation.stop();
+                }
+                ripple.inAnimation.getAnimation().stop();
+                ripple.outAnimation = new CachedAnimation(new Timeline(
+                    new KeyFrame(Duration.millis(Math.min(800, (0.9 * 500) / ripple.getScaleX()))
+                        , ripple.outKeyValues)), this);
+                ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
+                ripple.outAnimation.getAnimation().play();
+                if (overlayRect != null) {
+                    overlayRect.outAnimation.play();
                 }
             }
         }
@@ -395,20 +397,7 @@ public class JFXRippler extends StackPane {
 
                     return () -> {
                         // create fade out transition for the ripple
-                        if (generating.getAndSet(false)) {
-                            if (overlayRect != null) {
-                                overlayRect.inAnimation.stop();
-                            }
-                            ripple.inAnimation.getAnimation().stop();
-                            ripple.outAnimation = new CachedAnimation(new Timeline(new KeyFrame(Duration.millis(Math.min(
-                                800,
-                                (0.9 * 500) / ripple.getScaleX())), ripple.outKeyValues)), this);
-                            ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
-                            ripple.outAnimation.getAnimation().play();
-                            if (overlayRect != null) {
-                                overlayRect.outAnimation.play();
-                            }
-                        }
+                        releaseRipple(ripple);
                     };
                 }
             }

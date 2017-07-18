@@ -1,0 +1,8 @@
+.jfx-button:armed,
+.jfx-button:hover,
+.jfx-button:focused,
+.jfx-button{
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT,TRANSPARENT;
+    -fx-background-radius: 3px;
+    -fx-background-insets: 0px;
+}
