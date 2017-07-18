@@ -49,6 +49,14 @@ import java.util.List;
 public class JFXPasswordField extends PasswordField implements IFXTextInputControl {
 
     /**
+     * Initialize the style class to 'jfx-password-field'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-password-field";
+
+    /**
      * {@inheritDoc}
      */
     public JFXPasswordField() {
@@ -71,12 +79,12 @@ public class JFXPasswordField extends PasswordField implements IFXTextInputContr
     }
 
     /**
-     * Initialize the style class to 'jfx-password-field'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
+     * {@inheritDoc}
      */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-password-field";
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFXButton.class.getResource("/css/jfx-text-field.css").toExternalForm();
+    }
 
     /***************************************************************************
      *                                                                         *

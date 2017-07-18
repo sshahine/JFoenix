@@ -108,7 +108,7 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
     private Timeline scaleLess1 = new Timeline();
 
 
-    protected final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
+    private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
 
 
     public JFXTextFieldSkinAndroid(T field) {
@@ -273,31 +273,10 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
                 CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
-        promptTextFill.addListener((o, oldVal, newVal) -> {
-            if (!Color.TRANSPARENT.equals(newVal)) {
-                animatedPromptTextFill.set(newVal);
-            }else {
-                promptTextFill.set(oldVal);
-            }
-        });
+        promptTextFill.addListener((o, oldVal, newVal) -> animatedPromptTextFill.set(newVal));
 
         registerChangeListener(field.disableAnimationProperty(), "DISABLE_ANIMATION");
         registerChangeListener(field.labelFloatProperty(), "LABEL_FLOAT");
-    }
-
-    public CachedTransition createColorTransition(Paint newVal) {
-        return new CachedTransition(textPane, new Timeline(
-            new KeyFrame(Duration.millis(1300),
-                new KeyValue(animatedPromptTextFill, newVal, Interpolator.EASE_BOTH)))) {
-            {
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(160));
-            }
-            protected void starting() {
-                super.starting();
-                oldPromptTextFill = animatedPromptTextFill.get();
-            }
-        };
     }
 
     @Override
@@ -518,15 +497,6 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         }
     }
 
-    private void createFocusTransition() {
-        transition = new ParallelTransition();
-        if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
-            transition.getChildren().add(promptTextUpTransition);
-            transition.getChildren().add(promptTextColorTransition);
-        }
-        transition.getChildren().add(linesAnimation);
-    }
-
     private void unFocus() {
         if (transition != null) {
             transition.stop();
@@ -539,6 +509,30 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
                 promptTextDownTransition.play();
             }
         }
+    }
+
+    private CachedTransition createColorTransition(Paint newVal) {
+        return new CachedTransition(textPane, new Timeline(
+            new KeyFrame(Duration.millis(1300),
+                new KeyValue(animatedPromptTextFill, newVal, Interpolator.EASE_BOTH)))) {
+            {
+                setDelay(Duration.millis(0));
+                setCycleDuration(Duration.millis(160));
+            }
+            protected void starting() {
+                super.starting();
+                oldPromptTextFill = animatedPromptTextFill.get();
+            }
+        };
+    }
+
+    private void createFocusTransition() {
+        transition = new ParallelTransition();
+        if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
+            transition.getChildren().add(promptTextUpTransition);
+            transition.getChildren().add(promptTextColorTransition);
+        }
+        transition.getChildren().add(linesAnimation);
     }
 
     /**

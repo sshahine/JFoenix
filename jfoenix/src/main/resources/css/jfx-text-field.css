@@ -1,0 +1,28 @@
+.jfx-text-field,
+.jfx-password-field{
+    -jfx-focus-color: #4059A9;
+    -jfx-unfocus-color: #4d4d4d;
+}
+
+.jfx-text-field,
+.jfx-password-field,
+.jfx-text-field:focused,
+.jfx-password-field:focused{
+    -fx-prompt-text-fill: #4D4D4D;
+}
+
+.jfx-text-field:error,
+.jfx-password-field:error{
+    -jfx-focus-color: #D34336;
+    -jfx-unfocus-color: #D34336;
+}
+
+.jfx-text-field .error-label,
+.jfx-password-field .error-label{
+    -fx-text-fill: #D34336;
+}
+
+.jfx-text-field .error-icon,
+.jfx-password-field .error-icon{
+    -fx-fill: #D34336;
+}

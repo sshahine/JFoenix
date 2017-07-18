@@ -84,6 +84,14 @@ public class JFXTextField extends TextField implements IFXTextInputControl {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFXButton.class.getResource("/css/jfx-text-field.css").toExternalForm();
+    }
+
     /***************************************************************************
      *                                                                         *
      * Properties                                                              *
