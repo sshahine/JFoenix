@@ -29,9 +29,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.control.Skin;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -102,6 +104,15 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         // compute the current items count
         setCurrentItemsCount(count(getRoot()));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-tree-table-view.css").toExternalForm();
+    }
+
 
     @Override
     public int getTreeItemLevel(TreeItem<?> node) {

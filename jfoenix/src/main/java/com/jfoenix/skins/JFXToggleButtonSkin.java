@@ -31,10 +31,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -61,8 +58,6 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
     public JFXToggleButtonSkin(JFXToggleButton toggleButton) {
         super(toggleButton);
-        // hide the toggle button
-        toggleButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
         final int startY = 0;
         final int endX = 22;
@@ -136,11 +131,11 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
         toggleButton.toggleColorProperty().addListener((o, oldVal, newVal) -> {
             updateToggleTransition();
-            udpateCricle();
+            updateCircle();
         });
         toggleButton.unToggleColorProperty().addListener((o, oldVal, newVal) -> {
             updateToggleTransition();
-            udpateCricle();
+            updateCircle();
         });
         toggleButton.toggleLineColorProperty().addListener((o, oldVal, newVal) -> {
             updateToggleTransition();
@@ -160,7 +155,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         }
     }
 
-    private void udpateCricle() {
+    private void updateCircle() {
         circle.setFill(getSkinnable().isSelected() ? ((JFXToggleButton) getSkinnable()).getToggleColor() : ((JFXToggleButton) getSkinnable())
             .getUnToggleColor());
     }

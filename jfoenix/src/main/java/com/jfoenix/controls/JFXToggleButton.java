@@ -92,6 +92,15 @@ public class JFXToggleButton extends ToggleButton {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-toggle-button.css").toExternalForm();
+    }
+
+
     /***************************************************************************
      *                                                                         *
      * styleable Properties                                                    *
