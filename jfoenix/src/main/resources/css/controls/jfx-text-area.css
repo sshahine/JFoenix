@@ -1,0 +1,22 @@
+.jfx-text-area {
+    -jfx-focus-color: #4059A9;
+    -jfx-unfocus-color: #4d4d4d;
+}
+
+.jfx-text-area,
+.jfx-text-area:focused {
+    -fx-prompt-text-fill: #4D4D4D;
+}
+
+.jfx-text-area:error {
+    -jfx-focus-color: #D34336;
+    -jfx-unfocus-color: #D34336;
+}
+
+.jfx-text-area .error-label {
+    -fx-text-fill: #D34336;
+}
+
+.jfx-text-area .error-icon {
+    -fx-fill: #D34336;
+}

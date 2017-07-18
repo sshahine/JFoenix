@@ -29,6 +29,8 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -103,6 +105,8 @@ public class JFXTextAreaSkin extends TextAreaSkin {
     private Timeline scale1 = new Timeline();
     private Timeline scaleLess1 = new Timeline();
 
+    private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
+
     public JFXTextAreaSkin(JFXTextArea textArea) {
         super(textArea);
         // init text area properties
@@ -155,15 +159,6 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         errorContainer.setClip(textArea.isDisableAnimation() ? null : errorContainerClip);
 
         getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
-
-        textArea.labelFloatProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                JFXUtilities.runInFX(this::createFloatingLabel);
-            } else {
-                promptText.visibleProperty().bind(usePromptText);
-            }
-            createFocusTransition();
-        });
 
         textArea.activeValidatorProperty().addListener((o, oldVal, newVal) -> {
             if (scrollPane != null) {
@@ -237,19 +232,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
             if (newVal != null) {
                 focusedLine.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
                 if (((JFXTextArea) getSkinnable()).isLabelFloat()) {
-                    promptTextColorTransition = new CachedTransition(promptContainer, new Timeline(
-                        new KeyFrame(Duration.millis(1300),
-                            new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
-                        {
-                            setDelay(Duration.millis(0));
-                            setCycleDuration(Duration.millis(160));
-                        }
-
-                        protected void starting() {
-                            super.starting();
-                            oldPromptTextFill = promptTextFill.get();
-                        }
-                    };
+                    promptTextColorTransition = createColorTransition(newVal);
                     // reset transition
                     resetFocusTransition();
                 }
@@ -274,9 +257,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         textArea.textProperty().addListener((o, oldVal, newVal) -> {
             if (!getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
                 if (newVal == null || newVal.isEmpty()) {
-                    animateFLoatingLabel(false);
+                    animateFloatingLabel(false);
                 } else {
-                    animateFLoatingLabel(true);
+                    animateFloatingLabel(true);
                 }
             }
         });
@@ -299,18 +282,28 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         });
 
         // prevent setting prompt text fill to transparent when text field is focused (override java transparent color if the control was focused)
-        promptTextFill.addListener((o, oldVal, newVal) -> {
-            if (Color.TRANSPARENT.equals(newVal) && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
-                promptTextFill.set(oldVal);
-            }
-        });
+        promptTextFill.addListener((o, oldVal, newVal) -> animatedPromptTextFill.set(newVal));
 
         registerChangeListener(textArea.disableAnimationProperty(), "DISABLE_ANIMATION");
+        registerChangeListener(textArea.labelFloatProperty(), "LABEL_FLOAT");
     }
 
     @Override
     protected void handleControlPropertyChanged(String propertyReference) {
-        if ("DISABLE_ANIMATION".equals(propertyReference)) {
+        if("LABEL_FLOAT".equals(propertyReference)){
+            boolean isLabelFloat = ((JFXTextArea) getSkinnable()).isLabelFloat();
+            if (isLabelFloat) {
+                JFXUtilities.runInFX(this::createFloatingLabel);
+            } else {
+                if(promptText!=null){
+                    // remove parent focus listener to prevent editor class cast exception
+                    promptText.visibleProperty().bind(usePromptText);
+                }
+            }
+            createFocusTransition();
+            // update prompt text position
+            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+        } else if ("DISABLE_ANIMATION".equals(propertyReference)) {
             // remove error clip if animation is disabled
             errorContainer.setClip(((JFXTextArea) getSkinnable()).isDisableAnimation() ?
                 null : errorContainerClip);
@@ -326,12 +319,13 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         // change control properties if and only if animations are stopped
         if (transition == null || transition.getStatus() == Status.STOPPED) {
             if (getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
-                promptTextFill.set(((JFXTextArea) getSkinnable()).getFocusColor());
+                animatedPromptTextFill.set(((JFXTextArea) getSkinnable()).getFocusColor());
             }
         }
 
         if (invalid) {
             invalid = false;
+            animatedPromptTextFill.set(promptTextFill.get());
             // set the default background of text area viewport to white
             Region viewPort = (Region) scrollPane.getChildrenUnmodifiable().get(0);
             viewPort.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
@@ -451,6 +445,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                     }
                 });
 
+                promptText.fillProperty().bind(animatedPromptTextFill);
                 promptText.getTransforms().add(promptTextScale);
                 promptContainer.getChildren().add(promptText);
                 if (triggerFloatLabel) {
@@ -467,42 +462,43 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                         -promptText.getLayoutBounds().getHeight() - 2,
                         Interpolator.EASE_BOTH),
                     new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
-                    new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(240));
-            }};
-
-            promptTextColorTransition = new CachedTransition(promptContainer, new Timeline(
-                new KeyFrame(Duration.millis(1300),
-                    new KeyValue(promptTextFill,
-                        ((JFXTextArea) getSkinnable()).getFocusColor(),
-                        Interpolator.EASE_BOTH)))) {
+                    new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH))))
+            {
+                private double finalHeight = -promptText.getLayoutBounds().getHeight() - 2;
                 {
                     setDelay(Duration.millis(0));
-                    setCycleDuration(Duration.millis(160));
+                    setCycleDuration(Duration.millis(240));
                 }
 
-                protected void starting() {
-                    super.starting();
-                    oldPromptTextFill = promptTextFill.get();
+                @Override
+                protected void stopping() {
+                    super.stopping();
+                    promptText.setTranslateY(finalHeight);
+                    promptTextScale.setX(0.85);
+                    promptTextScale.setY(0.85);
                 }
-
             };
+
+            promptTextColorTransition = createColorTransition(((JFXTextArea) getSkinnable()).getFocusColor());
 
             promptTextDownTransition = new CachedTransition(promptContainer, new Timeline(
                 new KeyFrame(Duration.millis(1300),
                     new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
                     new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
-                    new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH))
-            )) {{
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(240));
-            }};
-            promptTextDownTransition.setOnFinished((finish) -> {
-                promptText.setTranslateY(0);
-                promptTextScale.setX(1);
-                promptTextScale.setY(1);
-            });
+                    new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH))))
+            {
+                {
+                    setDelay(Duration.millis(0));
+                    setCycleDuration(Duration.millis(240));
+                }
+                @Override
+                protected void stopping() {
+                    super.stopping();
+                    promptText.setTranslateY(0);
+                    promptTextScale.setX(1);
+                    promptTextScale.setY(1);
+                }
+            };
 
             promptText.visibleProperty().unbind();
             promptText.visibleProperty().set(true);
@@ -516,7 +512,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         promptText.visibleProperty().bind(usePromptText);
         promptText.fontProperty().bind(getSkinnable().fontProperty());
         promptText.textProperty().bind(getSkinnable().promptTextProperty());
-        promptText.fillProperty().bind(promptTextFill);
+        promptText.fillProperty().bind(animatedPromptTextFill);
         promptText.setLayoutX(1);
     }
 
@@ -550,11 +546,26 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         scale.setX(initScale);
         focusedLine.setOpacity(0);
         if (oldPromptTextFill != null && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
-            promptTextFill.set(oldPromptTextFill);
+            animatedPromptTextFill.set(oldPromptTextFill);
             if (usePromptText()) {
                 promptTextDownTransition.play();
             }
         }
+    }
+
+    private CachedTransition createColorTransition(Paint newVal) {
+        return new CachedTransition(promptContainer, new Timeline(
+            new KeyFrame(Duration.millis(1300),
+                new KeyValue(animatedPromptTextFill, newVal, Interpolator.EASE_BOTH)))) {
+            {
+                setDelay(Duration.millis(0));
+                setCycleDuration(Duration.millis(160));
+            }
+            protected void starting() {
+                super.starting();
+                oldPromptTextFill = animatedPromptTextFill.get();
+            }
+        };
     }
 
     /**
@@ -563,9 +574,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
      *
      * @param up
      */
-    private void animateFLoatingLabel(boolean up) {
+    private void animateFloatingLabel(boolean up) {
         if (promptText == null) {
-            Platform.runLater(() -> animateFLoatingLabel(up));
+            Platform.runLater(() -> animateFloatingLabel(up));
         } else {
             resetFocusTransition();
             if (up && promptContainer.getTranslateY() == 0) {

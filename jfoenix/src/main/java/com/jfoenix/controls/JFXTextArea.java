@@ -84,6 +84,14 @@ public class JFXTextArea extends TextArea {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-text-area.css").toExternalForm();
+    }
+
     /***************************************************************************
      *                                                                         *
      * Properties                                                              *

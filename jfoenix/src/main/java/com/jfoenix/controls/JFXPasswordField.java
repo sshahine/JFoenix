@@ -83,7 +83,7 @@ public class JFXPasswordField extends PasswordField implements IFXTextInputContr
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXButton.class.getResource("/css/jfx-text-field.css").toExternalForm();
+        return getClass().getResource("/css/controls/jfx-password-field.css").toExternalForm();
     }
 
     /***************************************************************************
