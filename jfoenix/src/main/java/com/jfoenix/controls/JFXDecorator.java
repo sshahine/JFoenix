@@ -58,16 +58,15 @@ public class JFXDecorator extends VBox {
 
     private double xOffset = 0;
     private double yOffset = 0;
-    private double newX;
-    private double newY;
-    private double initX;
-    private double initY;
+    private double newX, newY, initX, initY, initWidth = -1, initHeight = -1,
+        initStageX = -1, initStageY = -1;
 
     private boolean allowMove = false;
     private boolean isDragging = false;
     private Timeline windowDecoratorAnimation;
     private StackPane contentPlaceHolder = new StackPane();
     private HBox buttonsContainer;
+    
     private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() -> {
         primaryStage.close();
     });
@@ -315,6 +314,11 @@ public class JFXDecorator extends VBox {
             }
         });
 
+        contentPlaceHolder.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
+            updateInitMouseValues(mouseEvent));
+        buttonsContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
+            updateInitMouseValues(mouseEvent));
+
         // show the drag cursor on the borders
         this.setOnMouseMoved((mouseEvent) -> {
             if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
@@ -322,7 +326,7 @@ public class JFXDecorator extends VBox {
                 return; // maximized mode does not support resize
             }
             if (!primaryStage.isResizable()) {
-                updateInitMouseValues(mouseEvent);
+//                updateInitMouseValues(mouseEvent);
                 return;
             }
             double x = mouseEvent.getX();
@@ -353,7 +357,7 @@ public class JFXDecorator extends VBox {
                 } else {
                     this.setCursor(Cursor.DEFAULT);
                 }
-                updateInitMouseValues(mouseEvent);
+//                updateInitMouseValues(mouseEvent);
             }
         });
 
@@ -376,48 +380,49 @@ public class JFXDecorator extends VBox {
             newX = mouseEvent.getScreenX();
             newY = mouseEvent.getScreenY();
 
+
             double deltax = newX - initX;
             double deltay = newY - initY;
             Cursor cursor = this.getCursor();
 
             if (Cursor.E_RESIZE.equals(cursor)) {
-                setStageWidth(primaryStage.getWidth() + deltax);
+                setStageWidth(initWidth + deltax);
                 mouseEvent.consume();
             } else if (Cursor.NE_RESIZE.equals(cursor)) {
-                if (setStageHeight(primaryStage.getHeight() - deltay)) {
-                    primaryStage.setY(primaryStage.getY() + deltay);
+                if (setStageHeight(initHeight - deltay)) {
+                    primaryStage.setY(initStageY + deltay);
                 }
-                setStageWidth(primaryStage.getWidth() + deltax);
+                setStageWidth(initWidth + deltax);
                 mouseEvent.consume();
             } else if (Cursor.SE_RESIZE.equals(cursor)) {
-                setStageWidth(primaryStage.getWidth() + deltax);
-                setStageHeight(primaryStage.getHeight() + deltay);
+                setStageWidth(initWidth + deltax);
+                setStageHeight(initHeight + deltay);
                 mouseEvent.consume();
             } else if (Cursor.S_RESIZE.equals(cursor)) {
-                setStageHeight(primaryStage.getHeight() + deltay);
+                setStageHeight(initHeight + deltay);
                 mouseEvent.consume();
             } else if (Cursor.W_RESIZE.equals(cursor)) {
-                if (setStageWidth(primaryStage.getWidth() - deltax)) {
-                    primaryStage.setX(primaryStage.getX() + deltax);
+                if (setStageWidth(initWidth - deltax)) {
+                    primaryStage.setX(initStageX + deltax);
                 }
                 mouseEvent.consume();
             } else if (Cursor.SW_RESIZE.equals(cursor)) {
-                if (setStageWidth(primaryStage.getWidth() - deltax)) {
-                    primaryStage.setX(primaryStage.getX() + deltax);
+                if (setStageWidth(initWidth - deltax)) {
+                    primaryStage.setX(initStageX + deltax);
                 }
-                setStageHeight(primaryStage.getHeight() + deltay);
+                setStageHeight(initHeight + deltay);
                 mouseEvent.consume();
             } else if (Cursor.NW_RESIZE.equals(cursor)) {
-                if (setStageWidth(primaryStage.getWidth() - deltax)) {
-                    primaryStage.setX(primaryStage.getX() + deltax);
+                if (setStageWidth(initWidth - deltax)) {
+                    primaryStage.setX(initStageX + deltax);
                 }
-                if (setStageHeight(primaryStage.getHeight() - deltay)) {
-                    primaryStage.setY(primaryStage.getY() + deltay);
+                if (setStageHeight(initHeight - deltay)) {
+                    primaryStage.setY(initStageY + deltay);
                 }
                 mouseEvent.consume();
             } else if (Cursor.N_RESIZE.equals(cursor)) {
-                if (setStageHeight(primaryStage.getHeight() - deltay)) {
-                    primaryStage.setY(primaryStage.getY() + deltay);
+                if (setStageHeight(initHeight - deltay)) {
+                    primaryStage.setY(initStageY + deltay);
                 }
                 mouseEvent.consume();
             } else if (allowMove) {
@@ -429,6 +434,10 @@ public class JFXDecorator extends VBox {
     }
 
     private void updateInitMouseValues(MouseEvent mouseEvent) {
+        initStageX = primaryStage.getX();
+        initStageY = primaryStage.getY();
+        initWidth = primaryStage.getWidth();
+        initHeight = primaryStage.getHeight();
         initX = mouseEvent.getScreenX();
         initY = mouseEvent.getScreenY();
         xOffset = mouseEvent.getSceneX();
@@ -455,7 +464,7 @@ public class JFXDecorator extends VBox {
     boolean setStageWidth(double width) {
         if (width >= primaryStage.getMinWidth() && width >= buttonsContainer.getMinWidth()) {
             primaryStage.setWidth(width);
-            initX = newX;
+//            initX = newX;
             return true;
         } else if (width >= primaryStage.getMinWidth() && width <= buttonsContainer.getMinWidth()) {
             width = buttonsContainer.getMinWidth();
@@ -467,7 +476,7 @@ public class JFXDecorator extends VBox {
     boolean setStageHeight(double height) {
         if (height >= primaryStage.getMinHeight() && height >= buttonsContainer.getHeight()) {
             primaryStage.setHeight(height);
-            initY = newY;
+//            initY = newY;
             return true;
         } else if (height >= primaryStage.getMinHeight() && height <= buttonsContainer.getHeight()) {
             height = buttonsContainer.getHeight();

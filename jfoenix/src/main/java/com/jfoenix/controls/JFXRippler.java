@@ -79,6 +79,7 @@ public class JFXRippler extends StackPane {
     private static final double RIPPLE_MAX_RADIUS = 300;
 
     private boolean enabled = true;
+    private boolean forceOverlay = false;
     private Interpolator rippleInterpolator = Interpolator.SPLINE(0.0825,
         0.3025,
         0.0875,
@@ -243,7 +244,7 @@ public class JFXRippler extends StackPane {
     }
 
     /**
-     * compute the ripple raddius
+     * compute the ripple radius
      *
      * @return the ripple radius size
      */
@@ -297,6 +298,35 @@ public class JFXRippler extends StackPane {
         }
     }
 
+    /**
+     * show/hide the ripple overlay
+     * @param visible
+     * @param forceOverlay used to hold the overlay after ripple action
+     */
+    public void setOverlayVisible(boolean visible, boolean forceOverlay){
+        this.forceOverlay = forceOverlay;
+        setOverlayVisible(visible);
+    }
+
+    /**
+     * show/hide the ripple overlay
+     * NOTE: setting overlay visibility to false will reset forceOverlay to false
+     * @param visible
+     */
+    public void setOverlayVisible(boolean visible){
+        if(visible){
+            showOverlay();
+        }else{
+            forceOverlay = !visible ? false : forceOverlay;
+            hideOverlay();
+        }
+    }
+
+    /**
+     * this method will be set to private in future versions of JFoenix,
+     * user the method {@link #setOverlayVisible(boolean)}
+     */
+    @Deprecated
     public void showOverlay() {
         if (rippler.overlayRect != null) {
             rippler.overlayRect.outAnimation.stop();
@@ -305,12 +335,17 @@ public class JFXRippler extends StackPane {
         rippler.overlayRect.inAnimation.play();
     }
 
+    @Deprecated
     public void hideOverlay() {
-        if (rippler.overlayRect != null) {
-            rippler.overlayRect.inAnimation.stop();
-        }
-        if (rippler.overlayRect != null) {
-            rippler.overlayRect.outAnimation.play();
+        if(!forceOverlay){
+            if (rippler.overlayRect != null) {
+                rippler.overlayRect.inAnimation.stop();
+            }
+            if (rippler.overlayRect != null) {
+                rippler.overlayRect.outAnimation.play();
+            }
+        }else{
+            System.err.println("Ripple Overlay is forced!");
         }
     }
 
@@ -370,7 +405,7 @@ public class JFXRippler extends StackPane {
                         , ripple.outKeyValues)), this);
                 ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
                 ripple.outAnimation.getAnimation().play();
-                if (overlayRect != null) {
+                if (overlayRect != null && !forceOverlay) {
                     overlayRect.outAnimation.play();
                 }
             }
