@@ -262,16 +262,19 @@ public class JFXRippler extends StackPane {
             createRipple(event.getX(), event.getY());
             if (this.position.get() == RipplerPos.FRONT) {
                 this.control.fireEvent(event);
+                event.consume();
             }
         });
         ripplerPane.setOnMouseReleased((event) -> {
             if (this.position.get() == RipplerPos.FRONT) {
                 this.control.fireEvent(event);
+                event.consume();
             }
         });
         ripplerPane.setOnMouseClicked((event) -> {
             if (this.position.get() == RipplerPos.FRONT) {
                 this.control.fireEvent(event);
+                event.consume();
             }
         });
     }
