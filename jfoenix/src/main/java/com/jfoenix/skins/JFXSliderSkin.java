@@ -32,10 +32,7 @@ import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -55,6 +52,7 @@ import javafx.util.Duration;
 public class JFXSliderSkin extends SliderSkin {
 
 
+    private final Pane mouseHandlerPane = new Pane();
     private Paint thumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
 
     private Text sliderValue;
@@ -109,7 +107,7 @@ public class JFXSliderSkin extends SliderSkin {
 
         getChildren().add(getChildren().indexOf(thumb), coloredTrack);
         getChildren().add(getChildren().indexOf(thumb), animatedThumb);
-
+        getChildren().add(0, mouseHandlerPane);
         registerChangeListener(slider.valueFactoryProperty(), "VALUE_FACTORY");
 
         initListeners();
@@ -170,8 +168,7 @@ public class JFXSliderSkin extends SliderSkin {
         }
 
         coloredTrack.resizeRelocate(layoutX, layoutY, width, height);
-
-
+        mouseHandlerPane.resizeRelocate(x, y, w, h);
     }
 
     private boolean internalChange = false;
@@ -215,19 +212,19 @@ public class JFXSliderSkin extends SliderSkin {
 
     private void initListeners() {
         // delegate slider mouse events to track node
-        getSkinnable().setOnMousePressed(me -> {
+        mouseHandlerPane.setOnMousePressed(me -> {
             if (!me.isConsumed()) {
                 me.consume();
                 track.fireEvent(me);
             }
         });
-        getSkinnable().setOnMouseReleased(me -> {
+        mouseHandlerPane.setOnMouseReleased(me -> {
             if (!me.isConsumed()) {
                 me.consume();
                 track.fireEvent(me);
             }
         });
-        getSkinnable().setOnMouseDragged(me -> {
+        mouseHandlerPane.setOnMouseDragged(me -> {
             if (!me.isConsumed()) {
                 me.consume();
                 track.fireEvent(me);
