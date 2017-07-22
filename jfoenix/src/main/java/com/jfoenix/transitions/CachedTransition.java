@@ -42,8 +42,8 @@ public class CachedTransition extends Transition {
     public CachedTransition(final Node node, final Timeline timeline) {
         this.node = node;
         this.timeline.set(timeline);
-        statusProperty().addListener((o, oldStatus, newStatus) -> {
-            switch (newStatus) {
+        statusProperty().addListener(observable -> {
+            switch (getStatus()) {
                 case RUNNING:
                     starting();
                     break;
@@ -58,8 +58,8 @@ public class CachedTransition extends Transition {
         this.node = node;
         this.timeline.set(timeline);
         this.momentos = cacheMomentos;
-        statusProperty().addListener((o, oldStatus, newStatus) -> {
-            switch (newStatus) {
+        statusProperty().addListener(observable -> {
+            switch (getStatus()) {
                 case RUNNING:
                     starting();
                     break;

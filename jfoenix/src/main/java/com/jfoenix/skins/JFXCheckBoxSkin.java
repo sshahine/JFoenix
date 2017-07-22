@@ -94,7 +94,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         // add listeners
         control.selectedProperty().addListener((o, oldVal, newVal) -> {
             updateRippleColor();
-            playSelectAnimation(newVal);
+            playSelectAnimation(newVal, true);
         });
 
         // show focused state
@@ -173,7 +173,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 
         if (invalid) {
             if (getSkinnable().isSelected()) {
-                playSelectAnimation(true);
+                playSelectAnimation(true, false);
             }
             invalid = false;
         }
@@ -218,15 +218,33 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         }
     }
 
-    private void playSelectAnimation(Boolean selection) {
+    private void playSelectAnimation(Boolean selection, boolean playAnimation) {
         if (selection == null) {
             selection = false;
         }
         JFXCheckBox control = (JFXCheckBox) getSkinnable();
         transition.setRate(selection ? 1 : -1);
         select.setRate(selection ? 1 : -1);
-        transition.play();
-        select.play();
+        if(playAnimation) {
+            transition.play();
+            select.play();
+        }else{
+            CornerRadii radii = box.getBackground() == null ?
+                null : box.getBackground().getFills().get(0).getRadii();
+            Insets insets = box.getBackground() == null ?
+                null : box.getBackground().getFills().get(0).getInsets();
+            if(selection){
+                mark.setVisible(true);
+                mark.setScaleY(1);
+                mark.setScaleX(1);
+                box.setBackground(new Background(new BackgroundFill(((JFXCheckBox) getSkinnable()).getCheckedColor(), radii, insets)));
+            }else{
+                mark.setVisible(false);
+                mark.setScaleY(0);
+                mark.setScaleX(0);
+                box.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, radii, insets)));
+            }
+        }
         box.setBorder(new Border(new BorderStroke(selection ? control.getCheckedColor() : control.getUnCheckedColor(),
             BorderStrokeStyle.SOLID,
             new CornerRadii(2),
@@ -267,6 +285,11 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
             setDelay(Duration.seconds(0.05));
         }
 
+        @Override
+        protected void stopping() {
+            super.stopping();
+            mark.setVisible(getRate() == 1);
+        }
     }
 
 
