@@ -61,20 +61,22 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     private WeakReference<TreeItem<T>> treeItemRef;
 
     private ChangeListener<Boolean> weakExpandListener = (ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-        JFXTreeView<T> jfxTreeView = (JFXTreeView<T>) getTreeView();
-        jfxTreeView.clearAnimation();
-        int currentRow = getTreeView().getRow(getTreeItem());
-        jfxTreeView.animateRow = currentRow;
-        jfxTreeView.expand = newValue;
-        jfxTreeView.disableSiblings = false;
+        if(getTreeItem()!=null){
+            JFXTreeView<T> jfxTreeView = (JFXTreeView<T>) getTreeView();
+            jfxTreeView.clearAnimation();
+            int currentRow = getTreeView().getRow(getTreeItem());
+            jfxTreeView.animateRow = currentRow;
+            jfxTreeView.expand = newValue;
+            jfxTreeView.disableSiblings = false;
 
-        VirtualFlow<?> vf = (VirtualFlow<?>) getTreeView().lookup(".virtual-flow");
-        if (!newValue) {
-            int index = currentRow + getTreeItem().getChildren().size() + 1;
-            index = index > vf.getCellCount() ? vf.getCellCount() : index;
-            jfxTreeView.height = (index - currentRow - 1) * vf.getCell(currentRow).getHeight();
+            VirtualFlow<?> vf = (VirtualFlow<?>) getTreeView().lookup(".virtual-flow");
+            if (!newValue) {
+                int index = currentRow + getTreeItem().getChildren().size() + 1;
+                index = index > vf.getCellCount() ? vf.getCellCount() : index;
+                jfxTreeView.height = (index - currentRow - 1) * vf.getCell(currentRow).getHeight();
+            }
+            jfxTreeView.layoutY = vf.getCell(currentRow).getLayoutY();
         }
-        jfxTreeView.layoutY = vf.getCell(currentRow).getLayoutY();
     };
 
     private InvalidationListener treeItemGraphicInvalidationListener = observable -> updateDisplay(getItem(),
@@ -139,7 +141,8 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             int oldIndex = getIndex();
             if (oldIndex == -1 || (oldIndex > 0 && i > 0 && oldIndex != i)) {
                 if (jfxTreeView.sibRow == -1) {
-                    if (jfxTreeView.getTreeItem(i) != null && jfxTreeView.getTreeItem(jfxTreeView.animateRow) != null
+                    if (jfxTreeView.getTreeItem(i) != null
+                        && jfxTreeView.getTreeItem(jfxTreeView.animateRow) != null
                         && i > jfxTreeView.animateRow
                         && jfxTreeView.getTreeItem(i).getParent() == jfxTreeView.getTreeItem(jfxTreeView.animateRow)
                         .getParent()) {
@@ -149,8 +152,8 @@ public class JFXTreeCell<T> extends TreeCell<T> {
                         }
                     }
                 }
-                if (jfxTreeView.getTreeItem(i) != null && jfxTreeView.getTreeItem(i) == jfxTreeView.getTreeItem(
-                    jfxTreeView.animateRow)) {
+                if (jfxTreeView.getTreeItem(i) != null
+                    && jfxTreeView.getTreeItem(i) == jfxTreeView.getTreeItem(jfxTreeView.animateRow)) {
                     if (i * this.getHeight() != jfxTreeView.layoutY) {
                         jfxTreeView.disableSiblings = true;
                         for (int index : jfxTreeView.sibAnimationMap.keySet()) {
@@ -262,6 +265,11 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     private void animateSibling(int i, JFXTreeView<T> jfxTreeView) {
         if (!jfxTreeView.disableSiblings) {
             Timeline createSibAnimation = createSibAnimation(this, i);
+            if(jfxTreeView.childrenAnimationMap.containsKey(i)){
+                jfxTreeView.trans.getChildren().remove(jfxTreeView.childrenAnimationMap.get(i).getAnimation());
+                jfxTreeView.childrenAnimationMap.get(i).getCell().clearCellAnimation();
+                jfxTreeView.childrenAnimationMap.remove(i);
+            }
             jfxTreeView.sibAnimationMap.put(i, new CellAnimation(this, createSibAnimation));
             jfxTreeView.trans.getChildren().add(createSibAnimation);
         }
