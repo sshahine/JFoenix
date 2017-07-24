@@ -61,7 +61,7 @@ public class JFXButtonSkin extends ButtonSkin {
             @Override
             protected Node getMask() {
                 StackPane mask = new StackPane();
-                mask.shapeProperty().bind(shapeProperty());
+                mask.shapeProperty().bind(getSkinnable().shapeProperty());
                 mask.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
                     return new Background(new BackgroundFill(Color.WHITE,
                         getSkinnable().getBackground() != null
