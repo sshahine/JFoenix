@@ -42,6 +42,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -452,10 +453,14 @@ public class JFXRippler extends StackPane {
                 overlayRect = new OverLayRipple();
                 overlayRect.setClip(getMask());
                 getChildren().add(0, overlayRect);
-                overlayRect.setFill(new Color(((Color) ripplerFill.get()).getRed(),
-                    ((Color) ripplerFill.get()).getGreen(),
-                    ((Color) ripplerFill.get()).getBlue(),
-                    0.2));
+                if (ripplerFill.get() instanceof Color) {
+                    overlayRect.setFill(new Color(((Color) ripplerFill.get()).getRed(),
+                        ((Color) ripplerFill.get()).getGreen(),
+                        ((Color) ripplerFill.get()).getBlue(),
+                        0.2));
+                }else{
+                    overlayRect.setFill(Color.TRANSPARENT);
+                }
             }
         }
 
