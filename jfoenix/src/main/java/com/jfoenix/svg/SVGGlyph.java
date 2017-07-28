@@ -114,7 +114,7 @@ public class SVGGlyph extends Pane {
 
     /**
      * resize the svg to this size while keeping the width/height ratio
-     * 
+     *
      * @param size in pixel
      */
     public void setSizeRatio(double size){
@@ -127,5 +127,15 @@ public class SVGGlyph extends Pane {
         }else{
             setSize(size, size);
         }
+    }
+
+    /**
+     * resize the svg to certain width while keeping the width/height ratio
+     *
+     * @param width in pixel
+     */
+    public void setWidthSizeRatio(double width){
+        double height = width / widthHeightRatio;
+        setSize(width , height);
     }
 }

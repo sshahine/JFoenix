@@ -93,7 +93,13 @@ public class SVGLoaderController {
 
         List<SVGGlyph> glyphs = SVGGlyphLoader.getAllGlyphsIDs()
             .stream()
-            .map(SVGGlyphLoader::getIcoMoonGlyph)
+            .map(glyphName -> {
+                try {
+                    return SVGGlyphLoader.getIcoMoonGlyph(glyphName);
+                } catch (Exception e) {
+                    return null;
+                }
+            })
             .collect(Collectors.toList());
         glyphs.sort(Comparator.comparing(SVGGlyph::getName));
 
@@ -161,7 +167,10 @@ public class SVGLoaderController {
     }
 
     private void viewGlyphDetail(SVGGlyph glyph) {
-        glyphDetailViewer.setGlyph(SVGGlyphLoader.getIcoMoonGlyph(fileName + "." + glyph.getName()));
+        try {
+            glyphDetailViewer.setGlyph(SVGGlyphLoader.getIcoMoonGlyph(fileName + "." + glyph.getName()));
+        } catch (Exception e) {
+        }
     }
 
     private static final class GlyphDetailViewer extends VBox {
