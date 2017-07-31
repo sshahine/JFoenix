@@ -74,7 +74,12 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             changeListenersField.setAccessible(true);
             ChangeListener[] changeListeners = (ChangeListener[]) changeListenersField.get(value);
             // remove parent focus listener to prevent editor class cast exception
-            datePicker.focusedProperty().removeListener(changeListeners[changeListeners.length-1]);
+            for(int i = changeListeners.length - 1; i > 0; i--){
+                if(changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")){
+                    datePicker.focusedProperty().removeListener(changeListeners[i]);
+                    break;
+                }
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
