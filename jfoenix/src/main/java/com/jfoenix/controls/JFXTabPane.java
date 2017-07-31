@@ -20,9 +20,19 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXTabPaneSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * JFXTabPane is the material design implementation of a tab pane.
@@ -68,4 +78,69 @@ public class JFXTabPane extends TabPane {
             this.getParent().fireEvent(e);
         });
     }
+
+    /**
+     * disable animation on validation
+     */
+    private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(JFXTabPane.StyleableProperties.DISABLE_ANIMATION,
+        JFXTabPane.this,
+        "disableAnimation",
+        false);
+
+    public final StyleableBooleanProperty disableAnimationProperty() {
+        return this.disableAnimation;
+    }
+
+    public final Boolean isDisableAnimation() {
+        return disableAnimation != null && this.disableAnimationProperty().get();
+    }
+
+    public final void setDisableAnimation(final Boolean disabled) {
+        this.disableAnimationProperty().set(disabled);
+    }
+
+    private static class StyleableProperties {
+        private static final CssMetaData<JFXTabPane, Boolean> DISABLE_ANIMATION =
+            new CssMetaData<JFXTabPane, Boolean>("-jfx-disable-animation",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXTabPane control) {
+                    return control.disableAnimation == null || !control.disableAnimation.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXTabPane control) {
+                    return control.disableAnimationProperty();
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
+                Control.getClassCssMetaData());
+            Collections.addAll(styleables, DISABLE_ANIMATION);
+            CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+
+    // inherit the styleable properties from parent
+    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        if (STYLEABLES == null) {
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
+                Control.getClassCssMetaData());
+            styleables.addAll(getClassCssMetaData());
+            styleables.addAll(TabPane.getClassCssMetaData());
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+        return STYLEABLES;
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return JFXTabPane.StyleableProperties.CHILD_STYLEABLES;
+    }
+
 }
