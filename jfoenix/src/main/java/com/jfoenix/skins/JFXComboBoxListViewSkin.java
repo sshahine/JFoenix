@@ -111,8 +111,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         customPane = new StackPane();
         customPane.setMouseTransparent(true);
         customPane.getStyleClass().add("combo-box-button-container");
-        customPane.backgroundProperty().bindBidirectional(getSkinnable().backgroundProperty());
-        customPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
         customPane.getChildren().add(promptText);
         getChildren().add(0, customPane);
         StackPane.setAlignment(promptText, Pos.CENTER_LEFT);

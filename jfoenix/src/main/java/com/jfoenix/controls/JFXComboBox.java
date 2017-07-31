@@ -101,6 +101,14 @@ public class JFXComboBox<T> extends ComboBox<T> {
      * {@inheritDoc}
      */
     @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-combo-box.css").toExternalForm();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected Skin<?> createDefaultSkin() {
         return new JFXComboBoxListViewSkin<>(this);
     }

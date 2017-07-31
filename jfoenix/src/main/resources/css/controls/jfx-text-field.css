@@ -6,6 +6,7 @@
 .jfx-text-field,
 .jfx-text-field:focused {
     -fx-prompt-text-fill: #4D4D4D;
+    -fx-background-color:TRANSPARENT;
 }
 
 .jfx-text-field:error {

@@ -1,0 +1,22 @@
+.jfx-combo-box{
+    -jfx-focus-color: #4059A9;
+    -jfx-unfocus-color: #4d4d4d;
+}
+
+.jfx-combo-box,
+.jfx-combo-box:focused,
+.jfx-combo-box:editable,
+.jfx-combo-box:editable:focused{
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
+    -fx-background-radius: 3px;
+    -fx-background-insets: 0px;
+}
+
+.jfx-combo-box .combo-box-button-container{
+    -fx-background-color:TRANSPARENT;
+}
+
+.jfx-combo-box:error {
+    -jfx-focus-color: #D34336;
+    -jfx-unfocus-color: #D34336;
+}

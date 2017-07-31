@@ -8,6 +8,12 @@
     -fx-prompt-text-fill: #4D4D4D;
 }
 
+.jfx-text-area .content,
+.jfx-text-area:focused .content{
+    -fx-background-color:TRANSPARENT;
+    -fx-padding: 0px;
+}
+
 .jfx-text-area:error {
     -jfx-focus-color: #D34336;
     -jfx-unfocus-color: #D34336;
