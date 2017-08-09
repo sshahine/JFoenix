@@ -202,7 +202,7 @@ public class JFXSnackbar extends StackPane {
     }
 
     public void show(String message,  String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler){
-        this.show(message,null,  actionText, -1, actionHandler);
+        this.show(message,null,  actionText, timeout, actionHandler);
     }
 
     public void show(String message, String pseudoClass, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
