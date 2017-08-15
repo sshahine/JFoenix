@@ -200,27 +200,6 @@ public class JFXToggleButton extends ToggleButton {
     }
 
     /**
-     * default line color used when the button is not toggled
-     */
-    private StyleableIntegerProperty untoggleLineColor = new SimpleStyleableIntegerProperty<>(
-        StyleableProperties.UNTOGGLE_LINE_COLOR,
-        JFXToggleButton.this,
-        "unToggleLineColor",
-        Color.valueOf("#999999"));
-
-    public Paint getUnToggleLineColor() {
-        return untoggleLineColor == null ? Color.valueOf("#999999") : untoggleLineColor.get();
-    }
-
-    public StyleableObjectProperty<Paint> unToggleLineColorProperty() {
-        return this.untoggleLineColor;
-    }
-
-    public void setUnToggleLineColor(Paint color) {
-        this.untoggleLineColor.set(color);
-    }
-
-    /**
      * Default size of the toggle button.
      */
     private final StyleableDoubleProperty size = new SimpleStyleableDoubleProperty(
