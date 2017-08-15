@@ -287,7 +287,7 @@ public class JFXToggleButton extends ToggleButton {
                 }
 
                 @Override
-                public StyleableProperty<Paint> getStyleableProperty(JFXToggleButton control) {
+                public StyleableProperty<Number> getStyleableProperty(JFXToggleButton control) {
                     return control.sizeProperty();
                 }
             };
