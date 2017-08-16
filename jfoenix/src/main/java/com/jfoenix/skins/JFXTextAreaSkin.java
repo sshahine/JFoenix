@@ -282,7 +282,10 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         });
 
         // prevent setting prompt text fill to transparent when text field is focused (override java transparent color if the control was focused)
-        promptTextFill.addListener((o, oldVal, newVal) -> animatedPromptTextFill.set(newVal));
+        promptTextFill.addListener((o, oldVal, newVal) -> {
+            oldPromptTextFill = newVal;
+            animatedPromptTextFill.set(newVal);
+        });
 
         registerChangeListener(textArea.disableAnimationProperty(), "DISABLE_ANIMATION");
         registerChangeListener(textArea.labelFloatProperty(), "LABEL_FLOAT");

@@ -266,7 +266,10 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
-        promptTextFill.addListener((o, oldVal, newVal) -> animatedPromptTextFill.set(newVal));
+        promptTextFill.addListener((o, oldVal, newVal) -> {
+            oldPromptTextFill = newVal;
+            animatedPromptTextFill.set(newVal);
+        });
 
         registerChangeListener(field.disableAnimationProperty(), "DISABLE_ANIMATION");
         registerChangeListener(field.labelFloatProperty(), "LABEL_FLOAT");
