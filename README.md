@@ -14,6 +14,9 @@
 # Summary
 JFoenix is an open source Java library, that implements Google Material Design using Java components.
 
+# Using JFoenix already?
+Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github/website.
+
 # Build
 To build JFoenix, execute the following command:
 
