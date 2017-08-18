@@ -49,7 +49,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
     private Line line;
 
     private Circle circle;
-    private final int circleRadius = 10;
+    private final double circleRadius;
     private StackPane circleContainer = new StackPane();
 
     private JFXRippler rippler;
@@ -59,13 +59,15 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
     public JFXToggleButtonSkin(JFXToggleButton toggleButton) {
         super(toggleButton);
 
-        final int startY = 0;
-        final int endX = 22;
-        final int startX = 0;
+        final double size = toggleButton.getSize();
+        final double startY = 0;
+        final double endX = size * 2 + 2;
+        final double startX = 0;
+        circleRadius = toggleButton.getSize();
         line = new Line(startX, startY, endX, startY);
 
         line.setStroke(toggleButton.getUnToggleLineColor());
-        line.setStrokeWidth(14);
+        line.setStrokeWidth(size * 1.5);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
 
         circle = new Circle(startX - circleRadius, startY, circleRadius);
@@ -76,7 +78,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
         StackPane circlePane = new StackPane();
         circlePane.getChildren().add(circle);
-        circlePane.setPadding(new Insets(14));
+        circlePane.setPadding(new Insets(size * 1.5));
         rippler = new JFXRippler(circlePane, RipplerMask.CIRCLE, RipplerPos.BACK) {
             @Override
             protected void initListeners() {

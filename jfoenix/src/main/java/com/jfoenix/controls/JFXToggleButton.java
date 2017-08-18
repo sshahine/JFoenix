@@ -199,6 +199,27 @@ public class JFXToggleButton extends ToggleButton {
         this.untoggleLineColor.set(color);
     }
 
+    /**
+     * Default size of the toggle button.
+     */
+    private final StyleableDoubleProperty size = new SimpleStyleableDoubleProperty(
+        StyleableProperties.SIZE,
+        JFXToggleButton.this,
+        "size",
+        10.0);
+
+    public double getSize() {
+        return size.get();
+    }
+
+    public StyleableDoubleProperty sizeProperty() {
+        return this.size;
+    }
+
+    public void setSize(double size) {
+        this.size.set(size);
+    }
+
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXToggleButton, Paint> TOGGLE_COLOR =
@@ -257,6 +278,20 @@ public class JFXToggleButton extends ToggleButton {
                 }
             };
 
+        private static final CssMetaData<JFXToggleButton, Number> SIZE =
+            new CssMetaData<JFXToggleButton, Number>("-jfx-size",
+                StyleConverter.getSizeConverter(), 10.0) {
+                @Override
+                public boolean isSettable(JFXToggleButton control) {
+                    return !control.size.isBound();
+                }
+
+                @Override
+                public StyleableProperty<Number> getStyleableProperty(JFXToggleButton control) {
+                    return control.sizeProperty();
+                }
+            };
+
 
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
@@ -264,6 +299,7 @@ public class JFXToggleButton extends ToggleButton {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
+                SIZE,
                 TOGGLE_COLOR,
                 UNTOGGLE_COLOR,
                 TOGGLE_LINE_COLOR,
