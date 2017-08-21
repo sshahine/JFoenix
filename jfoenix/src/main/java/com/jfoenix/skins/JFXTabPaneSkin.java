@@ -1166,6 +1166,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         private boolean showControlButtons, isLeftArrow;
         private Timeline arrowAnimation;
         private SVGGlyph arrowButton;
+        private Container container;
         private SVGGlyph leftChevron = new SVGGlyph(0,
             "CHEVRON_LEFT",
             "M 742,-37 90,614 Q 53,651 53,704.5 53,758 90,795 l 652,651 q 37,37 90.5,37 53.5,0 90.5,-37 l 75,-75 q 37,-37 37,-90.5 0,-53.5 -37,-90.5 L 512,704 998,219 q 37,-38 37,-91 0,-53 -37,-90 L 923,-37 Q 886,-74 832.5,-74 779,-74 742,-37 z",
@@ -1187,7 +1188,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             DoubleProperty offsetProperty = new SimpleDoubleProperty(0);
             offsetProperty.addListener((o, oldVal, newVal) -> header.updateScrollOffset(newVal.doubleValue()));
 
-            StackPane container = new StackPane(arrowButton);
+            container = new StackPane(arrowButton);
             container.getStyleClass().add("container");
             container.setPadding(new Insets(7));
             container.setCursor(Cursor.HAND);
@@ -1256,21 +1257,32 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         private boolean showTabsHeaderControls = false;
 
         private void showTabsMenu(boolean value) {
+            
             final boolean wasTabsMenuShowing = isControlButtonShown();
             this.showTabsHeaderControls = value;
+            
+            // need to show & it was not showing
             if (showTabsHeaderControls && !wasTabsMenuShowing) {
                 arrowButton.setVisible(true);
                 showControlButtons = true;
                 inner.requestLayout();
                 header.requestLayout();
-            } else if (!showTabsHeaderControls && wasTabsMenuShowing) {
-                // hide control button
-                if (isControlButtonShown()) {
-                    showControlButtons = true;
-                } else {
-                    setVisible(false);
+            } else {
+
+                // need to hide & was showing
+                if (!showTabsHeaderControls && wasTabsMenuShowing) {
+
+                    container.setPrefWidth(0);
+
+                    // hide control button
+                    if (isControlButtonShown()) {
+                        showControlButtons = true;
+                    } else {
+                        setVisible(false);
+                    }
+                    requestLayout();
                 }
-                requestLayout();
+
             }
         }
 
