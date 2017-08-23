@@ -33,10 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -57,7 +54,10 @@ public class JFXButtonSkin extends ButtonSkin {
     public JFXButtonSkin(JFXButton button) {
         super(button);
 
-        buttonRippler = new JFXRippler(new StackPane()) {
+        final StackPane control = new StackPane();
+        control.backgroundProperty().bind(getSkinnable().backgroundProperty());
+
+        buttonRippler = new JFXRippler(control) {
             @Override
             protected Node getMask() {
                 StackPane mask = new StackPane();
@@ -109,10 +109,10 @@ public class JFXButtonSkin extends ButtonSkin {
         button.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
                 if (!getSkinnable().isPressed()) {
-                    buttonRippler.showOverlay();
+                    buttonRippler.setOverlayVisible(true);
                 }
             } else {
-                buttonRippler.hideOverlay();
+                buttonRippler.setOverlayVisible(false);
             }
         });
 
@@ -122,6 +122,8 @@ public class JFXButtonSkin extends ButtonSkin {
          * disable action when clicking on the button shadow
 		 */
         button.setPickOnBounds(false);
+        buttonRippler.setPickOnBounds(false);
+        control.setPickOnBounds(false);
 
         updateButtonType(button.getButtonType());
 
@@ -174,8 +176,8 @@ public class JFXButtonSkin extends ButtonSkin {
     private void updateButtonType(ButtonType type) {
         switch (type) {
             case RAISED:
-                JFXDepthManager.setDepth(getSkinnable(), 2);
-                clickedAnimation = new ButtonClickTransition((DropShadow) getSkinnable().getEffect());
+                JFXDepthManager.setDepth(buttonRippler.getControl(), 2);
+                clickedAnimation = new ButtonClickTransition((DropShadow) buttonRippler.getControl().getEffect());
                 break;
             default:
                 getSkinnable().setEffect(null);
