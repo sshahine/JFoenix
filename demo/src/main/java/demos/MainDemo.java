@@ -42,13 +42,11 @@ public class MainDemo extends Application {
 
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
-        Scene scene = new Scene(decorator, 800, 850);
+        Scene scene = new Scene(decorator, 800, 600);
         final ObservableList<String> stylesheets = scene.getStylesheets();
         stylesheets.addAll(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
                            MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm(),
                            MainDemo.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
-        stage.setMinWidth(700);
-        stage.setMinHeight(800);
         stage.setScene(scene);
         stage.show();
     }
