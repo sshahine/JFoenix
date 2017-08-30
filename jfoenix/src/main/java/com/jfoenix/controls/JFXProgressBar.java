@@ -58,6 +58,14 @@ public class JFXProgressBar extends ProgressBar {
      * {@inheritDoc}
      */
     @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-progress-bar.css").toExternalForm();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected Skin<?> createDefaultSkin() {
         return new JFXProgressBarSkin(this);
     }
