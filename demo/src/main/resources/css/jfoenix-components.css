@@ -357,11 +357,11 @@
 }
 
 .tree-table-row-cell .jfx-text-field {
-    -fx-focus-color: rgba(240, 40, 40);
+    -fx-focus-color: rgba(240, 40, 40, 1);
 }
 
 .tree-table-row-group {
-    -fx-background-color: rgba(230, 230, 230);
+    -fx-background-color: rgba(230, 230, 230, 1);
 }
 
 .animated-option-button {

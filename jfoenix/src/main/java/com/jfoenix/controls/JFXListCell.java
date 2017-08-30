@@ -31,7 +31,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
@@ -212,36 +211,16 @@ public class JFXListCell<T> extends ListCell<T> {
             // remove empty (Trailing cells)
             setMouseTransparent(true);
             setStyle("-fx-background-color:TRANSPARENT;");
-
         } else {
-            if (item != null) {
-                // if cell is not a trailing cell then show it
-                setStyle(null);
-                setMouseTransparent(false);
-
+            setMouseTransparent(false);
+            setStyle(null);
+            if(item instanceof Node) {
+                setText(null);
                 Node currentNode = getGraphic();
-
-                Node newNode;
-                if (item instanceof Region || item instanceof Control) {
-                    newNode = (Node) item;
-                } else {
-                    newNode = new Label(item.toString());
-                }
-
-
-                boolean isJFXListView = getListView() instanceof JFXListView;
-
-                // show cell tooltip if its toggled in JFXListView
-                if (isJFXListView && newNode instanceof Label && ((JFXListView<?>) getListView()).isShowTooltip()) {
-                    setTooltip(new Tooltip(((Label) newNode).getText()));
-                }
-
-
+                Node newNode = (Node) item;
                 if (currentNode == null || !currentNode.equals(newNode)) {
-                    // clear nodes
                     cellContent = newNode;
                     cellRippler.rippler.cacheRippleClip(false);
-
                     // build the Cell node
                     // RIPPLER ITEM : in case if the list item has its own rippler bind the list rippler and item rippler properties
                     if (newNode instanceof JFXRippler) {
@@ -375,10 +354,20 @@ public class JFXListCell<T> extends ListCell<T> {
                             }
                         });
                     }
-
                     ((Region) cellContent).setMaxHeight(cellContent.prefHeight(-1));
                     setGraphic(cellContent);
-                    setText(null);
+                }
+            }else {
+                setText(item == null ? "null" : item.toString());
+                setGraphic(null);
+            }
+            boolean isJFXListView = getListView() instanceof JFXListView;
+            // show cell tooltip if its toggled in JFXListView
+            if (isJFXListView && ((JFXListView<?>) getListView()).isShowTooltip()) {
+                if(item instanceof Label){
+                    setTooltip(new Tooltip(((Label) item).getText()));
+                }else if(getText()!=null){
+                    setTooltip(new Tooltip(getText()));
                 }
             }
         }

@@ -100,7 +100,7 @@ public class JFXDatePickerContent extends VBox {
     protected JFXDatePicker datePicker;
     private JFXButton backMonthButton;
     private JFXButton forwardMonthButton;
-    private ObjectProperty<Label> selectedYearCell = new SimpleObjectProperty<>(null);
+    private ObjectProperty<JFXListCell> selectedYearCell = new SimpleObjectProperty<>(null);
     private Label selectedDateLabel;
     private Label selectedYearLabel;
     private Label monthYearLabel;
@@ -152,12 +152,12 @@ public class JFXDatePickerContent extends VBox {
                     });
                     setOnMouseClicked(click -> {
                         String selectedItem = yearsListView.getSelectionModel().getSelectedItem();
-                        if (selectedItem != null && selectedItem.equals(((Label) cellContent).getText())) {
-                            int offset = Integer.parseInt(((Label) cellContent).getText()) - Integer.parseInt(
+                        if (selectedItem != null && selectedItem.equals(getText())) {
+                            int offset = Integer.parseInt(getText()) - Integer.parseInt(
                                 selectedYearLabel.getText());
                             forward(offset, YEARS, false, false);
                             hideTransition.setOnFinished(finish -> {
-                                selectedYearCell.set((Label) cellContent);
+                                selectedYearCell.set(this);
                                 yearsListView.scrollTo(this.getIndex() - 2 >= 0 ? this.getIndex() - 2 : this.getIndex());
                                 hideTransition.setOnFinished(null);
                             });
@@ -165,8 +165,8 @@ public class JFXDatePickerContent extends VBox {
                         }
                     });
                     selectedYearLabel.textProperty().addListener((o, oldVal, newVal) -> {
-                        if (!yearsListView.isVisible() && ((Label) cellContent).getText().equals(newVal)) {
-                            selectedYearCell.set((Label) cellContent);
+                        if (!yearsListView.isVisible() && newVal.equals(getText())) {
+                            selectedYearCell.set(this);
                         }
                     });
                 }
@@ -176,16 +176,13 @@ public class JFXDatePickerContent extends VBox {
                     super.updateItem(item, empty);
                     if (!empty) {
                         cellRippler.setRipplerFill(Color.GREY);
-                        Label lbl = (Label) cellContent;
-                        lbl.setAlignment(Pos.CENTER);
-                        lbl.setTextAlignment(TextAlignment.CENTER);
-                        lbl.setMaxWidth(Double.MAX_VALUE);
+                        setAlignment(Pos.CENTER);
                         if (!item.equals(selectedYearLabel.getText())) {
                             // default style for each cell
-                            lbl.setStyle("-fx-font-size: 16; -fx-font-weight: NORMAL;");
-                            lbl.setTextFill(DEFAULT_COLOR);
+                            setStyle("-fx-font-size: 16; -fx-font-weight: NORMAL;");
+                            setTextFill(DEFAULT_COLOR);
                         } else {
-                            selectedYearCell.set((Label) cellContent);
+                            selectedYearCell.set(this);
                         }
                         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                     }
