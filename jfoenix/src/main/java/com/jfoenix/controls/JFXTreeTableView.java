@@ -36,7 +36,10 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 
 /**
@@ -93,14 +96,16 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             }
         });
 
-        this.predicate.addListener((o, oldVal, newVal) -> filter(newVal));
+        this.predicate.addListener(observable -> filter(getPredicate()));
+        this.sceneProperty().addListener(observable -> {
+            if(getScene()==null) threadPool.shutdownNow();
+        });
 
-        this.rootProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null) {
+        this.rootProperty().addListener(observable -> {
+            if (getRoot() != null) {
                 setCurrentItemsCount(count(getRoot()));
             }
         });
-
         // compute the current items count
         setCurrentItemsCount(count(getRoot()));
     }
@@ -142,7 +147,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     }
 
     /*
-     * clear selection before sorting as its bugged in java
+     * clear selection before sorting as it's bugged in java
      */
     private boolean itemWasSelected = false;
 
@@ -161,20 +166,24 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
     // Allows for multiple column Grouping based on the order of the TreeTableColumns
     // in this observableArrayList.
-    //TODO: treat group order as sort order
     private ObservableList<TreeTableColumn<S, ?>> groupOrder = FXCollections.observableArrayList();
 
     final ObservableList<TreeTableColumn<S, ?>> getGroupOrder() {
         return groupOrder;
     }
 
-    // semaphore is used to force mutual exclusion while group/ungroup operation
-    private Semaphore groupingSemaphore = new Semaphore(1);
+    // lock is used to force mutual exclusion while group/ungroup operation
+    Lock lock = new ReentrantLock(true);
 
-    // this method will regroup the treetableview according to columns group order
+    /**
+     * this is a blocking method so it should not be called from the ui thread,
+     * it will regroup the tree table view
+     * @param treeTableColumns
+     */
     public void group(TreeTableColumn<S, ?>... treeTableColumns) {
-        // init groups map
-        if (groupingSemaphore.tryAcquire()) {
+        try{
+            lock.lock();
+            // init groups map
             if (groupOrder.size() == 0) {
                 groups = new HashMap<>();
             }
@@ -191,7 +200,8 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            groupingSemaphore.release();
+        }finally {
+            lock.unlock();
         }
     }
 
@@ -205,34 +215,37 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         buildGroupedRoot(groups, null, 0);
     }
 
+    /**
+     * this is a blocking method so it should not be called from the ui thread,
+     * it will ungroup the tree table view
+     * @param treeTableColumns
+     */
     public void unGroup(TreeTableColumn<S, ?>... treeTableColumns) {
-        if (groupingSemaphore.tryAcquire()) {
-            try {
-                if (groupOrder.size() > 0) {
-                    groupOrder.removeAll(treeTableColumns);
-                    List<TreeTableColumn<S, ?>> grouped = new ArrayList<>();
-                    grouped.addAll(groupOrder);
-                    groupOrder.clear();
-                    JFXUtilities.runInFXAndWait(() -> {
-                        ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
-                        sortOrder.addAll(getSortOrder());
-                        // needs to reset the children in order to update the parent
-                        List children = Arrays.asList(originalRoot.getChildren().toArray());
-                        originalRoot.getChildren().clear();
-                        originalRoot.getChildren().setAll(children);
-                        // reset the original root
-                        setRoot(originalRoot);
-                        getSelectionModel().select(0);
-                        getSortOrder().addAll(sortOrder);
-                        if (grouped.size() != 0) {
-                            refreshGroups(grouped);
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try{
+            lock.lock();
+            if (groupOrder.size() > 0) {
+                groupOrder.removeAll(treeTableColumns);
+                List<TreeTableColumn<S, ?>> grouped = new ArrayList<>();
+                grouped.addAll(groupOrder);
+                groupOrder.clear();
+                JFXUtilities.runInFXAndWait(() -> {
+                    ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
+                    sortOrder.addAll(getSortOrder());
+                    // needs to reset the children in order to update the parent
+                    List children = Arrays.asList(originalRoot.getChildren().toArray());
+                    originalRoot.getChildren().clear();
+                    originalRoot.getChildren().setAll(children);
+                    // reset the original root
+                    setRoot(originalRoot);
+                    getSelectionModel().select(0);
+                    getSortOrder().addAll(sortOrder);
+                    if (grouped.size() != 0) {
+                        refreshGroups(grouped);
+                    }
+                });
             }
-            groupingSemaphore.release();
+        }finally {
+            lock.unlock();
         }
     }
 
@@ -318,37 +331,37 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         }
     }
 
+    private ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1,
+        runnable -> {
+            Thread thread = new Thread(runnable);
+            thread.setName("JFXTreeTableView Filter Thread");
+            thread.setDaemon(true);
+            Runtime.getRuntime().addShutdownHook(thread);
+            return thread;
+        });
 
-    private Timer t;
-
-    /**
-     * this method will filter the treetable and it
-     */
-    private void filter(Predicate<TreeItem<S>> predicate) {
+    private Runnable filterRunnable = ()->{
         if (originalRoot == null) {
             originalRoot = getRoot();
         }
-        if (t != null) {
-            t.cancel();
-            t.purge();
-        }
-        t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //  filter the original root and regroup the data
-                new Thread(() -> {
-                    // filter the ungrouped root
-                    ((RecursiveTreeItem) originalRoot).setPredicate(predicate);
-                    // regroup the data
-                    reGroup();
-                    Platform.runLater(() -> {
-                        getSelectionModel().select(0);
-                        setCurrentItemsCount(count(getRoot()));
-                    });
-                }).start();
-            }
-        }, 500);
+        // filter the ungrouped root
+        ((RecursiveTreeItem) originalRoot).setPredicate(getPredicate());
+        // regroup the data
+        reGroup();
+        Platform.runLater(() -> {
+            getSelectionModel().select(0);
+            setCurrentItemsCount(count(getRoot()));
+        });
+    };
+
+    private ScheduledFuture<?> task;
+
+    /**
+     * this method will filter the tree table
+     */
+    private void filter(Predicate<TreeItem<S>> predicate) {
+        if (task != null) task.cancel(false);
+        task = threadPool.schedule(filterRunnable, 200, TimeUnit.MILLISECONDS);
     }
 
     public void reGroup() {
