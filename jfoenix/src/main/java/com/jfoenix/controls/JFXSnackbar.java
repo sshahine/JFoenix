@@ -194,15 +194,15 @@ public class JFXSnackbar extends StackPane {
     }
 
     public void show(String toastMessage, String pseudoClass, long timeout) {
-        this.show(toastMessage, pseudoClass,null, timeout, null);
+        this.show(toastMessage, pseudoClass, null, timeout, null);
     }
 
     public void show(String message, String pseudoClass, String actionText, EventHandler<? super MouseEvent> actionHandler) {
         this.show(message, pseudoClass, actionText, -1, actionHandler);
     }
 
-    public void show(String message,  String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler){
-        this.show(message,null,  actionText, timeout, actionHandler);
+    public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+        this.show(message, null, actionText, timeout, actionHandler);
     }
 
     public void show(String message, String pseudoClass, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
@@ -221,7 +221,7 @@ public class JFXSnackbar extends StackPane {
             action.setVisible(false);
         }
         Timeline animation = getTimeline(timeout);
-        if(pseudoClass!=null){
+        if (pseudoClass != null) {
             activePseudoClass = pseudoClass;
             content.pseudoClassStateChanged(PseudoClass.getPseudoClass(activePseudoClass), true);
         }
@@ -310,7 +310,7 @@ public class JFXSnackbar extends StackPane {
     }
 
     private void resetPseudoClass() {
-        if(activePseudoClass!=null) {
+        if (activePseudoClass != null) {
             content.pseudoClassStateChanged(PseudoClass.getPseudoClass(activePseudoClass), false);
             activePseudoClass = null;
         }
@@ -382,13 +382,16 @@ public class JFXSnackbar extends StackPane {
         public SnackbarEvent(String message) {
             this(message, null, 3000, false, null);
         }
+
         public SnackbarEvent(String message, String pseudoClass) {
-            this(message, pseudoClass,null, 3000, false, null);
+            this(message, pseudoClass, null, 3000, false, null);
         }
+
         public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
-            this(message, null,null, 3000, false, null);
+            this(message, null, actionText, timeout, persistent, actionHandler);
         }
-        public SnackbarEvent(String message,String pseudoClass, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+
+        public SnackbarEvent(String message, String pseudoClass, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
             super(SNACKBAR);
             this.message = message;
             this.pseudoClass = pseudoClass;
