@@ -24,7 +24,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
@@ -85,8 +84,6 @@ public class JFXNodesList extends VBox {
 
         // init node property
         node.setVisible(false);
-//        node.minWidthProperty().bind(node.prefWidthProperty());
-//        node.minHeightProperty().bind(node.prefHeightProperty());
         if (this.getChildren().size() > 0) {
             initNode(node);
         } else {
@@ -114,15 +111,17 @@ public class JFXNodesList extends VBox {
 
     @Override
     protected double computePrefWidth(double height) {
-        if(!getChildren().isEmpty())
+        if (!getChildren().isEmpty()) {
             return getChildren().get(0).prefWidth(height);
+        }
         return super.computePrefWidth(height);
     }
 
     @Override
     protected double computePrefHeight(double width) {
-        if(!getChildren().isEmpty())
+        if (!getChildren().isEmpty()) {
             return getChildren().get(0).prefHeight(width);
+        }
         return super.computePrefHeight(width);
     }
 

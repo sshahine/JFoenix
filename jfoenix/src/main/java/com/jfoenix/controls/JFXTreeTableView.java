@@ -173,7 +173,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     }
 
     // lock is used to force mutual exclusion while group/ungroup operation
-    Lock lock = new ReentrantLock(true);
+    private final Lock lock = new ReentrantLock(true);
 
     /**
      * this is a blocking method so it should not be called from the ui thread,
