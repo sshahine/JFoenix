@@ -24,6 +24,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
@@ -84,8 +85,8 @@ public class JFXNodesList extends VBox {
 
         // init node property
         node.setVisible(false);
-        node.minWidthProperty().bind(node.prefWidthProperty());
-        node.minHeightProperty().bind(node.prefHeightProperty());
+//        node.minWidthProperty().bind(node.prefWidthProperty());
+//        node.minHeightProperty().bind(node.prefHeightProperty());
         if (this.getChildren().size() > 0) {
             initNode(node);
         } else {
@@ -95,15 +96,7 @@ public class JFXNodesList extends VBox {
                 node.setOnMouseClicked((click) -> this.animateList());
             }
             node.getStyleClass().add("trigger-node");
-        }
-
-        // init the list height and width
-        if (this.getChildren().size() == 0) {
             node.setVisible(true);
-            this.minHeightProperty().bind(node.prefHeightProperty());
-            this.maxHeightProperty().bind(node.prefHeightProperty());
-            this.minWidthProperty().bind(node.prefWidthProperty());
-            this.maxWidthProperty().bind(node.prefWidthProperty());
         }
 
         // add the node and its listeners
@@ -117,6 +110,40 @@ public class JFXNodesList extends VBox {
             animationCallBack = (expanded) -> new ArrayList<>();
         }
         animationsMap.put(node, animationCallBack);
+    }
+
+    @Override
+    protected double computePrefWidth(double height) {
+        if(!getChildren().isEmpty())
+            return getChildren().get(0).prefWidth(height);
+        return super.computePrefWidth(height);
+    }
+
+    @Override
+    protected double computePrefHeight(double width) {
+        if(!getChildren().isEmpty())
+            return getChildren().get(0).prefHeight(width);
+        return super.computePrefHeight(width);
+    }
+
+    @Override
+    protected double computeMinHeight(double width) {
+        return computePrefHeight(width);
+    }
+
+    @Override
+    protected double computeMinWidth(double height) {
+        return computePrefWidth(height);
+    }
+
+    @Override
+    protected double computeMaxHeight(double width) {
+        return computePrefHeight(width);
+    }
+
+    @Override
+    protected double computeMaxWidth(double height) {
+        return computePrefWidth(height);
     }
 
     /**
