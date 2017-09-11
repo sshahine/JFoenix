@@ -30,6 +30,7 @@ import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
@@ -1184,6 +1185,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             arrowButton.getStyleClass().setAll("tab-down-button");
             arrowButton.setVisible(isControlButtonShown());
             arrowButton.setFill(selectedTabText);
+            StackPane.setMargin(arrowButton, new Insets(0, 0, 0, isLeftArrow ? -4 : 4));
 
             DoubleProperty offsetProperty = new SimpleDoubleProperty(0);
             offsetProperty.addListener((o, oldVal, newVal) -> header.updateScrollOffset(newVal.doubleValue()));
@@ -1192,7 +1194,6 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             container.getStyleClass().add("container");
             container.setPadding(new Insets(7));
             container.setCursor(Cursor.HAND);
-
             container.setOnMousePressed(press -> {
                 offsetProperty.set(header.scrollOffset);
                 double offset = isLeftArrow ? header.scrollOffset + header.headersRegion.getWidth() : header.scrollOffset - header.headersRegion
@@ -1204,7 +1205,9 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             container.setOnMouseReleased(release -> arrowAnimation.stop());
             JFXRippler arrowRippler = new JFXRippler(container, RipplerMask.CIRCLE, RipplerPos.BACK);
             arrowRippler.ripplerFillProperty().bind(arrowButton.fillProperty());
-            StackPane.setMargin(arrowButton, new Insets(0, 0, 0, isLeftArrow ? -4 : 4));
+            arrowRippler.setPadding(new Insets(0, 5, 0, 5));
+            StackPane.setMargin(arrowRippler, new Insets(0, 4, 0, 4));
+
 
             inner = new StackPane() {
                 @Override
@@ -1242,9 +1245,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                 }
             };
 
-            arrowRippler.setPadding(new Insets(0, 5, 0, 5));
             inner.getChildren().add(arrowRippler);
-            StackPane.setMargin(arrowRippler, new Insets(0, 4, 0, 4));
             getChildren().add(inner);
 
             showControlButtons = false;
@@ -1257,23 +1258,20 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         private boolean showTabsHeaderControls = false;
 
         private void showTabsMenu(boolean value) {
-            
+
             final boolean wasTabsMenuShowing = isControlButtonShown();
             this.showTabsHeaderControls = value;
-            
+
             // need to show & it was not showing
             if (showTabsHeaderControls && !wasTabsMenuShowing) {
                 arrowButton.setVisible(true);
                 showControlButtons = true;
                 inner.requestLayout();
-                header.requestLayout();
+                header.layoutChildren();
             } else {
-
                 // need to hide & was showing
                 if (!showTabsHeaderControls && wasTabsMenuShowing) {
-
                     container.setPrefWidth(0);
-
                     // hide control button
                     if (isControlButtonShown()) {
                         showControlButtons = true;
@@ -1282,7 +1280,6 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                     }
                     requestLayout();
                 }
-
             }
         }
 
