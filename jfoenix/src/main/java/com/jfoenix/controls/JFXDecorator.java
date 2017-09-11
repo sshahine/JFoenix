@@ -66,7 +66,7 @@ public class JFXDecorator extends VBox {
     private Timeline windowDecoratorAnimation;
     private StackPane contentPlaceHolder = new StackPane();
     private HBox buttonsContainer;
-    
+
     private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() -> {
         primaryStage.close();
     });
@@ -320,13 +320,12 @@ public class JFXDecorator extends VBox {
             updateInitMouseValues(mouseEvent));
 
         // show the drag cursor on the borders
-        this.setOnMouseMoved((mouseEvent) -> {
+        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> {
             if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
                 this.setCursor(Cursor.DEFAULT);
                 return; // maximized mode does not support resize
             }
             if (!primaryStage.isResizable()) {
-//                updateInitMouseValues(mouseEvent);
                 return;
             }
             double x = mouseEvent.getX();
@@ -357,13 +356,12 @@ public class JFXDecorator extends VBox {
                 } else {
                     this.setCursor(Cursor.DEFAULT);
                 }
-//                updateInitMouseValues(mouseEvent);
             }
         });
 
 
         // handle drag events on the decorator pane
-        this.setOnMouseReleased((mouseEvent) -> isDragging = false);
+        addEventFilter(MouseEvent.MOUSE_RELEASED, (mouseEvent) -> isDragging = false);
 
         this.setOnMouseDragged((mouseEvent) -> {
             isDragging = true;
