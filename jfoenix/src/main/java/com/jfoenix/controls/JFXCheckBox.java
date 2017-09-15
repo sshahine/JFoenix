@@ -78,6 +78,14 @@ public class JFXCheckBox extends CheckBox {
         return new JFXCheckBoxSkin(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-check-box.css").toExternalForm();
+    }
+
 
     /***************************************************************************
      *                                                                         *
