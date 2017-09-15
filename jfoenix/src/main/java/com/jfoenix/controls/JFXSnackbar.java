@@ -220,13 +220,15 @@ public class JFXSnackbar extends StackPane {
             actionContainer.setManaged(false);
             action.setVisible(false);
         }
-        Timeline animation = getTimeline(timeout);
+        openAnimation = getTimeline(timeout);
         if (pseudoClass != null) {
             activePseudoClass = pseudoClass;
             content.pseudoClassStateChanged(PseudoClass.getPseudoClass(activePseudoClass), true);
         }
-        animation.play();
+        openAnimation.play();
     }
+
+    private Timeline openAnimation = null;
 
     private Timeline getTimeline(long timeout) {
         Timeline animation;
@@ -281,7 +283,8 @@ public class JFXSnackbar extends StackPane {
     }
 
     public void close() {
-        Timeline animation = new Timeline(
+        openAnimation.stop();
+        Timeline closeAnimation = new Timeline(
             new KeyFrame(
                 Duration.ZERO,
                 e -> popup.toFront(),
@@ -301,12 +304,12 @@ public class JFXSnackbar extends StackPane {
                 new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
             )
         );
-        animation.setCycleCount(1);
-        animation.setOnFinished(e -> {
+        closeAnimation.setCycleCount(1);
+        closeAnimation.setOnFinished(e -> {
             resetPseudoClass();
             processSnackbars();
         });
-        animation.play();
+        closeAnimation.play();
     }
 
     private void resetPseudoClass() {
