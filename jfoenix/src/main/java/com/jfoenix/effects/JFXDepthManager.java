@@ -74,7 +74,27 @@ public class JFXDepthManager {
      * (which makes it looks as a real shadow)
      */
     public static Node createMaterialNode(Node control, int level) {
-        Node container = new Pane(control);
+        Node container = new Pane(control){
+            @Override
+            protected double computeMaxWidth(double height) {
+                return computePrefWidth(height);
+            }
+
+            @Override
+            protected double computeMaxHeight(double width) {
+                return computePrefHeight(width);
+            }
+
+            @Override
+            protected double computePrefWidth(double height) {
+                return control.prefWidth(height);
+            }
+
+            @Override
+            protected double computePrefHeight(double width) {
+                return control.prefHeight(width);
+            }
+        };
         container.getStyleClass().add("depth-container");
         level = level < 0 ? 0 : level;
         level = level > 5 ? 5 : level;

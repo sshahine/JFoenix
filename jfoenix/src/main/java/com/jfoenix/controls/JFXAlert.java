@@ -30,8 +30,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventDispatchChain;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonType;
@@ -39,9 +37,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.DialogPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -49,7 +44,7 @@ import javafx.stage.StageStyle;
 
 /**
  * JFXAlert is similar to {@link JFXDialog} control, however it extends JavaFX {@link Dialog}
- * control, thus it support modality options and doesn't require a parent to be specifed
+ * control, thus it support modality options and doesn't require a parent to be specified
  * unlike {@link JFXDialog}
  *
  * @author Shadi Shaheen
@@ -60,7 +55,6 @@ public class JFXAlert<R> extends Dialog<R> {
 
     private final StackPane contentContainer;
     private final StackPane overlay;
-    private final Group contentGroup;
 
     public JFXAlert(Stage stage) {
         // set the stage to transparent
@@ -85,7 +79,19 @@ public class JFXAlert<R> extends Dialog<R> {
         // init style for the content container
         contentContainer = new StackPane();
         contentContainer.getStyleClass().add("jfx-alert-content-container");
-        contentContainer.setStyle("-fx-background-color: WHITE;");
+
+        // set dialog pane content
+        final Node materialNode = JFXDepthManager.createMaterialNode(contentContainer, 2);
+        materialNode.setPickOnBounds(false);
+        materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event->event.consume());
+
+        // init style for overlay
+        overlay = new StackPane(materialNode){
+            public String getUserAgentStylesheet() {
+                return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+            }
+        };
+        overlay.getStyleClass().add("jfx-alert-overlay");
 
         // customize dialogPane
         final DialogPane dialogPane = getDialogPane();
@@ -93,21 +99,7 @@ public class JFXAlert<R> extends Dialog<R> {
         dialogPane.setStyle("-fx-background-color: transparent;");
         dialogPane.prefWidthProperty().bind(stage.getScene().widthProperty());
         dialogPane.prefHeightProperty().bind(stage.getScene().heightProperty());
-
-        // set dialog pane content
-        final Node materialNode = JFXDepthManager.createMaterialNode(contentContainer, 2);
-        materialNode.setPickOnBounds(false);
-        contentGroup = new Group(materialNode);
-
-        // init style for overlay
-        overlay = new StackPane(contentGroup);
-        overlay.getStyleClass().add("jfx-alert-overlay");
-        overlay.setBackground(new Background(
-            new BackgroundFill(Color.valueOf("#00000011"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        final StackPane container = new StackPane(overlay);
-        container.setPadding(new Insets(0));
-        dialogPane.setContent(container);
+        dialogPane.setContent(overlay);
 
         updateX(stage, dialogPane);
         updateY(stage, dialogPane);
@@ -121,12 +113,12 @@ public class JFXAlert<R> extends Dialog<R> {
         // handle animation
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
             if (getAnimation() != null) {
-                getAnimation().initAnimation(contentGroup, overlay);
+                getAnimation().initAnimation(contentContainer.getParent(), overlay);
             }
         });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWN, event -> {
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createShowingAnimation(contentGroup, overlay);
+                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), overlay);
                 if (animation != null) {
                     animation.play();
                 }
@@ -165,7 +157,7 @@ public class JFXAlert<R> extends Dialog<R> {
     public void hideWithAnimation() {
         if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createHidingAnimation(contentGroup, overlay);
+                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), overlay);
                 if (animation != null) {
                     transition = animation;
                     animation.setOnFinished(finish -> {
