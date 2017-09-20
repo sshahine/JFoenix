@@ -67,6 +67,13 @@ public class JFXToggleNode extends ToggleButton {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-toggle-node.css").toExternalForm();
+    }
 
     /***************************************************************************
      *                                                                         *
