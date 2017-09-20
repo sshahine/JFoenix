@@ -45,6 +45,7 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
     private JFXRippler rippler;
     private JFXFillTransition ft;
     private Runnable releaseManualRippler = null;
+    private boolean invalid = true;
 
     public JFXToggleNodeSkin(JFXToggleNode toggleNode) {
         super(toggleNode);
@@ -89,7 +90,7 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
         };
 
         // listener to change background color
-        getSkinnable().selectedProperty().addListener((o, oldVal, newVal) -> {
+        getSkinnable().selectedProperty().addListener(observable -> {
             // show animation only on user action
             if (!toggleNode.isDisableAnimation()) {
                 if (ft == null) {
@@ -98,20 +99,11 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
                     ft.fromValueProperty().bind(toggleNode.unSelectedColorProperty());
                 }
                 ft.stop();
-                ft.setRate(newVal ? 1 : -1);
+                ft.setRate(getSkinnable().isSelected() ? 1 : -1);
                 ft.play();
             } else {
                 // disable animation if the selected property changed from code
-                CornerRadii radii = getSkinnable().getBackground() == null ? CornerRadii.EMPTY : getSkinnable().getBackground()
-                    .getFills()
-                    .get(0)
-                    .getRadii();
-                Insets insets = getSkinnable().getBackground() == null ? Insets.EMPTY : getSkinnable().getBackground()
-                    .getFills()
-                    .get(0)
-                    .getInsets();
-                selectionOverLay.setBackground(new Background(new BackgroundFill(getSkinnable().isSelected() ? ((JFXToggleNode) getSkinnable())
-                    .getSelectedColor() : ((JFXToggleNode) getSkinnable()).getUnSelectedColor(), radii, insets)));
+                updateSelectionBackground();
             }
         });
 
@@ -138,6 +130,19 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
         updateChildren();
     }
 
+    public void updateSelectionBackground() {
+        CornerRadii radii = getSkinnable().getBackground() == null ? CornerRadii.EMPTY : getSkinnable().getBackground()
+            .getFills()
+            .get(0)
+            .getRadii();
+        Insets insets = getSkinnable().getBackground() == null ? Insets.EMPTY : getSkinnable().getBackground()
+            .getFills()
+            .get(0)
+            .getInsets();
+        selectionOverLay.setBackground(new Background(new BackgroundFill(getSkinnable().isSelected() ? ((JFXToggleNode) getSkinnable())
+            .getSelectedColor() : ((JFXToggleNode) getSkinnable()).getUnSelectedColor(), radii, insets)));
+    }
+
     @Override
     protected void updateChildren() {
         super.updateChildren();
@@ -152,6 +157,10 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         super.layoutChildren(x,y,w,h);
+        if(invalid){
+            updateSelectionBackground();
+            invalid = false;
+        }
         rippler.resizeRelocate(
             getSkinnable().getLayoutBounds().getMinX(),
             getSkinnable().getLayoutBounds().getMinY(),
