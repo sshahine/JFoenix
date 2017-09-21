@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,28 +17,38 @@
  * under the License.
  */
 
-.jfx-text-field {
-    -jfx-focus-color: #4059A9;
-    -jfx-unfocus-color: #4d4d4d;
-    -fx-background-color:TRANSPARENT;
-    -fx-padding: 4 0 4 0;
-}
+package com.jfoenix.transitions;
 
-.jfx-text-field,
-.jfx-text-field:focused {
-    -fx-prompt-text-fill: #4D4D4D;
-    -fx-background-color:TRANSPARENT;
-}
+import javafx.util.Duration;
 
-.jfx-text-field:error {
-    -jfx-focus-color: #D34336;
-    -jfx-unfocus-color: #D34336;
-}
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-.jfx-text-field .error-label {
-    -fx-text-fill: #D34336;
-}
+/**
+ * @author Shadi Shaheen
+ * @version 1.0
+ * @since 2017-09-21
+ */
 
-.jfx-text-field .error-icon {
-    -fx-fill: #D34336;
+public class JFXKeyFrame {
+
+    private Duration duration;
+    private final Set<JFXKeyValue> keyValues = new CopyOnWriteArraySet<>();
+
+    public JFXKeyFrame(Duration duration, JFXKeyValue... keyValues) {
+        this.duration = duration;
+        for (final JFXKeyValue keyValue : keyValues) {
+            if (keyValue != null) {
+                this.keyValues.add(keyValue);
+            }
+        }
+    }
+
+    public final Duration getTime() {
+        return duration;
+    }
+
+    public final Set<JFXKeyValue> getValues() {
+        return keyValues;
+    }
 }

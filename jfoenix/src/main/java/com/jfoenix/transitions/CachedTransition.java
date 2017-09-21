@@ -27,7 +27,7 @@ import javafx.scene.Node;
 import javafx.util.Duration;
 
 /**
- * applies animation on a cahced node to improve the performance
+ * applies animation on a cached node to improve the performance
  *
  * @author Shadi Shaheen
  * @version 1.0
