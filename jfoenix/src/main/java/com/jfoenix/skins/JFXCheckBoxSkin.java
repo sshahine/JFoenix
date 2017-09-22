@@ -28,9 +28,13 @@ import com.sun.javafx.scene.control.behavior.ButtonBehavior;
 import com.sun.javafx.scene.control.skin.LabeledSkinBase;
 import javafx.animation.*;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -227,15 +231,23 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<CheckBox, ButtonBehavior<Ch
             transition.play();
             select.play();
         } else {
+            CornerRadii radii = box.getBackground() == null ?
+                null : box.getBackground().getFills().get(0).getRadii();
+            Insets insets = box.getBackground() == null ?
+                null : box.getBackground().getFills().get(0).getInsets();
             if (selection) {
                 mark.setScaleY(1);
                 mark.setScaleX(1);
                 mark.setOpacity(1);
+                box.setBackground(new Background(new BackgroundFill(((JFXCheckBox) getSkinnable()).getCheckedColor(), radii, insets)));
+                select.playFrom(select.getCycleDuration());
                 transition.playFrom(transition.getCycleDuration());
             } else {
                 mark.setScaleY(0);
                 mark.setScaleX(0);
                 mark.setOpacity(0);
+                box.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, radii, insets)));
+                select.playFrom(Duration.ZERO);
                 transition.playFrom(Duration.ZERO);
             }
         }
