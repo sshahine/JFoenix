@@ -629,16 +629,15 @@
 *                                                                              *
 *******************************************************************************/
 
-.jfx-spinner > .arc {
+.jfx-spinner .arc {
     -fx-stroke-width: 3.0;
-    -fx-fill: transparent;
 }
 
 .first-spinner {
     -jfx-radius: 20;
 }
 
-.first-spinner > .arc {
+.first-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -646,7 +645,7 @@
     -jfx-radius: 30;
 }
 
-.second-spinner > .arc {
+.second-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -654,7 +653,7 @@
     -jfx-radius: 40;
 }
 
-.third-spinner > .arc {
+.third-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -662,7 +661,7 @@
     -jfx-radius: 50;
 }
 
-.fourth-spinner > .arc {
+.fourth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -670,7 +669,7 @@
     -jfx-radius: 60;
 }
 
-.fifth-spinner > .arc {
+.fifth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -678,7 +677,7 @@
     -jfx-radius: 70;
 }
 
-.sixth-spinner > .arc {
+.sixth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -686,7 +685,7 @@
     -jfx-radius: 80;
 }
 
-.seventh-spinner > .arc {
+.seventh-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 

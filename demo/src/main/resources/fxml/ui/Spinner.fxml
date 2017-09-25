@@ -3,6 +3,8 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Label?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
 
@@ -17,11 +19,11 @@
     </StackPane>
 
     <HBox maxHeight="400" spacing="10" alignment="TOP_CENTER">
-        <JFXSpinner styleClass="blue-spinner" startingAngle="0"/>
-        <JFXSpinner styleClass="red-spinner" startingAngle="0"/>
-        <JFXSpinner styleClass="yellow-spinner" startingAngle="0"/>
-        <JFXSpinner styleClass="green-spinner" startingAngle="0"/>
-        <JFXSpinner startingAngle="0"/>
+        <JFXSpinner styleClass="blue-spinner" startingAngle="0" radius="13"/>
+        <JFXSpinner styleClass="red-spinner" startingAngle="0" radius="13"/>
+        <JFXSpinner styleClass="yellow-spinner" startingAngle="0" radius="13"/>
+        <JFXSpinner styleClass="green-spinner" startingAngle="0" radius="13"/>
+        <JFXSpinner startingAngle="0" radius="13"/>
     </HBox>
 
 </StackPane>
