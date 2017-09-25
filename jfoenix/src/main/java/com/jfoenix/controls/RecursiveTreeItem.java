@@ -32,6 +32,9 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -52,9 +55,14 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
     private ObjectProperty<Predicate<TreeItem<T>>> predicate = new SimpleObjectProperty<>((TreeItem<T> t) -> true);
 
     /**
+     * map data value to tree item
+     */
+    private HashMap<T, TreeItem<T>> itemsMap;
+
+    /**
      * list of original items
      */
-    ObservableList<TreeItem<T>> originalItems = FXCollections.observableArrayList();
+    ObservableList<TreeItem<T>> originalItems;
 
     /**
      * list of filtered items
@@ -117,23 +125,23 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
         if (value != null) {
             addChildrenListener(value);
         }
-        valueProperty().addListener((o, oldValue, newValue) -> {
-            if (newValue != null) {
-                addChildrenListener(newValue);
+        valueProperty().addListener(observable -> {
+            if (getValue() != null) {
+                addChildrenListener(getValue());
             }
         });
 
-        this.filteredItems.predicateProperty().bind(Bindings.createObjectBinding(() ->
-            (Predicate<TreeItem<T>>) child -> {
+        predicate.addListener(observable -> {
+            filteredItems.setPredicate(child -> {
                 // Set the predicate of child items to force filtering
                 if (child instanceof RecursiveTreeItem) {
                     if (!((RecursiveTreeItem) child).originalItems.isEmpty()) {
                         RecursiveTreeItem<T> filterableChild = (RecursiveTreeItem<T>) child;
-                        filterableChild.setPredicate(RecursiveTreeItem.this.predicate.get());
+                        filterableChild.setPredicate(predicate.get());
                     }
                 }
                 // If there is no predicate, keep this tree item
-                if (RecursiveTreeItem.this.predicate.get() == null) {
+                if (predicate.get() == null) {
                     return true;
                 }
                 // If there are children, keep this tree item
@@ -146,24 +154,27 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
                     return child.getChildren().size() != 0;
                 }
                 // Otherwise ask the TreeItemPredicate
-                return RecursiveTreeItem.this.predicate.get().test(child);
-            }, this.predicate));
-
-
-        this.filteredItems.predicateProperty().addListener((o, oldVal, newVal) -> {
-            JFXUtilities.runInFXAndWait(() -> {
-                getChildren().clear();
-                getChildren().addAll(filteredItems);
+                return predicate.get().test(child);
             });
         });
+
+        this.filteredItems.predicateProperty().addListener(observable ->
+            JFXUtilities.runInFXAndWait(() -> {
+                getChildren().clear();
+                getChildren().setAll(filteredItems);
+            }));
     }
 
 
     private void addChildrenListener(RecursiveTreeObject<T> value) {
         final ObservableList<T> children = childrenFactory.call(value);
         originalItems = FXCollections.observableArrayList();
+        itemsMap = new HashMap<>();
+
         for (T child : children) {
-            originalItems.add(new RecursiveTreeItem<>(child, getGraphic(), childrenFactory));
+            final RecursiveTreeItem<T> treeItem = new RecursiveTreeItem<>(child, getGraphic(), childrenFactory);
+            originalItems.add(treeItem);
+            itemsMap.put(child, treeItem);
         }
 
         filteredItems = new FilteredList<>(originalItems, (TreeItem<T> t) -> true);
@@ -173,25 +184,31 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
         children.addListener((ListChangeListener<T>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    change.getAddedSubList().forEach(t -> {
-                        RecursiveTreeItem<T> newItem = new RecursiveTreeItem<>(t, getGraphic(), childrenFactory);
-                        RecursiveTreeItem.this.getChildren().add(newItem);
-                        originalItems.add(newItem);
-                    });
+                    List<RecursiveTreeItem<T>> addedItems = new ArrayList<>();
+                    for (T newChild : change.getAddedSubList()) {
+                        final RecursiveTreeItem<T> newTreeItem = new RecursiveTreeItem<>(newChild, getGraphic(), childrenFactory);
+                        addedItems.add(newTreeItem);
+                        itemsMap.put(newChild, newTreeItem);
+                    }
+                    getChildren().addAll(addedItems);
+                    originalItems.addAll(addedItems);
                 }
                 if (change.wasRemoved()) {
+                    List<TreeItem<T>> removedItems = new ArrayList<>();
                     change.getRemoved().forEach(t -> {
-                        for (int i = 0; i < RecursiveTreeItem.this.getChildren().size(); i++) {
-                            if (this.getChildren().get(i).getValue().equals(t)) {
-                                // remove the items from the current/original items list
-                                originalItems.remove(this.getChildren().remove(i));
-                                i--;
-                            }
+                        final TreeItem<T> treeItem = itemsMap.remove(t);
+                        if (treeItem != null) {
+                            // remove the items from the current/original items list
+                            removedItems.add(treeItem);
                         }
-                        //						final List<TreeItem<T>> itemsToRemove = RecursiveTreeItem.this.getChildren().stream()
-                        //								.filter(treeItem -> treeItem.getValue().equals(t)).collect(Collectors.toList());
-                        //						RecursiveTreeItem.this.getChildren().removeAll(itemsToRemove);
                     });
+                    if (originalItems.size() == removedItems.size()) {
+                        originalItems.clear();
+                        getChildren().clear();
+                    } else {
+                        getChildren().removeAll(removedItems);
+                        originalItems.removeAll(removedItems);
+                    }
                 }
             }
         });
