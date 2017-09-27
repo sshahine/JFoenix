@@ -595,15 +595,16 @@ public class JFXDrawer extends StackPane {
         this.resizable = resizable;
     }
 
-    public final ObjectProperty<Node> boundedNodeProperty() {
+
+    private final ObjectProperty<Node> boundedNodeProperty() {
         return this.boundedNode;
     }
 
-    public final Node getBoundedNode() {
+    private final Node getBoundedNode() {
         return this.boundedNodeProperty().get();
     }
 
-    public final void setBoundedNode(final Node boundedNode) {
+    private final void setBoundedNode(final Node boundedNode) {
         this.boundedNodeProperty().unbind();
         this.boundedNodeProperty().set(boundedNode);
     }

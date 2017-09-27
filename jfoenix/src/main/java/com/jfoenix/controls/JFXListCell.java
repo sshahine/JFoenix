@@ -203,7 +203,7 @@ public class JFXListCell<T> extends ListCell<T> {
      * {@inheritDoc}
      */
     @Override
-    public void updateItem(T item, boolean empty) {
+    protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
         if (empty) {
             setText(null);
