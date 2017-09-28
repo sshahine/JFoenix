@@ -99,6 +99,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         this.predicate.addListener(observable -> filter(getPredicate()));
         this.sceneProperty().addListener(observable -> {
             if(getScene()==null) threadPool.shutdownNow();
+            else if(threadPool.isTerminated()) threadPool = createThreadPool();
         });
 
         this.rootProperty().addListener(observable -> {
@@ -331,14 +332,18 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         }
     }
 
-    private ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1,
-        runnable -> {
-            Thread thread = new Thread(runnable);
-            thread.setName("JFXTreeTableView Filter Thread");
-            thread.setDaemon(true);
-            Runtime.getRuntime().addShutdownHook(thread);
-            return thread;
-        });
+    private ScheduledExecutorService threadPool = createThreadPool();
+
+    private ScheduledExecutorService createThreadPool() {
+        return Executors.newScheduledThreadPool(1,
+            runnable -> {
+                Thread thread = new Thread(runnable);
+                thread.setName("JFXTreeTableView Filter Thread");
+                thread.setDaemon(true);
+                Runtime.getRuntime().addShutdownHook(thread);
+                return thread;
+            });
+    }
 
     private Runnable filterRunnable = ()->{
         if (originalRoot == null) {
