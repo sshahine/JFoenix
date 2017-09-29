@@ -60,15 +60,10 @@ import javafx.util.Duration;
  */
 public class JFXListCell<T> extends ListCell<T> {
 
-    protected JFXRippler cellRippler = new JFXRippler(new StackPane()) {
-        @Override
-        protected void initListeners() {
-            ripplerPane.setOnMousePressed((event) -> createRipple(event.getX(), event.getY()));
-        }
-    };
-
+    protected JFXRippler cellRippler = new JFXRippler(new StackPane());
     protected Node cellContent;
     private Rectangle clip;
+
     //	private Timeline animateGap;
     private Timeline expandAnimation;
     private Timeline gapAnimation;

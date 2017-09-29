@@ -80,16 +80,16 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         circlePane.getChildren().add(circle);
         circlePane.setPadding(new Insets(size * 1.5));
         rippler = new JFXRippler(circlePane, RipplerMask.CIRCLE, RipplerPos.BACK) {
-            @Override
-            protected void initListeners() {
-                ripplerPane.setOnMousePressed((event) -> {
-                    if (releaseManualRippler != null) {
-                        releaseManualRippler.run();
-                    }
-                    releaseManualRippler = null;
-                    createRipple(event.getX(), event.getY());
-                });
-            }
+//            @Override
+//            protected void initListeners() {
+//                ripplerPane.setOnMousePressed((event) -> {
+//                    if (releaseManualRippler != null) {
+//                        releaseManualRippler.run();
+//                    }
+//                    releaseManualRippler = null;
+//                    createRipple(event.getX(), event.getY());
+//                });
+//            }
         };
         rippler.setRipplerFill(toggleButton.getUnToggleLineColor());
 

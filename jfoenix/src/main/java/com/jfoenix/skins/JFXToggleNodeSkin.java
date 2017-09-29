@@ -52,12 +52,13 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
 
         selectionOverLay = new StackPane();
         selectionOverLay.getChildren().add(getSkinnable().getGraphic());
+        selectionOverLay.shapeProperty().bind(getSkinnable().shapeProperty());
+        selectionOverLay.setPickOnBounds(false);
+
         rippler = new JFXRippler(selectionOverLay, RipplerPos.FRONT) {
             @Override
             protected Node getMask() {
-                StackPane mask = createMask();
-                selectionOverLay.setClip(createMask());
-                return mask;
+                return createMask();
             }
 
             private StackPane createMask() {
@@ -75,17 +76,6 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
                 mask.resize(getWidth() - snappedRightInset() - snappedLeftInset(),
                     getHeight() - snappedBottomInset() - snappedTopInset());
                 return mask;
-            }
-
-            @Override
-            protected void initListeners() {
-                ripplerPane.setOnMousePressed((event) -> {
-                    if (releaseManualRippler != null) {
-                        releaseManualRippler.run();
-                    }
-                    releaseManualRippler = null;
-                    createRipple(event.getX(), event.getY());
-                });
             }
         };
 

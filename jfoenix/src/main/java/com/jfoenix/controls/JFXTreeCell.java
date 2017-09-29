@@ -47,13 +47,8 @@ import java.lang.ref.WeakReference;
  * @since 2017-02-15
  */
 public class JFXTreeCell<T> extends TreeCell<T> {
-    protected JFXRippler cellRippler = new JFXRippler(new StackPane()) {
-        @Override
-        protected void initListeners() {
-            ripplerPane.setOnMousePressed((event) -> createRipple(event.getX(), event.getY()));
-        }
-    };
 
+    protected JFXRippler cellRippler = new JFXRippler(new StackPane());
     private HBox hbox;
     private StackPane selectedPane = new StackPane();
 

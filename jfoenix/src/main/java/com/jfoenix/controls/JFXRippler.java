@@ -33,16 +33,16 @@ import javafx.beans.DefaultProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
-import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -58,6 +58,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * JFXRippler is the material design implementation of a ripple effect.
  * the ripple effect can be applied to any node in the scene. JFXRippler is
  * a {@link StackPane} container that holds a specified node (control node) and a ripple generator.
+ *
+ * UPDATE NOTES:
+ * - fireEventProgrammatically(Event) method has been removed as the ripple controller is
+ * the control itself, so you can trigger manual ripple by firing mouse event on the control
+ * instead of JFXRippler
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -131,9 +136,15 @@ public class JFXRippler extends StackPane {
      */
     public JFXRippler(Node control, RipplerMask mask, RipplerPos pos) {
         initialize();
-        this.maskType.set(mask);
-        this.position.set(pos);
+
+        setMaskType(mask);
+        setPosition(pos);
         setControl(control);
+
+        // listen to control position changed
+        position.addListener(observable -> updateControlPosition());
+
+        setPickOnBounds(false);
         setCache(true);
         setCacheHint(CacheHint.SPEED);
         setCacheShape(true);
@@ -149,45 +160,35 @@ public class JFXRippler extends StackPane {
     public void setControl(Node control) {
         if (control != null) {
             this.control = control;
-
             // create rippler panels
             rippler = new RippleGenerator();
             ripplerPane = new StackPane();
+            ripplerPane.setMouseTransparent(true);
             ripplerPane.getChildren().add(rippler);
 
-            // set the control postion and listen if it's changed
-            if (this.position.get() == RipplerPos.BACK) {
-                ripplerPane.getChildren().add(this.control);
-            } else {
-                this.getChildren().add(this.control);
+            // position control
+            if(this.position.get() == RipplerPos.BACK){
+                ripplerPane.getChildren().add(control);
+                getChildren().setAll(ripplerPane);
+            }else{
+                getChildren().setAll(control, ripplerPane);
             }
 
-            this.position.addListener((o, oldVal, newVal) -> {
-                if (this.position.get() == RipplerPos.BACK) {
-                    ripplerPane.getChildren().add(this.control);
-                } else {
-                    this.getChildren().add(this.control);
-                }
-            });
+            // add control listeners to generate / release ripples
+            initControlListeners();
+        }
+    }
 
-            this.getChildren().add(ripplerPane);
-
-            // add listeners
-            initListeners();
-            // if the control got resized the overlay rect must be rest
-            control.layoutBoundsProperty().addListener((o, oldVal, newVal) -> {
-                resetOverLay();
-                resetClip();
-            });
-            control.boundsInParentProperty().addListener((o, oldVal, newVal) -> {
-                resetOverLay();
-                resetClip();
-            });
+    public void updateControlPosition() {
+        if (this.position.get() == RipplerPos.BACK) {
+            ripplerPane.getChildren().add(control);
+        } else {
+            this.getChildren().add(control);
         }
     }
 
     public Node getControl() {
-        return this.control;
+        return control;
     }
 
     public void setEnabled(boolean enable) {
@@ -198,7 +199,6 @@ public class JFXRippler extends StackPane {
 
     /**
      * generate the clipping mask
-     *
      * @return the mask node
      */
     protected Node getMask() {
@@ -246,7 +246,6 @@ public class JFXRippler extends StackPane {
 
     /**
      * compute the ripple radius
-     *
      * @return the ripple radius size
      */
     protected double computeRippleRadius() {
@@ -256,28 +255,20 @@ public class JFXRippler extends StackPane {
     }
 
     /**
-     * init mouse listeners on the rippler node
+     * init mouse listeners on the control
      */
-    protected void initListeners() {
-        ripplerPane.setOnMousePressed((event) -> {
-            createRipple(event.getX(), event.getY());
-            if (this.position.get() == RipplerPos.FRONT) {
-                this.control.fireEvent(event);
-                event.consume();
-            }
+    protected void initControlListeners() {
+        // if the control got resized the overlay rect must be rest
+        control.layoutBoundsProperty().addListener(observable -> {
+            resetOverLay();
+            resetClip();
         });
-        ripplerPane.setOnMouseReleased((event) -> {
-            if (this.position.get() == RipplerPos.FRONT) {
-                this.control.fireEvent(event);
-                event.consume();
-            }
+        control.boundsInParentProperty().addListener(observable -> {
+            resetOverLay();
+            resetClip();
         });
-        ripplerPane.setOnMouseClicked((event) -> {
-            if (this.position.get() == RipplerPos.FRONT) {
-                this.control.fireEvent(event);
-                event.consume();
-            }
-        });
+        control.addEventHandler(MouseEvent.MOUSE_PRESSED,
+            (event) -> createRipple(event.getX(), event.getY()));
     }
 
     /**
@@ -292,14 +283,13 @@ public class JFXRippler extends StackPane {
     }
 
     /**
-     * fire event to the rippler pane manually
-     *
-     * @param event
+     * creates Ripple effect in the center of the control
+     * @return a runnable to release the ripple when needed
      */
-    public void fireEventProgrammatically(Event event) {
-        if (!event.isConsumed()) {
-            ripplerPane.fireEvent(event);
-        }
+    public Runnable createManualRipple() {
+        rippler.setGeneratorCenterX(control.getLayoutBounds().getWidth() / 2);
+        rippler.setGeneratorCenterY(control.getLayoutBounds().getHeight() / 2);
+         return rippler.createManualRipple();
     }
 
     /**
@@ -393,7 +383,13 @@ public class JFXRippler extends StackPane {
                     ripple.inAnimation.getAnimation().play();
 
                     // create fade out transition for the ripple
-                    ripplerPane.setOnMouseReleased(e -> releaseRipple(ripple));
+                    control.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent e) {
+                            control.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
+                            releaseRipple(ripple);
+                        }
+                    });
                 }
             }
         }
@@ -733,7 +729,6 @@ public class JFXRippler extends StackPane {
     }
 
 
-
     /**
      * indicates whether the ripple effect is infront of or behind the node
      */
@@ -835,7 +830,6 @@ public class JFXRippler extends StackPane {
         }
     }
 
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         return getClassCssMetaData();
@@ -844,11 +838,4 @@ public class JFXRippler extends StackPane {
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return StyleableProperties.STYLEABLES;
     }
-
-    public Runnable createManualRipple() {
-        rippler.setGeneratorCenterX(control.getLayoutBounds().getWidth() / 2);
-        rippler.setGeneratorCenterY(control.getLayoutBounds().getHeight() / 2);
-        return rippler.createManualRipple();
-    }
-
 }

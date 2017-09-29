@@ -26,13 +26,13 @@
         <Label styleClass="title-label">Toggle Icons</Label>
 
         <FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-            <JFXToggleNode styleClass="toggle-icon1">
+            <JFXToggleNode styleClass="toggle-icon1" pickOnBounds="false">
                 <FontAwesomeIconView glyphName="PHONE" size="2em" styleClass="icon"/>
             </JFXToggleNode>
-            <JFXToggleNode styleClass="toggle-icon2">
+            <JFXToggleNode styleClass="toggle-icon2" pickOnBounds="false">
                 <FontAwesomeIconView glyphName="HEART" size="2em" styleClass="icon"/>
             </JFXToggleNode>
-            <JFXToggleNode styleClass="toggle-icon3">
+            <JFXToggleNode styleClass="toggle-icon3" pickOnBounds="false">
                 <FontAwesomeIconView glyphName="KEY" size="2em" styleClass="icon"/>
             </JFXToggleNode>
 

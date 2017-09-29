@@ -75,16 +75,6 @@ public class JFXButtonSkin extends ButtonSkin {
                     getHeight() - snappedBottomInset() - snappedTopInset());
                 return mask;
             }
-            @Override
-            protected void initListeners() {
-                ripplerPane.setOnMousePressed((event) -> {
-                    if (releaseManualRippler != null) {
-                        releaseManualRippler.run();
-                    }
-                    releaseManualRippler = null;
-                    createRipple(event.getX(), event.getY());
-                });
-            }
         };
 
         // add listeners to the button and bind properties
@@ -122,7 +112,7 @@ public class JFXButtonSkin extends ButtonSkin {
          * disable action when clicking on the button shadow
 		 */
         button.setPickOnBounds(false);
-        buttonRippler.setPickOnBounds(false);
+//        buttonRippler.setPickOnBounds(false);
         control.setPickOnBounds(false);
 
         updateButtonType(button.getButtonType());
