@@ -27,10 +27,17 @@
     -fx-prompt-text-fill: #4D4D4D;
 }
 
+.jfx-text-area,
+.jfx-text-area .scroll-pane,
+.jfx-text-area:focused,
+.jfx-text-area:focused .scroll-pane{
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
+}
+
 .jfx-text-area .content,
 .jfx-text-area:focused .content{
-    -fx-background-color:TRANSPARENT;
-    -fx-padding: 0px;
+    -fx-background-color:TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
+    -fx-padding: 0 0 0 0;
 }
 
 .jfx-text-area:error {

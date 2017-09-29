@@ -20,6 +20,7 @@
 .jfx-combo-box{
     -jfx-focus-color: #4059A9;
     -jfx-unfocus-color: #4d4d4d;
+    -fx-prompt-text-fill: #4d4d4d;
 }
 
 .jfx-combo-box,
