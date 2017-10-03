@@ -4,6 +4,8 @@
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
 
+---
+
 <h1 align="center">
     <img src="http://www.jfoenix.com/img/logo-JFX.png">
 </h1>
