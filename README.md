@@ -4,15 +4,19 @@
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
 
-# JFoenix
+<h1 align="center">
+    <img src="http://www.jfoenix.com/img/logo-JFX.png">
+</h1>
+<p align="center">
+<sup>
+<b>JFoenix is an open source Java library, that implements Google Material Design using Java components</b>
+</sup>
+</p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
-* JFoenix Android Build [download jar](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
+* JFoenix - [download jar](http://www.jfoenix.com/download/jfoenix.jar)
+* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
-
-# Summary
-JFoenix is an open source Java library, that implements Google Material Design using Java components.
 
 # Using JFoenix already?
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github/website.
@@ -28,9 +32,9 @@ To run the main demo, execute the following command:
 
 **NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
 
-**NOTE** : JFoenix requires **Java 1.8 u60** and above.
+**NOTE** : JFoenix requires **Java 1.8u60** and above.
 
-# How Can I Use JFoenix?
+# How can I use JFoenix?
 You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix-0.0.0-SNAPSHOT.jar under the jfoenix/build/libs folder. To use JFoenix, import jfoenix-0.0.0-SNAPSHOT.jar into your project and start using the new material design Java components :).
 
 ## Gradle
@@ -43,7 +47,7 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:1.4.0'
+    compile 'com.jfoenix:jfoenix:1.9.0'
 }
 ```
 
@@ -53,7 +57,7 @@ dependencies {
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>1.4.0</version>
+    <version>1.9.0</version>
 </dependency>
 ```
 # Pics
