@@ -21,7 +21,6 @@ package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
-import com.sun.javafx.scene.control.skin.SliderSkin;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,6 +30,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.control.skin.SliderSkin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -108,17 +108,9 @@ public class JFXSliderSkin extends SliderSkin {
         getChildren().add(getChildren().indexOf(thumb), coloredTrack);
         getChildren().add(getChildren().indexOf(thumb), animatedThumb);
         getChildren().add(0, mouseHandlerPane);
-        registerChangeListener(slider.valueFactoryProperty(), "VALUE_FACTORY");
+        registerChangeListener(slider.valueFactoryProperty(), obs->refreshSliderValueBinding());
 
         initListeners();
-    }
-
-    @Override
-    protected void handleControlPropertyChanged(String p) {
-        super.handleControlPropertyChanged(p);
-        if ("VALUE_FACTORY".equals(p)) {
-            refreshSliderValueBinding();
-        }
     }
 
     private void refreshSliderValueBinding() {

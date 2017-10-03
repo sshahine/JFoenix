@@ -20,8 +20,8 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXToggleButtonSkin;
-import com.sun.javafx.css.converters.PaintConverter;
 import javafx.css.*;
+import javafx.css.converter.PaintConverter;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;

@@ -25,7 +25,6 @@ import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
 import com.jfoenix.validation.base.ValidatorBase;
-import com.sun.javafx.scene.control.skin.TextFieldSkin;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -38,6 +37,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.TextFieldSkin;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -87,7 +87,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
     private Timeline scale1 = new Timeline();
     private Timeline scaleLess1 = new Timeline();
 
-    private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
+    private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.getPromptTextFill());
 
     JFXAnimationTimer focusTimer = new JFXAnimationTimer(
         new JFXKeyFrame(Duration.millis(1),
@@ -293,18 +293,17 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 CornerRadii.EMPTY, Insets.EMPTY)));
         });
 
-        promptTextFill.addListener(observable -> {
-            oldPromptTextFill = promptTextFill.get();
-            animatedPromptTextFill.set(promptTextFill.get());
+        promptTextFillProperty().addListener(observable -> {
+            oldPromptTextFill = getPromptTextFill();
+            animatedPromptTextFill.set(getPromptTextFill());
         });
 
-        registerChangeListener(field.disableAnimationProperty(), "DISABLE_ANIMATION");
-        registerChangeListener(field.labelFloatProperty(), "LABEL_FLOAT");
-    }
-
-    @Override
-    protected void handleControlPropertyChanged(String propertyReference) {
-        if("LABEL_FLOAT".equals(propertyReference)){
+        registerChangeListener(field.disableAnimationProperty(), obs->{
+            // remove error clip if animation is disabled
+            errorContainer.setClip(((IFXTextInputControl) getSkinnable()).isDisableAnimation() ?
+                null : errorContainerClip);
+        });
+        registerChangeListener(field.labelFloatProperty(), obs->{
             boolean isLabelFloat = ((IFXTextInputControl) getSkinnable()).isLabelFloat();
             if (isLabelFloat) {
                 JFXUtilities.runInFX(this::createFloatingLabel);
@@ -316,13 +315,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
             }
             // update prompt text position
             if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
-        }else if ("DISABLE_ANIMATION".equals(propertyReference)) {
-            // remove error clip if animation is disabled
-            errorContainer.setClip(((IFXTextInputControl) getSkinnable()).isDisableAnimation() ?
-                null : errorContainerClip);
-        } else {
-            super.handleControlPropertyChanged(propertyReference);
-        }
+        });
     }
 
     @Override
@@ -338,7 +331,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 
         if (invalid) {
             invalid = false;
-            animatedPromptTextFill.set(promptTextFill.get());
+            animatedPromptTextFill.set(getPromptTextFill());
             textPane = (Pane) this.getChildren().get(0);
             focusTimer.setCacheNodes(textPane);
             unfocusTimer.setCacheNodes(textPane);
@@ -511,7 +504,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         String promptTxt = getSkinnable().getPromptText();
         boolean isLabelFloat = ((IFXTextInputControl) getSkinnable()).isLabelFloat();
         return (txt == null || txt.isEmpty()) && promptTxt != null
-               && !promptTxt.isEmpty() && (!promptTextFill.get().equals(Color.TRANSPARENT) || isLabelFloat);
+               && !promptTxt.isEmpty() && (!getPromptTextFill().equals(Color.TRANSPARENT) || isLabelFloat);
     }
 
     private void showError(ValidatorBase validator) {

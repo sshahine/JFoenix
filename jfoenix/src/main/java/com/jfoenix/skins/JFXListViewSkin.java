@@ -21,10 +21,11 @@ package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.effects.JFXDepthManager;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 
 /**
  * <h1>Material Design ListView Skin</h1>
@@ -35,8 +36,11 @@ import javafx.scene.control.ListCell;
  */
 public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
+    private VirtualFlow<ListCell<T>> flow;
+
     public JFXListViewSkin(final JFXListView<T> listView) {
         super(listView);
+        flow = (VirtualFlow<ListCell<T>>) getChildren().get(0);
         JFXDepthManager.setDepth(flow, listView.depthProperty().get());
         listView.depthProperty().addListener((o, oldVal, newVal) -> JFXDepthManager.setDepth(flow, newVal));
         listView.getItems().addListener((Change<? extends T> change) -> new Thread(() -> {
@@ -48,6 +52,7 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
             Platform.runLater(() -> getSkinnable().requestLayout());
         }).start());
     }
+
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
@@ -79,7 +84,6 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
         double cellsHeight = 0;
         for (int i = 0; i < flow.getCellCount(); i++) {
             ListCell<T> cell = flow.getCell(i);
-
             cellsHeight += cell.getHeight();
         }
         return cellsHeight + gap + borderWidth;

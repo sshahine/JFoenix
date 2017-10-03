@@ -20,8 +20,8 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXRadioButtonSkin;
-import com.sun.javafx.css.converters.ColorConverter;
 import javafx.css.*;
+import javafx.css.converter.ColorConverter;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;

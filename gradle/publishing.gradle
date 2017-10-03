@@ -43,37 +43,37 @@ def pomConfig = {
     scm {
         url project.project_scm
     }
-    developers {    
+    developers {
     	developer {
             id 'sshahine'
-            name 'Shadi Shaheen'                
-            roles{role 'Project Lead'}               
+            name 'Shadi Shaheen'
+            roles{role 'Project Lead'}
         }
         developer {
             id 'belias'
-            name 'Bachir Elias'                
-            roles{role 'Developer'}               
+            name 'Bachir Elias'
+            roles{role 'Developer'}
         }
         developer {
             id 'mhelou'
-            name 'Marwan Helou'                
-            roles{role 'Head of Framework Development'}               
+            name 'Marwan Helou'
+            roles{role 'Head of Framework Development'}
         }
         developer {
             id 'gmoubarak'
-            name 'Gerard Moubarak'                
-            roles{role 'Head of IT Section'}               
-        }        
+            name 'Gerard Moubarak'
+            roles{role 'Head of IT Section'}
+        }
         developer {
             id 'rjreije'
-            name 'Rayan Jreije'                
-            roles{role 'Project Manager'}               
+            name 'Rayan Jreije'
+            roles{role 'Project Manager'}
         }
     }
 }
 
 // sign all artifacts
-task signJars (type : Sign, dependsOn: [jar, javadocJar, sourcesJar, retroSourcesJar]) {
+task signJars (type : Sign, dependsOn: [jar, javadocJar, sourcesJar]) {
     sign configurations.archives
 }
 // sign pom
@@ -91,12 +91,10 @@ def getSignatureFiles = {
     def allFiles = project.tasks.signJars.signatureFiles.collect { it }
     def signedSources = allFiles.find { it.name.contains('-sources') }
     def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
-    def signedRetrolambda = allFiles.find { it.name.contains('-retrolambda') }
     def signedJar = (allFiles - [signedSources, signedJavadoc, signedRetrolambda])[0]
     return [
             [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
             [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
-            [archive: signedRetrolambda, classifier: 'retrolambda', extension: 'jar.asc'],
             [archive: signedJar,     classifier: null,      extension: 'jar.asc']
     ]
 }
@@ -127,12 +125,11 @@ publishing {
                 }
             }
         }
-    
+
         mavenJava(MavenPublication) {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            artifact retroSourcesJar
             pom.withXml {
                 asNode().children().last() + pomConfig
                  if (!project.ext.pomFile.exists()) {
@@ -152,7 +149,7 @@ publishing {
 		            url "https://oss.sonatype.org/content/repositories/snapshots"
 		        } else {
 		            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-		        } 
+		        }
 		    } else {
 		        url project.local_deploy
 		    }

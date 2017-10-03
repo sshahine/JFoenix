@@ -22,7 +22,6 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
-import com.sun.javafx.scene.control.skin.RadioButtonSkin;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,6 +30,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.skin.RadioButtonSkin;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -93,24 +93,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         });
         control.pressedProperty().addListener((o, oldVal, newVal) -> rippler.hideOverlay());
 
-        registerChangeListener(control.selectedColorProperty(), "SELECTED_COLOR");
-        registerChangeListener(control.unSelectedColorProperty(), "UNSELECTED_COLOR");
-        registerChangeListener(control.selectedProperty(), "SELECTED");
-    }
-
-    @Override
-    protected void updateChildren() {
-        super.updateChildren();
-        if (radio != null) {
-            removeRadio();
-            getChildren().add(container);
-        }
-    }
-
-    @Override
-    protected void handleControlPropertyChanged(String p) {
-        super.handleControlPropertyChanged(p);
-        if ("SELECTED_COLOR".equals(p)) {
+        registerChangeListener(control.selectedColorProperty(), obs->{
             // update animation
             updateAnimation();
             // update current colors
@@ -121,7 +104,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             if (isSelected) {
                 radio.strokeProperty().set(selectedColor);
             }
-        } else if ("UNSELECTED_COLOR".equals(p)) {
+        });
+        registerChangeListener(control.unSelectedColorProperty(), obs->{
             // update animation
             updateAnimation();
             // update current colors
@@ -132,7 +116,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             if (!isSelected) {
                 radio.strokeProperty().set(unSelectedColor);
             }
-        } else if ("SELECTED".equals(p)) {
+        });
+        registerChangeListener(control.selectedProperty(), obs->{
             // update ripple color
             boolean isSelected = getSkinnable().isSelected();
             Color unSelectedColor = ((JFXRadioButton) getSkinnable()).getUnSelectedColor();
@@ -141,9 +126,17 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             if(timeline == null) updateAnimation();
             // play selection animation
             playAnimation();
-        }
+        });
     }
 
+    @Override
+    protected void updateChildren() {
+        super.updateChildren();
+        if (radio != null) {
+            removeRadio();
+            getChildren().add(container);
+        }
+    }
 
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
@@ -208,6 +201,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
     }
 
     private void removeRadio() {
+        // TODO: replace with removeIf
         for (int i = 0; i < getChildren().size(); i++) {
             if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
                 getChildren().remove(i);

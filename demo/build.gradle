@@ -1,15 +1,19 @@
 apply plugin: 'application'
+apply plugin: 'java-library'
 
+applicationDefaultJvmArgs = ["-Dprism.order=d3d,es2,es1,sw "]
 mainClassName = 'demos.MainDemo'
 
-dependencies {
-    compile project(':jfoenix')
+ext.moduleName = 'demo.main'
 
+dependencies {
     // NOTE: the latest version _is_ 8.0.1!
     // 8.0.7 was published by mistake
     compile 'io.datafx:datafx:8.0.1'
     compile 'io.datafx:flow:8.0.1'
 
     // FontAwesome (Bintray)
-    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
+    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-9'
+
+    compile project(':jfoenix')
 }

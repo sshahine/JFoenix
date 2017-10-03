@@ -20,10 +20,10 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXToggleNodeSkin;
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.css.converters.ColorConverter;
 import javafx.beans.DefaultProperty;
 import javafx.css.*;
+import javafx.css.converter.BooleanConverter;
+import javafx.css.converter.ColorConverter;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;

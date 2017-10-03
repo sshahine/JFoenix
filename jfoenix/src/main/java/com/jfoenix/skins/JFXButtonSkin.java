@@ -24,17 +24,20 @@ import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
-import com.sun.javafx.scene.control.skin.ButtonSkin;
-import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.skin.ButtonSkin;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -136,9 +139,9 @@ public class JFXButtonSkin extends ButtonSkin {
             if (((JFXButton) getSkinnable()).getRipplerFill() == null) {
                 // change rippler fill according to the last LabeledText/Label child
                 for (int i = getChildren().size() - 1; i >= 1; i--) {
-                    if (getChildren().get(i) instanceof LabeledText) {
-                        buttonRippler.setRipplerFill(((LabeledText) getChildren().get(i)).getFill());
-                        ((LabeledText) getChildren().get(i)).fillProperty()
+                    if (getChildren().get(i) instanceof Text) {
+                        buttonRippler.setRipplerFill(((Text) getChildren().get(i)).getFill());
+                        ((Text) getChildren().get(i)).fillProperty()
                             .addListener((o, oldVal, newVal) -> buttonRippler.setRipplerFill(
                                 newVal));
                         break;

@@ -24,14 +24,14 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
-import com.sun.javafx.scene.control.behavior.ButtonBehavior;
-import com.sun.javafx.scene.control.skin.LabeledSkinBase;
 import javafx.animation.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.skin.CheckBoxSkin;
+import javafx.scene.control.skin.LabeledSkinBase;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -47,7 +47,7 @@ import javafx.util.Duration;
  * @version 1.0
  * @since 2016-09-06
  */
-public class JFXCheckBoxSkin extends LabeledSkinBase<CheckBox, ButtonBehavior<CheckBox>> {
+public class JFXCheckBoxSkin extends CheckBoxSkin {
 
     private final StackPane box = new StackPane();
     private final StackPane mark = new StackPane();
@@ -62,7 +62,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<CheckBox, ButtonBehavior<Ch
     private final StackPane boxContainer;
 
     public JFXCheckBoxSkin(JFXCheckBox control) {
-        super(control, new ButtonBehavior<CheckBox>(control));
+        super(control);
 
         indeterminateMark.getStyleClass().setAll("indeterminate-mark");
         indeterminateMark.setOpacity(0);
@@ -112,7 +112,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<CheckBox, ButtonBehavior<Ch
         indeterminateTransition = new CheckBoxTransition(indeterminateMark);
         createFillTransition();
 
-        registerChangeListener(control.checkedColorProperty(), "CHECKED_COLOR");
+        registerChangeListener(control.checkedColorProperty(), obs->createFillTransition());
     }
 
     private void updateRippleColor() {
@@ -121,16 +121,9 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<CheckBox, ButtonBehavior<Ch
     }
 
     @Override
-    protected void handleControlPropertyChanged(String p) {
-        super.handleControlPropertyChanged(p);
-        if ("CHECKED_COLOR".equals(p)) {
-            createFillTransition();
-        }
-    }
-
-    @Override
     protected void updateChildren() {
         super.updateChildren();
+        getChildren().removeIf(node->node.getStyleClass().contains("box"));
         if (rippler != null) {
             getChildren().add(rippler);
         }

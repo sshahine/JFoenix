@@ -20,7 +20,6 @@
 package com.jfoenix.converters;
 
 import com.jfoenix.controls.JFXDialog.DialogTransition;
-import com.sun.javafx.css.StyleConverterImpl;
 import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
@@ -33,7 +32,7 @@ import javafx.scene.text.Font;
  * @version 1.0
  * @since 2016-03-09
  */
-public class DialogTransitionConverter extends StyleConverterImpl<String, DialogTransition> {
+public class DialogTransitionConverter extends StyleConverter<String, DialogTransition> {
     // lazy, thread-safe instatiation
     private static class Holder {
         static final DialogTransitionConverter INSTANCE = new DialogTransitionConverter();

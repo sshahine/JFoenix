@@ -20,11 +20,11 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXSpinnerSkin;
-import com.sun.javafx.css.converters.SizeConverter;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableDoubleProperty;
+import javafx.css.converter.SizeConverter;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Skin;

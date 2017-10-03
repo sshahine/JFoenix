@@ -20,22 +20,19 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXSpinner;
-import com.sun.javafx.scene.control.behavior.BehaviorBase;
-import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.util.Collections;
 
 /**
  * JFXSpinner material design skin
@@ -44,7 +41,7 @@ import java.util.Collections;
  * @version 1.0
  * @since 2017-09-25
  */
-public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JFXSpinner>> {
+public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
 
     boolean invalid = true;
     private JFXSpinner control;
@@ -59,7 +56,7 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
     private final Rectangle fillRect;
 
     public JFXSpinnerSkin(JFXSpinner control) {
-        super(control, new BehaviorBase<JFXSpinner>(control, Collections.emptyList()));
+        super(control);
 
         blueColor = Color.valueOf("#4285f4");
         redColor = Color.valueOf("#db4437");
@@ -86,24 +83,12 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
         this.control = control;
 
         // register listeners
-        registerChangeListener(control.indeterminateProperty(), "INDETERMINATE");
-        registerChangeListener(control.progressProperty(), "PROGRESS");
-        registerChangeListener(control.visibleProperty(), "VISIBLE");
-        registerChangeListener(control.parentProperty(), "PARENT");
-        registerChangeListener(control.sceneProperty(), "SCENE");
+
+        registerChangeListener(control.visibleProperty(), obs->updateAnimation());
+        registerChangeListener(control.parentProperty(), obs->updateAnimation());
+        registerChangeListener(control.sceneProperty(), obs->updateAnimation());
     }
 
-    @Override
-    protected void handleControlPropertyChanged(String p) {
-        super.handleControlPropertyChanged(p);
-        if ("VISIBLE".equals(p)) {
-            updateAnimation();
-        } else if ("PARENT".equals(p)) {
-            updateAnimation();
-        } else if ("SCENE".equals(p)) {
-            updateAnimation();
-        }
-    }
 
     private KeyFrame[] getKeyFrames(double angle, double duration, Color color) {
         KeyFrame[] frames = new KeyFrame[4];

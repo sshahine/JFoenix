@@ -20,11 +20,10 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXTimePickerSkin;
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.css.converters.PaintConverter;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.beans.property.*;
 import javafx.css.*;
+import javafx.css.converter.BooleanConverter;
+import javafx.css.converter.PaintConverter;
 import javafx.geometry.Insets;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.ComboBoxBase;

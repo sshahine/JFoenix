@@ -20,7 +20,6 @@
 package com.jfoenix.converters;
 
 import com.jfoenix.controls.JFXRippler.RipplerMask;
-import com.sun.javafx.css.StyleConverterImpl;
 import javafx.css.ParsedValue;
 import javafx.css.StyleConverter;
 import javafx.scene.text.Font;
@@ -33,7 +32,7 @@ import javafx.scene.text.Font;
  * @version 1.0
  * @since 2016-03-09
  */
-public final class RipplerMaskTypeConverter extends StyleConverterImpl<String, RipplerMask> {
+public final class RipplerMaskTypeConverter extends StyleConverter<String, RipplerMask> {
     // lazy, thread-safe instatiation
     private static class Holder {
         static final RipplerMaskTypeConverter INSTANCE = new RipplerMaskTypeConverter();
