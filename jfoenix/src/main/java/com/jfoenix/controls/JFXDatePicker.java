@@ -70,7 +70,6 @@ public class JFXDatePicker extends DatePicker {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
         try {
             editorProperty();
             Field editorField = getClass().getSuperclass().getDeclaredField("editor");
@@ -87,6 +86,14 @@ public class JFXDatePicker extends DatePicker {
         } catch (NoSuchFieldException e) {
         } catch (IllegalAccessException e) {
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     /**

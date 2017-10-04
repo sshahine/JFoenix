@@ -20,14 +20,13 @@
 .jfx-text-field {
     -jfx-focus-color: #4059A9;
     -jfx-unfocus-color: #4d4d4d;
-    -fx-background-color:TRANSPARENT;
-    -fx-padding: 4 0 4 0;
+    -fx-padding: 0.333333em 0 0.333333em 0;
 }
 
 .jfx-text-field,
 .jfx-text-field:focused {
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT;
     -fx-prompt-text-fill: #4D4D4D;
-    -fx-background-color:TRANSPARENT;
 }
 
 .jfx-text-field:error {
@@ -41,4 +40,15 @@
 
 .jfx-text-field .error-icon {
     -fx-fill: #D34336;
+}
+
+/* -------------- STYLES FOR THE DEFAULT JFXTEXTFIELD-BASED COMBOBOX ------------- */
+.combo-box-base:editable > .jfx-text-field,
+.date-picker > .jfx-text-field,
+.jfx-date-picker > .jfx-text-field,
+.combo-box-base:editable:focused > .text-field,
+.combo-box-base:editable > .text-field:focused,
+.date-picker:focused > .text-field,
+.date-picker > .text-field:focused {
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT;
 }

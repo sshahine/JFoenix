@@ -17,32 +17,15 @@
  * under the License.
  */
 
-.jfx-combo-box{
-    -jfx-focus-color: #4059A9;
-    -jfx-unfocus-color: #4d4d4d;
-    -fx-prompt-text-fill: #4d4d4d;
-}
-
-.jfx-combo-box,
-.jfx-combo-box:focused,
-.jfx-combo-box:editable,
-.jfx-combo-box:editable:focused{
+.jfx-time-picker,
+.jfx-time-picker:focused,
+.jfx-time-picker:focused:editable {
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
-    -fx-background-radius: 3px;
-    -fx-background-insets: 0px;
 }
 
-.jfx-combo-box .combo-box-button-container{
-    -fx-background-color:TRANSPARENT;
-}
-
-.jfx-combo-box:error {
-    -jfx-focus-color: #D34336;
-    -jfx-unfocus-color: #D34336;
-}
-
-.jfx-combo-box > .arrow-button,
-.jfx-combo-box:editable > .arrow-button,
-.jfx-combo-box:editable:focused > .arrow-button{
+.jfx-time-picker > .arrow-button,
+.jfx-time-picker:editable > .arrow-button,
+.jfx-time-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
+    -fx-padding: 1 8 1 8;
 }

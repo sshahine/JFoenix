@@ -340,8 +340,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
             invalid = false;
             animatedPromptTextFill.set(promptTextFill.get());
             textPane = (Pane) this.getChildren().get(0);
-            focusTimer.setCacheNodes(textPane);
-            unfocusTimer.setCacheNodes(textPane);
+//            focusTimer.setCacheNodes(textPane);
+//            unfocusTimer.setCacheNodes(textPane);
             // create floating label
             createFloatingLabel();
             // update validation container

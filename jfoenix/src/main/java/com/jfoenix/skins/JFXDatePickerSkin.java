@@ -104,10 +104,6 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         ((SVGGlyph) arrow).fillProperty().bind(jfxDatePicker.defaultColorProperty());
         ((SVGGlyph) arrow).setSize(20, 20);
         arrowButton.getChildren().setAll(arrow);
-        arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-            CornerRadii.EMPTY,
-            Insets.EMPTY)));
-        arrowButton.setPadding(new Insets(1,8,1,8));
 
         registerChangeListener(datePicker.converterProperty(), "CONVERTER");
         registerChangeListener(datePicker.dayCellFactoryProperty(), "DAY_CELL_FACTORY");

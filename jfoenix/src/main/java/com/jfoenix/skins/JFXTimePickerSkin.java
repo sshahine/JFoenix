@@ -101,10 +101,6 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
         ((SVGGlyph) arrow).fillProperty().bind(timePicker.defaultColorProperty());
         ((SVGGlyph) arrow).setSize(20, 20);
         arrowButton.getChildren().setAll(arrow);
-        arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-            CornerRadii.EMPTY,
-            Insets.EMPTY)));
-        arrowButton.setPadding(new Insets(1, 8, 1, 8));
 
         //dialog = new JFXDialog(null, content, transitionType, overlayClose)
         registerChangeListener(timePicker.converterProperty(), "CONVERTER");
