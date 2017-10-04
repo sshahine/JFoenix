@@ -74,8 +74,15 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
         setAccessibleRole(AccessibleRole.DATE_PICKER);
-        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
         setEditable(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     /**

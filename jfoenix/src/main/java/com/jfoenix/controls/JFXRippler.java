@@ -168,8 +168,7 @@ public class JFXRippler extends StackPane {
 
             // position control
             if(this.position.get() == RipplerPos.BACK){
-                ripplerPane.getChildren().add(control);
-                getChildren().setAll(ripplerPane);
+                getChildren().setAll(ripplerPane, control);
             }else{
                 getChildren().setAll(control, ripplerPane);
             }
@@ -181,9 +180,9 @@ public class JFXRippler extends StackPane {
 
     public void updateControlPosition() {
         if (this.position.get() == RipplerPos.BACK) {
-            ripplerPane.getChildren().add(control);
+            ripplerPane.toBack();
         } else {
-            this.getChildren().add(control);
+            ripplerPane.toFront();
         }
     }
 
