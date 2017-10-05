@@ -37,7 +37,13 @@ javadoc {
 
 task myJavadocs(type: Javadoc) {
     source = sourceSets.main.allJava
-    options.addStringOption('-add-exports','javafx.base/com.sun.javafx.event=com.jfoenix')
+    options.addMultilineStringsOption("-add-exports")
+        .setValue(["javafx.base/com.sun.javafx.event=com.jfoenix",
+                   "javafx.base/com.sun.javafx.binding=com.jfoenix",
+                   "javafx.graphics/com.sun.javafx.scene=com.jfoenix",
+                   "javafx.graphics/com.sun.javafx.stage=com.jfoenix",
+                   "javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
+                   "javafx.controls/com.sun.javafx.scene.control=com.jfoenix"])
 }
 
 task javadocJar(type: Jar) {
