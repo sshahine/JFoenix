@@ -245,7 +245,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     private static class StyleableProperties {
         private static final CssMetaData<JFXTimePicker, Paint> DEFAULT_COLOR =
             new CssMetaData<JFXTimePicker, Paint>("-jfx-default-color",
-                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                PaintConverter.getInstance(), Color.valueOf("#009688")) {
                 @Override
                 public boolean isSettable(JFXTimePicker control) {
                     return control.defaultColor == null || !control.defaultColor.isBound();

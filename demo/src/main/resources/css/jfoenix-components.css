@@ -360,7 +360,7 @@
     -fx-focus-color: rgba(240, 40, 40, 1);
 }
 
-.tree-table-row-group {
+.tree-table-row-cell:grouped {
     -fx-background-color: rgba(230, 230, 230, 1);
 }
 

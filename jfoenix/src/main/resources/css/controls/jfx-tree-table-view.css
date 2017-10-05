@@ -108,7 +108,7 @@
     -fx-font-size: 1.0em;
 }
 
-.tree-table-row-group {
+.tree-table-row-cell:grouped {
     -fx-background-color: rgb(230, 230, 230);
 }
 

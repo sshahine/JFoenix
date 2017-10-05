@@ -888,8 +888,8 @@
     -fx-font-size: 1.0em;
 }
 
-.tree-table-row-group {
-    -fx-background-color: rgba(230, 230, 230);
+.tree-table-row-cell:grouped {
+    -fx-background-color: rgb(230, 230, 230);
 }
 
 .tree-table-view .menu-item:focused {

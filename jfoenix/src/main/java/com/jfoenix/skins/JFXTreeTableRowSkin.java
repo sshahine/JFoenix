@@ -24,6 +24,7 @@ import com.sun.javafx.scene.control.skin.TreeTableRowSkin;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.beans.value.ChangeListener;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
@@ -86,17 +87,16 @@ public class JFXTreeTableRowSkin<T> extends TreeTableRowSkin<T> {
         });
     }
 
+    private static final PseudoClass groupedClass = PseudoClass.getPseudoClass("grouped");
 
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         // allow custom skin to grouped rows
-        getSkinnable().getStyleClass().remove("tree-table-row-group");
-        if (getSkinnable().getTreeItem() != null && getSkinnable().getTreeItem()
-            .getValue() instanceof RecursiveTreeObject && getSkinnable()
-            .getTreeItem()
-            .getValue()
-            .getClass() == RecursiveTreeObject.class) {
-            getSkinnable().getStyleClass().add("tree-table-row-group");
+        pseudoClassStateChanged(groupedClass, false);
+        if (getSkinnable().getTreeItem() != null
+            && getSkinnable().getTreeItem().getValue() instanceof RecursiveTreeObject
+            && getSkinnable().getTreeItem().getValue().getClass() == RecursiveTreeObject.class) {
+            pseudoClassStateChanged(groupedClass, true);
         }
 
         if (getSkinnable().getIndex() > -1 && getSkinnable().getTreeTableView()
