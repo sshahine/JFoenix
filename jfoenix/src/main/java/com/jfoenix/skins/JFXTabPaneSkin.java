@@ -27,8 +27,7 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.transitions.CachedTransition;
 import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
-import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
-import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
+import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -69,7 +68,7 @@ import java.util.List;
  *
  * @author Shadi Shaheen
  */
-public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
+public class JFXTabPaneSkin extends TabPaneSkin {
 
     private final Color defaultColor = Color.valueOf("#00BCD4");
     private final Color ripplerColor = Color.valueOf("#FFFF8D");
@@ -90,7 +89,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
     private double maxHeight = 0.0d;
 
     public JFXTabPaneSkin(TabPane tabPane) {
-        super(tabPane, new TabPaneBehavior(tabPane));
+        super(tabPane);
         tabContentHolders = FXCollections.observableArrayList();
         header = new HeaderContainer();
         getChildren().add(JFXDepthManager.createMaterialNode(header, 1));
