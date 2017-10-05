@@ -19,9 +19,9 @@
 
 package com.jfoenix.skins;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.skin.TableHeaderRow;
+import javafx.scene.control.skin.TreeTableViewSkin;
 
 /**
  * @author Shadi Shaheen
