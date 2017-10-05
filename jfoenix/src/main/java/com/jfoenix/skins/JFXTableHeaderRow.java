@@ -19,9 +19,9 @@
 
 package com.jfoenix.skins;
 
-import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import com.sun.javafx.scene.control.skin.TableViewSkinBase;
+import javafx.scene.control.skin.NestedTableColumnHeader;
+import javafx.scene.control.skin.TableHeaderRow;
+import javafx.scene.control.skin.TableViewSkinBase;
 
 /**
  * @author Shadi Shaheen
@@ -36,7 +36,7 @@ public class JFXTableHeaderRow {
         headerRow = new TableHeaderRow(skin) {
             // protected to allow subclasses to provide a custom root header
             protected NestedTableColumnHeader createRootHeader() {
-                return new JFXNestedTableColumnHeader(tableSkin, null);
+                return new JFXNestedTableColumnHeader(null);
             }
         };
     }

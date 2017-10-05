@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,21 +17,30 @@
  * under the License.
  */
 
-.jfx-date-picker,
-.jfx-date-picker:focused,
-.jfx-date-picker:focused:editable {
-    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
-}
+package com.jfoenix.controls.behavior;
 
-.jfx-date-picker > .arrow-button,
-.jfx-date-picker:editable > .arrow-button,
-.jfx-date-picker:editable:focused > .arrow-button{
-    -fx-background-color: TRANSPARENT;
-}
+import com.sun.javafx.scene.control.behavior.ComboBoxBaseBehavior;
+import javafx.scene.control.ComboBoxBase;
+import javafx.scene.control.PopupControl;
 
+/**
+ * @author Shadi Shaheen
+ * @version 2.0
+ * @since 2017-10-05
+ */
+public class JFXGenericPickerBehavior<T> extends ComboBoxBaseBehavior<T> {
 
-.jfx-date-picker > .arrow-button > .arrow{
-    -fx-shape: "M320 384h128v128h-128zM512 384h128v128h-128zM704 384h128v128h-128zM128 768h128v128h-128zM320 768h128v128h-128zM512 768h128v128h-128zM320 576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896 960h-832v-704h832v704z";
-    -fx-background-insets: 0;
-    -fx-padding: 10;
+    public JFXGenericPickerBehavior(ComboBoxBase<T> var1) {
+        super(var1);
+    }
+
+    public void onAutoHide(PopupControl var1) {
+        if (!var1.isShowing() && this.getNode().isShowing()) {
+            this.getNode().hide();
+        }
+        if (!this.getNode().isShowing()) {
+            super.onAutoHide(var1);
+        }
+    }
+
 }

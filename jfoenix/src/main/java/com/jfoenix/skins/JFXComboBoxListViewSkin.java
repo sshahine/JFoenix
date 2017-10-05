@@ -23,8 +23,6 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
-import com.sun.javafx.css.converters.PaintConverter;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.animation.Interpolator;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -35,9 +33,11 @@ import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
+import javafx.css.converter.PaintConverter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -206,10 +206,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 4 0 4 0");
             comboBox.getEditor().promptTextProperty().unbind();
             comboBox.getEditor().setPromptText(null);
-            comboBox.getEditor().textProperty().addListener((o, oldVal, newVal) -> {
-                usePromptText.invalidate();
-                comboBox.setValue(getConverter().fromString(newVal));
-            });
+            comboBox.getEditor().textProperty().addListener((o, oldVal, newVal) -> usePromptText.invalidate());
         }
 
         comboBox.labelFloatProperty().addListener((o, oldVal, newVal) -> {
@@ -340,6 +337,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
     private boolean usePromptText() {
         Object txt = ((JFXComboBox<?>) getSkinnable()).getValue();
+        if (getSkinnable().isEditable()) {
+            txt = ((JFXComboBox<?>) getSkinnable()).getEditor().getText().isEmpty() ? null : txt;
+        }
         String promptTxt = getSkinnable().getPromptText();
         boolean isLabelFloat = ((JFXComboBox<?>) getSkinnable()).isLabelFloat();
         return (txt == null || txt.toString().isEmpty()) && promptTxt != null
