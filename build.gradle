@@ -7,11 +7,11 @@ buildscript {
 
 plugins {
     id 'com.jfrog.bintray' version '1.7.3' apply false
-    id 'com.github.ben-manes.versions' version '0.14.0' apply false
-    id 'me.tatarka.retrolambda' version '3.6.0' apply false
-    id 'com.github.hierynomus.license' version '0.13.1' apply false
-    id 'net.nemerosa.versioning' version '2.6.0' apply false
-    id "org.sonarqube" version "2.5"
+    id 'com.github.ben-manes.versions' version '0.15.0' apply false
+    id 'me.tatarka.retrolambda' version '3.7.0' apply false
+    id 'com.github.hierynomus.license' version '0.14.0' apply false
+    id 'net.nemerosa.versioning' version '2.6.1' apply false
+    id 'org.sonarqube' version '2.5'
 }
 
 subprojects {
