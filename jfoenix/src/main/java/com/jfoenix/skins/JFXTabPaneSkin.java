@@ -1206,8 +1206,6 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             JFXRippler arrowRippler = new JFXRippler(container, RipplerMask.CIRCLE, RipplerPos.BACK);
             arrowRippler.ripplerFillProperty().bind(arrowButton.fillProperty());
             arrowRippler.setPadding(new Insets(0, 5, 0, 5));
-            StackPane.setMargin(arrowRippler, new Insets(0, 4, 0, 4));
-
 
             inner = new StackPane() {
                 @Override

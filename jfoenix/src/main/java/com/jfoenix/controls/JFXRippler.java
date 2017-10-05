@@ -212,21 +212,21 @@ public class JFXRippler extends StackPane {
         Node mask;
         switch (getMaskType()) {
             case RECT:
-                mask = new Rectangle(bounds.getMinX() + diffMinX,
-                    bounds.getMinY() + diffMinY,
+                mask = new Rectangle(bounds.getMinX() + diffMinX - snappedLeftInset(),
+                    bounds.getMinY() + diffMinY - snappedTopInset(),
                     width - 0.1 - 2 * borderWidth,
                     height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
                 break;
             case CIRCLE:
                 double radius = Math.min((width / 2) - 0.1 - 2 * borderWidth, (height / 2) - 0.1 - 2 * borderWidth);
-                mask = new Circle((bounds.getMinX() + diffMinX + bounds.getMaxX() - diffMaxX) / 2,
-                    (bounds.getMinY() + diffMinY + bounds.getMaxY() - diffMaxY) / 2,
+                mask = new Circle((bounds.getMinX() + diffMinX + bounds.getMaxX() - diffMaxX) / 2 - snappedLeftInset(),
+                    (bounds.getMinY() + diffMinY + bounds.getMaxY() - diffMaxY) / 2 - snappedTopInset(),
                     radius,
                     Color.BLUE);
                 break;
             default:
-                mask = new Rectangle(bounds.getMinX() + diffMinX,
-                    bounds.getMinY() + diffMinY,
+                mask = new Rectangle(bounds.getMinX() + diffMinX - snappedLeftInset(),
+                    bounds.getMinY() + diffMinY - snappedTopInset(),
                     width - 0.1 - 2 * borderWidth,
                     height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
                 break;
@@ -493,8 +493,8 @@ public class JFXRippler extends StackPane {
                 double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
                 double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
                 Bounds bounds = control.getBoundsInParent();
-                this.setX(bounds.getMinX() + diffMinX);
-                this.setY(bounds.getMinY() + diffMinY);
+                this.setX(bounds.getMinX() + diffMinX - snappedLeftInset());
+                this.setY(bounds.getMinY() + diffMinY - snappedTopInset());
                 // set initial attributes
                 this.setOpacity(0);
                 setCache(true);
