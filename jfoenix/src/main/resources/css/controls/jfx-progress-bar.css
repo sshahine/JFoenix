@@ -17,6 +17,21 @@
  * under the License.
  */
 
+.jfx-progress-bar > .track{
+    -fx-background-color: #E0E0E0;
+}
+
+.jfx-progress-bar > .bar,
+.jfx-progress-bar:indeterminate > .bar{
+    -fx-background-color: #0F9D58;
+    -fx-padding: 1.5;
+}
+
+.jfx-progress-bar > .secondary-bar,
+.jfx-progress-bar:indeterminate > .secondary-bar{
+    -fx-background-color: #CDE1B7;
+}
+
 .jfx-progress-bar > .track,
 .jfx-progress-bar > .bar {
     -fx-background-radius: 0;
