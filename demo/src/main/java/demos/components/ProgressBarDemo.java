@@ -40,7 +40,11 @@ public class ProgressBarDemo extends Application {
             new KeyFrame(
                 Duration.ZERO,
                 new KeyValue(bar.progressProperty(), 0),
+                new KeyValue(jfxBar.secondaryProgressProperty(), 0),
                 new KeyValue(jfxBar.progressProperty(), 0)),
+            new KeyFrame(
+                Duration.seconds(1),
+                new KeyValue(jfxBar.secondaryProgressProperty(), 1)),
             new KeyFrame(
                 Duration.seconds(2),
                 new KeyValue(bar.progressProperty(), 1),

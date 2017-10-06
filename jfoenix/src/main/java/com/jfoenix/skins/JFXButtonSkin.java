@@ -129,7 +129,9 @@ public class JFXButtonSkin extends ButtonSkin {
         if(buttonRippler!=null)
             getChildren().add(0, buttonRippler);
         for (int i = 1; i < getChildren().size(); i++) {
-            getChildren().get(i).setMouseTransparent(true);
+            final Node child = getChildren().get(i);
+            if(child instanceof Text)
+                child.setMouseTransparent(true);
         }
     }
 

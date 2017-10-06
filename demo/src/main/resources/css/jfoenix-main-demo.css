@@ -391,7 +391,10 @@
 }
 
 .custom-jfx-progress-bar > .bar {
-    -fx-background-color: rgb(255.0, 128.0, 0.0);
+    -fx-background-color: #ff8000;
+}
+.custom-jfx-progress-bar > .secondary-bar{
+    -fx-background-color: rgba(255, 135, 21, 0.18);
 }
 
 .custom-jfx-progress-bar-stroke > .bar {
