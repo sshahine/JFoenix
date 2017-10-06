@@ -35,6 +35,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -126,7 +127,9 @@ public class JFXButtonSkin extends ButtonSkin {
         if(buttonRippler!=null)
             getChildren().add(0, buttonRippler);
         for (int i = 1; i < getChildren().size(); i++) {
-            getChildren().get(i).setMouseTransparent(true);
+            final Node child = getChildren().get(i);
+            if(child instanceof Text)
+                child.setMouseTransparent(true);
         }
     }
 
