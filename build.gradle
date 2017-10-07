@@ -61,6 +61,7 @@ subprojects {
                     // For various usages of TraversalEngine
                     "--add-exports=javafx.graphics/com.sun.javafx.scene=com.jfoenix",
                     "--add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix",
+                    "--add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix",
 
                     // For various behaviors across controls
                     "--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
