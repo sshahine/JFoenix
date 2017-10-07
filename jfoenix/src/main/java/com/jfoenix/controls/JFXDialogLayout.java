@@ -127,7 +127,7 @@ public class JFXDialogLayout extends StackPane {
         this.setStyle("-fx-text-fill: rgba(0, 0, 0, 0.87);");
         heading.setStyle("-fx-font-weight: BOLD;-fx-alignment: center-left;");
         heading.setPadding(new Insets(5, 0, 5, 0));
-        body.setStyle("-fx-pref-width: 400px;-fx-wrap-text: true;");
+        body.setStyle("-fx-pref-width: 400px;-fx-wrap-text: true; -fx-alignment: center-left");
         actions.setStyle("-fx-alignment: center-right ;");
         actions.setPadding(new Insets(10, 0, 0, 0));
     }
