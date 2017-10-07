@@ -91,7 +91,7 @@ def getSignatureFiles = {
     def allFiles = project.tasks.signJars.signatureFiles.collect { it }
     def signedSources = allFiles.find { it.name.contains('-sources') }
     def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
-    def signedJar = (allFiles - [signedSources, signedJavadoc, signedRetrolambda])[0]
+    def signedJar = (allFiles - [signedSources, signedJavadoc])[0]
     return [
             [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
             [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
