@@ -81,12 +81,14 @@ public class JFXCustomColorPickerDialog extends StackPane {
         pickerDecorator.setOnCloseButtonAction(() -> close());
         pickerDecorator.setPickOnBounds(false);
         customScene = new Scene(pickerDecorator, Color.TRANSPARENT);
-        final Scene ownerScene = owner.getScene();
-        if (ownerScene != null) {
-            if (ownerScene.getUserAgentStylesheet() != null) {
-                customScene.setUserAgentStylesheet(ownerScene.getUserAgentStylesheet());
+        if(owner!=null) {
+            final Scene ownerScene = owner.getScene();
+            if (ownerScene != null) {
+                if (ownerScene.getUserAgentStylesheet() != null) {
+                    customScene.setUserAgentStylesheet(ownerScene.getUserAgentStylesheet());
+                }
+                customScene.getStylesheets().addAll(ownerScene.getStylesheets());
             }
-            customScene.getStylesheets().addAll(ownerScene.getStylesheets());
         }
         curvedColorPicker = new JFXCustomColorPicker();
 
