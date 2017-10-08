@@ -22,6 +22,7 @@ package com.jfoenix.controls;
 import com.jfoenix.converters.RipplerMaskTypeConverter;
 import com.jfoenix.transitions.CachedAnimation;
 import com.jfoenix.transitions.CachedTransition;
+import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import com.sun.javafx.css.converters.SizeConverter;
@@ -75,7 +76,7 @@ public class JFXRippler extends StackPane {
     }
 
     public enum RipplerMask {
-        CIRCLE, RECT
+        CIRCLE, RECT, FIT
     }
 
     protected RippleGenerator rippler;
@@ -224,21 +225,23 @@ public class JFXRippler extends StackPane {
                     radius,
                     Color.BLUE);
                 break;
+            case FIT:
+                mask = new Region();
+                if(control instanceof Shape){
+                    ((Region) mask).setShape((Shape) control);
+                }else if(control instanceof Region){
+                    ((Region) mask).setShape(((Region) control).getShape());
+                    JFXNodeUtils.updateBackground(((Region) control).getBackground(), (Region) mask);
+                }
+                mask.resize(width, height);
+                mask.relocate(bounds.getMinX() + diffMinX, bounds.getMinY() + diffMinY);
+                break;
             default:
                 mask = new Rectangle(bounds.getMinX() + diffMinX - snappedLeftInset(),
                     bounds.getMinY() + diffMinY - snappedTopInset(),
                     width - 0.1 - 2 * borderWidth,
                     height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
                 break;
-        }
-        if (control instanceof Shape || (control instanceof Region && ((Region) control).getShape() != null)) {
-            mask = new StackPane();
-            ((Region) mask).setShape((control instanceof Shape) ? (Shape) control : ((Region) control).getShape());
-            ((Region) mask).setBackground(new Background(new BackgroundFill(Color.WHITE,
-                CornerRadii.EMPTY,
-                Insets.EMPTY)));
-            mask.resize(width, height);
-            mask.relocate(bounds.getMinX() + diffMinX, bounds.getMinY() + diffMinY);
         }
         return mask;
     }

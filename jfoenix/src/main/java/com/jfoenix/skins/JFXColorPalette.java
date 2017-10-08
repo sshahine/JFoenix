@@ -20,13 +20,13 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.utils.JFXNodeUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
@@ -294,7 +294,7 @@ class JFXColorPalette extends Region {
 
             rectangle.setStrokeType(StrokeType.INSIDE);
 
-            String tooltipStr = JFXColorPickerSkin.tooltipString(color);
+            String tooltipStr = JFXNodeUtils.colorToHex(color);
             Tooltip.install(this, new Tooltip((tooltipStr == null) ? "" : tooltipStr.toUpperCase()));
 
             rectangle.getStyleClass().add("color-rect");

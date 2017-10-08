@@ -20,6 +20,7 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.scene.control.skin.ProgressIndicatorSkin;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -75,7 +76,7 @@ public class JFXProgressBarSkin extends ProgressIndicatorSkin {
 
         clip = new Region();
         clip.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        bar.backgroundProperty().addListener(observable -> updateBackground(bar.getBackground(), clip));
+        bar.backgroundProperty().addListener(observable -> JFXNodeUtils.updateBackground(bar.getBackground(), clip));
 
         getChildren().setAll(track, secondaryBar, bar);
     }
@@ -186,17 +187,6 @@ public class JFXProgressBarSkin extends ProgressIndicatorSkin {
             control.requestLayout();
         }
         wasIndeterminate = isIndeterminate;
-    }
-
-    private void updateBackground(Background background, Region region) {
-        if (background != null && !background.getFills().isEmpty()) {
-            final BackgroundFill[] fills = new BackgroundFill[background.getFills().size()];
-            for (int i = 0; i < background.getFills().size(); i++) {
-                BackgroundFill bf = background.getFills().get(i);
-                fills[i] = new BackgroundFill(Color.BLACK,bf.getRadii(),bf.getInsets());
-            }
-            region.setBackground(new Background(fills));
-        }
     }
 
     @Override
