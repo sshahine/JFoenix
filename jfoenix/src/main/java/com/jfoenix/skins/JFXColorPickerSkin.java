@@ -20,23 +20,21 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXRippler;
-import com.jfoenix.controls.behavior.JFXColorPickerBehavior;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.utils.JFXNodeUtils;
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.scene.control.skin.ComboBoxBaseSkin;
-import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.css.*;
+import javafx.css.converter.BooleanConverter;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.ComboBoxBaseSkin;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -45,12 +43,11 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Shadi Shaheen
  */
-public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
+public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
 
     private Label displayNode;
     private Pane colorBox;
@@ -62,7 +59,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         true);
 
     public JFXColorPickerSkin(final ColorPicker colorPicker) {
-        super(colorPicker, new JFXColorPickerBehavior(colorPicker));
+        super(colorPicker);
 
         // create displayNode
         displayNode = new Label("");
@@ -113,7 +110,8 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         });
 
         // add listeners
-        registerChangeListener(colorPicker.valueProperty(), "VALUE");
+        registerChangeListener(colorPicker.valueProperty(), obs-> updateColor());
+
         colorLabelVisible.addListener(invalidate -> {
             if (displayNode != null) {
                 if (colorLabelVisible.get()) {
@@ -148,13 +146,8 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     protected Node getPopupContent() {
         if (popupContent == null) {
             popupContent = new JFXColorPalette((ColorPicker) getSkinnable());
-            popupContent.setPopupControl(getPopup());
         }
         return popupContent;
-    }
-
-    @Override
-    protected void focusLost() {
     }
 
     @Override
@@ -162,21 +155,6 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         super.show();
         final ColorPicker colorPicker = (ColorPicker) getSkinnable();
         popupContent.updateSelection(colorPicker.getValue());
-    }
-
-    @Override
-    protected void handleControlPropertyChanged(String p) {
-        super.handleControlPropertyChanged(p);
-        if ("SHOWING".equals(p)) {
-            if (getSkinnable().isShowing()) {
-                show();
-            } else if (!popupContent.isCustomColorDialogShowing()) {
-                hide();
-            }
-        } else if ("VALUE".equals(p)) {
-            // change the selected color
-            updateColor();
-        }
     }
 
     @Override
@@ -208,14 +186,6 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
             displayNode.setText(JFXNodeUtils.colorToHex(colorPicker.getValue()));
         } else {
             displayNode.setText("");
-        }
-    }
-
-    public void syncWithAutoUpdate() {
-        if (!getPopup().isShowing() && getSkinnable().isShowing()) {
-            // Popup was dismissed. Maybe user clicked outside or typed ESCAPE.
-            // Make sure JFXColorPickerUI button is in sync.
-            getSkinnable().hide();
         }
     }
 
@@ -268,5 +238,4 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     protected javafx.util.StringConverter<Color> getConverter() {
         return null;
     }
-
 }
