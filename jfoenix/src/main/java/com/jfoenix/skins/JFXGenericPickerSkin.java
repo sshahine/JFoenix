@@ -1,5 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package com.jfoenix.skins;
 
+import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.controls.behavior.JFXGenericPickerBehavior;
 import com.sun.javafx.binding.ExpressionHelper;
 import com.sun.javafx.event.EventHandlerManager;
@@ -17,12 +37,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -72,7 +90,7 @@ public abstract class JFXGenericPickerSkin<T> extends ComboBoxPopupControl<T>{
 
         removeParentPopupHandlers();
 
-        popup = (PopupControl) fieldConsumer.apply(()->ComboBoxPopupControl.class.getDeclaredField("popup"), this);
+        popup = ReflectionHelper.getFieldContent(ComboBoxPopupControl.class, this, "popup");
     }
 
     @Override
@@ -90,38 +108,10 @@ public abstract class JFXGenericPickerSkin<T> extends ComboBoxPopupControl<T>{
      *                                                                         *
      **************************************************************************/
 
-    @FunctionalInterface
-    public interface CheckedSupplier<T> {
-        T get() throws Exception;
-    }
-
-    private BiFunction<CheckedSupplier<Method>, Object, Object> methodConsumer = (methodSupplier, object) -> {
-        try {
-            Method method = methodSupplier.get();
-            method.setAccessible(true);
-            return method.invoke(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    };
-
-    private BiFunction<CheckedSupplier<Field>, Object, Object> fieldConsumer = (fieldSupplier, object) -> {
-        try {
-            Field field = fieldSupplier.get();
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    };
-
     private BiConsumer<String, EventType<?>> parentArrowEventHandlerTerminator = (handlerName, eventType) ->{
         try {
-            Field field = ComboBoxBaseSkin.class.getDeclaredField(handlerName);
-            field.setAccessible(true);
-            arrowButton.removeEventHandler(eventType, (EventHandler) field.get(this));
+            EventHandler handler = ReflectionHelper.getFieldContent(ComboBoxBaseSkin.class, this, handlerName);
+            arrowButton.removeEventHandler(eventType, handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,12 +121,8 @@ public abstract class JFXGenericPickerSkin<T> extends ComboBoxPopupControl<T>{
         // handle FakeFocusField cast exception
         try {
             final ReadOnlyBooleanProperty focusedProperty = comboBoxBase.focusedProperty();
-            Field helper = focusedProperty.getClass().getSuperclass().getDeclaredField("helper");
-            helper.setAccessible(true);
-            ExpressionHelper value = (ExpressionHelper) helper.get(focusedProperty);
-            Field changeListenersField = value.getClass().getDeclaredField("changeListeners");
-            changeListenersField.setAccessible(true);
-            ChangeListener[] changeListeners = (ChangeListener[]) changeListenersField.get(value);
+            ExpressionHelper value = ReflectionHelper.getFieldContent(focusedProperty.getClass().getSuperclass(), focusedProperty, "helper");
+            ChangeListener[] changeListeners = ReflectionHelper.getFieldContent(value.getClass(), value, "changeListeners");
             // remove parent focus listener to prevent editor class cast exception
             for(int i = changeListeners.length - 1; i > 0; i--) {
                 if (changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")) {
@@ -151,17 +137,11 @@ public abstract class JFXGenericPickerSkin<T> extends ComboBoxPopupControl<T>{
 
     private void removeParentPopupHandlers() {
         try {
-            Method getPopupMethod = methodSupplier.apply("getPopup");
-            getPopupMethod.setAccessible(true);
-            PopupControl popup = (PopupControl) getPopupMethod.invoke(this);
+            PopupControl popup = ReflectionHelper.invoke(ComboBoxPopupControl.class, this, "getPopup");
             popup.setOnAutoHide(event -> behavior.onAutoHide(popup));
-
-            WindowEventDispatcher dispatcher = (WindowEventDispatcher)
-                methodConsumer.apply(()->Window.class.getDeclaredMethod("getInternalEventDispatcher"), popup);
-            Map compositeEventHandlersMap = (Map)
-                fieldConsumer.apply(()->EventHandlerManager.class.getDeclaredField("eventHandlerMap"), dispatcher.getEventHandlerManager());
+            WindowEventDispatcher dispatcher = ReflectionHelper.invoke(Window.class, popup, "getInternalEventDispatcher");
+            Map compositeEventHandlersMap = ReflectionHelper.getFieldContent(EventHandlerManager.class, dispatcher.getEventHandlerManager(), "eventHandlerMap");
             compositeEventHandlersMap.remove(MouseEvent.MOUSE_CLICKED);
-
 //            CompositeEventHandler compositeEventHandler = (CompositeEventHandler) compositeEventHandlersMap.get(MouseEvent.MOUSE_CLICKED);
 //            Object obj = fieldConsumer.apply(()->CompositeEventHandler.class.getDeclaredField("firstRecord"),compositeEventHandler);
 //            EventHandler handler = (EventHandler) fieldConsumer.apply(() -> obj.getClass().getDeclaredField("eventHandler"), obj);
@@ -198,8 +178,7 @@ public abstract class JFXGenericPickerSkin<T> extends ComboBoxPopupControl<T>{
     Function<String, Method> methodSupplier = name ->{
         if(!parentCachedMethods.containsKey(name)){
             try {
-                Method method = ComboBoxPopupControl.class.getDeclaredMethod(name);
-                method.setAccessible(true);
+                Method method = ReflectionHelper.getMethod(ComboBoxPopupControl.class, name);
                 parentCachedMethods.put(name, method);
             } catch (Exception e) {
                 e.printStackTrace();

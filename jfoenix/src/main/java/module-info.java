@@ -21,6 +21,7 @@ module com.jfoenix{
     requires javafx.controls;
     requires java.logging;
     requires java.xml;
+    requires jdk.unsupported;
 
     exports com.jfoenix.controls;
     exports com.jfoenix.effects;
