@@ -1204,7 +1204,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             });
             container.setOnMouseReleased(release -> arrowAnimation.stop());
             JFXRippler arrowRippler = new JFXRippler(container, RipplerMask.CIRCLE, RipplerPos.BACK);
-            arrowRippler.ripplerFillProperty().bind(arrowButton.fillProperty());
+            arrowRippler.setRipplerFill(selectedTabText);
             arrowRippler.setPadding(new Insets(0, 5, 0, 5));
 
             inner = new StackPane() {

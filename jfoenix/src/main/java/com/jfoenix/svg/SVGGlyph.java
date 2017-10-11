@@ -25,8 +25,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
 
 /**
  * Node that is used to show svg images
@@ -44,6 +46,9 @@ public class SVGGlyph extends Pane {
     private double widthHeightRatio = 1;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 
+    public SVGGlyph(String svgPathContent, Paint fill) {
+        this(-1, "UNNAMED", svgPathContent, fill);
+    }
     /**
      * Constructs SVGGlyph node for a specified svg content and color
      * <b>Note:</b> name and glyphId is not needed when creating a single SVG image,
@@ -58,10 +63,8 @@ public class SVGGlyph extends Pane {
         this.glyphId = glyphId;
         this.name = name;
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        this.fill.addListener((observable, oldValue, newValue) -> setBackground(new Background(new BackgroundFill(
-            newValue,
-            null,
-            null))));
+        this.fill.addListener((observable) -> setBackground(new Background(
+            new BackgroundFill(getFill() == null ? Color.BLACK : getFill(), null, null))));
 
         SVGPath shape = new SVGPath();
         shape.setContent(svgPathContent);
