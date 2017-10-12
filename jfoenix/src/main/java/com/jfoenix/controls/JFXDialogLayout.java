@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -50,6 +51,7 @@ public class JFXDialogLayout extends StackPane {
         heading.getStyleClass().add("jfx-layout-heading");
         heading.getStyleClass().add("title");
         layout.getChildren().add(body);
+        VBox.setVgrow(body, Priority.ALWAYS);
         body.getStyleClass().add("jfx-layout-body");
         layout.getChildren().add(actions);
         actions.getStyleClass().add("jfx-layout-actions");
