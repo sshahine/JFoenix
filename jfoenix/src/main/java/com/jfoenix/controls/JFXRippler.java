@@ -140,6 +140,7 @@ public class JFXRippler extends StackPane {
 
         setMaskType(mask);
         setPosition(pos);
+        createRippleUI();
         setControl(control);
 
         // listen to control position changed
@@ -152,6 +153,15 @@ public class JFXRippler extends StackPane {
         setSnapToPixel(false);
     }
 
+    protected final void createRippleUI() {
+        // create rippler panels
+        rippler = new RippleGenerator();
+        ripplerPane = new StackPane();
+        ripplerPane.setMouseTransparent(true);
+        ripplerPane.getChildren().add(rippler);
+        getChildren().add(ripplerPane);
+    }
+
     /***************************************************************************
      *                                                                         *
      * Setters / Getters                                                       *
@@ -161,21 +171,19 @@ public class JFXRippler extends StackPane {
     public void setControl(Node control) {
         if (control != null) {
             this.control = control;
-            // create rippler panels
-            rippler = new RippleGenerator();
-            ripplerPane = new StackPane();
-            ripplerPane.setMouseTransparent(true);
-            ripplerPane.getChildren().add(rippler);
-
             // position control
-            if(this.position.get() == RipplerPos.BACK){
-                getChildren().setAll(ripplerPane, control);
-            }else{
-                getChildren().setAll(control, ripplerPane);
-            }
-
+            positionControl(control);
             // add control listeners to generate / release ripples
             initControlListeners();
+        }
+    }
+
+    // Override this method to create JFXRippler for a control outside the ripple
+    protected void positionControl(Node control) {
+        if(this.position.get() == RipplerPos.BACK){
+            getChildren().add(control);
+        }else{
+            getChildren().add(0, control);
         }
     }
 
@@ -215,11 +223,11 @@ public class JFXRippler extends StackPane {
             case RECT:
                 mask = new Rectangle(bounds.getMinX() + diffMinX - snappedLeftInset(),
                     bounds.getMinY() + diffMinY - snappedTopInset(),
-                    width - 0.1 - 2 * borderWidth,
-                    height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
+                    width - 2 * borderWidth,
+                    height - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
                 break;
             case CIRCLE:
-                double radius = Math.min((width / 2) - 0.1 - 2 * borderWidth, (height / 2) - 0.1 - 2 * borderWidth);
+                double radius = Math.min((width / 2) - 2 * borderWidth, (height / 2) - 2 * borderWidth);
                 mask = new Circle((bounds.getMinX() + diffMinX + bounds.getMaxX() - diffMaxX) / 2 - snappedLeftInset(),
                     (bounds.getMinY() + diffMinY + bounds.getMaxY() - diffMaxY) / 2 - snappedTopInset(),
                     radius,
@@ -239,8 +247,8 @@ public class JFXRippler extends StackPane {
             default:
                 mask = new Rectangle(bounds.getMinX() + diffMinX - snappedLeftInset(),
                     bounds.getMinY() + diffMinY - snappedTopInset(),
-                    width - 0.1 - 2 * borderWidth,
-                    height - 0.1 - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
+                    width - 2 * borderWidth,
+                    height - 2 * borderWidth); // -0.1 to prevent resizing the anchor pane
                 break;
         }
         return mask;
@@ -261,14 +269,9 @@ public class JFXRippler extends StackPane {
      */
     protected void initControlListeners() {
         // if the control got resized the overlay rect must be rest
-        control.layoutBoundsProperty().addListener(observable -> {
-            resetOverLay();
-            resetClip();
-        });
-        control.boundsInParentProperty().addListener(observable -> {
-            resetOverLay();
-            resetClip();
-        });
+        control.layoutBoundsProperty().addListener(observable -> resetRippler());
+        if(getChildren().contains(control))
+            control.boundsInParentProperty().addListener(observable -> resetRippler());
         control.addEventHandler(MouseEvent.MOUSE_PRESSED,
             (event) -> createRipple(event.getX(), event.getY()));
     }
@@ -446,6 +449,7 @@ public class JFXRippler extends StackPane {
             cacheRipplerClip = cached;
         }
 
+
         void createOverlay() {
             if (overlayRect == null) {
                 overlayRect = new OverLayRipple();
@@ -490,14 +494,16 @@ public class JFXRippler extends StackPane {
             }};
 
             OverLayRipple() {
-                super(control.getLayoutBounds().getWidth() - 0.1, control.getLayoutBounds().getHeight() - 0.1);
+                super(control.getLayoutBounds().getWidth(), control.getLayoutBounds().getHeight());
                 this.getStyleClass().add("jfx-rippler-overlay");
                 // update initial position
-                double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
-                double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
-                Bounds bounds = control.getBoundsInParent();
-                this.setX(bounds.getMinX() + diffMinX - snappedLeftInset());
-                this.setY(bounds.getMinY() + diffMinY - snappedTopInset());
+                if(JFXRippler.this.getChildrenUnmodifiable().contains(control)) {
+                    double diffMinX = Math.abs(control.getBoundsInLocal().getMinX() - control.getLayoutBounds().getMinX());
+                    double diffMinY = Math.abs(control.getBoundsInLocal().getMinY() - control.getLayoutBounds().getMinY());
+                    Bounds bounds = control.getBoundsInParent();
+                    this.setX(bounds.getMinX() + diffMinX - snappedLeftInset());
+                    this.setY(bounds.getMinY() + diffMinY - snappedTopInset());
+                }
                 // set initial attributes
                 this.setOpacity(0);
                 setCache(true);
@@ -600,6 +606,11 @@ public class JFXRippler extends StackPane {
 
     private void resetClip() {
         this.rippler.resetClip = true;
+    }
+
+    protected void resetRippler() {
+        resetOverLay();
+        resetClip();
     }
 
     /***************************************************************************
