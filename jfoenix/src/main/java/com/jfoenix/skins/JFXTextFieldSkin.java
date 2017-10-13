@@ -80,10 +80,10 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 
     private final Rectangle errorContainerClip = new Rectangle();
     private final Scale errorClipScale = new Scale(1, 0, 0, 0);
-    private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80), new
-        KeyValue(errorContainer.opacityProperty(), 0, Interpolator.LINEAR)));
-    private Timeline errorShowTransition = new Timeline(new KeyFrame(Duration.millis(80), new
-        KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_OUT)));
+    private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80),
+        new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.LINEAR)));
+    private Timeline errorShowTransition = new Timeline(new KeyFrame(Duration.millis(80),
+        new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_OUT)));
     private Timeline scale1 = new Timeline();
     private Timeline scaleLess1 = new Timeline();
 
@@ -335,7 +335,6 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 animatedPromptTextFill.set(((IFXTextInputControl) getSkinnable()).getFocusColor());
             }
         }
-
         if (invalid) {
             invalid = false;
             animatedPromptTextFill.set(promptTextFill.get());
@@ -370,10 +369,16 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         line.resizeRelocate(x, height, w, line.prefHeight(-1));
         errorContainer.relocate(x, height + focusedLineHeight);
         // resize error container if animation is disabled
-        if (((IFXTextInputControl) getSkinnable()).isDisableAnimation()) {
+        if (((IFXTextInputControl) getSkinnable()).isDisableAnimation() || isErrorVisible()) {
             errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
         }
         scale.setPivotX(w / 2);
+    }
+
+    private boolean isErrorVisible() {
+        return errorContainer.isVisible()
+           && errorShowTransition.getStatus().equals(Animation.Status.STOPPED)
+           && errorHideTransition.getStatus().equals(Animation.Status.STOPPED);
     }
 
     private double computeErrorWidth(double w) {
