@@ -1,13 +1,12 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.css.converters.SizeConverter;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableDoubleProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableDoubleProperty;
+import javafx.css.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -20,33 +19,49 @@ import java.util.List;
 
 public class JFXTreeViewPath extends ScrollPane {
 
+    private PseudoClass firstClass = PseudoClass.getPseudoClass("first");
+    private PseudoClass nextClass = PseudoClass.getPseudoClass("next");
+    private PseudoClass lastClass = PseudoClass.getPseudoClass("last");
+    private Region clip = new Region();
+
     private HBox container = new HBox();
+
     private double lastX;
 
     public JFXTreeViewPath(TreeView<?> treeView) {
 
         getStyleClass().add(DEFAULT_STYLE_CLASS);
 
-        container.getStyleClass().add("buttons-container");
+        setClip(clip);
+        clip.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(3), Insets.EMPTY)));
+        backgroundProperty().addListener(observable -> JFXNodeUtils.updateBackground(getBackground(), clip));
 
+        container.getStyleClass().add("buttons-container");
+        container.getChildren().add(new Label("Select a tree item"));
+        container.widthProperty().addListener(observable -> setHvalue(getHmax()));
         setContent(container);
         setPannable(true);
         setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setFitToHeight(true);
         treeView.getSelectionModel().selectedItemProperty().addListener(observable -> {
-            TreeItem temp = treeView.getSelectionModel().getSelectedItem();
+            TreeItem selectedItem = treeView.getSelectionModel().getSelectedItem();
+            TreeItem temp = selectedItem;
+            int level = treeView.getTreeItemLevel(temp) - (treeView.isShowRoot() ? 0 : 1);
             if (temp != null) {
-                container.getChildren().clear();
+                List<Node> newPath = new ArrayList<>();
                 while (temp != null) {
                     if (temp.getParent() != null) {
                         Button button = null;
                         if (temp.getParent().getParent() == null) {
                             button = createFirstButton(temp);
+                            button.pseudoClassStateChanged(firstClass, true);
                         } else if (temp.isLeaf()) {
                             button = createLastButton(temp);
+                            button.pseudoClassStateChanged(lastClass, true);
                         } else {
                             button = createNextButton(temp);
+                            button.pseudoClassStateChanged(nextClass, true);
                         }
                         final TreeItem node = temp;
                         button.setOnAction(action -> treeView.scrollTo(treeView.getRow(node)));
@@ -54,20 +69,20 @@ public class JFXTreeViewPath extends ScrollPane {
                         container.setPickOnBounds(false);
 
                         if (temp.getParent().getParent() != null) {
-                            container.setTranslateX(-getOffset());
+                            container.setTranslateX((-getOffset()-1) * level--);
                         }
-                        if (!temp.isLeaf()) {
+                        if (temp!=selectedItem) {
                             final SVGGlyph arrow = new SVGGlyph("M366 698l196-196-196-196 60-60 256 256-256 256z", Color.BLACK);
-                            arrow.setWidthSizeRatio(4);
+                            arrow.setSizeForWidth(6);
                             arrow.setMouseTransparent(true);
                             StackPane.setAlignment(arrow, Pos.CENTER_RIGHT);
                             container.getChildren().add(arrow);
                         }
-                        this.container.getChildren().add(0, container);
+                        newPath.add(0, container);
                     }
                     temp = temp.getParent();
                 }
-                setHvalue(1);
+                container.getChildren().setAll(newPath);
             }
         });
 
@@ -83,6 +98,12 @@ public class JFXTreeViewPath extends ScrollPane {
         });
 
         JFXScrollPane.smoothHScrolling(this);
+    }
+
+    @Override
+    protected void layoutChildren() {
+        super.layoutChildren();
+        clip.resizeRelocate(0,0,getWidth(), getHeight());
     }
 
     /**
