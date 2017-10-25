@@ -32,6 +32,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,11 +74,21 @@ public class SVGGlyph extends Pane {
         this.fill.addListener((observable) -> setBackground(new Background(
             new BackgroundFill(getFill() == null ? Color.BLACK : getFill(), null, null))));
 
+        shapeProperty().addListener(observable -> {
+            Shape shape = getShape();
+            if(getShape()!=null){
+                widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
+                if(getSize() != Region.USE_COMPUTED_SIZE){
+                    setSizeRatio(getSize());
+                }
+            }
+        });
+
         SVGPath shape = new SVGPath();
         shape.setContent(svgPathContent);
         setShape(shape);
+
         setFill(fill);
-        widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
         setPrefSize(DEFAULT_PREF_SIZE, DEFAULT_PREF_SIZE);
     }
 
