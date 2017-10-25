@@ -283,33 +283,36 @@ public class JFXSnackbar extends StackPane {
     }
 
     public void close() {
-        openAnimation.stop();
-        Timeline closeAnimation = new Timeline(
-            new KeyFrame(
-                Duration.ZERO,
-                e -> popup.toFront(),
-                new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-            ),
-            new KeyFrame(
-                Duration.millis(290),
-                new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
-            ),
-            new KeyFrame(Duration.millis(300),
-                e -> popup.toBack(),
-                new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                new KeyValue(popup.translateYProperty(),
-                    popup.getLayoutBounds().getHeight(),
-                    easeInterpolator),
-                new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
-            )
-        );
-        closeAnimation.setCycleCount(1);
-        closeAnimation.setOnFinished(e -> {
-            resetPseudoClass();
-            processSnackbars();
-        });
-        closeAnimation.play();
+        if(openAnimation!=null)
+            openAnimation.stop();
+        if (popup.isVisible()) {
+            Timeline closeAnimation = new Timeline(
+                new KeyFrame(
+                    Duration.ZERO,
+                    e -> popup.toFront(),
+                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                ),
+                new KeyFrame(
+                    Duration.millis(290),
+                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                ),
+                new KeyFrame(Duration.millis(300),
+                    e -> popup.toBack(),
+                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(popup.translateYProperty(),
+                        popup.getLayoutBounds().getHeight(),
+                        easeInterpolator),
+                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                )
+            );
+            closeAnimation.setCycleCount(1);
+            closeAnimation.setOnFinished(e -> {
+                resetPseudoClass();
+                processSnackbars();
+            });
+            closeAnimation.play();
+        }
     }
 
     private void resetPseudoClass() {
