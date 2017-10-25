@@ -98,12 +98,14 @@ public class JFXButtonSkin extends ButtonSkin {
 
         // show focused state
         button.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                if (!getSkinnable().isPressed()) {
-                    buttonRippler.setOverlayVisible(true);
+            if(!button.disableVisualFocusProperty().get()){
+                if (newVal){
+                    if (!getSkinnable().isPressed()){
+                        buttonRippler.setOverlayVisible(true);
+                    }
+                } else{
+                    buttonRippler.setOverlayVisible(false);
                 }
-            } else {
-                buttonRippler.setOverlayVisible(false);
             }
         });
 

@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
@@ -169,6 +170,26 @@ public class JFXButton extends Button {
         this.buttonType.set(type);
     }
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXButton.this,
+        "disableVisualFocus",
+        false);
+
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
+
     private static class StyleableProperties {
         private static final CssMetaData<JFXButton, ButtonType> BUTTON_TYPE =
             new CssMetaData<JFXButton, ButtonType>("-jfx-button-type",
@@ -184,13 +205,27 @@ public class JFXButton extends Button {
                 }
             };
 
+        private static final CssMetaData<JFXButton, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXButton, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXButton control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXButton control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
+
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                BUTTON_TYPE
+                BUTTON_TYPE,DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
