@@ -103,12 +103,12 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
-        cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
         if (!getChildren().contains(selectedPane)) {
             getChildren().add(0, cellRippler);
             cellRippler.rippler.clear();
             getChildren().add(0, selectedPane);
         }
+        cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
         selectedPane.resizeRelocate(0, 0, selectedPane.prefWidth(-1), getHeight());
         selectedPane.setVisible(isSelected() ? true : false);
     }
@@ -150,8 +150,6 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
         updateDisplay(item, empty);
-        if (item != null && !empty) {
-            cellRippler.rippler.cacheRippleClip(false);
-        }
+        setMouseTransparent(item == null || empty);
     }
 }
