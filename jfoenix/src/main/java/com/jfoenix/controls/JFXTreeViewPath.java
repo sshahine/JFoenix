@@ -37,7 +37,8 @@ public class JFXTreeViewPath extends ScrollPane {
         backgroundProperty().addListener(observable -> JFXNodeUtils.updateBackground(getBackground(), clip));
 
         container.getStyleClass().add("buttons-container");
-        container.getChildren().add(new Label("Select a tree item"));
+        container.getChildren().add(new Label("Selection Path..."));
+        container.setAlignment(Pos.CENTER_LEFT);
         container.widthProperty().addListener(observable -> setHvalue(getHmax()));
         setContent(container);
         setPannable(true);
@@ -51,14 +52,15 @@ public class JFXTreeViewPath extends ScrollPane {
             if (temp != null) {
                 List<Node> newPath = new ArrayList<>();
                 while (temp != null) {
-                    if (temp.getParent() != null) {
+                    TreeItem parent = treeView.isShowRoot() ? temp : temp.getParent();
+                    if (parent != null) {
                         Button button = null;
-                        if (temp.getParent().getParent() == null) {
+                        if (temp.isLeaf()) {
+                            button = createLastButton(temp, parent.getParent());
+                            button.pseudoClassStateChanged(lastClass, true);
+                        } else if (parent.getParent() == null) {
                             button = createFirstButton(temp);
                             button.pseudoClassStateChanged(firstClass, true);
-                        } else if (temp.isLeaf()) {
-                            button = createLastButton(temp);
-                            button.pseudoClassStateChanged(lastClass, true);
                         } else {
                             button = createNextButton(temp);
                             button.pseudoClassStateChanged(nextClass, true);
@@ -68,7 +70,7 @@ public class JFXTreeViewPath extends ScrollPane {
                         final StackPane container = new StackPane(button);
                         container.setPickOnBounds(false);
 
-                        if (temp.getParent().getParent() != null) {
+                        if (parent.getParent() != null) {
                             container.setTranslateX((-getOffset()-1) * level--);
                         }
                         if (temp!=selectedItem) {
@@ -169,10 +171,11 @@ public class JFXTreeViewPath extends ScrollPane {
         };
     }
 
-    private JFXButton createLastButton(TreeItem temp) {
+    private JFXButton createLastButton(TreeItem temp, TreeItem parent) {
         return new JFXButton(temp.getValue().toString()) {
+            private boolean noParent = parent == null;
             {
-                setPadding(new Insets(getOffset(), getOffset(), getOffset(), 2 * getOffset()));
+                setPadding(new Insets(getOffset(), getOffset(), getOffset(), (noParent? 1 : 2) * getOffset()));
                 setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
             }
 
@@ -187,7 +190,7 @@ public class JFXTreeViewPath extends ScrollPane {
                     width, 0.0,
                     width, height,
                     0.0, height,
-                    getOffset(), height / 2});
+                    noParent ? 0 : getOffset(), noParent ? 0 : height / 2});
                 setClip(polygon);
             }
         };
