@@ -388,10 +388,10 @@ public class JFXRippler extends StackPane {
                     ripple.inAnimation.getAnimation().play();
 
                     // create fade out transition for the ripple
-                    control.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+                    control.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent e) {
-                            control.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
+                            control.removeEventFilter(MouseEvent.MOUSE_RELEASED, this);
                             releaseRipple(ripple);
                         }
                     });
