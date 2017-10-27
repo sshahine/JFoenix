@@ -294,7 +294,7 @@ public class JFXRippler extends StackPane {
     public Runnable createManualRipple() {
         rippler.setGeneratorCenterX(control.getLayoutBounds().getWidth() / 2);
         rippler.setGeneratorCenterY(control.getLayoutBounds().getHeight() / 2);
-         return rippler.createManualRipple();
+        return rippler.createManualRipple();
     }
 
     /**
@@ -388,10 +388,10 @@ public class JFXRippler extends StackPane {
                     ripple.inAnimation.getAnimation().play();
 
                     // create fade out transition for the ripple
-                    control.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+                    control.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent e) {
-                            control.removeEventFilter(MouseEvent.MOUSE_RELEASED, this);
+                            control.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
                             releaseRipple(ripple);
                         }
                     });
@@ -400,18 +400,17 @@ public class JFXRippler extends StackPane {
         }
 
         private void releaseRipple(Ripple ripple) {
+            ripple.inAnimation.getAnimation().stop();
+            ripple.outAnimation = new CachedAnimation(new Timeline(
+                new KeyFrame(Duration.millis(Math.min(800, (0.9 * 500) / ripple.getScaleX()))
+                    , ripple.outKeyValues)), this);
+            ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
+            ripple.outAnimation.getAnimation().play();
             if (generating.getAndSet(false)) {
                 if (overlayRect != null) {
                     overlayRect.inAnimation.stop();
-                }
-                ripple.inAnimation.getAnimation().stop();
-                ripple.outAnimation = new CachedAnimation(new Timeline(
-                    new KeyFrame(Duration.millis(Math.min(800, (0.9 * 500) / ripple.getScaleX()))
-                        , ripple.outKeyValues)), this);
-                ripple.outAnimation.getAnimation().setOnFinished((event) -> getChildren().remove(ripple));
-                ripple.outAnimation.getAnimation().play();
-                if (overlayRect != null && !forceOverlay) {
-                    overlayRect.outAnimation.play();
+                    if(!forceOverlay)
+                        overlayRect.outAnimation.play();
                 }
             }
         }
