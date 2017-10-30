@@ -23,6 +23,7 @@
 
 # Using JFoenix already?
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github/website.
+* One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
 # Build
 To build JFoenix, execute the following command:
