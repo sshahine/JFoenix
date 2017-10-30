@@ -19,7 +19,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.scenicview.ScenicView;
 
 import java.lang.reflect.Field;
 import java.util.List;
