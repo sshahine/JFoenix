@@ -19,22 +19,22 @@
 
 package com.jfoenix.controls;
 
+import javafx.animation.*;
 import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * list of nodes that are toggled On/Off by clicking on the 1st node
@@ -45,7 +45,7 @@ import java.util.HashMap;
  */
 public class JFXNodesList extends VBox {
 
-    private final HashMap<Node, Callback<Boolean, Collection<KeyValue>>> animationsMap = new HashMap<>();
+    private final HashMap<Node, BiFunction<Boolean, Duration, Collection<KeyFrame>>> animationsMap = new HashMap<>();
     private boolean expanded = false;
     private final Timeline animateTimeline = new Timeline();
 
@@ -53,8 +53,8 @@ public class JFXNodesList extends VBox {
      * Creates empty nodes list.
      */
     public JFXNodesList() {
-        this.setPickOnBounds(false);
-        this.getStyleClass().add("jfx-nodes-list");
+        setPickOnBounds(false);
+        getStyleClass().add("jfx-nodes-list");
     }
 
     /**
@@ -73,40 +73,42 @@ public class JFXNodesList extends VBox {
      *
      * @param node {@link Region} to add
      */
-    public void addAnimatedNode(Region node, Callback<Boolean, Collection<KeyValue>> animationCallBack) {
+    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction) {
         // create container for the node if it's a sub nodes list
         if (node instanceof JFXNodesList) {
             StackPane container = new StackPane(node);
             container.setPickOnBounds(false);
-            addAnimatedNode(container, animationCallBack);
+            addAnimatedNode(container, animationFramesFunction);
             return;
         }
 
         // init node property
-        node.setVisible(false);
-        if (this.getChildren().size() > 0) {
+        if (getChildren().size() > 0) {
             initNode(node);
+            node.setVisible(false);
         } else {
             if (node instanceof Button) {
-                ((Button) node).setOnAction((action) -> this.animateList());
+                node.addEventHandler(ActionEvent.ACTION, event -> animateList());
             } else {
-                node.setOnMouseClicked((click) -> this.animateList());
+                node.addEventHandler(MouseEvent.MOUSE_CLICKED, event-> animateList());
             }
             node.getStyleClass().add("trigger-node");
             node.setVisible(true);
         }
 
         // add the node and its listeners
-        this.getChildren().add(node);
-        this.rotateProperty()
-            .addListener((o, oldVal, newVal) -> node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal
-                .doubleValue()));
-        if (animationCallBack == null && this.getChildren().size() != 1) {
-            animationCallBack = (expanded) -> initDefaultAnimation(node, expanded);
-        } else if (animationCallBack == null && this.getChildren().size() == 1) {
-            animationCallBack = (expanded) -> new ArrayList<>();
+        getChildren().add(node);
+        rotateProperty()
+            .addListener((o, oldVal, newVal) ->
+                node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal.doubleValue()));
+
+        if (animationFramesFunction == null && getChildren().size() != 1) {
+            animationFramesFunction = initDefaultAnimation(node);
+        } else if (animationFramesFunction == null && getChildren().size() == 1) {
+            animationFramesFunction = (aBoolean, duration) -> new ArrayList<>();
         }
-        animationsMap.put(node, animationCallBack);
+
+        animationsMap.put(node, animationFramesFunction);
     }
 
     @Override
@@ -145,62 +147,88 @@ public class JFXNodesList extends VBox {
         return computePrefWidth(height);
     }
 
+    @Override
+    protected void layoutChildren() {
+        super.layoutChildren();
+        List<Node> managed = getChildren();
+        managed.forEach(child -> child.autosize());
+    }
+
     /**
      * Animates the list to show/hide the nodes.
      */
     public void animateList() {
         expanded = !expanded;
-
         if (animateTimeline.getStatus() == Status.RUNNING) {
             animateTimeline.stop();
         }
-
         animateTimeline.getKeyFrames().clear();
-        double duration = 120 / (double) this.getChildren().size();
+        createAnimation(expanded, animateTimeline);
+        animateTimeline.play();
+    }
 
+    public void animateList(boolean expand){
+        if ((expanded && !expand) || (!expanded && expand)) {
+            animateList();
+        }
+    }
+
+    public boolean isExpanded(){
+        return expanded;
+    }
+
+    public Animation getListAnimation(boolean expanded){
+        Timeline animation = new Timeline();
+        createAnimation(expanded, animation);
+        return animation;
+    }
+
+    private void createAnimation(boolean expanded, Timeline animation) {
+        double duration = 160 / (double) getChildren().size();
         // show child nodes
         if (expanded) {
-            this.getChildren().forEach(child -> child.setVisible(true));
+            getChildren().forEach(child -> child.setVisible(true));
         }
 
         // add child nodes animation
-        for (int i = 1; i < this.getChildren().size(); i++) {
-            Node child = this.getChildren().get(i);
-            Collection<KeyValue> keyValues = animationsMap.get(child).call(expanded);
-            animateTimeline.getKeyFrames()
-                .add(new KeyFrame(Duration.millis(i * duration),
-                    keyValues.toArray(new KeyValue[keyValues.size()])));
+        for (int i = 1; i < getChildren().size(); i++) {
+            Node child = getChildren().get(i);
+            Collection<KeyFrame> frames = animationsMap.get(child).apply(expanded, Duration.millis(i * duration));
+            animation.getKeyFrames().addAll(frames);
         }
         // add 1st element animation
-        Collection<KeyValue> keyValues = animationsMap.get(this.getChildren().get(0)).call(expanded);
-        animateTimeline.getKeyFrames()
-            .add(new KeyFrame(Duration.millis(160), keyValues.toArray(new KeyValue[keyValues.size()])));
+        Collection<KeyFrame> frames = animationsMap.get(getChildren().get(0)).apply(expanded, Duration.millis(160));
+        animation.getKeyFrames().addAll(frames);
 
         // hide child nodes to allow mouse events on the nodes behind them
         if (!expanded) {
-            animateTimeline.setOnFinished((finish) -> {
-                for (int i = 1; i < this.getChildren().size(); i++) {
-                    this.getChildren().get(i).setVisible(false);
+            animation.setOnFinished((finish) -> {
+                for (int i = 1; i < getChildren().size(); i++) {
+                    getChildren().get(i).setVisible(false);
                 }
             });
         } else {
-            animateTimeline.setOnFinished(null);
+            animation.setOnFinished(null);
         }
+    }
 
-        animateTimeline.play();
+    private BiFunction<Boolean, Duration, Collection<KeyFrame>> initDefaultAnimation(Node child) {
+        return (expanded, duration) -> {
+            ArrayList<KeyFrame> frames = new ArrayList<>();
+            frames.add(new KeyFrame(duration, event -> {
+                child.setScaleX(expanded ? 1 : 0);
+                child.setScaleY(expanded ? 1 : 0);
+            },
+                new KeyValue(child.scaleXProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH),
+                new KeyValue(child.scaleYProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH)
+            ));
+            return frames;
+        };
     }
 
     protected void initNode(Node node) {
         node.setScaleX(0);
         node.setScaleY(0);
         node.getStyleClass().add("sub-node");
-    }
-
-    // init default animation keyvalues
-    private ArrayList<KeyValue> initDefaultAnimation(Region region, boolean expanded) {
-        ArrayList<KeyValue> defaultAnimationValues = new ArrayList<>();
-        defaultAnimationValues.add(new KeyValue(region.scaleXProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH));
-        defaultAnimationValues.add(new KeyValue(region.scaleYProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH));
-        return defaultAnimationValues;
     }
 }
