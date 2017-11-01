@@ -92,10 +92,12 @@ public class JFXDrawersStack extends StackPane {
         drawer.setPickOnBounds(false);
 
         JFXNodeUtils.addPressAndHoldHandler(drawer.sidePane, Duration.millis(300), event -> {
-            drawer.bringToFront((param) -> {
-                drawer.toFront();
-                return param;
-            });
+            if (getChildren().indexOf(drawer) != getChildren().size() - 1) {
+                drawer.bringToFront((param) -> {
+                    drawer.toFront();
+                    return param;
+                });
+            }
         });
     }
 
