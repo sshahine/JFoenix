@@ -9,21 +9,16 @@ import javafx.animation.KeyValue;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.scenicview.ScenicView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.singletonList;
 
 
 public class NodesListDemo extends Application {
