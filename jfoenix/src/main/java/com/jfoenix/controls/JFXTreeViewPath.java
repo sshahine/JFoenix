@@ -2,8 +2,8 @@ package com.jfoenix.controls;
 
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.utils.JFXNodeUtils;
-import com.sun.javafx.css.converters.SizeConverter;
 import javafx.css.*;
+import javafx.css.converter.SizeConverter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
