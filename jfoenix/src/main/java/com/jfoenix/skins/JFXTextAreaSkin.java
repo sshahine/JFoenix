@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.transitions.JFXAnimationTimer;
@@ -44,6 +45,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
+import sun.reflect.Reflection;
 
 import java.lang.reflect.Field;
 
@@ -424,28 +426,10 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                 if (((Region) scrollPane.getContent()).getChildrenUnmodifiable().get(0) instanceof Text) {
                     promptText = (Text) ((Region) scrollPane.getContent()).getChildrenUnmodifiable().get(0);
                 } else {
-                    Field field;
-                    try {
-                        field = TextAreaSkin.class.getDeclaredField("promptNode");
-                        field.setAccessible(true);
-                        createPromptNode();
-                        field.set(this, promptText);
-                        // replace parent promptNode with promptText field
-                        triggerFloatLabel = true;
-                        oldPromptTextFill = getPromptTextFill();
-                    } catch (NoSuchFieldException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (SecurityException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                    createPromptNode();
+                    ReflectionHelper.setFieldContent(TextAreaSkin.class, this, "promptNode", promptText);
+                    triggerFloatLabel = true;
+                    oldPromptTextFill = getPromptTextFill();
                 }
                 // fixed issue text area is being resized when the content is excedeing its width
                 promptText.wrappingWidthProperty().addListener((o, oldval, newVal) -> {

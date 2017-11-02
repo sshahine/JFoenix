@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.IFXTextInputControl;
 import com.jfoenix.transitions.JFXAnimationTimer;
@@ -424,17 +425,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 if (textPane.getChildren().get(0) instanceof Text) {
                     promptText = (Text) textPane.getChildren().get(0);
                 } else {
-                    Field field;
-                    try {
-                        field = TextFieldSkin.class.getDeclaredField("promptNode");
-                        field.setAccessible(true);
-                        createPromptNode();
-                        field.set(this, promptText);
-                        // replace parent promptNode with promptText field
-                        triggerFloatLabel = true;
-                    } catch (NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException ex) {
-                        ex.printStackTrace();
-                    }
+                    createPromptNode();
+                    ReflectionHelper.setFieldContent(TextFieldSkin.class, this,"promptNode", promptText);
                 }
                 promptText.fillProperty().bind(animatedPromptTextFill);
                 promptText.getTransforms().add(promptTextScale);
