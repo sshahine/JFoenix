@@ -19,27 +19,21 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.controls.JFXTreeView.CellAnimation;
-import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import com.jfoenix.utils.JFXNodeUtils;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
-import javafx.beans.value.ChangeListener;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.skin.VirtualFlow;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.lang.ref.WeakReference;
 
 /**
- * JFXTreeCell is the animated material design implementation of a tree cell.
+ * JFXTreeCell is simple material design implementation of a tree cell.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -47,77 +41,55 @@ import java.lang.ref.WeakReference;
  */
 public class JFXTreeCell<T> extends TreeCell<T> {
 
-    protected JFXRippler cellRippler = new JFXRippler(new StackPane());
-    private HBox hbox;
-    private StackPane selectedPane = new StackPane();
+    protected JFXRippler cellRippler = new JFXRippler(this){
+        @Override
+        protected Node getMask() {
+            Region clip = new Region();
+            JFXNodeUtils.updateBackground(JFXTreeCell.this.getBackground(), clip);
+            double width = control.getLayoutBounds().getWidth();
+            double height = control.getLayoutBounds().getHeight();
+            clip.resize(width, height);
+            return clip;
+        }
 
-
-    private WeakReference<TreeItem<T>> treeItemRef;
-
-    private ChangeListener<Boolean> weakExpandListener = (ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-        if(getTreeItem()!=null){
-            JFXTreeView<T> jfxTreeView = (JFXTreeView<T>) getTreeView();
-            jfxTreeView.clearAnimation();
-            int currentRow = getTreeView().getRow(getTreeItem());
-            jfxTreeView.animateRow = currentRow;
-            jfxTreeView.expand = newValue;
-            jfxTreeView.disableSiblings = false;
-
-            VirtualFlow<?> vf = (VirtualFlow<?>) getTreeView().lookup(".virtual-flow");
-            if (!newValue) {
-                int index = currentRow + getTreeItem().getChildren().size() + 1;
-                index = index > vf.getCellCount() ? vf.getCellCount() : index;
-                jfxTreeView.height = (index - currentRow - 1) * vf.getCell(currentRow).getHeight();
-            }
-            jfxTreeView.layoutY = vf.getCell(currentRow).getLayoutY();
+        @Override
+        protected void initControlListeners() {
+            control.layoutBoundsProperty().addListener(observable -> resetRippler());
+            control.addEventFilter(MouseEvent.MOUSE_PRESSED,
+                (event) -> createRipple(event.getX(), event.getY()));
+        }
+        @Override
+        protected void positionControl(Node control) {
+            // do nothing
         }
     };
+    private HBox hbox;
+    private StackPane selectedPane = new StackPane();
 
     private InvalidationListener treeItemGraphicInvalidationListener = observable -> updateDisplay(getItem(),
         isEmpty());
     private WeakInvalidationListener weakTreeItemGraphicListener = new WeakInvalidationListener(
         treeItemGraphicInvalidationListener);
 
-    private ChangeListener<? super Status> weakAnimationListener = (o, oldVal, newVal) -> {
-        if (newVal == Status.STOPPED) {
-            clearCellAnimation();
-        }
-    };
-
-    private WeakReference<JFXTreeView<T>> treeViewRef;
+    private WeakReference<TreeItem<T>> treeItemRef;
 
     public JFXTreeCell() {
-        selectedPane.setStyle("-fx-background-color:RED");
+
+        selectedPane.getStyleClass().add("selection-bar");
+        selectedPane.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         selectedPane.setPrefWidth(3);
         selectedPane.setMouseTransparent(true);
-        selectedProperty().addListener((o, oldVal, newVal) -> {
-            selectedPane.setOpacity(newVal ? 1 : 0);
-        });
+        selectedProperty().addListener((o, oldVal, newVal) -> selectedPane.setVisible(newVal ? true : false));
 
-        final InvalidationListener treeViewInvalidationListener = observable -> {
-            JFXTreeView<T> oldTreeView = treeViewRef == null ? null : treeViewRef.get();
-            if (oldTreeView != null) {
-                oldTreeView.trans.statusProperty().removeListener(weakAnimationListener);
-            }
-            JFXTreeView<T> newTreeView = (JFXTreeView<T>) getTreeView();
-            if (newTreeView != null) {
-                newTreeView.trans.statusProperty().addListener(weakAnimationListener);
-                treeViewRef = new WeakReference<>(newTreeView);
-            }
-        };
-        final WeakInvalidationListener weakTreeViewListener = new WeakInvalidationListener(treeViewInvalidationListener);
-        treeViewProperty().addListener(weakTreeViewListener);
         final InvalidationListener treeItemInvalidationListener = observable -> {
             TreeItem<T> oldTreeItem = treeItemRef == null ? null : treeItemRef.get();
             if (oldTreeItem != null) {
                 oldTreeItem.graphicProperty().removeListener(weakTreeItemGraphicListener);
-                oldTreeItem.expandedProperty().removeListener(weakExpandListener);
             }
 
             TreeItem<T> newTreeItem = getTreeItem();
             if (newTreeItem != null) {
                 newTreeItem.graphicProperty().addListener(weakTreeItemGraphicListener);
-                newTreeItem.expandedProperty().addListener(weakExpandListener);
                 treeItemRef = new WeakReference<>(newTreeItem);
             }
         };
@@ -129,82 +101,16 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     }
 
     @Override
-    public void updateIndex(int i) {
-        JFXTreeView<T> jfxTreeView = (JFXTreeView<T>) getTreeView();
-        if (jfxTreeView.animateRow != -1 && i != -1) {
-            int oldIndex = getIndex();
-            if (oldIndex == -1 || (oldIndex > 0 && i > 0 && oldIndex != i)) {
-                if (jfxTreeView.sibRow == -1) {
-                    if (jfxTreeView.getTreeItem(i) != null
-                        && jfxTreeView.getTreeItem(jfxTreeView.animateRow) != null
-                        && i > jfxTreeView.animateRow
-                        && jfxTreeView.getTreeItem(i).getParent() == jfxTreeView.getTreeItem(jfxTreeView.animateRow)
-                        .getParent()) {
-                        jfxTreeView.sibRow = i;
-                        if (jfxTreeView.expand) {
-                            jfxTreeView.height = -(jfxTreeView.sibRow - jfxTreeView.animateRow - 1) * getHeight();
-                        }
-                    }
-                }
-                if (jfxTreeView.getTreeItem(i) != null
-                    && jfxTreeView.getTreeItem(i) == jfxTreeView.getTreeItem(jfxTreeView.animateRow)) {
-                    if (i * this.getHeight() != jfxTreeView.layoutY) {
-                        jfxTreeView.disableSiblings = true;
-                        for (int index : jfxTreeView.sibAnimationMap.keySet()) {
-                            if (index > i) {
-                                jfxTreeView.trans.getChildren()
-                                    .remove(jfxTreeView.sibAnimationMap.get(index).getAnimation());
-                                jfxTreeView.sibAnimationMap.get(index).getCell().clearCellAnimation();
-                            }
-                        }
-                        jfxTreeView.sibAnimationMap.clear();
-                    }
-                }
-                if (i > jfxTreeView.animateRow) {
-                    if (jfxTreeView.expand) {
-                        // animate siblings
-                        if (i >= jfxTreeView.sibRow && jfxTreeView.sibRow != -1) {
-                            animateSibling(i, jfxTreeView);
-                        }
-                        // animate children
-                        else {
-                            animateChild(i, jfxTreeView);
-                        }
-                    } else {
-                        // animate siblings
-                        animateSibling(i, jfxTreeView);
-                    }
-                }
-            }
-        }
-        super.updateIndex(i);
-    }
-
-    @Override
     protected void layoutChildren() {
         super.layoutChildren();
-        if (!getChildren().contains(cellRippler)) {
+        if (!getChildren().contains(selectedPane)) {
             getChildren().add(0, cellRippler);
+            cellRippler.rippler.clear();
             getChildren().add(0, selectedPane);
         }
-        if (isEmpty()) {
-            cellRippler.resizeRelocate(0, 0, 0, 0);
-        } else {
-            cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
-        }
-
+        cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
         selectedPane.resizeRelocate(0, 0, selectedPane.prefWidth(-1), getHeight());
-        selectedPane.setOpacity(isSelected() ? 1 : 0);
-        if (((JFXTreeView<T>) getTreeView()).trans.getChildren().isEmpty()) {
-            clearCellAnimation();
-            ((JFXTreeView<T>) getTreeView()).animateRow = -1;
-        } else if (((JFXTreeView<T>) getTreeView()).trans.getStatus() == Status.STOPPED) {
-            ((JFXTreeView<T>) getTreeView()).trans.setOnFinished((finish) -> {
-                ((JFXTreeView<T>) getTreeView()).trans.getChildren().clear();
-                ((JFXTreeView<T>) getTreeView()).animateRow = -1;
-            });
-            ((JFXTreeView<T>) getTreeView()).trans.play();
-        }
+        selectedPane.setVisible(isSelected() ? true : false);
     }
 
     private void updateDisplay(T item, boolean empty) {
@@ -241,52 +147,9 @@ public class JFXTreeCell<T> extends TreeCell<T> {
     }
 
     @Override
-    public void updateItem(T item, boolean empty) {
+    protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
         updateDisplay(item, empty);
-    }
-
-    private void animateChild(int i, JFXTreeView<T> jfxTreeView) {
-        Timeline createChildAnimation = createChildAnimation(this, i - jfxTreeView.animateRow - 1);
-        if (jfxTreeView.childrenAnimationMap.containsKey(i)) {
-            jfxTreeView.trans.getChildren().remove(jfxTreeView.childrenAnimationMap.get(i).getAnimation());
-            jfxTreeView.childrenAnimationMap.get(i).getCell().clearCellAnimation();
-        }
-        jfxTreeView.childrenAnimationMap.put(i, new CellAnimation(this, createChildAnimation));
-        jfxTreeView.trans.getChildren().add(createChildAnimation);
-    }
-
-    private void animateSibling(int i, JFXTreeView<T> jfxTreeView) {
-        if (!jfxTreeView.disableSiblings) {
-            Timeline createSibAnimation = createSibAnimation(this, i);
-            if(jfxTreeView.childrenAnimationMap.containsKey(i)){
-                jfxTreeView.trans.getChildren().remove(jfxTreeView.childrenAnimationMap.get(i).getAnimation());
-                jfxTreeView.childrenAnimationMap.get(i).getCell().clearCellAnimation();
-                jfxTreeView.childrenAnimationMap.remove(i);
-            }
-            jfxTreeView.sibAnimationMap.put(i, new CellAnimation(this, createSibAnimation));
-            jfxTreeView.trans.getChildren().add(createSibAnimation);
-        }
-    }
-
-    private void clearCellAnimation() {
-        this.setOpacity(1);
-        this.setTranslateY(0);
-    }
-
-    private Timeline createSibAnimation(TreeCell<?> cell, int index) {
-        cell.setTranslateY(((JFXTreeView<T>) getTreeView()).height);
-        return new Timeline(new KeyFrame(Duration.millis(120),
-            new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
-    }
-
-    private Timeline createChildAnimation(TreeCell<?> cell, int delay) {
-        cell.setOpacity(0);
-        cell.setTranslateY(-1);
-        Timeline f1 = new Timeline(new KeyFrame(Duration.millis(120),
-            new KeyValue(cell.opacityProperty(), 1, Interpolator.EASE_BOTH),
-            new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
-        f1.setDelay(Duration.millis(20 + delay * 10));
-        return f1;
+        setMouseTransparent(item == null || empty);
     }
 }

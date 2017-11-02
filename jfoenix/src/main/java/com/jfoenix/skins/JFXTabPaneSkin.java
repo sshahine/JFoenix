@@ -866,7 +866,8 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 }
             }
             // animate the tab selection
-            runTimeline(selectedTabOffset, selectedTabWidth);
+            if(selectedTabWidth > 0)
+                runTimeline(selectedTabOffset, selectedTabWidth);
         }
     }
 
@@ -1182,7 +1183,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             });
             container.setOnMouseReleased(release -> arrowAnimation.stop());
             JFXRippler arrowRippler = new JFXRippler(container, RipplerMask.CIRCLE, RipplerPos.BACK);
-            arrowRippler.ripplerFillProperty().bind(arrowButton.fillProperty());
+            arrowRippler.setRipplerFill(selectedTabText);
             arrowRippler.setPadding(new Insets(0, 5, 0, 5));
 
             inner = new StackPane() {

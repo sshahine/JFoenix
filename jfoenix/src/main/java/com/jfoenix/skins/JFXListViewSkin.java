@@ -59,14 +59,15 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
         if (getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0) {
             return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         }
-        if (getSkinnable().getMaxHeight() > 0) {
-            return getSkinnable().getMaxHeight();
-        }
 
         double computedHeight = estimateHeight();
         double height = super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         if (height > computedHeight) {
             height = computedHeight;
+        }
+
+        if (getSkinnable().getMaxHeight() > 0 && computedHeight > getSkinnable().getMaxHeight()) {
+            return getSkinnable().getMaxHeight();
         }
 
         return height;

@@ -19,11 +19,16 @@
 
 package com.jfoenix.utils;
 
+import javafx.animation.PauseTransition;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 
 import java.util.Locale;
 
@@ -54,5 +59,23 @@ public class JFXNodeUtils {
         } else {
             return null;
         }
+    }
+
+    public static void addPressAndHoldHandler(Node node, Duration holdTime,
+                                        EventHandler<MouseEvent> handler) {
+        class Wrapper<T> {
+            T content;
+        }
+        Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
+
+        PauseTransition holdTimer = new PauseTransition(holdTime);
+        holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
+
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            eventWrapper.content = event;
+            holdTimer.playFromStart();
+        });
+        node.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> holdTimer.stop());
+        node.addEventHandler(MouseEvent.DRAG_DETECTED, event -> holdTimer.stop());
     }
 }

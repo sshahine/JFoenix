@@ -76,7 +76,10 @@ public class JFXDecorator extends VBox {
     private BoundingBox originalBox;
     private BoundingBox maximizedBox;
 
-    private JFXButton btnMax;
+    protected JFXButton btnMax;
+    protected JFXButton btnFull;
+    protected JFXButton btnClose;
+    protected JFXButton btnMin;
 
     /**
      * Create a window decorator for the specified node with the options:
@@ -139,7 +142,7 @@ public class JFXDecorator extends VBox {
             Color.WHITE);
         close.setSize(12, 12);
 
-        JFXButton btnFull = new JFXButton();
+        btnFull = new JFXButton();
         btnFull.getStyleClass().add("jfx-decorator-button");
         btnFull.setCursor(Cursor.HAND);
         btnFull.setOnAction((action) -> primaryStage.setFullScreen(!primaryStage.isFullScreen()));
@@ -147,14 +150,14 @@ public class JFXDecorator extends VBox {
         btnFull.setTranslateX(-30);
         btnFull.setRipplerFill(Color.WHITE);
 
-        JFXButton btnClose = new JFXButton();
+        btnClose = new JFXButton();
         btnClose.getStyleClass().add("jfx-decorator-button");
         btnClose.setCursor(Cursor.HAND);
         btnClose.setOnAction((action) -> onCloseButtonAction.get().run());
         btnClose.setGraphic(close);
         btnClose.setRipplerFill(Color.WHITE);
 
-        JFXButton btnMin = new JFXButton();
+        btnMin = new JFXButton();
         btnMin.getStyleClass().add("jfx-decorator-button");
         btnMin.setCursor(Cursor.HAND);
         btnMin.setOnAction((action) -> primaryStage.setIconified(true));

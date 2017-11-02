@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,34 +17,22 @@
  * under the License.
  */
 
-package com.jfoenix.controls;
-
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-
-/**
- * JFXTreeView is the material design implementation of a TreeView
- * with expand/collapse animation and selection indicator.
- *
- * @author Shadi Shaheen
- * @version 1.0
- * @since 2017-02-15
- */
-public class JFXTreeView<T> extends TreeView<T> {
-
-    private static final String DEFAULT_STYLE_CLASS = "jfx-tree-view";
-
-    public JFXTreeView() {
-        init();
-    }
-
-    public JFXTreeView(TreeItem<T> root) {
-        super(root);
-        init();
-    }
-
-    private void init() {
-        this.setCellFactory((view) -> new JFXTreeCell<>());
-        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-    }
+.jfx-tree-view-path,
+.jfx-tree-view-path:focused{
+    -jfx-offset: 10;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-container-color: WHITE;
+    -fx-padding: 0;
 }
+
+.jfx-tree-view-path > .viewport,
+.jfx-tree-view-path:focused > .viewport{
+    -fx-background-color: -fx-container-color;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.jfx-tree-view-path .buttons-container{
+    -fx-background-color: -fx-container-color;
+}
+

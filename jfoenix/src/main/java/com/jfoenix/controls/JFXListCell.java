@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.utils.JFXNodeUtils;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -60,7 +61,29 @@ import javafx.util.Duration;
  */
 public class JFXListCell<T> extends ListCell<T> {
 
-    protected JFXRippler cellRippler = new JFXRippler(new StackPane());
+    protected JFXRippler cellRippler = new JFXRippler(this){
+        @Override
+        protected Node getMask() {
+            Region clip = new Region();
+            JFXNodeUtils.updateBackground(JFXListCell.this.getBackground(), clip);
+            double width = control.getLayoutBounds().getWidth();
+            double height = control.getLayoutBounds().getHeight();
+            clip.resize(width, height);
+            return clip;
+        }
+
+        @Override
+        protected void initControlListeners() {
+            control.layoutBoundsProperty().addListener(observable -> resetRippler());
+            control.addEventFilter(MouseEvent.MOUSE_PRESSED,
+                (event) -> createRipple(event.getX(), event.getY()));
+        }
+        @Override
+        protected void positionControl(Node control) {
+            // do nothing
+        }
+    };
+
     protected Node cellContent;
     private Rectangle clip;
 

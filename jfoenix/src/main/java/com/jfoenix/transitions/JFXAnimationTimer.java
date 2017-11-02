@@ -21,6 +21,8 @@ package com.jfoenix.transitions;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.WritableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -36,19 +38,20 @@ import java.util.*;
  * @since 2017-09-21
  */
 
-public class JFXAnimationTimer extends AnimationTimer{
+public class JFXAnimationTimer extends AnimationTimer {
 
     private Set<AnimationHandler> animationHandlers = new HashSet<>();
     private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
     private long startTime = -1;
     private boolean running = false;
     private List<CacheMomento> caches = new ArrayList<>();
+    private double totalElapsedMilliseconds;
 
-    public JFXAnimationTimer(JFXKeyFrame... keyFrames){
+    public JFXAnimationTimer(JFXKeyFrame... keyFrames) {
         for (JFXKeyFrame keyFrame : keyFrames) {
             Duration duration = keyFrame.getTime();
             final Set<JFXKeyValue> keyValuesSet = keyFrame.getValues();
-            if(!keyValuesSet.isEmpty()){
+            if (!keyValuesSet.isEmpty()) {
                 animationHandlers.add(new AnimationHandler(duration, keyFrame.getValues()));
             }
         }
@@ -66,7 +69,7 @@ public class JFXAnimationTimer extends AnimationTimer{
     @Override
     public void handle(long now) {
         startTime = startTime == -1 ? now : startTime;
-        double totalElapsedMilliseconds = (now - startTime) / 1000000.0;
+        totalElapsedMilliseconds = (now - startTime) / 1000000.0;
         boolean stop = true;
         for (AnimationHandler handler : animationHandlers) {
             handler.animate(totalElapsedMilliseconds);
@@ -74,8 +77,22 @@ public class JFXAnimationTimer extends AnimationTimer{
                 stop = false;
             }
         }
-        if(stop)
+        if (stop) {
             this.stop();
+        }
+    }
+
+    public void reverseAndContinue() {
+        if (isRunning()) {
+            super.stop();
+            for (AnimationHandler handler : animationHandlers) {
+                handler.reverse(totalElapsedMilliseconds);
+            }
+            startTime = -1;
+            super.start();
+        } else {
+            start();
+        }
     }
 
     @Override
@@ -84,15 +101,21 @@ public class JFXAnimationTimer extends AnimationTimer{
         running = false;
         initialValuesMap.clear();
         caches.forEach(CacheMomento::restore);
+        if(onFinished!=null) onFinished.run();
     }
 
     public boolean isRunning() {
         return running;
     }
 
-    public void setCacheNodes(Node... nodesToCache){
+    Runnable onFinished = null;
+    public void setOnFinished(Runnable onFinished){
+        this.onFinished = onFinished;
+    }
+
+    public void setCacheNodes(Node... nodesToCache) {
         caches.clear();
-        if(nodesToCache!=null){
+        if (nodesToCache != null) {
             for (Node node : nodesToCache) {
                 caches.add(new CacheMomento(node));
             }
@@ -101,41 +124,58 @@ public class JFXAnimationTimer extends AnimationTimer{
 
     class AnimationHandler {
         double duration;
+        double currentDuration;
         Set<JFXKeyValue> keyValues;
         boolean finished = false;
 
         public AnimationHandler(Duration duration, Set<JFXKeyValue> keyValues) {
             this.duration = duration.toMillis();
+            currentDuration = this.duration;
             this.keyValues = keyValues;
         }
 
         public void init() {
             finished = false;
             keyValues.forEach(keyValue -> {
-                if (keyValue.getTarget() != null)
+                if (keyValue.getTarget() != null) {
                     initialValuesMap.putIfAbsent(keyValue.getTarget(), keyValue.getTarget().getValue());
+                }
+            });
+        }
+
+        public void reverse(double now) {
+            currentDuration = duration - (currentDuration - now);
+            // update initial values
+            keyValues.forEach(keyValue -> {
+                if (keyValue.getTarget() != null) {
+                    initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
+                }
             });
         }
 
         // now in milliseconds
-        public void animate(double now){
-            if(now <=  duration){
+        public void animate(double now) {
+            if (now <= currentDuration) {
                 keyValues.forEach(keyValue -> {
-                    if(keyValue.isValid()) {
+                    if (keyValue.isValid()) {
                         final WritableValue target = keyValue.getTarget();
-                        if (target != null && !target.getValue().equals(keyValue.getEndValue()))
-                            target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), keyValue.getEndValue(), now / duration));
+                        if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
+                            target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), keyValue.getEndValue(), now / currentDuration));
+                        }
                     }
                 });
-            }else{
-                if(!finished) {
+            } else {
+                if (!finished) {
                     finished = true;
                     keyValues.forEach(keyValue -> {
-                        if(keyValue.isValid()) {
+                        if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            if (target != null) target.setValue(keyValue.getEndValue());
+                            if (target != null) {
+                                target.setValue(keyValue.getEndValue());
+                            }
                         }
                     });
+                    currentDuration = duration;
                 }
             }
         }

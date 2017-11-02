@@ -16,12 +16,14 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
+* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.0.jar)
 * JFoenix - [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github/website.
+* One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
 # Build
 To build JFoenix, execute the following command:

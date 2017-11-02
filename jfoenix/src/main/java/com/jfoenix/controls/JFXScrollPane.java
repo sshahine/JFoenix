@@ -23,6 +23,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.DefaultProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -35,6 +37,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.util.Duration;
+
+import java.util.function.Function;
 
 /**
  * <h1>Material Design ScrollPane with header </h1>
@@ -221,8 +225,8 @@ public class JFXScrollPane extends StackPane {
         return condensedHeaderBackground;
     }
 
-    public static void smoothScrolling(ScrollPane scrollPane) {
 
+    private static void customScrolling(ScrollPane scrollPane, DoubleProperty scrollDriection, Function<Bounds, Double> sizeFunc) {
         final double[] frictions = {0.99, 0.1, 0.05, 0.04, 0.03, 0.02, 0.01, 0.04, 0.01, 0.008, 0.008, 0.008, 0.008, 0.0006, 0.0005, 0.00003, 0.00001};
         final double[] pushes = {1};
         final double[] derivatives = new double[frictions.length];
@@ -250,12 +254,21 @@ public class JFXScrollPane extends StackPane {
                 derivatives[i] += derivatives[i - 1];
             }
             double dy = derivatives[derivatives.length - 1];
-            double height = scrollPane.getContent().getLayoutBounds().getHeight();
-            scrollPane.setVvalue(Math.min(Math.max(scrollPane.getVvalue() + dy / height, 0), 1));
+            double size = sizeFunc.apply(scrollPane.getContent().getLayoutBounds());
+            scrollDriection.set(Math.min(Math.max(scrollDriection.get() + dy / size, 0), 1));
             if (Math.abs(dy) < 0.001) {
                 timeline.stop();
             }
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
     }
+
+    public static void smoothScrolling(ScrollPane scrollPane) {
+        customScrolling(scrollPane, scrollPane.vvalueProperty(), bounds -> bounds.getHeight());
+    }
+
+    public static void smoothHScrolling(ScrollPane scrollPane) {
+        customScrolling(scrollPane, scrollPane.hvalueProperty(), bounds -> bounds.getWidth());
+    }
+
 }

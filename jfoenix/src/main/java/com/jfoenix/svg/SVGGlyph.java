@@ -19,14 +19,24 @@
 
 package com.jfoenix.svg;
 
+import com.sun.javafx.css.converters.SizeConverter;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableDoubleProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableDoubleProperty;
+import javafx.scene.Parent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Node that is used to show svg images
@@ -44,6 +54,9 @@ public class SVGGlyph extends Pane {
     private double widthHeightRatio = 1;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 
+    public SVGGlyph(String svgPathContent, Paint fill) {
+        this(-1, "UNNAMED", svgPathContent, fill);
+    }
     /**
      * Constructs SVGGlyph node for a specified svg content and color
      * <b>Note:</b> name and glyphId is not needed when creating a single SVG image,
@@ -58,16 +71,24 @@ public class SVGGlyph extends Pane {
         this.glyphId = glyphId;
         this.name = name;
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        this.fill.addListener((observable, oldValue, newValue) -> setBackground(new Background(new BackgroundFill(
-            newValue,
-            null,
-            null))));
+        this.fill.addListener((observable) -> setBackground(new Background(
+            new BackgroundFill(getFill() == null ? Color.BLACK : getFill(), null, null))));
+
+        shapeProperty().addListener(observable -> {
+            Shape shape = getShape();
+            if(getShape()!=null){
+                widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
+                if(getSize() != Region.USE_COMPUTED_SIZE){
+                    setSizeRatio(getSize());
+                }
+            }
+        });
 
         SVGPath shape = new SVGPath();
         shape.setContent(svgPathContent);
         setShape(shape);
+
         setFill(fill);
-        widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
         setPrefSize(DEFAULT_PREF_SIZE, DEFAULT_PREF_SIZE);
     }
 
@@ -117,7 +138,7 @@ public class SVGGlyph extends Pane {
      *
      * @param size in pixel
      */
-    public void setSizeRatio(double size){
+    private void setSizeRatio(double size){
         double width = widthHeightRatio * size;
         double height = size / widthHeightRatio;
         if(width <= size){
@@ -134,8 +155,88 @@ public class SVGGlyph extends Pane {
      *
      * @param width in pixel
      */
-    public void setWidthSizeRatio(double width){
+    public void setSizeForWidth(double width){
         double height = width / widthHeightRatio;
         setSize(width , height);
+    }
+
+    /**
+     * resize the svg to certain width while keeping the width/height ratio
+     *
+     * @param height in pixel
+     */
+    public void setSizeForHeight(double height){
+        double width = height * widthHeightRatio;
+        setSize(width , height);
+    }
+
+    /**
+     * specifies the radius of the spinner node, by default it's set to -1 (USE_COMPUTED_SIZE)
+     */
+    private StyleableDoubleProperty size = new SimpleStyleableDoubleProperty(StyleableProperties.SIZE,
+        SVGGlyph.this,
+        "size",
+        Region.USE_COMPUTED_SIZE){
+        @Override
+        public void invalidated() {
+            setSizeRatio(getSize());
+        }
+    };
+
+    public double getSize() {
+        return size.get();
+    }
+
+    public DoubleProperty sizeProperty() {
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size.set(size);
+    }
+
+    private static class StyleableProperties {
+        private static final CssMetaData<SVGGlyph, Number> SIZE =
+            new CssMetaData<SVGGlyph, Number>("-jfx-size",
+                SizeConverter.getInstance(), Region.USE_COMPUTED_SIZE) {
+                @Override
+                public boolean isSettable(SVGGlyph control) {
+                    return control.size == null || !control.size.isBound();
+                }
+
+                @Override
+                public StyleableDoubleProperty getStyleableProperty(SVGGlyph control) {
+                    return control.size;
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
+
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(Parent.getClassCssMetaData());
+            Collections.addAll(styleables,
+                SIZE
+            );
+            CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+
+    // inherit the styleable properties from parent
+    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        if (STYLEABLES == null) {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(Pane.getClassCssMetaData());
+            styleables.addAll(getClassCssMetaData());
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+        return STYLEABLES;
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return SVGGlyph.StyleableProperties.CHILD_STYLEABLES;
     }
 }
