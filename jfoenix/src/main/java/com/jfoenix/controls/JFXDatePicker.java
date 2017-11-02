@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.skins.JFXDatePickerSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -66,22 +67,16 @@ public class JFXDatePicker extends DatePicker {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        try {
-            editorProperty();
-            Field editorField = getClass().getSuperclass().getDeclaredField("editor");
-            editorField.setAccessible(true);
-            ReadOnlyObjectWrapper<TextField> editor = (ReadOnlyObjectWrapper<TextField>) editorField.get(this);
-            final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
-            editorNode.focusColorProperty().bind(this.defaultColorProperty());
-            this.focusedProperty().addListener((obj, oldVal, newVal) -> {
-                if (getEditor() != null) {
-                    editorNode.setFakeFocus(newVal);
-                }
-            });
-            editor.set(editorNode);
-        } catch (NoSuchFieldException e) {
-        } catch (IllegalAccessException e) {
-        }
+        editorProperty();
+        ReadOnlyObjectWrapper<TextField> editor = ReflectionHelper.getFieldContent(DatePicker.class, this, "editor" );
+        final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
+        editorNode.focusColorProperty().bind(this.defaultColorProperty());
+        this.focusedProperty().addListener((obj, oldVal, newVal) -> {
+            if (getEditor() != null) {
+                editorNode.setFakeFocus(newVal);
+            }
+        });
+        editor.set(editorNode);
     }
 
     /**
