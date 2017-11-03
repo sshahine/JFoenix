@@ -25,6 +25,7 @@
 
 .jfx-time-picker > .arrow-button,
 .jfx-time-picker:editable > .arrow-button,
+.jfx-time-picker:focused > .arrow-button,
 .jfx-time-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
     -fx-padding: 1 8 1 8;
