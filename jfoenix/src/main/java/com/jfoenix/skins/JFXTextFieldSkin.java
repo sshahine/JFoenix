@@ -141,6 +141,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
     public JFXTextFieldSkin(T field) {
         super(field);
 
+        textPane = (Pane) this.getChildren().get(0);
+
         // add style classes
         errorLabel.getStyleClass().add("error-label");
         line.getStyleClass().add("input-line");
@@ -338,7 +340,6 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         if (invalid) {
             invalid = false;
             animatedPromptTextFill.set(promptTextFill.get());
-            textPane = (Pane) this.getChildren().get(0);
 //            focusTimer.setCacheNodes(textPane);
 //            unfocusTimer.setCacheNodes(textPane);
             // create floating label
