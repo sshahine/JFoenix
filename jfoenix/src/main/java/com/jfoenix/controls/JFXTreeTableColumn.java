@@ -81,19 +81,17 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
             }
         });
 
-        Platform.runLater(() -> {
-            final ContextMenu contextMenu = new ContextMenu();
-            MenuItem item1 = new MenuItem("Group");
-            item1.setOnAction((action) -> {
-                ((JFXTreeTableView) getTreeTableView()).group(this);
-            });
-            MenuItem item2 = new MenuItem("UnGroup");
-            item2.setOnAction((action) -> {
-                ((JFXTreeTableView) getTreeTableView()).unGroup(this);
-            });
-            contextMenu.getItems().addAll(item1, item2);
-            setContextMenu(contextMenu);
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem item1 = new MenuItem("Group");
+        item1.setOnAction((action) -> {
+            ((JFXTreeTableView) getTreeTableView()).group(this);
         });
+        MenuItem item2 = new MenuItem("UnGroup");
+        item2.setOnAction((action) -> {
+            ((JFXTreeTableView) getTreeTableView()).unGroup(this);
+        });
+        contextMenu.getItems().addAll(item1, item2);
+        setContextMenu(contextMenu);
     }
 
     /**
@@ -106,12 +104,12 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
     public final boolean validateValue(CellDataFeatures<S, T> param) {
         Object rowObject = param.getValue().getValue();
         return !((rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class)
-            || (param.getTreeTableView() instanceof JFXTreeTableView
-            && ((JFXTreeTableView<?>) param.getTreeTableView()).getGroupOrder().contains(this)
-            // make sure the node is a direct child to a group node
-            && param.getValue().getParent() != null
-            && param.getValue().getParent().getValue().getClass() == RecursiveTreeObject.class
-        ));
+                 || (param.getTreeTableView() instanceof JFXTreeTableView
+                     && ((JFXTreeTableView<?>) param.getTreeTableView()).getGroupOrder().contains(this)
+                     // make sure the node is a direct child to a group node
+                     && param.getValue().getParent() != null
+                     && param.getValue().getParent().getValue().getClass() == RecursiveTreeObject.class
+                 ));
     }
 
     /**

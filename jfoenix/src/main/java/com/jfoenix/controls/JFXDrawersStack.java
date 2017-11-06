@@ -19,15 +19,16 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.utils.JFXNodeUtils;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.DefaultProperty;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-
-import java.util.ArrayList;
-import java.util.List;
+import javafx.util.Duration;
 
 /**
  * DrawersStack is used to show multiple drawers at once
@@ -38,18 +39,14 @@ import java.util.List;
  */
 @DefaultProperty(value = "content")
 public class JFXDrawersStack extends StackPane {
-    private List<JFXDrawer> drawers = new ArrayList<>();
+
     private Node content;
-    private boolean holding = false;
 
     /**
      * creates empty drawers stack
      */
     public JFXDrawersStack() {
-        final Rectangle clip = new Rectangle();
-        clip.widthProperty().bind(this.widthProperty());
-        clip.heightProperty().bind(this.heightProperty());
-        this.setClip(clip);
+
     }
 
     /**
@@ -66,11 +63,17 @@ public class JFXDrawersStack extends StackPane {
      * @param content
      */
     public void setContent(Node content) {
+        int index = 0;
+        boolean replace = false;
+        if (this.content != null) {
+            index = getChildren().indexOf(this.content);
+            replace = true;
+        }
         this.content = content;
-        if (drawers.size() > 0) {
-            drawers.get(0).setContent(content);
+        if (replace) {
+            this.getChildren().set(index, this.content);
         } else {
-            this.getChildren().add(this.content);
+            this.getChildren().add(0, this.content);
         }
     }
 
@@ -84,63 +87,18 @@ public class JFXDrawersStack extends StackPane {
             return;
         }
 
-        if (drawers.isEmpty()) {
-            if (content != null) {
-                drawer.setContent(content);
-            }
-            this.getChildren().add(drawer);
-        } else {
-            drawer.setContent(drawers.get(drawers.size() - 1));
-            this.getChildren().add(drawer);
-        }
+        getChildren().add(drawer);
 
-        drawer.sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED, (event) -> {
-            holding = true;
-            new Thread(() -> {
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException intEx) {
-                    // TODO Auto-generated catch block
-                    intEx.printStackTrace();
-                }
-                if (holding) {
-                    holding = false;
-                    if (drawers.indexOf(drawer) < drawers.size() - 1) {
-                        Platform.runLater(() -> drawer.bringToFront((param) -> {
-                            updateDrawerPosition(drawer);
-                            return param;
-                        }));
-                    }
-                }
-            }).start();
+        drawer.setPickOnBounds(false);
+
+        JFXNodeUtils.addPressAndHoldHandler(drawer.sidePane, Duration.millis(300), event -> {
+            if (getChildren().indexOf(drawer) != getChildren().size() - 1) {
+                drawer.bringToFront((param) -> {
+                    drawer.toFront();
+                    return param;
+                });
+            }
         });
-
-        drawer.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, (event) -> holding = false);
-        drawer.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, (event) -> holding = false);
-
-        drawers.add(drawer);
-    }
-
-    /**
-     * update drawers position in the stack once a drawer is drawn
-     *
-     * @param drawer
-     */
-    private void updateDrawerPosition(JFXDrawer drawer) {
-        int index = drawers.indexOf(drawer);
-        if (index + 1 < drawers.size()) {
-            if (index - 1 >= 0) {
-                drawers.get(index + 1).setContent(drawers.get(index - 1));
-            } else if (index == 0) {
-                drawers.get(index + 1).setContent(content);
-            }
-        }
-        if (index < drawers.size() - 1) {
-            drawer.setContent(drawers.get(drawers.size() - 1));
-            drawers.remove(drawer);
-            drawers.add(drawer);
-            this.getChildren().add(drawer);
-        }
     }
 
     /**
@@ -149,13 +107,13 @@ public class JFXDrawersStack extends StackPane {
      * @param drawer the drawer to be toggled
      */
     public void toggle(JFXDrawer drawer) {
-        if (!drawers.contains(drawer)) {
+        if (!getChildren().contains(drawer)) {
             addDrawer(drawer);
         }
         if (drawer.isShown() || drawer.isShowing()) {
             drawer.close();
         } else {
-            updateDrawerPosition(drawer);
+            drawer.toFront();
             drawer.open();
         }
     }
@@ -167,7 +125,7 @@ public class JFXDrawersStack extends StackPane {
      * @param show   true to toggle on, false to toggle off
      */
     public void toggle(JFXDrawer drawer, boolean show) {
-        if (!drawers.contains(drawer)) {
+        if (!getChildren().contains(drawer)) {
             addDrawer(drawer);
         }
         if (!show) {
@@ -176,7 +134,7 @@ public class JFXDrawersStack extends StackPane {
             }
         } else {
             if (!drawer.isShown() && !drawer.isShowing()) {
-                updateDrawerPosition(drawer);
+                drawer.toFront();
                 drawer.open();
             }
         }

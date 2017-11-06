@@ -872,7 +872,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                 }
             }
             // animate the tab selection
-            runTimeline(selectedTabOffset, selectedTabWidth);
+            if(selectedTabWidth > 0)
+                runTimeline(selectedTabOffset, selectedTabWidth);
         }
     }
 

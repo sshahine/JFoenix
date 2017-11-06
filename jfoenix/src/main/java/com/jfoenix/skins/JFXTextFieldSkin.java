@@ -80,10 +80,10 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 
     private final Rectangle errorContainerClip = new Rectangle();
     private final Scale errorClipScale = new Scale(1, 0, 0, 0);
-    private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80), new
-        KeyValue(errorContainer.opacityProperty(), 0, Interpolator.LINEAR)));
-    private Timeline errorShowTransition = new Timeline(new KeyFrame(Duration.millis(80), new
-        KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_OUT)));
+    private Timeline errorHideTransition = new Timeline(new KeyFrame(Duration.millis(80),
+        new KeyValue(errorContainer.opacityProperty(), 0, Interpolator.LINEAR)));
+    private Timeline errorShowTransition = new Timeline(new KeyFrame(Duration.millis(80),
+        new KeyValue(errorContainer.opacityProperty(), 1, Interpolator.EASE_OUT)));
     private Timeline scale1 = new Timeline();
     private Timeline scaleLess1 = new Timeline();
 
@@ -141,6 +141,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
     public JFXTextFieldSkin(T field) {
         super(field);
 
+        textPane = (Pane) this.getChildren().get(0);
+
         // add style classes
         errorLabel.getStyleClass().add("error-label");
         line.getStyleClass().add("input-line");
@@ -149,6 +151,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
+        line.setManaged(false);
         line.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
@@ -163,6 +166,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
+        focusedLine.setManaged(false);
         focusedLine.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
@@ -335,11 +339,9 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 animatedPromptTextFill.set(((IFXTextInputControl) getSkinnable()).getFocusColor());
             }
         }
-
         if (invalid) {
             invalid = false;
             animatedPromptTextFill.set(promptTextFill.get());
-            textPane = (Pane) this.getChildren().get(0);
 //            focusTimer.setCacheNodes(textPane);
 //            unfocusTimer.setCacheNodes(textPane);
             // create floating label
@@ -370,10 +372,16 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         line.resizeRelocate(x, height, w, line.prefHeight(-1));
         errorContainer.relocate(x, height + focusedLineHeight);
         // resize error container if animation is disabled
-        if (((IFXTextInputControl) getSkinnable()).isDisableAnimation()) {
+        if (((IFXTextInputControl) getSkinnable()).isDisableAnimation() || isErrorVisible()) {
             errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
         }
         scale.setPivotX(w / 2);
+    }
+
+    private boolean isErrorVisible() {
+        return errorContainer.isVisible()
+           && errorShowTransition.getStatus().equals(Animation.Status.STOPPED)
+           && errorHideTransition.getStatus().equals(Animation.Status.STOPPED);
     }
 
     private double computeErrorWidth(double w) {

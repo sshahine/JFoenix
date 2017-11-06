@@ -21,14 +21,12 @@ package com.jfoenix.android.skins;
 
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import com.sun.javafx.scene.control.skin.TextAreaSkinAndroid;
-import javafx.animation.Animation.Status;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -63,7 +61,6 @@ import java.lang.reflect.Field;
  * @since 2017-01-25
  */
 public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
-
 
     private boolean invalid = true;
 
@@ -159,6 +156,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1 + 4 + 2); // translate = prefHeight + init_translation
+        line.setManaged(false);
         line.setBackground(new Background(new BackgroundFill(((JFXTextArea) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
@@ -173,6 +171,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(4 + 2); // translate = prefHeight + init_translation(-1)
+        focusedLine.setManaged(false);
         focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextArea) getSkinnable()).getFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);

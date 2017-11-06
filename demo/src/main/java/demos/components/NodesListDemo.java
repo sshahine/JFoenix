@@ -4,16 +4,21 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.controls.JFXNodesList;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import static java.util.Collections.singletonList;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class NodesListDemo extends Application {
@@ -49,11 +54,7 @@ public class NodesListDemo extends Application {
         JFXNodesList nodesList3 = new JFXNodesList();
         nodesList3.setSpacing(10);
         // init nodes
-        nodesList3.addAnimatedNode(ssbutton1,
-                                   (expanded) -> singletonList(new KeyValue(
-                                       sslabel.rotateProperty(),
-                                       expanded ? 360 : 0,
-                                       Interpolator.EASE_BOTH)));
+        nodesList3.addAnimatedNode(ssbutton1);
         nodesList3.addAnimatedNode(ssbutton2);
         nodesList3.addAnimatedNode(ssbutton3);
 
@@ -78,10 +79,7 @@ public class NodesListDemo extends Application {
         JFXNodesList nodesList2 = new JFXNodesList();
         nodesList2.setSpacing(10);
         // init nodes
-        nodesList2.addAnimatedNode(sbutton1,
-                                   (expanded) -> singletonList(new KeyValue(slabel.rotateProperty(),
-                                                                            expanded ? 360 : 0,
-                                                                            Interpolator.EASE_BOTH)));
+        nodesList2.addAnimatedNode(sbutton1);
         nodesList2.addAnimatedNode(nodesList3);
         nodesList2.addAnimatedNode(sbutton2);
         nodesList2.addAnimatedNode(sbutton3);
@@ -104,14 +102,33 @@ public class NodesListDemo extends Application {
         button3.setButtonType(ButtonType.RAISED);
         button3.getStyleClass().add(ANIMATED_OPTION_BUTTON);
 
-
         JFXNodesList nodesList = new JFXNodesList();
         nodesList.setSpacing(10);
-        nodesList.addAnimatedNode(button1,
-                                  (expanded) -> singletonList(new KeyValue(label.rotateProperty(),
-                                                                           expanded ? 360 : 0,
-                                                                           Interpolator.EASE_BOTH)));
-        nodesList.addAnimatedNode(button2);
+        nodesList.addAnimatedNode(button1);
+        final HBox container = new HBox(new JFXButton("INFO"), button2);
+        container.setAlignment(Pos.CENTER_RIGHT);
+        container.setSpacing(12);
+        nodesList.addAnimatedNode(container, (expanded, duration) -> {
+                List<KeyFrame> frames = new ArrayList<>();
+                frames.add(new KeyFrame(duration,
+                    new KeyValue(container.getChildren().get(1).scaleXProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH),
+                    new KeyValue(container.getChildren().get(1).scaleYProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH)
+                ));
+                frames.add(new KeyFrame(Duration.millis(duration.toMillis()),
+                    new KeyValue(container.getChildren().get(0).opacityProperty(), expanded ? 0 : 1, Interpolator.EASE_BOTH),
+                    new KeyValue(container.getChildren().get(0).translateXProperty(), expanded ? 20 : 0, Interpolator.EASE_BOTH)
+                ));
+                frames.add(new KeyFrame(Duration.millis(duration.toMillis() + 40),
+                    new KeyValue(container.getChildren().get(0).opacityProperty(), expanded ? 1 : 0, Interpolator.EASE_BOTH),
+                    new KeyValue(container.getChildren().get(0).translateXProperty(), expanded ? 0 : 20, Interpolator.EASE_BOTH)
+                ));
+                return frames;
+            }
+        );
+        container.getChildren().get(0).setOpacity(0);
+        container.setScaleX(1);
+        container.setScaleY(1);
+
         nodesList.addAnimatedNode(nodesList2);
         nodesList.addAnimatedNode(button3);
         nodesList.setRotate(180);
@@ -129,6 +146,8 @@ public class NodesListDemo extends Application {
         Scene scene = new Scene(main, 600, 600);
         scene.getStylesheets().add(NodesListDemo.class.getResource("/css/jfoenix-components.css").toExternalForm());
         stage.setScene(scene);
+
+//        ScenicView.show(scene);
         stage.show();
     }
 }
