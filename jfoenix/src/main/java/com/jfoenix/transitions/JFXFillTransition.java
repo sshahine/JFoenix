@@ -201,10 +201,10 @@ public final class JFXFillTransition extends Transition {
      * @param fromValue The start value of the color-animation
      * @param toValue   The end value of the color-animation
      */
-    public JFXFillTransition(Duration duration, Region shape, Color fromValue,
+    public JFXFillTransition(Duration duration, Region region, Color fromValue,
                              Color toValue) {
         setDuration(duration);
-        setRegion(shape);
+        setRegion(region);
         setFromValue(fromValue);
         setToValue(toValue);
         setCycleDuration(duration);
@@ -240,8 +240,8 @@ public final class JFXFillTransition extends Transition {
      * @param duration The duration of the {@code JFXFillTransition}
      * @param region   The {@code region} which filling will be animated
      */
-    public JFXFillTransition(Duration duration, Region shape) {
-        this(duration, shape, null, null);
+    public JFXFillTransition(Duration duration, Region region) {
+        this(duration, region, null, null);
     }
 
     /**
