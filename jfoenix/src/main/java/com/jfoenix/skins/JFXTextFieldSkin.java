@@ -151,6 +151,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1); // translate = prefHeight + init_translation
+        line.setManaged(false);
         line.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
@@ -165,6 +166,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
+        focusedLine.setManaged(false);
         focusedLine.setBackground(new Background(new BackgroundFill(((IFXTextInputControl) getSkinnable()).getFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
