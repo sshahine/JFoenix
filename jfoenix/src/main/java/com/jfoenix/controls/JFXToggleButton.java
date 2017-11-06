@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXToggleButtonSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.css.*;
 import javafx.scene.control.Control;
@@ -220,6 +221,25 @@ public class JFXToggleButton extends ToggleButton {
         this.size.set(size);
     }
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXToggleButton.this,
+        "disableVisualFocus",
+        false);
+
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXToggleButton, Paint> TOGGLE_COLOR =
@@ -291,7 +311,19 @@ public class JFXToggleButton extends ToggleButton {
                     return control.sizeProperty();
                 }
             };
+        private static final CssMetaData<JFXToggleButton, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXToggleButton, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXToggleButton control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
 
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXToggleButton control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
 
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
@@ -303,7 +335,8 @@ public class JFXToggleButton extends ToggleButton {
                 TOGGLE_COLOR,
                 UNTOGGLE_COLOR,
                 TOGGLE_LINE_COLOR,
-                UNTOGGLE_LINE_COLOR
+                UNTOGGLE_LINE_COLOR,
+                DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
