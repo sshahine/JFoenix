@@ -83,12 +83,14 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 
         // show focused state
         control.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                if (!getSkinnable().isPressed()) {
-                    rippler.showOverlay();
+            if(!control.disableVisualFocusProperty().get()) {
+                if (newVal) {
+                    if (!getSkinnable().isPressed()) {
+                        rippler.showOverlay();
+                    }
+                } else {
+                    rippler.hideOverlay();
                 }
-            } else {
-                rippler.hideOverlay();
             }
         });
         control.pressedProperty().addListener((o, oldVal, newVal) -> rippler.hideOverlay());
