@@ -227,5 +227,7 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
         this.predicateProperty().set(predicate);
     }
 
-
+    public TreeItem<T> getTreeItem(T value) {
+        return itemsMap.get(value);
+    }
 }
