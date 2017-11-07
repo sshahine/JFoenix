@@ -17,6 +17,10 @@
  * under the License.
  */
 
+.jfx-date-picker{
+    -jfx-default-color: #009688;
+}
+
 .jfx-date-picker,
 .jfx-date-picker:focused,
 .jfx-date-picker:focused:editable {
@@ -29,4 +33,8 @@
 .jfx-date-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
     -fx-padding: 1 8 1 8;
+}
+
+.jfx-date-picker > .arrow-button > .jfx-svg-glyph{
+    -fx-background-color: -jfx-default-color;
 }

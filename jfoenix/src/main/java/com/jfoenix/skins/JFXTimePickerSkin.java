@@ -97,10 +97,12 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
             + "159.714-220.286 58.857-220.286-58.857-159.714-159.714-58.857-220.286 "
             + "58.857-220.286 159.714-159.714 220.286-58.857 220.286 58.857 159.714 159.714 "
             + "58.857 220.286z",
-            Color.BLACK);
-        ((SVGGlyph) arrow).fillProperty().bind(timePicker.defaultColorProperty());
+            null);
+        ((SVGGlyph) arrow).setFill(timePicker.getDefaultColor());
         ((SVGGlyph) arrow).setSize(20, 20);
         arrowButton.getChildren().setAll(arrow);
+
+        ((JFXTextField) getEditor()).setFocusColor(timePicker.getDefaultColor());
 
         //dialog = new JFXDialog(null, content, transitionType, overlayClose)
         registerChangeListener(timePicker.converterProperty(), "CONVERTER");

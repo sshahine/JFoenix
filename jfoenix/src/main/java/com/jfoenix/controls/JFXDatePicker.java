@@ -76,7 +76,6 @@ public class JFXDatePicker extends DatePicker {
             editorField.setAccessible(true);
             ReadOnlyObjectWrapper<TextField> editor = (ReadOnlyObjectWrapper<TextField>) editorField.get(this);
             final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
-            editorNode.focusColorProperty().bind(this.defaultColorProperty());
             this.focusedProperty().addListener((obj, oldVal, newVal) -> {
                 if (getEditor() != null) {
                     editorNode.setFakeFocus(newVal);

@@ -22,19 +22,18 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.behavior.JFXDatePickerBehavior;
 import com.jfoenix.svg.SVGGlyph;
 import com.sun.javafx.binding.ExpressionHelper;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
-import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 
 import java.lang.reflect.Field;
@@ -100,10 +99,12 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             + "576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 "
             + "576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896"
             + " 960h-832v-704h832v704z",
-            Color.BLACK);
-        ((SVGGlyph) arrow).fillProperty().bind(jfxDatePicker.defaultColorProperty());
+            null);
+        ((SVGGlyph) arrow).setFill(jfxDatePicker.getDefaultColor());
         ((SVGGlyph) arrow).setSize(20, 20);
         arrowButton.getChildren().setAll(arrow);
+
+        ((JFXTextField) getEditor()).setFocusColor(jfxDatePicker.getDefaultColor());
 
         registerChangeListener(datePicker.converterProperty(), "CONVERTER");
         registerChangeListener(datePicker.dayCellFactoryProperty(), "DAY_CELL_FACTORY");

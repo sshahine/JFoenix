@@ -17,6 +17,10 @@
  * under the License.
  */
 
+.jfx-time-picker{
+    -jfx-default-color: #009688;
+}
+
 .jfx-time-picker,
 .jfx-time-picker:focused,
 .jfx-time-picker:focused:editable {
@@ -29,4 +33,9 @@
 .jfx-time-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
     -fx-padding: 1 8 1 8;
+}
+
+
+.jfx-time-picker > .arrow-button > .jfx-svg-glyph{
+    -fx-background-color: -jfx-default-color;
 }
