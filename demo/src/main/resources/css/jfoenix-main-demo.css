@@ -980,3 +980,20 @@
 .jfx-scroll-pane .condensed-header {
     -fx-background-image: url("../bg4.jpg");
 }
+
+/*******************************************************************************
+*                                                                              *
+* Pickers                                                                      *
+*                                                                              *
+*******************************************************************************/
+
+.custom-color-picker{
+    -jfx-default-color: #3f51b5;
+}
+
+.jfx-date-picker > .jfx-text-field,
+.jfx-time-picker > .jfx-text-field{
+    -jfx-focus-color: -jfx-default-color;
+}
+
+

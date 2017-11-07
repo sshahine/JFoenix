@@ -20,8 +20,10 @@
             <Label styleClass="title-label">Overylays</Label>
             <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
                 <children>
-                    <JFXDatePicker fx:id="dateOverlay" overLay="true" defaultColor="#3f51b5"></JFXDatePicker>
-                    <JFXTimePicker fx:id="timeOverlay" overLay="true" defaultColor="#3f51b5"></JFXTimePicker>
+                    <JFXDatePicker fx:id="dateOverlay" overLay="true"
+                                   styleClass="custom-color-picker"></JFXDatePicker>
+                    <JFXTimePicker fx:id="timeOverlay" overLay="true"
+                                   styleClass="custom-color-picker"></JFXTimePicker>
                 </children>
             </HBox>
         </children>
