@@ -110,12 +110,14 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
             }
         });
         toggleButton.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                if (!getSkinnable().isPressed()) {
-                    rippler.showOverlay();
+            if(!toggleButton.isDisableVisualFocus()) {
+                if (newVal) {
+                    if (!getSkinnable().isPressed()) {
+                        rippler.showOverlay();
+                    }
+                } else {
+                    rippler.hideOverlay();
                 }
-            } else {
-                rippler.hideOverlay();
             }
         });
         toggleButton.pressedProperty().addListener((o, oldVal, newVal) -> rippler.hideOverlay());
