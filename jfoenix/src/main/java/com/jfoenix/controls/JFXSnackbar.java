@@ -27,7 +27,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -53,13 +52,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * own dedicated windows and alligning the popup window and handling window on top layering is more trouble then it is
  * worth.
  */
-public class JFXSnackbar extends StackPane {
+public class JFXSnackbar extends Group {
+
+    private static final String DEFAULT_STYLE_CLASS = "jfx-snackbar";
 
     private Label toast;
     private JFXButton action;
 
     private Pane snackbarContainer;
-    private Group popup;
     private ChangeListener<? super Number> sizeListener;
 
     private AtomicBoolean processingQueue = new AtomicBoolean(false);
@@ -76,70 +76,54 @@ public class JFXSnackbar extends StackPane {
 
     public JFXSnackbar(Pane snackbarContainer) {
 
-        content = new BorderPane();
         toast = new Label();
         toast.setMinWidth(Control.USE_PREF_SIZE);
         toast.getStyleClass().add("jfx-snackbar-toast");
         toast.setWrapText(true);
         StackPane toastContainer = new StackPane(toast);
         toastContainer.setPadding(new Insets(20));
-        content.setLeft(toastContainer);
 
         action = new JFXButton();
         action.setMinWidth(Control.USE_PREF_SIZE);
         action.setButtonType(ButtonType.FLAT);
         action.getStyleClass().add("jfx-snackbar-action");
-
         // actions will be added upon showing the snackbar if needed
         actionContainer = new StackPane(action);
         actionContainer.setPadding(new Insets(0, 10, 0, 0));
+
+        content = new BorderPane();
+        content.setLeft(toastContainer);
         content.setRight(actionContainer);
 
         toast.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> {
-            if (this.getPrefWidth() == -1) {
-                return this.getPrefWidth();
+            if (content.getPrefWidth() == -1) {
+                return content.getPrefWidth();
             }
             double actionWidth = actionContainer.isVisible() ? actionContainer.getWidth() : 0.0;
-            return this.prefWidthProperty().get() - actionWidth;
-        }, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
+            return content.prefWidthProperty().get() - actionWidth;
+        }, content.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
 
         //bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
-        content.prefWidthProperty().bind(this.prefWidthProperty());
         content.getStyleClass().add("jfx-snackbar-content");
-        //setting a shadow enlarges the snackbar height leaving a gap below it
-        //JFXDepthManager.setDepth(content, 4);
-
         //wrap the content in a group so that the content is managed inside its own container
         //but the group is not managed in the snackbarContainer so it does not affect any layout calculations
-        popup = new Group();
-        popup.getChildren().add(content);
-        popup.setManaged(false);
-        popup.setVisible(false);
-        popup.idProperty().bind(this.idProperty());
-        this.getStyleClass().addListener((ListChangeListener<String>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    popup.getStyleClass().addAll(c.getAddedSubList());
-                }
-                if (c.wasRemoved()) {
-                    popup.getStyleClass().removeAll(c.getRemoved());
-                }
-            }
-        });
+        getChildren().add(content);
+        setManaged(false);
+        setVisible(false);
+
         sizeListener = (o, oldVal, newVal) -> refreshPopup();
 
         // register the container before resizing it
         registerSnackbarContainer(snackbarContainer);
 
         // resize the popup if its layout has been changed
-        popup.layoutBoundsProperty().addListener((o, oldVal, newVal) -> refreshPopup());
+        layoutBoundsProperty().addListener((o, oldVal, newVal) -> refreshPopup());
 
         addEventHandler(SnackbarEvent.SNACKBAR, e -> enqueue(e));
+    }
 
-        //This control actually orchestrates the popup logic and is never visibly displayed.
-        this.setVisible(false);
-        this.setManaged(false);
-
+    private void initialize() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
     /***************************************************************************
@@ -150,25 +134,29 @@ public class JFXSnackbar extends StackPane {
         return snackbarContainer;
     }
 
+    public void setPrefWidth(double width) {
+        content.setPrefWidth(width);
+    }
+
+    public double getPrefWidth() {
+        return content.getPrefWidth();
+    }
 
     /***************************************************************************
      * * Public API * *
      **************************************************************************/
 
     public void registerSnackbarContainer(Pane snackbarContainer) {
-
         if (snackbarContainer != null) {
             if (this.snackbarContainer != null) {
                 //since listeners are added the container should be properly registered/unregistered
                 throw new IllegalArgumentException("Snackbar Container already set");
             }
-
             this.snackbarContainer = snackbarContainer;
-            this.snackbarContainer.getChildren().add(popup);
+            this.snackbarContainer.getChildren().add(this);
             this.snackbarContainer.heightProperty().addListener(sizeListener);
             this.snackbarContainer.widthProperty().addListener(sizeListener);
         }
-
     }
 
     public void unregisterSnackbarContainer(Pane snackbarContainer) {
@@ -178,7 +166,7 @@ public class JFXSnackbar extends StackPane {
                 throw new IllegalArgumentException("Snackbar Container not set");
             }
 
-            this.snackbarContainer.getChildren().remove(popup);
+            this.snackbarContainer.getChildren().remove(this);
             this.snackbarContainer.heightProperty().removeListener(sizeListener);
             this.snackbarContainer.widthProperty().removeListener(sizeListener);
             this.snackbarContainer = null;
@@ -236,19 +224,19 @@ public class JFXSnackbar extends StackPane {
             animation = new Timeline(
                 new KeyFrame(
                     Duration.ZERO,
-                    e -> popup.toBack(),
-                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                    e -> this.toBack(),
+                    new KeyValue(this.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(this.translateYProperty(), this.getLayoutBounds().getHeight(), easeInterpolator),
+                    new KeyValue(this.opacityProperty(), 0, easeInterpolator)
                 ),
                 new KeyFrame(
                     Duration.millis(10),
-                    e -> popup.toFront(),
-                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                    e -> this.toFront(),
+                    new KeyValue(this.visibleProperty(), true, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(300),
-                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                    new KeyValue(this.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(this.translateYProperty(), 0, easeInterpolator)
                 )
             );
             animation.setCycleCount(1);
@@ -256,19 +244,19 @@ public class JFXSnackbar extends StackPane {
             animation = new Timeline(
                 new KeyFrame(
                     Duration.ZERO,
-                    (e) -> popup.toBack(),
-                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                    (e) -> this.toBack(),
+                    new KeyValue(this.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(this.translateYProperty(), this.getLayoutBounds().getHeight(), easeInterpolator),
+                    new KeyValue(this.opacityProperty(), 0, easeInterpolator)
                 ),
                 new KeyFrame(
                     Duration.millis(10),
-                    (e) -> popup.toFront(),
-                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                    (e) -> this.toFront(),
+                    new KeyValue(this.visibleProperty(), true, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(300),
-                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                    new KeyValue(this.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(this.translateYProperty(), 0, easeInterpolator)
                 ),
                 new KeyFrame(Duration.millis(timeout / 2))
             );
@@ -285,25 +273,25 @@ public class JFXSnackbar extends StackPane {
     public void close() {
         if(openAnimation!=null)
             openAnimation.stop();
-        if (popup.isVisible()) {
+        if (this.isVisible()) {
             Timeline closeAnimation = new Timeline(
                 new KeyFrame(
                     Duration.ZERO,
-                    e -> popup.toFront(),
-                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
+                    e -> this.toFront(),
+                    new KeyValue(this.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(this.translateYProperty(), 0, easeInterpolator)
                 ),
                 new KeyFrame(
                     Duration.millis(290),
-                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
+                    new KeyValue(this.visibleProperty(), true, Interpolator.EASE_BOTH)
                 ),
                 new KeyFrame(Duration.millis(300),
-                    e -> popup.toBack(),
-                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                    new KeyValue(popup.translateYProperty(),
-                        popup.getLayoutBounds().getHeight(),
+                    e -> this.toBack(),
+                    new KeyValue(this.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(this.translateYProperty(),
+                        this.getLayoutBounds().getHeight(),
                         easeInterpolator),
-                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
+                    new KeyValue(this.opacityProperty(), 0, easeInterpolator)
                 )
             );
             closeAnimation.setCycleCount(1);
@@ -339,11 +327,11 @@ public class JFXSnackbar extends StackPane {
 
 
     public void refreshPopup() {
-        Bounds contentBound = popup.getLayoutBounds();
+        Bounds contentBound = this.getLayoutBounds();
         double offsetX = Math.ceil(snackbarContainer.getWidth() / 2) - Math.ceil(contentBound.getWidth() / 2);
         double offsetY = snackbarContainer.getHeight() - contentBound.getHeight();
-        popup.setLayoutX(offsetX);
-        popup.setLayoutY(offsetY);
+        this.setLayoutX(offsetX);
+        this.setLayoutY(offsetY);
 
     }
 

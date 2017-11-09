@@ -29,7 +29,6 @@ public class IconsController {
 
     @FXML
     private StackPane root;
-    @FXML
     private JFXSnackbar snackbar;
     private int count = 1;
 
@@ -45,7 +44,8 @@ public class IconsController {
         bindAction(burger3);
         bindAction(burger4);
 
-        snackbar.registerSnackbarContainer(root);
+        snackbar = new JFXSnackbar(root);
+        snackbar.setPrefWidth(300);
 
         badge1.setOnMouseClicked((click) -> {
             int value = Integer.parseInt(badge1.getText());
