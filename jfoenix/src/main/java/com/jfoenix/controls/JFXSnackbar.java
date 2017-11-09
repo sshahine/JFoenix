@@ -28,6 +28,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -36,7 +37,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -177,7 +177,7 @@ public class JFXSnackbar extends Group {
         this.show(toastMessage, null, timeout, null);
     }
 
-    public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+    public void show(String message, String actionText, EventHandler<ActionEvent> actionHandler) {
         this.show(message, actionText, -1, actionHandler);
     }
 
@@ -185,15 +185,15 @@ public class JFXSnackbar extends Group {
         this.show(toastMessage, pseudoClass, null, timeout, null);
     }
 
-    public void show(String message, String pseudoClass, String actionText, EventHandler<? super MouseEvent> actionHandler) {
+    public void show(String message, String pseudoClass, String actionText, EventHandler<ActionEvent> actionHandler) {
         this.show(message, pseudoClass, actionText, -1, actionHandler);
     }
 
-    public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+    public void show(String message, String actionText, long timeout, EventHandler<ActionEvent> actionHandler) {
         this.show(message, null, actionText, timeout, actionHandler);
     }
 
-    public void show(String message, String pseudoClass, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
+    public void show(String message, String pseudoClass, String actionText, long timeout, EventHandler<ActionEvent> actionHandler) {
         toast.setText(message);
         if (actionText != null && !actionText.isEmpty()) {
             action.setVisible(true);
@@ -202,7 +202,7 @@ public class JFXSnackbar extends Group {
             // to force updating the layout bounds
             action.setText("");
             action.setText(actionText);
-            action.setOnMouseClicked(actionHandler);
+            action.setOnAction(actionHandler);
         } else {
             actionContainer.setVisible(false);
             actionContainer.setManaged(false);
@@ -371,7 +371,7 @@ public class JFXSnackbar extends Group {
         private final String pseudoClass;
         private final long timeout;
         private final boolean persistent;
-        private final EventHandler<? super MouseEvent> actionHandler;
+        private final EventHandler<ActionEvent> actionHandler;
 
         public SnackbarEvent(String message) {
             this(message, null, 3000, false, null);
@@ -381,11 +381,11 @@ public class JFXSnackbar extends Group {
             this(message, pseudoClass, null, 3000, false, null);
         }
 
-        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<ActionEvent> actionHandler) {
             this(message, null, actionText, timeout, persistent, actionHandler);
         }
 
-        public SnackbarEvent(String message, String pseudoClass, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+        public SnackbarEvent(String message, String pseudoClass, String actionText, long timeout, boolean persistent, EventHandler<ActionEvent> actionHandler) {
             super(SNACKBAR);
             this.message = message;
             this.pseudoClass = pseudoClass;
@@ -407,7 +407,7 @@ public class JFXSnackbar extends Group {
             return timeout;
         }
 
-        public EventHandler<? super MouseEvent> getActionHandler() {
+        public EventHandler<ActionEvent> getActionHandler() {
             return actionHandler;
         }
 
