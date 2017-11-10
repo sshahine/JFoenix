@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -80,6 +81,9 @@ public class JFXDecorator extends VBox {
     protected JFXButton btnFull;
     protected JFXButton btnClose;
     protected JFXButton btnMin;
+    protected Label title;
+
+
 
     /**
      * Create a window decorator for the specified node with the options:
@@ -244,6 +248,19 @@ public class JFXDecorator extends VBox {
         }
         btns.add(btnClose);
 
+        title = new Label();
+        title.getStyleClass().add("jfx-decorator-label");
+        HBox titleContainer = new HBox();
+
+        titleContainer.setAlignment(Pos.CENTER);
+        titleContainer.getChildren().add(title);
+
+        HBox bigContainer = new HBox();
+        bigContainer.getStyleClass().add("jfx-decorator-buttons-container");
+        bigContainer.setPadding(new Insets(4));
+        bigContainer.setAlignment(Pos.CENTER_RIGHT);
+        bigContainer.getChildren().add(titleContainer);
+        bigContainer.setHgrow(titleContainer,Priority.ALWAYS);
         buttonsContainer.getChildren().addAll(btns);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter) -> allowMove = true);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter) -> {
@@ -268,7 +285,8 @@ public class JFXDecorator extends VBox {
         clip.widthProperty().bind(((Region) node).widthProperty());
         clip.heightProperty().bind(((Region) node).heightProperty());
         node.setClip(clip);
-        this.getChildren().addAll(buttonsContainer, contentPlaceHolder);
+        bigContainer.getChildren().add(buttonsContainer);
+        this.getChildren().addAll(bigContainer, contentPlaceHolder);
 
         primaryStage.fullScreenProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -540,6 +558,25 @@ public class JFXDecorator extends VBox {
      */
     public void setContent(Node content) {
         this.contentPlaceHolder.getChildren().setAll(content);
+    }
+
+
+    /**
+     * will set the title
+     *
+     * @param title
+     */
+    public void setTitle(String title){
+        this.title.setText(title);
+    }
+
+
+    /**
+     * will get the title
+     */
+
+    public String getTitle(){
+        return this.title.getText();
     }
 
 }
