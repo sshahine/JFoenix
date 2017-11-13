@@ -64,21 +64,34 @@ public class JFXNodesList extends VBox {
      * @param node {@link Region} to add
      */
     public void addAnimatedNode(Region node) {
-        addAnimatedNode(node, null);
+        addAnimatedNode(node, null, true);
     }
 
+    /**
+     * Adds node to list.
+     * Note: this method must be called instead of getChildren().add().
+     *
+     * @param node {@link Region} to add
+     */
+    public void addAnimatedNode(Region node, boolean addTriggerListener) {
+        addAnimatedNode(node, null, addTriggerListener);
+    }
+
+    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction){
+        addAnimatedNode(node, animationFramesFunction, true);
+    }
     /**
      * add node to list with a specified callback that is triggered after the node animation is finished.
      * Note: this method must be called instead of getChildren().add().
      *
      * @param node {@link Region} to add
      */
-    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction) {
+    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction, boolean addTriggerListener) {
         // create container for the node if it's a sub nodes list
         if (node instanceof JFXNodesList) {
             StackPane container = new StackPane(node);
             container.setPickOnBounds(false);
-            addAnimatedNode(container, animationFramesFunction);
+            addAnimatedNode(container, animationFramesFunction, addTriggerListener);
             return;
         }
 
@@ -87,10 +100,12 @@ public class JFXNodesList extends VBox {
             initNode(node);
             node.setVisible(false);
         } else {
-            if (node instanceof Button) {
-                node.addEventHandler(ActionEvent.ACTION, event -> animateList());
-            } else {
-                node.addEventHandler(MouseEvent.MOUSE_CLICKED, event-> animateList());
+            if (addTriggerListener) {
+                if (node instanceof Button) {
+                    node.addEventHandler(ActionEvent.ACTION, event -> animateList());
+                } else {
+                    node.addEventHandler(MouseEvent.MOUSE_CLICKED, event-> animateList());
+                }
             }
             node.getStyleClass().add("trigger-node");
             node.setVisible(true);
