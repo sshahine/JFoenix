@@ -119,6 +119,80 @@ public class JFXDecorator extends VBox {
         setPickOnBounds(false);
         this.getStyleClass().add("jfx-decorator");
 
+        initializeButtons();
+        initializeContainers(node,fullScreen, max, min);
+
+
+
+
+
+        primaryStage.fullScreenProperty().addListener((o, oldVal, newVal) -> {
+            if (newVal) {
+                // remove border
+                contentPlaceHolder.getStyleClass().remove("resize-border");
+                /*
+                 *  note the border property MUST NOT be bound to another property
+				 *  when going full screen mode, thus the binding will be lost if exisited
+				 */
+                contentPlaceHolder.borderProperty().unbind();
+                contentPlaceHolder.setBorder(Border.EMPTY);
+                if (windowDecoratorAnimation != null) {
+                    windowDecoratorAnimation.stop();
+                }
+                windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
+                    new KeyValue(this.translateYProperty(),
+                        -buttonsContainer.getHeight(),
+                        Interpolator.EASE_BOTH)));
+                windowDecoratorAnimation.setOnFinished((finish) -> {
+                    this.getChildren().remove(buttonsContainer);
+                    this.setTranslateY(0);
+                });
+                windowDecoratorAnimation.play();
+            } else {
+                // add border
+                if (windowDecoratorAnimation != null) {
+                    if (windowDecoratorAnimation.getStatus() == Animation.Status.RUNNING) {
+                        windowDecoratorAnimation.stop();
+                    } else {
+                        this.getChildren().add(0, buttonsContainer);
+                    }
+                }
+                this.setTranslateY(-buttonsContainer.getHeight());
+                windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
+                    new KeyValue(this.translateYProperty(),
+                        0,
+                        Interpolator.EASE_BOTH)));
+                windowDecoratorAnimation.setOnFinished((finish) -> {
+                    contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK,
+                        BorderStrokeStyle.SOLID,
+                        CornerRadii.EMPTY,
+                        new BorderWidths(0, 4, 4, 4))));
+                    contentPlaceHolder.getStyleClass().add("resize-border");
+                });
+                windowDecoratorAnimation.play();
+            }
+        });
+
+        contentPlaceHolder.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
+            updateInitMouseValues(mouseEvent));
+        buttonsContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
+            updateInitMouseValues(mouseEvent));
+
+        // show the drag cursor on the borders
+        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> showDragCursorOnTheborders(mouseEvent));
+
+
+        // handle drag events on the decorator pane
+        addEventFilter(MouseEvent.MOUSE_RELEASED, (mouseEvent) -> isDragging = false);
+
+        this.setOnMouseDragged((mouseEvent) -> handleDragEventOnDecoratorPane(mouseEvent));
+    }
+
+
+
+
+    private void initializeButtons(){
+
         SVGGlyph full = new SVGGlyph(0,
             "FULLSCREEN",
             "M598 214h212v212h-84v-128h-128v-84zM726 726v-128h84v212h-212v-84h128zM214 426v-212h212v84h-128v128h-84zM298 598v128h128v84h-212v-212h84z",
@@ -145,7 +219,6 @@ public class JFXDecorator extends VBox {
             "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z",
             Color.WHITE);
         close.setSize(12, 12);
-
         btnFull = new JFXButton();
         btnFull.getStyleClass().add("jfx-decorator-button");
         btnFull.setCursor(Cursor.HAND);
@@ -172,54 +245,59 @@ public class JFXDecorator extends VBox {
         btnMax.getStyleClass().add("jfx-decorator-button");
         btnMax.setCursor(Cursor.HAND);
         btnMax.setRipplerFill(Color.WHITE);
-        btnMax.setOnAction((action) -> {
-            if (!isCustomMaximize()) {
-                primaryStage.setMaximized(!primaryStage.isMaximized());
-                maximized = primaryStage.isMaximized();
-                if (primaryStage.isMaximized()) {
-                    btnMax.setGraphic(resizeMin);
-                    btnMax.setTooltip(new Tooltip("Restore Down"));
-                } else {
-                    btnMax.setGraphic(resizeMax);
-                    btnMax.setTooltip(new Tooltip("Maximize"));
-                }
-            } else {
-                if (!maximized) {
-                    // store original bounds
-                    originalBox = new BoundingBox(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight());
-                    // get the max stage bounds
-                    Screen screen = Screen.getScreensForRectangle(stage.getX(),
-                        stage.getY(),
-                        stage.getWidth(),
-                        stage.getHeight()).get(0);
-                    Rectangle2D bounds = screen.getVisualBounds();
-                    maximizedBox = new BoundingBox(bounds.getMinX(),
-                        bounds.getMinY(),
-                        bounds.getWidth(),
-                        bounds.getHeight());
-                    // maximized the stage
-                    stage.setX(maximizedBox.getMinX());
-                    stage.setY(maximizedBox.getMinY());
-                    stage.setWidth(maximizedBox.getWidth());
-                    stage.setHeight(maximizedBox.getHeight());
-                    btnMax.setGraphic(resizeMin);
-                    btnMax.setTooltip(new Tooltip("Restore Down"));
-                } else {
-                    // restore stage to its original size
-                    stage.setX(originalBox.getMinX());
-                    stage.setY(originalBox.getMinY());
-                    stage.setWidth(originalBox.getWidth());
-                    stage.setHeight(originalBox.getHeight());
-                    originalBox = null;
-                    btnMax.setGraphic(resizeMax);
-                    btnMax.setTooltip(new Tooltip("Maximize"));
-                }
-                maximized = !maximized;
-            }
-        });
+        btnMax.setOnAction((action) -> maximize(resizeMin, resizeMax));
         btnMax.setGraphic(resizeMax);
+    }
+
+    private void maximize(SVGGlyph resizeMin, SVGGlyph resizeMax) {
+        if (!isCustomMaximize()) {
+            primaryStage.setMaximized(!primaryStage.isMaximized());
+            maximized = primaryStage.isMaximized();
+            if (primaryStage.isMaximized()) {
+                btnMax.setGraphic(resizeMin);
+                btnMax.setTooltip(new Tooltip("Restore Down"));
+            } else {
+                btnMax.setGraphic(resizeMax);
+                btnMax.setTooltip(new Tooltip("Maximize"));
+            }
+        } else {
+            if (!maximized) {
+                // store original bounds
+                originalBox = new BoundingBox(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(), primaryStage.getHeight());
+                // get the max stage bounds
+                Screen screen = Screen.getScreensForRectangle(primaryStage.getX(),
+                    primaryStage.getY(),
+                    primaryStage.getWidth(),
+                    primaryStage.getHeight()).get(0);
+                Rectangle2D bounds = screen.getVisualBounds();
+                maximizedBox = new BoundingBox(bounds.getMinX(),
+                    bounds.getMinY(),
+                    bounds.getWidth(),
+                    bounds.getHeight());
+                // maximized the stage
+                primaryStage.setX(maximizedBox.getMinX());
+                primaryStage.setY(maximizedBox.getMinY());
+                primaryStage.setWidth(maximizedBox.getWidth());
+                primaryStage.setHeight(maximizedBox.getHeight());
+                btnMax.setGraphic(resizeMin);
+                btnMax.setTooltip(new Tooltip("Restore Down"));
+            } else {
+                // restore stage to its original size
+                primaryStage.setX(originalBox.getMinX());
+                primaryStage.setY(originalBox.getMinY());
+                primaryStage.setWidth(originalBox.getWidth());
+                primaryStage.setHeight(originalBox.getHeight());
+                originalBox = null;
+                btnMax.setGraphic(resizeMax);
+                btnMax.setTooltip(new Tooltip("Maximize"));
+            }
+            maximized = !maximized;
+        }
+    }
 
 
+
+    private void initializeContainers(Node node, boolean fullScreen, boolean max, boolean min){
         buttonsContainer = new HBox();
         buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
         buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK,
@@ -287,170 +365,118 @@ public class JFXDecorator extends VBox {
         node.setClip(clip);
         bigContainer.getChildren().add(buttonsContainer);
         this.getChildren().addAll(bigContainer, contentPlaceHolder);
-
-        primaryStage.fullScreenProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                // remove border
-                contentPlaceHolder.getStyleClass().remove("resize-border");
-                /*
-                 *  note the border property MUST NOT be bound to another property
-				 *  when going full screen mode, thus the binding will be lost if exisited
-				 */
-                contentPlaceHolder.borderProperty().unbind();
-                contentPlaceHolder.setBorder(Border.EMPTY);
-                if (windowDecoratorAnimation != null) {
-                    windowDecoratorAnimation.stop();
-                }
-                windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                    new KeyValue(this.translateYProperty(),
-                        -buttonsContainer.getHeight(),
-                        Interpolator.EASE_BOTH)));
-                windowDecoratorAnimation.setOnFinished((finish) -> {
-                    this.getChildren().remove(buttonsContainer);
-                    this.setTranslateY(0);
-                });
-                windowDecoratorAnimation.play();
-            } else {
-                // add border
-                if (windowDecoratorAnimation != null) {
-                    if (windowDecoratorAnimation.getStatus() == Animation.Status.RUNNING) {
-                        windowDecoratorAnimation.stop();
-                    } else {
-                        this.getChildren().add(0, buttonsContainer);
-                    }
-                }
-                this.setTranslateY(-buttonsContainer.getHeight());
-                windowDecoratorAnimation = new Timeline(new KeyFrame(Duration.millis(320),
-                    new KeyValue(this.translateYProperty(),
-                        0,
-                        Interpolator.EASE_BOTH)));
-                windowDecoratorAnimation.setOnFinished((finish) -> {
-                    contentPlaceHolder.setBorder(new Border(new BorderStroke(Color.BLACK,
-                        BorderStrokeStyle.SOLID,
-                        CornerRadii.EMPTY,
-                        new BorderWidths(0, 4, 4, 4))));
-                    contentPlaceHolder.getStyleClass().add("resize-border");
-                });
-                windowDecoratorAnimation.play();
-            }
-        });
-
-        contentPlaceHolder.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
-            updateInitMouseValues(mouseEvent));
-        buttonsContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, (mouseEvent) ->
-            updateInitMouseValues(mouseEvent));
-
-        // show the drag cursor on the borders
-        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> {
-            if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
-                this.setCursor(Cursor.DEFAULT);
-                return; // maximized mode does not support resize
-            }
-            if (!primaryStage.isResizable()) {
-                return;
-            }
-            double x = mouseEvent.getX();
-            double y = mouseEvent.getY();
-            Bounds boundsInParent = this.getBoundsInParent();
-            if (contentPlaceHolder.getBorder() != null && contentPlaceHolder.getBorder().getStrokes().size() > 0) {
-                double borderWidth = contentPlaceHolder.snappedLeftInset();
-                if (isRightEdge(x, y, boundsInParent)) {
-                    if (y < borderWidth) {
-                        this.setCursor(Cursor.NE_RESIZE);
-                    } else if (y > this.getHeight() - borderWidth) {
-                        this.setCursor(Cursor.SE_RESIZE);
-                    } else {
-                        this.setCursor(Cursor.E_RESIZE);
-                    }
-                } else if (isLeftEdge(x, y, boundsInParent)) {
-                    if (y < borderWidth) {
-                        this.setCursor(Cursor.NW_RESIZE);
-                    } else if (y > this.getHeight() - borderWidth) {
-                        this.setCursor(Cursor.SW_RESIZE);
-                    } else {
-                        this.setCursor(Cursor.W_RESIZE);
-                    }
-                } else if (isTopEdge(x, y, boundsInParent)) {
-                    this.setCursor(Cursor.N_RESIZE);
-                } else if (isBottomEdge(x, y, boundsInParent)) {
-                    this.setCursor(Cursor.S_RESIZE);
-                } else {
-                    this.setCursor(Cursor.DEFAULT);
-                }
-            }
-        });
+    }
 
 
-        // handle drag events on the decorator pane
-        addEventFilter(MouseEvent.MOUSE_RELEASED, (mouseEvent) -> isDragging = false);
+   private void showDragCursorOnTheborders(MouseEvent mouseEvent){
+       if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
+           this.setCursor(Cursor.DEFAULT);
+           return; // maximized mode does not support resize
+       }
+       if (!primaryStage.isResizable()) {
+           return;
+       }
+       double x = mouseEvent.getX();
+       double y = mouseEvent.getY();
+       Bounds boundsInParent = this.getBoundsInParent();
+       if (contentPlaceHolder.getBorder() != null && contentPlaceHolder.getBorder().getStrokes().size() > 0) {
+           double borderWidth = contentPlaceHolder.snappedLeftInset();
+           if (isRightEdge(x, y, boundsInParent)) {
+               if (y < borderWidth) {
+                   this.setCursor(Cursor.NE_RESIZE);
+               } else if (y > this.getHeight() - borderWidth) {
+                   this.setCursor(Cursor.SE_RESIZE);
+               } else {
+                   this.setCursor(Cursor.E_RESIZE);
+               }
+           } else if (isLeftEdge(x, y, boundsInParent)) {
+               if (y < borderWidth) {
+                   this.setCursor(Cursor.NW_RESIZE);
+               } else if (y > this.getHeight() - borderWidth) {
+                   this.setCursor(Cursor.SW_RESIZE);
+               } else {
+                   this.setCursor(Cursor.W_RESIZE);
+               }
+           } else if (isTopEdge(x, y, boundsInParent)) {
+               this.setCursor(Cursor.N_RESIZE);
+           } else if (isBottomEdge(x, y, boundsInParent)) {
+               this.setCursor(Cursor.S_RESIZE);
+           } else {
+               this.setCursor(Cursor.DEFAULT);
+           }
+       }
+   }
 
-        this.setOnMouseDragged((mouseEvent) -> {
-            isDragging = true;
-            if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
-                return;
-            }
+
+
+   private void handleDragEventOnDecoratorPane(MouseEvent mouseEvent){
+       isDragging = true;
+       if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
+           return;
+       }
 			/*
 			 * Long press generates drag event!
 			 */
-            if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
-                return;
-            }
+       if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
+           return;
+       }
 
-            newX = mouseEvent.getScreenX();
-            newY = mouseEvent.getScreenY();
+       newX = mouseEvent.getScreenX();
+       newY = mouseEvent.getScreenY();
 
 
-            double deltax = newX - initX;
-            double deltay = newY - initY;
-            Cursor cursor = this.getCursor();
+       double deltax = newX - initX;
+       double deltay = newY - initY;
+       Cursor cursor = this.getCursor();
 
-            if (Cursor.E_RESIZE.equals(cursor)) {
-                setStageWidth(initWidth + deltax);
-                mouseEvent.consume();
-            } else if (Cursor.NE_RESIZE.equals(cursor)) {
-                if (setStageHeight(initHeight - deltay)) {
-                    primaryStage.setY(initStageY + deltay);
-                }
-                setStageWidth(initWidth + deltax);
-                mouseEvent.consume();
-            } else if (Cursor.SE_RESIZE.equals(cursor)) {
-                setStageWidth(initWidth + deltax);
-                setStageHeight(initHeight + deltay);
-                mouseEvent.consume();
-            } else if (Cursor.S_RESIZE.equals(cursor)) {
-                setStageHeight(initHeight + deltay);
-                mouseEvent.consume();
-            } else if (Cursor.W_RESIZE.equals(cursor)) {
-                if (setStageWidth(initWidth - deltax)) {
-                    primaryStage.setX(initStageX + deltax);
-                }
-                mouseEvent.consume();
-            } else if (Cursor.SW_RESIZE.equals(cursor)) {
-                if (setStageWidth(initWidth - deltax)) {
-                    primaryStage.setX(initStageX + deltax);
-                }
-                setStageHeight(initHeight + deltay);
-                mouseEvent.consume();
-            } else if (Cursor.NW_RESIZE.equals(cursor)) {
-                if (setStageWidth(initWidth - deltax)) {
-                    primaryStage.setX(initStageX + deltax);
-                }
-                if (setStageHeight(initHeight - deltay)) {
-                    primaryStage.setY(initStageY + deltay);
-                }
-                mouseEvent.consume();
-            } else if (Cursor.N_RESIZE.equals(cursor)) {
-                if (setStageHeight(initHeight - deltay)) {
-                    primaryStage.setY(initStageY + deltay);
-                }
-                mouseEvent.consume();
-            } else if (allowMove) {
-                primaryStage.setX(mouseEvent.getScreenX() - xOffset);
-                primaryStage.setY(mouseEvent.getScreenY() - yOffset);
-                mouseEvent.consume();
-            }
-        });
-    }
+       if (Cursor.E_RESIZE.equals(cursor)) {
+           setStageWidth(initWidth + deltax);
+           mouseEvent.consume();
+       } else if (Cursor.NE_RESIZE.equals(cursor)) {
+           if (setStageHeight(initHeight - deltay)) {
+               primaryStage.setY(initStageY + deltay);
+           }
+           setStageWidth(initWidth + deltax);
+           mouseEvent.consume();
+       } else if (Cursor.SE_RESIZE.equals(cursor)) {
+           setStageWidth(initWidth + deltax);
+           setStageHeight(initHeight + deltay);
+           mouseEvent.consume();
+       } else if (Cursor.S_RESIZE.equals(cursor)) {
+           setStageHeight(initHeight + deltay);
+           mouseEvent.consume();
+       } else if (Cursor.W_RESIZE.equals(cursor)) {
+           if (setStageWidth(initWidth - deltax)) {
+               primaryStage.setX(initStageX + deltax);
+           }
+           mouseEvent.consume();
+       } else if (Cursor.SW_RESIZE.equals(cursor)) {
+           if (setStageWidth(initWidth - deltax)) {
+               primaryStage.setX(initStageX + deltax);
+           }
+           setStageHeight(initHeight + deltay);
+           mouseEvent.consume();
+       } else if (Cursor.NW_RESIZE.equals(cursor)) {
+           if (setStageWidth(initWidth - deltax)) {
+               primaryStage.setX(initStageX + deltax);
+           }
+           if (setStageHeight(initHeight - deltay)) {
+               primaryStage.setY(initStageY + deltay);
+           }
+           mouseEvent.consume();
+       } else if (Cursor.N_RESIZE.equals(cursor)) {
+           if (setStageHeight(initHeight - deltay)) {
+               primaryStage.setY(initStageY + deltay);
+           }
+           mouseEvent.consume();
+       } else if (allowMove) {
+           primaryStage.setX(mouseEvent.getScreenX() - xOffset);
+           primaryStage.setY(mouseEvent.getScreenY() - yOffset);
+           mouseEvent.consume();
+       }
+   }
+
+
 
     private void updateInitMouseValues(MouseEvent mouseEvent) {
         initStageX = primaryStage.getX();

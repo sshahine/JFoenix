@@ -771,7 +771,7 @@
     -fx-border-width: 0 4 4 4;
 }
 
-.jfx-decorator-label {
+.jfx-decorator .label {
     -fx-text-fill: #ffffff;
     -fx-font-size: 22;
     -fx-font-weight: bold;
