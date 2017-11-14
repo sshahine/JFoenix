@@ -77,7 +77,6 @@ public class JFXDrawer extends StackPane {
     StackPane sidePane = new StackPane();
     private StackPane content = new StackPane();
     private Transition drawerTransition;
-    //	private Transition outTransition;
     private Transition partialTransition;
     private Duration holdTime = Duration.seconds(0.2);
     private PauseTransition holdTimer = new PauseTransition(holdTime);
@@ -169,9 +168,6 @@ public class JFXDrawer extends StackPane {
             CornerRadii.EMPTY,
             Insets.EMPTY)));
         sidePane.setPickOnBounds(false);
-//        sidePane.setStyle("-fx-padding: 0 10 0 0; -fx-background-insets: 0 0 0 0, 50 10 50 50;"
-//                          + "-fx-background-color: linear-gradient(from 100% 100% to 80% 100%, rgba(97, 97, 97, 0.0), rgba(00, 00, 00, 0.5)),"
-//                          + "linear-gradient(from 0px 0px to 0px 5px, derive(RED, -9%), RED);");
         translateTimer.setCacheNodes(sidePane);
         // add listeners
         initListeners();
@@ -269,28 +265,11 @@ public class JFXDrawer extends StackPane {
         });
 
         holdTimer.setOnFinished(e -> {
-//            if (!this.getChildren().contains(overlayPane)) {
-//                this.getChildren().add(overlayPane);
-//            }
-//            if (!this.getChildren().contains(sidePane)) {
-//                this.getChildren().add(sidePane);
-//            }
             translateTo = initTranslate.get()
                           + initOffset * directionProperty.get().doubleValue()
                           + activeOffset * directionProperty.get().doubleValue();
             overlayPane.setMouseTransparent(!isOverLayVisible());
             translateTimer.setOnFinished(null);
-//            translateTimer.setOnFinished(()->{
-//                this.content.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseDragHandler);
-//                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<Event>() {
-//                    @Override
-//                    public void handle(Event event) {
-//                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
-//                    }
-//                });
-//            });
             translateTimer.start();
         });
     }
@@ -463,25 +442,14 @@ public class JFXDrawer extends StackPane {
      * @return true if he drawer is totally visible else false
      */
     public boolean isShown() {
-//        return isTransitionStopped(drawerTransition) && translateProperty.get() == 0;
         return translateTo == 0 && !translateTimer.isRunning();
     }
 
     public boolean isShowing() {
-//        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() > 0)
-//               || (partialTransition instanceof DrawerPartialTransitionDraw
-//                   && isRunningTransition(partialTransition));
         return translateTo == 0 && translateTimer.isRunning();
     }
 
-//    private boolean isRunningTransition(Transition transition) {
-//        return transition.getStatus() == Status.RUNNING;
-//    }
-
     public boolean isHiding() {
-//        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
-//               || (partialTransition instanceof DrawerPartialTransitionHide
-//                   && isRunningTransition(partialTransition));
         return translateTo == initTranslate.get() && translateTimer.isRunning();
     }
 
