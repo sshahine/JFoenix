@@ -60,6 +60,9 @@ import java.util.ArrayList;
  */
 public class JFXDrawer extends StackPane {
 
+    /**
+     * Defines the directions that a {@link JFXDrawer} can originate from.
+     */
     public enum DrawerDirection {
         LEFT(1), RIGHT(-1), TOP(1), BOTTOM(-1);
         private double numVal;
@@ -297,9 +300,9 @@ public class JFXDrawer extends StackPane {
     };
 
     /**
-     * this method will change the drawer behavior according to its direction
+     * This method will change the drawer behavior according to the argument direction.
      *
-     * @param dir
+     * @param dir - The direction that the drawer will enter the screen from.
      */
     private void updateDirection(DrawerDirection dir) {
         maxSizeProperty.get().set(-1);
@@ -437,26 +440,45 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * this method indicates whether the drawer is shown or not
+     * This indicates whether or not the drawer is completely shown.
      *
-     * @return true if he drawer is totally visible else false
+     * @return True if the drawer is totally visible and not transitioning, otherwise false.
      */
     public boolean isShown() {
         return translateTo == 0 && !translateTimer.isRunning();
     }
 
+    /**
+     * This indicates whether or not the drawer is in the process of being shown.
+     *
+     * @return True if the drawer is transitioning from closed to open, otherwise false.
+     */
     public boolean isShowing() {
         return translateTo == 0 && translateTimer.isRunning();
     }
 
+    /**
+     * This indicates whether or not the drawer is in the process of being hidden.
+     *
+     * @return True if the drawer is transitioning from open to closed, otherwise false.
+     */
     public boolean isHiding() {
         return translateTo == initTranslate.get() && translateTimer.isRunning();
     }
 
+    /**
+     * This indicates whether or not the drawer is completely hidden.
+     *
+     * @return True if the drawer is hidden and not in the process of transitioning, otherwise false.
+     */
     public boolean isHidden() {
         return translateTo == initTranslate.get() && !translateTimer.isRunning();
     }
 
+    /**
+     * Toggles the drawer between open and closed. The drawer will be closed if it is shown or transitioning between
+     * closed and open. Likewise, it will be opened if it is open or transitioning from open to closed.
+     */
     public void toggle(){
         if(isShown() || isShowing()){
             close();
@@ -466,7 +488,7 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * toggle the drawer on
+     * Starts the animation to transition this drawer to open.
      */
     public void open() {
         translateTo = 0;
@@ -476,7 +498,7 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * toggle the drawer off
+     * Starts the animation to transition this drawer to closed.
      */
     public void close() {
         // unbind properties as the drawer size might be bound to stage size
