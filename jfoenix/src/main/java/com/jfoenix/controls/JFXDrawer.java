@@ -60,6 +60,9 @@ import java.util.ArrayList;
  */
 public class JFXDrawer extends StackPane {
 
+    /**
+     * Defines the directions that a {@link JFXDrawer} can originate from.
+     */
     public enum DrawerDirection {
         LEFT(1), RIGHT(-1), TOP(1), BOTTOM(-1);
         private double numVal;
@@ -77,7 +80,6 @@ public class JFXDrawer extends StackPane {
     StackPane sidePane = new StackPane();
     private StackPane content = new StackPane();
     private Transition drawerTransition;
-    //	private Transition outTransition;
     private Transition partialTransition;
     private Duration holdTime = Duration.seconds(0.2);
     private PauseTransition holdTimer = new PauseTransition(holdTime);
@@ -169,9 +171,6 @@ public class JFXDrawer extends StackPane {
             CornerRadii.EMPTY,
             Insets.EMPTY)));
         sidePane.setPickOnBounds(false);
-//        sidePane.setStyle("-fx-padding: 0 10 0 0; -fx-background-insets: 0 0 0 0, 50 10 50 50;"
-//                          + "-fx-background-color: linear-gradient(from 100% 100% to 80% 100%, rgba(97, 97, 97, 0.0), rgba(00, 00, 00, 0.5)),"
-//                          + "linear-gradient(from 0px 0px to 0px 5px, derive(RED, -9%), RED);");
         translateTimer.setCacheNodes(sidePane);
         // add listeners
         initListeners();
@@ -269,28 +268,11 @@ public class JFXDrawer extends StackPane {
         });
 
         holdTimer.setOnFinished(e -> {
-//            if (!this.getChildren().contains(overlayPane)) {
-//                this.getChildren().add(overlayPane);
-//            }
-//            if (!this.getChildren().contains(sidePane)) {
-//                this.getChildren().add(sidePane);
-//            }
             translateTo = initTranslate.get()
                           + initOffset * directionProperty.get().doubleValue()
                           + activeOffset * directionProperty.get().doubleValue();
             overlayPane.setMouseTransparent(!isOverLayVisible());
             translateTimer.setOnFinished(null);
-//            translateTimer.setOnFinished(()->{
-//                this.content.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseDragHandler);
-//                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<Event>() {
-//                    @Override
-//                    public void handle(Event event) {
-//                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-//                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
-//                    }
-//                });
-//            });
             translateTimer.start();
         });
     }
@@ -318,9 +300,9 @@ public class JFXDrawer extends StackPane {
     };
 
     /**
-     * this method will change the drawer behavior according to its direction
+     * This method will change the drawer behavior according to the argument direction.
      *
-     * @param dir
+     * @param dir - The direction that the drawer will enter the screen from.
      */
     private void updateDirection(DrawerDirection dir) {
         maxSizeProperty.get().set(-1);
@@ -458,37 +440,45 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * this method indicates whether the drawer is shown or not
+     * This indicates whether or not the drawer is completely shown.
      *
-     * @return true if he drawer is totally visible else false
+     * @return True if the drawer is totally visible and not transitioning, otherwise false.
      */
     public boolean isShown() {
-//        return isTransitionStopped(drawerTransition) && translateProperty.get() == 0;
         return translateTo == 0 && !translateTimer.isRunning();
     }
 
+    /**
+     * This indicates whether or not the drawer is in the process of being shown.
+     *
+     * @return True if the drawer is transitioning from closed to open, otherwise false.
+     */
     public boolean isShowing() {
-//        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() > 0)
-//               || (partialTransition instanceof DrawerPartialTransitionDraw
-//                   && isRunningTransition(partialTransition));
         return translateTo == 0 && translateTimer.isRunning();
     }
 
-//    private boolean isRunningTransition(Transition transition) {
-//        return transition.getStatus() == Status.RUNNING;
-//    }
-
+    /**
+     * This indicates whether or not the drawer is in the process of being hidden.
+     *
+     * @return True if the drawer is transitioning from open to closed, otherwise false.
+     */
     public boolean isHiding() {
-//        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
-//               || (partialTransition instanceof DrawerPartialTransitionHide
-//                   && isRunningTransition(partialTransition));
         return translateTo == initTranslate.get() && translateTimer.isRunning();
     }
 
+    /**
+     * This indicates whether or not the drawer is completely hidden.
+     *
+     * @return True if the drawer is hidden and not in the process of transitioning, otherwise false.
+     */
     public boolean isHidden() {
         return translateTo == initTranslate.get() && !translateTimer.isRunning();
     }
 
+    /**
+     * Toggles the drawer between open and closed. The drawer will be closed if it is shown or transitioning between
+     * closed and open. Likewise, it will be opened if it is open or transitioning from open to closed.
+     */
     public void toggle(){
         if(isShown() || isShowing()){
             close();
@@ -498,7 +488,7 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * toggle the drawer on
+     * Starts the animation to transition this drawer to open.
      */
     public void open() {
         translateTo = 0;
@@ -508,7 +498,7 @@ public class JFXDrawer extends StackPane {
     }
 
     /**
-     * toggle the drawer off
+     * Starts the animation to transition this drawer to closed.
      */
     public void close() {
         // unbind properties as the drawer size might be bound to stage size
