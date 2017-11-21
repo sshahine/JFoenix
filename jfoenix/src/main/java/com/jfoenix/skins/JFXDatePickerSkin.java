@@ -72,7 +72,6 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
 
         // create calender or clock button
         updateArrow(datePicker);
-        ((SVGGlyph) arrow).setFill(jfxDatePicker.getDefaultColor());
         ((JFXTextField) getEditor()).setFocusColor(jfxDatePicker.getDefaultColor());
 
         registerChangeListener(datePicker.defaultColorProperty(), obs -> updateArrow(datePicker));

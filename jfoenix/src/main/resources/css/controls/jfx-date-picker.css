@@ -37,6 +37,7 @@
 
 .jfx-date-picker > .arrow-button > .arrow{
     -fx-shape: "M320 384h128v128h-128zM512 384h128v128h-128zM704 384h128v128h-128zM128 768h128v128h-128zM320 768h128v128h-128zM512 768h128v128h-128zM320 576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896 960h-832v-704h832v704z";
+    -fx-background-color: -jfx-default-color;
     -fx-background-insets: 0;
     -fx-padding: 10;
 }

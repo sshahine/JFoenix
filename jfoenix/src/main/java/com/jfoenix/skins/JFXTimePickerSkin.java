@@ -63,10 +63,9 @@ public class JFXTimePickerSkin extends JFXGenericPickerSkin<LocalTime> {
         });
 
         updateArrow(timePicker);
-        registerChangeListener(timePicker.defaultColorProperty(), obs -> updateArrow(timePicker));
-        ((SVGGlyph) arrow).setFill(timePicker.getDefaultColor());
         ((JFXTextField) getEditor()).setFocusColor(timePicker.getDefaultColor());
 
+        registerChangeListener(timePicker.defaultColorProperty(), obs -> updateArrow(timePicker));
         registerChangeListener(timePicker.converterProperty(), obs -> reflectUpdateDisplayNode());
         registerChangeListener(timePicker.editorProperty(), obs -> reflectUpdateDisplayNode());
         registerChangeListener(timePicker.showingProperty(), obs -> {
