@@ -23,12 +23,12 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.svg.SVGGlyph;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
@@ -72,11 +72,8 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
 
         // create calender or clock button
         updateArrow(datePicker);
-            null);
         ((SVGGlyph) arrow).setFill(jfxDatePicker.getDefaultColor());
         ((JFXTextField) getEditor()).setFocusColor(jfxDatePicker.getDefaultColor());
-
-    protected Node getPopupContent() {
 
         registerChangeListener(datePicker.defaultColorProperty(), obs -> updateArrow(datePicker));
         registerChangeListener(datePicker.converterProperty(), obs -> reflectUpdateDisplayNode());
@@ -129,7 +126,7 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
 
 
     @Override
-    public Node getPopupContent() {
+    protected Node getPopupContent() {
         if (content == null) {
             // different chronologies are not supported yet
             // will be called in constructor thus must use getSkinnable instead of jfxDatePicker

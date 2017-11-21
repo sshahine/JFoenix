@@ -21,7 +21,9 @@ package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.svg.SVGGlyph;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -62,9 +64,7 @@ public class JFXTimePickerSkin extends JFXGenericPickerSkin<LocalTime> {
 
         updateArrow(timePicker);
         registerChangeListener(timePicker.defaultColorProperty(), obs -> updateArrow(timePicker));
-            null);
         ((SVGGlyph) arrow).setFill(timePicker.getDefaultColor());
-
         ((JFXTextField) getEditor()).setFocusColor(timePicker.getDefaultColor());
 
         registerChangeListener(timePicker.converterProperty(), obs -> reflectUpdateDisplayNode());

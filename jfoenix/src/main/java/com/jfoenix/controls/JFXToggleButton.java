@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXToggleButtonSkin;
 import javafx.css.*;
+import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
