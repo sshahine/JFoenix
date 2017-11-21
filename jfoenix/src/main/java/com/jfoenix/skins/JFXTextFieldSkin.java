@@ -277,16 +277,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         });
 
         // handle text changing at runtime
-        field.textProperty().addListener((observable) -> {
-            if (!getSkinnable().isFocused() && ((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
-                final String text = field.getText();
-                if (text == null || text.isEmpty()) {
-                    animateFloatingLabel(false);
-                } else {
-                    animateFloatingLabel(true);
-                }
-            }
-        });
+        field.textProperty().addListener((observable) -> updateFloating());
 
         field.disabledProperty().addListener(observable -> {
             line.setBorder(field.isDisabled() ? new Border(new BorderStroke(((IFXTextInputControl) getSkinnable()).getUnFocusColor(),
@@ -323,6 +314,17 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
         });
     }
 
+    private void updateFloating() {
+        if (!getSkinnable().isFocused() && ((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
+            final String text = getSkinnable().getText();
+            if (text == null || text.isEmpty()) {
+                animateFloatingLabel(false);
+            } else {
+                animateFloatingLabel(true);
+            }
+        }
+    }
+
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         super.layoutChildren(x, y, w, h);
@@ -340,6 +342,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 //            unfocusTimer.setCacheNodes(textPane);
             // create floating label
             createFloatingLabel();
+            updateFloating();
             // update validation container
             final ValidatorBase activeValidator = ((IFXTextInputControl) getSkinnable()).getActiveValidator();
             if (activeValidator != null) {

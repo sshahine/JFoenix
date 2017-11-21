@@ -277,16 +277,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         });
 
         // handle text changing at runtime
-        textArea.textProperty().addListener(observable -> {
-            if (!getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
-                final String text = textArea.getText();
-                if (text == null || text.isEmpty()) {
-                    animateFloatingLabel(false);
-                } else {
-                    animateFloatingLabel(true);
-                }
-            }
-        });
+        textArea.textProperty().addListener(observable -> updateFloating());
 
         textArea.disabledProperty().addListener(observable -> {
             line.setBorder(textArea.isDisabled() ? new Border(new BorderStroke(((JFXTextArea) getSkinnable()).getUnFocusColor(),
@@ -324,6 +315,17 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         });
     }
 
+    private void updateFloating() {
+        if (!getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
+            final String text = getSkinnable().getText();
+            if (text == null || text.isEmpty()) {
+                animateFloatingLabel(false);
+            } else {
+                animateFloatingLabel(true);
+            }
+        }
+    }
+
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         super.layoutChildren(x, y, w, h);
@@ -349,6 +351,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
             focusTimer.setCacheNodes(promptContainer);
             unfocusTimer.setCacheNodes(promptContainer);
             createFloatingLabel();
+            updateFloating();
             // to position the prompt node properly
             super.layoutChildren(x, y, w, h);
             // update validation container
