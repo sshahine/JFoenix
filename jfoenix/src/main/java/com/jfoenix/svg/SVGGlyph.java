@@ -54,6 +54,10 @@ public class SVGGlyph extends Pane {
     private double widthHeightRatio = 1;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 
+    public SVGGlyph(String svgPathContent) {
+        this(-1, "UNNAMED", svgPathContent, Color.BLACK);
+    }
+
     public SVGGlyph(String svgPathContent, Paint fill) {
         this(-1, "UNNAMED", svgPathContent, fill);
     }

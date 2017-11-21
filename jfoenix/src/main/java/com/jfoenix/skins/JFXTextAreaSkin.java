@@ -152,6 +152,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         // draw lines
         line.setPrefHeight(1);
         line.setTranslateY(1 + 4 + 2); // translate = prefHeight + init_translation
+        line.setManaged(false);
         line.setBackground(new Background(new BackgroundFill(((JFXTextArea) getSkinnable()).getUnFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         if (getSkinnable().isDisabled()) {
@@ -166,6 +167,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         // focused line
         focusedLine.setPrefHeight(2);
         focusedLine.setTranslateY(4 + 2); // translate = prefHeight + init_translation(-1)
+        focusedLine.setManaged(false);
         focusedLine.setBackground(new Background(new BackgroundFill(((JFXTextArea) getSkinnable()).getFocusColor(),
             CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);

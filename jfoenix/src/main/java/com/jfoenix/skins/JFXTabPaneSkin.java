@@ -100,7 +100,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
         tabsContainerHolder.getChildren().add(tabsContainer);
         tabsClip = new Rectangle();
         tabsContainerHolder.setClip(tabsClip);
-        getChildren().add(tabsContainerHolder);
+        getChildren().add(0, tabsContainerHolder);
 
         // add tabs
         for (Tab tab : getSkinnable().getTabs()) {

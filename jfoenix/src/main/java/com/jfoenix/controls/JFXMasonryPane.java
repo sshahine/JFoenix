@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 
 import com.jfoenix.transitions.CachedTransition;
 import javafx.animation.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener.Change;
@@ -66,26 +67,22 @@ public class JFXMasonryPane extends Pane {
      * Constructs a new JFXMasonryPane
      */
     public JFXMasonryPane() {
-        this.widthProperty().addListener((o, oldVal, newVal) -> {
+        this.widthProperty().addListener(observable -> valid = false);
+        this.heightProperty().addListener(observable -> valid = false);
+        InvalidationListener layoutListener = observable -> {
             valid = false;
-        });
-        this.heightProperty().addListener((o, oldVal, newVal) -> {
-            valid = false;
-        });
-        ChangeListener<? super Number> layoutListener = (o, oldVal, newVal) -> {
-            valid = false;
-            this.requestLayout();
+            requestLayout();
         };
-        this.cellWidthProperty().addListener(layoutListener);
-        this.cellHeightProperty().addListener(layoutListener);
-        this.hSpacingProperty().addListener(layoutListener);
-        this.vSpacingProperty().addListener(layoutListener);
-        this.limitColumnProperty().addListener(layoutListener);
-        this.limitRowProperty().addListener(layoutListener);
-        this.getChildren().addListener((Change<? extends Node> c) -> {
+        cellWidthProperty().addListener(layoutListener);
+        cellHeightProperty().addListener(layoutListener);
+        hSpacingProperty().addListener(layoutListener);
+        vSpacingProperty().addListener(layoutListener);
+        limitColumnProperty().addListener(layoutListener);
+        limitRowProperty().addListener(layoutListener);
+        getChildren().addListener((InvalidationListener) observable -> {
             valid = false;
             matrix = null;
-            this.requestLayout();
+            requestLayout();
         });
     }
 

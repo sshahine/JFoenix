@@ -284,10 +284,10 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             animatedPromptTextFill.set(promptTextFill.get());
 //            focusTimer.setCacheNodes(promptText);
 //            unfocusTimer.setCacheNodes(promptText);
-            if(!getSkinnable().isEditable()){
-                final Text javaPromptText = (Text) ((ListCell<T>) super.getDisplayNode()).lookup(".text");
-                if(javaPromptText!=null) animatedPromptTextFill.set(javaPromptText.getFill());
-            }
+//            if(!getSkinnable().isEditable()){
+//                final Text javaPromptText = (Text) ((ListCell<T>) super.getDisplayNode()).lookup(".text");
+//                if(javaPromptText!=null) animatedPromptTextFill.set(javaPromptText.getFill());
+//            }
             if(getSkinnable().getValue()!=null)
                 animateFloatingLabel(true);
         }

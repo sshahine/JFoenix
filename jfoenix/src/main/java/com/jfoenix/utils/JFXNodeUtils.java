@@ -32,6 +32,11 @@ import javafx.util.Duration;
 
 import java.util.Locale;
 
+/**
+ * @author Shadi Shaheen
+ * @version 1.0
+ * @since 2017-02-11
+ */
 public class JFXNodeUtils {
 
 

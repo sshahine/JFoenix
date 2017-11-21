@@ -149,6 +149,20 @@ public class JFXPopup extends PopupControl {
         }
     }
 
+    public void show(Window window, double x, double y, PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY) {
+        if (!isShowing()) {
+            if (window == null) {
+                throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
+            }
+            Window parent = window;
+            final double anchorX = parent.getX() + x + initOffsetX;
+            final double anchorY = parent.getY() + y + initOffsetY;
+            this.show(parent, anchorX, anchorY);
+            ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
+            Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());
+        }
+    }
+
     @Override
     public void hide() {
         super.hide();

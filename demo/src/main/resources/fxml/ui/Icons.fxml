@@ -61,8 +61,6 @@
             </children>
         </HBox>
     </VBox>
-
-    <JFXSnackbar fx:id="snackbar" prefWidth="300"/>
 </StackPane>
 
 

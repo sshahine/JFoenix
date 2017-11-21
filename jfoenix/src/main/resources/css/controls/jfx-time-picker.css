@@ -17,6 +17,10 @@
  * under the License.
  */
 
+.jfx-time-picker{
+    -jfx-default-color: #009688;
+}
+
 .jfx-time-picker,
 .jfx-time-picker:focused,
 .jfx-time-picker:focused:editable {
@@ -25,6 +29,7 @@
 
 .jfx-time-picker > .arrow-button,
 .jfx-time-picker:editable > .arrow-button,
+.jfx-time-picker:focused > .arrow-button,
 .jfx-time-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
 }
@@ -33,4 +38,9 @@
     -fx-shape: "M512 310.857v256q0 8-5.143 13.143t-13.143 5.143h-182.857q-8 0-13.143-5.143t-5.143-13.143v-36.571q0-8 5.143-13.143t13.143-5.143h128v-201.143q0-8 5.143-13.143t13.143-5.143h36.571q8 0 13.143 5.143t5.143 13.143zM749.714 512q0-84.571-41.714-156t-113.143-113.143-156-41.714-156 41.714-113.143 113.143-41.714 156 41.714 156 113.143 113.143 156 41.714 156-41.714 113.143-113.143 41.714-156zM877.714 512q0 119.429-58.857 220.286t-159.714 159.714-220.286 58.857-220.286-58.857-159.714-159.714-58.857-220.286 58.857-220.286 159.714-159.714 220.286-58.857 220.286 58.857 159.714 159.714 58.857 220.286z";
     -fx-background-insets: 0;
     -fx-padding: 10;
+}
+
+
+.jfx-time-picker > .arrow-button > .jfx-svg-glyph{
+    -fx-background-color: -jfx-default-color;
 }

@@ -174,7 +174,6 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
         if (editor == null) {
             editor = new ReadOnlyObjectWrapper<>(this, "editor");
             final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
-            editorNode.focusColorProperty().bind(this.defaultColorProperty());
             this.focusedProperty().addListener((obj, oldVal, newVal) -> {
                 if (getEditor() != null) {
                     editorNode.setFakeFocus(newVal);

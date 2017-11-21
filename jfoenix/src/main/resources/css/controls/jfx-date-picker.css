@@ -17,6 +17,10 @@
  * under the License.
  */
 
+.jfx-date-picker{
+    -jfx-default-color: #009688;
+}
+
 .jfx-date-picker,
 .jfx-date-picker:focused,
 .jfx-date-picker:focused:editable {
@@ -25,6 +29,7 @@
 
 .jfx-date-picker > .arrow-button,
 .jfx-date-picker:editable > .arrow-button,
+.jfx-date-picker:focused > .arrow-button,
 .jfx-date-picker:editable:focused > .arrow-button{
     -fx-background-color: TRANSPARENT;
 }
@@ -34,4 +39,8 @@
     -fx-shape: "M320 384h128v128h-128zM512 384h128v128h-128zM704 384h128v128h-128zM128 768h128v128h-128zM320 768h128v128h-128zM512 768h128v128h-128zM320 576h128v128h-128zM512 576h128v128h-128zM704 576h128v128h-128zM128 576h128v128h-128zM832 0v64h-128v-64h-448v64h-128v-64h-128v1024h960v-1024h-128zM896 960h-832v-704h832v704z";
     -fx-background-insets: 0;
     -fx-padding: 10;
+}
+
+.jfx-date-picker > .arrow-button > .jfx-svg-glyph{
+    -fx-background-color: -jfx-default-color;
 }

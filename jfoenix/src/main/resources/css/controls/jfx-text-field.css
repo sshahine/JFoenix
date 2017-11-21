@@ -43,6 +43,7 @@
 }
 
 /* -------------- STYLES FOR THE DEFAULT JFXTEXTFIELD-BASED COMBOBOX ------------- */
+
 .combo-box-base:editable > .jfx-text-field,
 .date-picker > .jfx-text-field,
 .jfx-date-picker > .jfx-text-field,
@@ -51,4 +52,9 @@
 .date-picker:focused > .text-field,
 .date-picker > .text-field:focused {
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT;
+}
+
+.jfx-date-picker > .jfx-text-field,
+.jfx-time-picker > .jfx-text-field{
+    -jfx-focus-color: -jfx-default-color;
 }

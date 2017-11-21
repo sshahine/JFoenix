@@ -126,6 +126,25 @@ public class JFXRadioButton extends RadioButton {
         this.unSelectedColorProperty().set(unSelectedColor);
     }
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXRadioButton.this,
+        "disableVisualFocus",
+        false);
+
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXRadioButton, Color> SELECTED_COLOR =
@@ -154,7 +173,19 @@ public class JFXRadioButton extends RadioButton {
                     return control.unSelectedColorProperty();
                 }
             };
+        private static final CssMetaData<JFXRadioButton, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXRadioButton, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXRadioButton control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
 
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXRadioButton control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
@@ -162,7 +193,8 @@ public class JFXRadioButton extends RadioButton {
                 new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                 SELECTED_COLOR,
-                UNSELECTED_COLOR
+                UNSELECTED_COLOR,
+                DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
