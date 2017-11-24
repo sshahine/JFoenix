@@ -30,7 +30,6 @@ import com.sun.javafx.scene.control.MultiplePropertyChangeListenerHandler;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
@@ -542,6 +541,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                 Insets.EMPTY)));
             headerBackground.getStyleClass().setAll("tab-header-background");
             selectedTabLine = new StackPane();
+            selectedTabLine.setManaged(false);
             scale = new Scale(1, 1, 0, 0);
             rotate = new Rotate(0, 0, 1);
             rotate.pivotYProperty().bind(selectedTabLine.heightProperty().divide(2));
@@ -672,6 +672,10 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             final double transDiff = newTransX - oldTransX;
             double midScaleX = tempScaleX != 0 ?
                 tempScaleX : ((Math.abs(transDiff)/translateScaleFactor + oldWidth) * oldScaleX) / oldWidth;
+
+            if(midScaleX > Math.abs(transDiff) + newWidth){
+                midScaleX = Math.abs(transDiff) + newWidth;
+            }
 
             if (transDiff < 0) {
                 selectedTabLine.setTranslateX(selectedTabLine.getTranslateX() + oldWidth);
@@ -969,6 +973,7 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
             listener.registerChangeListener(getSkinnable().tabMinHeightProperty(), "TAB_MIN_HEIGHT");
             listener.registerChangeListener(getSkinnable().tabMaxHeightProperty(), "TAB_MAX_HEIGHT");
             listener.registerChangeListener(getSkinnable().sideProperty(), "SIDE");
+            listener.registerChangeListener(widthProperty(), "WIDTH");
             tab.getStyleClass().addListener(weakStyleClassListener);
 
             getProperties().put(Tab.class, tab);
@@ -1045,6 +1050,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                 pseudoClassStateChanged(BOTTOM_PSEUDOCLASS_STATE, (side == Side.BOTTOM));
                 pseudoClassStateChanged(LEFT_PSEUDOCLASS_STATE, (side == Side.LEFT));
                 inner.setRotate(side == Side.BOTTOM ? 180.0F : 0.0F);
+            } else if ("WIDTH".equals(p)) {
+                header.animateSelectionLine();
             }
         }
 
