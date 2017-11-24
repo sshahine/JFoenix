@@ -264,15 +264,16 @@
     -fx-fill: black;
 }
 
-.jfx-slider:disabled {
-    -fx-opacity: 0.4;
-}
-
 /*******************************************************
 *                           						   *
 * For the main demo sliders 						   *
 *                          							   *
 *******************************************************/
+
+.jfx-slider-colored{
+    -jfx-default-thumb: #5264AE;
+    -jfx-default-track: #212121;
+}
 
 .jfx-slider-style {
     -jfx-indicator-position: right;
@@ -286,6 +287,10 @@
     -fx-background-color: #ff5252;
     -fx-pref-height: 5px;
     -fx-pref-width: 5px;
+}
+
+.jfx-slider-style .animated-thumb{
+    -fx-background-color: darkorange;
 }
 
 .jfx-slider-style .sliderValue {
