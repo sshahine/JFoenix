@@ -27,6 +27,8 @@ Feel free to submit your project info to the following <a href="mailto:developer
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
+* Other small projects <a href="https://mayuso.itch.io/lolping-2">LOL ping</a>,
+<a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>
 
 # Build
 To build JFoenix, execute the following command:
