@@ -86,14 +86,14 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             if(!control.disableVisualFocusProperty().get()) {
                 if (newVal) {
                     if (!getSkinnable().isPressed()) {
-                        rippler.showOverlay();
+                        rippler.setOverlayVisible(true);
                     }
                 } else {
-                    rippler.hideOverlay();
+                    rippler.setOverlayVisible(false);
                 }
             }
         });
-        control.pressedProperty().addListener((o, oldVal, newVal) -> rippler.hideOverlay());
+        control.pressedProperty().addListener((o, oldVal, newVal) -> rippler.setOverlayVisible(false));
 
         registerChangeListener(control.selectedColorProperty(), "SELECTED_COLOR");
         registerChangeListener(control.unSelectedColorProperty(), "UNSELECTED_COLOR");
