@@ -29,6 +29,7 @@ import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -67,12 +68,7 @@ public class JFXButtonSkin extends ButtonSkin {
                     getHeight() - snappedBottomInset() - snappedTopInset());
                 return mask;
             }
-            @Override
-            protected void initControlListeners() {
-                control.layoutBoundsProperty().addListener(observable -> resetRippler());
-                control.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                    (event) -> createRipple(event.getX(), event.getY()));
-            }
+
             @Override
             protected void positionControl(Node control) {
                 // do nothing as the controls is not inside the ripple
