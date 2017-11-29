@@ -31,6 +31,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -82,8 +83,7 @@ public class JFXDecorator extends VBox {
     protected JFXButton btnClose;
     protected JFXButton btnMin;
     protected Label title;
-
-
+    protected Image titleImage;
 
     /**
      * Create a window decorator for the specified node with the options:
@@ -121,10 +121,6 @@ public class JFXDecorator extends VBox {
 
         initializeButtons();
         initializeContainers(node,fullScreen, max, min);
-
-
-
-
 
         primaryStage.fullScreenProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -184,12 +180,8 @@ public class JFXDecorator extends VBox {
 
         // handle drag events on the decorator pane
         addEventFilter(MouseEvent.MOUSE_RELEASED, (mouseEvent) -> isDragging = false);
-
         this.setOnMouseDragged((mouseEvent) -> handleDragEventOnDecoratorPane(mouseEvent));
     }
-
-
-
 
     private void initializeButtons(){
 
@@ -295,8 +287,6 @@ public class JFXDecorator extends VBox {
         }
     }
 
-
-
     private void initializeContainers(Node node, boolean fullScreen, boolean max, boolean min){
         buttonsContainer = new HBox();
         buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
@@ -367,7 +357,6 @@ public class JFXDecorator extends VBox {
         this.getChildren().addAll(bigContainer, contentPlaceHolder);
     }
 
-
    private void showDragCursorOnTheborders(MouseEvent mouseEvent){
        if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
            this.setCursor(Cursor.DEFAULT);
@@ -406,8 +395,6 @@ public class JFXDecorator extends VBox {
            }
        }
    }
-
-
 
    private void handleDragEventOnDecoratorPane(MouseEvent mouseEvent){
        isDragging = true;
@@ -475,8 +462,6 @@ public class JFXDecorator extends VBox {
            mouseEvent.consume();
        }
    }
-
-
 
     private void updateInitMouseValues(MouseEvent mouseEvent) {
         initStageX = primaryStage.getX();
