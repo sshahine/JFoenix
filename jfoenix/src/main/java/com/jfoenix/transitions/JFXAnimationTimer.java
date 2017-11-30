@@ -21,8 +21,6 @@ package com.jfoenix.transitions;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.WritableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -62,8 +60,12 @@ public class JFXAnimationTimer extends AnimationTimer {
         super.start();
         running = true;
         startTime = -1;
-        animationHandlers.forEach(AnimationHandler::init);
-        caches.forEach(CacheMomento::cache);
+        for (AnimationHandler animationHandler : animationHandlers) {
+            animationHandler.init();
+        }
+        for (CacheMomento cache : caches) {
+            cache.cache();
+        }
     }
 
     @Override
@@ -100,7 +102,9 @@ public class JFXAnimationTimer extends AnimationTimer {
         super.stop();
         running = false;
         initialValuesMap.clear();
-        caches.forEach(CacheMomento::restore);
+        for (CacheMomento cache : caches) {
+            cache.restore();
+        }
         if(onFinished!=null) onFinished.run();
     }
 
@@ -136,45 +140,45 @@ public class JFXAnimationTimer extends AnimationTimer {
 
         public void init() {
             finished = false;
-            keyValues.forEach(keyValue -> {
+            for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
                     initialValuesMap.putIfAbsent(keyValue.getTarget(), keyValue.getTarget().getValue());
                 }
-            });
+            }
         }
 
         public void reverse(double now) {
             currentDuration = duration - (currentDuration - now);
             // update initial values
-            keyValues.forEach(keyValue -> {
+            for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
                     initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
                 }
-            });
+            }
         }
 
         // now in milliseconds
         public void animate(double now) {
             if (now <= currentDuration) {
-                keyValues.forEach(keyValue -> {
+                for (JFXKeyValue keyValue : keyValues) {
                     if (keyValue.isValid()) {
                         final WritableValue target = keyValue.getTarget();
                         if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
                             target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), keyValue.getEndValue(), now / currentDuration));
                         }
                     }
-                });
+                }
             } else {
                 if (!finished) {
                     finished = true;
-                    keyValues.forEach(keyValue -> {
+                    for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
                             if (target != null) {
                                 target.setValue(keyValue.getEndValue());
                             }
                         }
-                    });
+                    }
                     currentDuration = duration;
                 }
             }
