@@ -83,7 +83,7 @@ public class JFXCheckBox extends CheckBox {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-check-box.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
 
 
@@ -100,7 +100,7 @@ public class JFXCheckBox extends CheckBox {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-check-box";
-
+    private static final String USER_AGENT_STYLESHEET = JFXCheckBox.class.getResource("/css/controls/jfx-check-box.css").toExternalForm();
     /**
      * checkbox color property when selected
      */
