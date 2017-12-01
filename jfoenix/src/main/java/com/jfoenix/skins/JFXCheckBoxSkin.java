@@ -30,8 +30,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.skin.CheckBoxSkin;
 import javafx.scene.layout.*;
-import javafx.scene.control.skin.LabeledSkinBase;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -231,7 +231,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
                 mark.setScaleY(1);
                 mark.setScaleX(1);
                 mark.setOpacity(1);
-                box.setBackground(new Background(new BackgroundFill(getSkinnable().getCheckedColor(), radii, insets)));
+                box.setBackground(new Background(new BackgroundFill(((JFXCheckBox) getSkinnable()).getCheckedColor(), radii, insets)));
                 select.playFrom(select.getCycleDuration());
                 transition.playFrom(transition.getCycleDuration());
             } else {
@@ -243,7 +243,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
                 transition.playFrom(Duration.ZERO);
             }
         }
-        box.setBorder(new Border(new BorderStroke(selection ? getSkinnable().getCheckedColor() : getSkinnable().getUnCheckedColor(),
+        box.setBorder(new Border(new BorderStroke(selection ? ((JFXCheckBox) getSkinnable()).getCheckedColor() : ((JFXCheckBox) getSkinnable()).getUnCheckedColor(),
             BorderStrokeStyle.SOLID,
             new CornerRadii(2),
             new BorderWidths(2))));
@@ -265,7 +265,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
                 indeterminateMark.setOpacity(1);
                 indeterminateMark.setScaleY(1);
                 indeterminateMark.setScaleX(1);
-                indeterminateMark.setBackground(new Background(new BackgroundFill(getSkinnable().getCheckedColor(), radii, insets)));
+                indeterminateMark.setBackground(new Background(new BackgroundFill(((JFXCheckBox) getSkinnable()).getCheckedColor(), radii, insets)));
                 indeterminateTransition.playFrom(indeterminateTransition.getCycleDuration());
             } else {
                 indeterminateMark.setOpacity(0);

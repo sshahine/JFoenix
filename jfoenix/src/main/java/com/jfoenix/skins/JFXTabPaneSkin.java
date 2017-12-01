@@ -965,7 +965,9 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             listener.registerChangeListener(tab.graphicProperty(), obs->{
                 tabText.setGraphic(tab.getGraphic());
             });
-            listener.registerChangeListener(widthProperty(), "WIDTH");
+            listener.registerChangeListener(widthProperty(), obs->{
+                header.animateSelectionLine();
+            });
             listener.registerChangeListener(tab.tooltipProperty(), obs->{
                 // install new Toolip/ uninstall the old one
                 if (oldTooltip != null) {
@@ -1030,8 +1032,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
         public void updateLayout() {
             requestLayout();
             getSkinnable().requestLayout();
-            } else if ("WIDTH".equals(p)) {
-                header.animateSelectionLine();
         }
 
         private void removeListeners(Tab tab) {
