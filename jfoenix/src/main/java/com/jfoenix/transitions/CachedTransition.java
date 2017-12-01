@@ -41,6 +41,7 @@ public class CachedTransition extends Transition {
 
     public CachedTransition(final Node node, final Timeline timeline) {
         this.node = node;
+        nodeCacheMomento = new CacheMomento(node);
         this.timeline.set(timeline);
         statusProperty().addListener(observable -> {
             switch (getStatus()) {
@@ -56,6 +57,7 @@ public class CachedTransition extends Transition {
 
     public CachedTransition(final Node node, final Timeline timeline, CacheMomento... cacheMomentos) {
         this.node = node;
+        nodeCacheMomento = new CacheMomento(node);
         this.timeline.set(timeline);
         this.momentos = cacheMomentos;
         statusProperty().addListener(observable -> {
@@ -74,7 +76,6 @@ public class CachedTransition extends Transition {
      * Called when the animation is starting
      */
     protected void starting() {
-        nodeCacheMomento = new CacheMomento(node);
         nodeCacheMomento.cache();
         if (momentos != null) {
             for (int i = 0; i < momentos.length; i++) {

@@ -378,6 +378,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         // resize error container if animation is disabled
         if (((JFXTextArea) getSkinnable()).isDisableAnimation()) {
             errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
+        }else{
+            errorContainer.resize(w, errorContainer.getHeight());
+            errorContainerClip.setWidth(w);
         }
         errorContainer.setTranslateY(h + focusedLine.getHeight() + 4);
         scale.setPivotX(w / 2);

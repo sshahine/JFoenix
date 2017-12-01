@@ -46,13 +46,6 @@ import java.util.List;
  * @since 2016-03-09
  */
 public class JFXTextField extends TextField implements IFXTextInputControl {
-    /**
-     * Initialize the style class to 'jfx-text-field'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
 
     /**
      * {@inheritDoc}
@@ -89,7 +82,7 @@ public class JFXTextField extends TextField implements IFXTextInputControl {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-text-field.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
 
     /***************************************************************************
@@ -158,9 +151,19 @@ public class JFXTextField extends TextField implements IFXTextInputControl {
 
     /***************************************************************************
      *                                                                         *
-     * styleable Properties                                                    *
+     * Styleable Properties                                                    *
      *                                                                         *
      **************************************************************************/
+
+    /**
+     * Initialize the style class to 'jfx-text-field'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
+    private static final String USER_AGENT_STYLESHEET = JFXTextField.class.getResource("/css/controls/jfx-text-field.css").toExternalForm();
+
 
     /**
      * set true to show a float the prompt text when focusing the field

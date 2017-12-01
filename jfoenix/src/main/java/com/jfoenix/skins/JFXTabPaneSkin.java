@@ -536,6 +536,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 Insets.EMPTY)));
             headerBackground.getStyleClass().setAll("tab-header-background");
             selectedTabLine = new StackPane();
+            selectedTabLine.setManaged(false);
             scale = new Scale(1, 1, 0, 0);
             rotate = new Rotate(0, 0, 1);
             rotate.pivotYProperty().bind(selectedTabLine.heightProperty().divide(2));
@@ -666,6 +667,10 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             final double transDiff = newTransX - oldTransX;
             double midScaleX = tempScaleX != 0 ?
                 tempScaleX : ((Math.abs(transDiff)/translateScaleFactor + oldWidth) * oldScaleX) / oldWidth;
+
+            if(midScaleX > Math.abs(transDiff) + newWidth){
+                midScaleX = Math.abs(transDiff) + newWidth;
+            }
 
             if (transDiff < 0) {
                 selectedTabLine.setTranslateX(selectedTabLine.getTranslateX() + oldWidth);
@@ -960,6 +965,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             listener.registerChangeListener(tab.graphicProperty(), obs->{
                 tabText.setGraphic(tab.getGraphic());
             });
+            listener.registerChangeListener(widthProperty(), "WIDTH");
             listener.registerChangeListener(tab.tooltipProperty(), obs->{
                 // install new Toolip/ uninstall the old one
                 if (oldTooltip != null) {
@@ -1024,6 +1030,8 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
         public void updateLayout() {
             requestLayout();
             getSkinnable().requestLayout();
+            } else if ("WIDTH".equals(p)) {
+                header.animateSelectionLine();
         }
 
         private void removeListeners(Tab tab) {

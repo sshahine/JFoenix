@@ -41,6 +41,7 @@ public abstract class ValidatorBase extends Parent {
     public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 
     private Tooltip tooltip = null;
+    private Tooltip errorTooltip = null;
 
     public ValidatorBase(String message) {
         this();
@@ -49,6 +50,8 @@ public abstract class ValidatorBase extends Parent {
 
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
+        errorTooltip = new Tooltip();
+        errorTooltip.getStyleClass().add("error-tooltip");
     }
 
     /***************************************************************************
@@ -95,8 +98,6 @@ public abstract class ValidatorBase extends Parent {
                 if (controlTooltip != null && !controlTooltip.getStyleClass().contains("error-tooltip")) {
                     tooltip = ((Control) control).getTooltip();
                 }
-                Tooltip errorTooltip = new Tooltip();
-                errorTooltip.getStyleClass().add("error-tooltip");
                 errorTooltip.setText(getMessage());
                 ((Control) control).setTooltip(errorTooltip);
             }
