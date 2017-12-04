@@ -26,12 +26,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -83,7 +83,7 @@ public class JFXDecorator extends VBox {
     protected JFXButton btnClose;
     protected JFXButton btnMin;
     protected Label title;
-    protected Image titleImage;
+    protected HBox titleImageBox;
 
     /**
      * Create a window decorator for the specified node with the options:
@@ -320,8 +320,11 @@ public class JFXDecorator extends VBox {
         title.getStyleClass().add("jfx-decorator-label");
         HBox titleContainer = new HBox();
 
+        titleImageBox = new HBox();
+
         titleContainer.setAlignment(Pos.CENTER);
         titleContainer.getChildren().add(title);
+        titleContainer.getChildren().add(titleImageBox);
 
         HBox bigContainer = new HBox();
         bigContainer.getStyleClass().add("jfx-decorator-buttons-container");
@@ -588,6 +591,16 @@ public class JFXDecorator extends VBox {
 
     public String getTitle(){
         return this.title.getText();
+    }
+
+
+    public void setTitleImage(Node... node){
+        titleImageBox.getChildren().setAll( node);
+    }
+
+
+    public ObservableList<Node> getTitleImage(Node node){
+        return titleImageBox.getChildren();
     }
 
 }
