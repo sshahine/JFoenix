@@ -40,7 +40,7 @@
         </bottomBar>
         <content>
             <StackPane style="-fx-padding:24;">
-                <JFXListView fx:id="contentList">
+                <JFXListView fx:id="contentList" prefHeight="Infinity">
                 </JFXListView>
             </StackPane>
         </content>
