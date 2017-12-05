@@ -696,11 +696,10 @@ public class JFXDatePickerContent extends VBox {
     protected void updateMonthYearPane() {
         // update date labels
         YearMonth yearMonth = selectedYearMonth.get();
-        if (datePicker.getValue() != null) {
-            selectedDateLabel.setText(DateTimeFormatter.ofPattern("EEE, MMM yy").format(datePicker.getValue()));
-        } else {
-            selectedDateLabel.setText(DateTimeFormatter.ofPattern("EEE, MMM yy").format(LocalDate.now()));
-        }
+        LocalDate value = datePicker.getValue();
+        value = value == null ? LocalDate.now() : value;
+        selectedDateLabel.setText(DateTimeFormatter.ofPattern("EEE, MMM dd").format(value));
+
         selectedYearLabel.setText(formatYear(yearMonth));
         monthYearLabel.setText(formatMonth(yearMonth) + " " + formatYear(yearMonth));
 

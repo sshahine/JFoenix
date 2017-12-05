@@ -1,6 +1,8 @@
 package demos;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
 import demos.gui.main.MainController;
 import io.datafx.controller.flow.Flow;
@@ -44,6 +46,8 @@ public class MainDemo extends Application {
 
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
+        decorator.setText("JFoenix Demo");
+        decorator.setGraphic(new SVGGlyph(""));
 
         double width = 800;
         double height = 600;
