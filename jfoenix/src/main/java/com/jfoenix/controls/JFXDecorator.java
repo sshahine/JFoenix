@@ -26,16 +26,15 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -69,9 +68,7 @@ public class JFXDecorator extends VBox {
     private StackPane contentPlaceHolder = new StackPane();
     private HBox buttonsContainer;
 
-    private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() -> {
-        primaryStage.close();
-    });
+    private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() -> primaryStage.close());
 
     private BooleanProperty customMaximize = new SimpleBooleanProperty(false);
     private boolean maximized = false;
@@ -82,8 +79,10 @@ public class JFXDecorator extends VBox {
     protected JFXButton btnFull;
     protected JFXButton btnClose;
     protected JFXButton btnMin;
-    protected Label title;
-    protected HBox titleImageBox;
+
+    protected Text text;
+    protected Node graphic;
+    protected HBox graphicContainer;
 
     /**
      * Create a window decorator for the specified node with the options:
@@ -117,10 +116,10 @@ public class JFXDecorator extends VBox {
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
         setPickOnBounds(false);
-        this.getStyleClass().add("jfx-decorator");
+        getStyleClass().add("jfx-decorator");
 
         initializeButtons();
-        initializeContainers(node,fullScreen, max, min);
+        initializeContainers(node, fullScreen, max, min);
 
         primaryStage.fullScreenProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
@@ -183,7 +182,7 @@ public class JFXDecorator extends VBox {
         this.setOnMouseDragged((mouseEvent) -> handleDragEventOnDecoratorPane(mouseEvent));
     }
 
-    private void initializeButtons(){
+    private void initializeButtons() {
 
         SVGGlyph full = new SVGGlyph(0,
             "FULLSCREEN",
@@ -287,7 +286,7 @@ public class JFXDecorator extends VBox {
         }
     }
 
-    private void initializeContainers(Node node, boolean fullScreen, boolean max, boolean min){
+    private void initializeContainers(Node node, boolean fullScreen, boolean max, boolean min) {
         buttonsContainer = new HBox();
         buttonsContainer.getStyleClass().add("jfx-decorator-buttons-container");
         buttonsContainer.setBackground(new Background(new BackgroundFill(Color.BLACK,
@@ -316,22 +315,23 @@ public class JFXDecorator extends VBox {
         }
         btns.add(btnClose);
 
-        title = new Label();
-        title.getStyleClass().add("jfx-decorator-label");
-        HBox titleContainer = new HBox();
+        text = new Text();
+        text.getStyleClass().addAll("jfx-decorator-text", "title");
+        text.setFill(Color.WHITE);
 
-        titleImageBox = new HBox();
+        graphicContainer = new HBox();
+        graphicContainer.setPickOnBounds(false);
+        graphicContainer.setAlignment(Pos.CENTER_LEFT);
+        graphicContainer.getChildren().setAll(text);
 
-        titleContainer.setAlignment(Pos.CENTER);
-        titleContainer.getChildren().add(title);
-        titleContainer.getChildren().add(titleImageBox);
+        HBox graphicTextContainer = new HBox(graphicContainer, text);
+        graphicTextContainer.getStyleClass().add("jfx-decorator-title-container");
+        graphicTextContainer.setAlignment(Pos.CENTER_LEFT);
+        graphicTextContainer.setPickOnBounds(false);
+        HBox.setHgrow(graphicTextContainer, Priority.ALWAYS);
+        HBox.setMargin(graphicContainer, new Insets(0, 8 , 0, 8));
 
-        HBox bigContainer = new HBox();
-        bigContainer.getStyleClass().add("jfx-decorator-buttons-container");
-        bigContainer.setPadding(new Insets(4));
-        bigContainer.setAlignment(Pos.CENTER_RIGHT);
-        bigContainer.getChildren().add(titleContainer);
-        bigContainer.setHgrow(titleContainer,Priority.ALWAYS);
+        buttonsContainer.getChildren().setAll(graphicTextContainer);
         buttonsContainer.getChildren().addAll(btns);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_ENTERED, (enter) -> allowMove = true);
         buttonsContainer.addEventHandler(MouseEvent.MOUSE_EXITED, (enter) -> {
@@ -356,115 +356,114 @@ public class JFXDecorator extends VBox {
         clip.widthProperty().bind(((Region) node).widthProperty());
         clip.heightProperty().bind(((Region) node).heightProperty());
         node.setClip(clip);
-        bigContainer.getChildren().add(buttonsContainer);
-        this.getChildren().addAll(bigContainer, contentPlaceHolder);
+        this.getChildren().addAll(buttonsContainer, contentPlaceHolder);
     }
 
-   private void showDragCursorOnTheborders(MouseEvent mouseEvent){
-       if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
-           this.setCursor(Cursor.DEFAULT);
-           return; // maximized mode does not support resize
-       }
-       if (!primaryStage.isResizable()) {
-           return;
-       }
-       double x = mouseEvent.getX();
-       double y = mouseEvent.getY();
-       Bounds boundsInParent = this.getBoundsInParent();
-       if (contentPlaceHolder.getBorder() != null && contentPlaceHolder.getBorder().getStrokes().size() > 0) {
-           double borderWidth = contentPlaceHolder.snappedLeftInset();
-           if (isRightEdge(x, y, boundsInParent)) {
-               if (y < borderWidth) {
-                   this.setCursor(Cursor.NE_RESIZE);
-               } else if (y > this.getHeight() - borderWidth) {
-                   this.setCursor(Cursor.SE_RESIZE);
-               } else {
-                   this.setCursor(Cursor.E_RESIZE);
-               }
-           } else if (isLeftEdge(x, y, boundsInParent)) {
-               if (y < borderWidth) {
-                   this.setCursor(Cursor.NW_RESIZE);
-               } else if (y > this.getHeight() - borderWidth) {
-                   this.setCursor(Cursor.SW_RESIZE);
-               } else {
-                   this.setCursor(Cursor.W_RESIZE);
-               }
-           } else if (isTopEdge(x, y, boundsInParent)) {
-               this.setCursor(Cursor.N_RESIZE);
-           } else if (isBottomEdge(x, y, boundsInParent)) {
-               this.setCursor(Cursor.S_RESIZE);
-           } else {
-               this.setCursor(Cursor.DEFAULT);
-           }
-       }
-   }
+    private void showDragCursorOnTheborders(MouseEvent mouseEvent) {
+        if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
+            this.setCursor(Cursor.DEFAULT);
+            return; // maximized mode does not support resize
+        }
+        if (!primaryStage.isResizable()) {
+            return;
+        }
+        double x = mouseEvent.getX();
+        double y = mouseEvent.getY();
+        Bounds boundsInParent = this.getBoundsInParent();
+        if (contentPlaceHolder.getBorder() != null && contentPlaceHolder.getBorder().getStrokes().size() > 0) {
+            double borderWidth = contentPlaceHolder.snappedLeftInset();
+            if (isRightEdge(x, y, boundsInParent)) {
+                if (y < borderWidth) {
+                    this.setCursor(Cursor.NE_RESIZE);
+                } else if (y > this.getHeight() - borderWidth) {
+                    this.setCursor(Cursor.SE_RESIZE);
+                } else {
+                    this.setCursor(Cursor.E_RESIZE);
+                }
+            } else if (isLeftEdge(x, y, boundsInParent)) {
+                if (y < borderWidth) {
+                    this.setCursor(Cursor.NW_RESIZE);
+                } else if (y > this.getHeight() - borderWidth) {
+                    this.setCursor(Cursor.SW_RESIZE);
+                } else {
+                    this.setCursor(Cursor.W_RESIZE);
+                }
+            } else if (isTopEdge(x, y, boundsInParent)) {
+                this.setCursor(Cursor.N_RESIZE);
+            } else if (isBottomEdge(x, y, boundsInParent)) {
+                this.setCursor(Cursor.S_RESIZE);
+            } else {
+                this.setCursor(Cursor.DEFAULT);
+            }
+        }
+    }
 
-   private void handleDragEventOnDecoratorPane(MouseEvent mouseEvent){
-       isDragging = true;
-       if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
-           return;
-       }
-			/*
-			 * Long press generates drag event!
+    private void handleDragEventOnDecoratorPane(MouseEvent mouseEvent) {
+        isDragging = true;
+        if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
+            return;
+        }
+            /*
+             * Long press generates drag event!
 			 */
-       if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
-           return;
-       }
+        if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
+            return;
+        }
 
-       newX = mouseEvent.getScreenX();
-       newY = mouseEvent.getScreenY();
+        newX = mouseEvent.getScreenX();
+        newY = mouseEvent.getScreenY();
 
 
-       double deltax = newX - initX;
-       double deltay = newY - initY;
-       Cursor cursor = this.getCursor();
+        double deltax = newX - initX;
+        double deltay = newY - initY;
+        Cursor cursor = this.getCursor();
 
-       if (Cursor.E_RESIZE.equals(cursor)) {
-           setStageWidth(initWidth + deltax);
-           mouseEvent.consume();
-       } else if (Cursor.NE_RESIZE.equals(cursor)) {
-           if (setStageHeight(initHeight - deltay)) {
-               primaryStage.setY(initStageY + deltay);
-           }
-           setStageWidth(initWidth + deltax);
-           mouseEvent.consume();
-       } else if (Cursor.SE_RESIZE.equals(cursor)) {
-           setStageWidth(initWidth + deltax);
-           setStageHeight(initHeight + deltay);
-           mouseEvent.consume();
-       } else if (Cursor.S_RESIZE.equals(cursor)) {
-           setStageHeight(initHeight + deltay);
-           mouseEvent.consume();
-       } else if (Cursor.W_RESIZE.equals(cursor)) {
-           if (setStageWidth(initWidth - deltax)) {
-               primaryStage.setX(initStageX + deltax);
-           }
-           mouseEvent.consume();
-       } else if (Cursor.SW_RESIZE.equals(cursor)) {
-           if (setStageWidth(initWidth - deltax)) {
-               primaryStage.setX(initStageX + deltax);
-           }
-           setStageHeight(initHeight + deltay);
-           mouseEvent.consume();
-       } else if (Cursor.NW_RESIZE.equals(cursor)) {
-           if (setStageWidth(initWidth - deltax)) {
-               primaryStage.setX(initStageX + deltax);
-           }
-           if (setStageHeight(initHeight - deltay)) {
-               primaryStage.setY(initStageY + deltay);
-           }
-           mouseEvent.consume();
-       } else if (Cursor.N_RESIZE.equals(cursor)) {
-           if (setStageHeight(initHeight - deltay)) {
-               primaryStage.setY(initStageY + deltay);
-           }
-           mouseEvent.consume();
-       } else if (allowMove) {
-           primaryStage.setX(mouseEvent.getScreenX() - xOffset);
-           primaryStage.setY(mouseEvent.getScreenY() - yOffset);
-           mouseEvent.consume();
-       }
-   }
+        if (Cursor.E_RESIZE.equals(cursor)) {
+            setStageWidth(initWidth + deltax);
+            mouseEvent.consume();
+        } else if (Cursor.NE_RESIZE.equals(cursor)) {
+            if (setStageHeight(initHeight - deltay)) {
+                primaryStage.setY(initStageY + deltay);
+            }
+            setStageWidth(initWidth + deltax);
+            mouseEvent.consume();
+        } else if (Cursor.SE_RESIZE.equals(cursor)) {
+            setStageWidth(initWidth + deltax);
+            setStageHeight(initHeight + deltay);
+            mouseEvent.consume();
+        } else if (Cursor.S_RESIZE.equals(cursor)) {
+            setStageHeight(initHeight + deltay);
+            mouseEvent.consume();
+        } else if (Cursor.W_RESIZE.equals(cursor)) {
+            if (setStageWidth(initWidth - deltax)) {
+                primaryStage.setX(initStageX + deltax);
+            }
+            mouseEvent.consume();
+        } else if (Cursor.SW_RESIZE.equals(cursor)) {
+            if (setStageWidth(initWidth - deltax)) {
+                primaryStage.setX(initStageX + deltax);
+            }
+            setStageHeight(initHeight + deltay);
+            mouseEvent.consume();
+        } else if (Cursor.NW_RESIZE.equals(cursor)) {
+            if (setStageWidth(initWidth - deltax)) {
+                primaryStage.setX(initStageX + deltax);
+            }
+            if (setStageHeight(initHeight - deltay)) {
+                primaryStage.setY(initStageY + deltay);
+            }
+            mouseEvent.consume();
+        } else if (Cursor.N_RESIZE.equals(cursor)) {
+            if (setStageHeight(initHeight - deltay)) {
+                primaryStage.setY(initStageY + deltay);
+            }
+            mouseEvent.consume();
+        } else if (allowMove) {
+            primaryStage.setX(mouseEvent.getScreenX() - xOffset);
+            primaryStage.setY(mouseEvent.getScreenY() - yOffset);
+            mouseEvent.consume();
+        }
+    }
 
     private void updateInitMouseValues(MouseEvent mouseEvent) {
         initStageX = primaryStage.getX();
@@ -574,33 +573,33 @@ public class JFXDecorator extends VBox {
         this.contentPlaceHolder.getChildren().setAll(content);
     }
 
-
     /**
      * will set the title
      *
-     * @param title
+     * @param text
      */
-    public void setTitle(String title){
-        this.title.setText(title);
+    public void setText(String text) {
+        this.text.setText(text);
     }
-
 
     /**
      * will get the title
      */
-
-    public String getTitle(){
-        return this.title.getText();
+    public String getText() {
+        return text.getText();
     }
 
-
-    public void setTitleImage(Node... node){
-        titleImageBox.getChildren().setAll( node);
+    public void setGraphic(Node node) {
+        if (graphic != null) {
+            graphicContainer.getChildren().remove(graphic);
+        }
+        if (node != null) {
+            graphicContainer.getChildren().add(0, node);
+        }
+        graphic = node;
     }
 
-
-    public ObservableList<Node> getTitleImage(Node node){
-        return titleImageBox.getChildren();
+    public Node getGraphic(Node node) {
+        return graphic;
     }
-
 }

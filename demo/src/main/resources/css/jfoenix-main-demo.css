@@ -776,12 +776,16 @@
     -fx-border-width: 0 4 4 4;
 }
 
-.jfx-decorator .label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 22;
-    -fx-font-weight: bold;
+.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
+    -fx-fill: WHITE;
+    -fx-font-size: 16;
 }
 
+.jfx-decorator .jfx-decorator-title-container .jfx-svg-glyph {
+    -fx-shape: "M512 682c-128.024-99.309-255.626-199.040-384-298l384-298 384 298c-128.375 98.958-255.974 198.693-384 298zM512 792l314-246 70 54-384 298-384-298 70-54z";
+    -jfx-size: 15;
+    -fx-background-color: WHITE;
+}
 /*******************************************************************************
 *                                                                              *
 * Tree Table View                                                              *
