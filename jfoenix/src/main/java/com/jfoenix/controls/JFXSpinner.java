@@ -25,7 +25,6 @@ import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableDoubleProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableDoubleProperty;
-import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.Region;
@@ -43,9 +42,10 @@ import java.util.List;
  */
 public class JFXSpinner extends ProgressIndicator {
 
+    public static final double INDETERMINATE_PROGRESS = -1;
+
     public JFXSpinner() {
-        super();
-        init();
+        this(INDETERMINATE_PROGRESS);
     }
 
     public JFXSpinner(double progress) {
@@ -60,6 +60,14 @@ public class JFXSpinner extends ProgressIndicator {
     @Override
     protected Skin<?> createDefaultSkin() {
         return new JFXSpinnerSkin(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-spinner.css").toExternalForm();
     }
 
     /***************************************************************************
@@ -151,7 +159,7 @@ public class JFXSpinner extends ProgressIndicator {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
+                new ArrayList<>(ProgressIndicator.getClassCssMetaData());
             Collections.addAll(styleables,
                 RADIUS,
                 STARTING_ANGLE
@@ -160,19 +168,9 @@ public class JFXSpinner extends ProgressIndicator {
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(ProgressIndicator.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

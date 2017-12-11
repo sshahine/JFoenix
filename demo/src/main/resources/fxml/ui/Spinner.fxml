@@ -24,6 +24,9 @@
         <JFXSpinner styleClass="yellow-spinner" startingAngle="0" radius="13"/>
         <JFXSpinner styleClass="green-spinner" startingAngle="0" radius="13"/>
         <JFXSpinner startingAngle="0" radius="13"/>
+        <JFXSpinner fx:id="greenSpinner" styleClass="materialDesign-green" progress="0"
+                    radius="15"/>
+        <JFXSpinner fx:id="blueSpinner" styleClass="materialDesign-blue" progress="0" radius="20"/>
     </HBox>
 
 </StackPane>

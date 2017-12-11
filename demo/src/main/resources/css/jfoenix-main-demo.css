@@ -687,19 +687,23 @@
 }
 
 .green-spinner .arc {
-    -fx-stroke: #f4b400;
-}
-
-.yellow-spinner .arc {
     -fx-stroke: #0F9D58;
 }
 
-.materialDesign-purple .arc {
+.yellow-spinner .arc {
+    -fx-stroke: #f4b400;
+}
+
+.materialDesign-purple:indeterminate .arc {
     -fx-stroke: #ab47bc;
 }
 
 .materialDesign-blue .arc {
     -fx-stroke: #2962ff;
+}
+
+.materialDesign-blue .percentage{
+    -fx-fill: #ab47bc;
 }
 
 .materialDesign-cyan .arc {
@@ -708,6 +712,10 @@
 
 .materialDesign-green .arc {
     -fx-stroke: #00c853;
+}
+
+.materialDesign-green .text{
+    visibility: false;
 }
 
 .materialDesign-yellow .arc {
