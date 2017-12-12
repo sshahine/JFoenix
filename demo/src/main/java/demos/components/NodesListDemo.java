@@ -125,6 +125,8 @@ public class NodesListDemo extends Application {
                 return frames;
             }
         );
+
+        JFXNodesList.alignNodeToChild(container, button2);
         container.getChildren().get(0).setOpacity(0);
         container.setScaleX(1);
         container.setScaleY(1);

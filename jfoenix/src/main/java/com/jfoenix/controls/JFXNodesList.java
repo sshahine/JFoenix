@@ -22,9 +22,15 @@ package com.jfoenix.controls;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -45,6 +51,44 @@ import java.util.function.BiFunction;
  */
 public class JFXNodesList extends VBox {
 
+    private static void setConstraint(Node node, Object key, Object value) {
+        if (value == null) {
+            node.getProperties().remove(key);
+        } else {
+            node.getProperties().put(key, value);
+        }
+        if (node.getParent() != null) {
+            node.getParent().requestLayout();
+        }
+    }
+
+    private static Object getConstraint(Node node, Object key) {
+        if (node.hasProperties()) {
+            Object value = node.getProperties().get(key);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private static final String ALIGN_NODE_CONSTRAINT = "align-node";
+
+    /**
+     * set a child node as the alignment controller when applying alignments on
+     * the nodes list.
+     * @param node
+     * @param child
+     */
+    public static void alignNodeToChild(Node node, Node child) {
+        setConstraint(node, ALIGN_NODE_CONSTRAINT, child);
+    }
+
+    public static Node getAlignNodeToChild(Node node) {
+        return (Node)getConstraint(node, ALIGN_NODE_CONSTRAINT);
+    }
+
+
     private final HashMap<Node, BiFunction<Boolean, Duration, Collection<KeyFrame>>> animationsMap = new HashMap<>();
     private boolean expanded = false;
     private final Timeline animateTimeline = new Timeline();
@@ -55,6 +99,7 @@ public class JFXNodesList extends VBox {
     public JFXNodesList() {
         setPickOnBounds(false);
         getStyleClass().add("jfx-nodes-list");
+        setAlignment(Pos.TOP_CENTER);
     }
 
     /**
@@ -113,9 +158,6 @@ public class JFXNodesList extends VBox {
 
         // add the node and its listeners
         getChildren().add(node);
-        rotateProperty()
-            .addListener((o, oldVal, newVal) ->
-                node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal.doubleValue()));
 
         if (animationFramesFunction == null && getChildren().size() != 1) {
             animationFramesFunction = initDefaultAnimation(node);
@@ -162,11 +204,89 @@ public class JFXNodesList extends VBox {
         return computePrefWidth(height);
     }
 
+    private boolean performingLayout = false;
+    @Override public void requestLayout() {
+        if (performingLayout) {
+            return;
+        }
+        super.requestLayout();
+    }
+
     @Override
     protected void layoutChildren() {
-        super.layoutChildren();
+        performingLayout = true;
+
         List<Node> managed = getChildren();
-        managed.forEach(child -> child.autosize());
+
+        Insets insets = getInsets();
+        double width = getWidth();
+        double rotate = getRotate();
+        double height = getHeight();
+        double left = snapSpace(insets.getLeft());
+        double right = snapSpace(insets.getRight());
+        double space = snapSpace(getSpacing());
+        boolean isFillWidth = isFillWidth();
+        double contentWidth = width - left - right;
+
+
+        Pos alignment = getAlignment();
+        alignment = alignment == null ? Pos.TOP_CENTER : alignment;
+        final HPos hpos = alignment.getHpos();
+        final VPos vpos = alignment.getVpos();
+
+        double y = 0;
+
+        for (int i = 0, size = managed.size(); i < size; i++) {
+            Node child = managed.get(i);
+            child.autosize();
+            child.setRotate(rotate % 180 == 0 ? rotate : -rotate);
+
+            double x = 0;
+            double childWidth = child.getLayoutBounds().getWidth();
+            double childHeight = child.getLayoutBounds().getHeight();
+
+
+            if(childWidth > width){
+                switch (hpos) {
+                    case CENTER:
+                        x = snapPosition(contentWidth - childWidth) / 2;
+                        break;
+                }
+                Node alignToChild = getAlignNodeToChild(child);
+                if (alignToChild != null && child instanceof Parent) {
+                    ((Parent) child).layout();
+                    double alignedWidth = alignToChild.getLayoutBounds().getWidth();
+                    double alignedX = alignToChild.getLayoutX();
+                    if(childWidth / 2 > alignedX + alignedWidth){
+                        alignedWidth = -(childWidth / 2 - (alignedWidth/2 + alignedX));
+                    }else{
+                        alignedWidth = alignedWidth/2 + alignedX - childWidth / 2;
+                    }
+                    child.setTranslateX(-alignedWidth * Math.cos(Math.toRadians(rotate)));
+                    child.setTranslateY(alignedWidth * Math.cos(Math.toRadians(90 - rotate)));
+                }
+            }else{
+                childWidth = contentWidth;
+            }
+
+            final Insets margin = getMargin(child);
+            if (margin != null) {
+                childWidth += margin.getLeft() + margin.getRight();
+                childHeight += margin.getTop() + margin.getRight();
+            }
+
+            layoutInArea(child, x, y, childWidth, childHeight,
+                /* baseline shouldn't matter */0,
+                margin, isFillWidth, true, hpos, vpos);
+
+            y += child.getLayoutBounds().getHeight() + space;
+            if (margin != null) {
+                y += margin.getTop() + margin.getBottom();
+            }
+            y = snapPosition(y);
+        }
+
+        performingLayout = false;
     }
 
     /**
