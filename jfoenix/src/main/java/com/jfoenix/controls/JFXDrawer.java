@@ -125,6 +125,11 @@ public class JFXDrawer extends StackPane {
     private JFXAnimationTimer translateTimer = new JFXAnimationTimer(
         new JFXKeyFrame(Duration.millis(420),
             JFXKeyValue.builder()
+                .setTargetSupplier(() -> overlayPane.opacityProperty())
+                .setEndValueSupplier(() -> 1 - translateTo / initTranslate.get())
+                .setInterpolator(Interpolator.EASE_BOTH).build()),
+        new JFXKeyFrame(Duration.millis(420),
+            JFXKeyValue.builder()
                 .setTargetSupplier(() -> translateProperty)
                 .setEndValueSupplier(() -> translateTo)
                 .setInterpolator(Interpolator.EASE_BOTH).build()),
@@ -201,7 +206,7 @@ public class JFXDrawer extends StackPane {
         initTranslate.addListener(observable -> updateDrawerAnimation(initTranslate.get()));
 
         // mouse drag handler
-        translateProperty.addListener(observable -> overlayPane.setOpacity(1 - translateProperty.doubleValue() / initTranslate.get()));
+//        translateProperty.addListener(observable -> overlayPane.setOpacity(1 - translateProperty.doubleValue() / initTranslate.get()));
 
         // add opening/closing action listeners
         translateProperty.addListener((o, oldVal, newVal) -> {
@@ -794,9 +799,11 @@ public class JFXDrawer extends StackPane {
                                                   * ((startSize - getDefaultDrawerSize())
                                                      + directionProperty.get().doubleValue()
                                                        * currentTranslate));
+                            overlayPane.setOpacity(1 - translateProperty.get() / initTranslate.get());
                         }
                     } else {
                         translateProperty.set(currentTranslate);
+                        overlayPane.setOpacity(1 - translateProperty.get() / initTranslate.get());
                     }
                 } else {
                     // the drawer is already shown
@@ -817,6 +824,7 @@ public class JFXDrawer extends StackPane {
                         }
                     }
                     translateProperty.set(0);
+                    overlayPane.setOpacity(1 - translateProperty.get() / initTranslate.get());
                 }
             }
         }

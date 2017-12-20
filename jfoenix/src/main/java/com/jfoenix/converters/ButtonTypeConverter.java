@@ -41,7 +41,7 @@ public class ButtonTypeConverter extends StyleConverter<String, ButtonType> {
         super();
     }
 
-    // lazy, thread-safe instatiation
+    // lazy, thread-safe instantiation
     private static class Holder {
         static final ButtonTypeConverter INSTANCE = new ButtonTypeConverter();
 

@@ -20,6 +20,7 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXSpinner;
+import com.sun.javafx.scene.NodeHelper;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -32,19 +33,21 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
  * JFXSpinner material design skin
  *
- * @author Shadi Shaheen
+ * @author Shadi Shaheen & Gerard Moubarak
  * @version 1.0
  * @since 2017-09-25
  */
 public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
 
-    boolean invalid = true;
     private JFXSpinner control;
+    private boolean isValid = false;
 
     private Color greenColor;
     private Color redColor;
@@ -54,9 +57,13 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
     private Arc arc;
     private final StackPane arcPane;
     private final Rectangle fillRect;
+    private double arcLength = -1;
+    private Text text;
 
     public JFXSpinnerSkin(JFXSpinner control) {
         super(control);
+
+        this.control = control;
 
         blueColor = Color.valueOf("#4285f4");
         redColor = Color.valueOf("#db4437");
@@ -73,22 +80,36 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
 
         fillRect = new Rectangle();
         fillRect.setFill(Color.TRANSPARENT);
-        final Group group = new Group(fillRect, arc);
+        text = new Text();
+        text.getStyleClass().setAll("text", "percentage");
+        final Group group = new Group(fillRect, arc, text);
         group.setManaged(false);
         arcPane = new StackPane(group);
         arcPane.setPrefSize(50, 50);
-
         getChildren().setAll(arcPane);
 
-        this.control = control;
-
         // register listeners
-
+        registerChangeListener(control.indeterminateProperty(), obs -> initialize());
+        registerChangeListener(control.progressProperty(), obs -> updateProgress());
         registerChangeListener(control.visibleProperty(), obs->updateAnimation());
         registerChangeListener(control.parentProperty(), obs->updateAnimation());
         registerChangeListener(control.sceneProperty(), obs->updateAnimation());
     }
 
+    private void initialize() {
+        if (getSkinnable().isIndeterminate()) {
+            if (timeline == null) {
+                createTransition();
+                if (NodeHelper.isTreeShowing(getSkinnable())) {
+                    timeline.play();
+                }
+            }
+        } else {
+            clearAnimation();
+            arc.setStartAngle(90);
+            updateProgress();
+        }
+    }
 
     private KeyFrame[] getKeyFrames(double angle, double duration, Color color) {
         KeyFrame[] frames = new KeyFrame[4];
@@ -177,21 +198,44 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         final double strokeWidth = arc.getStrokeWidth();
         final double radius = Math.min(contentWidth, contentHeight) / 2 - strokeWidth / 2;
         final double arcSize = snapSize(radius * 2 + strokeWidth);
+
         arcPane.resizeRelocate((contentWidth - arcSize) / 2 + 1, (contentHeight - arcSize) / 2 + 1, arcSize, arcSize);
-
-        fillRect.setWidth(arcSize);
-        fillRect.setHeight(arcSize);
-
         arc.setRadiusX(radius);
         arc.setRadiusY(radius);
         arc.setCenterX(arcSize / 2);
         arc.setCenterY(arcSize / 2);
 
-        if (invalid) {
-            createTransition();
-            timeline.playFromStart();
-            invalid = false;
+        fillRect.setWidth(arcSize);
+        fillRect.setHeight(arcSize);
+
+        if (!isValid) {
+            initialize();
+            isValid = true;
         }
+
+        if (!getSkinnable().isIndeterminate()) {
+            arc.setLength(arcLength);
+            if (text.isVisible()) {
+                final double progress = control.getProgress();
+                int intProgress = (int) Math.round(progress * 100.0);
+                Font font = text.getFont();
+                text.setFont(Font.font(font.getFamily(), radius / 1.7));
+                text.setText((progress > 1 ? 100 : intProgress) + "%");
+                text.relocate((arcSize - text.getLayoutBounds().getWidth()) / 2, (arcSize - text.getLayoutBounds().getHeight()) / 2);
+            }
+        }
+    }
+
+    boolean wasIndeterminate = false;
+
+    protected void updateProgress() {
+        final ProgressIndicator control = getSkinnable();
+        final boolean isIndeterminate = control.isIndeterminate();
+        if (!(isIndeterminate && wasIndeterminate)) {
+            arcLength = -360 * control.getProgress();
+            control.requestLayout();
+        }
+        wasIndeterminate = isIndeterminate;
     }
 
     private void createTransition() {
@@ -236,19 +280,19 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         timeline.setDelay(Duration.ZERO);
     }
 
+    private void clearAnimation() {
+        if (timeline != null) {
+            timeline.stop();
+            timeline.getKeyFrames().clear();
+            timeline = null;
+        }
+    }
+
     @Override
     public void dispose() {
         super.dispose();
-
-        if (timeline != null) {
-            timeline.stop();
-            timeline = null;
-        }
-
-        if (arc != null) {
-            arc = null;
-        }
-
+        clearAnimation();
+        arc = null;
         control = null;
     }
 }
