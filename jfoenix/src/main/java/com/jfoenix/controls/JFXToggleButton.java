@@ -31,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,11 +69,9 @@ public class JFXToggleButton extends ToggleButton {
         initialize();
         // init in scene builder workaround ( TODO : remove when JFoenix is well integrated in scenebuilder by gluon )
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        for (int i = 0; i < stackTraceElements.length && i < 15; i++) {
-            if (stackTraceElements[i].getClassName().toLowerCase().contains(".scenebuilder.kit.fxom.")) {
-                this.setText("ToggleButton");
-                break;
-            }
+        if (Arrays.stream(stackTraceElements, 0, 15).anyMatch(stackTraceElement -> 
+                stackTraceElement.getClassName().toLowerCase().contains(".scenebuilder.kit.fxom."))) {
+            this.setText("ToggleButton");
         }
     }
 

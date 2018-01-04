@@ -76,11 +76,8 @@ public class JFXResponsiveHandler {
             public void onChanged(javafx.collections.ListChangeListener.Change<? extends Node> c) {
                 while (c.next()) {
                     if (!c.wasPermutated() && !c.wasUpdated()) {
-                        for (Node addedNode : c.getAddedSubList()) {
-                            if (addedNode instanceof Parent) {
-                                scanAllNodes((Parent) addedNode, pseudoClass);
-                            }
-                        }
+                        c.getAddedSubList().stream().filter(addedNode -> addedNode instanceof Parent)
+                            .forEach(addedNode -> scanAllNodes((Parent) addedNode, pseudoClass));
                     }
                 }
             }
