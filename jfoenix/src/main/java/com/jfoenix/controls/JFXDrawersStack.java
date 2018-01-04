@@ -30,6 +30,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DrawersStack is used to show multiple drawers at once
  *
@@ -40,13 +43,17 @@ import javafx.util.Duration;
 @DefaultProperty(value = "content")
 public class JFXDrawersStack extends StackPane {
 
+    private List<JFXDrawer> drawers = new ArrayList<>();
     private Node content;
 
     /**
      * creates empty drawers stack
      */
     public JFXDrawersStack() {
-
+        final Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(this.widthProperty());
+        clip.heightProperty().bind(this.heightProperty());
+        this.setClip(clip);
     }
 
     /**
@@ -63,17 +70,11 @@ public class JFXDrawersStack extends StackPane {
      * @param content
      */
     public void setContent(Node content) {
-        int index = 0;
-        boolean replace = false;
-        if (this.content != null) {
-            index = getChildren().indexOf(this.content);
-            replace = true;
-        }
         this.content = content;
-        if (replace) {
-            this.getChildren().set(index, this.content);
+        if (drawers.size() > 0) {
+            drawers.get(0).setContent(content);
         } else {
-            this.getChildren().add(0, this.content);
+            getChildren().add(this.content);
         }
     }
 
@@ -87,18 +88,44 @@ public class JFXDrawersStack extends StackPane {
             return;
         }
 
-        getChildren().add(drawer);
+        if (drawers.isEmpty()) {
+            if (content != null) {
+                drawer.setContent(content);
+            }
+        } else {
+            drawer.setContent(drawers.get(drawers.size() - 1));
+        }
 
+        drawers.add(drawer);
+        getChildren().setAll(drawer);
         drawer.setPickOnBounds(false);
 
+        // add listener to bring drawer to front on hold
         JFXNodeUtils.addPressAndHoldHandler(drawer.sidePane, Duration.millis(300), event -> {
-            if (getChildren().indexOf(drawer) != getChildren().size() - 1) {
+            if (drawers.indexOf(drawer) < drawers.size() - 1) {
                 drawer.bringToFront((param) -> {
-                    drawer.toFront();
+                    updateDrawerPosition(drawer);
                     return param;
                 });
             }
         });
+    }
+
+
+    private void updateDrawerPosition(JFXDrawer drawer) {
+        int index = drawers.indexOf(drawer);
+        if (index + 1 < drawers.size()) {
+            // handle previous
+            if (index - 1 >= 0) {
+                drawers.get(index + 1).setContent(drawers.get(index - 1));
+            } else if (index == 0) {
+                drawers.get(index + 1).setContent(content);
+            }
+            drawer.setContent(drawers.get(drawers.size() - 1));
+            drawers.remove(drawer);
+            drawers.add(drawer);
+            getChildren().setAll(drawer);
+        }
     }
 
     /**
@@ -107,13 +134,13 @@ public class JFXDrawersStack extends StackPane {
      * @param drawer the drawer to be toggled
      */
     public void toggle(JFXDrawer drawer) {
-        if (!getChildren().contains(drawer)) {
+        if (!drawers.contains(drawer)) {
             addDrawer(drawer);
         }
         if (drawer.isShown() || drawer.isShowing()) {
             drawer.close();
         } else {
-            drawer.toFront();
+            updateDrawerPosition(drawer);
             drawer.open();
         }
     }
@@ -125,7 +152,7 @@ public class JFXDrawersStack extends StackPane {
      * @param show   true to toggle on, false to toggle off
      */
     public void toggle(JFXDrawer drawer, boolean show) {
-        if (!getChildren().contains(drawer)) {
+        if (!drawers.contains(drawer)) {
             addDrawer(drawer);
         }
         if (!show) {
@@ -134,7 +161,7 @@ public class JFXDrawersStack extends StackPane {
             }
         } else {
             if (!drawer.isShown() && !drawer.isShowing()) {
-                drawer.toFront();
+                updateDrawerPosition(drawer);
                 drawer.open();
             }
         }

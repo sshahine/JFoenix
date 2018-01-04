@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.scenicview.ScenicView;
 
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
@@ -37,6 +38,7 @@ public class DrawerDemo extends Application {
         leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
         leftDrawer.setSidePane(leftDrawerPane);
         leftDrawer.setDefaultDrawerSize(150);
+        leftDrawer.setResizeContent(true);
         leftDrawer.setOverLayVisible(false);
         leftDrawer.setResizableOnDrag(true);
 
@@ -48,6 +50,7 @@ public class DrawerDemo extends Application {
         bottomDrawer.setDefaultDrawerSize(150);
         bottomDrawer.setDirection(DrawerDirection.BOTTOM);
         bottomDrawer.setSidePane(bottomDrawerPane);
+        bottomDrawer.setResizeContent(true);
         bottomDrawer.setOverLayVisible(false);
         bottomDrawer.setResizableOnDrag(true);
 
