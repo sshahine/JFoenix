@@ -319,7 +319,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 }
             }
             // update prompt text position
-            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+            if(isLabelFloat && getSkinnable().getText() != null)
+                animateFloatingLabel(!getSkinnable().getText().isEmpty());
         }else if ("DISABLE_ANIMATION".equals(propertyReference)) {
             // remove error clip if animation is disabled
             errorContainer.setClip(((IFXTextInputControl) getSkinnable()).isDisableAnimation() ?
