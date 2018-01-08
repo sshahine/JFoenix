@@ -47,8 +47,6 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import java.lang.reflect.Field;
-
 /**
  * <h1>Material Design Text input control Skin, used for both JFXTextField/JFXPasswordField</h1>
  *
@@ -299,18 +297,19 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
             errorContainer.setClip(((IFXTextInputControl) getSkinnable()).isDisableAnimation() ?
                 null : errorContainerClip);
         });
-        registerChangeListener(field.labelFloatProperty(), obs->{
+        registerChangeListener(field.labelFloatProperty(), obs-> {
             boolean isLabelFloat = ((IFXTextInputControl) getSkinnable()).isLabelFloat();
             if (isLabelFloat) {
                 JFXUtilities.runInFX(this::createFloatingLabel);
             } else {
-                if(promptText!=null){
+                if (promptText != null) {
                     // remove parent focus listener to prevent editor class cast exception
                     promptText.visibleProperty().bind(usePromptText);
                 }
             }
             // update prompt text position
-            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+            if (isLabelFloat && getSkinnable().getText() != null)
+                animateFloatingLabel(!getSkinnable().getText().isEmpty());
         });
     }
 

@@ -1,6 +1,5 @@
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
-[![][versioneye img]][versioneye]
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
 
@@ -17,7 +16,7 @@
 
 * [JFoenix Site](http://www.jfoenix.com)
 * JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.0.jar)
-* JFoenix - [download jar](http://www.jfoenix.com/download/jfoenix.jar)
+* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix.jar)
 * JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
@@ -105,9 +104,6 @@ dependencies {
 
 [mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
-
-[versioneye]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361
-[versioneye img]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361/badge.svg
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
 [sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root

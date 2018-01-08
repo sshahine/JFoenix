@@ -31,6 +31,7 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -111,7 +112,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         }
     }
 
-    private KeyFrame[] getKeyFrames(double angle, double duration, Color color) {
+    private KeyFrame[] getKeyFrames(double angle, double duration, Paint color) {
         KeyFrame[] frames = new KeyFrame[4];
         frames[0] = new KeyFrame(Duration.seconds(duration),
             new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
@@ -239,7 +240,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
     }
 
     private void createTransition() {
-        final Color initialColor = (Color) arc.getStroke();
+        final Paint initialColor = arc.getStroke();
         if (initialColor == null) {
             arc.setStroke(blueColor);
         }

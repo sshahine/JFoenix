@@ -45,9 +45,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
-import sun.reflect.Reflection;
-
-import java.lang.reflect.Field;
 
 /**
  * <h1>Material Design TextArea Skin</h1>
@@ -311,7 +308,8 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                 }
             }
             // update prompt text position
-            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+            if(isLabelFloat && getSkinnable().getText() != null)
+                animateFloatingLabel(!getSkinnable().getText().isEmpty());
         });
     }
 
