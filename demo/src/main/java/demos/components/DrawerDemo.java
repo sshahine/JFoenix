@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.scenicview.ScenicView;
 
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
