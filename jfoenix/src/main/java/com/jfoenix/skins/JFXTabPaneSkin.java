@@ -49,6 +49,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -131,7 +132,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
                                       - dragStart);
             me.consume();
         });
-        getSkinnable().setOnMousePressed(me -> {
+
+        getSkinnable().addEventHandler(MouseEvent.MOUSE_PRESSED, me -> {
             dragStart = (isHorizontal() ? me.getSceneX() : me .getSceneY());
             offsetStart = header.scrollOffset;
         });
