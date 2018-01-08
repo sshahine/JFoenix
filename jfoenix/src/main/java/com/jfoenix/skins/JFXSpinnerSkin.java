@@ -19,18 +19,20 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -128,7 +130,7 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
         }
     }
 
-    private KeyFrame[] getKeyFrames(double angle, double duration, Color color) {
+    private KeyFrame[] getKeyFrames(double angle, double duration, Paint color) {
         KeyFrame[] frames = new KeyFrame[4];
         frames[0] = new KeyFrame(Duration.seconds(duration),
             new KeyValue(arc.lengthProperty(), 5, Interpolator.LINEAR),
@@ -256,7 +258,7 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
     }
 
     private void createTransition() {
-        final Color initialColor = (Color) arc.getStroke();
+        final Paint initialColor = arc.getStroke();
         if (initialColor == null) {
             arc.setStroke(blueColor);
         }
