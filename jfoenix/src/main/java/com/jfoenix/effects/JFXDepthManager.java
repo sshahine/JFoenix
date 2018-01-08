@@ -96,6 +96,7 @@ public class JFXDepthManager {
             }
         };
         container.getStyleClass().add("depth-container");
+        container.setPickOnBounds(false);
         level = level < 0 ? 0 : level;
         level = level > 5 ? 5 : level;
         container.setEffect(new DropShadow(BlurType.GAUSSIAN,
