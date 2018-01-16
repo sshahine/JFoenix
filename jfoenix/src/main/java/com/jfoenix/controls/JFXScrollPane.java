@@ -232,8 +232,8 @@ public class JFXScrollPane extends StackPane {
         final double[] derivatives = new double[frictions.length];
 
         Timeline timeline = new Timeline();
-        scrollPane.getContent().addEventHandler(MouseEvent.DRAG_DETECTED, event -> timeline.stop());
-        scrollPane.getContent().addEventHandler(ScrollEvent.ANY, event -> {
+        scrollPane.addEventFilter(MouseEvent.DRAG_DETECTED, event -> timeline.stop());
+        scrollPane.addEventFilter(ScrollEvent.ANY, event -> {
             if (event.getEventType() == ScrollEvent.SCROLL) {
                 int direction = event.getDeltaY() > 0 ? -1 : 1;
                 for (int i = 0; i < pushes.length; i++) {
