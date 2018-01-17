@@ -24,6 +24,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -146,9 +147,10 @@ public class JFXScrollPane extends StackPane {
             if (newVal.doubleValue() == 0) {
                 header.setTranslateY(0);
                 topBar.setTranslateY(0);
-            } else if (newVal.doubleValue() == 1) {
-                topBar.setTranslateY(minHeight);
-                header.setTranslateY(-maxHeight);
+//            } else if (newVal.doubleValue() == 1) {
+//                topBar.setTranslateY(minHeight);
+//                header.setStyle("-fx-border-color: RED");
+//                header.setTranslateY(-maxHeight);
             } else {
                 double dy = ty - initY;
                 topBar.setTranslateY(-dy <= minHeight ? -dy : minHeight);
@@ -232,8 +234,8 @@ public class JFXScrollPane extends StackPane {
         final double[] derivatives = new double[frictions.length];
 
         Timeline timeline = new Timeline();
-        scrollPane.addEventFilter(MouseEvent.DRAG_DETECTED, event -> timeline.stop());
-        scrollPane.addEventFilter(ScrollEvent.ANY, event -> {
+        final EventHandler<MouseEvent> dragHandler = event -> timeline.stop();
+        final EventHandler<ScrollEvent> scrollHandler = event -> {
             if (event.getEventType() == ScrollEvent.SCROLL) {
                 int direction = event.getDeltaY() > 0 ? -1 : 1;
                 for (int i = 0; i < pushes.length; i++) {
@@ -244,8 +246,21 @@ public class JFXScrollPane extends StackPane {
                 }
                 event.consume();
             }
+        };
+        if (scrollPane.getContent().getParent() != null) {
+            scrollPane.getContent().getParent().addEventHandler(MouseEvent.DRAG_DETECTED, dragHandler);
+            scrollPane.getContent().getParent().addEventHandler(ScrollEvent.ANY, scrollHandler);
+        }
+        scrollPane.getContent().parentProperty().addListener((o,oldVal, newVal)->{
+            if (oldVal != null) {
+                oldVal.removeEventHandler(MouseEvent.DRAG_DETECTED, dragHandler);
+                oldVal.removeEventHandler(ScrollEvent.ANY, scrollHandler);
+            }
+            if (newVal != null) {
+                newVal.addEventHandler(MouseEvent.DRAG_DETECTED, dragHandler);
+                newVal.addEventHandler(ScrollEvent.ANY, scrollHandler);
+            }
         });
-
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(3), (event) -> {
             for (int i = 0; i < derivatives.length; i++) {
                 derivatives[i] *= frictions[i];
