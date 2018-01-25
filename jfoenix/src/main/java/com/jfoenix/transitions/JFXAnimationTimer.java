@@ -142,7 +142,10 @@ public class JFXAnimationTimer extends AnimationTimer {
             finished = false;
             for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
-                    initialValuesMap.putIfAbsent(keyValue.getTarget(), keyValue.getTarget().getValue());
+                    // replaced putIfAbsent for mobile compatibility
+                    if (!initialValuesMap.containsKey(keyValue.getTarget())) {
+                        initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
+                    }
                 }
             }
         }
