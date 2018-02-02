@@ -26,6 +26,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
+* <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * Other small projects <a href="https://github.com/mayuso/LoLPing2">LoLPing 2</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>
