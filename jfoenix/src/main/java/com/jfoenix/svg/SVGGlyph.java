@@ -54,6 +54,10 @@ public class SVGGlyph extends Pane {
     private double widthHeightRatio = 1;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>();
 
+    public SVGGlyph() {
+        this(null);
+    }
+
     public SVGGlyph(String svgPathContent) {
         this(-1, "UNNAMED", svgPathContent, Color.BLACK);
     }
@@ -61,6 +65,7 @@ public class SVGGlyph extends Pane {
     public SVGGlyph(String svgPathContent, Paint fill) {
         this(-1, "UNNAMED", svgPathContent, fill);
     }
+
     /**
      * Constructs SVGGlyph node for a specified svg content and color
      * <b>Note:</b> name and glyphId is not needed when creating a single SVG image,
@@ -80,17 +85,19 @@ public class SVGGlyph extends Pane {
 
         shapeProperty().addListener(observable -> {
             Shape shape = getShape();
-            if(getShape()!=null){
-                widthHeightRatio = shape.prefWidth(-1)/ shape.prefHeight(-1);
-                if(getSize() != Region.USE_COMPUTED_SIZE){
+            if (getShape() != null) {
+                widthHeightRatio = shape.prefWidth(-1) / shape.prefHeight(-1);
+                if (getSize() != Region.USE_COMPUTED_SIZE) {
                     setSizeRatio(getSize());
                 }
             }
         });
 
-        SVGPath shape = new SVGPath();
-        shape.setContent(svgPathContent);
-        setShape(shape);
+        if (svgPathContent != null && !svgPathContent.isEmpty()) {
+            SVGPath shape = new SVGPath();
+            shape.setContent(svgPathContent);
+            setShape(shape);
+        }
 
         setFill(fill);
         setPrefSize(DEFAULT_PREF_SIZE, DEFAULT_PREF_SIZE);
@@ -142,14 +149,14 @@ public class SVGGlyph extends Pane {
      *
      * @param size in pixel
      */
-    private void setSizeRatio(double size){
+    private void setSizeRatio(double size) {
         double width = widthHeightRatio * size;
         double height = size / widthHeightRatio;
-        if(width <= size){
-            setSize(width , size);
-        }else if(height <= size){
+        if (width <= size) {
+            setSize(width, size);
+        } else if (height <= size) {
             setSize(size, height);
-        }else{
+        } else {
             setSize(size, size);
         }
     }
@@ -159,9 +166,9 @@ public class SVGGlyph extends Pane {
      *
      * @param width in pixel
      */
-    public void setSizeForWidth(double width){
+    public void setSizeForWidth(double width) {
         double height = width / widthHeightRatio;
-        setSize(width , height);
+        setSize(width, height);
     }
 
     /**
@@ -169,9 +176,9 @@ public class SVGGlyph extends Pane {
      *
      * @param height in pixel
      */
-    public void setSizeForHeight(double height){
+    public void setSizeForHeight(double height) {
         double width = height * widthHeightRatio;
-        setSize(width , height);
+        setSize(width, height);
     }
 
     /**
@@ -180,7 +187,7 @@ public class SVGGlyph extends Pane {
     private StyleableDoubleProperty size = new SimpleStyleableDoubleProperty(StyleableProperties.SIZE,
         SVGGlyph.this,
         "size",
-        Region.USE_COMPUTED_SIZE){
+        Region.USE_COMPUTED_SIZE) {
         @Override
         public void invalidated() {
             setSizeRatio(getSize());
