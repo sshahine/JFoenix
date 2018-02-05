@@ -1,8 +1,11 @@
+[![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
-
+[![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
+[![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
+[![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
 ---
 
 <h1 align="center">
