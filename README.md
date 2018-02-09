@@ -82,6 +82,8 @@ dependencies {
 
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
 
+![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
+
 ![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 
 ![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
