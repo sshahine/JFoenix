@@ -99,7 +99,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
             }
         });
         toggleButton.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if(!toggleButton.isDisableVisualFocus()) {
+            if (!toggleButton.isDisableVisualFocus()) {
                 if (newVal) {
                     if (!getSkinnable().isPressed()) {
                         rippler.setOverlayVisible(true);
@@ -109,13 +109,19 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
                 }
             }
         });
-        toggleButton.pressedProperty().addListener((o, oldVal, newVal) -> rippler.setOverlayVisible(false));
+        toggleButton.pressedProperty().addListener(observable -> rippler.setOverlayVisible(false));
 
         // add change listener to selected property
-        getSkinnable().selectedProperty().addListener((o, oldVal, newVal) -> {
-            rippler.setRipplerFill(newVal ? toggleButton.getToggleColor() : toggleButton.getUnToggleLineColor());
-            transition.setRate(newVal ? 1 : -1);
-            transition.play();
+        getSkinnable().selectedProperty().addListener(observable -> {
+            if (!toggleButton.isDisableAnimation()) {
+                rippler.setRipplerFill(toggleButton.isSelected() ? toggleButton.getToggleColor() : toggleButton.getUnToggleLineColor());
+                transition.setRate(toggleButton.isSelected() ? 1 : -1);
+                transition.play();
+            } else {
+                circleContainer.setTranslateX((toggleButton.isSelected() ? 1 : -1) * ((line.getLayoutBounds().getWidth() / 2) - circleRadius));
+                line.setStroke(toggleButton.isSelected() ? ((JFXToggleButton) getSkinnable()).getToggleLineColor() : ((JFXToggleButton) getSkinnable()).getUnToggleLineColor());
+                circle.setFill(toggleButton.isSelected() ? ((JFXToggleButton) getSkinnable()).getToggleColor() : ((JFXToggleButton) getSkinnable()).getUnToggleColor());
+            }
         });
 
         getSkinnable().setGraphic(main);

@@ -44,8 +44,8 @@ import javafx.util.Duration;
  */
 public class JFXPopupSkin implements Skin<JFXPopup> {
 
-    protected final JFXPopup control;
-    protected final StackPane container = new StackPane();
+    protected JFXPopup control;
+    protected StackPane container = new StackPane();
     protected Region popupContent;
     protected Node root;
 
@@ -92,6 +92,12 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
 
     @Override
     public void dispose() {
+        animation.stop();
+        animation = null;
+        container = null;
+        control = null;
+        popupContent = null;
+        root = null;
     }
 
     protected Animation getAnimation() {

@@ -1,8 +1,11 @@
+[![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
-
+[![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
+[![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
+[![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
 ---
 
 <h1 align="center">
@@ -15,10 +18,9 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.1.jar)(9.x.x)
-* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1.jar)(8.x.x)
-* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1-retrolambda
-.jar)
+* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.1.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1.jar) (8.x.x)
+* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
@@ -27,6 +29,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
+* <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * Other small projects <a href="https://github.com/mayuso/LoLPing2">LoLPing 2</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>
@@ -81,6 +84,8 @@ dependencies {
 ![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
 
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
+
+![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
 
 ![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 

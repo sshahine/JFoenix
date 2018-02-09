@@ -46,8 +46,9 @@ public class MainDemo extends Application {
 
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
-        decorator.setText("JFoenix Demo");
         decorator.setGraphic(new SVGGlyph(""));
+        
+        stage.setTitle("JFoenix Demo");
 
         double width = 800;
         double height = 600;

@@ -61,7 +61,7 @@ public class JFXResponsiveHandler {
      * @param pseudoClass css class for certain device
      */
     public JFXResponsiveHandler(Stage stage, PseudoClass pseudoClass) {
-        scanAllNodes(stage.getScene().getRoot(), PSEUDO_CLASS_LARGE);
+        scanAllNodes(stage.getScene().getRoot(), pseudoClass);
     }
 
     /**

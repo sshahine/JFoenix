@@ -266,10 +266,6 @@
     -fx-text-fill: black;
 }
 
-.combo-box-popup .list-view .jfx-list-cell .jfx-rippler {
-    -fx-rippler-fill: #5264AE;
-}
-
 /*.combo-box .combo-box-button-container{
  	-fx-border-color:BLACK;-fx-border-width: 0 0 1 0;
 }

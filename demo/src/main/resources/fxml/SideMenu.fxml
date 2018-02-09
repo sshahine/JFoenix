@@ -22,6 +22,7 @@
         <Label fx:id="slider">Slider</Label>
         <Label fx:id="spinner">Spinner</Label>
         <Label fx:id="textfield">Text Field</Label>
+        <Label fx:id="chipview">Chip View</Label>
         <Label fx:id="togglebutton">Toggle Button</Label>
         <Label fx:id="popup">Popup</Label>
         <Label fx:id="pickers">Pickers</Label>
