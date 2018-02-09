@@ -21,7 +21,6 @@ package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.events.JFXAutoCompleteEvent;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.animation.Animation.Status;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -30,6 +29,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
@@ -112,7 +112,7 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
 					Cell<T> cell = vf.getCell(i);
 					cell.setOpacity(0);
 					cell.setTranslateY(-suggestionList.getFixedCellSize() / 8);
-					vf.show(i);
+					vf.scrollTo(i);
 					Timeline f = new Timeline(new KeyFrame(Duration.millis(120),
 							new KeyValue(cell.opacityProperty(), 1, Interpolator.EASE_BOTH),
 							new KeyValue(cell.translateYProperty(), 0, Interpolator.EASE_BOTH)));
