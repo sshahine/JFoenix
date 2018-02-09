@@ -39,7 +39,7 @@ import java.util.function.BiPredicate;
  * An easy way to manage chips in a text area component with an x to
  * omit the chip.
  *
- * @author Gerard Moubarak & Shadi Shaheen
+ * @author Shadi Shaheen & Gerard Moubarak
  * @version 1.0.0
  * @since 2018-02-01
  */

@@ -20,10 +20,9 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXAutoCompletePopup;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXChip;
 import com.jfoenix.controls.JFXChipView;
-import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.controls.JFXDefaultChip;
 import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -33,20 +32,17 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,7 +50,7 @@ import java.util.List;
  * An easy way to manage chips in a text area component with an x to
  * omit the chip.
  *
- * @author Gerard Moubarak & Shadi Shaheen
+ * @author Shadi Shaheen & Gerard Moubarak
  * @version 1.0.0
  * @since 2018-02-01
  */
@@ -72,12 +68,18 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
     private double availableWidth;
     private double requiredWidth;
 
-    private HashMap<T, JFXChip<T>> chipsMap = new HashMap<>();
-
     private final ListChangeListener<T> chipsChangeListeners = change -> {
         while (change.next()) {
             for (T item : change.getRemoved()) {
-                removeChip(chipsMap.get(item));
+                for (int i = root.getChildren().size() - 2; i >= 0; i--) {
+                    Node child = root.getChildren().get(i);
+                    if (child instanceof JFXChip) {
+                        if (((JFXChip) child).getItem() == item) {
+                            root.getChildren().remove(i);
+                            break;
+                        }
+                    }
+                }
             }
             for (T item : change.getAddedSubList()) {
                 createChip(item);
@@ -95,8 +97,8 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
         // init auto complete
         autoCompletePopup = (ChipsAutoComplete<T>) getSkinnable().getAutoCompletePopup();
-        autoCompletePopup.setSelectionHandler(event-> {
-            getSkinnable().getChips().add(event.getSelection());
+        autoCompletePopup.setSelectionHandler(event -> {
+            getSkinnable().getChips().add(event.getObject());
             inputField.clear();
         });
         // add position listener to auto complete
@@ -142,12 +144,14 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             }
             editor.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.ENTER) {
-                    try {
-                        getSkinnable().getChips().add(sc.fromString(editor.getText()));
-                        editor.clear();
-                        autoCompletePopup.hide();
-                    } catch (Exception ex) {
-                        getSkinnable().pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
+                    if (!editor.getText().trim().isEmpty()) {
+                        try {
+                            getSkinnable().getChips().add(sc.fromString(editor.getText()));
+                            editor.clear();
+                            autoCompletePopup.hide();
+                        } catch (Exception ex) {
+                            getSkinnable().pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
+                        }
                     }
                     event.consume();
                 }
@@ -156,6 +160,9 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                     int size = chips.size();
                     if ((size > 0) && editor.getText().isEmpty()) {
                         chips.remove(size - 1);
+                        if (autoCompletePopup.isShowing()) {
+                            autoCompletePopup.hide();
+                        }
                     }
                 }
             });
@@ -177,37 +184,10 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         if (getSkinnable().getChipFactory() != null) {
             chip = getSkinnable().getChipFactory().apply(getSkinnable(), item);
         } else {
-            chip = createDefaultChip(item);
+            chip = new JFXDefaultChip<T>(getSkinnable(), item);
         }
         int size = root.getChildren().size();
         root.getChildren().add(size - 1, chip);
-        chipsMap.put(item, chip);
-    }
-
-    private void removeChip(JFXChip chip) {
-        root.getChildren().remove(chip);
-        chipsMap.remove(chip.getItem());
-    }
-
-    private JFXChip<T> createDefaultChip(T item) {
-        return new JFXChip<T>(getSkinnable(), item) {
-            {
-                JFXButton closeButton = new JFXButton(null, new SVGGlyph());
-                closeButton.getStyleClass().add("close-button");
-                closeButton.setOnAction((event) -> getSkinnable().getChips().remove(item));
-
-                String tagString = null;
-                if (getItem() instanceof String) {
-                    tagString = (String) getItem();
-                } else {
-                    tagString = getSkinnable().getConverter().toString(getItem());
-                }
-                Label label = new Label(tagString);
-                label.setWrapText(true);
-                getChildren().setAll(new HBox(label, closeButton));
-                label.setMaxWidth(100);
-            }
-        };
     }
 
     private double computeTextContentWidth(TextInputControl editor) {
@@ -294,6 +274,10 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     public static class ChipsAutoComplete<T> extends JFXAutoCompletePopup<T> {
 
+        public ChipsAutoComplete() {
+            getStyleClass().add("jfx-chips-popup");
+        }
+
         private double shift = 0;
 
         private Text text;
@@ -302,21 +286,22 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             this.shift = shift;
         }
 
-        public void show(Node node){
+        public void show(Node node) {
             if (text == null) {
                 text = (Text) node.lookup(".text");
             }
             node = text;
-            if(!isShowing()){
-                if(node.getScene() == null || node.getScene().getWindow() == null)
+            if (!isShowing()) {
+                if (node.getScene() == null || node.getScene().getWindow() == null) {
                     throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
+                }
                 Window parent = node.getScene().getWindow();
                 this.show(parent, parent.getX() +
                                   node.localToScene(0, 0).getX() +
                                   node.getScene().getX(),
                     parent.getY() + node.localToScene(0, 0).getY() +
                     node.getScene().getY() + node.getLayoutBounds().getHeight() + shift);
-                ((JFXAutoCompletePopupSkin<T>)getSkin()).animate();
+                ((JFXAutoCompletePopupSkin<T>) getSkin()).animate();
             } else {
                 // if already showing update location if needed
                 Window parent = node.getScene().getWindow();

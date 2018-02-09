@@ -78,6 +78,9 @@ public class SideMenuController {
     @ActionTrigger("scrollpane")
     private Label scrollpane;
     @FXML
+    @ActionTrigger("chipview")
+    private Label chipview;
+    @FXML
     private JFXListView<Label> sideList;
 
     /**
@@ -116,6 +119,7 @@ public class SideMenuController {
         bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);
         bindNodeToController(spinner, SpinnerController.class, contentFlow, contentFlowHandler);
         bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(chipview, ChipViewController.class, contentFlow, contentFlowHandler);
         bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
         bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
         bindNodeToController(svgLoader, SVGLoaderController.class, contentFlow, contentFlowHandler);

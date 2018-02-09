@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXChipView?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2">
+    <StackPane maxWidth="400" maxHeight="400" >
+        <JFXChipView fx:id="chipView"></JFXChipView>
+    </StackPane>
+</StackPane>
+
