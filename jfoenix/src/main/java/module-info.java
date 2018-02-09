@@ -29,6 +29,7 @@ module com.jfoenix{
     exports com.jfoenix.skins;
     exports com.jfoenix.svg;
     exports com.jfoenix.validation;
+    exports com.jfoenix.validation.base;
     exports com.jfoenix.transitions;
     exports com.jfoenix.animation;
     exports com.jfoenix.transitions.hamburger;
