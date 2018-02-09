@@ -23,7 +23,6 @@ import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.JFXChip;
 import com.jfoenix.controls.JFXChipView;
 import com.jfoenix.controls.JFXDefaultChip;
-import javafx.beans.WeakInvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -103,9 +102,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         });
         // add position listener to auto complete
         autoCompletePopup.setShift(root.getVgap() * 2);
-        root.vgapProperty().addListener(new WeakInvalidationListener((observable -> {
-            autoCompletePopup.setShift(root.getVgap() * 2);
-        })));
+        root.vgapProperty().addListener((observable -> autoCompletePopup.setShift(root.getVgap() * 2)));
 
         // create initial chips
         for (T item : control.getChips()) {
@@ -166,14 +163,14 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                     }
                 }
             });
-            editor.textProperty().addListener(new WeakInvalidationListener(observable -> {
+            editor.textProperty().addListener(observable -> {
                 autoCompletePopup.filter(item -> getSkinnable().getPredicate().test(item, inputField.getText()));
                 if (autoCompletePopup.getFilteredSuggestions().isEmpty()) {
                     autoCompletePopup.hide();
                 } else {
                     autoCompletePopup.show(editor);
                 }
-            }));
+            });
         }
         root.getChildren().add(inputField);
     }
