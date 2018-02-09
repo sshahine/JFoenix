@@ -4,6 +4,7 @@
 
 .root {
     -fx-font-family: "Roboto";
+    -fx-font-smoothing-type: gray;
 }
 
 .side-menu {
