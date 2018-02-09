@@ -4,10 +4,8 @@ import com.jfoenix.controls.JFXChipView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.scenicview.ScenicView;
 
 public final class ChipViewDemo extends Application {
 
