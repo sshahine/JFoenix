@@ -78,6 +78,9 @@ public class SideMenuController {
     @ActionTrigger("scrollpane")
     private Label scrollpane;
     @FXML
+    @ActionTrigger("nodeslist")
+    private Label nodesList;
+    @FXML
     private JFXListView<Label> sideList;
 
     /**
@@ -122,6 +125,7 @@ public class SideMenuController {
         bindNodeToController(pickers, PickersController.class, contentFlow, contentFlowHandler);
         bindNodeToController(masonry, MasonryPaneController.class, contentFlow, contentFlowHandler);
         bindNodeToController(scrollpane, ScrollPaneController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(nodesList, NodesListController.class, contentFlow, contentFlowHandler);
     }
 
     private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
