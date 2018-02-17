@@ -37,3 +37,4 @@ libs/*
 .classpath
 .project
 JFoenix.eml
+/.nb-gradle/

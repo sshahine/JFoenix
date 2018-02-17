@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.jfoenix.controls;
 
 import com.jfoenix.validation.base.ValidatorBase;
@@ -27,8 +26,8 @@ import javafx.css.StyleableObjectProperty;
 import javafx.scene.paint.Paint;
 
 /**
- * this class is created for internal use only, to remove duplication between text input controls
- * skins
+ * this class is created for internal use only, to remove duplication between
+ * text input controls skins
  *
  * Created by sshahine on 7/14/2017.
  */
@@ -44,6 +43,8 @@ public interface IFXTextInputControl {
 
     boolean validate();
 
+    boolean validateAsync(ValidatorBase async);
+    
     void resetValidation();
 
     StyleableBooleanProperty labelFloatProperty();
