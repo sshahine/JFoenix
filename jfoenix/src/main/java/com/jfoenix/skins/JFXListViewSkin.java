@@ -25,6 +25,7 @@ import com.sun.javafx.scene.control.skin.ListViewSkin;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.Region;
 
 /**
  * <h1>Material Design ListView Skin</h1>
@@ -56,7 +57,9 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        if (getSkinnable().maxHeightProperty().isBound() || getSkinnable().getItems().size() <= 0) {
+        if (getSkinnable().maxHeightProperty().isBound()
+            || getSkinnable().getItems().size() <= 0
+            || getSkinnable().getFixedCellSize() != Region.USE_COMPUTED_SIZE) {
             return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         }
 

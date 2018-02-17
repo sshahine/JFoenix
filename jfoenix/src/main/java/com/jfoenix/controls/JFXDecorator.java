@@ -22,10 +22,7 @@ package com.jfoenix.controls;
 import com.jfoenix.svg.SVGGlyph;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -80,6 +77,7 @@ public class JFXDecorator extends VBox {
     protected JFXButton btnClose;
     protected JFXButton btnMin;
 
+    protected StringProperty title = new SimpleStringProperty();
     protected Text text;
     protected Node graphic;
     protected HBox graphicContainer;
@@ -316,8 +314,10 @@ public class JFXDecorator extends VBox {
         btns.add(btnClose);
 
         text = new Text();
-        text.getStyleClass().addAll("jfx-decorator-text", "title");
+        text.getStyleClass().addAll("jfx-decorator-text", "title", "jfx-decorator-title");
         text.setFill(Color.WHITE);
+        text.textProperty().bind(title); //binds the Text's text to title
+        title.bind(primaryStage.titleProperty()); //binds title to the primaryStage's title
 
         graphicContainer = new HBox();
         graphicContainer.setPickOnBounds(false);
@@ -577,16 +577,47 @@ public class JFXDecorator extends VBox {
      * will set the title
      *
      * @param text
+     * @deprecated Use {@link JFXDecorator#setTitle(java.lang.String)} instead.
      */
     public void setText(String text) {
-        this.text.setText(text);
+        setTitle(text);
     }
 
     /**
      * will get the title
+     *
+     * @deprecated Use {@link JFXDecorator#setTitle(java.lang.String)} instead.
      */
     public String getText() {
-        return text.getText();
+        return getTitle();
+    }
+
+    public String getTitle() {
+        return title.get();
+    }
+
+    /**
+     * By default this title property is bound to the primaryStage's title property.
+     * <p>
+     * To change it to something else, use <pre>
+     *     {@code jfxDecorator.titleProperty().unbind();}</pre> first.
+     *
+     */
+    public StringProperty titleProperty() {
+        return title;
+    }
+
+    /**
+     * If you want the {@code primaryStage}'s title and the {@code JFXDecorator}'s title to be different, then
+     * go ahead and use this method.
+     * <p>
+     * By default, this title property is bound to the {@code primaryStage}'s title property—so merely setting the
+     * {@code primaryStage}'s title, will set the {@code JFXDecorator}'s title.
+     *
+     */
+    public void setTitle(String title) {
+        this.title.unbind();
+        this.title.set(title);
     }
 
     public void setGraphic(Node node) {

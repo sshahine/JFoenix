@@ -4,6 +4,7 @@
 
 .root {
     -fx-font-family: "Roboto";
+    -fx-font-smoothing-type: gray;
 }
 
 .side-menu {
@@ -1020,3 +1021,34 @@
 }
 
 
+
+.jfx-chip-view{
+    -fx-background-color: WHITE;
+    -fx-padding: 16;
+}
+
+.jfx-chip-view .chips-pane > .text-area{
+    -fx-padding: 8 0 8 0;
+}
+
+
+.jfx-chip-view .chips-pane .jfx-chip .chip-icon{
+    -jfx-size: 20;
+    -fx-background-color: #3f51b5;
+}
+
+.jfx-chip-view .chips-pane .jfx-chip .heart{
+    -jfx-size: 20;
+    -fx-background-color: #D34336;
+}
+
+.jfx-chips-popup .autocomplete-list{
+    -fx-fixed-cell-size: 32;
+    -fx-background-insets: 0.0;
+    -fx-max-height: 200;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.26) , 5, 0.06, -1, 2 );
+}
+
+.jfx-chips-popup .autocomplete-list .jfx-list-cell{
+    -fx-text-fill: rgba(0,0,0,.87);
+}

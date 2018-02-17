@@ -97,9 +97,9 @@ public class SVGGlyph extends Pane {
             SVGPath shape = new SVGPath();
             shape.setContent(svgPathContent);
             setShape(shape);
+            setFill(fill);
         }
 
-        setFill(fill);
         setPrefSize(DEFAULT_PREF_SIZE, DEFAULT_PREF_SIZE);
     }
 

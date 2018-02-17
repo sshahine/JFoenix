@@ -54,12 +54,19 @@ import javafx.stage.StageStyle;
 public class JFXAlert<R> extends Dialog<R> {
 
     private final StackPane contentContainer;
-    private final StackPane overlay;
+    private StackPane overlay;
+
+    public JFXAlert() {
+        this(null);
+    }
 
     public JFXAlert(Stage stage) {
         // set the stage to transparent
         initStyle(StageStyle.TRANSPARENT);
-        initOwner(stage);
+
+        if(stage!=null) {
+            initOwner(stage);
+        }
 
         // create custom dialog pane
         setDialogPane(new DialogPane() {
@@ -85,48 +92,52 @@ public class JFXAlert<R> extends Dialog<R> {
         materialNode.setPickOnBounds(false);
         materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event->event.consume());
 
-        // init style for overlay
-        overlay = new StackPane(materialNode){
-            public String getUserAgentStylesheet() {
-                return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
-            }
-        };
-        overlay.getStyleClass().add("jfx-alert-overlay");
-
         // customize dialogPane
         final DialogPane dialogPane = getDialogPane();
         dialogPane.getScene().setFill(Color.TRANSPARENT);
         dialogPane.setStyle("-fx-background-color: transparent;");
-        dialogPane.prefWidthProperty().bind(stage.getScene().widthProperty());
-        dialogPane.prefHeightProperty().bind(stage.getScene().heightProperty());
-        dialogPane.setContent(overlay);
 
-        updateX(stage, dialogPane);
-        updateY(stage, dialogPane);
+        if(stage!=null) {
+            // init style for overlay
+            overlay = new StackPane(materialNode) {
+                public String getUserAgentStylesheet() {
+                    return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+                }
+            };
+            overlay.getStyleClass().add("jfx-alert-overlay");
+            overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (this.isOverlayClose()) {
+                    new Thread(() -> hideWithAnimation()).start();
+                }
+            });
+            dialogPane.setContent(overlay);
 
-        // bind dialog position to stage position
-        stage.getScene().widthProperty().addListener(observable -> updateSize(dialogPane));
-        stage.getScene().heightProperty().addListener(observable -> updateSize(dialogPane));
-        stage.xProperty().addListener((observable, oldValue, newValue) -> updateX(stage, dialogPane));
-        stage.yProperty().addListener((observable, oldValue, newValue) -> updateY(stage, dialogPane));
+            dialogPane.prefWidthProperty().bind(stage.getScene().widthProperty());
+            dialogPane.prefHeightProperty().bind(stage.getScene().heightProperty());
+
+            updateX(stage, dialogPane);
+            updateY(stage, dialogPane);
+            // bind dialog position to stage position
+            stage.getScene().widthProperty().addListener(observable -> updateSize(dialogPane));
+            stage.getScene().heightProperty().addListener(observable -> updateSize(dialogPane));
+            stage.xProperty().addListener((observable, oldValue, newValue) -> updateX(stage, dialogPane));
+            stage.yProperty().addListener((observable, oldValue, newValue) -> updateY(stage, dialogPane));
+        }else{
+            dialogPane.setContent(materialNode);
+        }
 
         // handle animation
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
             if (getAnimation() != null) {
-                getAnimation().initAnimation(contentContainer.getParent(), overlay);
+                getAnimation().initAnimation(contentContainer.getParent(), dialogPane.getContent());
             }
         });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWN, event -> {
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), overlay);
+                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), dialogPane.getContent());
                 if (animation != null) {
                     animation.play();
                 }
-            }
-        });
-        overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if (this.isOverlayClose()) {
-                new Thread(() -> hideWithAnimation()).start();
             }
         });
     }
@@ -157,7 +168,7 @@ public class JFXAlert<R> extends Dialog<R> {
     public void hideWithAnimation() {
         if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), overlay);
+                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), getDialogPane().getContent());
                 if (animation != null) {
                     transition = animation;
                     animation.setOnFinished(finish -> {
