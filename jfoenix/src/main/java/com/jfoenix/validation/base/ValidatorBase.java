@@ -28,8 +28,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
 /**
- * An abstract class that defines the basic validation functionality for a
- * certain control.
+ * An abstract class that defines the basic validation functionality for a certain control.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -61,12 +60,12 @@ public abstract class ValidatorBase extends Parent {
         this.listener = listener;
     }
 
-    /**
-     * *************************************************************************
+    /***************************************************************************
      *                                                                         *
-     * Methods * *
-     * ************************************************************************
-     */
+     * Methods                                                                 *
+     *                                                                         *
+     **************************************************************************/
+
     private void parentChanged() {
         updateSrcControl();
     }
@@ -86,7 +85,7 @@ public abstract class ValidatorBase extends Parent {
         eval();
         onEval();
     }
-
+    
     /**
      * will validate the source control
      */
@@ -95,13 +94,15 @@ public abstract class ValidatorBase extends Parent {
     }
 
     /**
+
+
+    /**
      * will evaluate the validation condition once calling validate method
      */
     protected abstract void eval();
 
     /**
-     * this method will update the source control after evaluating the
-     * validation condition
+     * this method will update the source control after evaluating the validation condition
      */
     protected void onEval() {
         Node control = getSrcControl();
@@ -121,7 +122,7 @@ public abstract class ValidatorBase extends Parent {
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
                 if ((controlTooltip != null && controlTooltip.getStyleClass().contains("error-tooltip"))
-                        || (controlTooltip == null && tooltip != null)) {
+                    || (controlTooltip == null && tooltip != null)) {
                     ((Control) control).setTooltip(tooltip);
                 }
                 tooltip = null;
@@ -130,15 +131,13 @@ public abstract class ValidatorBase extends Parent {
         }
     }
 
-    /**
-     * *************************************************************************
+    /***************************************************************************
      *                                                                         *
-     * Properties * *
-     * ************************************************************************
-     */
-    /**
-     * *** srcControl ****
-     */
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /***** srcControl *****/
     protected SimpleObjectProperty<Node> srcControl = new SimpleObjectProperty<>();
 
     public void setSrcControl(Node srcControl) {
@@ -153,9 +152,8 @@ public abstract class ValidatorBase extends Parent {
         return this.srcControl;
     }
 
-    /**
-     * *** src ****
-     */
+
+    /***** src *****/
     protected SimpleStringProperty src = new SimpleStringProperty() {
         @Override
         protected void invalidated() {
@@ -175,9 +173,8 @@ public abstract class ValidatorBase extends Parent {
         return this.src;
     }
 
-    /**
-     * *** hasErrors ****
-     */
+
+    /***** hasErrors *****/
     protected ReadOnlyBooleanWrapper hasErrors = new ReadOnlyBooleanWrapper(false);
 
     public boolean getHasErrors() {
@@ -188,9 +185,7 @@ public abstract class ValidatorBase extends Parent {
         return hasErrors.getReadOnlyProperty();
     }
 
-    /**
-     * *** Message ****
-     */
+    /***** Message *****/
     protected SimpleStringProperty message = new SimpleStringProperty() {
         @Override
         protected void invalidated() {
@@ -210,9 +205,7 @@ public abstract class ValidatorBase extends Parent {
         return this.message;
     }
 
-    /**
-     * *** Awsome Icon ****
-     */
+    /***** Awsome Icon *****/
     protected SimpleObjectProperty<Node> icon = new SimpleObjectProperty<Node>() {
         @Override
         protected void invalidated() {
