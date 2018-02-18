@@ -38,6 +38,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.scene.control.ProgressIndicator;
 
 /**
  * JFXPasswordField is the material design implementation of a password Field.
@@ -250,6 +251,30 @@ public class JFXPasswordField extends PasswordField implements IFXTextInputContr
     @Override
     public final void setDisableAnimation(final Boolean disabled) {
         this.disableAnimationProperty().set(disabled);
+    }
+
+    @Override
+    public boolean validateAsync(ValidatorBase async) {
+        ProgressIndicator indicator = new ProgressIndicator();
+        indicator.setProgress(-1);
+        async.setIcon(indicator);
+        activeValidator.set(async);
+
+        for (ValidatorBase validator : validators) {
+            if (validator.getSrcControl() == null) {
+                validator.setSrcControl(this);
+            }
+            validator.validateAsync();
+            validator.addListener(() -> {
+                if (validator.getHasErrors()) {
+                    activeValidator.set(validator);
+                } else {
+                    this.resetValidation();
+                }
+            });
+
+        }
+        return true;
     }
 
 
