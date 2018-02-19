@@ -40,14 +40,6 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
         super(listView);
         JFXDepthManager.setDepth(flow, listView.depthProperty().get());
         listView.depthProperty().addListener((o, oldVal, newVal) -> JFXDepthManager.setDepth(flow, newVal));
-        listView.getItems().addListener((Change<? extends T> change) -> new Thread(() -> {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException intEx) {
-                intEx.printStackTrace();
-            }
-            Platform.runLater(() -> getSkinnable().requestLayout());
-        }).start());
     }
 
     @Override
