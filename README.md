@@ -49,6 +49,9 @@ To run the main demo, execute the following command:
 
 **NOTE** : JFoenix requires **Java 1.8u60** and above.
 
+# Demo
+For detailed steps on getting the demo running, see [the wiki].
+
 # How can I use JFoenix?
 You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix-0.0.0-SNAPSHOT.jar under the jfoenix/build/libs folder. To use JFoenix, import jfoenix-0.0.0-SNAPSHOT.jar into your project and start using the new material design Java components :).
 
@@ -124,3 +127,5 @@ dependencies {
 
 [gitter]:https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
+
+[the wiki]: https://github.com/jfoenixadmin/JFoenix/wiki#trying-the-demo
