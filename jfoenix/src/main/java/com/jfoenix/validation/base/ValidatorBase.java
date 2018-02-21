@@ -19,6 +19,7 @@
 
 package com.jfoenix.validation.base;
 
+import com.jfoenix.validation.interfaces.AsyncValidationListener;
 import javafx.beans.property.*;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
@@ -42,6 +43,7 @@ public abstract class ValidatorBase extends Parent {
 
     private Tooltip tooltip = null;
     private Tooltip errorTooltip = null;
+    private AsyncValidationListener listener;
 
     public ValidatorBase(String message) {
         this();
@@ -52,6 +54,10 @@ public abstract class ValidatorBase extends Parent {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
         errorTooltip = new Tooltip();
         errorTooltip.getStyleClass().add("error-tooltip");
+    }
+
+    public void addListener(AsyncValidationListener listener) {
+        this.listener = listener;
     }
 
     /***************************************************************************
@@ -79,6 +85,16 @@ public abstract class ValidatorBase extends Parent {
         eval();
         onEval();
     }
+    
+    /**
+     * will validate the source control
+     */
+    public void validateAsync() {
+        eval();
+    }
+
+    /**
+
 
     /**
      * will evaluate the validation condition once calling validate method
@@ -90,6 +106,7 @@ public abstract class ValidatorBase extends Parent {
      */
     protected void onEval() {
         Node control = getSrcControl();
+        listener.validated();
         if (hasErrors.get()) {
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 

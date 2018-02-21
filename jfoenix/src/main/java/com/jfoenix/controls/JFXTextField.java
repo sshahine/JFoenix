@@ -37,6 +37,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.scene.control.ProgressIndicator;
 
 /**
  * JFXTextField is the material design implementation of a text Field.
@@ -141,6 +142,37 @@ public class JFXTextField extends TextField implements IFXTextInputControl {
             }
         }
         activeValidator.set(null);
+        return true;
+    }
+    
+        /**
+     * validates the text value using the list of validators provided by the
+     * user {{@link #setValidators(ValidatorBase...)}
+     *
+     * @param async
+     * @return true if the value is valid else false
+     */
+    @Override
+    public boolean validateAsync(ValidatorBase async) {
+        ProgressIndicator indicator = new ProgressIndicator();
+        indicator.setProgress(-1);
+        async.setIcon(indicator);
+        activeValidator.set(async);
+
+        for (ValidatorBase validator : validators) {
+            if (validator.getSrcControl() == null) {
+                validator.setSrcControl(this);
+            }
+            validator.validateAsync();
+            validator.addListener(() -> {
+                if (validator.getHasErrors()) {
+                    activeValidator.set(validator);
+                } else {
+                    this.resetValidation();
+                }
+            });
+
+        }
         return true;
     }
 
