@@ -21,6 +21,9 @@ package com.jfoenix.controls;
 
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -100,6 +103,20 @@ public class JFXNodesList extends VBox {
         setPickOnBounds(false);
         getStyleClass().add("jfx-nodes-list");
         setAlignment(Pos.TOP_CENTER);
+
+        //This is for children that get added in FXML
+        Platform.runLater(() -> {
+            if (getChildren().size() > 0) {
+                //Save the already-added children
+                ObservableList<Node> existingChildren = FXCollections.observableArrayList(getChildren());
+                //Remove all children from JFXNodesList
+                getChildren().removeAll(existingChildren);
+                //Add each child back properly
+                for (Node child : existingChildren) {
+                    this.addAnimatedNode((Region) child);
+                }
+            }
+        });
     }
 
     /**
