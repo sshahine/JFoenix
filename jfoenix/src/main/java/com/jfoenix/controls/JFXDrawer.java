@@ -239,7 +239,7 @@ public class JFXDrawer extends StackPane {
         // add listeners to update drawer properties
         overLayVisibleProperty().addListener(observable -> {
             final boolean overLayVisible = isOverLayVisible();
-            overlayPane.setManaged(overLayVisible);
+            overlayPane.setStyle(!overLayVisible ? "-fx-background-color : transparent;" : "");
             overlayPane.setPickOnBounds(overLayVisible);
         });
 
