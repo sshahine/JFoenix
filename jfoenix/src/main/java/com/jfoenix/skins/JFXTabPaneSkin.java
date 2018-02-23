@@ -641,7 +641,8 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         }
 
         private void runTimeline(double newTransX, double newWidth) {
-            if(selectedTabLine.getTranslateX() == newTransX) return;
+            if(selectedTabLine.getTranslateX() == newTransX
+                && scale.getX() == newWidth) return;
 
             double tempScaleX = 0;
             double tempWidth = 0;
