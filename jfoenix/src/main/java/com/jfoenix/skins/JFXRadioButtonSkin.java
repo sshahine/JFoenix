@@ -65,6 +65,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         radio.getStyleClass().setAll("radio");
         radio.setStrokeWidth(2);
         radio.setFill(Color.TRANSPARENT);
+        radio.setSmooth(true);
 
         dot = new Circle();
         dot.getStyleClass().setAll("dot");
@@ -72,6 +73,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         dot.fillProperty().bind(control.selectedColorProperty());
         dot.setScaleX(0);
         dot.setScaleY(0);
+        dot.setSmooth(true);
 
         StackPane boxContainer = new StackPane();
         boxContainer.getChildren().addAll(radio, dot);

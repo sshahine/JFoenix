@@ -361,15 +361,41 @@
 }
 
 .animated-option-button {
-    -fx-pref-width: 50px;
-    -fx-background-color: #44B449;
+    -fx-background-color: #F1F1F1;
     -fx-background-radius: 50px;
     -fx-pref-height: 50px;
-    -fx-text-fill: white;
-    -fx-border-color: WHITE;
-    -fx-border-radius: 50px;
-    -fx-border-width: 4px;
+    -fx-pref-width: 50px;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -jfx-button-type: RAISED;
 }
+.animated-option-button .jfx-rippler{
+    -jfx-rippler-fill: rgb(113, 118, 114);
+}
+.sub-icon{
+    -fx-fill: rgb(113, 118, 114);
+}
+
+.main-button {
+    -fx-pref-width: 60px;
+    -fx-background-color: #0F9D58;
+    -fx-background-radius: 60px;
+    -fx-pref-height: 60px;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -jfx-button-type: RAISED;
+}
+.main-button .jfx-rippler{
+    -jfx-rippler-fill: rgba(255,255,255, .87);
+}
+.main-icon{
+    -fx-fill: rgba(255,255,255, .87);
+}
+
 
 .animated-option-sub-button {
     -fx-background-color: #43609C;

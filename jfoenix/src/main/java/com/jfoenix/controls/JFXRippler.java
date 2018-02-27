@@ -487,6 +487,7 @@ public class JFXRippler extends StackPane {
                 setCacheHint(CacheHint.SPEED);
                 setCacheShape(true);
                 setManaged(false);
+                setSmooth(true);
 
                 KeyValue[] inKeyValues = new KeyValue[isRipplerRecenter() ? 4 : 2];
                 outKeyValues = new KeyValue[isRipplerRecenter() ? 5 : 3];
