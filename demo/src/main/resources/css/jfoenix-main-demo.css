@@ -563,6 +563,7 @@
 
 .custom-jfx-toggle-button-red {
     -jfx-toggle-color: red;
+    -jfx-toggle-line-color: #ff8782;
 }
 
 .toggle-label {
