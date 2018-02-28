@@ -86,11 +86,12 @@ public class JFXToggleButton extends ToggleButton {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        toggleColor.addListener((o, oldVal, newVal) -> {
-            // update line color in case not set by the user
-            if(newVal instanceof Color)
-                toggleLineColor.set(((Color)newVal).desaturate().desaturate().brighter());
-        });
+        // it's up for the user to add this behavior
+//        toggleColor.addListener((o, oldVal, newVal) -> {
+//            // update line color in case not set by the user
+//            if(newVal instanceof Color)
+//                toggleLineColor.set(((Color)newVal).desaturate().desaturate().brighter());
+//        });
     }
 
     /**
