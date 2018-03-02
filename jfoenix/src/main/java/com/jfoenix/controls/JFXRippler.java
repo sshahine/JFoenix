@@ -76,7 +76,7 @@ public class JFXRippler extends StackPane {
     protected Pane ripplerPane;
     protected Node control;
 
-    private static final double RIPPLE_MAX_RADIUS = 300;
+    protected static final double RIPPLE_MAX_RADIUS = 300;
 
     private boolean enabled = true;
     private boolean forceOverlay = false;
@@ -254,6 +254,11 @@ public class JFXRippler extends StackPane {
         double width2 = control.getLayoutBounds().getWidth() * control.getLayoutBounds().getWidth();
         double height2 = control.getLayoutBounds().getHeight() * control.getLayoutBounds().getHeight();
         return Math.min(Math.sqrt(width2 + height2), RIPPLE_MAX_RADIUS) * 1.1 + 5;
+    }
+
+    protected void setOverLayBounds(Rectangle overlay){
+        overlay.setWidth(control.getLayoutBounds().getWidth());
+        overlay.setHeight(control.getLayoutBounds().getHeight());
     }
 
     /**
@@ -453,7 +458,8 @@ public class JFXRippler extends StackPane {
                 new KeyValue(opacityProperty(), 0, Interpolator.EASE_OUT)));
 
             OverLayRipple() {
-                super(control.getLayoutBounds().getWidth(), control.getLayoutBounds().getHeight());
+                super();
+                setOverLayBounds(this);
                 this.getStyleClass().add("jfx-rippler-overlay");
                 // update initial position
                 if(JFXRippler.this.getChildrenUnmodifiable().contains(control)) {

@@ -73,6 +73,15 @@ public class JFXRadioButton extends RadioButton {
         return new JFXRadioButtonSkin(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return USER_AGENT_STYLESHEET;
+    }
+
+
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
@@ -84,6 +93,7 @@ public class JFXRadioButton extends RadioButton {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
+    private static final String USER_AGENT_STYLESHEET = JFXRadioButton.class.getResource("/css/controls/jfx-radio-button.css").toExternalForm();
 
     /**
      * default color used when the radio button is selected
