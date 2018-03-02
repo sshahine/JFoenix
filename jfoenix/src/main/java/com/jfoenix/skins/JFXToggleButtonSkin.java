@@ -179,4 +179,11 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
     private double computeTranslation(double circleRadius, Line line) {
         return (getSkinnable().isSelected() ? 1 : -1) * ((line.getLayoutBounds().getWidth() / 2) - circleRadius + 2);
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        timer.dispose();
+        timer = null;
+    }
 }
