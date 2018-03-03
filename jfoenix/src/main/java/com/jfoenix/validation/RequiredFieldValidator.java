@@ -16,19 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.jfoenix.validation;
 
-import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.DefaultProperty;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 
 /**
- * An example of required field validtaion, that is applied on text input controls
- * such as {@link TextField} and {@link TextArea}
+ * An example of required field validation, that is applied on text input
+ * controls such as {@link TextField} and {@link TextArea}
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -45,7 +44,7 @@ public class RequiredFieldValidator extends ValidatorBase {
         if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
         }
-        if (srcControl.get() instanceof JFXComboBox<?>) {
+        if (srcControl.get() instanceof ComboBoxBase) {
             evalComboBoxField();
         }
     }
@@ -60,12 +59,8 @@ public class RequiredFieldValidator extends ValidatorBase {
     }
 
     private void evalComboBoxField() {
-        JFXComboBox<?> comboField = (JFXComboBox<?>) srcControl.get();
-        boolean hasValue = comboField.getValue() != null;
-        boolean editorHasNonEmptyText = comboField.isEditable() && comboField.getEditor()
-            .getText() != null && !comboField.getEditor()
-            .getText()
-            .isEmpty();
-        hasErrors.set(!hasValue && !editorHasNonEmptyText);
+        ComboBoxBase comboField = (ComboBoxBase) srcControl.get();
+        Object value = comboField.getValue();
+        hasErrors.set(value == null || value.toString().isEmpty());
     }
 }
