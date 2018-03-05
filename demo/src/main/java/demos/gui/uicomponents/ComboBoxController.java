@@ -44,7 +44,7 @@ public class ComboBoxController {
             }
             @Override
             public Label fromString(String string) {
-                return new Label(string);
+                return string == null || string.isEmpty() ? null : new Label(string);
             }
         });
     }
