@@ -112,6 +112,9 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             super.startEdit();
             if (editorNode == null) {
                 createEditorNode();
+            }else{
+                // set current value if the editor is already created
+                builder.setValue(getValue());
             }
             builder.startEdit();
             setGraphic(editorNode);
