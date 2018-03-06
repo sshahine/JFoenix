@@ -66,18 +66,14 @@ public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer>
     }
 
     @Override
-    public Region createNode(Integer value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
+    public Region createNode(Integer value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
         textField = new JFXTextField(value + "");
-        textField.minWidthProperty().bind(minWidthBinding);
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
         NumberValidator validator = new NumberValidator();
         validator.setMessage("Value must be a number");
         textField.getValidators().add(validator);
-        pane.getChildren().add(textField);
-        return pane;
+        return textField;
     }
 
     @Override

@@ -108,7 +108,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 
     @Override
     public void startEdit() {
-        if (checkGroupedColumn()) {
+        if (isEditable() && checkGroupedColumn()) {
             super.startEdit();
             if (editorNode == null) {
                 createEditorNode();
@@ -168,7 +168,6 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             setGraphic(null);
         } else {
             if (isEditing() && checkGroupedColumn()) {
-
                 if (editorNode != null) {
                     builder.setValue(getValue());
                 }
@@ -215,10 +214,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
                 commitHelper(true);
             }
         };
-        DoubleBinding minWidthBinding = Bindings.createDoubleBinding(() -> {
-            return this.getWidth() - this.getGraphicTextGap() * 2 - this.getBaselineOffset();
-        }, this.widthProperty(), this.graphicTextGapProperty());
-        editorNode = builder.createNode(getValue(), minWidthBinding, keyEventsHandler, focusChangeListener);
+        editorNode = builder.createNode(getValue(), keyEventsHandler, focusChangeListener);
     }
 
     /**
