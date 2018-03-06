@@ -32,9 +32,13 @@ Feel free to submit your project info to the following <a href="mailto:developer
 * <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * <a href="https://github.com/badarshahzad/Jfx-Browser">JFX-Browser</a>
+* By <a href="https://github.com/anongrp">Anongrp</a> in several projects: 
+<a href="https://github.com/anongrp/Phony">Phony</a>,
+<a href="https://github.com/anongrp/ThunderGet">ThunderGet</a>,
+<a href="https://github.com/anongrp/Portume">Portume</a>
 * Other small projects <a href="https://github.com/mayuso/LoLPing2">LoLPing 2</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
-<a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>,
+<a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 
 # Build
 To build JFoenix, execute the following command:
