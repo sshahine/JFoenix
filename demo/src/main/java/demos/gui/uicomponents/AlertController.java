@@ -1,12 +1,13 @@
 package demos.gui.uicomponents;
 
+import com.jfoenix.animation.alert.JFXAlertAnimation;
+import com.jfoenix.controls.JFXAlert;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialog.DialogTransition;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 import javax.annotation.PostConstruct;
@@ -32,41 +33,43 @@ public class AlertController {
     @FXML
     private StackPane root;
     @FXML
-    private JFXDialog dialog;
+    private JFXAlert<String> alert;
 
     /**
      * init fxml when loaded.
      */
     @PostConstruct
     public void init() {
-        root.getChildren().remove(dialog);
+
+        alert = new JFXAlert<>();
+        alert.setContent(new Label("Hey this is an alert."));
 
         centerButton.setOnMouseClicked((e) -> {
-            dialog.setTransitionType(DialogTransition.CENTER);
-            dialog.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
+            alert.setAnimation(JFXAlertAnimation.CENTER_ANIMATION);
+            alert.show();
         });
 
-        topButton.setOnMouseClicked((e) -> {
-            dialog.setTransitionType(DialogTransition.TOP);
-            dialog.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
-        });
-
-        rightButton.setOnMouseClicked((e) -> {
-            dialog.setTransitionType(DialogTransition.RIGHT);
-            dialog.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
-        });
-
-        bottomButton.setOnMouseClicked((e) -> {
-            dialog.setTransitionType(DialogTransition.BOTTOM);
-            dialog.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
-        });
-
-        leftButton.setOnMouseClicked((e) -> {
-            dialog.setTransitionType(DialogTransition.LEFT);
-            dialog.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
-        });
-
-        acceptButton.setOnMouseClicked((e) -> dialog.close());
+//        topButton.setOnMouseClicked((e) -> {
+//            alert.setTransitionType(DialogTransition.TOP);
+//            alert.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
+//        });
+//
+//        rightButton.setOnMouseClicked((e) -> {
+//            alert.setTransitionType(DialogTransition.RIGHT);
+//            alert.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
+//        });
+//
+//        bottomButton.setOnMouseClicked((e) -> {
+//            alert.setTransitionType(DialogTransition.BOTTOM);
+//            alert.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
+//        });
+//
+//        leftButton.setOnMouseClicked((e) -> {
+//            alert.setTransitionType(DialogTransition.LEFT);
+//            alert.show((StackPane) context.getRegisteredObject(CONTENT_PANE));
+//        });
+//
+//        acceptButton.setOnMouseClicked((e) -> alert.close());
     }
 
 }
