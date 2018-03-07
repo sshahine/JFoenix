@@ -36,6 +36,9 @@ public class SideMenuController {
     @ActionTrigger("dialogs")
     private Label dialogs;
     @FXML
+    @ActionTrigger("alerts")
+    private Label alerts;
+    @FXML
     @ActionTrigger("icons")
     private Label icons;
     @FXML
@@ -114,6 +117,7 @@ public class SideMenuController {
         bindNodeToController(checkbox, CheckboxController.class, contentFlow, contentFlowHandler);
         bindNodeToController(combobox, ComboBoxController.class, contentFlow, contentFlowHandler);
         bindNodeToController(dialogs, DialogController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(alerts, AlertController.class, contentFlow, contentFlowHandler);
         bindNodeToController(icons, IconsController.class, contentFlow, contentFlowHandler);
         bindNodeToController(listview, ListViewController.class, contentFlow, contentFlowHandler);
         bindNodeToController(treetableview, TreeTableViewController.class, contentFlow, contentFlowHandler);
