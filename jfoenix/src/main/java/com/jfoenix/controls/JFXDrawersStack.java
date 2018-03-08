@@ -126,8 +126,8 @@ public class JFXDrawersStack extends Region {
         getChildren().setAll(drawer);
         drawer.setPickOnBounds(false);
 
-        // update content after adding the drawer to prevent
-        // removing the content off of the scene
+        // update the content after adding the drawer to the scene
+        // to prevent taking the content off of the scene temporarily
         if (drawers.size() == 1) {
             if (content != null) {
                 drawer.setContent(content);
