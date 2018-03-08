@@ -122,19 +122,17 @@ public class JFXDrawersStack extends Region {
             return;
         }
 
-        drawers.add(drawer);
-        getChildren().setAll(drawer);
-        drawer.setPickOnBounds(false);
-
-        // update the content after adding the drawer to the scene
-        // to prevent taking the content off of the scene temporarily
-        if (drawers.size() == 1) {
+        if (drawers.isEmpty()) {
             if (content != null) {
                 drawer.setContent(content);
             }
         } else {
-            drawer.setContent(drawers.get(drawers.size() - 2));
+            drawer.setContent(drawers.get(drawers.size() - 1));
         }
+
+        drawers.add(drawer);
+        getChildren().setAll(drawer);
+        drawer.setPickOnBounds(false);
 
         // add listener to bring drawer to front on hold
         JFXNodeUtils.addPressAndHoldHandler(drawer.sidePane, Duration.millis(300), event -> {
