@@ -69,7 +69,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.1'
+    compile 'com.jfoenix:jfoenix:8.0.2' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.2' // Java 9
 }
 ```
 
