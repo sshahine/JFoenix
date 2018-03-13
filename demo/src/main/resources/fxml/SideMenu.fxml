@@ -13,6 +13,7 @@
         <Label fx:id="checkbox">Check Box</Label>
         <Label fx:id="combobox">Combo Box</Label>
         <Label fx:id="dialogs">Dialogs</Label>
+        <Label fx:id="alerts">Alerts</Label>
         <Label fx:id="icons">Icons</Label>
         <Label fx:id="scrollpane">Header Scroll Pane</Label>
         <Label fx:id="listview">List View</Label>
