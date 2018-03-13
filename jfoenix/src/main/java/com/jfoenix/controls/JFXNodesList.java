@@ -30,7 +30,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -139,9 +138,14 @@ public class JFXNodesList extends VBox {
             addAnimatedNode(container, animationFramesFunction, addTriggerListener);
             return;
         }
+        // init node property and its listeners
+        initChild(node, getChildren().size(), animationFramesFunction, addTriggerListener);
+        // add the node
+        getChildren().add(node);
+    }
 
-        // init node property
-        if (getChildren().size() > 0) {
+    private void initChild(Node node, int index, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction, boolean addTriggerListener) {
+        if (index > 0) {
             initNode(node);
             node.setVisible(false);
         } else {
@@ -156,12 +160,9 @@ public class JFXNodesList extends VBox {
             node.setVisible(true);
         }
 
-        // add the node and its listeners
-        getChildren().add(node);
-
-        if (animationFramesFunction == null && getChildren().size() != 1) {
+        if (animationFramesFunction == null && index != 0) {
             animationFramesFunction = initDefaultAnimation(node);
-        } else if (animationFramesFunction == null && getChildren().size() == 1) {
+        } else if (animationFramesFunction == null && index == 0) {
             animationFramesFunction = (aBoolean, duration) -> new ArrayList<>();
         }
 
@@ -216,7 +217,7 @@ public class JFXNodesList extends VBox {
     protected void layoutChildren() {
         performingLayout = true;
 
-        List<Node> managed = getChildren();
+        List<Node> children = getChildren();
 
         Insets insets = getInsets();
         double width = getWidth();
@@ -236,10 +237,20 @@ public class JFXNodesList extends VBox {
 
         double y = 0;
 
-        for (int i = 0, size = managed.size(); i < size; i++) {
-            Node child = managed.get(i);
+        for (int i = 0, size = children.size(); i < size; i++) {
+            Node child = children.get(i);
             child.autosize();
             child.setRotate(rotate % 180 == 0 ? rotate : -rotate);
+
+            // init child node if not added using addAnimatedChild method
+            if (!animationsMap.containsKey(child)) {
+                if (child instanceof JFXNodesList) {
+                    StackPane container = new StackPane(child);
+                    container.setPickOnBounds(false);
+                    getChildren().set(i, container);
+                }
+                initChild(child, i, null, true);
+            }
 
             double x = 0;
             double childWidth = child.getLayoutBounds().getWidth();

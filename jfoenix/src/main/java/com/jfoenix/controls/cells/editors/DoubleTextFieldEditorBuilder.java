@@ -66,18 +66,14 @@ public class DoubleTextFieldEditorBuilder implements EditorNodeBuilder<Double> {
     }
 
     @Override
-    public Region createNode(Double value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
+    public Region createNode(Double value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
         textField = new JFXTextField(value + "");
-        textField.minWidthProperty().bind(minWidthBinding);
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
         DoubleValidator validator = new DoubleValidator();
         validator.setMessage("Value must be a rational number");
         textField.getValidators().add(validator);
-        pane.getChildren().add(textField);
-        return pane;
+        return textField;
     }
 
     @Override

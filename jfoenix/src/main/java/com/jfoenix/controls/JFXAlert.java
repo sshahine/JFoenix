@@ -107,7 +107,7 @@ public class JFXAlert<R> extends Dialog<R> {
             overlay.getStyleClass().add("jfx-alert-overlay");
             overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (this.isOverlayClose()) {
-                    new Thread(() -> hideWithAnimation()).start();
+                    hideWithAnimation();
                 }
             });
             dialogPane.setContent(overlay);

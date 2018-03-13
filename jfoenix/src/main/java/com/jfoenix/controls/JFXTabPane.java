@@ -49,6 +49,7 @@ public class JFXTabPane extends TabPane {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
+    private static final String USER_AGENT_STYLESHEET = JFXTabPane.class.getResource("/css/controls/jfx-tab-pane.css").toExternalForm();
 
     /**
      * {@inheritDoc}
@@ -67,6 +68,15 @@ public class JFXTabPane extends TabPane {
 
     private void initialize() {
         this.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+        this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return USER_AGENT_STYLESHEET;
     }
 
     /**

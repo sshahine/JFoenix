@@ -279,6 +279,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
             endingFrame);
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setDelay(Duration.ZERO);
+        timeline.playFromStart();
     }
 
     private void clearAnimation() {

@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.controls.JFXRippler.RipplerPos;
@@ -39,10 +40,7 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
 import javafx.css.PseudoClass;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Side;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -50,11 +48,10 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -69,11 +66,6 @@ import java.util.List;
  * @author Shadi Shaheen
  */
 public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
-
-    private final Color defaultColor = Color.valueOf("#00BCD4");
-    private final Color ripplerColor = Color.valueOf("#FFFF8D");
-    private final Color selectedTabText = Color.WHITE;
-    private Color tempLabelColor = Color.WHITE;
 
     private HeaderContainer header;
     private ObservableList<TabContentHolder> tabContentHolders;
@@ -194,6 +186,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
 
     }
 
+    private boolean removedTabs = false;
     private void removeTabs(List<? extends Tab> removedTabs) {
         for (Tab tab : removedTabs) {
             TabHeaderContainer tabHeaderContainer = header.getTabHeaderContainer(tab);
@@ -206,6 +199,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 }
             }
         }
+        this.removedTabs = !removedTabs.isEmpty();
     }
 
     private void addTabs(List<? extends Tab> addedTabs, int startIndex) {
@@ -249,7 +243,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
     private void removeTab(Tab tab) {
         final TabHeaderContainer tabHeaderContainer = header.getTabHeaderContainer(tab);
         if (tabHeaderContainer != null) {
-            tabHeaderContainer.removeListeners(tab);
+            tabHeaderContainer.removeListeners();
         }
         header.removeTab(tab);
         removeTabContentHolder(tab);
@@ -486,9 +480,14 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                         }
                     }
 
+                    if (removedTabs) {
+                        updateSelectionLine(false);
+                        removedTabs = false;
+                    }
+
                     if (isSelectingTab) {
                         // make sure the selected tab is visible
-                        animateSelectionLine();
+                        updateSelectionLine(true);
                         isSelectingTab = false;
                     } else {
                         // validate scroll offset
@@ -533,9 +532,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             headersRegion.setClip(clip);
 
             headerBackground = new StackPane();
-            headerBackground.setBackground(new Background(new BackgroundFill(defaultColor,
-                CornerRadii.EMPTY,
-                Insets.EMPTY)));
             headerBackground.getStyleClass().setAll("tab-header-background");
             selectedTabLine = new StackPane();
             selectedTabLine.setManaged(false);
@@ -546,10 +542,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             selectedTabLine.getTransforms().addAll(scale, rotate);
             selectedTabLine.setCache(true);
             selectedTabLine.getStyleClass().add("tab-selected-line");
-            selectedTabLine.setPrefHeight(2);
-            selectedTabLine.setPrefWidth(1);
-            selectedTabLine.setBackground(new Background(new BackgroundFill(ripplerColor,
-                CornerRadii.EMPTY, Insets.EMPTY)));
             headersRegion.getChildren().add(selectedTabLine);
 
             rightControlButton = new HeaderControl(ArrowPosition.RIGHT);
@@ -620,7 +612,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                     // we need to keep track of the removed tab headers
                     // to compute scroll offset of the header
                     removedTabsHeaders.add(tabHeaderContainer);
-                    tabHeaderContainer.removeListeners(tab);
+                    tabHeaderContainer.removeListeners();
                 }
             }
         }
@@ -640,10 +632,13 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             double headerPrefWidth = snapSize(headersRegion.prefWidth(-1));
             double rightControlWidth = 2 * snapSize(rightControlButton.prefWidth(-1));
             double visibleWidth = headerPrefWidth + rightControlWidth + snappedLeftInset() + SPACER;
-            return visibleWidth < getWidth();
+            return visibleWidth <= getWidth();
         }
 
         private void runTimeline(double newTransX, double newWidth) {
+            if(selectedTabLine.getTranslateX() == newTransX
+                && scale.getX() == newWidth) return;
+
             double tempScaleX = 0;
             double tempWidth = 0;
             final double lineWidth = selectedTabLine.prefWidth(-1);
@@ -667,13 +662,14 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             // add offset to the computed translation
             newTransX = newTransX + offsetStart * direction;
             final double transDiff = newTransX - oldTransX;
+
+
             double midScaleX = tempScaleX != 0 ?
                 tempScaleX : ((Math.abs(transDiff)/translateScaleFactor + oldWidth) * oldScaleX) / oldWidth;
 
             if(midScaleX > Math.abs(transDiff) + newWidth){
                 midScaleX = Math.abs(transDiff) + newWidth;
             }
-
             if (transDiff < 0) {
                 selectedTabLine.setTranslateX(selectedTabLine.getTranslateX() + oldWidth);
                 newTransX += newWidth;
@@ -683,22 +679,17 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             timeline = new Timeline(
                 new KeyFrame(
                     Duration.ZERO,
-                    new KeyValue(selectedTabLine.translateXProperty(),
-                        selectedTabLine.getTranslateX(),
-                        Interpolator.EASE_BOTH)),
+                    new KeyValue(selectedTabLine.translateXProperty(), selectedTabLine.getTranslateX(), Interpolator.EASE_BOTH)),
                 new KeyFrame(
-                    Duration.seconds(0.12),
+                    Duration.seconds(.12),
                     new KeyValue(scale.xProperty(), midScaleX, Interpolator.EASE_BOTH),
-                    new KeyValue(selectedTabLine.translateXProperty(),
-                        selectedTabLine.getTranslateX(),
-                        Interpolator.EASE_BOTH)),
+                    new KeyValue(selectedTabLine.translateXProperty(), selectedTabLine.getTranslateX(), Interpolator.EASE_BOTH)),
                 new KeyFrame(
-                    Duration.seconds(0.24),
+                    Duration.seconds(.24),
                     new KeyValue(scale.xProperty(), newScaleX, Interpolator.EASE_BOTH),
-                    new KeyValue(selectedTabLine.translateXProperty(),
-                        newTransX,
-                        Interpolator.EASE_BOTH))
+                    new KeyValue(selectedTabLine.translateXProperty(), newTransX, Interpolator.EASE_BOTH))
             );
+
             timeline.setOnFinished(finish -> {
                 if (rotate.getAngle() != 0) {
                     rotate.setAngle(0);
@@ -712,7 +703,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             return timeline != null && timeline.getStatus() == Animation.Status.RUNNING;
         }
 
-        public void updateScrollOffset(double newOffset) {
+        private void updateScrollOffset(double newOffset) {
             double tabPaneWidth = snapSize(isHorizontal() ?
                 getSkinnable().getWidth() : getSkinnable().getHeight());
             double controlTabWidth = 2 * snapSize(rightControlButton.getWidth());
@@ -849,12 +840,12 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             leftControlButton.setRotate((side == Side.LEFT || side == Side.BOTTOM) ? 180.0F : 0.0F);
 
             if (!initialized) {
-                animateSelectionLine();
+                updateSelectionLine(true);
                 initialized = true;
             }
         }
 
-        private void animateSelectionLine() {
+        private void updateSelectionLine(boolean animate) {
             double offset = 0.0;
             double selectedTabOffset = 0.0;
             double selectedTabWidth = 0.0;
@@ -873,8 +864,15 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 }
             }
             // animate the tab selection
-            if(selectedTabWidth > 0)
-                runTimeline(selectedTabOffset, selectedTabWidth);
+            if(selectedTabWidth > 0){
+                if (animate) {
+                    runTimeline(selectedTabOffset, selectedTabWidth);
+                }else{
+                    selectedTabLine.setTranslateX(selectedTabOffset + scrollOffset * direction);
+                    scale.setX(selectedTabWidth);
+                    selectedTabLineOffset = selectedTabOffset;
+                }
+            }
         }
     }
 
@@ -888,12 +886,12 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
     protected class TabHeaderContainer extends StackPane {
 
         private Tab tab = null;
-        private Label tabText;
+        private Label tabLabel;
         private Tooltip oldTooltip;
         private Tooltip tooltip;
-        private BorderPane inner;
+        private HBox inner;
+        private Button closeButton;
         private JFXRippler rippler;
-        private boolean systemChange = false;
         private boolean isClosing = false;
 
         private final LambdaMultiplePropertyChangeListenerHandler listener =
@@ -912,18 +910,26 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             setId(tab.getId());
             setStyle(tab.getStyle());
 
-            tabText = new Label(tab.getText(), tab.getGraphic());
-            tabText.setFont(Font.font("", FontWeight.BOLD, 16));
-            tabText.setPadding(new Insets(5, 10, 5, 10));
-            tabText.getStyleClass().setAll("tab-label");
+            tabLabel = new Label(tab.getText(), tab.getGraphic());
+            tabLabel.getStyleClass().setAll("tab-label");
 
-            inner = new BorderPane();
-            inner.setCenter(tabText);
+            closeButton = new JFXButton(null, new SVGGlyph());
+            closeButton.getStyleClass().add("tab-close-button");
+            closeButton.setOnAction(action->{
+                TabPaneBehavior behavior = getBehavior();
+                if (behavior.canCloseTab(tab)) {
+                    behavior.closeTab(tab);
+                    setOnMouseClicked(null);
+                }
+            });
+
+            inner = new HBox();
+            inner.getChildren().setAll(tabLabel, closeButton);
+            inner.setAlignment(Pos.CENTER);
             inner.getStyleClass().add("tab-container");
             inner.setRotate(getSkinnable().getSide().equals(Side.BOTTOM) ? 180.0F : 0.0F);
 
-            rippler = new JFXRippler(inner, RipplerPos.FRONT);
-            rippler.setRipplerFill(ripplerColor);
+            rippler = new JFXRippler(inner);
             getChildren().addAll(rippler);
 
             tooltip = tab.getTooltip();
@@ -932,44 +938,13 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 oldTooltip = tooltip;
             }
 
-            if (tab.isSelected()) {
-                tabText.setTextFill(selectedTabText);
-            } else {
-                tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
-            }
-
-
-            tabText.textFillProperty().addListener((o, oldVal, newVal) -> {
-                if (!systemChange) {
-                    tempLabelColor = (Color) newVal;
-                }
-            });
-
-            tab.selectedProperty().addListener((o, oldVal, newVal) -> {
-                systemChange = true;
-                if (newVal) {
-                    tabText.setTextFill(tempLabelColor);
-                } else {
-                    tabText.setTextFill(tempLabelColor.deriveColor(0, 0, 0.9, 1));
-                }
-                systemChange = false;
-            });
-
-
             listener.registerChangeListener(tab.selectedProperty(), obs->{
                 pseudoClassStateChanged(SELECTED_PSEUDOCLASS_STATE, tab.isSelected());
-                inner.requestLayout();
-                requestLayout();
+                updateInnerUI();
             });
-            listener.registerChangeListener(tab.textProperty(), obs->{
-                tabText.setText(tab.getText());
-            });
-            listener.registerChangeListener(tab.graphicProperty(), obs->{
-                tabText.setGraphic(tab.getGraphic());
-            });
-            listener.registerChangeListener(widthProperty(), obs->{
-                header.animateSelectionLine();
-            });
+            listener.registerChangeListener(tab.textProperty(), obs-> tabLabel.setText(tab.getText()));
+            listener.registerChangeListener(tab.graphicProperty(), obs-> tabLabel.setGraphic(tab.getGraphic()));
+            listener.registerChangeListener(widthProperty(), obs-> header.updateSelectionLine(true));
             listener.registerChangeListener(tab.tooltipProperty(), obs->{
                 // install new Toolip/ uninstall the old one
                 if (oldTooltip != null) {
@@ -983,14 +958,13 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             });
             listener.registerChangeListener(tab.disableProperty(), obs->{
                 pseudoClassStateChanged(DISABLED_PSEUDOCLASS_STATE, tab.isDisable());
-                inner.requestLayout();
-                requestLayout();
+                updateInnerUI();
             });
             listener.registerChangeListener(tab.styleProperty(), obs-> setStyle(tab.getStyle()));
-            listener.registerChangeListener(getSkinnable().tabMinWidthProperty(), obs-> updateLayout());
-            listener.registerChangeListener(getSkinnable().tabMaxWidthProperty(), obs-> updateLayout());
-            listener.registerChangeListener(getSkinnable().tabMinHeightProperty(), obs-> updateLayout());
-            listener.registerChangeListener(getSkinnable().tabMaxHeightProperty(), obs-> updateLayout());
+            listener.registerChangeListener(getSkinnable().tabMinWidthProperty(), obs-> updateSkinnableUI());
+            listener.registerChangeListener(getSkinnable().tabMaxWidthProperty(), obs-> updateSkinnableUI());
+            listener.registerChangeListener(getSkinnable().tabMinHeightProperty(), obs-> updateSkinnableUI());
+            listener.registerChangeListener(getSkinnable().tabMaxHeightProperty(), obs-> updateSkinnableUI());
             listener.registerChangeListener(getSkinnable().sideProperty(), obs->{
                 final Side side = getSkinnable().getSide();
                 pseudoClassStateChanged(TOP_PSEUDOCLASS_STATE, (side == Side.TOP));
@@ -999,6 +973,8 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 pseudoClassStateChanged(LEFT_PSEUDOCLASS_STATE, (side == Side.LEFT));
                 inner.setRotate(side == Side.BOTTOM ? 180.0F : 0.0F);
             });
+            listener.registerChangeListener(getSkinnable().tabClosingPolicyProperty(), obs->updateInnerUI());
+
             tab.getStyleClass().addListener(weakStyleClassListener);
 
             getProperties().put(Tab.class, tab);
@@ -1007,7 +983,15 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 if (tab.isDisable() || !event.isStillSincePress()) {
                     return;
                 }
-                if (event.getButton() == MouseButton.PRIMARY) {
+                if (event.getButton() == MouseButton.MIDDLE) {
+                    if (showCloseButton()) {
+                        TabPaneBehavior behavior = getBehavior();
+                        if (behavior.canCloseTab(tab)) {
+                            removeListeners();
+                            behavior.closeTab(tab);
+                        }
+                    }
+                }else if (event.getButton() == MouseButton.PRIMARY) {
                     setOpacity(1);
                     behavior.selectTab(tab);
                 }
@@ -1016,7 +1000,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
                 ContextMenu contextMenu = tab.getContextMenu();
                 if (contextMenu != null) {
-                    contextMenu.show(tabText, event.getScreenX(), event.getScreenY());
+                    contextMenu.show(tabLabel, event.getScreenX(), event.getScreenY());
                     event.consume();
                 }
             });
@@ -1029,14 +1013,27 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             pseudoClassStateChanged(RIGHT_PSEUDOCLASS_STATE, (side == Side.RIGHT));
             pseudoClassStateChanged(BOTTOM_PSEUDOCLASS_STATE, (side == Side.BOTTOM));
             pseudoClassStateChanged(LEFT_PSEUDOCLASS_STATE, (side == Side.LEFT));
+            pseudoClassStateChanged(CLOSABLE, showCloseButton());
         }
 
-        public void updateLayout() {
+        private void updateInnerUI(){
+            inner.requestLayout();
+            requestLayout();
+        }
+
+        private void updateSkinnableUI(){
             requestLayout();
             getSkinnable().requestLayout();
         }
 
-        private void removeListeners(Tab tab) {
+        private boolean showCloseButton() {
+            return tab.isClosable() &&
+                   (getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.ALL_TABS));
+//                   ||
+//                    getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.SELECTED_TAB) && tab.isSelected());
+        }
+
+        private void removeListeners() {
             listener.dispose();
             inner.getChildren().clear();
             getChildren().clear();
@@ -1048,7 +1045,11 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             double maxWidth = snapSize(getSkinnable().getTabMaxWidth());
             double paddingRight = snappedRightInset();
             double paddingLeft = snappedLeftInset();
-            double tmpPrefWidth = snapSize(tabText.prefWidth(-1));
+            double tmpPrefWidth = snapSize(tabLabel.prefWidth(-1));
+
+            if (showCloseButton()) {
+                tmpPrefWidth += snapSize(closeButton.prefWidth(-1));
+            }
 
             if (tmpPrefWidth > maxWidth) {
                 tmpPrefWidth = maxWidth;
@@ -1065,7 +1066,7 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             double maxHeight = snapSize(getSkinnable().getTabMaxHeight());
             double paddingTop = snappedTopInset();
             double paddingBottom = snappedBottomInset();
-            double tmpPrefHeight = snapSize(tabText.prefHeight(width));
+            double tmpPrefHeight = snapSize(tabLabel.prefHeight(width));
 
             if (tmpPrefHeight > maxHeight) {
                 tmpPrefHeight = maxHeight;
@@ -1078,32 +1079,21 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
 
         @Override
         protected void layoutChildren() {
-            double w = snapSize(getWidth()) - snappedRightInset() - snappedLeftInset();
-            rippler.resize(w, snapSize(getHeight()) - snappedTopInset() - snappedBottomInset());
-            rippler.relocate(snappedLeftInset(), snappedTopInset());
-        }
-
-        @Override
-        protected void setWidth(double value) {
-            super.setWidth(value);
-        }
-
-        @Override
-        protected void setHeight(double value) {
-            super.setHeight(value);
+            final boolean showClose = showCloseButton();
+            closeButton.setManaged(showClose);
+            closeButton.setVisible(showClose);
+            pseudoClassStateChanged(CLOSABLE, showClose);
+            rippler.resizeRelocate(0,0, getWidth(), getHeight());
         }
     }
 
     private static final PseudoClass SELECTED_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("selected");
     private static final PseudoClass DISABLED_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("disabled");
-    private static final PseudoClass TOP_PSEUDOCLASS_STATE =
-        PseudoClass.getPseudoClass("top");
-    private static final PseudoClass BOTTOM_PSEUDOCLASS_STATE =
-        PseudoClass.getPseudoClass("bottom");
-    private static final PseudoClass LEFT_PSEUDOCLASS_STATE =
-        PseudoClass.getPseudoClass("left");
-    private static final PseudoClass RIGHT_PSEUDOCLASS_STATE =
-        PseudoClass.getPseudoClass("right");
+    private static final PseudoClass TOP_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("top");
+    private static final PseudoClass BOTTOM_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("bottom");
+    private static final PseudoClass LEFT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("left");
+    private static final PseudoClass RIGHT_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("right");
+    private static final PseudoClass CLOSABLE = PseudoClass.getPseudoClass("closable");
 
     /**************************************************************************
      *																		  *
@@ -1157,23 +1147,17 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
         private Timeline arrowAnimation;
         private SVGGlyph arrowButton;
         private StackPane container;
-        private SVGGlyph leftChevron = new SVGGlyph(0,
-            "CHEVRON_LEFT",
-            "M 742,-37 90,614 Q 53,651 53,704.5 53,758 90,795 l 652,651 q 37,37 90.5,37 53.5,0 90.5,-37 l 75,-75 q 37,-37 37,-90.5 0,-53.5 -37,-90.5 L 512,704 998,219 q 37,-38 37,-91 0,-53 -37,-90 L 923,-37 Q 886,-74 832.5,-74 779,-74 742,-37 z",
-            Color.WHITE);
-        private SVGGlyph rightChevron = new SVGGlyph(0,
-            "CHEVRON_RIGHT",
-            "m 1099,704 q 0,-52 -37,-91 L 410,-38 q -37,-37 -90,-37 -53,0 -90,37 l -76,75 q -37,39 -37,91 0,53 37,90 l 486,486 -486,485 q -37,39 -37,91 0,53 37,90 l 76,75 q 36,38 90,38 54,0 90,-38 l 652,-651 q 37,-37 37,-90 z",
-            Color.WHITE);
+
+        private PseudoClass left = PseudoClass.getPseudoClass("left");
+        private PseudoClass right = PseudoClass.getPseudoClass("right");
 
         public HeaderControl(ArrowPosition pos) {
             getStyleClass().setAll("control-buttons-tab");
             isLeftArrow = pos == ArrowPosition.LEFT;
-            arrowButton = isLeftArrow ? leftChevron : rightChevron;
-            arrowButton.setStyle("-fx-min-width:0.8em;-fx-max-width:0.8em;-fx-min-height:1.3em;-fx-max-height:1.3em;");
+            arrowButton = new SVGGlyph();
+            arrowButton.pseudoClassStateChanged(isLeftArrow ? left : right, true);
             arrowButton.getStyleClass().setAll("tab-down-button");
             arrowButton.setVisible(isControlButtonShown());
-            arrowButton.setFill(selectedTabText);
             StackPane.setMargin(arrowButton, new Insets(0, 0, 0, isLeftArrow ? -4 : 4));
 
             DoubleProperty offsetProperty = new SimpleDoubleProperty(0);
@@ -1193,7 +1177,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             });
             container.setOnMouseReleased(release -> arrowAnimation.stop());
             JFXRippler arrowRippler = new JFXRippler(container, RipplerMask.CIRCLE, RipplerPos.BACK);
-            arrowRippler.setRipplerFill(selectedTabText);
             arrowRippler.setPadding(new Insets(0, 5, 0, 5));
 
             inner = new StackPane() {

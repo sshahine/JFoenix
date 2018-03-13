@@ -28,6 +28,10 @@
                        styleClass="dialog-trigger">LEFT
             </JFXButton>
         </HBox>
+
+        <JFXButton fx:id="alertButton" prefWidth="220" prefHeight="30"
+                   styleClass="dialog-trigger"> MODAL ALERT
+        </JFXButton>
         <StackPane.margin>
             <Insets>
                 <top>-200</top>

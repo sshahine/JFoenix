@@ -22,12 +22,10 @@ package com.jfoenix.controls.cells.editors;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
 import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 
 /**
  * <h1>Text field cell editor</h1>
@@ -65,16 +63,11 @@ public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
     }
 
     @Override
-    public Region createNode(String value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
+    public Region createNode(String value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
         textField = new JFXTextField(value);
-        textField.setStyle("-fx-background-color:TRANSPARENT;");
-        textField.minWidthProperty().bind(minWidthBinding);
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
-        pane.getChildren().add(textField);
-        return pane;
+        return textField;
     }
 
     @Override
