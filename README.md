@@ -83,18 +83,15 @@ dependencies {
 </dependency>
 ```
 # Components
-### JFXButton
-[JFXButton](https://github.com/jfoenixadmin/JFoenix/wiki/Button)
+### [JFXButton](https://github.com/jfoenixadmin/JFoenix/wiki/Button)
 
 ![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
 
-### JFXCheckBox
-[JFXCheckBox](https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox)
+### [JFXCheckBox](https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox)
 
 ![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
 
-### JFXToggleButton
-[JFXToggleButton](https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button)
+### [JFXToggleButton](https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button)
 
 ![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
 
