@@ -49,13 +49,14 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        if (getSkinnable().maxHeightProperty().isBound()
-            || getSkinnable().getItems().size() <= 0
-            || getSkinnable().getFixedCellSize() != Region.USE_COMPUTED_SIZE) {
+        final int itemsCount = getSkinnable().getItems().size();
+        if (getSkinnable().maxHeightProperty().isBound() || itemsCount <= 0) {
             return super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         }
 
-        double computedHeight = estimateHeight();
+        final double fixedCellSize = getSkinnable().getFixedCellSize();
+        double computedHeight = fixedCellSize != Region.USE_COMPUTED_SIZE ?
+            fixedCellSize * itemsCount + snapVerticalInsets() : estimateHeight();
         double height = super.computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
         if (height > computedHeight) {
             height = computedHeight;
@@ -70,7 +71,7 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
 
     private double estimateHeight() {
         // compute the border/padding for the list
-        double borderWidth = getSkinnable().snappedBottomInset() + getSkinnable().snappedTopInset();
+        double borderWidth = snapVerticalInsets();
         // compute the gap between list cells
 
         JFXListView<T> listview = (JFXListView<T>) getSkinnable();
@@ -84,6 +85,10 @@ public class JFXListViewSkin<T> extends ListViewSkin<T> {
             cellsHeight += cell.getHeight();
         }
         return cellsHeight + gap + borderWidth;
+    }
+
+    private double snapVerticalInsets() {
+        return getSkinnable().snappedBottomInset() + getSkinnable().snappedTopInset();
     }
 
 }
