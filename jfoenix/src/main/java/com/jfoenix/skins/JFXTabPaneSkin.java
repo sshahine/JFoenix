@@ -916,7 +916,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
             closeButton = new JFXButton(null, new SVGGlyph());
             closeButton.getStyleClass().add("tab-close-button");
             closeButton.setOnAction(action->{
-                TabPaneBehavior behavior = getBehavior();
                 if (behavior.canCloseTab(tab)) {
                     behavior.closeTab(tab);
                     setOnMouseClicked(null);
@@ -985,7 +984,6 @@ public class JFXTabPaneSkin extends SkinBase<JFXTabPane> {
                 }
                 if (event.getButton() == MouseButton.MIDDLE) {
                     if (showCloseButton()) {
-                        TabPaneBehavior behavior = getBehavior();
                         if (behavior.canCloseTab(tab)) {
                             removeListeners();
                             behavior.closeTab(tab);
