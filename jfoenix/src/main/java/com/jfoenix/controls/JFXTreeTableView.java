@@ -88,6 +88,8 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     }
 
     protected void init() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+
         this.setRowFactory(param -> new JFXTreeTableRow<>());
 
         this.getSelectionModel().selectedItemProperty().addListener((o, oldVal, newVal) -> {
@@ -98,8 +100,11 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
 
         this.predicate.addListener(observable -> filter(getPredicate()));
         this.sceneProperty().addListener(observable -> {
-            if(getScene()==null) threadPool.shutdownNow();
-            else if(threadPool.isTerminated()) threadPool = createThreadPool();
+            if (getScene() == null) {
+                threadPool.shutdownNow();
+            } else if (threadPool.isTerminated()) {
+                threadPool = createThreadPool();
+            }
         });
 
         this.rootProperty().addListener(observable -> {
@@ -111,14 +116,18 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         setCurrentItemsCount(count(getRoot()));
     }
 
+
+    private static final String DEFAULT_STYLE_CLASS = "jfx-tree-table-view";
+
+    private static final String USER_AGENT_STYLESHEET = JFXTreeTableView.class.getResource("/css/controls/jfx-tree-table-view.css").toExternalForm();
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-tree-table-view.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
-
 
     @Override
     public int getTreeItemLevel(TreeItem<?> node) {
@@ -179,10 +188,11 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     /**
      * this is a blocking method so it should not be called from the ui thread,
      * it will regroup the tree table view
+     *
      * @param treeTableColumns
      */
     public void group(TreeTableColumn<S, ?>... treeTableColumns) {
-        try{
+        try {
             lock.lock();
             // init groups map
             if (groupOrder.size() == 0) {
@@ -201,7 +211,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -219,10 +229,11 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     /**
      * this is a blocking method so it should not be called from the ui thread,
      * it will ungroup the tree table view
+     *
      * @param treeTableColumns
      */
     public void unGroup(TreeTableColumn<S, ?>... treeTableColumns) {
-        try{
+        try {
             lock.lock();
             if (groupOrder.size() > 0) {
                 groupOrder.removeAll(treeTableColumns);
@@ -245,7 +256,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                     }
                 });
             }
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -345,7 +356,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             });
     }
 
-    private Runnable filterRunnable = ()->{
+    private Runnable filterRunnable = () -> {
         if (originalRoot == null) {
             originalRoot = getRoot();
         }
@@ -365,7 +376,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
      * this method will filter the tree table
      */
     private void filter(Predicate<TreeItem<S>> predicate) {
-        if (task != null) task.cancel(false);
+        if (task != null) {
+            task.cancel(false);
+        }
         task = threadPool.schedule(filterRunnable, 200, TimeUnit.MILLISECONDS);
     }
 
