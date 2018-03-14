@@ -83,36 +83,53 @@ dependencies {
     <version>8.0.1</version>
 </dependency>
 ```
-# Pics
+# Components
+### [JFXButton](https://github.com/jfoenixadmin/JFoenix/wiki/Button)
 
 ![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
 
+### [JFXCheckBox](https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox)
+
 ![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
 
-![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Buton Demo")
+### [JFXToggleButton](https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button)
 
+![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
+
+### JFXDialog
 ![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
 
+### JFXListView
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
 
+### JFXChipView
 ![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
 
+### JFXNodesList
 ![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 
+### JFXMasonryPane
 ![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
 
+### JFXSlider
 ![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
 
+### JFXSpinner
 ![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
 
+### JFXSnackbar
 ![Alt text](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
 
+### JFXColorPicker
 ![Alt text](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
 
+### JFXDatePicker
 ![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
 
+### JFXTimePicker
 ![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
 
+### JFXTreeTableView
 ![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
 
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
