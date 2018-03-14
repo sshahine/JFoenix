@@ -29,6 +29,7 @@ import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -52,6 +53,7 @@ public class JFXButtonSkin extends ButtonSkin {
     private JFXRippler buttonRippler;
     private Runnable releaseManualRippler = null;
     private boolean invalid = true;
+    private boolean mousePressed = false;
 
     public JFXButtonSkin(JFXButton button) {
         super(button);
@@ -66,12 +68,7 @@ public class JFXButtonSkin extends ButtonSkin {
                     getHeight() - snappedBottomInset() - snappedTopInset());
                 return mask;
             }
-            @Override
-            protected void initControlListeners() {
-                control.layoutBoundsProperty().addListener(observable -> resetRippler());
-                control.addEventFilter(MouseEvent.MOUSE_PRESSED,
-                    (event) -> createRipple(event.getX(), event.getY()));
-            }
+
             @Override
             protected void positionControl(Node control) {
                 // do nothing as the controls is not inside the ripple
@@ -80,17 +77,23 @@ public class JFXButtonSkin extends ButtonSkin {
 
         // add listeners to the button and bind properties
         button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> playClickAnimation(1));
-        button.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> playClickAnimation(-1));
+//        button.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> playClickAnimation(-1));
+        button.addEventFilter(MouseEvent.MOUSE_PRESSED, e-> mousePressed = true);
+        button.addEventFilter(MouseEvent.MOUSE_RELEASED, e-> mousePressed = false);
+        button.addEventFilter(MouseEvent.MOUSE_DRAGGED, e-> mousePressed = false);
 
         button.ripplerFillProperty().addListener((o, oldVal, newVal) -> buttonRippler.setRipplerFill(newVal));
 
         button.armedProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                releaseManualRippler = buttonRippler.createManualRipple();
-                playClickAnimation(1);
+                if (!mousePressed) {
+                    releaseManualRippler = buttonRippler.createManualRipple();
+                    playClickAnimation(1);
+                }
             } else {
                 if (releaseManualRippler != null) {
                     releaseManualRippler.run();
+                    releaseManualRippler = null;
                 }
                 playClickAnimation(-1);
             }
@@ -180,8 +183,10 @@ public class JFXButtonSkin extends ButtonSkin {
 
     private void playClickAnimation(double rate) {
         if (clickedAnimation != null) {
-            clickedAnimation.setRate(rate);
-            clickedAnimation.play();
+            if(!clickedAnimation.getCurrentTime().equals(clickedAnimation.getCycleDuration()) || rate != 1){
+                clickedAnimation.setRate(rate);
+                clickedAnimation.play();
+            }
         }
     }
 

@@ -21,8 +21,6 @@ package com.jfoenix.transitions;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.WritableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -62,8 +60,12 @@ public class JFXAnimationTimer extends AnimationTimer {
         super.start();
         running = true;
         startTime = -1;
-        animationHandlers.forEach(AnimationHandler::init);
-        caches.forEach(CacheMomento::cache);
+        for (AnimationHandler animationHandler : animationHandlers) {
+            animationHandler.init();
+        }
+        for (CacheMomento cache : caches) {
+            cache.cache();
+        }
     }
 
     @Override
@@ -100,16 +102,31 @@ public class JFXAnimationTimer extends AnimationTimer {
         super.stop();
         running = false;
         initialValuesMap.clear();
-        caches.forEach(CacheMomento::restore);
-        if(onFinished!=null) onFinished.run();
+        for (CacheMomento cache : caches) {
+            cache.restore();
+        }
+        if (onFinished != null) {
+            onFinished.run();
+        }
+    }
+
+    public void applyEndValues() {
+        if (isRunning()) {
+            super.stop();
+        }
+        for (AnimationHandler handler : animationHandlers) {
+            handler.applyEndValues();
+        }
+        startTime = -1;
     }
 
     public boolean isRunning() {
         return running;
     }
 
-    Runnable onFinished = null;
-    public void setOnFinished(Runnable onFinished){
+    private Runnable onFinished = null;
+
+    public void setOnFinished(Runnable onFinished) {
         this.onFinished = onFinished;
     }
 
@@ -122,11 +139,20 @@ public class JFXAnimationTimer extends AnimationTimer {
         }
     }
 
+    public void dispose() {
+        initialValuesMap.clear();
+        caches.clear();
+        for (AnimationHandler handler : animationHandlers) {
+            handler.dispose();
+        }
+        animationHandlers.clear();
+    }
+
     class AnimationHandler {
-        double duration;
-        double currentDuration;
-        Set<JFXKeyValue> keyValues;
-        boolean finished = false;
+        private double duration;
+        private double currentDuration;
+        private Set<JFXKeyValue> keyValues;
+        private boolean finished = false;
 
         public AnimationHandler(Duration duration, Set<JFXKeyValue> keyValues) {
             this.duration = duration.toMillis();
@@ -136,46 +162,64 @@ public class JFXAnimationTimer extends AnimationTimer {
 
         public void init() {
             finished = false;
-            keyValues.forEach(keyValue -> {
+            for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
-                    initialValuesMap.putIfAbsent(keyValue.getTarget(), keyValue.getTarget().getValue());
+                    // replaced putIfAbsent for mobile compatibility
+                    if (!initialValuesMap.containsKey(keyValue.getTarget())) {
+                        initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
+                    }
                 }
-            });
+            }
         }
 
         public void reverse(double now) {
             currentDuration = duration - (currentDuration - now);
             // update initial values
-            keyValues.forEach(keyValue -> {
+            for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
                     initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
                 }
-            });
+            }
         }
 
         // now in milliseconds
         public void animate(double now) {
             if (now <= currentDuration) {
-                keyValues.forEach(keyValue -> {
+                for (JFXKeyValue keyValue : keyValues) {
                     if (keyValue.isValid()) {
                         final WritableValue target = keyValue.getTarget();
                         if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
                             target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), keyValue.getEndValue(), now / currentDuration));
                         }
                     }
-                });
+                }
             } else {
                 if (!finished) {
                     finished = true;
-                    keyValues.forEach(keyValue -> {
+                    for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
                             if (target != null) {
                                 target.setValue(keyValue.getEndValue());
                             }
                         }
-                    });
+                    }
                     currentDuration = duration;
+                }
+            }
+        }
+
+        public void dispose() {
+            keyValues.clear();
+        }
+
+        public void applyEndValues() {
+            for (JFXKeyValue keyValue : keyValues) {
+                if (keyValue.isValid()) {
+                    final WritableValue target = keyValue.getTarget();
+                    if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
+                        target.setValue(keyValue.getEndValue());
+                    }
                 }
             }
         }

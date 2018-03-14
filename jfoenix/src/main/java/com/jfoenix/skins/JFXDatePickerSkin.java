@@ -113,7 +113,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
     }
 
     @Override
-    public Node getPopupContent() {
+    protected Node getPopupContent() {
         if (content == null) {
             // different chronologies are not supported yet
             content = new JFXDatePickerContent(jfxDatePicker);

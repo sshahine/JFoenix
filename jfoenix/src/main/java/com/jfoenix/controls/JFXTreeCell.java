@@ -53,12 +53,6 @@ public class JFXTreeCell<T> extends TreeCell<T> {
         }
 
         @Override
-        protected void initControlListeners() {
-            control.layoutBoundsProperty().addListener(observable -> resetRippler());
-            control.addEventFilter(MouseEvent.MOUSE_PRESSED,
-                (event) -> createRipple(event.getX(), event.getY()));
-        }
-        @Override
         protected void positionControl(Node control) {
             // do nothing
         }

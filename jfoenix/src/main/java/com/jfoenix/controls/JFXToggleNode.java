@@ -24,6 +24,7 @@ import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.ColorConverter;
 import javafx.beans.DefaultProperty;
 import javafx.css.*;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
@@ -52,6 +53,11 @@ public class JFXToggleNode extends ToggleButton {
      * {@inheritDoc}
      */
     public JFXToggleNode() {
+        initialize();
+    }
+
+    public JFXToggleNode(Node graphic) {
+        super("", graphic);
         initialize();
     }
 

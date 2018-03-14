@@ -12,7 +12,7 @@
         <Label fx:id="button">Buttons</Label>
         <Label fx:id="checkbox">Check Box</Label>
         <Label fx:id="combobox">Combo Box</Label>
-        <Label fx:id="dialogs">Dialogs</Label>
+        <Label fx:id="dialogs">Dialogs &amp; Alert</Label>
         <Label fx:id="icons">Icons</Label>
         <Label fx:id="scrollpane">Header Scroll Pane</Label>
         <Label fx:id="listview">List View</Label>
@@ -22,10 +22,12 @@
         <Label fx:id="slider">Slider</Label>
         <Label fx:id="spinner">Spinner</Label>
         <Label fx:id="textfield">Text Field</Label>
+        <Label fx:id="chipview">Chip View</Label>
         <Label fx:id="togglebutton">Toggle Button</Label>
         <Label fx:id="popup">Popup</Label>
         <Label fx:id="pickers">Pickers</Label>
         <Label fx:id="svgLoader">SVG Loader</Label>
         <Label fx:id="masonry">Masonry Layout</Label>
+        <Label fx:id="nodesList">Nodes List</Label>
     </JFXListView>
 </StackPane>

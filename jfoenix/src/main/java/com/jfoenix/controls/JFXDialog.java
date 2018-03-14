@@ -119,8 +119,8 @@ public class JFXDialog extends StackPane {
      * @param overlayClose
      */
     public JFXDialog(StackPane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {
-        initialize();
         setOverlayClose(overlayClose);
+        initialize();
         setContent(content);
         setDialogContainer(dialogContainer);
         this.transitionType.set(transitionType);

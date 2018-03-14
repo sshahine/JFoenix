@@ -70,8 +70,8 @@
 
 .tree-table-view .tree-table-cell {
     -fx-border-width: 0 0 0 0;
-    -fx-padding: 16 0 16 0;
-    -fx-alignment: top-center;
+    -fx-pref-height: 48px;
+    -fx-alignment: center-left;
 }
 
 .tree-table-view .column-overlay {
@@ -89,8 +89,11 @@
     -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
 }
 
-.tree-table-row-cell .jfx-text-field {
-    -fx-focus-color: rgb(82, 100, 174);
+.tree-table-row-cell .jfx-text-field,
+.tree-table-row-cell .jfx-password-field,
+.tree-table-row-cell .jfx-text-area {
+    -jfx-focus-color: rgb(82, 100, 174);
+    -fx-background-color: transparent;
 }
 
 .tree-table-row-cell .jfx-text-field:error {

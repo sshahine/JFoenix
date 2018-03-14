@@ -319,7 +319,8 @@ public class JFXTextAreaSkin extends TextAreaSkin {
                 }
             }
             // update prompt text position
-            if(isLabelFloat) animateFloatingLabel(!getSkinnable().getText().isEmpty());
+            if(isLabelFloat && getSkinnable().getText() != null)
+                animateFloatingLabel(!getSkinnable().getText().isEmpty());
         } else if ("DISABLE_ANIMATION".equals(propertyReference)) {
             // remove error clip if animation is disabled
             errorContainer.setClip(((JFXTextArea) getSkinnable()).isDisableAnimation() ?
@@ -380,6 +381,9 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         // resize error container if animation is disabled
         if (((JFXTextArea) getSkinnable()).isDisableAnimation()) {
             errorContainer.resize(w, computeErrorHeight(computeErrorWidth(w)));
+        }else{
+            errorContainer.resize(w, errorContainer.getHeight());
+            errorContainerClip.setWidth(w);
         }
         errorContainer.setTranslateY(h + focusedLine.getHeight() + 4);
         scale.setPivotX(w / 2);

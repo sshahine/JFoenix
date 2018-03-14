@@ -4,6 +4,7 @@
 
 .root {
     -fx-font-family: "Roboto";
+    -fx-font-smoothing-type: gray;
 }
 
 .side-menu {
@@ -264,15 +265,16 @@
     -fx-fill: black;
 }
 
-.jfx-slider:disabled {
-    -fx-opacity: 0.4;
-}
-
 /*******************************************************
 *                           						   *
 * For the main demo sliders 						   *
 *                          							   *
 *******************************************************/
+
+.jfx-slider-colored{
+    -jfx-default-thumb: #5264AE;
+    -jfx-default-track: #212121;
+}
 
 .jfx-slider-style {
     -jfx-indicator-position: right;
@@ -286,6 +288,10 @@
     -fx-background-color: #ff5252;
     -fx-pref-height: 5px;
     -fx-pref-width: 5px;
+}
+
+.jfx-slider-style .animated-thumb{
+    -fx-background-color: darkorange;
 }
 
 .jfx-slider-style .sliderValue {
@@ -557,6 +563,7 @@
 
 .custom-jfx-toggle-button-red {
     -jfx-toggle-color: red;
+    -jfx-toggle-line-color: #ff8782;
 }
 
 .toggle-label {
@@ -682,19 +689,23 @@
 }
 
 .green-spinner .arc {
-    -fx-stroke: #f4b400;
-}
-
-.yellow-spinner .arc {
     -fx-stroke: #0F9D58;
 }
 
-.materialDesign-purple .arc {
+.yellow-spinner .arc {
+    -fx-stroke: #f4b400;
+}
+
+.materialDesign-purple:indeterminate .arc {
     -fx-stroke: #ab47bc;
 }
 
 .materialDesign-blue .arc {
     -fx-stroke: #2962ff;
+}
+
+.materialDesign-blue .percentage{
+    -fx-fill: #ab47bc;
 }
 
 .materialDesign-cyan .arc {
@@ -703,6 +714,10 @@
 
 .materialDesign-green .arc {
     -fx-stroke: #00c853;
+}
+
+.materialDesign-green .text{
+    visibility: false;
 }
 
 .materialDesign-yellow .arc {
@@ -771,6 +786,16 @@
     -fx-border-width: 0 4 4 4;
 }
 
+.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
+    -fx-fill: WHITE;
+    -fx-font-size: 16;
+}
+
+.jfx-decorator .jfx-decorator-title-container .jfx-svg-glyph {
+    -fx-shape: "M512 682c-128.024-99.309-255.626-199.040-384-298l384-298 384 298c-128.375 98.958-255.974 198.693-384 298zM512 792l314-246 70 54-384 298-384-298 70-54z";
+    -jfx-size: 15;
+    -fx-background-color: WHITE;
+}
 /*******************************************************************************
 *                                                                              *
 * Tree Table View                                                              *
@@ -979,4 +1004,52 @@
 
 .jfx-scroll-pane .condensed-header {
     -fx-background-image: url("../bg4.jpg");
+}
+
+/*******************************************************************************
+*                                                                              *
+* Pickers                                                                      *
+*                                                                              *
+*******************************************************************************/
+
+.custom-color-picker{
+    -jfx-default-color: #3f51b5;
+}
+
+.jfx-date-picker > .jfx-text-field,
+.jfx-time-picker > .jfx-text-field{
+    -jfx-focus-color: -jfx-default-color;
+}
+
+
+
+.jfx-chip-view{
+    -fx-background-color: WHITE;
+    -fx-padding: 16;
+}
+
+.jfx-chip-view .chips-pane > .text-area{
+    -fx-padding: 8 0 8 0;
+}
+
+
+.jfx-chip-view .chips-pane .jfx-chip .chip-icon{
+    -jfx-size: 20;
+    -fx-background-color: #3f51b5;
+}
+
+.jfx-chip-view .chips-pane .jfx-chip .heart{
+    -jfx-size: 20;
+    -fx-background-color: #D34336;
+}
+
+.jfx-chips-popup .autocomplete-list{
+    -fx-fixed-cell-size: 32;
+    -fx-background-insets: 0.0;
+    -fx-max-height: 200;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.26) , 5, 0.06, -1, 2 );
+}
+
+.jfx-chips-popup .autocomplete-list .jfx-list-cell{
+    -fx-text-fill: rgba(0,0,0,.87);
 }

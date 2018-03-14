@@ -10,7 +10,7 @@
         <children>
             <HBox spacing="100" alignment="CENTER">
                 <children>
-                    <JFXSlider orientation="VERTICAL" prefHeight="300">
+                    <JFXSlider orientation="VERTICAL" prefHeight="300" styleClass="jfx-slider-colored">
                     </JFXSlider>
                     <JFXSlider orientation="VERTICAL" styleClass="jfx-slider-style"
                                maxHeight="200">

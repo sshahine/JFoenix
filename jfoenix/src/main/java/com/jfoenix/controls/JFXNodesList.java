@@ -22,7 +22,12 @@ package com.jfoenix.controls;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -45,6 +50,44 @@ import java.util.function.BiFunction;
  */
 public class JFXNodesList extends VBox {
 
+    private static void setConstraint(Node node, Object key, Object value) {
+        if (value == null) {
+            node.getProperties().remove(key);
+        } else {
+            node.getProperties().put(key, value);
+        }
+        if (node.getParent() != null) {
+            node.getParent().requestLayout();
+        }
+    }
+
+    private static Object getConstraint(Node node, Object key) {
+        if (node.hasProperties()) {
+            Object value = node.getProperties().get(key);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private static final String ALIGN_NODE_CONSTRAINT = "align-node";
+
+    /**
+     * set a child node as the alignment controller when applying alignments on
+     * the nodes list.
+     * @param node
+     * @param child
+     */
+    public static void alignNodeToChild(Node node, Node child) {
+        setConstraint(node, ALIGN_NODE_CONSTRAINT, child);
+    }
+
+    public static Node getAlignNodeToChild(Node node) {
+        return (Node)getConstraint(node, ALIGN_NODE_CONSTRAINT);
+    }
+
+
     private final HashMap<Node, BiFunction<Boolean, Duration, Collection<KeyFrame>>> animationsMap = new HashMap<>();
     private boolean expanded = false;
     private final Timeline animateTimeline = new Timeline();
@@ -55,6 +98,7 @@ public class JFXNodesList extends VBox {
     public JFXNodesList() {
         setPickOnBounds(false);
         getStyleClass().add("jfx-nodes-list");
+        setAlignment(Pos.TOP_CENTER);
     }
 
     /**
@@ -64,47 +108,61 @@ public class JFXNodesList extends VBox {
      * @param node {@link Region} to add
      */
     public void addAnimatedNode(Region node) {
-        addAnimatedNode(node, null);
+        addAnimatedNode(node, null, true);
     }
 
+    /**
+     * Adds node to list.
+     * Note: this method must be called instead of getChildren().add().
+     *
+     * @param node {@link Region} to add
+     */
+    public void addAnimatedNode(Region node, boolean addTriggerListener) {
+        addAnimatedNode(node, null, addTriggerListener);
+    }
+
+    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction){
+        addAnimatedNode(node, animationFramesFunction, true);
+    }
     /**
      * add node to list with a specified callback that is triggered after the node animation is finished.
      * Note: this method must be called instead of getChildren().add().
      *
      * @param node {@link Region} to add
      */
-    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction) {
+    public void addAnimatedNode(Region node, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction, boolean addTriggerListener) {
         // create container for the node if it's a sub nodes list
         if (node instanceof JFXNodesList) {
             StackPane container = new StackPane(node);
             container.setPickOnBounds(false);
-            addAnimatedNode(container, animationFramesFunction);
+            addAnimatedNode(container, animationFramesFunction, addTriggerListener);
             return;
         }
+        // init node property and its listeners
+        initChild(node, getChildren().size(), animationFramesFunction, addTriggerListener);
+        // add the node
+        getChildren().add(node);
+    }
 
-        // init node property
-        if (getChildren().size() > 0) {
+    private void initChild(Node node, int index, BiFunction<Boolean, Duration, Collection<KeyFrame>> animationFramesFunction, boolean addTriggerListener) {
+        if (index > 0) {
             initNode(node);
             node.setVisible(false);
         } else {
-            if (node instanceof Button) {
-                node.addEventHandler(ActionEvent.ACTION, event -> animateList());
-            } else {
-                node.addEventHandler(MouseEvent.MOUSE_CLICKED, event-> animateList());
+            if (addTriggerListener) {
+                if (node instanceof Button) {
+                    node.addEventHandler(ActionEvent.ACTION, event -> animateList());
+                } else {
+                    node.addEventHandler(MouseEvent.MOUSE_CLICKED, event-> animateList());
+                }
             }
             node.getStyleClass().add("trigger-node");
             node.setVisible(true);
         }
 
-        // add the node and its listeners
-        getChildren().add(node);
-        rotateProperty()
-            .addListener((o, oldVal, newVal) ->
-                node.setRotate(newVal.doubleValue() % 180 == 0 ? newVal.doubleValue() : -newVal.doubleValue()));
-
-        if (animationFramesFunction == null && getChildren().size() != 1) {
+        if (animationFramesFunction == null && index != 0) {
             animationFramesFunction = initDefaultAnimation(node);
-        } else if (animationFramesFunction == null && getChildren().size() == 1) {
+        } else if (animationFramesFunction == null && index == 0) {
             animationFramesFunction = (aBoolean, duration) -> new ArrayList<>();
         }
 
@@ -147,11 +205,99 @@ public class JFXNodesList extends VBox {
         return computePrefWidth(height);
     }
 
+    private boolean performingLayout = false;
+    @Override public void requestLayout() {
+        if (performingLayout) {
+            return;
+        }
+        super.requestLayout();
+    }
+
     @Override
     protected void layoutChildren() {
-        super.layoutChildren();
-        List<Node> managed = getChildren();
-        managed.forEach(child -> child.autosize());
+        performingLayout = true;
+
+        List<Node> children = getChildren();
+
+        Insets insets = getInsets();
+        double width = getWidth();
+        double rotate = getRotate();
+        double height = getHeight();
+        double left = snapSpace(insets.getLeft());
+        double right = snapSpace(insets.getRight());
+        double space = snapSpace(getSpacing());
+        boolean isFillWidth = isFillWidth();
+        double contentWidth = width - left - right;
+
+
+        Pos alignment = getAlignment();
+        alignment = alignment == null ? Pos.TOP_CENTER : alignment;
+        final HPos hpos = alignment.getHpos();
+        final VPos vpos = alignment.getVpos();
+
+        double y = 0;
+
+        for (int i = 0, size = children.size(); i < size; i++) {
+            Node child = children.get(i);
+            child.autosize();
+            child.setRotate(rotate % 180 == 0 ? rotate : -rotate);
+
+            // init child node if not added using addAnimatedChild method
+            if (!animationsMap.containsKey(child)) {
+                if (child instanceof JFXNodesList) {
+                    StackPane container = new StackPane(child);
+                    container.setPickOnBounds(false);
+                    getChildren().set(i, container);
+                }
+                initChild(child, i, null, true);
+            }
+
+            double x = 0;
+            double childWidth = child.getLayoutBounds().getWidth();
+            double childHeight = child.getLayoutBounds().getHeight();
+
+
+            if(childWidth > width){
+                switch (hpos) {
+                    case CENTER:
+                        x = snapPosition(contentWidth - childWidth) / 2;
+                        break;
+                }
+                Node alignToChild = getAlignNodeToChild(child);
+                if (alignToChild != null && child instanceof Parent) {
+                    ((Parent) child).layout();
+                    double alignedWidth = alignToChild.getLayoutBounds().getWidth();
+                    double alignedX = alignToChild.getLayoutX();
+                    if(childWidth / 2 > alignedX + alignedWidth){
+                        alignedWidth = -(childWidth / 2 - (alignedWidth/2 + alignedX));
+                    }else{
+                        alignedWidth = alignedWidth/2 + alignedX - childWidth / 2;
+                    }
+                    child.setTranslateX(-alignedWidth * Math.cos(Math.toRadians(rotate)));
+                    child.setTranslateY(alignedWidth * Math.cos(Math.toRadians(90 - rotate)));
+                }
+            }else{
+                childWidth = contentWidth;
+            }
+
+            final Insets margin = getMargin(child);
+            if (margin != null) {
+                childWidth += margin.getLeft() + margin.getRight();
+                childHeight += margin.getTop() + margin.getRight();
+            }
+
+            layoutInArea(child, x, y, childWidth, childHeight,
+                /* baseline shouldn't matter */0,
+                margin, isFillWidth, true, hpos, vpos);
+
+            y += child.getLayoutBounds().getHeight() + space;
+            if (margin != null) {
+                y += margin.getTop() + margin.getBottom();
+            }
+            y = snapPosition(y);
+        }
+
+        performingLayout = false;
     }
 
     /**

@@ -86,11 +86,12 @@ public class JFXToggleButton extends ToggleButton {
 
     private void initialize() {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
-        toggleColor.addListener((o, oldVal, newVal) -> {
-            // update line color in case not set by the user
-            if(newVal instanceof Color)
-                toggleLineColor.set(((Color)newVal).desaturate().desaturate().brighter());
-        });
+        // it's up for the user to add this behavior
+//        toggleColor.addListener((o, oldVal, newVal) -> {
+//            // update line color in case not set by the user
+//            if(newVal instanceof Color)
+//                toggleLineColor.set(((Color)newVal).desaturate().desaturate().brighter());
+//        });
     }
 
     /**
@@ -241,6 +242,29 @@ public class JFXToggleButton extends ToggleButton {
         this.disableVisualFocusProperty().set(disabled);
     }
 
+
+    /**
+     * disable animation on button action
+     */
+    private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(JFXToggleButton.StyleableProperties.DISABLE_ANIMATION,
+        JFXToggleButton.this,
+        "disableAnimation",
+        false);
+
+    public final StyleableBooleanProperty disableAnimationProperty() {
+        return this.disableAnimation;
+    }
+
+    public final Boolean isDisableAnimation() {
+        return disableAnimation != null && this.disableAnimationProperty().get();
+    }
+
+    public final void setDisableAnimation(final Boolean disabled) {
+        this.disableAnimationProperty().set(disabled);
+    }
+
+
+
     private static class StyleableProperties {
         private static final CssMetaData<JFXToggleButton, Paint> TOGGLE_COLOR =
             new CssMetaData<JFXToggleButton, Paint>("-jfx-toggle-color",
@@ -325,6 +349,20 @@ public class JFXToggleButton extends ToggleButton {
                 }
             };
 
+        private static final CssMetaData<JFXToggleButton, Boolean> DISABLE_ANIMATION =
+            new CssMetaData<JFXToggleButton, Boolean>("-jfx-disable-animation",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXToggleButton control) {
+                    return control.disableAnimation == null || !control.disableAnimation.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXToggleButton control) {
+                    return control.disableAnimationProperty();
+                }
+            };
+
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
@@ -336,7 +374,8 @@ public class JFXToggleButton extends ToggleButton {
                 UNTOGGLE_COLOR,
                 TOGGLE_LINE_COLOR,
                 UNTOGGLE_LINE_COLOR,
-                DISABLE_VISUAL_FOCUS
+                DISABLE_VISUAL_FOCUS,
+                DISABLE_ANIMATION
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

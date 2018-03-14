@@ -83,7 +83,7 @@ public class JFXCheckBox extends CheckBox {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-check-box.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
 
 
@@ -100,7 +100,7 @@ public class JFXCheckBox extends CheckBox {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-check-box";
-
+    private static final String USER_AGENT_STYLESHEET = JFXCheckBox.class.getResource("/css/controls/jfx-check-box.css").toExternalForm();
     /**
      * checkbox color property when selected
      */
@@ -176,7 +176,7 @@ public class JFXCheckBox extends CheckBox {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
+                new ArrayList<>(CheckBox.getClassCssMetaData());
             Collections.addAll(styleables,
                 CHECKED_COLOR,
                 UNCHECKED_COLOR
@@ -185,19 +185,9 @@ public class JFXCheckBox extends CheckBox {
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(Labeled.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

@@ -95,7 +95,7 @@ public class JFXButton extends Button {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-button.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
 
 
@@ -143,7 +143,7 @@ public class JFXButton extends Button {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-button";
-
+    private static final String USER_AGENT_STYLESHEET = JFXButton.class.getResource("/css/controls/jfx-button.css").toExternalForm();
 
     public enum ButtonType {FLAT, RAISED}
 

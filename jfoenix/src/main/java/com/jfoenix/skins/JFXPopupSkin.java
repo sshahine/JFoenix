@@ -25,11 +25,8 @@ import com.jfoenix.controls.JFXPopup.PopupVPosition;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CacheMomento;
 import com.jfoenix.transitions.CachedTransition;
+import javafx.animation.*;
 import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
@@ -47,12 +44,13 @@ import javafx.util.Duration;
  */
 public class JFXPopupSkin implements Skin<JFXPopup> {
 
-    private final JFXPopup control;
-    private final StackPane container = new StackPane();
-    private Node root;
-    private PopupTransition t;
-    private Scale scale;
-    private Region popupContent;
+    protected JFXPopup control;
+    protected StackPane container = new StackPane();
+    protected Region popupContent;
+    protected Node root;
+
+    private Animation animation;
+    protected Scale scale;
 
     public JFXPopupSkin(JFXPopup control) {
         this.control = control;
@@ -64,7 +62,7 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
         container.getTransforms().add(scale);
         container.setOpacity(0);
         root = JFXDepthManager.createMaterialNode(container, 4);
-        t = new PopupTransition();
+        animation = getAnimation();
     }
 
 
@@ -76,9 +74,9 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
         root.setTranslateY(vAlign == PopupVPosition.BOTTOM ? -container.getHeight() + offsetY : offsetY);
     }
 
-    public void animate() {
-        if (t.getStatus() == Status.STOPPED) {
-            t.play();
+    public final void animate() {
+        if (animation.getStatus() == Status.STOPPED) {
+            animation.play();
         }
     }
 
@@ -94,6 +92,16 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
 
     @Override
     public void dispose() {
+        animation.stop();
+        animation = null;
+        container = null;
+        control = null;
+        popupContent = null;
+        root = null;
+    }
+
+    protected Animation getAnimation() {
+        return new PopupTransition();
     }
 
     private final class PopupTransition extends CachedTransition {
@@ -127,7 +135,7 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
     }
 
     public void init() {
-        t.stop();
+        animation.stop();
         container.setOpacity(0);
         scale.setX(0);
         scale.setY(0);

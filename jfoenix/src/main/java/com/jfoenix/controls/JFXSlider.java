@@ -67,6 +67,14 @@ public class JFXSlider extends Slider {
         return new JFXSliderSkin(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-slider.css").toExternalForm();
+    }
+
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
     }

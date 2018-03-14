@@ -46,13 +46,6 @@ import java.util.List;
  * @since 2016-03-09
  */
 public class JFXTextArea extends TextArea {
-    /**
-     * Initialize the style class to 'jfx-text-field'.
-     * <p>
-     * This is the selector class from which CSS can be used to style
-     * this control.
-     */
-    private static final String DEFAULT_STYLE_CLASS = "jfx-text-area";
 
     /**
      * {@inheritDoc}
@@ -89,7 +82,7 @@ public class JFXTextArea extends TextArea {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-text-area.css").toExternalForm();
+        return USER_AGENT_STYLESHEET;
     }
 
     /***************************************************************************
@@ -153,17 +146,23 @@ public class JFXTextArea extends TextArea {
 
     /***************************************************************************
      *                                                                         *
-     * styleable Properties                                                    *
+     * Styleable Properties                                                    *
      *                                                                         *
      **************************************************************************/
 
     /**
+     * Initialize the style class to 'jfx-text-field'.
+     * <p>
+     * This is the selector class from which CSS can be used to style
+     * this control.
+     */
+    private static final String DEFAULT_STYLE_CLASS = "jfx-text-area";
+    private static final String USER_AGENT_STYLESHEET = JFXTextArea.class.getResource("/css/controls/jfx-text-area.css").toExternalForm();
+    /**
      * set true to show a float the prompt text when focusing the field
      */
     private StyleableBooleanProperty labelFloat = new SimpleStyleableBooleanProperty(StyleableProperties.LABEL_FLOAT,
-        JFXTextArea.this,
-        "lableFloat",
-        false);
+        JFXTextArea.this, "lableFloat", false);
 
     public final StyleableBooleanProperty labelFloatProperty() {
         return this.labelFloat;
@@ -181,11 +180,7 @@ public class JFXTextArea extends TextArea {
      * default color used when the text area is unfocused
      */
     private StyleableObjectProperty<Paint> unFocusColor = new SimpleStyleableObjectProperty<>(StyleableProperties.UNFOCUS_COLOR,
-        JFXTextArea.this,
-        "unFocusColor",
-        Color.rgb(77,
-            77,
-            77));
+        JFXTextArea.this, "unFocusColor", Color.rgb(77, 77, 77));
 
     public Paint getUnFocusColor() {
         return unFocusColor == null ? Color.rgb(77, 77, 77) : unFocusColor.get();

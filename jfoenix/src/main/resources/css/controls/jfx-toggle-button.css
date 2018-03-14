@@ -22,8 +22,38 @@
 .jfx-toggle-button:hover,
 .jfx-toggle-button:focused,
 .jfx-toggle-button:selected,
-.jfx-toggle-button:focused:selected{
+.jfx-toggle-button:focused:selected {
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
     -fx-background-radius: 3px;
     -fx-background-insets: 0px;
+
+    -jfx-toggle-color: #009688;
+    -jfx-untoggle-color: #FAFAFA;
+    -jfx-toggle-line-color: derive(-jfx-toggle-color, 65%);
+    -jfx-untoggle-line-color: #999999;
+    -jfx-size: 10;
+}
+
+
+.jfx-toggle-button Line {
+    -fx-stroke: -jfx-untoggle-line-color;
+}
+.jfx-toggle-button:selected Line{
+    -fx-stroke: -jfx-toggle-line-color;
+}
+
+.jfx-toggle-button Circle{
+    -fx-fill: -jfx-untoggle-color;
+}
+
+.jfx-toggle-button:selected Circle{
+    -fx-fill: -jfx-toggle-color;
+}
+
+.jfx-toggle-button .jfx-rippler {
+    -jfx-rippler-fill: -jfx-untoggle-line-color;
+}
+
+.jfx-toggle-button:selected .jfx-rippler {
+    -jfx-rippler-fill: -jfx-toggle-line-color;
 }
