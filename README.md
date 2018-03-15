@@ -111,7 +111,7 @@ dependencies {
 ### JFXMasonryPane
 ![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
 
-### JFXSlider
+### [JFXSlider](https://github.com/jfoenixadmin/JFoenix/wiki/Slider)
 ![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
 
 ### JFXSpinner
