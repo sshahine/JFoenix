@@ -62,6 +62,9 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
 		if(control.getSuggestionsCellFactory()!=null) suggestionList.setCellFactory(control.getSuggestionsCellFactory());
 		pane.getChildren().add(new Group(suggestionList));
 		pane.getStyleClass().add("autocomplete-container");
+		suggestionList.prefWidthProperty().bind(control.prefWidthProperty());
+        suggestionList.maxWidthProperty().bind(control.maxWidthProperty());
+        suggestionList.minWidthProperty().bind(control.minWidthProperty());
 		registerEventListener();
 	}
 
