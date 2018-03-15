@@ -43,8 +43,21 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
     /**
      * {@inheritDoc}
      */
+    private final DoubleProperty percentageWidth = new SimpleDoubleProperty(1);
+    
     public JFXTreeTableColumn() {
         init();
+        treeTableViewProperty().addListener(new ChangeListener<TreeTableView<S>>() {
+
+            @Override
+            public void changed(ObservableValue<? extends TreeTableView<S>> observable, TreeTableView<S> oldValue, TreeTableView<S> newValue) {
+                if (prefWidthProperty().isBound()) {
+                    prefWidthProperty().unbind();
+                }
+
+                prefWidthProperty().bind(newValue.widthProperty().multiply(percentageWidth));
+            }
+        });
     }
 
     /**
@@ -53,6 +66,17 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
     public JFXTreeTableColumn(String text) {
         super(text);
         init();
+        treeTableViewProperty().addListener(new ChangeListener<TreeTableView<S>>() {
+
+            @Override
+            public void changed(ObservableValue<? extends TreeTableView<S>> observable, TreeTableView<S> oldValue, TreeTableView<S> newValue) {
+                if (prefWidthProperty().isBound()) {
+                    prefWidthProperty().unbind();
+                }
+
+                prefWidthProperty().bind(newValue.widthProperty().multiply(percentageWidth));
+            }
+        });
     }
 
     private void init() {
@@ -134,6 +158,22 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
         return getTreeTableView() instanceof JFXTreeTableView && ((JFXTreeTableView<?>) getTreeTableView()).getGroupOrder()
             .contains(
                 this);
+    }
+    
+    public final DoubleProperty percentageWidthProperty() {
+        return this.percentageWidth;
+    }
+
+    public final double getPercentageWidth() {
+        return this.percentageWidthProperty().get();
+    }
+
+    public final void setPercentageWidth(double value) throws IllegalArgumentException {
+        if (value >= 0 && value <= 1) {
+            this.percentageWidthProperty().set(value);
+        } else {
+            throw new IllegalArgumentException(String.format("The provided percentage width is not between 0.0 and 1.0. Value is: %1$s", value));
+        }
     }
 
 }
