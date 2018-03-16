@@ -80,7 +80,13 @@ dependencies {
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>8.0.1</version>
+    <version>9.0.3</version>
+</dependency>
+
+<dependency>
+    <groupId>com.jfoenix</groupId>
+    <artifactId>jfoenix</artifactId>
+    <version>8.0.3</version>
 </dependency>
 ```
 # Components
