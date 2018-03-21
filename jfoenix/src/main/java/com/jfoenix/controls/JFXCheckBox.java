@@ -152,18 +152,29 @@ public class JFXCheckBox extends CheckBox {
         "disableVisualFocus",
         false);
 
+    /**
+     * Setting this property disables this {@link JFXCheckBox} from showing keyboard focus.
+     * @return A property that if true visual focus is not displayed and false otherwise.
+     */
     public final StyleableBooleanProperty disableVisualFocusProperty() {
         return this.disableVisualFocus;
     }
 
+    /**
+     * Indicates whether or not this {@link JFXCheckBox} will show focus when it receives keyboard focus.
+     * @return False if this {@link JFXCheckBox} will show visual focus and true if otherwise.
+     */
     public final Boolean isDisableVisualFocus() {
         return disableVisualFocus != null && this.disableVisualFocusProperty().get();
     }
 
+    /**
+     * Setting this to true will disable this {@link JFXCheckBox} from showing focus when it receives keyboard focus.
+     * @param disabled True to disable visual focus and false to enable it.
+     */
     public final void setDisableVisualFocus(final Boolean disabled) {
         this.disableVisualFocusProperty().set(disabled);
     }
-
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXCheckBox, Paint> CHECKED_COLOR =
