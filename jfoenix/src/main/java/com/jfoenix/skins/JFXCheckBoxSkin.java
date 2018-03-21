@@ -97,7 +97,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
 
         // show focused state
         control.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if(!control.disableVisualFocusProperty().get()){
+            if(!control.isDisableVisualFocus()){
                 if (newVal) {
                     if (!getSkinnable().isPressed()) {
                         rippler.setOverlayVisible(true);
