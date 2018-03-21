@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXCheckBoxSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.css.*;
 import javafx.scene.control.CheckBox;
@@ -143,6 +144,26 @@ public class JFXCheckBox extends CheckBox {
         this.unCheckedColor.set(color);
     }
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXCheckBox.this,
+        "disableVisualFocus",
+        false);
+
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
+
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXCheckBox, Paint> CHECKED_COLOR =
@@ -171,7 +192,19 @@ public class JFXCheckBox extends CheckBox {
                     return control.unCheckedColorProperty();
                 }
             };
+        private static final CssMetaData<JFXCheckBox, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXCheckBox, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXCheckBox control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
 
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXCheckBox control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
@@ -179,7 +212,8 @@ public class JFXCheckBox extends CheckBox {
                 new ArrayList<>(CheckBox.getClassCssMetaData());
             Collections.addAll(styleables,
                 CHECKED_COLOR,
-                UNCHECKED_COLOR
+                UNCHECKED_COLOR,
+                DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
