@@ -145,7 +145,7 @@ public class JFXCheckBox extends CheckBox {
     }
 
     /**
-     * Disable the visual indicator for focus
+     * Disable the visual indicator for focus.
      */
     private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
         JFXCheckBox.this,
@@ -154,7 +154,7 @@ public class JFXCheckBox extends CheckBox {
 
     /**
      * Setting this property disables this {@link JFXCheckBox} from showing keyboard focus.
-     * @return A property that if true visual focus is not displayed and false otherwise.
+     * @return A property that will disable visual focus if true and enable it if false.
      */
     public final StyleableBooleanProperty disableVisualFocusProperty() {
         return this.disableVisualFocus;
@@ -162,7 +162,7 @@ public class JFXCheckBox extends CheckBox {
 
     /**
      * Indicates whether or not this {@link JFXCheckBox} will show focus when it receives keyboard focus.
-     * @return False if this {@link JFXCheckBox} will show visual focus and true if otherwise.
+     * @return False if this {@link JFXCheckBox} will show visual focus and true if it will not.
      */
     public final Boolean isDisableVisualFocus() {
         return disableVisualFocus != null && this.disableVisualFocusProperty().get();

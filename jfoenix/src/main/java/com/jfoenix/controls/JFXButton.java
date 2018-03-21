@@ -180,7 +180,7 @@ public class JFXButton extends Button {
 
     /**
      * Setting this property disables this {@link JFXButton} from showing keyboard focus.
-     * @return A property that if true visual focus is not displayed and false otherwise.
+     * @return A property that will disable visual focus if true and enable it if false.
      */
     public final StyleableBooleanProperty disableVisualFocusProperty() {
         return this.disableVisualFocus;
@@ -188,7 +188,7 @@ public class JFXButton extends Button {
 
     /**
      * Indicates whether or not this {@link JFXButton} will show focus when it receives keyboard focus.
-     * @return False if this {@link JFXButton} will show visual focus and true if otherwise.
+     * @return False if this {@link JFXButton} will show visual focus and true if it will not.
      */
     public final Boolean isDisableVisualFocus() {
         return disableVisualFocus != null && this.disableVisualFocusProperty().get();
