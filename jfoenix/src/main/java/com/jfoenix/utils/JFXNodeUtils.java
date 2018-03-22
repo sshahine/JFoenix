@@ -22,6 +22,7 @@ package com.jfoenix.utils;
 import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -66,16 +67,16 @@ public class JFXNodeUtils {
         }
     }
 
+    private static class Wrapper<T> {
+        T content;
+    }
+
     public static void addPressAndHoldHandler(Node node, Duration holdTime,
                                         EventHandler<MouseEvent> handler) {
-        class Wrapper<T> {
-            T content;
-        }
         Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
 
         PauseTransition holdTimer = new PauseTransition(holdTime);
         holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
-
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             eventWrapper.content = event;
             holdTimer.playFromStart();
@@ -86,19 +87,25 @@ public class JFXNodeUtils {
 
     public static void addPressAndHoldFilter(Node node, Duration holdTime,
                                               EventHandler<MouseEvent> handler) {
-        class Wrapper<T> {
-            T content;
-        }
         Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
-
         PauseTransition holdTimer = new PauseTransition(holdTime);
         holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
-
         node.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             eventWrapper.content = event;
             holdTimer.playFromStart();
         });
         node.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> holdTimer.stop());
         node.addEventFilter(MouseEvent.DRAG_DETECTED, event -> holdTimer.stop());
+    }
+
+    public static void addDelayedKeyPressedHandler(Node node, Duration delayTime,
+                                                   EventHandler<KeyEvent> handler){
+        Wrapper<KeyEvent> eventWrapper = new Wrapper<>();
+        PauseTransition holdTimer = new PauseTransition(delayTime);
+        holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
+        node.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            eventWrapper.content = event;
+            holdTimer.playFromStart();
+        });
     }
 }
