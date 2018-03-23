@@ -1053,3 +1053,13 @@
 .jfx-chips-popup .autocomplete-list .jfx-list-cell{
     -fx-text-fill: rgba(0,0,0,.87);
 }
+
+.jfx-drawer .jfx-drawer-side-pane{
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0) 100%);
+    -fx-border-width: 0px 7px 0px 0px;
+}
+
+.jfx-drawer .jfx-drawer-side-pane #root{
+    -fx-background-color: WHITE;
+}
