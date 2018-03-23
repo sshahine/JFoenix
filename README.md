@@ -109,6 +109,9 @@ dependencies {
 ### JFXListView
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
 
+### JFXHighlighter
+![Alt text](http://jfoenix.com/gif/highlighter.gif "Highlighter")
+
 ### JFXChipView
 ![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
 
