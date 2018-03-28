@@ -20,8 +20,10 @@
 package com.jfoenix.utils;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.InvalidationListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -32,6 +34,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * @author Shadi Shaheen
@@ -103,9 +106,22 @@ public class JFXNodeUtils {
         Wrapper<KeyEvent> eventWrapper = new Wrapper<>();
         PauseTransition holdTimer = new PauseTransition(delayTime);
         holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
-        node.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             eventWrapper.content = event;
             holdTimer.playFromStart();
         });
+    }
+
+    public static InvalidationListener addDelayedTextChangedHandler(TextInputControl control, Duration delayTime,
+                                                                    Consumer<String> handler){
+        Wrapper<String> eventWrapper = new Wrapper<>();
+        PauseTransition holdTimer = new PauseTransition(delayTime);
+        holdTimer.setOnFinished(event -> handler.accept(eventWrapper.content));
+        final InvalidationListener invalidationListener = observable -> {
+            eventWrapper.content = control.getText();
+            holdTimer.playFromStart();
+        };
+        control.textProperty().addListener(invalidationListener);
+        return invalidationListener;
     }
 }
