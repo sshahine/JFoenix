@@ -55,7 +55,7 @@ public class JFXHighlighter {
 
     private Pane pane;
     private HashMap<Node, List<Rectangle>> boxes = new HashMap<>();
-    private ObjectProperty<Paint> paint = new SimpleObjectProperty<>(Color.rgb(255, 0, 0, 0.4));
+    private ObjectProperty<Paint> paint = new SimpleObjectProperty<>(Color.valueOf("#B2DFDB"));
 
     private Method textLayoutMethod;
     {
@@ -114,7 +114,7 @@ public class JFXHighlighter {
             }
         });
 
-        Platform.runLater(()-> pane.getChildren().addAll(allRectangles));
+        Platform.runLater(()-> pane.getChildren().addAll(0, allRectangles));
     }
 
     private Set<Node> getTextNodes(Pane pane) {
