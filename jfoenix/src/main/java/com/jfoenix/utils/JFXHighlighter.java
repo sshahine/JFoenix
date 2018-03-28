@@ -40,10 +40,7 @@ import javafx.scene.text.Text;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -82,8 +79,8 @@ public class JFXHighlighter {
         if(query.isEmpty()) return;
 
         this.pane = pane;
-        Set<Node> nodes = pane.lookupAll("LabeledText");
-        nodes.addAll(pane.lookupAll("Text"));
+
+        Set<Node> nodes = getTextNodes(pane);
 
         ArrayList<Rectangle> allRectangles = new ArrayList<>();
         nodes.forEach(node -> {
@@ -118,6 +115,15 @@ public class JFXHighlighter {
         });
 
         Platform.runLater(()-> pane.getChildren().addAll(allRectangles));
+    }
+
+    private Set<Node> getTextNodes(Pane pane) {
+        Set<Node> labeledTextNodes = pane.lookupAll("LabeledText");
+        Set<Node> textNodes = pane.lookupAll("Text");
+        Set<Node> nodes = new HashSet<>();
+        nodes.addAll(labeledTextNodes);
+        nodes.addAll(textNodes);
+        return nodes;
     }
 
     private ArrayList<Bounds> getMatchingBounds(String query, Node node, Text text) {
