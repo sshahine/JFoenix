@@ -186,7 +186,7 @@ public class JFXHighlighter {
         List<Rectangle> allBoxes = new ArrayList<>();
         boxes.values().forEach(allBoxes::addAll);
         boxes.clear();
-        JFXUtilities.runInFX(()-> pane.getChildren().removeAll(allBoxes));
+        if(pane!=null) JFXUtilities.runInFX(()-> pane.getChildren().removeAll(allBoxes));
     }
 
     public Paint getPaint() {
