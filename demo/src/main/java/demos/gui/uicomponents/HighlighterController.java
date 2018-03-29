@@ -10,6 +10,7 @@ import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -34,7 +35,7 @@ public class HighlighterController {
     @PostConstruct
     public void init() {
         JFXDepthManager.setDepth(content, 1);
-        JFXNodeUtils.addDelayedKeyPressedHandler(searchField, Duration.millis(400),
-            event->highlighter.highlight(content, searchField.getText()));
+        JFXNodeUtils.addDelayedEventHandler(searchField, Duration.millis(400),
+            KeyEvent.KEY_PRESSED, event -> highlighter.highlight(content, searchField.getText()));
     }
 }
