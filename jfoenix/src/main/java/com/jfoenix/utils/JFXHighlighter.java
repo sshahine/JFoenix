@@ -26,12 +26,14 @@ import com.sun.javafx.scene.text.TextLine;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -90,10 +92,11 @@ public class JFXHighlighter {
                 ArrayList<Bounds> boundingBoxes = getMatchingBounds(query, node, text);
                 ArrayList<Rectangle> rectangles = new ArrayList<>();
                 for (Bounds boundingBox : boundingBoxes) {
-                    Rectangle rect = new Rectangle();
+                    HighLightRectangle rect = new HighLightRectangle(text);
                     rect.setCacheHint(CacheHint.SPEED);
                     rect.setCache(true);
                     rect.setMouseTransparent(true);
+                    rect.setBlendMode(BlendMode.MULTIPLY);
                     rect.fillProperty().bind(paintProperty());
                     rect.setManaged(false);
                     rect.setX(boundingBox.getMinX());
@@ -115,6 +118,15 @@ public class JFXHighlighter {
         });
 
         Platform.runLater(()-> pane.getChildren().addAll(allRectangles));
+    }
+
+    private class HighLightRectangle extends Rectangle{
+        // add listener to remove the current rectangle if text was changed
+        InvalidationListener listener = observable -> pane.getChildren().remove(HighLightRectangle.this);
+
+        public HighLightRectangle(Text text) {
+            text.textProperty().addListener(new WeakInvalidationListener(listener));
+        }
     }
 
     private Set<Node> getTextNodes(Pane pane) {
