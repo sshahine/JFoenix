@@ -25,7 +25,6 @@ import com.sun.javafx.scene.text.TextLayout;
 import com.sun.javafx.scene.text.TextLine;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -107,13 +106,6 @@ public class JFXHighlighter {
                     allRectangles.add(rect);
                 }
                 boxes.put(node, rectangles);
-                text.boundsInParentProperty().addListener(new InvalidationListener() {
-                    @Override
-                    public void invalidated(Observable observable) {
-                        pane.getChildren().remove(boxes.get(text));
-                        text.boundsInParentProperty().removeListener(this);
-                    }
-                });
             }
         });
 
@@ -122,10 +114,17 @@ public class JFXHighlighter {
 
     private class HighLightRectangle extends Rectangle{
         // add listener to remove the current rectangle if text was changed
-        InvalidationListener listener = observable -> pane.getChildren().remove(HighLightRectangle.this);
+        private InvalidationListener listener;
 
         public HighLightRectangle(Text text) {
+            listener = observable -> clear(text);
             text.textProperty().addListener(new WeakInvalidationListener(listener));
+            text.localToSceneTransformProperty().addListener(new WeakInvalidationListener(listener));
+        }
+
+        private void clear(Text text) {
+            if(boxes.get(text)!=null && !boxes.get(text).isEmpty())
+                Platform.runLater(() -> pane.getChildren().removeAll(boxes.get(text)));
         }
     }
 
