@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 
 import com.jfoenix.transitions.CachedTransition;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.ListChangeListener;
@@ -47,7 +48,7 @@ import java.util.List;
  * fill the empty gaps caused in masonry layoutMode.
  * <p>
  * <p>
- * <b>Note:</b> childs that doesn't fit in the grid will be hidden.
+ * <b>Note:</b> children that doesn't fit in the grid will be hidden.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -91,6 +92,12 @@ public class JFXMasonryPane extends Pane {
         limitColumnProperty().addListener(layoutListener);
         limitRowProperty().addListener(layoutListener);
         getChildren().addListener(new WeakListChangeListener<>(childrenListener));
+        Platform.runLater(()-> requestLayout());
+    }
+
+    @Override
+    protected double computePrefWidth(double height) {
+        return snappedLeftInset() + getCellWidth() + snappedRightInset() + 2 * getHSpacing();
     }
 
     /**
@@ -168,6 +175,8 @@ public class JFXMasonryPane extends Pane {
                         blockHeight = -1;
                     }
 
+                    boundingBoxes.put(child, boundingBox);
+
                     if (animationMap == null) {
                         // init static children
                         child.setLayoutX(blockX);
@@ -185,7 +194,6 @@ public class JFXMasonryPane extends Pane {
                             child.setPrefSize(blockWidth, blockHeight);
                             child.resizeRelocate(blockX, blockY, blockWidth, blockHeight);
                         }
-                        boundingBoxes.put(child, boundingBox);
 
                         if (boundingBox != null) {
                             // handle children repositioning
@@ -244,7 +252,10 @@ public class JFXMasonryPane extends Pane {
                     }
                 }
             }
-            this.setMinSize(minWidth, minHeight);
+            minHeight += snappedBottomInset();
+            setPrefHeight(minHeight);
+            setHeight(minHeight);
+
             if (animationMap == null) {
                 animationMap = new HashMap<>();
             }
@@ -257,7 +268,6 @@ public class JFXMasonryPane extends Pane {
             valid = true;
             dirtyBoxes = false;
         }
-
         performingLayout = false;
     }
 
