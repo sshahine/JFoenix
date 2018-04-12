@@ -51,7 +51,8 @@ public class JFXToggleNodeSkin extends ToggleButtonSkin {
         super(toggleNode);
 
         selectionOverLay = new StackPane();
-        selectionOverLay.getChildren().add(getSkinnable().getGraphic());
+        final Node graphic = getSkinnable().getGraphic();
+        if(graphic!=null) selectionOverLay.getChildren().add(graphic);
         selectionOverLay.shapeProperty().bind(getSkinnable().shapeProperty());
         selectionOverLay.setPickOnBounds(false);
 
