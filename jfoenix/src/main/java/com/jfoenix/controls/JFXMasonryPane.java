@@ -109,7 +109,7 @@ public class JFXMasonryPane extends Pane {
         if (!valid) {
 
             int col, row;
-            col = (int) Math.floor(this.getWidth() / (getCellWidth() + 2 * getHSpacing()));
+            col = (int) Math.floor((getWidth() + getHSpacing() - snappedLeftInset() - snappedRightInset()) / (getCellWidth() + getHSpacing()));
             col = getLimitColumn() != -1 && col > getLimitColumn() ? getLimitColumn() : col;
 
             if (matrix != null && col == matrix[0].length) {
@@ -161,13 +161,13 @@ public class JFXMasonryPane extends Pane {
                     double blockHeight;
                     if (boundingBox != null) {
                         blockX = boundingBox.getMinY() * getCellWidth() +
-                                 ((boundingBox.getMinY() + 1) * 2 - 1) * getHSpacing();
+                                 boundingBox.getMinY() * getHSpacing() + snappedLeftInset();
                         blockY = boundingBox.getMinX() * getCellHeight() +
-                                 ((boundingBox.getMinX() + 1) * 2 - 1) * getVSpacing();
+                                 boundingBox.getMinX() * getVSpacing() + snappedTopInset();
                         blockWidth = boundingBox.getWidth() * getCellWidth() +
-                                     (boundingBox.getWidth() - 1) * 2 * getHSpacing();
+                                     (boundingBox.getWidth() - 1) * getHSpacing();
                         blockHeight = boundingBox.getHeight() * getCellHeight() +
-                                      (boundingBox.getHeight() - 1) * 2 * getVSpacing();
+                                      (boundingBox.getHeight() - 1) * getVSpacing();
                     } else {
                         blockX = child.getLayoutX();
                         blockY = child.getLayoutY();
@@ -175,12 +175,8 @@ public class JFXMasonryPane extends Pane {
                         blockHeight = -1;
                     }
 
-                    boundingBoxes.put(child, boundingBox);
-
                     if (animationMap == null) {
                         // init static children
-                        child.setLayoutX(blockX);
-                        child.setLayoutY(blockY);
                         child.setPrefSize(blockWidth, blockHeight);
                         child.resizeRelocate(blockX, blockY, blockWidth, blockHeight);
                     } else {
@@ -189,8 +185,6 @@ public class JFXMasonryPane extends Pane {
                             || (!oldBoundingBox.equals(boundingBox) && dirtyBoxes)) {
                             // handle new children
                             child.setOpacity(0);
-                            child.setLayoutX(blockX);
-                            child.setLayoutY(blockY);
                             child.setPrefSize(blockWidth, blockHeight);
                             child.resizeRelocate(blockX, blockY, blockWidth, blockHeight);
                         }
@@ -198,17 +192,10 @@ public class JFXMasonryPane extends Pane {
                         if (boundingBox != null) {
                             // handle children repositioning
                             final KeyFrame keyFrame = new KeyFrame(Duration.millis(2000),
-                                new KeyValue(child.opacityProperty(),
-                                    1,
-                                    Interpolator.LINEAR),
-                                new KeyValue(child.layoutXProperty(),
-                                    blockX,
-                                    Interpolator.LINEAR),
-                                new KeyValue(child.layoutYProperty(),
-                                    blockY,
-                                    Interpolator.LINEAR));
-                            animationMap.put(child,
-                                new CachedTransition(child, new Timeline(keyFrame)) {{
+                                new KeyValue(child.opacityProperty(), 1, Interpolator.LINEAR),
+                                new KeyValue(child.layoutXProperty(), blockX, Interpolator.LINEAR),
+                                new KeyValue(child.layoutYProperty(), blockY, Interpolator.LINEAR));
+                            animationMap.put(child, new CachedTransition(child, new Timeline(keyFrame)) {{
                                     setCycleDuration(Duration.seconds(0.320));
                                     setDelay(Duration.seconds(0));
                                     setOnFinished((finish) -> {
@@ -217,20 +204,14 @@ public class JFXMasonryPane extends Pane {
                                         child.setOpacity(1);
                                     });
                                 }});
+
                         } else {
                             // handle children is being hidden ( cause it can't fit in the pane )
                             final KeyFrame keyFrame = new KeyFrame(Duration.millis(2000),
-                                new KeyValue(child.opacityProperty(),
-                                    0,
-                                    Interpolator.LINEAR),
-                                new KeyValue(child.layoutXProperty(),
-                                    blockX,
-                                    Interpolator.LINEAR),
-                                new KeyValue(child.layoutYProperty(),
-                                    blockY,
-                                    Interpolator.LINEAR));
-                            animationMap.put(child,
-                                new CachedTransition(child, new Timeline(keyFrame)) {{
+                                new KeyValue(child.opacityProperty(), 0, Interpolator.LINEAR),
+                                new KeyValue(child.layoutXProperty(), blockX, Interpolator.LINEAR),
+                                new KeyValue(child.layoutYProperty(), blockY, Interpolator.LINEAR));
+                            animationMap.put(child, new CachedTransition(child, new Timeline(keyFrame)) {{
                                     setCycleDuration(Duration.seconds(0.320));
                                     setDelay(Duration.seconds(0));
                                     setOnFinished((finish) -> {
@@ -242,6 +223,9 @@ public class JFXMasonryPane extends Pane {
                         }
                     }
 
+                    // update bounding box
+                    boundingBoxes.put(child, boundingBox);
+
                     if (boundingBox != null) {
                         if (blockX + blockWidth > minWidth) {
                             minWidth = blockX + blockWidth;
@@ -252,9 +236,10 @@ public class JFXMasonryPane extends Pane {
                     }
                 }
             }
-            minHeight += snappedBottomInset();
-            setPrefHeight(minHeight);
-            setHeight(minHeight);
+            if (minHeight != -1) {
+                minHeight += snappedBottomInset();
+                setPrefHeight(minHeight);
+            }
 
             if (animationMap == null) {
                 animationMap = new HashMap<>();
@@ -436,7 +421,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * sets the column limit to be used in the grid
      *
-     * @param limitColumn number of colummns to be used in the grid
+     * @param limitColumn number of columns to be used in the grid
      */
     public final void setLimitColumn(final int limitColumn) {
         this.limitColumnProperty().set(limitColumn);
@@ -633,20 +618,10 @@ public class JFXMasonryPane extends Pane {
                         }
 
                         BoundingBox box = getFreeArea(matrix,
-                            i,
-                            j,
-                            block,
-                            cellWidth,
-                            cellHeight,
-                            limitRow,
-                            limitCol,
-                            gutterX,
-                            gutterY);
-                        if (!validWidth(box, block, cellWidth, gutterX, gutterY) || !validHeight(box,
-                            block,
-                            cellHeight,
-                            gutterX,
-                            gutterY)) {
+                            i, j, block, cellWidth, cellHeight,
+                            limitRow, limitCol, gutterX, gutterY);
+                        if (!validWidth(box, block, cellWidth, gutterX, gutterY)
+                            || !validHeight(box, block, cellHeight, gutterX, gutterY)) {
                             continue;
                         }
                         matrix = fillMatrix(matrix,

@@ -45,12 +45,8 @@ public class MasonryPaneController {
         for (int i = 0; i < 20; i++) {
             StackPane child = new StackPane();
             double width = Math.random() * 100 + 100;
-            child.setMinWidth(width);
-            child.setMaxWidth(width);
             child.setPrefWidth(width);
             double height = Math.random() * 100 + 100;
-            child.setMinHeight(height);
-            child.setMaxHeight(height);
             child.setPrefHeight(height);
             JFXDepthManager.setDepth(child, 1);
             children.add(child);
