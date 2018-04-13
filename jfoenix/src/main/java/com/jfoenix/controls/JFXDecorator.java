@@ -35,6 +35,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -65,7 +66,8 @@ public class JFXDecorator extends VBox {
     private StackPane contentPlaceHolder = new StackPane();
     private HBox buttonsContainer;
 
-    private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() -> primaryStage.close());
+    private ObjectProperty<Runnable> onCloseButtonAction = new SimpleObjectProperty<>(() ->
+        primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST)));
 
     private BooleanProperty customMaximize = new SimpleBooleanProperty(false);
     private boolean maximized = false;
