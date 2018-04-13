@@ -49,8 +49,11 @@ public class NumberValidator extends ValidatorBase {
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
         try {
-            Integer.parseInt(textField.getText());
             hasErrors.set(false);
+            if (!textField.getText().isEmpty()) {
+                Integer.parseInt(textField.getText());
+                hasErrors.set(false);
+            }
         } catch (Exception e) {
             hasErrors.set(true);
         }
