@@ -45,6 +45,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
+import java.util.Set;
+
 /**
  * material design implementation of ListCell
  * <p>
@@ -61,7 +63,7 @@ import javafx.util.Duration;
  */
 public class JFXListCell<T> extends ListCell<T> {
 
-    protected JFXRippler cellRippler = new JFXRippler(this){
+    protected JFXRippler cellRippler = new JFXRippler(this) {
         @Override
         protected Node getMask() {
             Region clip = new Region();
@@ -205,7 +207,10 @@ public class JFXListCell<T> extends ListCell<T> {
      */
     protected void makeChildrenTransparent() {
         for (Node child : getChildren()) {
-            if (child instanceof Label || child instanceof Shape) {
+            if (child instanceof Label) {
+                Set<Node> texts = child.lookupAll("Text");
+                texts.forEach(text -> text.setMouseTransparent(true));
+            } else if (child instanceof Shape) {
                 child.setMouseTransparent(true);
             }
         }
@@ -226,7 +231,7 @@ public class JFXListCell<T> extends ListCell<T> {
         } else {
             setMouseTransparent(false);
             setStyle(null);
-            if(item instanceof Node) {
+            if (item instanceof Node) {
                 setText(null);
                 Node currentNode = getGraphic();
                 Node newNode = (Node) item;
@@ -369,16 +374,16 @@ public class JFXListCell<T> extends ListCell<T> {
                     ((Region) cellContent).setMaxHeight(cellContent.prefHeight(-1));
                     setGraphic(cellContent);
                 }
-            }else {
+            } else {
                 setText(item == null ? "null" : item.toString());
                 setGraphic(null);
             }
             boolean isJFXListView = getListView() instanceof JFXListView;
             // show cell tooltip if its toggled in JFXListView
             if (isJFXListView && ((JFXListView<?>) getListView()).isShowTooltip()) {
-                if(item instanceof Label){
+                if (item instanceof Label) {
                     setTooltip(new Tooltip(((Label) item).getText()));
-                }else if(getText()!=null){
+                } else if (getText() != null) {
                     setTooltip(new Tooltip(getText()));
                 }
             }
@@ -400,14 +405,17 @@ public class JFXListCell<T> extends ListCell<T> {
     // indicate whether the sub list is expanded or not
     @Deprecated
     private BooleanProperty expandedProperty = new SimpleBooleanProperty(false);
+
     @Deprecated
     public BooleanProperty expandedProperty() {
         return expandedProperty;
     }
+
     @Deprecated
     public void setExpanded(boolean expand) {
         expandedProperty.set(expand);
     }
+
     @Deprecated
     public boolean isExpanded() {
         return expandedProperty.get();
