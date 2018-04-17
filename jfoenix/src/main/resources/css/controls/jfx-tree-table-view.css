@@ -82,10 +82,14 @@
 }
 
 
-.tree-table-row-cell > .tree-disclosure-node > .arrow {
+.tree-table-row-cell .tree-table-cell > .tree-disclosure-node > .arrow {
     -fx-background-color: -fx-text-fill;
     -fx-padding: 0.333333em 0.229em 0.333333em 0.229em; /* 4 */
     -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
+}
+
+.tree-table-row-cell:expanded .tree-table-cell > .tree-disclosure-node > .arrow {
+    -fx-rotate: 90;
 }
 
 .tree-table-row-cell .jfx-text-field,

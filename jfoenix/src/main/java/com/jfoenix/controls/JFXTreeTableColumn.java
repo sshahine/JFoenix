@@ -108,6 +108,7 @@ public class JFXTreeTableColumn<S, T> extends TreeTableColumn<S, T> {
                      && ((JFXTreeTableView<?>) param.getTreeTableView()).getGroupOrder().contains(this)
                      // make sure the node is a direct child to a group node
                      && param.getValue().getParent() != null
+                     && param.getValue().getParent().getValue() != null
                      && param.getValue().getParent().getValue().getClass() == RecursiveTreeObject.class
                  ));
     }

@@ -52,6 +52,7 @@ import java.util.function.Predicate;
 public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTableView<S> {
 
     private TreeItem<S> originalRoot;
+    private boolean internalSetRoot = false;
 
     /**
      * {@inheritDoc}
@@ -111,7 +112,12 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             if (getRoot() != null) {
                 setCurrentItemsCount(count(getRoot()));
             }
+            if(!internalSetRoot) {
+                originalRoot = getRoot();
+                reGroup();
+            }
         });
+
         // compute the current items count
         setCurrentItemsCount(count(getRoot()));
     }
@@ -203,6 +209,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                     originalRoot = getRoot();
                 }
                 for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) {
+                    if (groupOrder.contains(treeTableColumn)) {
+                        continue;
+                    }
                     groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
                 }
                 groupOrder.addAll(treeTableColumns);
@@ -248,7 +257,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                     originalRoot.getChildren().clear();
                     originalRoot.getChildren().setAll(children);
                     // reset the original root
+                    internalSetRoot = true;
                     setRoot(originalRoot);
+                    internalSetRoot = false;
                     getSelectionModel().select(0);
                     getSortOrder().addAll(sortOrder);
                     if (grouped.size() != 0) {
@@ -336,7 +347,9 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             JFXUtilities.runInFX(() -> {
                 ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
                 sortOrder.addAll(getSortOrder());
+                internalSetRoot = true;
                 setRoot(newParent);
+                internalSetRoot = false;
                 getSortOrder().addAll(sortOrder);
                 getSelectionModel().select(0);
             });

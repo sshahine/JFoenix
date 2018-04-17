@@ -22,10 +22,17 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.behavior.JFXTreeTableCellBehavior;
+import com.jfoenix.controls.cells.editors.base.JFXTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
 import com.sun.javafx.scene.control.skin.TableCellSkinBase;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 /**
@@ -41,6 +48,47 @@ public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<
         super(treeTableCell, new JFXTreeTableCellBehavior<>(treeTableCell));
         tableColumn = treeTableCell.getTableColumn();
         super.init(treeTableCell);
+    }
+
+    @Override
+    protected void updateChildren() {
+        super.updateChildren();
+        updateDisclosureNode();
+    }
+
+    private void updateDisclosureNode() {
+        Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
+        if (disclosureNode != null) {
+            TreeItem<S> item = getSkinnable().getTreeTableRow().getTreeItem();
+            boolean disclosureVisible = item != null && !item.isLeaf()
+                                        && item.getValue() != null
+                                        && ((RecursiveTreeObject) item.getValue()).getGroupedColumn() == tableColumn;
+            disclosureNode.setVisible(disclosureVisible);
+
+            if (!disclosureVisible) {
+                getChildren().remove(disclosureNode);
+            } else if (disclosureNode.getParent() == null) {
+                getChildren().add(disclosureNode);
+                disclosureNode.toFront();
+            } else {
+                disclosureNode.toBack();
+            }
+            if (disclosureNode.getScene() != null) {
+                disclosureNode.applyCss();
+            }
+        }
+    }
+
+    @Override
+    protected void layoutChildren(double x, double y, double w, double h) {
+        updateDisclosureNode();
+        Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
+        if (disclosureNode.isVisible()) {
+            Pos alighnment = getSkinnable().getAlignment();
+            alighnment = alighnment == null ? Pos.CENTER_LEFT : alighnment;
+            layoutInArea(disclosureNode, x + 8, y, w, h, 0, Insets.EMPTY, false, false, HPos.LEFT, VPos.CENTER);
+        }
+        super.layoutChildren(x, y, w, h);
     }
 
     @Override
@@ -84,27 +132,11 @@ public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<
             return leftPadding;
         }
 
-        // getTreeItemLevel ignore the group nodes level
-        treeColumn = treeTable.getTreeColumn() == null ? treeTable.getVisibleLeafColumn(0) : treeTable.getTreeColumn();
-        if (tableColumn == treeColumn) {
-            int nodeLevel = treeTable.getTreeItemLevel(treeItem);
-            if (!treeTable.isShowRoot()) {
-                nodeLevel--;
-            }
-            double indentPerLevel = 10;
-            if (treeTableRow.getSkin() instanceof JFXTreeTableRowSkin) {
-                indentPerLevel = ((JFXTreeTableRowSkin<?>) treeTableRow.getSkin()).getIndentationPerLevel();
-            }
-            leftPadding += nodeLevel * indentPerLevel;
+        Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
+        if (((JFXTreeTableColumn) tableColumn).isGrouped()) {
+            leftPadding += disclosureNode.prefWidth(-1) + 18;
         }
 
-        if (tableColumn == treeColumn || ((JFXTreeTableColumn<S, T>) tableColumn).isGrouped()) {
-            // add in the width of the disclosure node
-            if (JFXTreeTableRowSkin.disclosureWidthMap != null && JFXTreeTableRowSkin.disclosureWidthMap.containsKey(
-                treeTable)) {
-                leftPadding += JFXTreeTableRowSkin.disclosureWidthMap.get(treeTable);
-            }
-        }
         // adding in the width of the graphic on the tree item
         leftPadding += treeItem.getGraphic() == null ? 0 : treeItem.getGraphic().prefWidth(height);
 
