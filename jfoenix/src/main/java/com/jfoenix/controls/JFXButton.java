@@ -22,7 +22,6 @@ package com.jfoenix.controls;
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
-import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
@@ -66,7 +65,7 @@ public class JFXButton extends Button {
     /**
      * {@inheritDoc}
      */
-    public JFXButton(@NamedArg("text") String text) {
+    public JFXButton(String text) {
         super(text);
         initialize();
     }
@@ -74,7 +73,7 @@ public class JFXButton extends Button {
     /**
      * {@inheritDoc}
      */
-    public JFXButton(@NamedArg("text") String text, @NamedArg("graphic") Node graphic) {
+    public JFXButton(String text, Node graphic) {
         super(text, graphic);
         initialize();
     }
