@@ -20,6 +20,7 @@
 package com.jfoenix.svg;
 
 import com.sun.javafx.css.converters.SizeConverter;
+import javafx.beans.NamedArg;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -58,11 +59,11 @@ public class SVGGlyph extends Pane {
         this(null);
     }
 
-    public SVGGlyph(String svgPathContent) {
+    public SVGGlyph(@NamedArg("svgPathContent") String svgPathContent) {
         this(-1, "UNNAMED", svgPathContent, Color.BLACK);
     }
 
-    public SVGGlyph(String svgPathContent, Paint fill) {
+    public SVGGlyph(@NamedArg("svgPathContent") String svgPathContent, @NamedArg("fill") Paint fill) {
         this(-1, "UNNAMED", svgPathContent, fill);
     }
 
