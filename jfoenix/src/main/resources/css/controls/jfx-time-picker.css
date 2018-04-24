@@ -35,7 +35,17 @@
     -fx-padding: 1 8 1 8;
 }
 
-
 .jfx-time-picker > .arrow-button > .jfx-svg-glyph{
     -fx-background-color: -jfx-default-color;
+}
+
+.date-picker-popup > * > .spinner {
+    -fx-spacing: 0.25em; /* 3 */
+    -fx-alignment: CENTER;
+    -fx-fill-height: false;
+    -fx-background-color: transparent;
+}
+
+.date-picker-popup > * > .spinner > .label {
+    -fx-alignment: CENTER;
 }

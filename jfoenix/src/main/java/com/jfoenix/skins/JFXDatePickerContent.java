@@ -412,6 +412,11 @@ public class JFXDatePickerContent extends VBox {
         };
     }
 
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+    }
+
     ObjectProperty<YearMonth> displayedYearMonthProperty() {
         return selectedYearMonth;
     }
@@ -470,9 +475,8 @@ public class JFXDatePickerContent extends VBox {
         selectedDateLabel.setTextFill(Color.WHITE);
         selectedDateLabel.setFont(Font.font(ROBOTO, FontWeight.BOLD, 32));
         // selected date label container
-        HBox selectedDateContainer = new HBox();
+        HBox selectedDateContainer = new HBox(selectedDateLabel);
         selectedDateContainer.getStyleClass().add("spinner");
-        selectedDateContainer.getChildren().addAll(selectedDateLabel);
         selectedDateContainer.setAlignment(Pos.CENTER_LEFT);
         selectedDateContainer.setOnMouseClicked((click) -> {
             if (yearsListView.isVisible()) {
