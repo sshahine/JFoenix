@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class JFXKeyFrame {
 
     private Duration duration;
-    private final Set<JFXKeyValue> keyValues = new CopyOnWriteArraySet<>();
+    private final Set<JFXKeyValue<?>> keyValues = new CopyOnWriteArraySet<>();
 
     public JFXKeyFrame(Duration duration, JFXKeyValue... keyValues) {
         this.duration = duration;
@@ -48,7 +48,7 @@ public class JFXKeyFrame {
         return duration;
     }
 
-    public final Set<JFXKeyValue> getValues() {
+    public final Set<JFXKeyValue<?>> getValues() {
         return keyValues;
     }
 }

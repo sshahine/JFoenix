@@ -28,6 +28,7 @@ import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.WritableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -42,6 +43,8 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * JFXDrawer is material design implementation of drawer.
@@ -72,6 +75,11 @@ public class JFXDrawer extends StackPane {
             return numVal;
         }
     }
+
+    // used to add custom user animation to drawer animation
+    private List<JFXKeyValue<?>> animatedValues = new ArrayList<>();
+    private HashMap<WritableValue<?>, ValueWrapper<?>> initValues = new HashMap<>();
+    private HashMap<WritableValue<?>, Object> currentValue = new HashMap<>();
 
     // nodes
     private StackPane overlayPane = new StackPane();
@@ -191,6 +199,7 @@ public class JFXDrawer extends StackPane {
                 .setInterpolator(Interpolator.EASE_BOTH).build())
 
     );
+
 
     /**
      * creates empty drawer node
@@ -376,7 +385,6 @@ public class JFXDrawer extends StackPane {
         if (!isResizeContent()) {
             return 0;
         }
-
         if (hasMiniSize()) {
             return resizeTo;
         } else if (translateTo == 0 && tempDrawerSize > getDefaultDrawerSize()) {
@@ -532,6 +540,7 @@ public class JFXDrawer extends StackPane {
      * Starts the animation to transition this drawer to open.
      */
     public void open() {
+        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.open));
         translateTo = 0;
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
@@ -547,18 +556,20 @@ public class JFXDrawer extends StackPane {
             overlayPane.setMouseTransparent(true);
             fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
         });
+
         if (hasMiniSize()) {
             if(resizeTo != getMiniDrawerSize()){
                 resizeTo = getMiniDrawerSize();
-                translateTimer.reverseAndContinue();
+                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.close));
             }
         } else {
             updateTempDrawerSize();
             if (translateTo != initTranslate.get()) {
                 translateTo = initTranslate.get();
-                translateTimer.reverseAndContinue();
+                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.close));
             }
         }
+        translateTimer.reverseAndContinue();
     }
 
     /***************************************************************************
@@ -859,6 +870,15 @@ public class JFXDrawer extends StackPane {
                         opacity = opacity > 1 ? 1 : opacity;
                         opacity = opacity < 0 ? 0 : opacity;
                         overlayPane.setOpacity(opacity);
+                        // update user custom animation
+                        for (JFXKeyValue<?> value : animatedValues) {
+                            if (value.isValid()) {
+                                final WritableValue<?> target = value.getTarget();
+                                final ValueWrapper<?> initValue = initValues.get(target);
+                                ((WritableValue) target).setValue(value.getInterpolator()
+                                    .interpolate(initValue.open, initValue.close, 1 - opacity));
+                            }
+                        }
                         if (isResizeContent()) {
                             paddingSizeProperty.set(newSize);
                         }
@@ -897,6 +917,15 @@ public class JFXDrawer extends StackPane {
                         opacity = opacity > 1 ? 1 : opacity;
                         opacity = opacity < 0 ? 0 : opacity;
                         overlayPane.setOpacity(opacity);
+                        // update user custom animation
+                        for (JFXKeyValue<?> value : animatedValues) {
+                            if (value.isValid()) {
+                                final WritableValue<?> target = value.getTarget();
+                                final ValueWrapper<?> initValue = initValues.get(target);
+                                ((WritableValue) target).setValue(value.getInterpolator()
+                                    .interpolate(initValue.close, initValue.open, opacity));
+                            }
+                        }
                         if (isResizeContent()) {
                             paddingSizeProperty.set(newSize);
                         }
@@ -912,6 +941,8 @@ public class JFXDrawer extends StackPane {
         }
     };
 
+
+
     private EventHandler<MouseEvent> mousePressedHandler = (mouseEvent) -> {
         translateTimer.setOnFinished(null);
         translateTimer.stop();
@@ -923,7 +954,6 @@ public class JFXDrawer extends StackPane {
         }
         startTranslate = translateProperty.get();
         startSize = sizeProperty.get();
-
     };
 
     private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent) -> {
@@ -957,6 +987,7 @@ public class JFXDrawer extends StackPane {
                 partialClose();
             }else if(prefSizeProperty.get() >= getDefaultDrawerSize()){
                 resizeTo = getDefaultDrawerSize();
+                overlayPane.setMouseTransparent(!isOverLayVisible());
             }
         }else{
             if (direction * translateProperty.get() > direction * initTranslate.get() / 2) {
@@ -972,6 +1003,7 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialClose() {
+        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.close));
         translateTo = initTranslate.get();
         resizeTo = getMiniDrawerSize();
         translateTimer.setOnFinished(() -> {
@@ -982,11 +1014,35 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialOpen() {
+        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.open));
         translateTo = 0;
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
         translateTimer.start();
+    }
+
+    public <T> void addAnimatedKeyValue(Node node, WritableValue<T> target, T openValue, T closeValue) {
+        JFXKeyValue animatedValue = JFXKeyValue.builder()
+            .setEndValueSupplier(() -> currentValue.get(target))
+            .setAnimateCondition(()-> node.getScene()!=null)
+            .setTarget(target)
+            .setInterpolator(Interpolator.EASE_BOTH).build();
+        animatedValues.add(animatedValue);
+        translateTimer.addKeyFrame(new JFXKeyFrame(Duration.millis(450), animatedValue));
+        currentValue.put(target, isClosed() ? closeValue : openValue);
+        initValues.put(target, new ValueWrapper<>(openValue, closeValue));
+    }
+
+
+    private class ValueWrapper<T>{
+        T open;
+        T close;
+
+        public ValueWrapper(T start, T end) {
+            this.open = start;
+            this.close = end;
+        }
     }
 
     /***************************************************************************

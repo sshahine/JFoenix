@@ -44,13 +44,26 @@ public class JFXAnimationTimer extends AnimationTimer {
     private List<CacheMomento> caches = new ArrayList<>();
     private double totalElapsedMilliseconds;
 
+
     public JFXAnimationTimer(JFXKeyFrame... keyFrames) {
         for (JFXKeyFrame keyFrame : keyFrames) {
             Duration duration = keyFrame.getTime();
-            final Set<JFXKeyValue> keyValuesSet = keyFrame.getValues();
+            final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
             if (!keyValuesSet.isEmpty()) {
                 animationHandlers.add(new AnimationHandler(duration, keyFrame.getValues()));
             }
+        }
+    }
+
+    private HashMap<JFXKeyFrame, AnimationHandler> mutableFrames = new HashMap<>();
+
+    public void addKeyFrame(JFXKeyFrame keyFrame) {
+        Duration duration = keyFrame.getTime();
+        final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
+        if (!keyValuesSet.isEmpty()) {
+            final AnimationHandler handler = new AnimationHandler(duration, keyFrame.getValues());
+            animationHandlers.add(handler);
+            mutableFrames.put(keyFrame, handler);
         }
     }
 
@@ -151,13 +164,13 @@ public class JFXAnimationTimer extends AnimationTimer {
     class AnimationHandler {
         private double duration;
         private double currentDuration;
-        private Set<JFXKeyValue> keyValues;
+        private Set<JFXKeyValue<?>> keyValues;
         private boolean finished = false;
 
         private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
         private HashMap<WritableValue<?>, Object> endValuesMap = new HashMap<>();
 
-        public AnimationHandler(Duration duration, Set<JFXKeyValue> keyValues) {
+        public AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
             this.duration = duration.toMillis();
             currentDuration = this.duration;
             this.keyValues = keyValues;
@@ -196,7 +209,7 @@ public class JFXAnimationTimer extends AnimationTimer {
                     if (keyValue.isValid()) {
                         final WritableValue target = keyValue.getTarget();
                         final Object endValue = endValuesMap.get(target);
-                        if (target != null && !target.getValue().equals(endValue)) {
+                        if (endValue != null && target != null && !target.getValue().equals(endValue)) {
                             target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), endValue, now / currentDuration));
                         }
                     }
@@ -207,8 +220,9 @@ public class JFXAnimationTimer extends AnimationTimer {
                     for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            if (target != null) {
-                                target.setValue(endValuesMap.get(target));
+                            final Object endValue = endValuesMap.get(target);
+                            if (target != null && endValue != null) {
+                                target.setValue(endValue);
                             }
                         }
                     }
@@ -222,7 +236,7 @@ public class JFXAnimationTimer extends AnimationTimer {
                 if (keyValue.isValid()) {
                     final WritableValue target = keyValue.getTarget();
                     final Object endValue = keyValue.getEndValue();
-                    if (target != null && !target.getValue().equals(endValue)) {
+                    if (endValue != null && target != null && !target.getValue().equals(endValue)) {
                         target.setValue(endValue);
                     }
                 }
