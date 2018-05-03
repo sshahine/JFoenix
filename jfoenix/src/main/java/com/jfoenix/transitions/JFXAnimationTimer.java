@@ -39,20 +39,43 @@ import java.util.*;
 public class JFXAnimationTimer extends AnimationTimer {
 
     private Set<AnimationHandler> animationHandlers = new HashSet<>();
-    private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
     private long startTime = -1;
     private boolean running = false;
     private List<CacheMomento> caches = new ArrayList<>();
     private double totalElapsedMilliseconds;
 
+
     public JFXAnimationTimer(JFXKeyFrame... keyFrames) {
         for (JFXKeyFrame keyFrame : keyFrames) {
             Duration duration = keyFrame.getTime();
-            final Set<JFXKeyValue> keyValuesSet = keyFrame.getValues();
+            final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
             if (!keyValuesSet.isEmpty()) {
                 animationHandlers.add(new AnimationHandler(duration, keyFrame.getValues()));
             }
         }
+    }
+
+    private HashMap<JFXKeyFrame, AnimationHandler> mutableFrames = new HashMap<>();
+
+    public void addKeyFrame(JFXKeyFrame keyFrame) throws Exception {
+        if(isRunning()){
+            throw new Exception("Can't update animation timer while running");
+        }
+        Duration duration = keyFrame.getTime();
+        final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
+        if (!keyValuesSet.isEmpty()) {
+            final AnimationHandler handler = new AnimationHandler(duration, keyFrame.getValues());
+            animationHandlers.add(handler);
+            mutableFrames.put(keyFrame, handler);
+        }
+    }
+
+    public void removeKeyFrame(JFXKeyFrame keyFrame) throws Exception{
+        if(isRunning()){
+            throw new Exception("Can't update animation timer while running");
+        }
+        AnimationHandler handler = mutableFrames.get(keyFrame);
+        animationHandlers.remove(handler);
     }
 
     @Override
@@ -101,7 +124,9 @@ public class JFXAnimationTimer extends AnimationTimer {
     public void stop() {
         super.stop();
         running = false;
-        initialValuesMap.clear();
+        for (AnimationHandler handler : animationHandlers) {
+            handler.clear();
+        }
         for (CacheMomento cache : caches) {
             cache.restore();
         }
@@ -140,7 +165,6 @@ public class JFXAnimationTimer extends AnimationTimer {
     }
 
     public void dispose() {
-        initialValuesMap.clear();
         caches.clear();
         for (AnimationHandler handler : animationHandlers) {
             handler.dispose();
@@ -151,10 +175,13 @@ public class JFXAnimationTimer extends AnimationTimer {
     class AnimationHandler {
         private double duration;
         private double currentDuration;
-        private Set<JFXKeyValue> keyValues;
+        private Set<JFXKeyValue<?>> keyValues;
         private boolean finished = false;
 
-        public AnimationHandler(Duration duration, Set<JFXKeyValue> keyValues) {
+        private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
+        private HashMap<WritableValue<?>, Object> endValuesMap = new HashMap<>();
+
+        public AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
             this.duration = duration.toMillis();
             currentDuration = this.duration;
             this.keyValues = keyValues;
@@ -168,6 +195,9 @@ public class JFXAnimationTimer extends AnimationTimer {
                     if (!initialValuesMap.containsKey(keyValue.getTarget())) {
                         initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
                     }
+                    if (!endValuesMap.containsKey(keyValue.getTarget())) {
+                        endValuesMap.put(keyValue.getTarget(), keyValue.getEndValue());
+                    }
                 }
             }
         }
@@ -178,6 +208,7 @@ public class JFXAnimationTimer extends AnimationTimer {
             for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
                     initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
+                    endValuesMap.put(keyValue.getTarget(), keyValue.getEndValue());
                 }
             }
         }
@@ -188,8 +219,9 @@ public class JFXAnimationTimer extends AnimationTimer {
                 for (JFXKeyValue keyValue : keyValues) {
                     if (keyValue.isValid()) {
                         final WritableValue target = keyValue.getTarget();
-                        if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
-                            target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), keyValue.getEndValue(), now / currentDuration));
+                        final Object endValue = endValuesMap.get(target);
+                        if (endValue != null && target != null && !target.getValue().equals(endValue)) {
+                            target.setValue(keyValue.getInterpolator().interpolate(initialValuesMap.get(target), endValue, now / currentDuration));
                         }
                     }
                 }
@@ -199,8 +231,9 @@ public class JFXAnimationTimer extends AnimationTimer {
                     for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            if (target != null) {
-                                target.setValue(keyValue.getEndValue());
+                            final Object endValue = endValuesMap.get(target);
+                            if (target != null && endValue != null) {
+                                target.setValue(endValue);
                             }
                         }
                     }
@@ -209,19 +242,26 @@ public class JFXAnimationTimer extends AnimationTimer {
             }
         }
 
-        public void dispose() {
-            keyValues.clear();
-        }
-
         public void applyEndValues() {
             for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.isValid()) {
                     final WritableValue target = keyValue.getTarget();
-                    if (target != null && !target.getValue().equals(keyValue.getEndValue())) {
-                        target.setValue(keyValue.getEndValue());
+                    final Object endValue = keyValue.getEndValue();
+                    if (endValue != null && target != null && !target.getValue().equals(endValue)) {
+                        target.setValue(endValue);
                     }
                 }
             }
+        }
+
+        public void clear() {
+            initialValuesMap.clear();
+            endValuesMap.clear();
+        }
+
+        public void dispose() {
+            clear();
+            keyValues.clear();
         }
     }
 }

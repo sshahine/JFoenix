@@ -30,11 +30,11 @@ import java.util.function.Supplier;
  * @since 2017-09-21
  */
 
-public class JFXKeyValue {
+public class JFXKeyValue<T> {
 
-    private WritableValue<?> target;
-    private Supplier<WritableValue<?>> targetSupplier;
-    private Supplier<?> endValueSupplier;
+    private WritableValue<T> target;
+    private Supplier<WritableValue<T>> targetSupplier;
+    private Supplier<T> endValueSupplier;
     private Object endValue;
     private Supplier<Boolean> animateCondition = ()->true;
     private Interpolator interpolator;
@@ -58,8 +58,8 @@ public class JFXKeyValue {
         return interpolator;
     }
 
-    boolean isValid(){
-        return animateCondition.get();
+    public boolean isValid() {
+        return animateCondition == null ? true : animateCondition.get();
     }
 
     public static final class JFXKeyValueBuilder {
@@ -68,7 +68,7 @@ public class JFXKeyValue {
         private Supplier<?> endValueSupplier;
         private Object endValue;
         private Supplier<Boolean> animateCondition = ()->true;
-        private Interpolator interpolator;
+        private Interpolator interpolator = Interpolator.EASE_BOTH;
 
         private JFXKeyValueBuilder() {
         }

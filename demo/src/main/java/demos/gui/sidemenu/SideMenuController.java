@@ -84,6 +84,9 @@ public class SideMenuController {
     @ActionTrigger("nodeslist")
     private Label nodesList;
     @FXML
+    @ActionTrigger("highlighter")
+    private Label highlighter;
+    @FXML
     private JFXListView<Label> sideList;
 
     /**
@@ -122,6 +125,7 @@ public class SideMenuController {
         bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);
         bindNodeToController(spinner, SpinnerController.class, contentFlow, contentFlowHandler);
         bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(highlighter, HighlighterController.class, contentFlow, contentFlowHandler);
         bindNodeToController(chipview, ChipViewController.class, contentFlow, contentFlowHandler);
         bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
         bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);

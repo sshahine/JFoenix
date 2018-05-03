@@ -1043,13 +1043,23 @@
     -fx-background-color: #D34336;
 }
 
+.jfx-chips-popup {
+    -jfx-cell-limit: 3;
+}
+
 .jfx-chips-popup .autocomplete-list{
     -fx-fixed-cell-size: 32;
     -fx-background-insets: 0.0;
-    -fx-max-height: 200;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.26) , 5, 0.06, -1, 2 );
 }
 
 .jfx-chips-popup .autocomplete-list .jfx-list-cell{
     -fx-text-fill: rgba(0,0,0,.87);
 }
+
+.jfx-drawer .jfx-drawer-side-pane{
+    -fx-border-color: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0) 100%);
+    -fx-border-width: 0px 7px 0px 0px;
+    -fx-border-insets: 0px -7px 0px 0px;
+}
+

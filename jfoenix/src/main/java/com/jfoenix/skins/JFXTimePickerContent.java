@@ -138,6 +138,11 @@ public class JFXTimePickerContent extends VBox {
         }
     }
 
+    @Override
+    public String getUserAgentStylesheet() {
+        return getClass().getResource("/css/controls/jfx-time-picker.css").toExternalForm();
+    }
+
     protected BorderPane createContentPane(LocalTime time, boolean _24HourView) {
         Circle circle = new Circle(contentCircleRadius),
             selectionCircle = new Circle(contentCircleRadius / 6);

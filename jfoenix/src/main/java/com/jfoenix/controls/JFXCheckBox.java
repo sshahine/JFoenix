@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXCheckBoxSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import javafx.css.*;
 import javafx.css.converter.PaintConverter;
 import javafx.scene.control.CheckBox;
@@ -143,6 +144,37 @@ public class JFXCheckBox extends CheckBox {
         this.unCheckedColor.set(color);
     }
 
+    /**
+     * Disable the visual indicator for focus.
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXCheckBox.this,
+        "disableVisualFocus",
+        false);
+
+    /**
+     * Setting this property disables this {@link JFXCheckBox} from showing keyboard focus.
+     * @return A property that will disable visual focus if true and enable it if false.
+     */
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    /**
+     * Indicates whether or not this {@link JFXCheckBox} will show focus when it receives keyboard focus.
+     * @return False if this {@link JFXCheckBox} will show visual focus and true if it will not.
+     */
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    /**
+     * Setting this to true will disable this {@link JFXCheckBox} from showing focus when it receives keyboard focus.
+     * @param disabled True to disable visual focus and false to enable it.
+     */
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXCheckBox, Paint> CHECKED_COLOR =
@@ -171,7 +203,19 @@ public class JFXCheckBox extends CheckBox {
                     return control.unCheckedColorProperty();
                 }
             };
+        private static final CssMetaData<JFXCheckBox, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXCheckBox, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXCheckBox control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
 
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXCheckBox control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
@@ -179,7 +223,8 @@ public class JFXCheckBox extends CheckBox {
                 new ArrayList<>(CheckBox.getClassCssMetaData());
             Collections.addAll(styleables,
                 CHECKED_COLOR,
-                UNCHECKED_COLOR
+                UNCHECKED_COLOR,
+                DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }

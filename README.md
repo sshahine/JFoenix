@@ -32,11 +32,15 @@ Feel free to submit your project info to the following <a href="mailto:developer
 * <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * <a href="https://github.com/badarshahzad/Jfx-Browser">JFX-Browser</a>
+* <a href="https://github.com/huanghongxun/HMCL">HMCL</a> - Hello Minecraft! Launcher 
 * By <a href="https://github.com/anongrp">Anongrp</a> in several projects: 
 <a href="https://github.com/anongrp/Phony">Phony</a>,
 <a href="https://github.com/anongrp/ThunderGet">ThunderGet</a>,
 <a href="https://github.com/anongrp/Portume">Portume</a>
-* Other small projects <a href="https://github.com/mayuso/LoLPing2">LoLPing 2</a>,
+* By <a href="https://github.com/goxr3plus">GOXR3PLUS</a> in:
+<a href="https://github.com/goxr3plus/XR3Player">XR3Player</a>,
+<a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>,
+* Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 
@@ -69,7 +73,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.1'
+    compile 'com.jfoenix:jfoenix:8.0.3' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.3' // Java 9
 }
 ```
 
@@ -79,39 +84,65 @@ dependencies {
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>8.0.1</version>
+    <version>9.0.3</version>
+</dependency>
+
+<dependency>
+    <groupId>com.jfoenix</groupId>
+    <artifactId>jfoenix</artifactId>
+    <version>8.0.3</version>
 </dependency>
 ```
-# Pics
+# Components
+### [JFXButton](https://github.com/jfoenixadmin/JFoenix/wiki/Button)
 
 ![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
 
+### [JFXCheckBox](https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox)
+
 ![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
 
-![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Buton Demo")
+### [JFXToggleButton](https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button)
 
+![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
+
+### JFXDialog
 ![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
 
+### JFXListView
 ![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
 
+### JFXHighlighter
+![Alt text](http://jfoenix.com/gif/highlighter.gif "Highlighter")
+
+### JFXChipView
 ![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
 
+### JFXNodesList
 ![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 
+### JFXMasonryPane
 ![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
 
+### [JFXSlider](https://github.com/jfoenixadmin/JFoenix/wiki/Slider)
 ![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
 
+### JFXSpinner
 ![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
 
+### JFXSnackbar
 ![Alt text](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
 
+### JFXColorPicker
 ![Alt text](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
 
+### JFXDatePicker
 ![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
 
+### JFXTimePicker
 ![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
 
+### JFXTreeTableView
 ![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
 
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")

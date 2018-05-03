@@ -19,8 +19,8 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.skins.JFXTreeTableRowSkin;
-import javafx.scene.control.Skin;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.css.PseudoClass;
 import javafx.scene.control.TreeTableRow;
 
 /**
@@ -31,17 +31,25 @@ import javafx.scene.control.TreeTableRow;
  * @since 2016-03-09
  */
 public class JFXTreeTableRow<T> extends TreeTableRow<T> {
-    /**
-     * {@inheritDoc}
-     */
-    public JFXTreeTableRow() {
-    }
+
+    private static final PseudoClass groupedClass = PseudoClass.getPseudoClass("grouped");
 
     /**
      * {@inheritDoc}
      */
+    public JFXTreeTableRow() {
+        // allow custom skin to grouped rows
+        itemProperty().addListener(observable -> {
+            T item = getItem();
+            pseudoClassStateChanged(groupedClass, item != null
+                                                  && item instanceof RecursiveTreeObject
+                                                  && item.getClass() == RecursiveTreeObject.class);
+        });
+    }
+
     @Override
-    protected Skin<?> createDefaultSkin() {
-        return new JFXTreeTableRowSkin<>(this);
+    protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
+        setDisclosureNode(null);
     }
 }
