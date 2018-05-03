@@ -21,11 +21,15 @@ package com.jfoenix.controls;
 
 import com.jfoenix.controls.events.JFXAutoCompleteEvent;
 import com.jfoenix.skins.JFXAutoCompletePopupSkin;
+import com.sun.javafx.css.converters.SizeConverter;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.css.*;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
@@ -36,6 +40,9 @@ import javafx.scene.layout.Region;
 import javafx.stage.Window;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -43,7 +50,7 @@ import java.util.function.Predicate;
  * suggestions according to some predicate.
  *
  * @author Shadi Shaheen
- * @version 1.0.0
+ * @version 1.1.0
  * @since 2018-02-01
  */
 public class JFXAutoCompletePopup<T> extends PopupControl {
@@ -53,11 +60,13 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
     private final FilteredList<T> filteredData = new FilteredList<T>(suggestions, s -> true);
     private final ObjectProperty<Callback<ListView<T>, ListCell<T>>> suggestionsCellFactory = new SimpleObjectProperty<Callback<ListView<T>, ListCell<T>>>();
 
+    private static final String DEFAULT_STYLE_CLASS = "jfx-autocomplete-popup";
+
     public JFXAutoCompletePopup() {
-        this.setAutoFix(true);
-        this.setAutoHide(true);
-        this.setHideOnEscape(true);
-        this.getStyleClass().add("autocomplete-popup");
+        setAutoFix(true);
+        setAutoHide(true);
+        setHideOnEscape(true);
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
     @Override
@@ -113,4 +122,75 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
         this.suggestionsCellFactoryProperty().set(suggestionsCellFactory);
     }
 
+    /**
+     * limits the number of cells to be shown, used to compute the list size
+     */
+    private IntegerProperty cellLimit = new SimpleStyleableIntegerProperty(StyleableProperties.CELL_LIMIT,
+        JFXAutoCompletePopup.this, "cellLimit", 10);
+    public final void setCellLimit(int value) {
+        cellLimitProperty().set(value);
+    }
+    public final int getCellLimit() { return cellLimitProperty().get(); }
+    public final IntegerProperty cellLimitProperty() { return cellLimit; }
+
+    /**
+     * cell size, used to compute the list size
+     */
+    private DoubleProperty fixedCellSize = new SimpleStyleableDoubleProperty(StyleableProperties.FIXED_CELL_SIZE,
+        JFXAutoCompletePopup.this, "fixedCellSize", 24d);
+
+    public final void setFixedCellSize(double value) {
+        fixedCellSizeProperty().set(value);
+    }
+    public final double getFixedCellSize() { return fixedCellSizeProperty().get(); }
+    public final DoubleProperty fixedCellSizeProperty() { return fixedCellSize; }
+
+
+    private static class StyleableProperties {
+        private static final CssMetaData<JFXAutoCompletePopup<?>,Number> FIXED_CELL_SIZE =
+            new CssMetaData<JFXAutoCompletePopup<?>, Number>("-fx-fixed-cell-size",
+                SizeConverter.getInstance(), 24) {
+                @Override public Double getInitialValue(JFXAutoCompletePopup<?> popup) {
+                    return popup.getFixedCellSize();
+                }
+                @Override public boolean isSettable(JFXAutoCompletePopup<?> popup) {
+                    return popup.fixedCellSize == null || !popup.fixedCellSize.isBound();
+                }
+                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup<?> popup) {
+                    return (StyleableProperty<Number>) popup.fixedCellSizeProperty();
+                }
+            };
+        private static final CssMetaData<JFXAutoCompletePopup<?>, Number> CELL_LIMIT =
+            new CssMetaData<JFXAutoCompletePopup<?>, Number>("-jfx-cell-limit",
+                SizeConverter.getInstance(), 10) {
+                @Override public Number getInitialValue(JFXAutoCompletePopup<?> popup) {
+                    return popup.getCellLimit();
+                }
+                @Override public boolean isSettable(JFXAutoCompletePopup<?> popup) {
+                    return popup.cellLimit == null || !popup.cellLimit.isBound();
+                }
+                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup<?> popup) {
+                    return (StyleableProperty<Number>) popup.cellLimitProperty();
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<CssMetaData<? extends Styleable, ?>>(PopupControl.getClassCssMetaData());
+            styleables.add(FIXED_CELL_SIZE);
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.STYLEABLES;
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return getClassCssMetaData();
+    }
 }
