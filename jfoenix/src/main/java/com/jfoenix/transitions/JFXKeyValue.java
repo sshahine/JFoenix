@@ -58,8 +58,8 @@ public class JFXKeyValue<T> {
         return interpolator;
     }
 
-    public boolean isValid(){
-        return animateCondition.get();
+    public boolean isValid() {
+        return animateCondition == null ? true : animateCondition.get();
     }
 
     public static final class JFXKeyValueBuilder {
@@ -68,7 +68,7 @@ public class JFXKeyValue<T> {
         private Supplier<?> endValueSupplier;
         private Object endValue;
         private Supplier<Boolean> animateCondition = ()->true;
-        private Interpolator interpolator;
+        private Interpolator interpolator = Interpolator.EASE_BOTH;
 
         private JFXKeyValueBuilder() {
         }

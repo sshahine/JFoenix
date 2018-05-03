@@ -57,7 +57,10 @@ public class JFXAnimationTimer extends AnimationTimer {
 
     private HashMap<JFXKeyFrame, AnimationHandler> mutableFrames = new HashMap<>();
 
-    public void addKeyFrame(JFXKeyFrame keyFrame) {
+    public void addKeyFrame(JFXKeyFrame keyFrame) throws Exception {
+        if(isRunning()){
+            throw new Exception("Can't update animation timer while running");
+        }
         Duration duration = keyFrame.getTime();
         final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
         if (!keyValuesSet.isEmpty()) {
@@ -65,6 +68,14 @@ public class JFXAnimationTimer extends AnimationTimer {
             animationHandlers.add(handler);
             mutableFrames.put(keyFrame, handler);
         }
+    }
+
+    public void removeKeyFrame(JFXKeyFrame keyFrame) throws Exception{
+        if(isRunning()){
+            throw new Exception("Can't update animation timer while running");
+        }
+        AnimationHandler handler = mutableFrames.get(keyFrame);
+        animationHandlers.remove(handler);
     }
 
     @Override
