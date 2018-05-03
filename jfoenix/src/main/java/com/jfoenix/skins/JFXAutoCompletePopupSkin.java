@@ -53,7 +53,8 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
     public JFXAutoCompletePopupSkin(JFXAutoCompletePopup<T> control) {
         this.control = control;
         suggestionList = new ListView<T>(control.getFilteredSuggestions());
-        suggestionList.fixedCellSizeProperty().bind(control.fixedCellSizeProperty());
+        suggestionList.setFixedCellSize(control.getFixedCellSize());
+        control.fixedCellSizeProperty().addListener(observable -> suggestionList.setFixedCellSize(control.getFixedCellSize()));
         suggestionList.getItems().addListener((InvalidationListener) observable -> updateListHeight());
         suggestionList.getStyleClass().add("autocomplete-list");
         control.suggestionsCellFactoryProperty().addListener((o, oldVal, newVal) -> {
@@ -141,8 +142,7 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
 
     private void updateListHeight() {
         final double height = Math.min(suggestionList.getItems().size(), getSkinnable().getCellLimit()) * suggestionList.getFixedCellSize();
-        suggestionList.setPrefHeight(height);
-        suggestionList.setMaxHeight(height);
+        suggestionList.setPrefHeight(height + suggestionList.getFixedCellSize() / 2);
     }
 
     private void selectItem() {

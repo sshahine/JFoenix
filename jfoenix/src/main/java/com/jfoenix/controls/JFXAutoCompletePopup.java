@@ -63,6 +63,9 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
     private static final String DEFAULT_STYLE_CLASS = "jfx-autocomplete-popup";
 
     public JFXAutoCompletePopup() {
+        super();
+        bridge = new CSSBridge();
+        getContent().setAll(bridge);
         setAutoFix(true);
         setAutoHide(true);
         setHideOnEscape(true);
@@ -146,31 +149,39 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
     public final DoubleProperty fixedCellSizeProperty() { return fixedCellSize; }
 
 
+    private final class CSSBridge extends PopupControl.CSSBridge {
+        private JFXAutoCompletePopup popup = JFXAutoCompletePopup.this;
+        CSSBridge() {
+            super();
+        }
+    }
+
+
     private static class StyleableProperties {
-        private static final CssMetaData<JFXAutoCompletePopup<?>,Number> FIXED_CELL_SIZE =
-            new CssMetaData<JFXAutoCompletePopup<?>, Number>("-fx-fixed-cell-size",
+        private static final CssMetaData<JFXAutoCompletePopup.CSSBridge,Number> FIXED_CELL_SIZE =
+            new CssMetaData<JFXAutoCompletePopup.CSSBridge, Number>("-fx-fixed-cell-size",
                 SizeConverter.getInstance(), 24) {
-                @Override public Double getInitialValue(JFXAutoCompletePopup<?> popup) {
-                    return popup.getFixedCellSize();
+                @Override public Double getInitialValue(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return bridge.popup.getFixedCellSize();
                 }
-                @Override public boolean isSettable(JFXAutoCompletePopup<?> popup) {
-                    return popup.fixedCellSize == null || !popup.fixedCellSize.isBound();
+                @Override public boolean isSettable(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return bridge.popup.fixedCellSize == null || !bridge.popup.fixedCellSize.isBound();
                 }
-                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup<?> popup) {
-                    return (StyleableProperty<Number>) popup.fixedCellSizeProperty();
+                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return (StyleableProperty<Number>) bridge.popup.fixedCellSizeProperty();
                 }
             };
-        private static final CssMetaData<JFXAutoCompletePopup<?>, Number> CELL_LIMIT =
-            new CssMetaData<JFXAutoCompletePopup<?>, Number>("-jfx-cell-limit",
+        private static final CssMetaData<JFXAutoCompletePopup.CSSBridge, Number> CELL_LIMIT =
+            new CssMetaData<JFXAutoCompletePopup.CSSBridge, Number>("-jfx-cell-limit",
                 SizeConverter.getInstance(), 10) {
-                @Override public Number getInitialValue(JFXAutoCompletePopup<?> popup) {
-                    return popup.getCellLimit();
+                @Override public Number getInitialValue(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return bridge.popup.getCellLimit();
                 }
-                @Override public boolean isSettable(JFXAutoCompletePopup<?> popup) {
-                    return popup.cellLimit == null || !popup.cellLimit.isBound();
+                @Override public boolean isSettable(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return bridge.popup.cellLimit == null || !bridge.popup.cellLimit.isBound();
                 }
-                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup<?> popup) {
-                    return (StyleableProperty<Number>) popup.cellLimitProperty();
+                @Override public StyleableProperty<Number> getStyleableProperty(JFXAutoCompletePopup.CSSBridge bridge) {
+                    return (StyleableProperty<Number>) bridge.popup.cellLimitProperty();
                 }
             };
 
@@ -180,6 +191,7 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<CssMetaData<? extends Styleable, ?>>(PopupControl.getClassCssMetaData());
             styleables.add(FIXED_CELL_SIZE);
+            styleables.add(CELL_LIMIT);
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }

@@ -23,15 +23,13 @@ public class ChipViewController {
     @PostConstruct
     public void init() throws Exception {
 
-        chipView.setChipFactory((emailJFXChipView, email) -> {
-            return new JFXDefaultChip<MyShape>(emailJFXChipView, email){
-                {
-                    if (getItem().image != null) {
-                        getItem().image.getStyleClass().add("chip-icon");
-                        root.getChildren().add(0, getItem().image);
-                    }
+        chipView.setChipFactory((emailJFXChipView, email) -> new JFXDefaultChip<MyShape>(emailJFXChipView, email){
+            {
+                if (getItem().image != null) {
+                    getItem().image.getStyleClass().add("chip-icon");
+                    root.getChildren().add(0, getItem().image);
                 }
-            };
+            }
         });
 
         HashMap<String, MyShape> suggestions = new HashMap<>();
@@ -56,9 +54,7 @@ public class ChipViewController {
             }
         });
         chipView.getSuggestions().addAll(suggestions.values());
-        chipView.setSuggestionsCellFactory(param -> {
-            return new JFXListCell<>();
-        });
+        chipView.setSuggestionsCellFactory(param -> new JFXListCell<>());
 
         JFXDepthManager.setDepth(chipView, 2);
     }
