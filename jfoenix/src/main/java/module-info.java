@@ -34,6 +34,7 @@ module com.jfoenix{
     exports com.jfoenix.animation;
     exports com.jfoenix.transitions.hamburger;
     exports com.jfoenix.concurrency;
+    exports com.jfoenix.utils;
 
     exports com.jfoenix.controls.datamodels.treetable;
     exports com.jfoenix.controls.events;

@@ -41,7 +41,9 @@ task myJavadocs(type: Javadoc) {
         .setValue(["javafx.base/com.sun.javafx.event=com.jfoenix",
                    "javafx.base/com.sun.javafx.binding=com.jfoenix",
                    "javafx.graphics/com.sun.javafx.scene=com.jfoenix",
+                   "javafx.graphics/com.sun.javafx.scene.text=com.jfoenix",
                    "javafx.graphics/com.sun.javafx.stage=com.jfoenix",
+                   "javafx.graphics/com.sun.javafx.geom=com.jfoenix",
                    "javafx.graphics/com.sun.javafx.util=com.jfoenix",
                    "javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
                    "javafx.controls/com.sun.javafx.scene.control=com.jfoenix"])

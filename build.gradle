@@ -60,6 +60,8 @@ subprojects {
                     '--module-path', classpath.asPath,
                     // For various usages of TraversalEngine
                     "--add-exports=javafx.graphics/com.sun.javafx.scene=com.jfoenix",
+                    "--add-exports=javafx.graphics/com.sun.javafx.scene.text=com.jfoenix",
+                    "--add-exports=javafx.graphics/com.sun.javafx.geom=com.jfoenix",
                     "--add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix",
                     "--add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix",
 

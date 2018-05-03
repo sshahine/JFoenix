@@ -18,10 +18,9 @@
  */
 
 package com.jfoenix.controls;
-
 import com.jfoenix.controls.events.JFXAutoCompleteEvent;
 import com.jfoenix.skins.JFXAutoCompletePopupSkin;
-import com.sun.javafx.css.converters.SizeConverter;
+import com.sun.javafx.stage.PopupWindowHelper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -30,6 +29,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.css.*;
+import javafx.css.converter.SizeConverter;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
@@ -65,7 +65,7 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
     public JFXAutoCompletePopup() {
         super();
         bridge = new CSSBridge();
-        getContent().setAll(bridge);
+        PopupWindowHelper.getContent(this).setAll(new Node[]{this.bridge});
         setAutoFix(true);
         setAutoHide(true);
         setHideOnEscape(true);

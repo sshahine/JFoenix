@@ -52,7 +52,7 @@ public class JFXTreeTableCellSkin<S, T> extends TreeTableCellSkin<S, T> {
             TreeItem<S> item = getSkinnable().getTreeTableRow().getTreeItem();
             boolean disclosureVisible = item != null && !item.isLeaf()
                                         && item.getValue() != null
-                                        && ((RecursiveTreeObject) item.getValue()).getGroupedColumn() == tableColumn;
+                                        && ((RecursiveTreeObject) item.getValue()).getGroupedColumn() == getTableColumn();
             disclosureNode.setVisible(disclosureVisible);
 
             if (!disclosureVisible) {
@@ -72,13 +72,15 @@ public class JFXTreeTableCellSkin<S, T> extends TreeTableCellSkin<S, T> {
     @Override
     protected void layoutChildren(double x, double y, double w, double h) {
         updateDisclosureNode();
+        double disclosureWidth = 0;
         Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
         if (disclosureNode.isVisible()) {
             Pos alighnment = getSkinnable().getAlignment();
             alighnment = alighnment == null ? Pos.CENTER_LEFT : alighnment;
             layoutInArea(disclosureNode, x + 8, y, w, h, 0, Insets.EMPTY, false, false, HPos.LEFT, VPos.CENTER);
+            disclosureWidth = disclosureNode.getLayoutBounds().getWidth() + 18;
         }
-        super.layoutChildren(x, y, w, h);
+        super.layoutChildren(x + disclosureWidth, y, w - disclosureWidth, h);
     }
 
     // compute the padding of disclosure node

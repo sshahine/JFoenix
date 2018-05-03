@@ -20,12 +20,10 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.skins.JFXCheckBoxSkin;
-import com.sun.javafx.css.converters.BooleanConverter;
 import javafx.css.*;
+import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
