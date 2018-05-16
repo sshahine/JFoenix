@@ -396,7 +396,7 @@ public class JFXDrawer extends StackPane {
         } else if (translateTo == initTranslate.get()) {
             return 0;
         } else {
-            return defaultSizeProperty.get() + getDirection().doubleValue() * translateTo;
+            return getDefaultDrawerSize() + getDirection().doubleValue() * translateTo;
         }
     }
 
@@ -1020,7 +1020,7 @@ public class JFXDrawer extends StackPane {
     private void partialOpen() {
         initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getOpenValueSupplier()));
         translateTo = 0;
-        resizeTo = getDefaultDrawerSize();
+        resizeTo = tempDrawerSize = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
         translateTimer.start();
