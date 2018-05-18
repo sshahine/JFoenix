@@ -73,8 +73,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.3' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.3' // Java 9
+    compile 'com.jfoenix:jfoenix:8.0.4' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.4' // Java 9
 }
 ```
 
@@ -84,13 +84,13 @@ dependencies {
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>9.0.3</version>
+    <version>9.0.4</version>
 </dependency>
 
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>8.0.3</version>
+    <version>8.0.4</version>
 </dependency>
 ```
 # Components
