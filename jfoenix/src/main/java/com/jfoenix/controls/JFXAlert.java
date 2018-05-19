@@ -24,14 +24,13 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.animation.Animation;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventDispatchChain;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
@@ -41,6 +40,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 /**
  * JFXAlert is similar to {@link JFXDialog} control, however it extends JavaFX {@link Dialog}
@@ -55,19 +55,16 @@ public class JFXAlert<R> extends Dialog<R> {
 
     private final StackPane contentContainer;
     private StackPane overlay;
+    private InvalidationListener widthListener;
+    private InvalidationListener heightListener;
+    private InvalidationListener xListener;
+    private InvalidationListener yListener;
 
     public JFXAlert() {
         this(null);
     }
 
     public JFXAlert(Stage stage) {
-        // set the stage to transparent
-        initStyle(StageStyle.TRANSPARENT);
-
-        if(stage!=null) {
-            initOwner(stage);
-        }
-
         // create custom dialog pane
         setDialogPane(new DialogPane() {
             {
@@ -76,12 +73,12 @@ public class JFXAlert<R> extends Dialog<R> {
                 closeButton.managedProperty().bind(closeButton.visibleProperty());
                 closeButton.setVisible(false);
             }
+
             @Override
             protected Node createButtonBar() {
                 return null;
             }
         });
-
 
         // init style for the content container
         contentContainer = new StackPane();
@@ -90,14 +87,18 @@ public class JFXAlert<R> extends Dialog<R> {
         // set dialog pane content
         final Node materialNode = JFXDepthManager.createMaterialNode(contentContainer, 2);
         materialNode.setPickOnBounds(false);
-        materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event->event.consume());
+        materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> event.consume());
 
         // customize dialogPane
         final DialogPane dialogPane = getDialogPane();
         dialogPane.getScene().setFill(Color.TRANSPARENT);
         dialogPane.setStyle("-fx-background-color: transparent;");
 
-        if(stage!=null) {
+        if (stage != null) {
+            // set the stage to transparent
+            initStyle(StageStyle.TRANSPARENT);
+            initOwner(stage);
+
             // init style for overlay
             overlay = new StackPane(materialNode) {
                 public String getUserAgentStylesheet() {
@@ -110,29 +111,29 @@ public class JFXAlert<R> extends Dialog<R> {
                     hideWithAnimation();
                 }
             });
+
             dialogPane.setContent(overlay);
-
-            dialogPane.prefWidthProperty().bind(stage.getScene().widthProperty());
-            dialogPane.prefHeightProperty().bind(stage.getScene().heightProperty());
-
-            updateX(stage, dialogPane);
-            updateY(stage, dialogPane);
             // bind dialog position to stage position
-            stage.getScene().widthProperty().addListener(observable -> updateSize(dialogPane));
-            stage.getScene().heightProperty().addListener(observable -> updateSize(dialogPane));
-            stage.xProperty().addListener((observable, oldValue, newValue) -> updateX(stage, dialogPane));
-            stage.yProperty().addListener((observable, oldValue, newValue) -> updateY(stage, dialogPane));
-        }else{
+            widthListener = observable -> updateWidth();
+            heightListener = observable -> updateHeight();
+            xListener = observable -> updateX();
+            yListener = observable -> updateY();
+        } else {
             dialogPane.setContent(materialNode);
         }
 
-        // handle animation
+        // handle animation / owner stage layout changes
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
             if (getAnimation() != null) {
+                addLayoutListeners();
+                overlay.setOpacity(0);
                 getAnimation().initAnimation(contentContainer.getParent(), dialogPane.getContent());
             }
         });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWN, event -> {
+            if (getOwner() != null) {
+                updateLayout();
+            }
             if (getAnimation() != null) {
                 Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), dialogPane.getContent());
                 if (animation != null) {
@@ -140,22 +141,58 @@ public class JFXAlert<R> extends Dialog<R> {
                 }
             }
         });
+        eventHandlerManager.addEventHandler(DialogEvent.DIALOG_HIDDEN, event -> removeLayoutListeners());
     }
 
-    private void updateY(Stage stage, DialogPane dialogPane) {
-        if(dialogPane.getScene()!=null) {
-            final Parent root = stage.getScene().getRoot();
-            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
-            dialogPane.getScene().getWindow().setY(screenBounds.getMinY());
+
+    private void removeLayoutListeners() {
+        Window stage = getOwner();
+        if (stage != null) {
+            stage.getScene().widthProperty().removeListener(widthListener);
+            stage.getScene().heightProperty().removeListener(heightListener);
+            stage.xProperty().removeListener(xListener);
+            stage.yProperty().removeListener(yListener);
         }
     }
 
-    private void updateX(Stage stage, DialogPane dialogPane) {
-        if(dialogPane.getScene()!=null) {
-            final Parent root = stage.getScene().getRoot();
-            final Bounds screenBounds = root.localToScreen(root.getLayoutBounds());
-            dialogPane.getScene().getWindow().setX(screenBounds.getMinX());
+    private void addLayoutListeners() {
+        Window stage = getOwner();
+        if (stage != null) {
+            if (widthListener == null) {
+                throw new RuntimeException("Owner can only be set using the constructor");
+            }
+            stage.getScene().widthProperty().addListener(widthListener);
+            stage.getScene().heightProperty().addListener(heightListener);
+            stage.xProperty().addListener(xListener);
+            stage.yProperty().addListener(yListener);
         }
+    }
+
+    private void updateLayout() {
+        updateX();
+        updateY();
+        updateWidth();
+        updateHeight();
+    }
+
+    private void updateHeight() {
+        Window stage = getOwner();
+        setHeight(stage.getScene().getHeight());
+    }
+
+    private void updateWidth() {
+        Window stage = getOwner();
+        setWidth(stage.getScene().getWidth());
+    }
+
+    private void updateY() {
+        Window stage = getOwner();
+        setY(stage.getY() + stage.getScene().getY());
+    }
+
+    private void updateX() {
+        Window stage = getOwner();
+        setX(stage.getX() + stage.getScene().getX());
     }
 
 
@@ -163,7 +200,7 @@ public class JFXAlert<R> extends Dialog<R> {
 
     /**
      * play the hide animation for the dialog, as the java hide method is set to final
-     * can not be overridden
+     * so it can not be overridden
      */
     public void hideWithAnimation() {
         if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
@@ -180,12 +217,6 @@ public class JFXAlert<R> extends Dialog<R> {
                     Platform.runLater(this::hide);
                 }
             }
-        }
-    }
-
-    private void updateSize(DialogPane dialogPane) {
-        if (dialogPane.getScene() != null) {
-            dialogPane.getScene().getWindow().sizeToScene();
         }
     }
 
@@ -240,7 +271,7 @@ public class JFXAlert<R> extends Dialog<R> {
         this.animation.set(animation);
     }
 
-    public void setSize(double prefWidth, double prefHeight){
+    public void setSize(double prefWidth, double prefHeight) {
         contentContainer.setPrefSize(prefWidth, prefHeight);
     }
 }
