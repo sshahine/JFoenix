@@ -29,7 +29,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.Event;
 import javafx.event.EventDispatchChain;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -41,6 +45,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+
+import java.util.List;
 
 /**
  * JFXAlert is similar to {@link JFXDialog} control, however it extends JavaFX {@link Dialog}
@@ -54,7 +60,6 @@ import javafx.stage.Window;
 public class JFXAlert<R> extends Dialog<R> {
 
     private final StackPane contentContainer;
-    private StackPane overlay;
     private InvalidationListener widthListener;
     private InvalidationListener heightListener;
     private InvalidationListener xListener;
@@ -65,8 +70,17 @@ public class JFXAlert<R> extends Dialog<R> {
     }
 
     public JFXAlert(Stage stage) {
-        // create custom dialog pane
-        setDialogPane(new DialogPane() {
+        // create content
+        contentContainer = new StackPane();
+        contentContainer.getStyleClass().add("jfx-alert-content-container");
+        // add depth effect
+        final Node materialNode = JFXDepthManager.createMaterialNode(contentContainer, 2);
+        materialNode.setPickOnBounds(false);
+        materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, Event::consume);
+
+        // create custom dialog pane (will layout children in center)
+        final DialogPane dialogPane = new DialogPane() {
+            private boolean performingLayout = false;
             {
                 getButtonTypes().add(ButtonType.CLOSE);
                 Node closeButton = this.lookupButton(ButtonType.CLOSE);
@@ -75,59 +89,68 @@ public class JFXAlert<R> extends Dialog<R> {
             }
 
             @Override
+            public void requestLayout() {
+                if (performingLayout) {
+                    return;
+                }
+                super.requestLayout();
+            }
+
+            @Override
+            protected void layoutChildren() {
+                performingLayout = true;
+                List<Node> managed = getManagedChildren();
+                final double width = getWidth();
+                double height = getHeight();
+                double top = getInsets().getTop();
+                double right = getInsets().getRight();
+                double left = getInsets().getLeft();
+                double bottom = getInsets().getBottom();
+                double contentWidth = width - left - right;
+                double contentHeight = height - top - bottom;
+                for (Node child : managed) {
+                    layoutInArea(child, left, top, contentWidth, contentHeight,
+                        0, Insets.EMPTY, HPos.CENTER, VPos.CENTER);
+                }
+                performingLayout = false;
+            }
+
+            public String getUserAgentStylesheet() {
+                return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+            }
+
+            @Override
             protected Node createButtonBar() {
                 return null;
             }
-        });
-
-        // init style for the content container
-        contentContainer = new StackPane();
-        contentContainer.getStyleClass().add("jfx-alert-content-container");
-
-        // set dialog pane content
-        final Node materialNode = JFXDepthManager.createMaterialNode(contentContainer, 2);
-        materialNode.setPickOnBounds(false);
-        materialNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> event.consume());
-
-        // customize dialogPane
-        final DialogPane dialogPane = getDialogPane();
+        };
+        dialogPane.getStyleClass().add("jfx-alert-overlay");
+        dialogPane.setContent(materialNode);
+        setDialogPane(dialogPane);
         dialogPane.getScene().setFill(Color.TRANSPARENT);
-        dialogPane.setStyle("-fx-background-color: transparent;");
 
         if (stage != null) {
             // set the stage to transparent
             initStyle(StageStyle.TRANSPARENT);
             initOwner(stage);
-
             // init style for overlay
-            overlay = new StackPane(materialNode) {
-                public String getUserAgentStylesheet() {
-                    return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
-                }
-            };
-            overlay.getStyleClass().add("jfx-alert-overlay");
-            overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            dialogPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (this.isOverlayClose()) {
                     hideWithAnimation();
                 }
             });
-
-            dialogPane.setContent(overlay);
             // bind dialog position to stage position
             widthListener = observable -> updateWidth();
             heightListener = observable -> updateHeight();
             xListener = observable -> updateX();
             yListener = observable -> updateY();
-        } else {
-            dialogPane.setContent(materialNode);
         }
 
         // handle animation / owner stage layout changes
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
             if (getAnimation() != null) {
                 addLayoutListeners();
-                overlay.setOpacity(0);
-                getAnimation().initAnimation(contentContainer.getParent(), dialogPane.getContent());
+                getAnimation().initAnimation(contentContainer.getParent(), dialogPane);
             }
         });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWN, event -> {
@@ -135,7 +158,7 @@ public class JFXAlert<R> extends Dialog<R> {
                 updateLayout();
             }
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), dialogPane.getContent());
+                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), dialogPane);
                 if (animation != null) {
                     animation.play();
                 }
@@ -205,7 +228,7 @@ public class JFXAlert<R> extends Dialog<R> {
     public void hideWithAnimation() {
         if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), getDialogPane().getContent());
+                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), getDialogPane());
                 if (animation != null) {
                     transition = animation;
                     animation.setOnFinished(finish -> {
