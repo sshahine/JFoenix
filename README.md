@@ -18,9 +18,9 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.1.jar) (9.x.x)
-* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1.jar) (8.x.x)
-* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.1-retrolambda.jar)
+* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.4.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.4.jar) (8.x.x)
+* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.4-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
@@ -73,8 +73,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.3' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.3' // Java 9
+    compile 'com.jfoenix:jfoenix:8.0.4' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.4' // Java 9
 }
 ```
 
@@ -84,13 +84,13 @@ dependencies {
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>9.0.3</version>
+    <version>9.0.4</version>
 </dependency>
 
 <dependency>
     <groupId>com.jfoenix</groupId>
     <artifactId>jfoenix</artifactId>
-    <version>8.0.3</version>
+    <version>8.0.4</version>
 </dependency>
 ```
 # Components
