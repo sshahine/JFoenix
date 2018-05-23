@@ -114,7 +114,7 @@ public class JFXHighlighter {
             }
         }
 
-        JFXUtilities.runInFXAndWait(()-> getParentChildren(pane).addAll(allRectangles));
+        Platform.runLater(()-> getParentChildren(pane).addAll(allRectangles));
     }
 
     private class HighLightRectangle extends Rectangle{
@@ -128,8 +128,9 @@ public class JFXHighlighter {
         }
 
         private void clear(Text text) {
-            if(boxes.get(text)!=null && !boxes.get(text).isEmpty())
-                Platform.runLater(() -> getParentChildren(parent).removeAll(boxes.get(text)));
+            final List<Rectangle> rectangles = boxes.get(text);
+            if(rectangles != null && !rectangles.isEmpty())
+                Platform.runLater(() -> getParentChildren(parent).removeAll(rectangles));
         }
     }
 
