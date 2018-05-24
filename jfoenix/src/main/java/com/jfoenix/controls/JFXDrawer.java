@@ -100,6 +100,7 @@ public class JFXDrawer extends StackPane {
     private double startMouse = -1;
     private double startTranslate = -1;
     private double startSize = -1;
+    private double contentMinSize = -1;
 
     // used to trigger the drawer events
     private boolean openCalled = false;
@@ -859,6 +860,7 @@ public class JFXDrawer extends StackPane {
             }
 
             double mouseDiff = startTranslate + eventPoint - startMouse;
+            final double sizeLimit = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? getWidth() : getHeight();
 
             if (directionValue * mouseDiff <= 0) {
                 // drawer close drag
@@ -883,7 +885,7 @@ public class JFXDrawer extends StackPane {
                             }
                         }
                         if (isResizeContent()) {
-                            paddingSizeProperty.set(newSize);
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
                         }
                     } else {
                         // animate <- when resize is finished
@@ -911,7 +913,7 @@ public class JFXDrawer extends StackPane {
                 // drawer open drag
                 if (resizable || hasMiniSize()) {
                     double newSize = startSize + directionValue * mouseDiff;
-                    if (newSize <= (getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? getWidth() : getHeight())) {
+                    if (newSize <= sizeLimit) {
                         // change the side drawer size after being shown
                         newSize = resizable ? newSize : (newSize < getDefaultDrawerSize() ? newSize : getDefaultDrawerSize());
                         maxSizeProperty.set(newSize);
@@ -930,7 +932,7 @@ public class JFXDrawer extends StackPane {
                             }
                         }
                         if (isResizeContent()) {
-                            paddingSizeProperty.set(newSize);
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
                         }
                     } else if (resizable) {
                         // bind the drawer size to its parent
@@ -958,6 +960,10 @@ public class JFXDrawer extends StackPane {
         }
         startTranslate = translateProperty.get();
         startSize = sizeProperty.get();
+        contentMinSize = -1;
+        if (isResizeContent()) {
+            contentMinSize = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? content.minWidth(-1) : content.minHeight(-1);
+        }
     };
 
     private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent) -> {
