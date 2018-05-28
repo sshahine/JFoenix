@@ -295,13 +295,16 @@ public class JFXRippler extends StackPane {
      * @return a runnable to release the ripple when needed
      */
     public Runnable createManualRipple() {
-        rippler.setGeneratorCenterX(control.getLayoutBounds().getWidth() / 2);
-        rippler.setGeneratorCenterY(control.getLayoutBounds().getHeight() / 2);
-        rippler.createRipple();
-        return () -> {
-            // create fade out transition for the ripple
-            releaseRipple();
-        };
+        if(!isRipplerDisabled()) {
+            rippler.setGeneratorCenterX(control.getLayoutBounds().getWidth() / 2);
+            rippler.setGeneratorCenterY(control.getLayoutBounds().getHeight() / 2);
+            rippler.createRipple();
+            return () -> {
+                // create fade out transition for the ripple
+                releaseRipple();
+            };
+        }
+        return () -> { };
     }
 
     /**
