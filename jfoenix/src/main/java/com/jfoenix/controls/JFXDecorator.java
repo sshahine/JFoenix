@@ -174,7 +174,7 @@ public class JFXDecorator extends VBox {
             updateInitMouseValues(mouseEvent));
 
         // show the drag cursor on the borders
-        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> showDragCursorOnTheborders(mouseEvent));
+        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> showDragCursorOnBorders(mouseEvent));
 
 
         // handle drag events on the decorator pane
@@ -361,7 +361,7 @@ public class JFXDecorator extends VBox {
         this.getChildren().addAll(buttonsContainer, contentPlaceHolder);
     }
 
-    private void showDragCursorOnTheborders(MouseEvent mouseEvent) {
+    private void showDragCursorOnBorders(MouseEvent mouseEvent) {
         if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
             this.setCursor(Cursor.DEFAULT);
             return; // maximized mode does not support resize
