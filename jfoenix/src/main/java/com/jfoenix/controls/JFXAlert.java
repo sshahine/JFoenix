@@ -39,6 +39,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.DialogPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -65,6 +67,8 @@ public class JFXAlert<R> extends Dialog<R> {
     private InvalidationListener xListener;
     private InvalidationListener yListener;
 
+    private boolean animateClosing = true;
+
     public JFXAlert() {
         this(null);
     }
@@ -81,11 +85,30 @@ public class JFXAlert<R> extends Dialog<R> {
         // create custom dialog pane (will layout children in center)
         final DialogPane dialogPane = new DialogPane() {
             private boolean performingLayout = false;
+
             {
                 getButtonTypes().add(ButtonType.CLOSE);
                 Node closeButton = this.lookupButton(ButtonType.CLOSE);
                 closeButton.managedProperty().bind(closeButton.visibleProperty());
                 closeButton.setVisible(false);
+            }
+
+            @Override
+            protected double computePrefHeight(double width) {
+                Window owner = getOwner();
+                if (owner != null) {
+                    return owner.getHeight();
+                }else
+                    return super.computePrefHeight(width);
+            }
+
+            @Override
+            protected double computePrefWidth(double height) {
+                Window owner = getOwner();
+                if (owner != null) {
+                    return owner.getWidth();
+                }else
+                    return super.computePrefWidth(height);
             }
 
             @Override
@@ -133,10 +156,11 @@ public class JFXAlert<R> extends Dialog<R> {
             // set the stage to transparent
             initStyle(StageStyle.TRANSPARENT);
             initOwner(stage);
+
             // init style for overlay
             dialogPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (this.isOverlayClose()) {
-                    hideWithAnimation();
+                    hide();
                 }
             });
             // bind dialog position to stage position
@@ -158,15 +182,29 @@ public class JFXAlert<R> extends Dialog<R> {
                 updateLayout();
             }
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createShowingAnimation(contentContainer.getParent(), dialogPane);
+                animateClosing = true;
+                Animation animation = getAnimation().createShowingAnimation(dialogPane.getContent(), dialogPane);
                 if (animation != null) {
                     animation.play();
                 }
             }
         });
+        eventHandlerManager.addEventHandler(DialogEvent.DIALOG_CLOSE_REQUEST, event -> {
+            if (animateClosing) {
+                event.consume();
+                hideWithAnimation();
+            }
+        });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_HIDDEN, event -> removeLayoutListeners());
-    }
 
+        getDialogPane().getScene().getWindow().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                if (!isHideOnEscape()) {
+                    keyEvent.consume();
+                }
+            }
+        });
+    }
 
     private void removeLayoutListeners() {
         Window stage = getOwner();
@@ -226,12 +264,13 @@ public class JFXAlert<R> extends Dialog<R> {
      * so it can not be overridden
      */
     public void hideWithAnimation() {
-        if(transition==null || transition.getStatus().equals(Animation.Status.STOPPED)){
+        if (transition == null || transition.getStatus().equals(Animation.Status.STOPPED)) {
             if (getAnimation() != null) {
-                Animation animation = getAnimation().createHidingAnimation(contentContainer.getParent(), getDialogPane());
+                Animation animation = getAnimation().createHidingAnimation(getDialogPane().getContent(), getDialogPane());
                 if (animation != null) {
                     transition = animation;
                     animation.setOnFinished(finish -> {
+                        animateClosing = false;
                         this.hide();
                         this.transition = null;
                     });
@@ -297,4 +336,19 @@ public class JFXAlert<R> extends Dialog<R> {
     public void setSize(double prefWidth, double prefHeight) {
         contentContainer.setPrefSize(prefWidth, prefHeight);
     }
+
+    private BooleanProperty hideOnEscape = new SimpleBooleanProperty(this, "hideOnEscape", true);
+
+    public final void setHideOnEscape(boolean value) {
+        hideOnEscape.set(value);
+    }
+
+    public final boolean isHideOnEscape() {
+        return hideOnEscape.get();
+    }
+
+    public final BooleanProperty hideOnEscapeProperty() {
+        return hideOnEscape;
+    }
+
 }
