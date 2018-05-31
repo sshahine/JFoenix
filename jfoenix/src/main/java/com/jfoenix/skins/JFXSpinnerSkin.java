@@ -258,6 +258,7 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
     }
 
     private void createTransition() {
+        if(!getSkinnable().isIndeterminate()) return;
         final Paint initialColor = arc.getStroke();
         if (initialColor == null) {
             arc.setStroke(blueColor);
