@@ -173,6 +173,11 @@ public class JFXMasonryPane extends Pane {
 
                     if (boundingBox != null) {
                         // handle children repositioning
+                        if (child.getWidth() != blockWidth || child.getHeight() != blockHeight) {
+                            child.setOpacity(0);
+                            child.setPrefSize(blockWidth, blockHeight);
+                            child.resizeRelocate(blockX, blockY, blockWidth, blockHeight);
+                        }
                         final KeyFrame keyFrame = new KeyFrame(Duration.millis(2000),
                             new KeyValue(child.opacityProperty(), 1, Interpolator.LINEAR),
                             new KeyValue(child.layoutXProperty(), blockX, Interpolator.LINEAR),
