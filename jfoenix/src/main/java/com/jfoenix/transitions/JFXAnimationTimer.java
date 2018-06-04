@@ -235,7 +235,8 @@ public class JFXAnimationTimer extends AnimationTimer {
                     for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            final Object endValue = endValuesMap.get(target);
+                            // set updated end value instead of cached
+                            final Object endValue = keyValue.getEndValue();
                             if (target != null && endValue != null) {
                                 target.setValue(endValue);
                             }
