@@ -3,6 +3,7 @@ package demos.components;
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
+import demos.components.base.Overdrive;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -24,32 +25,31 @@ import javafx.util.Duration;
 
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
-public class AlertDemo extends Application {
+public class AlertDemo extends Overdrive {
+
+    private Button leftButton;
 
     @Override
-    public void start(Stage stage) {
-
-        JFXDialogLayout layout = new JFXDialogLayout();
-        layout.setBody(new Label("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."));
-
-        Button leftButton = new JFXButton("Alert");
+    public Node build() {
+        leftButton = new JFXButton("Alert");
         leftButton.setLayoutX(50);
         leftButton.setLayoutY(50);
+        return new Group(leftButton);
+    }
 
-        final Scene scene = new Scene(new Group(leftButton), 800, 800);
-        stage.setScene(scene);
-        stage.setResizable(true);
-        stage.show();
-
+    @Override
+    protected void afterShow(Stage stage) {
+        JFXDialogLayout layout = new JFXDialogLayout();
+        layout.setBody(new Label("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."));
         JFXAlert<Void> alert = new JFXAlert<>(stage);
+        alert.setOverlayClose(true);
         alert.setAnimation(JFXAlertAnimation.CENTER_ANIMATION);
         alert.setContent(layout);
         alert.initModality(Modality.NONE);
-        leftButton.setOnAction(action-> alert.show());
+        leftButton.setOnAction(action-> alert.showAndWait());
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 }
