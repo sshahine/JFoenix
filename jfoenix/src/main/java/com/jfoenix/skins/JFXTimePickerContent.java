@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.animation.*;
 import javafx.beans.property.*;
@@ -140,7 +141,7 @@ public class JFXTimePickerContent extends VBox {
 
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-time-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     protected BorderPane createContentPane(LocalTime time, boolean _24HourView) {

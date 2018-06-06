@@ -29,6 +29,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+import com.jfoenix.JFoenixResources;
+
 /**
  * Default dialog layout according to material design guidelines.
  *
@@ -125,7 +127,7 @@ public class JFXDialogLayout extends StackPane {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-dialog-layout.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-dialog-layout.css").toExternalForm();
     }
 
     private void initialize() {

@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -162,7 +163,7 @@ public class JFXTextField extends TextField implements IFXTextInputControl {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-text-field";
-    private static final String USER_AGENT_STYLESHEET = JFXTextField.class.getResource("/com/jfoenix/css/controls/jfx-text-field.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-text-field.css").toExternalForm();
 
 
     /**

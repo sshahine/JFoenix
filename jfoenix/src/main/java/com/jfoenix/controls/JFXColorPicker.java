@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.skins.JFXColorPickerSkin;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Skin;
@@ -61,7 +62,7 @@ public class JFXColorPicker extends ColorPicker {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-color-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-color-picker.css").toExternalForm();
     }
 
 

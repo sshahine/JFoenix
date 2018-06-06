@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.skins.JFXToggleNodeSkin;
 import javafx.beans.DefaultProperty;
 import javafx.css.*;
@@ -78,7 +79,7 @@ public class JFXToggleNode extends ToggleButton {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-toggle-node.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-toggle-node.css").toExternalForm();
     }
 
     /***************************************************************************

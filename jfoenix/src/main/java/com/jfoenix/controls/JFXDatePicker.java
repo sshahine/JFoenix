@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.skins.JFXDatePickerSkin;
 import javafx.beans.property.ObjectProperty;
@@ -83,7 +84,7 @@ public class JFXDatePicker extends DatePicker {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-date-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     /**

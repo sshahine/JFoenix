@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.skins.JFXRadioButtonSkin;
 import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
@@ -93,7 +94,7 @@ public class JFXRadioButton extends RadioButton {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-radio-button";
-    private static final String USER_AGENT_STYLESHEET = JFXRadioButton.class.getResource("/com/jfoenix/css/controls/jfx-radio-button.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-radio-button.css").toExternalForm();
 
     /**
      * default color used when the radio button is selected

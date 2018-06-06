@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.JFoenixResources;
 import com.jfoenix.skins.JFXToggleButtonSkin;
 import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
@@ -99,7 +100,7 @@ public class JFXToggleButton extends ToggleButton {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/com/jfoenix/css/controls/jfx-toggle-button.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-toggle-button.css").toExternalForm();
     }
 
 
