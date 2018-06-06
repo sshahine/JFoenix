@@ -88,7 +88,7 @@ public class JFXChipView<T> extends Control {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-chip-view.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-chip-view.css").toExternalForm();
     }
 
     /**

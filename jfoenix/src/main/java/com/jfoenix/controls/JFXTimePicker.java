@@ -82,7 +82,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-time-picker.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     /**

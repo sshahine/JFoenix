@@ -102,7 +102,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-combo-box.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-combo-box.css").toExternalForm();
     }
 
     /**

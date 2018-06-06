@@ -143,7 +143,7 @@ public class JFXButton extends Button {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-button";
-    private static final String USER_AGENT_STYLESHEET = JFXButton.class.getResource("/css/controls/jfx-button.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFXButton.class.getResource("/com/jfoenix/css/controls/jfx-button.css").toExternalForm();
 
     public enum ButtonType {FLAT, RAISED}
 

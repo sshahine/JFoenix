@@ -156,7 +156,7 @@ public class JFXPasswordField extends PasswordField implements IFXTextInputContr
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-password-field";
-    private static final String USER_AGENT_STYLESHEET = JFXPasswordField.class.getResource("/css/controls/jfx-password-field.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFXPasswordField.class.getResource("/com/jfoenix/css/controls/jfx-password-field.css").toExternalForm();
 
     /**
      * set true to show a float the prompt text when focusing the field

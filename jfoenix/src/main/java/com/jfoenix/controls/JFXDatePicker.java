@@ -83,7 +83,7 @@ public class JFXDatePicker extends DatePicker {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     /**

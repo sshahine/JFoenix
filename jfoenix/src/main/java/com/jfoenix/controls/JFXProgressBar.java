@@ -63,7 +63,7 @@ public class JFXProgressBar extends ProgressBar {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-progress-bar.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-progress-bar.css").toExternalForm();
     }
 
     /**

@@ -99,7 +99,7 @@ public class JFXToggleButton extends ToggleButton {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-toggle-button.css").toExternalForm();
+        return getClass().getResource("/com/jfoenix/css/controls/jfx-toggle-button.css").toExternalForm();
     }
 
 

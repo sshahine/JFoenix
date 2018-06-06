@@ -157,7 +157,7 @@ public class JFXTextArea extends TextArea {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-text-area";
-    private static final String USER_AGENT_STYLESHEET = JFXTextArea.class.getResource("/css/controls/jfx-text-area.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFXTextArea.class.getResource("/com/jfoenix/css/controls/jfx-text-area.css").toExternalForm();
     /**
      * set true to show a float the prompt text when focusing the field
      */

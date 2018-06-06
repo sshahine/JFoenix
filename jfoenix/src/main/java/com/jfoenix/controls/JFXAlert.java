@@ -101,7 +101,7 @@ public class JFXAlert<R> extends Dialog<R> {
             // init style for overlay
             overlay = new StackPane(materialNode) {
                 public String getUserAgentStylesheet() {
-                    return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+                    return getClass().getResource("/com/jfoenix/css/controls/jfx-alert.css").toExternalForm();
                 }
             };
             overlay.getStyleClass().add("jfx-alert-overlay");
