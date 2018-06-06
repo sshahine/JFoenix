@@ -19,8 +19,8 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
 import com.jfoenix.animation.alert.JFXAlertAnimation;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.animation.Animation;

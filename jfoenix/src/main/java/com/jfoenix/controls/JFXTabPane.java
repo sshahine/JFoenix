@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXTabPaneSkin;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableBooleanProperty;

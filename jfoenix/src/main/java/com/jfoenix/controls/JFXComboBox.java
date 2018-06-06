@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
 import javafx.beans.property.ObjectProperty;

@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXTextAreaSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.property.ReadOnlyObjectProperty;

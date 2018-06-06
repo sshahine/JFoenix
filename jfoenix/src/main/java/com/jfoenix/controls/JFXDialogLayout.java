@@ -29,7 +29,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 
 /**
  * Default dialog layout according to material design guidelines.

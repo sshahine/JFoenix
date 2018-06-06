@@ -19,8 +19,8 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
 import com.jfoenix.adapters.ReflectionHelper;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXDatePickerSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;

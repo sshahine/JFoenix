@@ -19,7 +19,7 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.animation.*;
 import javafx.beans.property.*;

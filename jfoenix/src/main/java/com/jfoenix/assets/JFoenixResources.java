@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.jfoenix;
+package com.jfoenix.assets;
 
 import java.net.URL;
 

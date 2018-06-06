@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.JFoenixResources;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.IndicatorPositionConverter;
 import com.jfoenix.skins.JFXSliderSkin;
 import javafx.beans.binding.StringBinding;
