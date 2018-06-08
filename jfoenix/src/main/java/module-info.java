@@ -23,6 +23,7 @@ module com.jfoenix{
     requires java.xml;
     requires jdk.unsupported;
 
+    exports com.jfoenix.assets;
     exports com.jfoenix.controls;
     exports com.jfoenix.effects;
     exports com.jfoenix.responsive;
@@ -41,4 +42,8 @@ module com.jfoenix{
     exports com.jfoenix.controls.cells.editors;
     exports com.jfoenix.controls.cells.editors.base;
     exports com.jfoenix.animation.alert;
+
+    opens com.jfoenix.assets.css;
+    opens com.jfoenix.assets.css.controls;
+    opens com.jfoenix.assets.font.roboto;
 }

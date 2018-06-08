@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXTabPaneSkin;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableBooleanProperty;
@@ -49,7 +50,7 @@ public class JFXTabPane extends TabPane {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-tab-pane";
-    private static final String USER_AGENT_STYLESHEET = JFXTabPane.class.getResource("/css/controls/jfx-tab-pane.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-tab-pane.css").toExternalForm();
 
     /**
      * {@inheritDoc}

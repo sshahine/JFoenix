@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.animation.Animation;
@@ -101,7 +102,7 @@ public class JFXAlert<R> extends Dialog<R> {
             // init style for overlay
             overlay = new StackPane(materialNode) {
                 public String getUserAgentStylesheet() {
-                    return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+                    return JFoenixResources.load("css/controls/jfx-alert.css").toExternalForm();
                 }
             };
             overlay.getStyleClass().add("jfx-alert-overlay");

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXListCell;
@@ -414,7 +415,7 @@ public class JFXDatePickerContent extends VBox {
 
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     ObjectProperty<YearMonth> displayedYearMonthProperty() {

@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
 import javafx.beans.property.ObjectProperty;
@@ -102,7 +103,7 @@ public class JFXComboBox<T> extends ComboBox<T> {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-combo-box.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-combo-box.css").toExternalForm();
     }
 
     /**
