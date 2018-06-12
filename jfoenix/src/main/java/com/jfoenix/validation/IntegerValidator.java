@@ -24,7 +24,6 @@ import javafx.beans.DefaultProperty;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-import javafx.util.converter.NumberStringConverter;
 
 /**
  * An example of Number field validation, that is applied on text input controls
@@ -35,26 +34,7 @@ import javafx.util.converter.NumberStringConverter;
  * @since 2016-03-09
  */
 @DefaultProperty(value = "icon")
-public class NumberValidator extends ValidatorBase {
-
-    private NumberStringConverter numberStringConverter = new NumberStringConverter();
-
-    public NumberValidator() {
-
-    }
-
-    public NumberValidator(String message) {
-        super(message);
-    }
-
-    public NumberValidator(NumberStringConverter numberStringConverter) {
-        this.numberStringConverter = numberStringConverter;
-    }
-
-    public NumberValidator(String message, NumberStringConverter numberStringConverter) {
-        super(message);
-        this.numberStringConverter = numberStringConverter;
-    }
+public class IntegerValidator extends ValidatorBase {
 
     /**
      * {@inheritDoc}
@@ -70,19 +50,11 @@ public class NumberValidator extends ValidatorBase {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
         try {
-            hasErrors.set(false);
-            if (!text.isEmpty())
-                numberStringConverter.fromString(text);
+        	hasErrors.set(false);
+        	if (!text.isEmpty())
+        		Integer.parseInt(text);
         } catch (Exception e) {
             hasErrors.set(true);
         }
-    }
-
-    public NumberStringConverter getNumberStringConverter() {
-        return numberStringConverter;
-    }
-
-    public void setNumberStringConverter(NumberStringConverter numberStringConverter) {
-        this.numberStringConverter = numberStringConverter;
     }
 }
