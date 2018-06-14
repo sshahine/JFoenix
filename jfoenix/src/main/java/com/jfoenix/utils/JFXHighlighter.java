@@ -82,7 +82,7 @@ public class JFXHighlighter {
         if (this.parent != null && !boxes.isEmpty()) {
             clear();
         }
-        if(query.isEmpty()) return;
+        if(query == null || query.isEmpty()) return;
 
         this.parent = pane;
 

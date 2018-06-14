@@ -183,16 +183,6 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 
         children.addListener((ListChangeListener<T>) change -> {
             while (change.next()) {
-                if (change.wasAdded()) {
-                    List<RecursiveTreeItem<T>> addedItems = new ArrayList<>();
-                    for (T newChild : change.getAddedSubList()) {
-                        final RecursiveTreeItem<T> newTreeItem = new RecursiveTreeItem<>(newChild, getGraphic(), childrenFactory);
-                        addedItems.add(newTreeItem);
-                        itemsMap.put(newChild, newTreeItem);
-                    }
-                    getChildren().addAll(addedItems);
-                    originalItems.addAll(addedItems);
-                }
                 if (change.wasRemoved()) {
                     List<TreeItem<T>> removedItems = new ArrayList<>();
                     change.getRemoved().forEach(t -> {
@@ -209,6 +199,16 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
                         getChildren().removeAll(removedItems);
                         originalItems.removeAll(removedItems);
                     }
+                }
+                if (change.wasAdded()) {
+                    List<RecursiveTreeItem<T>> addedItems = new ArrayList<>();
+                    for (T newChild : change.getAddedSubList()) {
+                        final RecursiveTreeItem<T> newTreeItem = new RecursiveTreeItem<>(newChild, getGraphic(), childrenFactory);
+                        addedItems.add(newTreeItem);
+                        itemsMap.put(newChild, newTreeItem);
+                    }
+                    getChildren().addAll(addedItems);
+                    originalItems.addAll(addedItems);
                 }
             }
         });
