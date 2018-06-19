@@ -544,7 +544,9 @@ public class JFXDrawer extends StackPane {
      * Starts the animation to transition this drawer to open.
      */
     public void open() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getOpenValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
+        }
         translateTo = 0;
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
@@ -564,13 +566,17 @@ public class JFXDrawer extends StackPane {
         if (hasMiniSize()) {
             if (resizeTo != getMiniDrawerSize()) {
                 resizeTo = getMiniDrawerSize();
-                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+                }
             }
         } else {
             updateTempDrawerSize();
             if (translateTo != initTranslate.get()) {
                 translateTo = initTranslate.get();
-                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+                }
             }
         }
         translateTimer.reverseAndContinue();
@@ -1013,7 +1019,9 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialClose() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+        }
         translateTo = initTranslate.get();
         resizeTo = getMiniDrawerSize();
         translateTimer.setOnFinished(() -> {
@@ -1024,7 +1032,9 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialOpen() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getOpenValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
+        }
         translateTo = 0;
         resizeTo = tempDrawerSize = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
