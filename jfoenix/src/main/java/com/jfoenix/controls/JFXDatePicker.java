@@ -72,7 +72,7 @@ public class JFXDatePicker extends DatePicker {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
         try {
             editorProperty();
-            Field editorField = getClass().getSuperclass().getDeclaredField("editor");
+            Field editorField = DatePicker.class.getDeclaredField("editor");
             editorField.setAccessible(true);
             ReadOnlyObjectWrapper<TextField> editor = (ReadOnlyObjectWrapper<TextField>) editorField.get(this);
             final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
