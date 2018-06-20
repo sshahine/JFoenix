@@ -26,6 +26,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.util.converter.NumberStringConverter;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
+
 /**
  * An example of Number field validation, that is applied on text input controls
  * such as {@link TextField} and {@link TextArea}
@@ -37,7 +41,31 @@ import javafx.util.converter.NumberStringConverter;
 @DefaultProperty(value = "icon")
 public class NumberValidator extends ValidatorBase {
 
-    private NumberStringConverter numberStringConverter = new NumberStringConverter();
+    private NumberStringConverter numberStringConverter = new NumberStringConverter(){
+        @Override
+        public Number fromString(String string) {
+            try {
+                if (string == null) {
+                    return null;
+                }
+                string = string.trim();
+                if (string.length() < 1) {
+                    return null;
+                }
+                // Create and configure the parser to be used
+                NumberFormat parser = getNumberFormat();
+                ParsePosition parsePosition = new ParsePosition(0);
+                Number result = parser.parse(string, parsePosition);
+                final int index = parsePosition.getIndex();
+                if (index == 0 || index < string.length()) {
+                    throw new ParseException("Unparseable number: \"" + string + "\"", parsePosition.getErrorIndex());
+                }
+                return result;
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    };
 
     public NumberValidator() {
 
