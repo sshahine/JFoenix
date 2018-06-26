@@ -218,7 +218,7 @@ public class JFXDecorator extends VBox {
         btnFull.setOnAction((action) -> {
             primaryStage.setFullScreen(!primaryStage.isFullScreen());
             text.requestFocus();
-                            });
+        });
         btnFull.setGraphic(full);
         btnFull.setTranslateX(-30);
         btnFull.setRipplerFill(Color.WHITE);
