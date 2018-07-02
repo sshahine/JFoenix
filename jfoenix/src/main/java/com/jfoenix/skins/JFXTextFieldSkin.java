@@ -364,7 +364,7 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 
     private void updateTextPos(){
         double textWidth = textNode.getLayoutBounds().getWidth();
-        final double promptWidth = promptText.getLayoutBounds().getWidth();
+        final double promptWidth = promptText == null ? 0 : promptText.getLayoutBounds().getWidth();
         switch (getHAlignment()){
             case CENTER:
                 promptTextScale.setPivotX(promptWidth / 2);
