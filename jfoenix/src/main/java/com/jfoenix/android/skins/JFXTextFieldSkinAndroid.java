@@ -383,8 +383,10 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
                 break;
             case LEFT:
                 promptTextScale.setPivotX(0);
+                break;
             case RIGHT:
                 promptTextScale.setPivotX(promptWidth);
+                break;
         }
 
     }

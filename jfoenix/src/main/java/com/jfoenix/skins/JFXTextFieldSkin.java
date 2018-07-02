@@ -376,8 +376,10 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 break;
             case LEFT:
                 promptTextScale.setPivotX(0);
+                break;
             case RIGHT:
                 promptTextScale.setPivotX(promptWidth);
+                break;
         }
 
     }
