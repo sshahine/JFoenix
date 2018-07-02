@@ -111,6 +111,8 @@ public class JFXDecorator extends VBox {
      */
     public JFXDecorator(Stage stage, Node node, boolean fullScreen, boolean max, boolean min) {
         primaryStage = stage;
+        //Initializing Text in the constructor itself to call its requestFocus method in initButtons
+        text = new Text();
         // Note that setting the style to TRANSPARENT is causing performance
         // degradation, as an alternative we set it to UNDECORATED instead.
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -213,7 +215,10 @@ public class JFXDecorator extends VBox {
         btnFull = new JFXButton();
         btnFull.getStyleClass().add("jfx-decorator-button");
         btnFull.setCursor(Cursor.HAND);
-        btnFull.setOnAction((action) -> primaryStage.setFullScreen(!primaryStage.isFullScreen()));
+        btnFull.setOnAction((action) -> {
+            primaryStage.setFullScreen(!primaryStage.isFullScreen());
+            text.requestFocus();
+        });
         btnFull.setGraphic(full);
         btnFull.setTranslateX(-30);
         btnFull.setRipplerFill(Color.WHITE);
@@ -228,7 +233,10 @@ public class JFXDecorator extends VBox {
         btnMin = new JFXButton();
         btnMin.getStyleClass().add("jfx-decorator-button");
         btnMin.setCursor(Cursor.HAND);
-        btnMin.setOnAction((action) -> primaryStage.setIconified(true));
+        btnMin.setOnAction((action) -> {
+            primaryStage.setIconified(true);
+            text.requestFocus();
+        });
         btnMin.setGraphic(minus);
         btnMin.setRipplerFill(Color.WHITE);
 
@@ -236,7 +244,10 @@ public class JFXDecorator extends VBox {
         btnMax.getStyleClass().add("jfx-decorator-button");
         btnMax.setCursor(Cursor.HAND);
         btnMax.setRipplerFill(Color.WHITE);
-        btnMax.setOnAction((action) -> maximize(resizeMin, resizeMax));
+        btnMax.setOnAction((action) -> {
+            maximize(resizeMin, resizeMax);
+            text.requestFocus();
+        });
         btnMax.setGraphic(resizeMax);
     }
 
@@ -315,7 +326,7 @@ public class JFXDecorator extends VBox {
         }
         btns.add(btnClose);
 
-        text = new Text();
+        
         text.getStyleClass().addAll("jfx-decorator-text", "title", "jfx-decorator-title");
         text.setFill(Color.WHITE);
         text.textProperty().bind(title); //binds the Text's text to title
