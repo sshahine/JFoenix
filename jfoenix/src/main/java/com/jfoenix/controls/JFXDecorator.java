@@ -29,6 +29,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -620,6 +621,10 @@ public class JFXDecorator extends VBox {
     public void setTitle(String title) {
         this.title.unbind();
         this.title.set(title);
+    }
+    
+    public void setTitleFill(Paint fill){
+        this.text.setFill(fill);
     }
 
     public void setGraphic(Node node) {
