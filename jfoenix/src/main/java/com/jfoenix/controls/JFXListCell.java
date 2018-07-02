@@ -209,7 +209,9 @@ public class JFXListCell<T> extends ListCell<T> {
         for (Node child : getChildren()) {
             if (child instanceof Label) {
                 Set<Node> texts = child.lookupAll("Text");
-                texts.forEach(text -> text.setMouseTransparent(true));
+                for (Node text : texts) {
+                    text.setMouseTransparent(true);
+                }
             } else if (child instanceof Shape) {
                 child.setMouseTransparent(true);
             }

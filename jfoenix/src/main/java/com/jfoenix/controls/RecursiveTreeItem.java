@@ -185,13 +185,13 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
             while (change.next()) {
                 if (change.wasRemoved()) {
                     List<TreeItem<T>> removedItems = new ArrayList<>();
-                    change.getRemoved().forEach(t -> {
+                    for (T t : change.getRemoved()) {
                         final TreeItem<T> treeItem = itemsMap.remove(t);
                         if (treeItem != null) {
                             // remove the items from the current/original items list
                             removedItems.add(treeItem);
                         }
-                    });
+                    }
                     if (originalItems.size() == removedItems.size()) {
                         originalItems.clear();
                         getChildren().clear();

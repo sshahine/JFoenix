@@ -214,10 +214,13 @@ public class JFXHighlighter {
      * clear highlights
      */
     public synchronized void clear() {
-        List<Rectangle> allBoxes = new ArrayList<>();
-        boxes.values().forEach(allBoxes::addAll);
+        List<Rectangle> flatBoxes = new ArrayList<>();
+        final Collection<List<Rectangle>> boxesCollection = boxes.values();
+        for (List<Rectangle> box : boxesCollection) {
+            flatBoxes.addAll(box);
+        }
         boxes.clear();
-        if(parent!=null) JFXUtilities.runInFX(()-> getParentChildren(parent).removeAll(allBoxes));
+        if(parent!=null) JFXUtilities.runInFX(()-> getParentChildren(parent).removeAll(flatBoxes));
     }
 
     public Paint getPaint() {
