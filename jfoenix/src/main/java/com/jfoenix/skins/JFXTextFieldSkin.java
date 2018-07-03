@@ -93,6 +93,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
 
     private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
 
+    private boolean animating = false;
+
     JFXAnimationTimer focusTimer = new JFXAnimationTimer(
         new JFXKeyFrame(Duration.millis(1),
             JFXKeyValue.builder()
@@ -145,8 +147,6 @@ public class JFXTextFieldSkin<T extends TextField & IFXTextInputControl> extends
                 .setEndValue(1)
                 .setInterpolator(Interpolator.EASE_BOTH).build())
     );
-
-    boolean animating = false;
 
     public JFXTextFieldSkin(T textField) {
         super(textField);

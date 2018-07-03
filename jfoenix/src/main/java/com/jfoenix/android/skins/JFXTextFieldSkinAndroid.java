@@ -37,7 +37,6 @@ import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -101,6 +100,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
 
     private final ObjectProperty<Paint> animatedPromptTextFill = new SimpleObjectProperty<>(super.promptTextFill.get());
 
+    private boolean animating = false;
+
     JFXAnimationTimer focusTimer = new JFXAnimationTimer(
         new JFXKeyFrame(Duration.millis(1),
             JFXKeyValue.builder()
@@ -113,7 +114,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
             JFXKeyValue.builder()
                 .setTarget(scale.xProperty())
                 .setEndValue(1)
-                .setInterpolator(Interpolator.EASE_BOTH).build(),
+                .setInterpolator(Interpolator.EASE_BOTH)
+                .setAnimateCondition(() -> getSkinnable().isFocused()).build(),
             JFXKeyValue.builder()
                 .setTarget(animatedPromptTextFill)
                 .setEndValueSupplier(() -> ((IFXTextInputControl) getSkinnable()).getFocusColor())
@@ -153,7 +155,6 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
                 .setInterpolator(Interpolator.EASE_BOTH).build())
     );
 
-
     public JFXTextFieldSkinAndroid(T textField) {
         super(textField);
 
@@ -181,17 +182,6 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         line.setManaged(false);
         line.setBackground(new Background(
             new BackgroundFill(textField.getUnFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
-        if (getSkinnable().isDisabled()) {
-            line.setBorder(new Border(new BorderStroke(
-                textField.getUnFocusColor(),
-                BorderStrokeStyle.DASHED,
-                CornerRadii.EMPTY,
-                new BorderWidths(1))));
-            line.setBackground(new Background(
-                new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
-        line.setCache(true);
-        line.setCacheHint(CacheHint.SPEED);
 
         // focused line
         focusedLine.setManaged(false);
@@ -199,9 +189,6 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
             new BackgroundFill(textField.getFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
         focusedLine.setOpacity(0);
         focusedLine.getTransforms().add(scale);
-        focusedLine.setCacheHint(CacheHint.SPEED);
-        focusedLine.setCache(true);
-
 
         // error container
         errorContainer.getChildren().setAll(new StackPane(errorLabel), errorIcon);
@@ -218,6 +205,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
 
         getChildren().addAll(line, focusedLine, promptContainer, errorContainer);
 
+        focusTimer.setOnFinished(()-> animating = false);
+        unfocusTimer.setOnFinished(()-> animating = false);
         focusTimer.setCacheNodes(textPane);
         unfocusTimer.setCacheNodes(textPane);
 
@@ -290,8 +279,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         });
 
         // handle animation on focus gained/lost event
-        textField.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
+        textField.focusedProperty().addListener(observable -> {
+            if (textField.isFocused()) {
                 focus();
             } else {
                 unFocus();
@@ -304,14 +293,29 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
             }
         });
 
+        updateDisabled();
+
+        registerChangeListener(textField.disableProperty(), "DISABLE_NODE");
         registerChangeListener(textField.focusColorProperty(), "FOCUS_COLOR");
         registerChangeListener(textField.unFocusColorProperty(), "UNFOCUS_COLOR");
         registerChangeListener(textField.disableAnimationProperty(), "DISABLE_ANIMATION");
     }
 
+    private void updateDisabled() {
+        IFXTextInputControl control = (IFXTextInputControl) getSkinnable();
+        final boolean disabled = getSkinnable().isDisable();
+        line.setBorder(!disabled ? Border.EMPTY :
+            new Border(new BorderStroke(control.getUnFocusColor(),
+                BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(1))));
+        line.setBackground(new Background(
+            new BackgroundFill(disabled ? Color.TRANSPARENT : control.getUnFocusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
     @Override
     protected void handleControlPropertyChanged(String propertyReference) {
-        if ("FOCUS_COLOR".equals(propertyReference)) {
+        if ("DISABLE_NODE".equals(propertyReference)) {
+            updateDisabled();
+        } else if ("FOCUS_COLOR".equals(propertyReference)) {
             Paint paint = ((IFXTextInputControl) getSkinnable()).getFocusColor();
             focusedLine.setBackground(paint == null ? Background.EMPTY
                 : new Background(new BackgroundFill(paint, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -331,7 +335,6 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
     @Override
     protected void layoutChildren(final double x, final double y, final double w, final double h) {
         super.layoutChildren(x, y, w, h);
-
         final double height = getSkinnable().getHeight();
         final double focusedLineHeight = focusedLine.prefHeight(-1);
         focusedLine.resizeRelocate(x, height, w, focusedLineHeight);
@@ -347,7 +350,9 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
             updateTextPos();
         }
 
-        updateLabelFloat(!invalid);
+        if (!animating) {
+            updateLabelFloat(false);
+        }
 
         if (invalid) {
             invalid = false;
@@ -369,10 +374,10 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         }
     }
 
-    private void updateTextPos(){
+    private void updateTextPos() {
         double textWidth = textNode.getLayoutBounds().getWidth();
         final double promptWidth = promptText == null ? 0 : promptText.getLayoutBounds().getWidth();
-        switch (getHAlignment()){
+        switch (getHAlignment()) {
             case CENTER:
                 promptTextScale.setPivotX(promptWidth / 2);
                 double midPoint = textRight.get() / 2;
@@ -488,6 +493,7 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
 
     private void focus() {
         unfocusTimer.stop();
+        animating = true;
         runTimer(focusTimer, true);
     }
 
@@ -498,9 +504,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
             animatedPromptTextFill.set(promptTextFill.get());
             if (getSkinnable().getText().isEmpty()) {
-                if (!unfocusTimer.isRunning()) {
-                    unfocusTimer.start();
-                }
+                animating = true;
+                runTimer(unfocusTimer, true);
             }
         }
     }
@@ -513,12 +518,12 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
      */
     private void animateFloatingLabel(boolean up, boolean animation) {
         if (up) {
-            if (promptTextScale.getX() != 0.85) {
+            if (promptText.getTranslateY() != -textPane.getHeight()) {
                 unfocusTimer.stop();
                 runTimer(focusTimer, animation);
             }
         } else {
-            if (promptTextScale.getX() != 1) {
+            if (promptText.getTranslateY() != 0) {
                 focusTimer.stop();
                 runTimer(unfocusTimer, animation);
             }
