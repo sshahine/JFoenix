@@ -503,7 +503,8 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXTextInputControl> 
         focusedLine.setOpacity(0);
         if (((IFXTextInputControl) getSkinnable()).isLabelFloat()) {
             animatedPromptTextFill.set(promptTextFill.get());
-            if (getSkinnable().getText().isEmpty()) {
+            final String text = getSkinnable().getText();
+            if (text == null || text.isEmpty()) {
                 animating = true;
                 runTimer(unfocusTimer, true);
             }
