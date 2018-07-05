@@ -43,6 +43,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
+<a href="https://github.com/bkenn/KFoenix">KFoenix</a>
 
 # Build
 To build JFoenix, execute the following command:
