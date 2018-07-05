@@ -174,7 +174,7 @@ public class JFXDecorator extends VBox {
             updateInitMouseValues(mouseEvent));
 
         // show the drag cursor on the borders
-        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> showDragCursorOnTheborders(mouseEvent));
+        addEventFilter(MouseEvent.MOUSE_MOVED, (mouseEvent) -> showDragCursorOnBorders(mouseEvent));
 
 
         // handle drag events on the decorator pane
@@ -361,7 +361,7 @@ public class JFXDecorator extends VBox {
         this.getChildren().addAll(buttonsContainer, contentPlaceHolder);
     }
 
-    private void showDragCursorOnTheborders(MouseEvent mouseEvent) {
+    private void showDragCursorOnBorders(MouseEvent mouseEvent) {
         if (primaryStage.isMaximized() || primaryStage.isFullScreen() || maximized) {
             this.setCursor(Cursor.DEFAULT);
             return; // maximized mode does not support resize
@@ -615,7 +615,7 @@ public class JFXDecorator extends VBox {
      * If you want the {@code primaryStage}'s title and the {@code JFXDecorator}'s title to be different, then
      * go ahead and use this method.
      * <p>
-     * By default, this title property is bound to the {@code primaryStage}'s title property—so merely setting the
+     * By default, this title property is bound to the {@code primaryStage}'s title property-so merely setting the
      * {@code primaryStage}'s title, will set the {@code JFXDecorator}'s title.
      *
      */

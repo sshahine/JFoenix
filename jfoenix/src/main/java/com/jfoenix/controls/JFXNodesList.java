@@ -21,6 +21,7 @@ package com.jfoenix.controls;
 
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -330,27 +331,30 @@ public class JFXNodesList extends VBox {
     }
 
     private void createAnimation(boolean expanded, Timeline animation) {
-        double duration = 160 / (double) getChildren().size();
+        final ObservableList<Node> children = getChildren();
+        double duration = 160 / (double) children.size();
         // show child nodes
         if (expanded) {
-            getChildren().forEach(child -> child.setVisible(true));
+            for (Node child : children) {
+                child.setVisible(true);
+            }
         }
 
         // add child nodes animation
-        for (int i = 1; i < getChildren().size(); i++) {
-            Node child = getChildren().get(i);
+        for (int i = 1; i < children.size(); i++) {
+            Node child = children.get(i);
             Collection<KeyFrame> frames = animationsMap.get(child).apply(expanded, Duration.millis(i * duration));
             animation.getKeyFrames().addAll(frames);
         }
         // add 1st element animation
-        Collection<KeyFrame> frames = animationsMap.get(getChildren().get(0)).apply(expanded, Duration.millis(160));
+        Collection<KeyFrame> frames = animationsMap.get(children.get(0)).apply(expanded, Duration.millis(160));
         animation.getKeyFrames().addAll(frames);
 
         // hide child nodes to allow mouse events on the nodes behind them
         if (!expanded) {
             animation.setOnFinished((finish) -> {
-                for (int i = 1; i < getChildren().size(); i++) {
-                    getChildren().get(i).setVisible(false);
+                for (int i = 1; i < children.size(); i++) {
+                    children.get(i).setVisible(false);
                 }
             });
         } else {

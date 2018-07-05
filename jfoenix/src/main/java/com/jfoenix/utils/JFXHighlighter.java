@@ -28,17 +28,19 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.effect.BlendMode;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -46,7 +48,7 @@ import java.util.*;
 
 /**
  * JFXHighlighter is used to highlight Text and LabeledText nodes
- * (in a specific Pane) that matches the user query.
+ * (in a specific {@link Parent}) that matches the user query.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -54,16 +56,19 @@ import java.util.*;
  */
 public class JFXHighlighter {
 
-    private Pane pane;
+    private Parent parent;
     private HashMap<Node, List<Rectangle>> boxes = new HashMap<>();
     private ObjectProperty<Paint> paint = new SimpleObjectProperty<>(Color.rgb(255, 0, 0, 0.4));
 
     private Method textLayoutMethod;
+    private Field parentChildrenField;
     {
         try {
             textLayoutMethod = Text.class.getDeclaredMethod("getTextLayout");
             textLayoutMethod.setAccessible(true);
-        } catch (NoSuchMethodException e) {
+            parentChildrenField = Parent.class.getDeclaredField("children");
+            parentChildrenField.setAccessible(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -73,22 +78,22 @@ public class JFXHighlighter {
      * @param pane node to search into its text
      * @param query search text
      */
-    public synchronized void highlight(Pane pane, String query) {
-        if (this.pane != null && !boxes.isEmpty()) {
+    public synchronized void highlight(Parent pane, String query) {
+        if (this.parent != null && !boxes.isEmpty()) {
             clear();
         }
-        if(query.isEmpty()) return;
+        if(query == null || query.isEmpty()) return;
 
-        this.pane = pane;
+        this.parent = pane;
 
         Set<Node> nodes = getTextNodes(pane);
 
         ArrayList<Rectangle> allRectangles = new ArrayList<>();
-        nodes.forEach(node -> {
+        for (Node node : nodes) {
             Text text = ((Text) node);
             final int beginIndex = text.getText().toLowerCase().indexOf(query.toLowerCase());
             if (node.isVisible() && beginIndex > -1) {
-                ArrayList<Bounds> boundingBoxes = getMatchingBounds(query, node, text);
+                ArrayList<Bounds> boundingBoxes = getMatchingBounds(query, text);
                 ArrayList<Rectangle> rectangles = new ArrayList<>();
                 for (Bounds boundingBox : boundingBoxes) {
                     HighLightRectangle rect = new HighLightRectangle(text);
@@ -107,9 +112,9 @@ public class JFXHighlighter {
                 }
                 boxes.put(node, rectangles);
             }
-        });
+        }
 
-        Platform.runLater(()-> pane.getChildren().addAll(allRectangles));
+        Platform.runLater(()-> getParentChildren(pane).addAll(allRectangles));
     }
 
     private class HighLightRectangle extends Rectangle{
@@ -123,12 +128,13 @@ public class JFXHighlighter {
         }
 
         private void clear(Text text) {
-            if(boxes.get(text)!=null && !boxes.get(text).isEmpty())
-                Platform.runLater(() -> pane.getChildren().removeAll(boxes.get(text)));
+            final List<Rectangle> rectangles = boxes.get(text);
+            if(rectangles != null && !rectangles.isEmpty())
+                Platform.runLater(() -> getParentChildren(parent).removeAll(rectangles));
         }
     }
 
-    private Set<Node> getTextNodes(Pane pane) {
+    private Set<Node> getTextNodes(Parent pane) {
         Set<Node> labeledTextNodes = pane.lookupAll("LabeledText");
         Set<Node> textNodes = pane.lookupAll("Text");
         Set<Node> nodes = new HashSet<>();
@@ -137,10 +143,18 @@ public class JFXHighlighter {
         return nodes;
     }
 
-    private ArrayList<Bounds> getMatchingBounds(String query, Node node, Text text) {
+    private ObservableList<Node> getParentChildren(Parent parent){
+        try {
+            return (ObservableList<Node>) parentChildrenField.get(parent);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        Bounds sceneBounds = node.localToScene(text.getLayoutBounds());
-        Bounds parentSceneBounds = pane.localToScene(pane.getLayoutBounds());
+    private ArrayList<Bounds> getMatchingBounds(String query, Text text) {
+        // find local text bounds in parent
+        Bounds textBounds = parent.sceneToLocal(text.localToScene(text.getBoundsInLocal()));
 
         ArrayList<Bounds> rectBounds = new ArrayList<>();
 
@@ -185,8 +199,8 @@ public class JFXHighlighter {
                 double maxX = temp.getLayoutBounds().getMaxX();
                 double startX = maxX - width;
 
-                rectBounds.add(new BoundingBox(sceneBounds.getMinX() + startX - parentSceneBounds.getMinX(),
-                    sceneBounds.getMinY() - parentSceneBounds.getMinY() + startY,
+                rectBounds.add(new BoundingBox(textBounds.getMinX() + startX,
+                    textBounds.getMinY() + startY,
                     width, temp.getLayoutBounds().getHeight()));
 
                 beginIndex = lineTextLow.indexOf(queryLow, beginIndex + queryLength);
@@ -200,10 +214,13 @@ public class JFXHighlighter {
      * clear highlights
      */
     public synchronized void clear() {
-        List<Rectangle> allBoxes = new ArrayList<>();
-        boxes.values().forEach(allBoxes::addAll);
+        List<Rectangle> flatBoxes = new ArrayList<>();
+        final Collection<List<Rectangle>> boxesCollection = boxes.values();
+        for (List<Rectangle> box : boxesCollection) {
+            flatBoxes.addAll(box);
+        }
         boxes.clear();
-        if(pane!=null) JFXUtilities.runInFX(()-> pane.getChildren().removeAll(allBoxes));
+        if(parent!=null) JFXUtilities.runInFX(()-> getParentChildren(parent).removeAll(flatBoxes));
     }
 
     public Paint getPaint() {

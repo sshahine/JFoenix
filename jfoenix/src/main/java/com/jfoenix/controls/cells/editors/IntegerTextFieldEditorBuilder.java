@@ -21,14 +21,12 @@ package com.jfoenix.controls.cells.editors;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
-import com.jfoenix.validation.NumberValidator;
+import com.jfoenix.validation.IntegerValidator;
 import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 
 /**
  * <h1>Text field cell editor (numbers only) </h1>
@@ -70,7 +68,7 @@ public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer>
         textField = new JFXTextField(value + "");
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
-        NumberValidator validator = new NumberValidator();
+        IntegerValidator validator = new IntegerValidator();
         validator.setMessage("Value must be a number");
         textField.getValidators().add(validator);
         return textField;

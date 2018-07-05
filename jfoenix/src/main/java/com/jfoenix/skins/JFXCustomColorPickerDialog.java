@@ -32,13 +32,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.*;
 import javafx.util.Duration;
 
@@ -167,12 +167,14 @@ public class JFXCustomColorPickerDialog extends StackPane {
                     Color fontColor = ((Color) newVal.getFills().get(0).getFill()).grayscale()
                         .getRed() > 0.5 ? Color.valueOf(
                         "rgba(40, 40, 40, 0.87)") : Color.valueOf("rgba(255, 255, 255, 0.87)");
-                    tabs.lookupAll(".tab")
-                        .forEach(tabNode -> tabNode.lookupAll(".tab-label")
-                            .forEach(node -> ((Label) node).setTextFill(fontColor)));
-                    tabs.lookupAll(".tab")
-                        .forEach(tabNode -> tabNode.lookupAll(".jfx-rippler")
-                            .forEach(node -> ((JFXRippler) node).setRipplerFill(fontColor)));
+                    for (Node tabNode : tabs.lookupAll(".tab")) {
+                        for (Node node : tabNode.lookupAll(".tab-label")) {
+                            ((Label) node).setTextFill(fontColor);
+                        }
+                        for (Node node : tabNode.lookupAll(".jfx-rippler")) {
+                            ((JFXRippler) node).setRipplerFill(fontColor);
+                        }
+                    }
                     ((Pane) tabs.lookup(".tab-selected-line")).setBackground(new Background(new BackgroundFill(fontColor,CornerRadii.EMPTY,Insets.EMPTY)));
                     pickerDecorator.lookupAll(".jfx-decorator-button").forEach(button -> {
                         ((JFXButton) button).setRipplerFill(fontColor);

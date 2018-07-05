@@ -100,6 +100,7 @@ public class JFXDrawer extends StackPane {
     private double startMouse = -1;
     private double startTranslate = -1;
     private double startSize = -1;
+    private double contentMinSize = -1;
 
     // used to trigger the drawer events
     private boolean openCalled = false;
@@ -396,7 +397,7 @@ public class JFXDrawer extends StackPane {
         } else if (translateTo == initTranslate.get()) {
             return 0;
         } else {
-            return defaultSizeProperty.get() + getDirection().doubleValue() * translateTo;
+            return getDefaultDrawerSize() + getDirection().doubleValue() * translateTo;
         }
     }
 
@@ -543,7 +544,9 @@ public class JFXDrawer extends StackPane {
      * Starts the animation to transition this drawer to open.
      */
     public void open() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getOpenValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
+        }
         translateTo = 0;
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
@@ -563,13 +566,17 @@ public class JFXDrawer extends StackPane {
         if (hasMiniSize()) {
             if (resizeTo != getMiniDrawerSize()) {
                 resizeTo = getMiniDrawerSize();
-                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+                }
             }
         } else {
             updateTempDrawerSize();
             if (translateTo != initTranslate.get()) {
                 translateTo = initTranslate.get();
-                initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+                }
             }
         }
         translateTimer.reverseAndContinue();
@@ -859,6 +866,7 @@ public class JFXDrawer extends StackPane {
             }
 
             double mouseDiff = startTranslate + eventPoint - startMouse;
+            final double sizeLimit = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? getWidth() : getHeight();
 
             if (directionValue * mouseDiff <= 0) {
                 // drawer close drag
@@ -883,7 +891,7 @@ public class JFXDrawer extends StackPane {
                             }
                         }
                         if (isResizeContent()) {
-                            paddingSizeProperty.set(newSize);
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
                         }
                     } else {
                         // animate <- when resize is finished
@@ -911,7 +919,7 @@ public class JFXDrawer extends StackPane {
                 // drawer open drag
                 if (resizable || hasMiniSize()) {
                     double newSize = startSize + directionValue * mouseDiff;
-                    if (newSize <= (getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? getWidth() : getHeight())) {
+                    if (newSize <= sizeLimit) {
                         // change the side drawer size after being shown
                         newSize = resizable ? newSize : (newSize < getDefaultDrawerSize() ? newSize : getDefaultDrawerSize());
                         maxSizeProperty.set(newSize);
@@ -930,7 +938,7 @@ public class JFXDrawer extends StackPane {
                             }
                         }
                         if (isResizeContent()) {
-                            paddingSizeProperty.set(newSize);
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
                         }
                     } else if (resizable) {
                         // bind the drawer size to its parent
@@ -958,6 +966,10 @@ public class JFXDrawer extends StackPane {
         }
         startTranslate = translateProperty.get();
         startSize = sizeProperty.get();
+        contentMinSize = -1;
+        if (isResizeContent()) {
+            contentMinSize = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? content.minWidth(-1) : content.minHeight(-1);
+        }
     };
 
     private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent) -> {
@@ -1007,7 +1019,9 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialClose() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getCloseValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+        }
         translateTo = initTranslate.get();
         resizeTo = getMiniDrawerSize();
         translateTimer.setOnFinished(() -> {
@@ -1018,9 +1032,11 @@ public class JFXDrawer extends StackPane {
     }
 
     private void partialOpen() {
-        initValues.forEach((writableValue, valueWrapper) -> currentValue.put(writableValue, valueWrapper.getOpenValueSupplier()));
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
+        }
         translateTo = 0;
-        resizeTo = getDefaultDrawerSize();
+        resizeTo = tempDrawerSize = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
         translateTimer.start();

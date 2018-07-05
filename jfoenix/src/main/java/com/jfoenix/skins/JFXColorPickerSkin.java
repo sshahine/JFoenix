@@ -164,9 +164,11 @@ public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
 
     private void updateColor() {
         final ColorPicker colorPicker = (ColorPicker) getSkinnable();
+        Color color = colorPicker.getValue();
         // update picker box color
+        Color circleColor = color == null ? Color.WHITE : color;
         Circle colorCircle = new Circle();
-        colorCircle.setFill(colorPicker.getValue());
+        colorCircle.setFill(circleColor);
         colorCircle.setLayoutX(colorBox.getWidth() / 4);
         colorCircle.setLayoutY(colorBox.getHeight() / 2);
         colorBox.getChildren().add(colorCircle);
@@ -180,10 +182,10 @@ public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
         });
         animateColor.play();
         // update label color
-        displayNode.setTextFill(colorPicker.getValue().grayscale().getRed() < 0.5 ? Color.valueOf(
+        displayNode.setTextFill(circleColor.grayscale().getRed() < 0.5 ? Color.valueOf(
             "rgba(255, 255, 255, 0.87)") : Color.valueOf("rgba(0, 0, 0, 0.87)"));
         if (colorLabelVisible.get()) {
-            displayNode.setText(JFXNodeUtils.colorToHex(colorPicker.getValue()));
+            displayNode.setText(JFXNodeUtils.colorToHex(circleColor));
         } else {
             displayNode.setText("");
         }

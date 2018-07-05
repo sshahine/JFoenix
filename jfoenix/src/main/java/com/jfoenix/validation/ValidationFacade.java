@@ -206,9 +206,7 @@ public class ValidationFacade extends VBox {
     public static boolean validate(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
         for (ValidatorBase validator : facade.validators) {
-            if (validator.getSrcControl() == null) {
-                validator.setSrcControl(facade.controlProperty.get());
-            }
+            validator.setSrcControl(facade.controlProperty.get());
             validator.validate();
             if (validator.getHasErrors()) {
                 facade.activeValidator.set(validator);

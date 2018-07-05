@@ -107,6 +107,10 @@ public class JFXAnimationTimer extends AnimationTimer {
         }
     }
 
+    /**
+     * this method will pause the timer and reverse the animation if the timer already
+     * started otherwise it will start the animation.
+     */
     public void reverseAndContinue() {
         if (isRunning()) {
             super.stop();
@@ -231,7 +235,8 @@ public class JFXAnimationTimer extends AnimationTimer {
                     for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            final Object endValue = endValuesMap.get(target);
+                            // set updated end value instead of cached
+                            final Object endValue = keyValue.getEndValue();
                             if (target != null && endValue != null) {
                                 target.setValue(endValue);
                             }

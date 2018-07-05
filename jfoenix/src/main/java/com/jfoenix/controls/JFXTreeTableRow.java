@@ -41,15 +41,20 @@ public class JFXTreeTableRow<T> extends TreeTableRow<T> {
         // allow custom skin to grouped rows
         itemProperty().addListener(observable -> {
             T item = getItem();
-            pseudoClassStateChanged(groupedClass, item != null
-                                                  && item instanceof RecursiveTreeObject
-                                                  && item.getClass() == RecursiveTreeObject.class);
+            pseudoClassStateChanged(groupedClass, isGroupItem(item));
         });
+    }
+
+    private boolean isGroupItem(T item) {
+        return item != null && item instanceof RecursiveTreeObject
+               && item.getClass() == RecursiveTreeObject.class;
     }
 
     @Override
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
-        setDisclosureNode(null);
+        if (isGroupItem(item)) {
+            setDisclosureNode(null);
+        }
     }
 }

@@ -127,9 +127,8 @@ public class JFXTextArea extends TextArea {
      */
     public boolean validate() {
         for (ValidatorBase validator : validators) {
-            if (validator.getSrcControl() == null) {
-                validator.setSrcControl(this);
-            }
+            // source control must be set to allow validators re-usability
+            validator.setSrcControl(this);
             validator.validate();
             if (validator.getHasErrors()) {
                 activeValidator.set(validator);

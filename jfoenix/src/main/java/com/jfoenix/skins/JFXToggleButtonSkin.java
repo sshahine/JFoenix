@@ -59,6 +59,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         double circleRadius = toggleButton.getSize();
 
         line = new Line();
+        line.setStroke(getSkinnable().isSelected() ? toggleButton.getToggleLineColor() : toggleButton.getUnToggleLineColor());
         line.setStartX(0);
         line.setStartY(0);
         line.setEndX(circleRadius * 2 + 2);
@@ -68,6 +69,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         line.setSmooth(true);
 
         circle = new Circle();
+        circle.setFill(getSkinnable().isSelected() ? toggleButton.getToggleColor() : toggleButton.getUnToggleColor());
         circle.setCenterX(-circleRadius);
         circle.setCenterY(0);
         circle.setRadius(circleRadius);
