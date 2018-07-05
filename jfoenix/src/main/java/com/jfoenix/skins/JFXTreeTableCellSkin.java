@@ -81,5 +81,5 @@ public class JFXTreeTableCellSkin<S, T> extends TreeTableCellSkin<S, T> {
             disclosureWidth = disclosureNode.getLayoutBounds().getWidth() + 18;
         }
         super.layoutChildren(x + disclosureWidth, y, w - disclosureWidth, h);
-//    }
+    }
 }
