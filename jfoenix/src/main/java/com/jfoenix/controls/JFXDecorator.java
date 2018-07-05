@@ -613,7 +613,7 @@ public class JFXDecorator extends VBox {
      * If you want the {@code primaryStage}'s title and the {@code JFXDecorator}'s title to be different, then
      * go ahead and use this method.
      * <p>
-     * By default, this title property is bound to the {@code primaryStage}'s title property—so merely setting the
+     * By default, this title property is bound to the {@code primaryStage}'s title property-so merely setting the
      * {@code primaryStage}'s title, will set the {@code JFXDecorator}'s title.
      *
      */
