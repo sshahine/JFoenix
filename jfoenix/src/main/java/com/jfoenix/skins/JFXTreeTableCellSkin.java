@@ -51,11 +51,12 @@ public class JFXTreeTableCellSkin<S, T>  extends TreeTableCellSkin<S, T> {
         Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
         if (disclosureNode != null) {
             TreeItem<S> item = getSkinnable().getTreeTableRow().getTreeItem();
+            final S value = item.getValue();
             boolean disclosureVisible = item != null && !item.isLeaf()
-                                        && item.getValue() != null
-                                        && ((RecursiveTreeObject) item.getValue()).getGroupedColumn() == getSkinnable().getTableColumn();
+                                        && value != null
+                                        && value instanceof RecursiveTreeObject
+                                        && ((RecursiveTreeObject) value).getGroupedColumn() == getSkinnable().getTableColumn();
             disclosureNode.setVisible(disclosureVisible);
-
             if (!disclosureVisible) {
                 getChildren().remove(disclosureNode);
             } else if (disclosureNode.getParent() == null) {
