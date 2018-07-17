@@ -41,6 +41,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 <a href="https://github.com/goxr3plus/XR3Player">XR3Player</a>,
 <a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>,
 * <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
+* <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
