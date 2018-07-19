@@ -42,5 +42,5 @@ public class JFXAutoCompleteEvent<T> extends Event {
 
 	//TODO: more events to be added
 	public static final EventType<JFXAutoCompleteEvent> SELECTION =
-			new EventType<JFXAutoCompleteEvent>(Event.ANY, "DIALOG_CLOSED");
+			new EventType<JFXAutoCompleteEvent>(Event.ANY, "JFX_AUTOCOMPLETE_SELECTION");
 }
