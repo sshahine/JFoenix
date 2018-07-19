@@ -18,9 +18,9 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.4.jar) (9.x.x)
-* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.4.jar) (8.x.x)
-* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.4-retrolambda.jar)
+* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.5.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.5.jar) (8.x.x)
+* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.5-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
@@ -41,6 +41,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 <a href="https://github.com/goxr3plus/XR3Player">XR3Player</a>,
 <a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>,
 * <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
+* <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
@@ -74,8 +75,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.4' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.4' // Java 9
+    compile 'com.jfoenix:jfoenix:8.0.5' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.5' // Java 9
 }
 ```
 
