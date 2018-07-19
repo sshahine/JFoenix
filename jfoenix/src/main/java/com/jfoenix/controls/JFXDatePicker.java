@@ -19,21 +19,21 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.skins.JFXDatePickerSkin;
+import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.css.*;
-import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -51,7 +51,7 @@ import java.util.List;
  * @version 1.0
  * @since 2016-03-09
  */
-public class JFXDatePicker extends DatePicker {
+public class JFXDatePicker extends DatePicker implements IFXValidatableControl {
 
     /**
      * {@inheritDoc}
@@ -81,6 +81,7 @@ public class JFXDatePicker extends DatePicker {
                     editorNode.setFakeFocus(newVal);
                 }
             });
+            editorNode.activeValidatorWritableProperty().bind(activeValidatorProperty());
             editor.set(editorNode);
         } catch (NoSuchFieldException e) {
         } catch (IllegalAccessException e) {
@@ -125,6 +126,38 @@ public class JFXDatePicker extends DatePicker {
 
     public final void setDialogParent(final StackPane dialogParent) {
         this.dialogParentProperty().set(dialogParent);
+    }
+
+    private ValidationControl validationControl = new ValidationControl(this);
+
+    @Override
+    public ValidatorBase getActiveValidator() {
+        return validationControl.getActiveValidator();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
+        return validationControl.activeValidatorProperty();
+    }
+
+    @Override
+    public ObservableList<ValidatorBase> getValidators() {
+        return validationControl.getValidators();
+    }
+
+    @Override
+    public void setValidators(ValidatorBase... validators) {
+        validationControl.setValidators(validators);
+    }
+
+    @Override
+    public boolean validate() {
+        return validationControl.validate();
+    }
+
+    @Override
+    public void resetValidation() {
+        validationControl.resetValidation();
     }
 
     /***************************************************************************
@@ -183,6 +216,7 @@ public class JFXDatePicker extends DatePicker {
     public void setDefaultColor(Paint color) {
         this.defaultColor.set(color);
     }
+
 
     private static class StyleableProperties {
         private static final CssMetaData<JFXDatePicker, Paint> DEFAULT_COLOR =

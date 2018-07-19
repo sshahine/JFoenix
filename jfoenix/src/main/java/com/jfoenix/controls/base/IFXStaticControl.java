@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,35 +17,15 @@
  * under the License.
  */
 
-.jfx-date-picker{
-    -jfx-default-color: #009688;
-}
+package com.jfoenix.controls.base;
 
-.jfx-date-picker,
-.jfx-date-picker:focused,
-.jfx-date-picker:focused:editable {
-    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
-}
+import javafx.css.StyleableBooleanProperty;
 
-.jfx-date-picker > .arrow-button,
-.jfx-date-picker:editable > .arrow-button,
-.jfx-date-picker:focused > .arrow-button,
-.jfx-date-picker:editable:focused > .arrow-button {
-    -fx-background-color: TRANSPARENT;
-    -fx-padding: 1 8 1 8;
-}
+public interface IFXStaticControl {
 
-.jfx-date-picker > .arrow-button > .jfx-svg-glyph {
-    -fx-background-color: -jfx-default-color;
-}
+    StyleableBooleanProperty disableAnimationProperty();
 
-.date-picker-popup > * > .spinner {
-    -fx-spacing: 0.25em; /* 3 */
-    -fx-alignment: CENTER;
-    -fx-fill-height: false;
-    -fx-background-color: transparent;
-}
+    Boolean isDisableAnimation();
 
-.date-picker-popup > * > .spinner > .label {
-    -fx-alignment: CENTER;
+    void setDisableAnimation(Boolean disabled);
 }

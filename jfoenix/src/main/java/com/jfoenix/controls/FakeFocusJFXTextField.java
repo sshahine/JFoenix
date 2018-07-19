@@ -19,6 +19,8 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.validation.base.ValidatorBase;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.AccessibleAttribute;
 
 /**
@@ -43,5 +45,9 @@ final class FakeFocusJFXTextField extends JFXTextField {
                 return getParent();
             default: return super.queryAccessibleAttribute(attribute, parameters);
         }
+    }
+
+    public ReadOnlyObjectWrapper<ValidatorBase> activeValidatorWritableProperty() {
+        return validationControl.activeValidatorWritableProperty();
     }
 }

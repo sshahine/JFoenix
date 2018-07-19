@@ -110,6 +110,7 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
         registerChangeListener(datePicker.dayCellFactoryProperty(), "DAY_CELL_FACTORY");
         registerChangeListener(datePicker.showWeekNumbersProperty(), "SHOW_WEEK_NUMBERS");
         registerChangeListener(datePicker.valueProperty(), "VALUE");
+        registerChangeListener(datePicker.defaultColorProperty(), "DEFAULT_COLOR");
     }
 
     @Override
@@ -153,7 +154,9 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
 
     @Override
     protected void handleControlPropertyChanged(String p) {
-        if ("DAY_CELL_FACTORY".equals(p)) {
+        if ("DEFAULT_COLOR".equals(p)) {
+            ((JFXTextField) getEditor()).setFocusColor(jfxDatePicker.getDefaultColor());
+        } else if ("DAY_CELL_FACTORY".equals(p)) {
             updateDisplayNode();
             content = null;
             popup = null;

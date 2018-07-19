@@ -19,13 +19,12 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.skins.JFXTextAreaSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.scene.control.Control;
@@ -45,7 +44,7 @@ import java.util.List;
  * @version 1.0
  * @since 2016-03-09
  */
-public class JFXTextArea extends TextArea {
+public class JFXTextArea extends TextArea implements IFXLabelFloatControl {
 
     /**
      * {@inheritDoc}
@@ -92,55 +91,38 @@ public class JFXTextArea extends TextArea {
      **************************************************************************/
 
     /**
-     * holds the current active validator on the text area in case of validation error
+     * wrapper for validation properties / methods
      */
-    private ReadOnlyObjectWrapper<ValidatorBase> activeValidator = new ReadOnlyObjectWrapper<>();
+    protected ValidationControl validationControl = new ValidationControl(this);
 
+    @Override
     public ValidatorBase getActiveValidator() {
-        return activeValidator == null ? null : activeValidator.get();
+        return validationControl.getActiveValidator();
     }
 
+    @Override
     public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
-        return this.activeValidator.getReadOnlyProperty();
+        return validationControl.activeValidatorProperty();
     }
 
-    /**
-     * list of validators that will validate the text value upon calling
-     * {{@link #validate()}
-     */
-    private ObservableList<ValidatorBase> validators = FXCollections.observableArrayList();
-
+    @Override
     public ObservableList<ValidatorBase> getValidators() {
-        return validators;
+        return validationControl.getValidators();
     }
 
+    @Override
     public void setValidators(ValidatorBase... validators) {
-        this.validators.addAll(validators);
+        validationControl.setValidators(validators);
     }
 
-    /**
-     * validates the text value using the list of validators provided by the user
-     * {{@link #setValidators(ValidatorBase...)}
-     *
-     * @return true if the value is valid else false
-     */
+    @Override
     public boolean validate() {
-        for (ValidatorBase validator : validators) {
-            // source control must be set to allow validators re-usability
-            validator.setSrcControl(this);
-            validator.validate();
-            if (validator.getHasErrors()) {
-                activeValidator.set(validator);
-                return false;
-            }
-        }
-        activeValidator.set(null);
-        return true;
+        return validationControl.validate();
     }
 
+    @Override
     public void resetValidation() {
-        pseudoClassStateChanged(ValidatorBase.PSEUDO_CLASS_ERROR, false);
-        activeValidator.set(null);
+        validationControl.resetValidation();
     }
 
     /***************************************************************************

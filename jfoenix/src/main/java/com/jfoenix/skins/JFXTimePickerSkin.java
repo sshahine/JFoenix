@@ -29,11 +29,10 @@ import com.sun.javafx.binding.ExpressionHelper;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 
 import java.lang.reflect.Field;
@@ -107,6 +106,7 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
         //dialog = new JFXDialog(null, content, transitionType, overlayClose)
         registerChangeListener(timePicker.converterProperty(), "CONVERTER");
         registerChangeListener(timePicker.valueProperty(), "VALUE");
+        registerChangeListener(timePicker.defaultColorProperty(), "DEFAULT_COLOR");
     }
 
     @Override
@@ -149,7 +149,9 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
 
     @Override
     protected void handleControlPropertyChanged(String p) {
-        if ("CONVERTER".equals(p)) {
+        if ("DEFAULT_COLOR".equals(p)) {
+            ((JFXTextField) getEditor()).setFocusColor(jfxTimePicker.getDefaultColor());
+        }else if ("CONVERTER".equals(p)) {
             updateDisplayNode();
         } else if ("EDITOR".equals(p)) {
             getEditableInputNode();
