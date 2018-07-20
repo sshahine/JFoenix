@@ -95,7 +95,7 @@ public class JFXTextAreaSkin extends TextAreaSkin {
         super.layoutChildren(x, y, w, h);
 
         final double height = getSkinnable().getHeight();
-        linesWrapper.layoutLines(x, y, w, h, height, promptText.getLayoutBounds().getHeight() + 3);
+        linesWrapper.layoutLines(x, y, w, h, height, promptText == null ? 0 : promptText.getLayoutBounds().getHeight() + 3);
         errorContainer.layoutPane(x, height + linesWrapper.focusedLine.getHeight(), w, h);
         linesWrapper.updateLabelFloatLayout();
 

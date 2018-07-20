@@ -226,7 +226,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     }
 
     private void updateLabelFloat(boolean animation) {
-        if (((IFXLabelFloatControl) control).isLabelFloat()) {
+        if (control.isLabelFloat()) {
             if (control.isFocused()) {
                 animateFloatingLabel(true, animation);
             } else {
@@ -243,6 +243,9 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
      * @param up
      */
     private void animateFloatingLabel(boolean up, boolean animation) {
+        if (promptTextSupplier.get() == null) {
+            return;
+        }
         if (up) {
             if (promptTextSupplier.get().getTranslateY() != -contentHeight) {
                 unfocusTimer.stop();

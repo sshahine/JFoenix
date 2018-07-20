@@ -144,7 +144,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         super.layoutChildren(x, y, w, h);
         final double height = getSkinnable().getHeight();
         linesWrapper.layoutLines(x, y, w, h, height,
-            snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
+            promptText == null ? 0 : snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
         errorContainer.layoutPane(x, height + linesWrapper.focusedLine.getHeight(), w, h);
 
         linesWrapper.updateLabelFloatLayout();
