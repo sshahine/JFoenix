@@ -93,7 +93,7 @@ public class JFXDatePicker extends DatePicker implements IFXValidatableControl {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+        return JFXDatePicker.class.getResource("/css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     /**

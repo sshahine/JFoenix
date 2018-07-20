@@ -414,7 +414,7 @@ public class JFXDatePickerContent extends VBox {
 
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+        return JFXDatePickerContent.class.getResource("/css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     ObjectProperty<YearMonth> displayedYearMonthProperty() {

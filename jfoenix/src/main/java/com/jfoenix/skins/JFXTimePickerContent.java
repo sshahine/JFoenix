@@ -141,7 +141,7 @@ public class JFXTimePickerContent extends VBox {
 
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-time-picker.css").toExternalForm();
+        return JFXTimePickerContent.class.getResource("/css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     protected BorderPane createContentPane(LocalTime time, boolean _24HourView) {

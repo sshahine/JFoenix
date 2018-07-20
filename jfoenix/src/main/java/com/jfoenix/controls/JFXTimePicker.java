@@ -80,7 +80,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidat
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-time-picker.css").toExternalForm();
+        return JFXTimePicker.class.getResource("/css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     /**

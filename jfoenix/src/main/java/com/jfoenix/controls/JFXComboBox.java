@@ -105,7 +105,7 @@ public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl 
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-combo-box.css").toExternalForm();
+        return JFXComboBox.class.getResource("/css/controls/jfx-combo-box.css").toExternalForm();
     }
 
     /**

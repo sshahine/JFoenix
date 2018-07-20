@@ -61,7 +61,7 @@ public class JFXColorPicker extends ColorPicker {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-color-picker.css").toExternalForm();
+        return JFXColorPicker.class.getResource("/css/controls/jfx-color-picker.css").toExternalForm();
     }
 
 

@@ -125,7 +125,7 @@ public class JFXDialogLayout extends StackPane {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("/css/controls/jfx-dialog-layout.css").toExternalForm();
+        return JFXDialogLayout.class.getResource("/css/controls/jfx-dialog-layout.css").toExternalForm();
     }
 
     private void initialize() {

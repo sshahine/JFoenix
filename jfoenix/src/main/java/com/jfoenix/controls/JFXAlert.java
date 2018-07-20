@@ -139,7 +139,7 @@ public class JFXAlert<R> extends Dialog<R> {
             }
 
             public String getUserAgentStylesheet() {
-                return getClass().getResource("/css/controls/jfx-alert.css").toExternalForm();
+                return JFXAlert.class.getResource("/css/controls/jfx-alert.css").toExternalForm();
             }
 
             @Override
