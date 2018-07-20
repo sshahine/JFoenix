@@ -67,7 +67,7 @@ public class DoubleTextFieldEditorBuilder implements EditorNodeBuilder<Double> {
 
     @Override
     public Region createNode(Double value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        textField = new JFXTextField(value + "");
+        textField = new JFXTextField(String.valueOf(value));
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
         DoubleValidator validator = new DoubleValidator();
@@ -78,12 +78,12 @@ public class DoubleTextFieldEditorBuilder implements EditorNodeBuilder<Double> {
 
     @Override
     public void setValue(Double value) {
-        textField.setText(value + "");
+        textField.setText(String.valueOf(value));
     }
 
     @Override
     public Double getValue() {
-        return Double.parseDouble(textField.getText());
+        return Double.valueOf(textField.getText());
     }
 
     @Override

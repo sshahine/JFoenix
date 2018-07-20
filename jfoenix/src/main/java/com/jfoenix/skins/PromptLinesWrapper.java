@@ -269,10 +269,11 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     private boolean usePromptText() {
         Object txt = valueProperty.getValue();
         String promptTxt = promptTextProperty.getValue();
-        boolean isLabelFloat = ((IFXLabelFloatControl) control).isLabelFloat();
-        return isLabelFloat || ((txt == null || txt.toString().isEmpty()) &&
-                                promptTxt != null && !promptTxt.isEmpty() &&
-                                !promptTextFill.get().equals(Color.TRANSPARENT));
+        boolean isLabelFloat = control.isLabelFloat();
+        return isLabelFloat || (promptTxt != null
+                                && (txt == null || txt.toString().isEmpty())
+                                && !promptTxt.isEmpty()
+                                && !promptTextFill.get().equals(Color.TRANSPARENT));
     }
 
     public void layoutLines(double x, double y, double w, double h, double controlHeight, double translateY) {

@@ -76,6 +76,8 @@ public class JFXSnackbar extends Group {
 
     public JFXSnackbar(Pane snackbarContainer) {
 
+        initialize();
+
         toast = new Label();
         toast.setMinWidth(Control.USE_PREF_SIZE);
         toast.getStyleClass().add("jfx-snackbar-toast");
@@ -271,8 +273,9 @@ public class JFXSnackbar extends Group {
     }
 
     public void close() {
-        if(openAnimation!=null)
+        if (openAnimation != null) {
             openAnimation.stop();
+        }
         if (this.isVisible()) {
             Timeline closeAnimation = new Timeline(
                 new KeyFrame(

@@ -65,8 +65,8 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
             changeListenersField.setAccessible(true);
             ChangeListener[] changeListeners = (ChangeListener[]) changeListenersField.get(value);
             // remove parent focus listener to prevent editor class cast exception
-            for(int i = changeListeners.length - 1; i > 0; i--){
-                if(changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")){
+            for (int i = changeListeners.length - 1; i > 0; i--) {
+                if (changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")) {
                     timePicker.focusedProperty().removeListener(changeListeners[i]);
                     break;
                 }
@@ -126,24 +126,22 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
             content.init();
             content.clearFocus();
         }
-        if (jfxTimePicker.isOverLay()) {
-            if (dialog == null) {
-                StackPane dialogParent = jfxTimePicker.getDialogParent();
-                if (dialogParent == null) {
-                    dialogParent = (StackPane) getSkinnable().getScene().getRoot();
-                }
-                dialog = new JFXDialog(dialogParent, (Region) getPopupContent(),
-                    DialogTransition.CENTER, true);
-                arrowButton.setOnMouseClicked((click) -> {
-                    if (jfxTimePicker.isOverLay()) {
-                        StackPane parent = jfxTimePicker.getDialogParent();
-                        if (parent == null) {
-                            parent = (StackPane) getSkinnable().getScene().getRoot();
-                        }
-                        dialog.show(parent);
-                    }
-                });
+        if (dialog == null && jfxTimePicker.isOverLay()) {
+            StackPane dialogParent = jfxTimePicker.getDialogParent();
+            if (dialogParent == null) {
+                dialogParent = (StackPane) jfxTimePicker.getScene().getRoot();
             }
+            dialog = new JFXDialog(dialogParent, (Region) getPopupContent(),
+                DialogTransition.CENTER, true);
+            arrowButton.setOnMouseClicked((click) -> {
+                if (jfxTimePicker.isOverLay()) {
+                    StackPane parent = jfxTimePicker.getDialogParent();
+                    if (parent == null) {
+                        parent = (StackPane) jfxTimePicker.getScene().getRoot();
+                    }
+                    dialog.show(parent);
+                }
+            });
         }
     }
 
@@ -151,7 +149,7 @@ public class JFXTimePickerSkin extends ComboBoxPopupControl<LocalTime> {
     protected void handleControlPropertyChanged(String p) {
         if ("DEFAULT_COLOR".equals(p)) {
             ((JFXTextField) getEditor()).setFocusColor(jfxTimePicker.getDefaultColor());
-        }else if ("CONVERTER".equals(p)) {
+        } else if ("CONVERTER".equals(p)) {
             updateDisplayNode();
         } else if ("EDITOR".equals(p)) {
             getEditableInputNode();

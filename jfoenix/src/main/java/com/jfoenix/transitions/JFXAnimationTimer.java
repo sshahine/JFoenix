@@ -176,7 +176,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         animationHandlers.clear();
     }
 
-    class AnimationHandler {
+    static class AnimationHandler {
         private double duration;
         private double currentDuration;
         private Set<JFXKeyValue<?>> keyValues;

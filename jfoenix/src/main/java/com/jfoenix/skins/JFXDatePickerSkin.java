@@ -73,8 +73,8 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
             changeListenersField.setAccessible(true);
             ChangeListener[] changeListeners = (ChangeListener[]) changeListenersField.get(value);
             // remove parent focus listener to prevent editor class cast exception
-            for(int i = changeListeners.length - 1; i > 0; i--){
-                if(changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")){
+            for (int i = changeListeners.length - 1; i > 0; i--) {
+                if (changeListeners[i] != null && changeListeners[i].getClass().getName().contains("ComboBoxPopupControl")) {
                     datePicker.focusedProperty().removeListener(changeListeners[i]);
                     break;
                 }
@@ -124,30 +124,28 @@ public class JFXDatePickerSkin extends ComboBoxPopupControl<LocalDate> {
 
     @Override
     public void show() {
-        if (!((JFXDatePicker) getSkinnable()).isOverLay()) {
+        if (!jfxDatePicker.isOverLay()) {
             super.show();
         }
         if (content != null) {
             content.init();
             content.clearFocus();
         }
-        if (((JFXDatePicker) getSkinnable()).isOverLay()) {
-            if (dialog == null) {
-                StackPane dialogParent = jfxDatePicker.getDialogParent();
-                if (dialogParent == null) {
-                    dialogParent = (StackPane) getSkinnable().getScene().getRoot();
-                }
-                dialog = new JFXDialog(dialogParent, (Region) getPopupContent(), DialogTransition.CENTER, true);
-                arrowButton.setOnMouseClicked((click) -> {
-                    if (((JFXDatePicker) getSkinnable()).isOverLay()) {
-                        StackPane parent = jfxDatePicker.getDialogParent();
-                        if (parent == null) {
-                            parent = (StackPane) getSkinnable().getScene().getRoot();
-                        }
-                        dialog.show(parent);
-                    }
-                });
+        if (dialog == null && jfxDatePicker.isOverLay()) {
+            StackPane dialogParent = jfxDatePicker.getDialogParent();
+            if (dialogParent == null) {
+                dialogParent = (StackPane) jfxDatePicker.getScene().getRoot();
             }
+            dialog = new JFXDialog(dialogParent, (Region) getPopupContent(), DialogTransition.CENTER, true);
+            arrowButton.setOnMouseClicked((click) -> {
+                if (jfxDatePicker.isOverLay()) {
+                    StackPane parent = jfxDatePicker.getDialogParent();
+                    if (parent == null) {
+                        parent = (StackPane) jfxDatePicker.getScene().getRoot();
+                    }
+                    dialog.show(parent);
+                }
+            });
         }
     }
 

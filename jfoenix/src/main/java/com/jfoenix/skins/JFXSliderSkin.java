@@ -114,7 +114,7 @@ public class JFXSliderSkin extends SliderSkin {
                 if (getSkinnable().getLabelFormatter() != null) {
                     return getSkinnable().getLabelFormatter().toString(getSkinnable().getValue());
                 } else {
-                    return Math.round(getSkinnable().getValue()) + "";
+                    return String.valueOf(Math.round(getSkinnable().getValue()));
                 }
             }, getSkinnable().valueProperty()));
         }

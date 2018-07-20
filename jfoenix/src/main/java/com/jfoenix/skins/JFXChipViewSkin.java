@@ -197,7 +197,6 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     private class CustomFlowPane extends FlowPane {
         double initOffset = 8;
-        double childHeight = 0;
 
         @Override
         protected void layoutChildren() {
@@ -205,12 +204,12 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             updateEditorPosition();
         }
 
-        private VPos getRowValignmentInternal() {
+        private VPos getRowVAlignmentInternal() {
             VPos localPos = getRowValignment();
             return localPos == null ? VPos.CENTER : localPos;
         }
 
-        private HPos getColumnHalignmentInternal() {
+        private HPos getColumnHAlignmentInternal() {
             HPos localPos = getColumnHalignment();
             return localPos == null ? HPos.LEFT : localPos;
         }
@@ -231,7 +230,6 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             final int mangedChildrenSize = managedChildren.size();
             if (mangedChildrenSize > 0) {
                 Region lastChild = (Region) managedChildren.get(mangedChildrenSize - 1);
-                childHeight = lastChild.getHeight();
                 double contentHeight = lastChild.getHeight() + lastChild.getLayoutY();
                 availableWidth = insideWidth - lastChild.getBoundsInParent().getMaxX();
                 double minWidth = inputField.getMinWidth();
@@ -246,7 +244,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                     layoutInArea(inputField,
                         newLineEditorX, contentHeight + root.getVgap(),
                         insideWidth - initOffset, insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
-                        0, getColumnHalignmentInternal(), VPos.TOP);
+                        0, getColumnHAlignmentInternal(), VPos.TOP);
                     editorOnNewLine = true;
                 } else {
                     double controlInsets = 0;
@@ -258,11 +256,11 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                         lastChild.getLayoutY() + controlInsets,
                         availableWidth - root.getHgap(),
                         lastChild.getHeight(),
-                        0, getColumnHalignmentInternal(), getRowValignmentInternal());
+                        0, getColumnHAlignmentInternal(), getRowVAlignmentInternal());
                     editorOnNewLine = false;
                 }
             } else {
-                layoutInArea(inputField, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHalignmentInternal(), VPos.TOP);
+                layoutInArea(inputField, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHAlignmentInternal(), VPos.TOP);
                 editorOnNewLine = true;
             }
         }

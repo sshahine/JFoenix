@@ -36,8 +36,10 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
@@ -311,14 +313,15 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
      * this method is used to update tree items and set the new root
      * after grouping the data model
      */
-    private void buildGroupedRoot(Map groupedItems, RecursiveTreeItem parent, int groupIndex) {
+    private void buildGroupedRoot(Map<?,?> groupedItems, RecursiveTreeItem parent, int groupIndex) {
         boolean setRoot = false;
         if (parent == null) {
             parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
             setRoot = true;
         }
 
-        for (Object key : groupedItems.keySet()) {
+        for (Map.Entry<?, ?> entry : groupedItems.entrySet()) {
+            Object key = entry.getKey();
             RecursiveTreeObject groupItem = new RecursiveTreeObject<>();
             groupItem.setGroupedValue(key);
             groupItem.setGroupedColumn(groupOrder.get(groupIndex));
@@ -332,7 +335,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             parent.originalItems.add(node);
             parent.getChildren().add(node);
 
-            Object children = groupedItems.get(key);
+            Object children = groupedItems.get(entry.getValue());
             if (children instanceof List) {
                 node.originalItems.addAll((List) children);
                 node.getChildren().addAll((List) children);

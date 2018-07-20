@@ -23,7 +23,10 @@ import com.jfoenix.svg.SVGGlyph;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.geometry.*;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
@@ -371,10 +374,9 @@ public class JFXDecorator extends VBox {
         }
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
-        Bounds boundsInParent = this.getBoundsInParent();
         if (contentPlaceHolder.getBorder() != null && contentPlaceHolder.getBorder().getStrokes().size() > 0) {
             double borderWidth = contentPlaceHolder.snappedLeftInset();
-            if (isRightEdge(x, y, boundsInParent)) {
+            if (isRightEdge(x)) {
                 if (y < borderWidth) {
                     this.setCursor(Cursor.NE_RESIZE);
                 } else if (y > this.getHeight() - borderWidth) {
@@ -382,7 +384,7 @@ public class JFXDecorator extends VBox {
                 } else {
                     this.setCursor(Cursor.E_RESIZE);
                 }
-            } else if (isLeftEdge(x, y, boundsInParent)) {
+            } else if (isLeftEdge(x)) {
                 if (y < borderWidth) {
                     this.setCursor(Cursor.NW_RESIZE);
                 } else if (y > this.getHeight() - borderWidth) {
@@ -390,9 +392,9 @@ public class JFXDecorator extends VBox {
                 } else {
                     this.setCursor(Cursor.W_RESIZE);
                 }
-            } else if (isTopEdge(x, y, boundsInParent)) {
+            } else if (isTopEdge(y)) {
                 this.setCursor(Cursor.N_RESIZE);
-            } else if (isBottomEdge(x, y, boundsInParent)) {
+            } else if (isBottomEdge(y)) {
                 this.setCursor(Cursor.S_RESIZE);
             } else {
                 this.setCursor(Cursor.DEFAULT);
@@ -479,19 +481,21 @@ public class JFXDecorator extends VBox {
     }
 
 
-    private boolean isRightEdge(double x, double y, Bounds boundsInParent) {
-        return x < this.getWidth() && x > this.getWidth() - contentPlaceHolder.snappedLeftInset();
+    private boolean isRightEdge(double x) {
+        final double width = this.getWidth();
+        return x < width && x > width - contentPlaceHolder.snappedLeftInset();
     }
 
-    private boolean isTopEdge(double x, double y, Bounds boundsInParent) {
+    private boolean isTopEdge(double y) {
         return y >= 0 && y < contentPlaceHolder.snappedLeftInset();
     }
 
-    private boolean isBottomEdge(double x, double y, Bounds boundsInParent) {
-        return y < this.getHeight() && y > this.getHeight() - contentPlaceHolder.snappedLeftInset();
+    private boolean isBottomEdge(double y) {
+        final double height = this.getHeight();
+        return y < height && y > height - contentPlaceHolder.snappedLeftInset();
     }
 
-    private boolean isLeftEdge(double x, double y, Bounds boundsInParent) {
+    private boolean isLeftEdge(double x) {
         return x >= 0 && x < contentPlaceHolder.snappedLeftInset();
     }
 

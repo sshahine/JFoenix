@@ -65,7 +65,7 @@ public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer>
 
     @Override
     public Region createNode(Integer value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        textField = new JFXTextField(value + "");
+        textField = new JFXTextField(String.valueOf(value));
         textField.setOnKeyPressed(keyEventsHandler);
         textField.focusedProperty().addListener(focusChangeListener);
         IntegerValidator validator = new IntegerValidator();
@@ -76,12 +76,12 @@ public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer>
 
     @Override
     public void setValue(Integer value) {
-        textField.setText(value + "");
+        textField.setText(String.valueOf(value));
     }
 
     @Override
     public Integer getValue() {
-        return Integer.parseInt(textField.getText());
+        return Integer.valueOf(textField.getText());
     }
 
     @Override

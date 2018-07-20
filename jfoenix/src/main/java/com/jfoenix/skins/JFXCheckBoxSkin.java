@@ -299,11 +299,11 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         select = new JFXFillTransition(Duration.millis(120),
             box,
             Color.TRANSPARENT,
-            (Color) ((JFXCheckBox) getSkinnable()).getCheckedColor());
+            (Color) getSkinnable().getCheckedColor());
         select.setInterpolator(Interpolator.EASE_OUT);
     }
 
-    private final class CheckBoxTransition extends CachedTransition {
+    private final static class CheckBoxTransition extends CachedTransition {
         CheckBoxTransition(Node mark) {
             super(mark, new Timeline(
                     new KeyFrame(

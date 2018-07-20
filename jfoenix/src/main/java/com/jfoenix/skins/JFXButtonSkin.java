@@ -28,15 +28,11 @@ import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -173,7 +169,7 @@ public class JFXButtonSkin extends ButtonSkin {
         switch (type) {
             case RAISED:
                 JFXDepthManager.setDepth(getSkinnable(), 2);
-                clickedAnimation = new ButtonClickTransition((DropShadow) getSkinnable().getEffect());
+                clickedAnimation = new ButtonClickTransition(getSkinnable(), (DropShadow) getSkinnable().getEffect());
                 break;
             default:
                 getSkinnable().setEffect(null);
@@ -190,9 +186,9 @@ public class JFXButtonSkin extends ButtonSkin {
         }
     }
 
-    private class ButtonClickTransition extends CachedTransition {
-        ButtonClickTransition(DropShadow shadowEffect) {
-            super(getSkinnable(), new Timeline(
+    private static class ButtonClickTransition extends CachedTransition {
+        ButtonClickTransition(Node node, DropShadow shadowEffect) {
+            super(node, new Timeline(
                     new KeyFrame(Duration.ZERO,
                         new KeyValue(shadowEffect.radiusProperty(),
                             JFXDepthManager.getShadowAt(2).radiusProperty().get(),

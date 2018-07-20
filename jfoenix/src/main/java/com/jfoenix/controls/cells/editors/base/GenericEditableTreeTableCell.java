@@ -210,7 +210,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             //listener runs and therefore the text field has been cleaned up. If the
             //text field is null we don't commit the edit. This has the useful side effect
             //of stopping the double commit.
-            if (!newValue && editorNode != null) {
+            if (editorNode != null && !newValue) {
                 commitHelper(true);
             }
         };

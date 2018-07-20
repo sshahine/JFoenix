@@ -67,9 +67,7 @@ public class NumberValidator extends ValidatorBase {
         }
     };
 
-    public NumberValidator() {
-
-    }
+    public NumberValidator() { }
 
     public NumberValidator(String message) {
         super(message);
