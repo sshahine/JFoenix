@@ -335,7 +335,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             parent.originalItems.add(node);
             parent.getChildren().add(node);
 
-            Object children = groupedItems.get(entry.getKey());
+            Object children = entry.getValue();
             if (children instanceof List) {
                 node.originalItems.addAll((List) children);
                 node.getChildren().addAll((List) children);
