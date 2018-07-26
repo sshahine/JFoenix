@@ -163,7 +163,7 @@ public class JFXTextFieldSkinAndroid<T extends TextField & IFXLabelFloatControl>
         promptText.setLayoutX(1);
         promptText.getTransforms().add(linesWrapper.promptTextScale);
         linesWrapper.promptContainer.getChildren().add(promptText);
-        if (getSkinnable().isFocused()) {
+        if (getSkinnable().isFocused() && ((IFXLabelFloatControl) getSkinnable()).isLabelFloat()) {
             promptText.setTranslateY(-Math.floor(textPane.getHeight()));
             linesWrapper.promptTextScale.setX(0.85);
             linesWrapper.promptTextScale.setY(0.85);

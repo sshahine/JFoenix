@@ -33,6 +33,7 @@ import javafx.util.StringConverter;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 /**
  * JFXChipArea is the material design implementation of chip Input.
@@ -123,6 +124,24 @@ public class JFXChipView<T> extends Control {
     public void setChipFactory(BiFunction<JFXChipView<T>, T, JFXChip<T>> chipFactory) {
         chipFactoryProperty().set(chipFactory);
     }
+
+    private ObjectProperty<Function<T, T>> selectionHandler;
+
+    public Function<T, T> getSelectionHandler() {
+        return selectionHandler == null ? null : selectionHandler.get();
+    }
+
+    public ObjectProperty<Function<T, T>> selectionHandlerProperty() {
+        if (selectionHandler == null) {
+            selectionHandler = new SimpleObjectProperty<>(this, "selectionHandler");
+        }
+        return selectionHandler;
+    }
+
+    public void setSelectionHandler(Function<T, T> selectionHandler) {
+        selectionHandlerProperty().set(selectionHandler);
+    }
+
 
     private JFXAutoCompletePopup<T> autoCompletePopup = new JFXChipViewSkin.ChipsAutoComplete<T>();
 

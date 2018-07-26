@@ -138,7 +138,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
         promptText.setTranslateX(1);
         promptText.getTransforms().add(linesWrapper.promptTextScale);
         linesWrapper.promptContainer.getChildren().add(promptText);
-        if (getSkinnable().isFocused()) {
+        if (getSkinnable().isFocused() && ((JFXTextArea) getSkinnable()).isLabelFloat()) {
             promptText.setTranslateY(-Math.floor(scrollPane.getHeight()));
             linesWrapper.promptTextScale.setX(0.85);
             linesWrapper.promptTextScale.setY(0.85);

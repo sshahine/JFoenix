@@ -97,7 +97,11 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         // init auto complete
         autoCompletePopup = (ChipsAutoComplete<T>) getSkinnable().getAutoCompletePopup();
         autoCompletePopup.setSelectionHandler(event -> {
-            getSkinnable().getChips().add(event.getObject());
+            T selectedItem = event.getObject();
+            if (getSkinnable().getSelectionHandler()!=null) {
+                selectedItem = getSkinnable().getSelectionHandler().apply(selectedItem);
+            }
+            getSkinnable().getChips().add(selectedItem);
             inputField.clear();
         });
         // add position listener to auto complete
@@ -143,7 +147,10 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 if (event.getCode() == KeyCode.ENTER) {
                     if (!editor.getText().trim().isEmpty()) {
                         try {
-                            getSkinnable().getChips().add(sc.fromString(editor.getText()));
+                            final T item = sc.fromString(editor.getText());
+                            if (item != null) {
+                                getSkinnable().getChips().add(item);
+                            }
                             editor.clear();
                             autoCompletePopup.hide();
                         } catch (Exception ex) {
@@ -177,11 +184,16 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     // these methods are called inside the chips items change listener
     private void createChip(T item) {
-        JFXChip<T> chip;
-        if (getSkinnable().getChipFactory() != null) {
-            chip = getSkinnable().getChipFactory().apply(getSkinnable(), item);
-        } else {
-            chip = new JFXDefaultChip<T>(getSkinnable(), item);
+        JFXChip<T> chip = null;
+        try {
+            if (getSkinnable().getChipFactory() != null) {
+                chip = getSkinnable().getChipFactory().apply(getSkinnable(), item);
+            } else {
+                chip = new JFXDefaultChip<T>(getSkinnable(), item);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException( "can't create chip for item '" + item +
+                "' make sure to override the string converter and return null if text input is not valid.", e);
         }
         int size = root.getChildren().size();
         root.getChildren().add(size - 1, chip);

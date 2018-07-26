@@ -173,7 +173,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         promptText.setTranslateX(1);
         linesWrapper.promptContainer.getChildren().add(promptText);
 
-        if (getSkinnable().isFocused()) {
+        if (getSkinnable().isFocused() && ((JFXComboBox<T>) getSkinnable()).isLabelFloat()) {
             promptText.setTranslateY(-snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
             linesWrapper.promptTextScale.setX(0.85);
             linesWrapper.promptTextScale.setY(0.85);
