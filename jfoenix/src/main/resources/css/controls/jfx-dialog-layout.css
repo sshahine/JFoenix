@@ -17,36 +17,36 @@
  * under the License.
  */
 
-.jfx-dialog-layout{
+.jfx-dialog-layout {
     -fx-text-fill: rgba(0, 0, 0, 0.87);
 }
 
-.jfx-dialog-layout .jfx-layout-heading {
+.jfx-dialog-layout > .jfx-layout-heading {
     -fx-alignment: center-left;
     -fx-font-weight: BOLD;
     -fx-padding: 24 24 20 24;
 }
 
-.jfx-dialog-layout .jfx-layout-actions{
-    -fx-alignment: center-right ;
-    -fx-hgap : 8 ;
+.jfx-dialog-layout > .jfx-layout-actions {
+    -fx-alignment: center-right;
+    -fx-hgap: 8;
     -fx-padding: 8 8 8 8;
 }
 
-.jfx-dialog-layout .jfx-layout-actions .jfx-button{
+.jfx-dialog-layout > .jfx-layout-actions .jfx-button {
     -fx-pref-height: 36;
     -fx-max-height: 36;
     -fx-min-width: 64;
     -fx-padding: 8;
 }
 
-.jfx-dialog-layout .jfx-layout-body{
+.jfx-dialog-layout > .jfx-layout-body {
     -fx-alignment: center-left;
     -fx-padding: 0 24 24 24;
     -fx-pref-width: 400;
 }
 
-.jfx-dialog-layout .jfx-layout-body .label{
+.jfx-dialog-layout > .jfx-layout-body .label {
     -fx-text-fill: #757575;
     -fx-font-size: 16.0;
     -fx-wrap-text: true;
