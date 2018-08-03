@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @ViewController(value = "/fxml/ui/SVGLoader.fxml", title = "Material Design Example")
@@ -36,6 +37,8 @@ public class SVGLoaderController {
     private static final String FX_BACKGROUND_INSETS_0 = "-fx-background-insets: 0;";
     private static final String DEFAULT_OPACITY = "33";
     private static final String THUMB = ".thumb";
+    private static final String ANIMATED_THUMB = ".animated-thumb";
+    private static final String COLORED_TRACK = ".colored-track";
 
     @FXMLViewFlowContext
     private ViewFlowContext context;
@@ -131,13 +134,18 @@ public class SVGLoaderController {
         button.ripplerFillProperty().bind(glyphDetailViewer.colorPicker.valueProperty());
         glyphDetailViewer.colorPicker.valueProperty().addListener((o, oldVal, newVal) -> {
             String webColor = "#" + Integer.toHexString(newVal.hashCode()).substring(0, 6).toUpperCase();
-            BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(THUMB)).getBackground()
-                .getFills()
-                .get(0);
-            ((Region) glyphDetailViewer.sizeSlider.lookup(THUMB)).setBackground(new Background(new BackgroundFill(
-                Color.valueOf(webColor),
-                fill.getRadii(),
-                fill.getInsets())));
+            Consumer<String> lookupConsumer = lookup->{
+                BackgroundFill fill = ((Region) glyphDetailViewer.sizeSlider.lookup(lookup)).getBackground()
+                    .getFills()
+                    .get(0);
+                ((Region) glyphDetailViewer.sizeSlider.lookup(lookup)).setBackground(new Background(new BackgroundFill(
+                    Color.valueOf(webColor),
+                    fill.getRadii(),
+                    fill.getInsets())));
+            };
+            lookupConsumer.accept(THUMB);
+            lookupConsumer.accept(COLORED_TRACK);
+            lookupConsumer.accept(ANIMATED_THUMB);
             if (lastClicked != null) {
                 final String currentColor = glyphDetailViewer.colorPicker.getValue()
                     .toString()

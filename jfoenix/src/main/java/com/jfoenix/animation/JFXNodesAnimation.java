@@ -36,10 +36,10 @@ public abstract class JFXNodesAnimation<S extends Node, T extends Node> {
         init();
         Animation exitAnimation = animateExit();
         Animation sharedAnimation = animateSharedNodes();
-        Animation enteranceAnimation = animateEntrance();
-        exitAnimation.setOnFinished((finish) -> sharedAnimation.play());
-        sharedAnimation.setOnFinished((finish) -> enteranceAnimation.play());
-        enteranceAnimation.setOnFinished((finish) -> end());
+        Animation entranceAnimation = animateEntrance();
+        exitAnimation.setOnFinished(finish -> sharedAnimation.play());
+        sharedAnimation.setOnFinished(finish -> entranceAnimation.play());
+        entranceAnimation.setOnFinished(finish -> end());
         exitAnimation.play();
     }
 

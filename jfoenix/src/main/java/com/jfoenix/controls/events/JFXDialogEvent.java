@@ -52,14 +52,14 @@ public class JFXDialogEvent extends Event {
      * ( after the exit animation ends )
      */
     public static final EventType<JFXDialogEvent> CLOSED =
-        new EventType<>(Event.ANY, "DIALOG_CLOSED");
+        new EventType<>(Event.ANY, "JFX_DIALOG_CLOSED");
 
     /**
      * This event occurs when a JFXDialog is opened, visible to the user
      * ( after the entrance animation ends )
      */
     public static final EventType<JFXDialogEvent> OPENED =
-        new EventType<>(Event.ANY, "DIALOG_OPENED");
+        new EventType<>(Event.ANY, "JFX_DIALOG_OPENED");
 
 
 }

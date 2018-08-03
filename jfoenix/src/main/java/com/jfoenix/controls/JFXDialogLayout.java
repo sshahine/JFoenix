@@ -20,7 +20,6 @@
 package com.jfoenix.controls;
 
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
@@ -38,7 +37,7 @@ import com.jfoenix.assets.JFoenixResources;
  * @version 1.0
  * @since 2016-03-09
  */
-public class JFXDialogLayout extends StackPane {
+public class JFXDialogLayout extends VBox {
     private StackPane heading = new StackPane();
     private StackPane body = new StackPane();
     private FlowPane actions = new FlowPane();
@@ -48,16 +47,11 @@ public class JFXDialogLayout extends StackPane {
      */
     public JFXDialogLayout() {
         initialize();
-        final VBox layout = new VBox();
-        layout.getChildren().add(heading);
-        heading.getStyleClass().add("jfx-layout-heading");
-        heading.getStyleClass().add("title");
-        layout.getChildren().add(body);
-        VBox.setVgrow(body, Priority.ALWAYS);
+        heading.getStyleClass().addAll("jfx-layout-heading", "title");
         body.getStyleClass().add("jfx-layout-body");
-        layout.getChildren().add(actions);
+        VBox.setVgrow(body, Priority.ALWAYS);
         actions.getStyleClass().add("jfx-layout-actions");
-        this.getChildren().add(layout);
+        getChildren().setAll(heading, body, actions);
     }
 
     /***************************************************************************

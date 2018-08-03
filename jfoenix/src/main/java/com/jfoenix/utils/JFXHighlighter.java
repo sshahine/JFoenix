@@ -92,7 +92,7 @@ public class JFXHighlighter {
         for (Node node : nodes) {
             Text text = ((Text) node);
             final int beginIndex = text.getText().toLowerCase().indexOf(query.toLowerCase());
-            if (node.isVisible() && beginIndex > -1) {
+            if (beginIndex > -1 && node.isVisible()) {
                 ArrayList<Bounds> boundingBoxes = getMatchingBounds(query, text);
                 ArrayList<Rectangle> rectangles = new ArrayList<>();
                 for (Bounds boundingBox : boundingBoxes) {

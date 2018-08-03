@@ -20,6 +20,18 @@
 .jfx-text-area {
     -jfx-focus-color: #4059A9;
     -jfx-unfocus-color: #4d4d4d;
+    -fx-padding: 0.333333em 0 0 0 ;
+}
+
+.jfx-text-area > .input-line {
+    -fx-background-color: -jfx-unfocus-color;
+    -fx-pref-height: 1px;
+    -fx-translate-y: 1px;
+}
+
+.jfx-text-area > .input-focused-line {
+    -fx-background-color: -jfx-focus-color;
+    -fx-pref-height: 2px;
 }
 
 .jfx-text-area,

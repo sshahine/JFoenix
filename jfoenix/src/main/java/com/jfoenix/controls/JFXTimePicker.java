@@ -20,27 +20,25 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.assets.JFoenixResources;
+import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.skins.JFXTimePickerSkin;
+import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
-import javafx.geometry.Insets;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 
-import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ import java.util.Locale;
  * @version 1.0
  * @since 2017-03-01
  */
-public class JFXTimePicker extends ComboBoxBase<LocalTime> {
+public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidatableControl {
 
     /**
      * {@inheritDoc}
@@ -180,9 +178,42 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
                     editorNode.setFakeFocus(newVal);
                 }
             });
+            editorNode.activeValidatorWritableProperty().bind(activeValidatorProperty());
             editor.set(editorNode);
         }
         return editor.getReadOnlyProperty();
+    }
+
+    private ValidationControl validationControl = new ValidationControl(this);
+
+    @Override
+    public ValidatorBase getActiveValidator() {
+        return validationControl.getActiveValidator();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
+        return validationControl.activeValidatorProperty();
+    }
+
+    @Override
+    public ObservableList<ValidatorBase> getValidators() {
+        return validationControl.getValidators();
+    }
+
+    @Override
+    public void setValidators(ValidatorBase... validators) {
+        validationControl.setValidators(validators);
+    }
+
+    @Override
+    public boolean validate() {
+        return validationControl.validate();
+    }
+
+    @Override
+    public void resetValidation() {
+        validationControl.resetValidation();
     }
 
     /***************************************************************************

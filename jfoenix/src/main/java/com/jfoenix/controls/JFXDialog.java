@@ -329,7 +329,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class LeftTransition extends CachedTransition {
-        public LeftTransition() {
+        LeftTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateXProperty(), -offsetX, Interpolator.EASE_BOTH),
@@ -351,7 +351,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class RightTransition extends CachedTransition {
-        public RightTransition() {
+        RightTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateXProperty(), offsetX, Interpolator.EASE_BOTH),
@@ -372,7 +372,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class TopTransition extends CachedTransition {
-        public TopTransition() {
+        TopTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateYProperty(), -offsetY, Interpolator.EASE_BOTH),
@@ -393,7 +393,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class BottomTransition extends CachedTransition {
-        public BottomTransition() {
+        BottomTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateYProperty(), offsetY, Interpolator.EASE_BOTH),
@@ -414,7 +414,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class CenterTransition extends CachedTransition {
-        public CenterTransition() {
+        CenterTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.scaleXProperty(), 0, Interpolator.EASE_BOTH),

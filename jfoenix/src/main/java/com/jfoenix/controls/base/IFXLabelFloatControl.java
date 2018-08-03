@@ -17,30 +17,35 @@
  * under the License.
  */
 
-package com.jfoenix.controls.events;
+package com.jfoenix.controls.base;
 
-import javafx.event.Event;
-import javafx.event.EventType;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.scene.paint.Paint;
 
 /**
- * @author Shadi Shaheen
- * @version 1.0.0
- * @since 2018-02-01
+ * this class is created for internal use only, to remove duplication between text input controls
+ * skins
+ *
+ * Created by sshahine on 7/14/2017.
  */
-public class JFXAutoCompleteEvent<T> extends Event {
+public interface IFXLabelFloatControl extends IFXValidatableControl, IFXStaticControl {
 
-	private T object;
+    StyleableBooleanProperty labelFloatProperty();
 
-	public JFXAutoCompleteEvent(EventType<? extends Event> eventType, T object) {
-		super(eventType);
-		this.object = object;
-	}
+    boolean isLabelFloat();
 
-	public T getObject(){
-		return object;
-	}
+    void setLabelFloat(boolean labelFloat);
 
-	//TODO: more events to be added
-	public static final EventType<JFXAutoCompleteEvent> SELECTION =
-			new EventType<JFXAutoCompleteEvent>(Event.ANY, "JFX_AUTOCOMPLETE_SELECTION");
+    Paint getUnFocusColor();
+
+    StyleableObjectProperty<Paint> unFocusColorProperty();
+
+    void setUnFocusColor(Paint color);
+
+    Paint getFocusColor();
+
+    StyleableObjectProperty<Paint> focusColorProperty();
+
+    void setFocusColor(Paint color);
 }

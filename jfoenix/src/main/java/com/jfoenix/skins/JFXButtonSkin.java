@@ -26,7 +26,6 @@ import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.utils.JFXNodeUtils;
 import javafx.animation.*;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.skin.ButtonSkin;
@@ -169,7 +168,7 @@ public class JFXButtonSkin extends ButtonSkin {
         switch (type) {
             case RAISED:
                 JFXDepthManager.setDepth(getSkinnable(), 2);
-                clickedAnimation = new ButtonClickTransition((DropShadow) getSkinnable().getEffect());
+                clickedAnimation = new ButtonClickTransition(getSkinnable(), (DropShadow) getSkinnable().getEffect());
                 break;
             default:
                 getSkinnable().setEffect(null);
@@ -186,9 +185,9 @@ public class JFXButtonSkin extends ButtonSkin {
         }
     }
 
-    private class ButtonClickTransition extends CachedTransition {
-        ButtonClickTransition(DropShadow shadowEffect) {
-            super(getSkinnable(), new Timeline(
+    private static class ButtonClickTransition extends CachedTransition {
+        ButtonClickTransition(Node node, DropShadow shadowEffect) {
+            super(node, new Timeline(
                     new KeyFrame(Duration.ZERO,
                         new KeyValue(shadowEffect.radiusProperty(),
                             JFXDepthManager.getShadowAt(2).radiusProperty().get(),

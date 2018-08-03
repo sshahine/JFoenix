@@ -1,7 +1,6 @@
 package demos.gui.uicomponents;
 
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.validation.ValidationFacade;
 import io.datafx.controller.ViewController;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -26,13 +25,13 @@ public class ComboBoxController {
 
         jfxComboBox.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {
-                ValidationFacade.validate(jfxComboBox);
+                jfxComboBox.validate();
             }
         });
 
         ChangeListener<? super Boolean> comboBoxFocus = (o, oldVal, newVal) -> {
             if (!newVal) {
-                ValidationFacade.validate(jfxEditableComboBox);
+                jfxEditableComboBox.validate();
             }
         };
         jfxEditableComboBox.focusedProperty().addListener(comboBoxFocus);

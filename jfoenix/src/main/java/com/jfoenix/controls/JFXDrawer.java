@@ -160,13 +160,13 @@ public class JFXDrawer extends StackPane {
             JFXKeyValue.builder()
                 .setTargetSupplier(() -> prefSizeProperty)
                 .setEndValueSupplier(() -> tempDrawerSize)
-                .setAnimateCondition(() -> !hasMiniSize() && translateTo == 0 && tempDrawerSize > getDefaultDrawerSize())
+                .setAnimateCondition(() -> translateTo == 0 && tempDrawerSize > getDefaultDrawerSize() && !hasMiniSize())
                 .setInterpolator(Interpolator.EASE_BOTH).build()),
         new JFXKeyFrame(Duration.millis(420),
             JFXKeyValue.builder()
                 .setTargetSupplier(() -> maxSizeProperty)
                 .setEndValueSupplier(() -> tempDrawerSize)
-                .setAnimateCondition(() -> !hasMiniSize() && translateTo == 0 && tempDrawerSize > getDefaultDrawerSize())
+                .setAnimateCondition(() -> translateTo == 0 && tempDrawerSize > getDefaultDrawerSize() && !hasMiniSize())
                 .setInterpolator(Interpolator.EASE_BOTH).build()),
         new JFXKeyFrame(Duration.millis(420),
             JFXKeyValue.builder()
@@ -309,7 +309,7 @@ public class JFXDrawer extends StackPane {
                 }
 
                 if (size + direction.doubleValue() * eventPoint < activeOffset
-                    && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null)
+                    && (content.getCursor() == null || content.getCursor() == Cursor.DEFAULT)
                     && valid == 0
                     && !isOpened()) {
                     holdTimer.play();

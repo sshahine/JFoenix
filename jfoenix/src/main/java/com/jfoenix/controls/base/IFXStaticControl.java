@@ -17,30 +17,15 @@
  * under the License.
  */
 
-package com.jfoenix.controls.events;
+package com.jfoenix.controls.base;
 
-import javafx.event.Event;
-import javafx.event.EventType;
+import javafx.css.StyleableBooleanProperty;
 
-/**
- * @author Shadi Shaheen
- * @version 1.0.0
- * @since 2018-02-01
- */
-public class JFXAutoCompleteEvent<T> extends Event {
+public interface IFXStaticControl {
 
-	private T object;
+    StyleableBooleanProperty disableAnimationProperty();
 
-	public JFXAutoCompleteEvent(EventType<? extends Event> eventType, T object) {
-		super(eventType);
-		this.object = object;
-	}
+    Boolean isDisableAnimation();
 
-	public T getObject(){
-		return object;
-	}
-
-	//TODO: more events to be added
-	public static final EventType<JFXAutoCompleteEvent> SELECTION =
-			new EventType<JFXAutoCompleteEvent>(Event.ANY, "JFX_AUTOCOMPLETE_SELECTION");
+    void setDisableAnimation(Boolean disabled);
 }

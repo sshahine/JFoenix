@@ -23,18 +23,16 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.svg.SVGGlyph;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
@@ -57,8 +55,6 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
     private TextField displayNode;
     private JFXDatePickerContent content;
     private JFXDialog dialog;
-
-    private Method reflectSetTextFromTextFieldIntoComboBoxValue;
 
     public JFXDatePickerSkin(final JFXDatePicker datePicker) {
         super(datePicker);
@@ -120,6 +116,7 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
     private void updateArrow(JFXDatePicker datePicker) {
         ((Region) arrowButton.getChildren().get(0)).setBackground(new Background(
             new BackgroundFill(datePicker.getDefaultColor(), null, null)));
+        ((JFXTextField) getEditor()).setFocusColor(jfxDatePicker.getDefaultColor());
     }
 
 
@@ -157,30 +154,28 @@ public class JFXDatePickerSkin extends JFXGenericPickerSkin<LocalDate> {
 
     @Override
     public void show() {
-        if (!((JFXDatePicker) getSkinnable()).isOverLay()) {
+        if (!jfxDatePicker.isOverLay()) {
             super.show();
         }
         if (content != null) {
             content.init();
             content.clearFocus();
         }
-        if (((JFXDatePicker) getSkinnable()).isOverLay()) {
-            if (dialog == null) {
-                StackPane dialogParent = jfxDatePicker.getDialogParent();
-                if (dialogParent == null) {
-                    dialogParent = (StackPane) getSkinnable().getScene().getRoot();
-                }
-                dialog = new JFXDialog(dialogParent, (Region) getPopupContent(), DialogTransition.CENTER, true);
-                arrowButton.setOnMouseClicked((click) -> {
-                    if (((JFXDatePicker) getSkinnable()).isOverLay()) {
-                        StackPane parent = jfxDatePicker.getDialogParent();
-                        if (parent == null) {
-                            parent = (StackPane) getSkinnable().getScene().getRoot();
-                        }
-                        dialog.show(parent);
-                    }
-                });
+        if (dialog == null && jfxDatePicker.isOverLay()) {
+            StackPane dialogParent = jfxDatePicker.getDialogParent();
+            if (dialogParent == null) {
+                dialogParent = (StackPane) jfxDatePicker.getScene().getRoot();
             }
+            dialog = new JFXDialog(dialogParent, (Region) getPopupContent(), DialogTransition.CENTER, true);
+            arrowButton.setOnMouseClicked((click) -> {
+                if (jfxDatePicker.isOverLay()) {
+                    StackPane parent = jfxDatePicker.getDialogParent();
+                    if (parent == null) {
+                        parent = (StackPane) jfxDatePicker.getScene().getRoot();
+                    }
+                    dialog.show(parent);
+                }
+            });
         }
     }
 }

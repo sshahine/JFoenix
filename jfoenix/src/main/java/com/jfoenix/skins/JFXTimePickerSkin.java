@@ -23,7 +23,6 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialog.DialogTransition;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
-import com.jfoenix.svg.SVGGlyph;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -84,6 +83,7 @@ public class JFXTimePickerSkin extends JFXGenericPickerSkin<LocalTime> {
     private void updateArrow(JFXTimePicker picker) {
         ((Region) arrowButton.getChildren().get(0)).setBackground(new Background(
             new BackgroundFill(picker.getDefaultColor(), null, null)));
+        ((JFXTextField) getEditor()).setFocusColor(jfxTimePicker.getDefaultColor());
     }
 
     @Override
@@ -103,24 +103,22 @@ public class JFXTimePickerSkin extends JFXGenericPickerSkin<LocalTime> {
             content.init();
             content.clearFocus();
         }
-        if (jfxTimePicker.isOverLay()) {
-            if (dialog == null) {
-                StackPane dialogParent = jfxTimePicker.getDialogParent();
-                if (dialogParent == null) {
-                    dialogParent = (StackPane) getSkinnable().getScene().getRoot();
-                }
-                dialog = new JFXDialog(dialogParent, (Region) getPopupContent(),
-                    DialogTransition.CENTER, true);
-                arrowButton.setOnMouseClicked((click) -> {
-                    if (jfxTimePicker.isOverLay()) {
-                        StackPane parent = jfxTimePicker.getDialogParent();
-                        if (parent == null) {
-                            parent = (StackPane) getSkinnable().getScene().getRoot();
-                        }
-                        dialog.show(parent);
-                    }
-                });
+        if (dialog == null && jfxTimePicker.isOverLay()) {
+            StackPane dialogParent = jfxTimePicker.getDialogParent();
+            if (dialogParent == null) {
+                dialogParent = (StackPane) jfxTimePicker.getScene().getRoot();
             }
+            dialog = new JFXDialog(dialogParent, (Region) getPopupContent(),
+                DialogTransition.CENTER, true);
+            arrowButton.setOnMouseClicked((click) -> {
+                if (jfxTimePicker.isOverLay()) {
+                    StackPane parent = jfxTimePicker.getDialogParent();
+                    if (parent == null) {
+                        parent = (StackPane) jfxTimePicker.getScene().getRoot();
+                    }
+                    dialog.show(parent);
+                }
+            });
         }
     }
 

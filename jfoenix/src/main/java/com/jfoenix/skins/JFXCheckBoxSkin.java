@@ -295,7 +295,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         select.setInterpolator(Interpolator.EASE_OUT);
     }
 
-    private final class CheckBoxTransition extends CachedTransition {
+    private final static class CheckBoxTransition extends CachedTransition {
         CheckBoxTransition(Node mark) {
             super(mark, new Timeline(
                     new KeyFrame(

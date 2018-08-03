@@ -29,7 +29,7 @@
     -fx-translate-y: 1px;
 }
 
-.jfx-text-field > .input-focused-line{
+.jfx-text-field > .input-focused-line {
     -fx-background-color: -jfx-focus-color;
     -fx-pref-height: 2px;
 }
@@ -68,4 +68,10 @@
 .jfx-date-picker > .jfx-text-field,
 .jfx-time-picker > .jfx-text-field{
     -jfx-focus-color: -jfx-default-color;
+}
+
+.combo-box-base:error > .jfx-text-field,
+.combo-box-base:error > .jfx-text-field {
+    -jfx-focus-color: #D34336;
+    -jfx-unfocus-color: #D34336;
 }

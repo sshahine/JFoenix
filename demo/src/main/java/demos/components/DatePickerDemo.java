@@ -70,6 +70,9 @@ public class DatePickerDemo extends Application {
 
     }
 
+    // toRun:
+    // --add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix --add-exports=javafx.base/com.sun.javafx.binding=com.jfoenix --add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix --add-exports=javafx.base/com.sun.javafx.event=com.jfoenix
+
     public static void main(String[] args) {
         launch(args);
     }

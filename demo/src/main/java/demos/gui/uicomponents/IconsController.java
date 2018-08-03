@@ -67,7 +67,7 @@ public class IconsController {
                 snackbar.fireEvent(new SnackbarEvent("Toast Message " + count));
             } else {
                 if (count % 4 == 0) {
-                    snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistant " + count,
+                    snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistent " + count,
                                                          "CLOSE",
                                                          3000,
                                                          true,

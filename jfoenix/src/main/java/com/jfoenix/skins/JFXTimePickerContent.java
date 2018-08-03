@@ -213,7 +213,7 @@ public class JFXTimePickerContent extends VBox {
     protected StackPane createHeaderPane(LocalTime time, boolean _24HourView) {
         int hour = time.getHour();
 
-        selectedHourLabel.setText((hour % (_24HourView ? 24 : 12) == 0 ? (_24HourView ? 0 : 12) : hour % (_24HourView ? 24 : 12)) + "");
+        selectedHourLabel.setText(String.valueOf(hour % (_24HourView ? 24 : 12) == 0 ? (_24HourView ? 0 : 12) : hour % (_24HourView ? 24 : 12)));
         selectedHourLabel.getStyleClass().add(SPINNER_LABEL);
         selectedHourLabel.setTextFill(Color.WHITE);
         selectedHourLabel.setFont(Font.font(ROBOTO, FontWeight.BOLD, 42));
@@ -222,7 +222,7 @@ public class JFXTimePickerContent extends VBox {
         selectedHourLabel.setAlignment(Pos.CENTER_RIGHT);
         timeLabel.set(selectedHourLabel);
 
-        selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
+        selectedMinLabel.setText(String.valueOf(unitConverter.toString(time.getMinute())));
         selectedMinLabel.getStyleClass().add(SPINNER_LABEL);
         selectedMinLabel.setTextFill(fadedColor);
         selectedMinLabel.setFont(Font.font(ROBOTO, FontWeight.BOLD, 42));
@@ -455,7 +455,7 @@ public class JFXTimePickerContent extends VBox {
         for (int i = 0; i < 12; i++) {
             StackPane labelContainer = new StackPane();
             int val = ((i + 3) * 5) % 60;
-            Label label = new Label(unitConverter.toString(val) + "");
+            Label label = new Label(String.valueOf(unitConverter.toString(val)));
             label.setFont(Font.font(ROBOTO, FontWeight.BOLD, 12));
             // init label color
             label.setTextFill(val == time.getMinute() ?

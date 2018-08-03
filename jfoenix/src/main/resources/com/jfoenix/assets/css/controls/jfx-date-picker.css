@@ -30,7 +30,7 @@
 .jfx-date-picker > .arrow-button,
 .jfx-date-picker:editable > .arrow-button,
 .jfx-date-picker:focused > .arrow-button,
-.jfx-date-picker:editable:focused > .arrow-button{
+.jfx-date-picker:editable:focused > .arrow-button {
     -fx-background-color: TRANSPARENT;
 }
 
@@ -42,7 +42,7 @@
     -fx-padding: 10;
 }
 
-.jfx-date-picker > .arrow-button > .jfx-svg-glyph{
+.jfx-date-picker > .arrow-button > .jfx-svg-glyph {
     -fx-background-color: -jfx-default-color;
 }
 

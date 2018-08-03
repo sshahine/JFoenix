@@ -50,11 +50,12 @@ public class JFXTreeTableCellSkin<S, T> extends TreeTableCellSkin<S, T> {
         Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
         if (disclosureNode != null) {
             TreeItem<S> item = getSkinnable().getTreeTableRow().getTreeItem();
-            boolean disclosureVisible = item != null && !item.isLeaf()
-                                        && item.getValue() != null
-                                        && ((RecursiveTreeObject) item.getValue()).getGroupedColumn() == getSkinnable().getTableColumn();
+            final S value = item == null ? null : item.getValue();
+            boolean disclosureVisible = value != null
+                                        && !item.isLeaf()
+                                        && value instanceof RecursiveTreeObject
+                                        && ((RecursiveTreeObject) value).getGroupedColumn() == getSkinnable().getTableColumn();
             disclosureNode.setVisible(disclosureVisible);
-
             if (!disclosureVisible) {
                 getChildren().remove(disclosureNode);
             } else if (disclosureNode.getParent() == null) {
@@ -75,8 +76,8 @@ public class JFXTreeTableCellSkin<S, T> extends TreeTableCellSkin<S, T> {
         double disclosureWidth = 0;
         Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
         if (disclosureNode.isVisible()) {
-            Pos alighnment = getSkinnable().getAlignment();
-            alighnment = alighnment == null ? Pos.CENTER_LEFT : alighnment;
+            Pos alignment = getSkinnable().getAlignment();
+            alignment = alignment == null ? Pos.CENTER_LEFT : alignment;
             layoutInArea(disclosureNode, x + 8, y, w, h, 0, Insets.EMPTY, false, false, HPos.LEFT, VPos.CENTER);
             disclosureWidth = disclosureNode.getLayoutBounds().getWidth() + 18;
         }

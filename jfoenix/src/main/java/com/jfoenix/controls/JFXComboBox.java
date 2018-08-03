@@ -20,18 +20,31 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.assets.JFoenixResources;
+import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
+import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.Skin;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
@@ -50,7 +63,7 @@ import java.util.List;
  * @version 1.0
  * @since 2016-03-09
  */
-public class JFXComboBox<T> extends ComboBox<T> {
+public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl {
 
     /**
      * {@inheritDoc}
@@ -218,6 +231,47 @@ public class JFXComboBox<T> extends ComboBox<T> {
 
     /***************************************************************************
      *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * wrapper for validation properties / methods
+     */
+    private ValidationControl validationControl = new ValidationControl(this);
+
+    @Override
+    public ValidatorBase getActiveValidator() {
+        return validationControl.getActiveValidator();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
+        return validationControl.activeValidatorProperty();
+    }
+
+    @Override
+    public ObservableList<ValidatorBase> getValidators() {
+        return validationControl.getValidators();
+    }
+
+    @Override
+    public void setValidators(ValidatorBase... validators) {
+        validationControl.setValidators(validators);
+    }
+
+    @Override
+    public boolean validate() {
+        return validationControl.validate();
+    }
+
+    @Override
+    public void resetValidation() {
+        validationControl.resetValidation();
+    }
+
+    /***************************************************************************
+     *                                                                         *
      * styleable Properties                                                    *
      *                                                                         *
      **************************************************************************/
@@ -285,6 +339,30 @@ public class JFXComboBox<T> extends ComboBox<T> {
     }
 
 
+    /**
+     * disable animation on validation
+     */
+    private StyleableBooleanProperty disableAnimation = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_ANIMATION,
+        JFXComboBox.this,
+        "disableAnimation",
+        false);
+
+    @Override
+    public final StyleableBooleanProperty disableAnimationProperty() {
+        return this.disableAnimation;
+    }
+
+    @Override
+    public final Boolean isDisableAnimation() {
+        return disableAnimation != null && this.disableAnimationProperty().get();
+    }
+
+    @Override
+    public final void setDisableAnimation(final Boolean disabled) {
+        this.disableAnimationProperty().set(disabled);
+    }
+
+
     private static class StyleableProperties {
         private static final CssMetaData<JFXComboBox<?>, Paint> UNFOCUS_COLOR = new CssMetaData<JFXComboBox<?>, Paint>(
             "-jfx-unfocus-color",
@@ -329,13 +407,25 @@ public class JFXComboBox<T> extends ComboBox<T> {
             }
         };
 
+        private static final CssMetaData<JFXComboBox, Boolean> DISABLE_ANIMATION =
+            new CssMetaData<JFXComboBox, Boolean>("-jfx-disable-animation",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXComboBox control) {
+                    return control.disableAnimation == null || !control.disableAnimation.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXComboBox control) {
+                    return control.disableAnimationProperty();
+                }
+            };
 
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
-                Control.getClassCssMetaData());
-            Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT);
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>();
+            Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT, DISABLE_ANIMATION);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }
@@ -346,10 +436,10 @@ public class JFXComboBox<T> extends ComboBox<T> {
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(
-                Control.getClassCssMetaData());
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(Control.getClassCssMetaData());
+            styleables.addAll(ComboBox.getClassCssMetaData());
             styleables.addAll(getClassCssMetaData());
-            styleables.addAll(Control.getClassCssMetaData());
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
         return STYLEABLES;

@@ -97,7 +97,11 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         // init auto complete
         autoCompletePopup = (ChipsAutoComplete<T>) getSkinnable().getAutoCompletePopup();
         autoCompletePopup.setSelectionHandler(event -> {
-            getSkinnable().getChips().add(event.getObject());
+            T selectedItem = event.getObject();
+            if (getSkinnable().getSelectionHandler()!=null) {
+                selectedItem = getSkinnable().getSelectionHandler().apply(selectedItem);
+            }
+            getSkinnable().getChips().add(selectedItem);
             inputField.clear();
         });
         // add position listener to auto complete
@@ -143,7 +147,10 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 if (event.getCode() == KeyCode.ENTER) {
                     if (!editor.getText().trim().isEmpty()) {
                         try {
-                            getSkinnable().getChips().add(sc.fromString(editor.getText()));
+                            final T item = sc.fromString(editor.getText());
+                            if (item != null) {
+                                getSkinnable().getChips().add(item);
+                            }
                             editor.clear();
                             autoCompletePopup.hide();
                         } catch (Exception ex) {
@@ -177,11 +184,16 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     // these methods are called inside the chips items change listener
     private void createChip(T item) {
-        JFXChip<T> chip;
-        if (getSkinnable().getChipFactory() != null) {
-            chip = getSkinnable().getChipFactory().apply(getSkinnable(), item);
-        } else {
-            chip = new JFXDefaultChip<T>(getSkinnable(), item);
+        JFXChip<T> chip = null;
+        try {
+            if (getSkinnable().getChipFactory() != null) {
+                chip = getSkinnable().getChipFactory().apply(getSkinnable(), item);
+            } else {
+                chip = new JFXDefaultChip<T>(getSkinnable(), item);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException( "can't create chip for item '" + item +
+                "' make sure to override the string converter and return null if text input is not valid.", e);
         }
         int size = root.getChildren().size();
         root.getChildren().add(size - 1, chip);
@@ -197,7 +209,6 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     private class CustomFlowPane extends FlowPane {
         double initOffset = 8;
-        double childHeight = 0;
 
         @Override
         protected void layoutChildren() {
@@ -205,12 +216,12 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             updateEditorPosition();
         }
 
-        private VPos getRowValignmentInternal() {
+        private VPos getRowVAlignmentInternal() {
             VPos localPos = getRowValignment();
             return localPos == null ? VPos.CENTER : localPos;
         }
 
-        private HPos getColumnHalignmentInternal() {
+        private HPos getColumnHAlignmentInternal() {
             HPos localPos = getColumnHalignment();
             return localPos == null ? HPos.LEFT : localPos;
         }
@@ -231,7 +242,6 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             final int mangedChildrenSize = managedChildren.size();
             if (mangedChildrenSize > 0) {
                 Region lastChild = (Region) managedChildren.get(mangedChildrenSize - 1);
-                childHeight = lastChild.getHeight();
                 double contentHeight = lastChild.getHeight() + lastChild.getLayoutY();
                 availableWidth = insideWidth - lastChild.getBoundsInParent().getMaxX();
                 double minWidth = inputField.getMinWidth();
@@ -246,7 +256,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                     layoutInArea(inputField,
                         newLineEditorX, contentHeight + root.getVgap(),
                         insideWidth - initOffset, insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
-                        0, getColumnHalignmentInternal(), VPos.TOP);
+                        0, getColumnHAlignmentInternal(), VPos.TOP);
                     editorOnNewLine = true;
                 } else {
                     double controlInsets = 0;
@@ -258,11 +268,11 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                         lastChild.getLayoutY() + controlInsets,
                         availableWidth - root.getHgap(),
                         lastChild.getHeight(),
-                        0, getColumnHalignmentInternal(), getRowValignmentInternal());
+                        0, getColumnHAlignmentInternal(), getRowVAlignmentInternal());
                     editorOnNewLine = false;
                 }
             } else {
-                layoutInArea(inputField, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHalignmentInternal(), VPos.TOP);
+                layoutInArea(inputField, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHAlignmentInternal(), VPos.TOP);
                 editorOnNewLine = true;
             }
         }
