@@ -31,8 +31,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -205,7 +213,8 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         focusedLine.setOpacity(0);
         if (control.isLabelFloat()) {
             animatedPromptTextFill.set(promptTextFill.get());
-            final Object text = valueProperty.getValue();
+            Object text = valueProperty.getValue();
+            text = validateComboBox(text);
             if (text == null || text.toString().isEmpty()) {
                 animating = true;
                 runTimer(unfocusTimer, true);
@@ -230,10 +239,19 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
             if (control.isFocused()) {
                 animateFloatingLabel(true, animation);
             } else {
-                final Object text = valueProperty.getValue();
+                Object text = valueProperty.getValue();
+                text = validateComboBox(text);
                 animateFloatingLabel(!(text == null || text.toString().isEmpty()), animation);
             }
         }
+    }
+
+    private Object validateComboBox(Object text) {
+        if (control instanceof ComboBox && ((ComboBox) control).isEditable()) {
+            final String editorText = ((ComboBox<?>) control).getEditor().getText();
+            text = editorText.isEmpty() ? null : text;
+        }
+        return text;
     }
 
     /**
@@ -271,6 +289,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
 
     private boolean usePromptText() {
         Object txt = valueProperty.getValue();
+        txt = validateComboBox(txt);
         String promptTxt = promptTextProperty.getValue();
         boolean isLabelFloat = control.isLabelFloat();
         return isLabelFloat || (promptTxt != null
