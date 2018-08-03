@@ -24,7 +24,11 @@ import javafx.beans.value.WritableValue;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Custom AnimationTimer that can be created the same way as a timeline,
@@ -58,7 +62,7 @@ public class JFXAnimationTimer extends AnimationTimer {
     private HashMap<JFXKeyFrame, AnimationHandler> mutableFrames = new HashMap<>();
 
     public void addKeyFrame(JFXKeyFrame keyFrame) throws Exception {
-        if(isRunning()){
+        if (isRunning()) {
             throw new Exception("Can't update animation timer while running");
         }
         Duration duration = keyFrame.getTime();
@@ -70,8 +74,8 @@ public class JFXAnimationTimer extends AnimationTimer {
         }
     }
 
-    public void removeKeyFrame(JFXKeyFrame keyFrame) throws Exception{
-        if(isRunning()){
+    public void removeKeyFrame(JFXKeyFrame keyFrame) throws Exception {
+        if (isRunning()) {
             throw new Exception("Can't update animation timer while running");
         }
         AnimationHandler handler = mutableFrames.get(keyFrame);
@@ -210,9 +214,10 @@ public class JFXAnimationTimer extends AnimationTimer {
             currentDuration = duration - (currentDuration - now);
             // update initial values
             for (JFXKeyValue keyValue : keyValues) {
-                if (keyValue.getTarget() != null) {
-                    initialValuesMap.put(keyValue.getTarget(), keyValue.getTarget().getValue());
-                    endValuesMap.put(keyValue.getTarget(), keyValue.getEndValue());
+                final WritableValue target = keyValue.getTarget();
+                if (target != null) {
+                    initialValuesMap.put(target, target.getValue());
+                    endValuesMap.put(target, keyValue.getEndValue());
                 }
             }
         }
@@ -235,10 +240,12 @@ public class JFXAnimationTimer extends AnimationTimer {
                     for (JFXKeyValue keyValue : keyValues) {
                         if (keyValue.isValid()) {
                             final WritableValue target = keyValue.getTarget();
-                            // set updated end value instead of cached
-                            final Object endValue = keyValue.getEndValue();
-                            if (target != null && endValue != null) {
-                                target.setValue(endValue);
+                            if (target != null) {
+                                // set updated end value instead of cached
+                                final Object endValue = keyValue.getEndValue();
+                                if (endValue != null) {
+                                    target.setValue(endValue);
+                                }
                             }
                         }
                     }
@@ -251,9 +258,11 @@ public class JFXAnimationTimer extends AnimationTimer {
             for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.isValid()) {
                     final WritableValue target = keyValue.getTarget();
-                    final Object endValue = keyValue.getEndValue();
-                    if (endValue != null && target != null && !target.getValue().equals(endValue)) {
-                        target.setValue(endValue);
+                    if (target != null) {
+                        final Object endValue = keyValue.getEndValue();
+                        if (endValue != null && !target.getValue().equals(endValue)) {
+                            target.setValue(endValue);
+                        }
                     }
                 }
             }
