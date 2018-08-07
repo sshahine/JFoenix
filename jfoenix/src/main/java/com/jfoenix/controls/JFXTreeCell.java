@@ -103,6 +103,7 @@ public class JFXTreeCell<T> extends TreeCell<T> {
             getChildren().add(0, selectedPane);
         }
         cellRippler.resizeRelocate(0, 0, getWidth(), getHeight());
+        cellRippler.releaseRipple();
         selectedPane.resizeRelocate(0, 0, selectedPane.prefWidth(-1), getHeight());
         selectedPane.setVisible(isSelected() ? true : false);
     }
