@@ -150,7 +150,7 @@ dependencies {
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
 
 
-[mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
+[mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
