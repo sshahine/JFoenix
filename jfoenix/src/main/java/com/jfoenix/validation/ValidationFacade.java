@@ -44,6 +44,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * this class has been deprecated and will be removed in later versions of JFoenix,
+ * we are moving validations into each control that implements the interface
+ * {@Link IFXValidatableControl}. Validation will be applied through the control itself
+ * similar to {@link com.jfoenix.controls.JFXTextField}, it's straight forward and
+ * simpler than using the ValidationFacade.
+ */
 @Deprecated
 public class ValidationFacade extends VBox {
 
