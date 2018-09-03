@@ -45,6 +45,7 @@ Feel free to submit your project info to the following <a href="mailto:developer
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
+* <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
 
 # Build
 To build JFoenix, execute the following command:
@@ -150,7 +151,7 @@ dependencies {
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
 
 
-[mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
+[mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
