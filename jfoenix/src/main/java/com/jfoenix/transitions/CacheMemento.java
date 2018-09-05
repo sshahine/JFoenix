@@ -25,8 +25,8 @@ import javafx.scene.layout.Region;
 
 import java.util.HashMap;
 
-public class CacheMomento {
-    private static HashMap<Node, CacheMomento> history = new HashMap<>();
+public class CacheMemento {
+    private static HashMap<Node, CacheMemento> history = new HashMap<>();
 
     private boolean cache;
     private boolean cacheShape;
@@ -34,7 +34,7 @@ public class CacheMomento {
     private CacheHint cacheHint = CacheHint.DEFAULT;
     private Node node;
 
-    public CacheMomento(Node node) {
+    public CacheMemento(Node node) {
         this.node = node;
     }
 
@@ -55,7 +55,7 @@ public class CacheMomento {
             }
             history.put(node, this);
         } else {
-            CacheMomento cached = new CacheMomento(node);
+            CacheMemento cached = new CacheMemento(node);
             this.cache = cached.cache;
             this.cacheHint = cached.cacheHint;
             this.cacheShape = cached.cacheShape;

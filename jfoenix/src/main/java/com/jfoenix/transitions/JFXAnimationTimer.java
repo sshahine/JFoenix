@@ -45,7 +45,7 @@ public class JFXAnimationTimer extends AnimationTimer {
     private Set<AnimationHandler> animationHandlers = new HashSet<>();
     private long startTime = -1;
     private boolean running = false;
-    private List<CacheMomento> caches = new ArrayList<>();
+    private List<CacheMemento> caches = new ArrayList<>();
     private double totalElapsedMilliseconds;
 
 
@@ -90,7 +90,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         for (AnimationHandler animationHandler : animationHandlers) {
             animationHandler.init();
         }
-        for (CacheMomento cache : caches) {
+        for (CacheMemento cache : caches) {
             cache.cache();
         }
     }
@@ -135,7 +135,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         for (AnimationHandler handler : animationHandlers) {
             handler.clear();
         }
-        for (CacheMomento cache : caches) {
+        for (CacheMemento cache : caches) {
             cache.restore();
         }
         if (onFinished != null) {
@@ -167,7 +167,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         caches.clear();
         if (nodesToCache != null) {
             for (Node node : nodesToCache) {
-                caches.add(new CacheMomento(node));
+                caches.add(new CacheMemento(node));
             }
         }
     }
