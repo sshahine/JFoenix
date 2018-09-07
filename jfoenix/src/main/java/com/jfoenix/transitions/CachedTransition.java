@@ -57,11 +57,11 @@ public class CachedTransition extends Transition {
     public CachedTransition(final Node node, final Timeline timeline, CacheMemento... cacheMomentos) {
         this.node = node;
         this.timeline.set(timeline);
-        mementos = new CacheMemento[(node == null ? 1 : 0) + cacheMomentos.length];
+        mementos = new CacheMemento[(node == null ? 0 : 1) + cacheMomentos.length];
         if (node != null) {
             mementos[0] = new CacheMemento(node);
         }
-        System.arraycopy(cacheMomentos, 0, mementos, node == null ? 0 : 1, mementos.length);
+        System.arraycopy(cacheMomentos, 0, mementos, node == null ? 0 : 1, cacheMomentos.length);
         statusProperty().addListener(observable -> {
             switch (getStatus()) {
                 case RUNNING:
