@@ -27,6 +27,7 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import com.sun.javafx.scene.traversal.Direction;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -100,7 +101,6 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
 
         root = new CustomFlowPane();
         root.getStyleClass().add("chips-pane");
-
         setupEditor();
 
         scrollPane = new ScrollPane(root) {
@@ -230,14 +230,17 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
                 if (ke.getTarget().equals(editor)) {
                     return;
                 }
-                switch (ke.getCode()) {
-                    case ESCAPE:
-                    case F10:
-                        // Allow to bubble up.
-                        break;
-                    default:
-                        editor.fireEvent(ke.copyFor(editor, editor));
-                        ke.consume();
+                // only pass event
+                if (ke.getTarget().equals(control)) {
+                    switch (ke.getCode()) {
+                        case ESCAPE:
+                        case F10:
+                            // Allow to bubble up.
+                            break;
+                        default:
+                            editor.fireEvent(ke.copyFor(editor, editor));
+                            ke.consume();
+                    }
                 }
             }
         });
@@ -270,9 +273,20 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
 
     private class CustomFlowPane extends FlowPane {
         double initOffset = 8;
+
         {
-            addEventHandler(MouseEvent.MOUSE_CLICKED, event -> scrollPane.setVvalue(1));
+            addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ensureVisible(editor));
         }
+
+        private void ensureVisible(Node node) {
+            double height = scrollPane.getContent().getBoundsInLocal().getHeight();
+            double y = node.getBoundsInParent().getMaxY();
+            // scrolling values range from 0 to 1
+            scrollPane.setVvalue(y / height);
+            // just for usability
+            node.requestFocus();
+        }
+
 
         @Override
         protected void layoutChildren() {
@@ -282,7 +296,9 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
 
         @Override
         protected double computePrefHeight(double forWidth) {
-            return super.computePrefHeight(forWidth) + editor.getHeight();
+            final double editorHeight = editorOnNewLine ?
+                editor.getHeight() - editor.snappedTopInset() - editor.snappedBottomInset() : 0;
+            return super.computePrefHeight(forWidth) + editorHeight;
         }
 
         private VPos getRowVAlignmentInternal() {
@@ -323,28 +339,36 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
 
                 if (availableWidth < minWidth || moveToNewLine) {
                     layoutInArea(editor,
-                        newLineEditorX, contentHeight + root.getVgap(),
-                        insideWidth - initOffset, insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
+                        newLineEditorX,
+                        contentHeight + root.getVgap(),
+                        insideWidth - initOffset,
+                        insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
                         0, getColumnHAlignmentInternal(), VPos.TOP);
                     editorOnNewLine = true;
-                    scrollPane.setVvalue(1);
+                    Platform.runLater(()->{
+                        setHeight(computePrefHeight(width));
+                        ensureVisible(editor);
+                    });
                 } else {
-                    double controlInsets = 0;
-                    if (editor instanceof TextArea) {
-                        controlInsets = editor.snappedTopInset();
-                    }
                     layoutInArea(editor,
                         lastChild.getBoundsInParent().getMaxX() + root.getHgap(),
-                        lastChild.getLayoutY() + controlInsets,
+                        lastChild.getLayoutY() + 3,
                         availableWidth - root.getHgap(),
                         lastChild.getHeight(),
                         0, getColumnHAlignmentInternal(), getRowVAlignmentInternal());
                     editorOnNewLine = false;
                 }
             } else {
-                layoutInArea(editor, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHAlignmentInternal(), VPos.TOP);
+                layoutInArea(editor,
+                    newLineEditorX,
+                    top ,
+                    insideWidth - initOffset,
+                    height, 0, getColumnHAlignmentInternal(), VPos.TOP);
                 editorOnNewLine = true;
-                scrollPane.setVvalue(1);
+                Platform.runLater(()->{
+                    setHeight(computePrefHeight(width));
+                    ensureVisible(editor);
+                });
             }
         }
 

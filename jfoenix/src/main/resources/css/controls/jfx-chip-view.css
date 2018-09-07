@@ -39,16 +39,13 @@
 
 .jfx-chip-view .chips-pane > .text-area {
     -fx-padding: 0.333333em 0 0.333333em 0;
+    -fx-min-width: 100px;
 }
 
 .jfx-chip-view .chips-pane > .text-area .content,
 .jfx-chip-view .chips-pane > .text-area:focused .content {
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
     -fx-padding: 0 0 0 0;
-}
-
-.jfx-chip-view .chips-pane .editor {
-    -fx-min-width: 100px;
 }
 
 .jfx-chip-view .jfx-chip > HBox {
