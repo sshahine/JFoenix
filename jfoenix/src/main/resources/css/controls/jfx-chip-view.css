@@ -31,7 +31,7 @@
 
 .jfx-chip-view .chips-pane > .text-area,
 .jfx-chip-view .chips-pane > .text-area .scroll-pane,
-.jfx-chip-view .chips-pane > .text-area .scroll-pane .viewport,
+.jfx-chip-view .chips-pane > .text-area .scroll-pane > .viewport,
 .jfx-chip-view .chips-pane > .text-area:focused,
 .jfx-chip-view .chips-pane > .text-area:focused .scroll-pane {
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
@@ -42,16 +42,16 @@
 }
 
 .jfx-chip-view .chips-pane > .text-area .content,
-.jfx-chip-view .chips-pane > .text-area:focused .content{
-    -fx-background-color:TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
+.jfx-chip-view .chips-pane > .text-area:focused .content {
+    -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
     -fx-padding: 0 0 0 0;
 }
 
-.jfx-chip-view .chips-pane .editor{
+.jfx-chip-view .chips-pane .editor {
     -fx-min-width: 100px;
 }
 
-.jfx-chip-view .jfx-chip > HBox{
+.jfx-chip-view .jfx-chip > HBox {
     -fx-font-family: "Roboto Medium";
     -fx-font-size: 14.0;
     -fx-background-color: #E0E0E0;
@@ -62,6 +62,51 @@
     -fx-spacing: 8;
 }
 
-/*.jfx-chip-area .error-label {*/
-    /*-fx-background-color: #D34336;*/
-/*}*/
+.jfx-chip-view > .scroll-pane,
+.jfx-chip-view > .scroll-pane > .viewport {
+    -fx-background-color: TRANSPARENT;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar:horizontal,
+.jfx-chip-view > .scroll-pane > .scroll-bar:vertical {
+    -fx-background-color: TRANSPARENT;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar:horizontal .track,
+.jfx-chip-view > .scroll-pane > .scroll-bar:vertical .track {
+    -fx-background-color: TRANSPARENT;
+    -fx-border-color: TRANSPARENT;
+    -fx-background-radius: 0em;
+    -fx-border-radius: 2em;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar:horizontal .thumb,
+.jfx-chip-view > .scroll-pane > .scroll-bar:vertical .thumb {
+    -fx-background-color: #898989;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+.jfx-chip-view > .scroll-pane > .corner {
+    -fx-background-color: TRANSPARENT;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar:horizontal .increment-button,
+.jfx-chip-view > .scroll-pane > .scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 0 0 10 0;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar:vertical .increment-button,
+.jfx-chip-view > .scroll-pane > .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 0 10 0 0;
+}
+
+.jfx-chip-view > .scroll-pane > .scroll-bar .increment-arrow,
+.jfx-chip-view > .scroll-pane > .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}

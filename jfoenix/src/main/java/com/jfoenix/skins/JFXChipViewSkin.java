@@ -23,6 +23,10 @@ import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.JFXChip;
 import com.jfoenix.controls.JFXChipView;
 import com.jfoenix.controls.JFXDefaultChip;
+import com.sun.javafx.scene.control.behavior.BehaviorBase;
+import com.sun.javafx.scene.control.behavior.KeyBinding;
+import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
+import com.sun.javafx.scene.traversal.Direction;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -30,12 +34,14 @@ import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
-import javafx.scene.control.SkinBase;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
@@ -53,13 +59,13 @@ import java.util.List;
  * @version 1.0.0
  * @since 2018-02-01
  */
-public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
+public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChipViewSkin.ChipViewBehaviorBase<T>> {
 
     private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 
     private CustomFlowPane root;
-    private JFXChipView control;
-    private TextArea inputField;
+    private JFXChipView<T> control;
+    private FakeFocusTextArea editor;
     private ChipsAutoComplete<T> autoCompletePopup;
 
     private boolean moveToNewLine = false;
@@ -86,23 +92,37 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         }
     };
 
+    private final ScrollPane scrollPane;
+
     public JFXChipViewSkin(JFXChipView<T> control) {
-        super(control);
+        super(control, new ChipViewBehaviorBase<T>(control, null));
         this.control = control;
+
         root = new CustomFlowPane();
         root.getStyleClass().add("chips-pane");
+
         setupEditor();
-        getChildren().add(root);
+
+        scrollPane = new ScrollPane(root) {
+            @Override
+            public void requestFocus() {
+                if (getSkinnable() != null) {
+                    getSkinnable().requestFocus();
+                }
+            }
+        };
+        scrollPane.setFitToWidth(true);
+        getChildren().add(scrollPane);
 
         // init auto complete
         autoCompletePopup = (ChipsAutoComplete<T>) getSkinnable().getAutoCompletePopup();
         autoCompletePopup.setSelectionHandler(event -> {
             T selectedItem = event.getObject();
-            if (getSkinnable().getSelectionHandler()!=null) {
+            if (getSkinnable().getSelectionHandler() != null) {
                 selectedItem = getSkinnable().getSelectionHandler().apply(selectedItem);
             }
             getSkinnable().getChips().add(selectedItem);
-            inputField.clear();
+            editor.clear();
         });
         // add position listener to auto complete
         autoCompletePopup.setShift(root.getVgap() * 2);
@@ -116,37 +136,21 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
     }
 
     private void setupEditor() {
-        inputField = new TextArea();
-        inputField.setManaged(false);
-        inputField.getStyleClass().add("editor");
-        final StringConverter<T> sc = control.getConverter();
-        if (inputField instanceof TextInputControl) {
-            TextInputControl editor = (TextInputControl) inputField;
-            editor.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-                if (event.getCode() != KeyCode.ENTER) {
-                    getSkinnable().pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
-                }
-            });
-            if (editor instanceof TextArea) {
-                ((TextArea) editor).setWrapText(true);
-                editor.textProperty().addListener(observable -> {
-                    // 13 is the default scroll bar width
-                    requiredWidth = editor.snappedLeftInset() + computeTextContentWidth(editor) + editor.snappedRightInset() + 13;
-                    if (availableWidth < requiredWidth && !editorOnNewLine) {
-                        moveToNewLine = true;
-                        root.updateEditorPosition();
-                        root.requestLayout();
-                    } else if (availableWidth > requiredWidth && editorOnNewLine) {
-                        moveToNewLine = false;
-                        root.updateEditorPosition();
-                        root.requestLayout();
-                    }
-                });
+        editor = new FakeFocusTextArea();
+        editor.setManaged(false);
+        editor.getStyleClass().add("editor");
+        editor.setWrapText(true);
+        editor.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() != KeyCode.ENTER) {
+                getSkinnable().pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
             }
-            editor.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.getCode() == KeyCode.ENTER) {
+        });
+        editor.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            switch (event.getCode()) {
+                case ENTER:
                     if (!editor.getText().trim().isEmpty()) {
                         try {
+                            final StringConverter<T> sc = control.getConverter();
                             final T item = sc.fromString(editor.getText());
                             if (item != null) {
                                 getSkinnable().getChips().add(item);
@@ -158,8 +162,20 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                         }
                     }
                     event.consume();
-                }
-                if (event.getCode() == KeyCode.BACK_SPACE) {
+                    break;
+
+                case TAB:
+                    if (editor.getText().trim().isEmpty()) {
+                        if (event.isShiftDown()) {
+                            getBehavior().traverse(getSkinnable(), Direction.PREVIOUS);
+                        } else {
+                            getBehavior().traverse(editor, Direction.NEXT);
+                        }
+                    }
+                    event.consume();
+                    break;
+
+                case BACK_SPACE:
                     ObservableList<T> chips = getSkinnable().getChips();
                     int size = chips.size();
                     if ((size > 0) && editor.getText().isEmpty()) {
@@ -168,18 +184,63 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                             autoCompletePopup.hide();
                         }
                     }
+                    break;
+
+                case SPACE:
+                    if (event.isControlDown()) {
+                        if (!autoCompletePopup.getFilteredSuggestions().isEmpty()) {
+                            autoCompletePopup.show(editor);
+                        }
+                    }
+                    break;
+            }
+        });
+
+        editor.textProperty().addListener(observable -> {
+            // update editor position
+            // 13 is the default scroll bar width
+            requiredWidth = editor.snappedLeftInset() + computeTextContentWidth(editor) + editor.snappedRightInset() + 13;
+            if (availableWidth < requiredWidth && !editorOnNewLine) {
+                moveToNewLine = true;
+                root.updateEditorPosition();
+                root.requestLayout();
+            } else if (availableWidth > requiredWidth && editorOnNewLine) {
+                moveToNewLine = false;
+                root.updateEditorPosition();
+                root.requestLayout();
+            }
+            // show popup
+            autoCompletePopup.filter(item -> getSkinnable().getPredicate().test(item, editor.getText()));
+            if (autoCompletePopup.getFilteredSuggestions().isEmpty()) {
+                autoCompletePopup.hide();
+            } else {
+                autoCompletePopup.show(editor);
+            }
+        });
+        root.getChildren().add(editor);
+
+        // add control listeners
+        control.focusedProperty().addListener((obj, oldVal, newVal) -> {
+            if (editor != null) {
+                editor.setFakeFocus(newVal);
+            }
+        });
+        control.addEventFilter(KeyEvent.ANY, ke -> {
+            if (editor != null) {
+                if (ke.getTarget().equals(editor)) {
+                    return;
                 }
-            });
-            editor.textProperty().addListener(observable -> {
-                autoCompletePopup.filter(item -> getSkinnable().getPredicate().test(item, inputField.getText()));
-                if (autoCompletePopup.getFilteredSuggestions().isEmpty()) {
-                    autoCompletePopup.hide();
-                } else {
-                    autoCompletePopup.show(editor);
+                switch (ke.getCode()) {
+                    case ESCAPE:
+                    case F10:
+                        // Allow to bubble up.
+                        break;
+                    default:
+                        editor.fireEvent(ke.copyFor(editor, editor));
+                        ke.consume();
                 }
-            });
-        }
-        root.getChildren().add(inputField);
+            }
+        });
     }
 
     // these methods are called inside the chips items change listener
@@ -192,8 +253,8 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 chip = new JFXDefaultChip<T>(getSkinnable(), item);
             }
         } catch (Exception e) {
-            throw new RuntimeException( "can't create chip for item '" + item +
-                "' make sure to override the string converter and return null if text input is not valid.", e);
+            throw new RuntimeException("can't create chip for item '" + item +
+                                       "' make sure to override the string converter and return null if text input is not valid.", e);
         }
         int size = root.getChildren().size();
         root.getChildren().add(size - 1, chip);
@@ -209,11 +270,19 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     private class CustomFlowPane extends FlowPane {
         double initOffset = 8;
+        {
+            addEventHandler(MouseEvent.MOUSE_CLICKED, event -> scrollPane.setVvalue(1));
+        }
 
         @Override
         protected void layoutChildren() {
             super.layoutChildren();
             updateEditorPosition();
+        }
+
+        @Override
+        protected double computePrefHeight(double forWidth) {
+            return super.computePrefHeight(forWidth) + editor.getHeight();
         }
 
         private VPos getRowVAlignmentInternal() {
@@ -244,7 +313,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 Region lastChild = (Region) managedChildren.get(mangedChildrenSize - 1);
                 double contentHeight = lastChild.getHeight() + lastChild.getLayoutY();
                 availableWidth = insideWidth - lastChild.getBoundsInParent().getMaxX();
-                double minWidth = inputField.getMinWidth();
+                double minWidth = editor.getMinWidth();
                 minWidth = minWidth < 0 ? 100 : minWidth;
                 minWidth = Math.max(minWidth, requiredWidth);
 
@@ -253,17 +322,18 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 }
 
                 if (availableWidth < minWidth || moveToNewLine) {
-                    layoutInArea(inputField,
+                    layoutInArea(editor,
                         newLineEditorX, contentHeight + root.getVgap(),
                         insideWidth - initOffset, insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
                         0, getColumnHAlignmentInternal(), VPos.TOP);
                     editorOnNewLine = true;
+                    scrollPane.setVvalue(1);
                 } else {
                     double controlInsets = 0;
-                    if (inputField instanceof TextArea) {
-                        controlInsets = inputField.snappedTopInset();
+                    if (editor instanceof TextArea) {
+                        controlInsets = editor.snappedTopInset();
                     }
-                    layoutInArea(inputField,
+                    layoutInArea(editor,
                         lastChild.getBoundsInParent().getMaxX() + root.getHgap(),
                         lastChild.getLayoutY() + controlInsets,
                         availableWidth - root.getHgap(),
@@ -272,8 +342,9 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                     editorOnNewLine = false;
                 }
             } else {
-                layoutInArea(inputField, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHAlignmentInternal(), VPos.TOP);
+                layoutInArea(editor, newLineEditorX, top, insideWidth - initOffset, height, 0, getColumnHAlignmentInternal(), VPos.TOP);
                 editorOnNewLine = true;
+                scrollPane.setVvalue(1);
             }
         }
 
@@ -321,4 +392,38 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
         }
     }
 
+    final class FakeFocusTextArea extends TextArea {
+        @Override
+        public void requestFocus() {
+            if (getSkinnable() != null) {
+                getSkinnable().requestFocus();
+            }
+        }
+
+        public void setFakeFocus(boolean b) {
+            setFocused(b);
+        }
+
+        @Override
+        public Object queryAccessibleAttribute(AccessibleAttribute attribute, Object... parameters) {
+            switch (attribute) {
+                case FOCUS_ITEM:
+                    // keep focus on parent control
+                    return getSkinnable();
+                default:
+                    return super.queryAccessibleAttribute(attribute, parameters);
+            }
+        }
+    }
+
+    final static class ChipViewBehaviorBase<T> extends BehaviorBase<JFXChipView<T>> {
+        public ChipViewBehaviorBase(JFXChipView<T> control, List<KeyBinding> keyBindings) {
+            super(control, keyBindings);
+        }
+
+        @Override
+        public void traverse(Node node, Direction dir) {
+            super.traverse(node, dir);
+        }
+    }
 }
