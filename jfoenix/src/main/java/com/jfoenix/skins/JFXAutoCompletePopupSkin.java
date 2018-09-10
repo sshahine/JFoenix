@@ -22,7 +22,11 @@ package com.jfoenix.skins;
 import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.events.JFXAutoCompleteEvent;
 import javafx.animation.Animation.Status;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -49,13 +53,29 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
     private final StackPane pane = new StackPane();
     private Scale scale;
     private Timeline showTransition;
+    private boolean itemChanged = true;
 
     public JFXAutoCompletePopupSkin(JFXAutoCompletePopup<T> control) {
         this.control = control;
-        suggestionList = new ListView<T>(control.getFilteredSuggestions());
+        suggestionList = new ListView<T>(control.getFilteredSuggestions()){
+            @Override
+            protected void layoutChildren() {
+                super.layoutChildren();
+                if (itemChanged) {
+                    if (suggestionList.getItems().size() > 0) {
+                        suggestionList.getSelectionModel().select(0);
+                        suggestionList.scrollTo(0);
+                    }
+                    itemChanged = false;
+                }
+            }
+        };
         suggestionList.setFixedCellSize(control.getFixedCellSize());
         control.fixedCellSizeProperty().addListener(observable -> suggestionList.setFixedCellSize(control.getFixedCellSize()));
-        suggestionList.getItems().addListener((InvalidationListener) observable -> updateListHeight());
+        suggestionList.getItems().addListener((InvalidationListener) observable -> {
+            itemChanged = true;
+            updateListHeight();
+        });
         suggestionList.getStyleClass().add("autocomplete-list");
         control.suggestionsCellFactoryProperty().addListener((o, oldVal, newVal) -> {
             if (newVal != null) {
@@ -119,11 +139,11 @@ public class JFXAutoCompletePopupSkin<T> implements Skin<JFXAutoCompletePopup<T>
                 for (int i = 0; i < vf.getChildren().size(); i++) {
                     ListCell<T> cell = (ListCell<T>) vf.getChildren().get(i);
                     int index = cell.getIndex();
-                    if(index > -1){
+                    if (index > -1) {
                         cell.setOpacity(0);
-                        cell.setTranslateY(- suggestionList.getFixedCellSize() / 8);
+                        cell.setTranslateY(-suggestionList.getFixedCellSize() / 8);
                         Timeline f = new Timeline(new KeyFrame(Duration.millis(120),
-                            end ->{
+                            end -> {
                                 cell.setOpacity(1);
                                 cell.setTranslateY(0);
                             },
