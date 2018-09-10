@@ -27,7 +27,6 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import com.sun.javafx.scene.traversal.Direction;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -112,6 +111,7 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             }
         };
         scrollPane.setFitToWidth(true);
+
         getChildren().add(scrollPane);
 
         // init auto complete
@@ -133,6 +133,11 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             createChip(item);
         }
         control.getChips().addListener(new WeakListChangeListener<>(chipsChangeListeners));
+    }
+
+    @Override
+    protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+        scrollPane.resizeRelocate(contentX, contentY, contentWidth, contentHeight);
     }
 
     private void setupEditor() {
@@ -200,13 +205,11 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             // update editor position
             // 13 is the default scroll bar width
             requiredWidth = editor.snappedLeftInset() + computeTextContentWidth(editor) + editor.snappedRightInset() + 13;
-            if (availableWidth < requiredWidth && !editorOnNewLine) {
+            if (availableWidth < requiredWidth && !editorOnNewLine && !moveToNewLine) {
                 moveToNewLine = true;
-                root.updateEditorPosition();
                 root.requestLayout();
-            } else if (availableWidth > requiredWidth && editorOnNewLine) {
+            } else if (availableWidth > requiredWidth && editorOnNewLine && moveToNewLine) {
                 moveToNewLine = false;
-                root.updateEditorPosition();
                 root.requestLayout();
             }
             // show popup
@@ -296,9 +299,10 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
 
         @Override
         protected double computePrefHeight(double forWidth) {
-            final double editorHeight = editorOnNewLine ?
-                editor.getHeight() - editor.snappedTopInset() - editor.snappedBottomInset() : 0;
-            return super.computePrefHeight(forWidth) + editorHeight;
+            editor.setManaged(true);
+            double height = super.computePrefHeight(forWidth);
+            editor.setManaged(false);
+            return height;
         }
 
         private VPos getRowVAlignmentInternal() {
@@ -322,6 +326,7 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             final double insideWidth = width - left - right;
             final double insideHeight = height - top - bottom;
             final double newLineEditorX = right + initOffset;
+            final double editorVInsets = editor.snappedTopInset() + editor.snappedBottomInset();
 
             final List<Node> managedChildren = getManagedChildren();
             final int mangedChildrenSize = managedChildren.size();
@@ -342,33 +347,28 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
                         newLineEditorX,
                         contentHeight + root.getVgap(),
                         insideWidth - initOffset,
-                        insideHeight - lastChild.getHeight() - lastChild.getLayoutY(),
+                        editor.prefHeight(-1),
                         0, getColumnHAlignmentInternal(), VPos.TOP);
                     editorOnNewLine = true;
-                    Platform.runLater(()->{
-                        setHeight(computePrefHeight(width));
-                        ensureVisible(editor);
-                    });
+                    ensureVisible(editor);
                 } else {
                     layoutInArea(editor,
                         lastChild.getBoundsInParent().getMaxX() + root.getHgap(),
-                        lastChild.getLayoutY() + 3,
+                        lastChild.getLayoutY(),
                         availableWidth - root.getHgap(),
-                        lastChild.getHeight(),
+                        lastChild.getHeight() + editorVInsets,
                         0, getColumnHAlignmentInternal(), getRowVAlignmentInternal());
                     editorOnNewLine = false;
                 }
             } else {
                 layoutInArea(editor,
                     newLineEditorX,
-                    top ,
+                    top,
                     insideWidth - initOffset,
-                    height, 0, getColumnHAlignmentInternal(), VPos.TOP);
+                    editor.prefHeight(-1)
+                    , 0, getColumnHAlignmentInternal(), VPos.TOP);
                 editorOnNewLine = true;
-                Platform.runLater(()->{
-                    setHeight(computePrefHeight(width));
-                    ensureVisible(editor);
-                });
+                ensureVisible(editor);
             }
         }
 

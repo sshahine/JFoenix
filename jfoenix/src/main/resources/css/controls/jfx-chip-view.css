@@ -40,6 +40,7 @@
 .jfx-chip-view .chips-pane > .text-area {
     -fx-padding: 0.333333em 0 0.333333em 0;
     -fx-min-width: 100px;
+    -fx-pref-height: 42;
 }
 
 .jfx-chip-view .chips-pane > .text-area .content,
