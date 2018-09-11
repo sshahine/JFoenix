@@ -21,7 +21,6 @@ package com.jfoenix.controls;
 
 import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -122,9 +121,8 @@ public class RecursiveTreeItem<T extends RecursiveTreeObject<T>> extends TreeIte
 
     private void init(RecursiveTreeObject<T> value) {
 
-        if (value != null) {
-            addChildrenListener(value);
-        }
+        addChildrenListener(value);
+
         valueProperty().addListener(observable -> {
             if (getValue() != null) {
                 addChildrenListener(getValue());
