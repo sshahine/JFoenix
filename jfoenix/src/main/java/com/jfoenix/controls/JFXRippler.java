@@ -20,10 +20,14 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.converters.RipplerMaskTypeConverter;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.transitions.JFXAnimation;
 import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.DurationConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import com.sun.javafx.css.converters.SizeConverter;
+import com.sun.javafx.geom.Area;
 import javafx.animation.*;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,9 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -84,6 +86,7 @@ public class JFXRippler extends StackPane {
         0.3025,
         0.0875,
         0.9975); //0.1, 0.54, 0.28, 0.95);
+
 
     /**
      * creates empty rippler node
@@ -358,6 +361,13 @@ public class JFXRippler extends StackPane {
         }
     }
 
+  private boolean intersect;
+
+  public void setSVGCoutout(SVGGlyph svgGlyph, boolean intersect) {
+    this.intersect = intersect;
+    rippler.ripplePath = (SVGPath) svgGlyph.getShape();
+  }
+
     /**
      * Generates ripples on the screen every 0.3 seconds or whenever
      * the createRipple method is called. Ripples grow and fade out
@@ -371,7 +381,9 @@ public class JFXRippler extends StackPane {
         private AtomicBoolean generating = new AtomicBoolean(false);
         private boolean cacheRipplerClip = false;
         private boolean resetClip = false;
-        private Queue<Ripple> ripplesQueue = new LinkedList<Ripple>();
+        private Queue<Ripple> ripplesQueue = new LinkedList<>();
+        private SVGPath ripplePath = new SVGPath();
+        private Path rippleCutout;
 
         RippleGenerator() {
             // improve in performance, by preventing
@@ -392,7 +404,7 @@ public class JFXRippler extends StackPane {
                     this.resetClip = false;
 
                     // create the ripple effect
-                    final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY);
+                    final Ripple ripple = new Ripple(generatorCenterX, generatorCenterY, ripplePath);
                     getChildren().add(ripple);
                     ripplesQueue.add(ripple);
 
@@ -408,10 +420,11 @@ public class JFXRippler extends StackPane {
             Ripple ripple = ripplesQueue.poll();
             if(ripple!=null) {
                 ripple.inAnimation.stop();
-                ripple.outAnimation = new Timeline(
-                    new KeyFrame(Duration.millis(Math.min(800, (0.9 * 500) / ripple.getScaleX()))
-                        , ripple.outKeyValues));
-                ripple.outAnimation.setOnFinished((event) -> getChildren().remove(ripple));
+//                ripple.outAnimation = new Timeline(
+//                    new KeyFrame(Duration.millis(Math.min(800, (0.9 * 500) / ripple.getScaleX()))
+//                        , ripple.outKeyValues));
+                ripple.outAnimation = ripple.outAnimationBuilder.build(ripple);
+//                ripple.outAnimation.setOnFinished((event) -> getChildren().remove(ripple));
                 ripple.outAnimation.play();
                 if (generating.getAndSet(false)) {
                     if (overlayRect != null) {
@@ -481,62 +494,125 @@ public class JFXRippler extends StackPane {
             }
         }
 
-        private final class Ripple extends Circle {
+        private final class Ripple extends Path {
 
             KeyValue[] outKeyValues;
+            JFXAnimation.Builder<Node> outAnimationBuilder;
             Animation outAnimation = null;
+
             Animation inAnimation = null;
 
-            private Ripple(double centerX, double centerY) {
-                super(centerX,
-                    centerY,
-                    ripplerRadius.get().doubleValue() == Region.USE_COMPUTED_SIZE ?
-                        computeRippleRadius() : ripplerRadius.get().doubleValue(), null);
+            private Ripple(double centerX, double centerY, SVGPath svgPath) {
+
+                double radius = ripplerRadius.get().doubleValue() == Region.USE_COMPUTED_SIZE
+                    ? computeRippleRadius()
+                    : ripplerRadius.get().doubleValue();
+
+                createSVGCutout(radius, svgPath);
+
+                getElements().addAll(rippleCutout.getElements());
+
+                setTranslateX(centerX);
+                setTranslateY(centerY);
+
                 setCache(true);
                 setCacheHint(CacheHint.SPEED);
                 setCacheShape(true);
                 setManaged(false);
                 setSmooth(true);
 
-                KeyValue[] inKeyValues = new KeyValue[isRipplerRecenter() ? 4 : 2];
-                outKeyValues = new KeyValue[isRipplerRecenter() ? 5 : 3];
+        //                KeyValue[] inKeyValues = new KeyValue[isRipplerRecenter() ? 4 : 2];
+        //                outKeyValues = new KeyValue[isRipplerRecenter() ? 5 : 3];
+        //
+        //                inKeyValues[0] = new KeyValue(scaleXProperty(), 0.9, rippleInterpolator);
+        //                inKeyValues[1] = new KeyValue(scaleYProperty(), 0.9, rippleInterpolator);
+        //
+        //                outKeyValues[0] = new KeyValue(this.scaleXProperty(), 1,
+        // rippleInterpolator);
+        //                outKeyValues[1] = new KeyValue(this.scaleYProperty(), 1,
+        // rippleInterpolator);
+        //                outKeyValues[2] = new KeyValue(this.opacityProperty(), 0,
+        // rippleInterpolator);
+        //
+        //                if (isRipplerRecenter()) {
+        //                    double dx = (control.getLayoutBounds().getWidth() / 2 - centerX) /
+        // 1.55;
+        //                    double dy = (control.getLayoutBounds().getHeight() / 2 - centerY) /
+        // 1.55;
+        //                    inKeyValues[2] = outKeyValues[3] = new KeyValue(translateXProperty(),
+        //                        Math.signum(dx) * Math.min(Math.abs(dx),
+        //                            radius / 2),
+        //                        rippleInterpolator);
+        //                    inKeyValues[3] = outKeyValues[4] = new KeyValue(translateYProperty(),
+        //                        Math.signum(dy) * Math.min(Math.abs(dy),
+        //                                                   radius / 2),
+        //                        rippleInterpolator);
+        //                }
 
-                inKeyValues[0] = new KeyValue(scaleXProperty(), 0.9, rippleInterpolator);
-                inKeyValues[1] = new KeyValue(scaleYProperty(), 0.9, rippleInterpolator);
+        JFXAnimation.JFXAnimationValue.Builder<Node, Number> translateXAction =
+            JFXAnimation.JFXAnimationValue.builder()
+                .target(Node::translateXProperty)
+                .animateWhen(isRipplerRecenter())
+                .endValue(
+                    node -> {
+                      double dx = (control.getLayoutBounds().getWidth() / 2 - centerX) / 1.55;
+                      return Math.signum(dx) * Math.min(Math.abs(dx), radius / 2);
+                    });
 
-                outKeyValues[0] = new KeyValue(this.scaleXProperty(), 1, rippleInterpolator);
-                outKeyValues[1] = new KeyValue(this.scaleYProperty(), 1, rippleInterpolator);
-                outKeyValues[2] = new KeyValue(this.opacityProperty(), 0, rippleInterpolator);
+        JFXAnimation.JFXAnimationValue.Builder<Node, Number> translateYAction =
+            JFXAnimation.JFXAnimationValue.builder()
+                .target(Node::translateYProperty)
+                .animateWhen(isRipplerRecenter())
+                .endValue(
+                    node -> {
+                      double dy = (control.getLayoutBounds().getHeight() / 2 - centerY) / 1.55;
+                      return Math.signum(dy) * Math.min(Math.abs(dy), radius / 2);
+                    });
 
-                if (isRipplerRecenter()) {
-                    double dx = (control.getLayoutBounds().getWidth() / 2 - centerX) / 1.55;
-                    double dy = (control.getLayoutBounds().getHeight() / 2 - centerY) / 1.55;
-                    inKeyValues[2] = outKeyValues[3] = new KeyValue(translateXProperty(),
-                        Math.signum(dx) * Math.min(Math.abs(dx),
-                            this.getRadius() / 2),
-                        rippleInterpolator);
-                    inKeyValues[3] = outKeyValues[4] = new KeyValue(translateYProperty(),
-                        Math.signum(dy) * Math.min(Math.abs(dy),
-                            this.getRadius() / 2),
-                        rippleInterpolator);
-                }
-                inAnimation = new Timeline(new KeyFrame(Duration.ZERO,
-                    new KeyValue(scaleXProperty(),
-                        0,
-                        rippleInterpolator),
-                    new KeyValue(scaleYProperty(),
-                        0,
-                        rippleInterpolator),
-                    new KeyValue(translateXProperty(),
-                        0,
-                        rippleInterpolator),
-                    new KeyValue(translateYProperty(),
-                        0,
-                        rippleInterpolator),
-                    new KeyValue(opacityProperty(),
-                        1,
-                        rippleInterpolator)
-                ), new KeyFrame(Duration.millis(900), inKeyValues));
+        inAnimation =
+            JFXAnimation.builder()
+                .from()
+                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0))
+                .action(
+                    b -> b.target(Node::translateXProperty, Node::translateYProperty).endValue(0))
+                .action(b -> b.target(Node::opacityProperty).endValue(1))
+                .to()
+                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0.9))
+                .action(translateXAction)
+                .action(translateYAction)
+                .config(b -> b.duration(getRipplerInAnimation()).interpolator(rippleInterpolator))
+                .build(this);
+
+        outAnimationBuilder =
+            JFXAnimation.builder()
+                .to()
+                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(1))
+                .action(b -> b.target(Node::opacityProperty).endValue(0))
+                .action(translateXAction)
+                .action(translateYAction)
+                .config(
+                    b ->
+                        b.duration(() -> Duration.millis(Math.min(800, (0.9 * 500) / getScaleX())))
+                            .interpolator(rippleInterpolator)
+                            .onFinish(event -> RippleGenerator.this.getChildren().remove(this)));
+
+//                inAnimation = new Timeline(new KeyFrame(Duration.ZERO,
+//                    new KeyValue(scaleXProperty(),
+//                        0,
+//                        rippleInterpolator),
+//                    new KeyValue(scaleYProperty(),
+//                        0,
+//                        rippleInterpolator),
+//                    new KeyValue(translateXProperty(),
+//                        0,
+//                        rippleInterpolator),
+//                    new KeyValue(translateYProperty(),
+//                        0,
+//                        rippleInterpolator),
+//                    new KeyValue(opacityProperty(),
+//                        1,
+//                        rippleInterpolator)
+//                ), new KeyFrame(getRipplerInAnimation(), inKeyValues));
 
                 setScaleX(0);
                 setScaleY(0);
@@ -552,7 +628,56 @@ public class JFXRippler extends StackPane {
                     setFill(ripplerFill.get());
                 }
             }
+
+
+
+      private void createSVGCutout(double radius, SVGPath svgPath) {
+
+        Circle circle = new Circle(radius);
+
+        if (rippleCutout == null) {
+          if (!svgPath.getContent().isEmpty()) {
+
+              svgPath.setTranslateX(0);
+              svgPath.setTranslateY(0);
+
+              double originalSVGWidth = svgPath.prefWidth(-1);
+              double originalSVGHeight = svgPath.prefHeight(originalSVGWidth);
+              double ratio = originalSVGWidth / originalSVGHeight;
+              double innerQuadLength = (circle.getRadius() * 2) / Math.sqrt(2);
+              double SVGWidth = innerQuadLength;
+              double SVGHeight = innerQuadLength;
+
+              if(originalSVGWidth > originalSVGHeight){
+                  SVGHeight = innerQuadLength / ratio;
+              }else{
+                  SVGWidth = innerQuadLength / ratio;
+              }
+
+              double scaleX = SVGWidth / originalSVGWidth;
+              double scaleY = SVGHeight / originalSVGHeight;
+            svgPath.setScaleX(scaleX);
+            svgPath.setScaleY(scaleY);
+
+            svgPath.setTranslateY(
+                circle.getBoundsInParent().getMaxY()
+                    - svgPath.getBoundsInParent().getMinY()
+                    - circle.getRadius()
+                    - (svgPath.getBoundsInParent().getHeight() / 2));
+
+            svgPath.setTranslateX(
+                circle.getBoundsInParent().getMinX()
+                    - svgPath.getBoundsInParent().getMaxX()
+                    + circle.getRadius()
+                    + (svgPath.getBoundsInParent().getWidth() / 2));
+
+            rippleCutout = (Path) (intersect ? Shape.intersect(circle, svgPath) : Shape.subtract(circle, svgPath));
+          } else {
+            rippleCutout = (Path) Shape.intersect(circle, circle);
+          }
         }
+      }
+    }
 
         public void clear() {
             getChildren().clear();
@@ -560,6 +685,7 @@ public class JFXRippler extends StackPane {
             generating.set(false);
         }
     }
+
 
     private void resetOverLay() {
         if (rippler.overlayRect != null) {
@@ -661,6 +787,27 @@ public class JFXRippler extends StackPane {
 
     public void setRipplerFill(Paint color) {
         this.ripplerFill.set(color);
+    }
+
+
+    /**
+     * the default in animation of the ripple effect
+     */
+    private StyleableObjectProperty<Duration> ripplerInAnimation = new SimpleStyleableObjectProperty<>(StyleableProperties.RIPPLER_IN_ANIMATION,
+        JFXRippler.this,
+        "ripplerInAnimation",
+        Duration.millis(900));
+
+    public Duration getRipplerInAnimation() {
+        return ripplerInAnimation == null ? Duration.millis(900) : ripplerInAnimation.get();
+    }
+
+    public StyleableObjectProperty<Duration> ripplerInAnimation() {
+        return this.ripplerInAnimation;
+    }
+
+    public void setRipplerInAnimation(Duration duration) {
+        this.ripplerInAnimation.set(duration);
     }
 
     /**
@@ -765,6 +912,19 @@ public class JFXRippler extends StackPane {
                 @Override
                 public StyleableProperty<Paint> getStyleableProperty(JFXRippler control) {
                     return control.ripplerFillProperty();
+                }
+            };
+        private static final CssMetaData<JFXRippler, Duration> RIPPLER_IN_ANIMATION =
+            new CssMetaData<JFXRippler, Duration>("-jfx-rippler-in-animation",
+                DurationConverter.getInstance(), Duration.millis(900)) {
+                @Override
+                public boolean isSettable(JFXRippler control) {
+                    return control.ripplerInAnimation == null || !control.ripplerInAnimation.isBound();
+                }
+
+                @Override
+                public StyleableProperty<Duration> getStyleableProperty(JFXRippler control) {
+                    return control.ripplerInAnimation();
                 }
             };
         private static final CssMetaData<JFXRippler, Number> RIPPLER_RADIUS =
