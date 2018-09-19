@@ -31,6 +31,10 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+retrolambda {
+    defaultMethods true
+}
+
 task retroSourcesJar(type: Jar){
 	String str = sourceSets.main.output.classesDir;
 	sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"
