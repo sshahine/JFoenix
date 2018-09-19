@@ -1,6 +1,6 @@
 apply plugin: 'application'
 
-mainClassName = 'demos.MainDemo'
+mainClassName = 'demos.components.RipplerDemo'
 
 dependencies {
     compile project(':jfoenix')
