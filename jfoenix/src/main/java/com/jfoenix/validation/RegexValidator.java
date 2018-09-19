@@ -22,6 +22,7 @@ package com.jfoenix.validation;
 import com.jfoenix.validation.base.ValidatorBase;
 import java.util.regex.Pattern;
 import javafx.beans.DefaultProperty;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -48,6 +49,9 @@ public class RegexValidator extends ValidatorBase {
         if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
         }
+        if (srcControl.get() instanceof ComboBoxBase) {
+            evalComboBoxField();
+        }
     }
 
     private void evalTextInputField() {
@@ -57,6 +61,12 @@ public class RegexValidator extends ValidatorBase {
         } else {
             hasErrors.set(true);
         }
+    }
+
+    private void evalComboBoxField() {
+        ComboBoxBase comboField = (ComboBoxBase) srcControl.get();
+        Object value = comboField.getValue();
+        hasErrors.set(value == null || !value.toString().matches(regexPattern));
     }
 
     /*
