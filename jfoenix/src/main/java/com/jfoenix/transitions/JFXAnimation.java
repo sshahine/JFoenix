@@ -185,6 +185,10 @@ public class JFXAnimation<N> {
       return targetFunctions;
     }
 
+    public Optional<WritableValue<T>> getFirstTarget() {
+      return getTargetFunctions().findFirst().map(function -> function.apply(animationNode));
+    }
+
     public T getEndValue() {
       return endValueSupplier.apply(animationNode);
     }
@@ -276,6 +280,10 @@ public class JFXAnimation<N> {
 
       public JFXAnimationValue<N, T> build(Function<String, ?> buildFunction) {
         this.animationNode = clazz == null ? null : clazz.cast(buildFunction.apply(classKey));
+        return new JFXAnimationValue<>(this);
+      }
+
+      public JFXAnimationValue<N, T> build() {
         return new JFXAnimationValue<>(this);
       }
     }
