@@ -35,7 +35,7 @@ public class JFXAnimation<N> {
     return builder(Node.class);
   }
 
-  private Timeline buildAnimation() {
+  private Timeline buildTimeline() {
 
     Timeline timeline = new Timeline();
     JFXAnimationConfig animationConfig =
@@ -85,6 +85,51 @@ public class JFXAnimation<N> {
     timeline.setOnFinished(animationConfig::handleOnFinish);
 
     return timeline;
+  }
+
+  private JFXAnimationTimer buildAnimationTimer() {
+
+    JFXAnimationTimer animationTimer = new JFXAnimationTimer();
+    JFXAnimationConfig animationConfig =
+        builder.animationConfigBuilderFunction.apply(JFXAnimationConfig.builder()).build();
+
+    builder.animationValueBuilderFunctions.forEach(
+        (percent, animationValueBuilderFunctions) -> {
+
+          // calc the percentage duration of total duration.
+          Duration percentageDuration = animationConfig.getDuration().multiply((percent / 100));
+
+          // Build the animation values once and store.
+          List<JFXAnimationValue<?, ?>> animationValues =
+              animationValueBuilderFunctions
+                  .stream()
+                  .map(
+                      builderFunction ->
+                          builderFunction
+                              .apply(JFXAnimationValue.builder(builder.clazz))
+                              .build(this.builder.animationsTargets::get))
+                  .collect(Collectors.toList());
+
+          // Create the key values.
+          JFXKeyValue<?>[] keyValues =
+              animationValues
+                  .stream()
+                  .flatMap(
+                      animationValue ->
+                          animationValue.toJFXKeyValues(animationConfig.getInterpolator()))
+                  .toArray(JFXKeyValue<?>[]::new);
+
+          JFXKeyFrame keyFrame = new JFXKeyFrame(percentageDuration, keyValues);
+          try {
+            animationTimer.addKeyFrame(keyFrame);
+          } catch (Exception e) {
+            // Nothing happens cause timer can't run at this point.
+          }
+        });
+
+    animationTimer.setOnFinished(() -> animationConfig.handleOnFinish(new ActionEvent()));
+
+    return animationTimer;
   }
 
   public static final class Builder<N> implements AnimationConfig<N> {
@@ -147,7 +192,17 @@ public class JFXAnimation<N> {
       for (Pair<String, ?> pair : animationNodes) {
         animationsTargets.put(pair.getKey(), pair.getValue());
       }
-      return new JFXAnimation<>(this).buildAnimation();
+      return new JFXAnimation<>(this).buildTimeline();
+    }
+
+    @SafeVarargs
+    public final JFXAnimationTimer buildJFXAnimationTimer(
+        N animationNode, Pair<String, ?>... animationNodes) {
+      animationsTargets.put(DEFAULT_CLASS_KEY, animationNode);
+      for (Pair<String, ?> pair : animationNodes) {
+        animationsTargets.put(pair.getKey(), pair.getValue());
+      }
+      return new JFXAnimation<>(this).buildAnimationTimer();
     }
   }
 
@@ -221,6 +276,21 @@ public class JFXAnimation<N> {
                           function.apply(animationNode),
                           getEndValue(),
                           interpolator == null ? globalInterpolator : interpolator))
+          : Stream.empty();
+    }
+
+    public Stream<JFXKeyValue> toJFXKeyValues(Interpolator globalInterpolator) {
+      Interpolator interpolator = getInterpolator();
+      return animateWhen
+          ? getTargetFunctions()
+              .map(
+                  function ->
+                      JFXKeyValue.builder()
+                          .setTarget(function.apply(animationNode))
+                          .setEndValue(getEndValue())
+                          .setInterpolator(interpolator == null ? globalInterpolator : interpolator)
+                          .setAnimateCondition(() -> true)
+                          .build())
           : Stream.empty();
     }
 
