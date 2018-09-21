@@ -18,14 +18,9 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2018-09-18
  */
-public class JFXAnimation<N> {
+public class JFXAnimation {
 
   private static final String DEFAULT_CLASS_KEY = "_DefaultKey_";
-  private final Builder<N> builder;
-
-  private JFXAnimation(Builder<N> builder) {
-    this.builder = builder;
-  }
 
   public static <N> AnimationProcess<N> builder(Class<N> clazz) {
     return new Builder<>(clazz);
@@ -35,7 +30,7 @@ public class JFXAnimation<N> {
     return builder(Node.class);
   }
 
-  private Timeline buildTimeline() {
+  public static <N> Timeline buildTimeline(Builder<N> builder) {
 
     Timeline timeline = new Timeline();
     JFXAnimationConfig animationConfig =
@@ -55,7 +50,7 @@ public class JFXAnimation<N> {
                       builderFunction ->
                           builderFunction
                               .apply(JFXAnimationValue.builder(builder.clazz))
-                              .build(this.builder.animationsTargets::get))
+                              .build(builder.animationsTargets::get))
                   .collect(Collectors.toList());
 
           // Create the key values.
@@ -87,7 +82,7 @@ public class JFXAnimation<N> {
     return timeline;
   }
 
-  private JFXAnimationTimer buildAnimationTimer() {
+  public static <N> JFXAnimationTimer buildAnimationTimer(Builder<N> builder) {
 
     JFXAnimationTimer animationTimer = new JFXAnimationTimer();
     JFXAnimationConfig animationConfig =
@@ -107,7 +102,7 @@ public class JFXAnimation<N> {
                       builderFunction ->
                           builderFunction
                               .apply(JFXAnimationValue.builder(builder.clazz))
-                              .build(this.builder.animationsTargets::get))
+                              .build(builder.animationsTargets::get))
                   .collect(Collectors.toList());
 
           // Create the key values.
@@ -187,22 +182,20 @@ public class JFXAnimation<N> {
     }
 
     @SafeVarargs
-    public final Timeline build(N animationNode, Pair<String, ?>... animationNodes) {
+    public final <B> B build(
+        Function<Builder<N>, B> builderFunction,
+        N animationNode,
+        Pair<String, ?>... animationNodes) {
       animationsTargets.put(DEFAULT_CLASS_KEY, animationNode);
       for (Pair<String, ?> pair : animationNodes) {
         animationsTargets.put(pair.getKey(), pair.getValue());
       }
-      return new JFXAnimation<>(this).buildTimeline();
+      return builderFunction.apply(this);
     }
 
     @SafeVarargs
-    public final JFXAnimationTimer buildJFXAnimationTimer(
-        N animationNode, Pair<String, ?>... animationNodes) {
-      animationsTargets.put(DEFAULT_CLASS_KEY, animationNode);
-      for (Pair<String, ?> pair : animationNodes) {
-        animationsTargets.put(pair.getKey(), pair.getValue());
-      }
-      return new JFXAnimation<>(this).buildAnimationTimer();
+    public final Timeline build(N animationNode, Pair<String, ?>... animationNodes) {
+      return build(JFXAnimation::buildTimeline, animationNode, animationNodes);
     }
   }
 
