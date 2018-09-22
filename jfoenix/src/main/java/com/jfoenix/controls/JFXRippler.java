@@ -21,13 +21,13 @@ package com.jfoenix.controls;
 
 import com.jfoenix.converters.RipplerMaskTypeConverter;
 import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.transitions.JFXAnimation;
+import com.jfoenix.transitions.creator.JFXAnimationCreator;
+import com.jfoenix.transitions.creator.JFXAnimationCreatorValue;
 import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.DurationConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import com.sun.javafx.css.converters.SizeConverter;
-import com.sun.javafx.geom.Area;
 import javafx.animation.*;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.ObjectProperty;
@@ -497,7 +497,7 @@ public class JFXRippler extends StackPane {
         private final class Ripple extends Path {
 
             KeyValue[] outKeyValues;
-            JFXAnimation.Builder<Node> outAnimationBuilder;
+            JFXAnimationCreator.Builder<Node> outAnimationBuilder;
             Animation outAnimation = null;
 
             Animation inAnimation = null;
@@ -549,48 +549,48 @@ public class JFXRippler extends StackPane {
         //                        rippleInterpolator);
         //                }
 
-        JFXAnimation.JFXAnimationValue.Builder<Node, Number> translateXAction =
-            JFXAnimation.JFXAnimationValue.builder()
-                .target(Node::translateXProperty)
-                .animateWhen(isRipplerRecenter())
-                .endValue(
+        JFXAnimationCreatorValue.Builder<Node, Number> translateXAction =
+            JFXAnimationCreatorValue.builder()
+                                    .target(Node::translateXProperty)
+                                    .animateWhen(isRipplerRecenter())
+                                    .endValue(
                     node -> {
                       double dx = (control.getLayoutBounds().getWidth() / 2 - centerX) / 1.55;
                       return Math.signum(dx) * Math.min(Math.abs(dx), radius / 2);
                     });
 
-        JFXAnimation.JFXAnimationValue.Builder<Node, Number> translateYAction =
-            JFXAnimation.JFXAnimationValue.builder()
-                .target(Node::translateYProperty)
-                .animateWhen(isRipplerRecenter())
-                .endValue(
+        JFXAnimationCreatorValue.Builder<Node, Number> translateYAction =
+            JFXAnimationCreatorValue.builder()
+                                    .target(Node::translateYProperty)
+                                    .animateWhen(isRipplerRecenter())
+                                    .endValue(
                     node -> {
                       double dy = (control.getLayoutBounds().getHeight() / 2 - centerY) / 1.55;
                       return Math.signum(dy) * Math.min(Math.abs(dy), radius / 2);
                     });
 
         inAnimation =
-            JFXAnimation.builder()
-                .from()
-                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0))
-                .action(
+            JFXAnimationCreator.create()
+                               .from()
+                               .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0))
+                               .action(
                     b -> b.target(Node::translateXProperty, Node::translateYProperty).endValue(0))
-                .action(b -> b.target(Node::opacityProperty).endValue(1))
-                .to()
-                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0.9))
-                .action(translateXAction)
-                .action(translateYAction)
-                .config(b -> b.duration(getRipplerInAnimation()).interpolator(rippleInterpolator))
-                .build(this);
+                               .action(b -> b.target(Node::opacityProperty).endValue(1))
+                               .to()
+                               .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(0.9))
+                               .action(translateXAction)
+                               .action(translateYAction)
+                               .config(b -> b.duration(getRipplerInAnimation()).interpolator(rippleInterpolator))
+                               .build(this);
 
         outAnimationBuilder =
-            JFXAnimation.builder()
-                .to()
-                .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(1))
-                .action(b -> b.target(Node::opacityProperty).endValue(0))
-                .action(translateXAction)
-                .action(translateYAction)
-                .config(
+            JFXAnimationCreator.create()
+                               .to()
+                               .action(b -> b.target(Node::scaleXProperty, Node::scaleYProperty).endValue(1))
+                               .action(b -> b.target(Node::opacityProperty).endValue(0))
+                               .action(translateXAction)
+                               .action(translateYAction)
+                               .config(
                     b ->
                         b.duration(() -> Duration.millis(Math.min(800, (0.9 * 500) / getScaleX())))
                             .interpolator(rippleInterpolator)
