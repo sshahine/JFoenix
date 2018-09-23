@@ -36,11 +36,11 @@ public class JFXAnimationCreator<N> {
     mainHelperType = builder.mainHelperType;
   }
 
-  public static <N> AnimationProcess<N> create(Class<N> clazz) {
+  public static <N> CreatorProcess<N> create(Class<N> clazz) {
     return new Builder<>(clazz);
   }
 
-  public static AnimationProcess<Node> create() {
+  public static CreatorProcess<Node> create() {
     return create(Node.class);
   }
 
@@ -87,7 +87,7 @@ public class JFXAnimationCreator<N> {
     return mainHelperType;
   }
 
-  public static final class Builder<N> implements AnimationConfig<N> {
+  public static final class Builder<N> implements CreatorConfig<N> {
 
     private final Set<Double> percents = new HashSet<>();
     private final Map<
@@ -108,7 +108,7 @@ public class JFXAnimationCreator<N> {
     }
 
     @Override
-    public AnimationAction<N> percent(double first, double... rest) {
+    public CreatorAction<N> percent(double first, double... rest) {
       if (clearPercents) {
         percents.clear();
         clearPercents = false;
@@ -125,7 +125,7 @@ public class JFXAnimationCreator<N> {
     }
 
     @Override
-    public AnimationConfig<N> action(
+    public CreatorConfig<N> action(
         Function<
                 JFXAnimationCreatorValue.GenericBuilderWrapper<N>,
                 JFXAnimationCreatorValue.Builder<?, ?>>
@@ -163,34 +163,34 @@ public class JFXAnimationCreator<N> {
     }
   }
 
-  public interface AnimationProcess<N> {
+  public interface CreatorProcess<N> {
 
-    AnimationAction<N> percent(double percent, double... percents);
+    CreatorAction<N> percent(double percent, double... percents);
 
-    default AnimationAction<N> from() {
+    default CreatorAction<N> from() {
       return percent(0);
     }
 
-    default AnimationAction<N> to() {
+    default CreatorAction<N> to() {
       return percent(100);
     }
   }
 
-  public interface AnimationAction<N> extends AnimationProcess<N> {
+  public interface CreatorAction<N> extends CreatorProcess<N> {
 
-    AnimationConfig<N> action(
+    CreatorConfig<N> action(
         Function<
                 JFXAnimationCreatorValue.GenericBuilderWrapper<N>,
                 JFXAnimationCreatorValue.Builder<?, ?>>
             valueBuilderFunction);
 
-    default AnimationConfig<N> action(
+    default CreatorConfig<N> action(
         JFXAnimationCreatorValue.Builder<?, ?> animationValueBuilder) {
       return action(builder -> animationValueBuilder);
     }
   }
 
-  public interface AnimationConfig<N> extends AnimationAction<N> {
+  public interface CreatorConfig<N> extends CreatorAction<N> {
 
     Builder<N> config(
         Function<JFXAnimationCreatorConfig.Builder, JFXAnimationCreatorConfig.Builder>

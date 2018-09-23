@@ -18,88 +18,88 @@ import java.util.function.Consumer;
  */
 public class JFXAnimationBuilder {
 
-    public static <N> Timeline buildTimeline(JFXAnimationCreator<N> creator) {
+  public static <N> Timeline buildTimeline(JFXAnimationCreator<N> creator) {
 
-        Timeline timeline = new Timeline();
-        JFXAnimationCreatorConfig animationConfig =
-            creator
-                .getCreatorConfigBuilderFunction()
-                .apply(JFXAnimationCreatorConfig.builder())
-                .build();
-
+    Timeline timeline = new Timeline();
+    JFXAnimationCreatorConfig animationConfig =
         creator
-            .getAnimationValues()
-            .forEach(
-                (percent, animationValues) -> {
+            .getCreatorConfigBuilderFunction()
+            .apply(JFXAnimationCreatorConfig.builder())
+            .build();
 
-                    // calc the percentage duration of total duration.
-                    Duration percentageDuration = animationConfig.getDuration().multiply((percent / 100));
+    creator
+        .getAnimationValues()
+        .forEach(
+            (percent, animationValues) -> {
 
-                    // Create the key values.
-                    KeyValue[] keyValues =
-                        animationValues
-                            .stream()
-                            .flatMap(
-                                animationValue ->
-                                    animationValue.toKeyValues(animationConfig.getInterpolator()))
-                            .toArray(KeyValue[]::new);
+              // calc the percentage duration of total duration.
+              Duration percentageDuration = animationConfig.getDuration().multiply((percent / 100));
 
-                    // Reduce the onFinish events to one consumer.
-                    Consumer<ActionEvent> onFinish =
-                        animationValues
-                            .stream()
-                            .map(animationValue -> (Consumer<ActionEvent>) animationValue::handleOnFinish)
-                            .reduce(action -> {}, Consumer::andThen);
+              // Create the key values.
+              KeyValue[] keyValues =
+                  animationValues
+                      .stream()
+                      .flatMap(
+                          animationValue ->
+                              animationValue.toKeyValues(animationConfig.getInterpolator()))
+                      .toArray(KeyValue[]::new);
 
-                    KeyFrame keyFrame = new KeyFrame(percentageDuration, onFinish::accept, keyValues);
-                    timeline.getKeyFrames().add(keyFrame);
-                });
+              // Reduce the onFinish events to one consumer.
+              Consumer<ActionEvent> onFinish =
+                  animationValues
+                      .stream()
+                      .map(animationValue -> (Consumer<ActionEvent>) animationValue::handleOnFinish)
+                      .reduce(action -> {}, Consumer::andThen);
 
-        timeline.setAutoReverse(animationConfig.isAutoReverse());
-        timeline.setCycleCount(animationConfig.getCycleCount());
-        timeline.setDelay(animationConfig.getDelay());
-        timeline.setRate(animationConfig.getRate());
-        timeline.setOnFinished(animationConfig::handleOnFinish);
+              KeyFrame keyFrame = new KeyFrame(percentageDuration, onFinish::accept, keyValues);
+              timeline.getKeyFrames().add(keyFrame);
+            });
 
-        return timeline;
-    }
+    timeline.setAutoReverse(animationConfig.isAutoReverse());
+    timeline.setCycleCount(animationConfig.getCycleCount());
+    timeline.setDelay(animationConfig.getDelay());
+    timeline.setRate(animationConfig.getRate());
+    timeline.setOnFinished(animationConfig::handleOnFinish);
 
-    public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationCreator<N> creator) {
+    return timeline;
+  }
 
-        JFXAnimationTimer animationTimer = new JFXAnimationTimer();
-        JFXAnimationCreatorConfig animationConfig =
-            creator
-                .getCreatorConfigBuilderFunction()
-                .apply(JFXAnimationCreatorConfig.builder())
-                .build();
+  public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationCreator<N> creator) {
 
+    JFXAnimationTimer animationTimer = new JFXAnimationTimer();
+    JFXAnimationCreatorConfig animationConfig =
         creator
-            .getAnimationValues()
-            .forEach(
-                (percent, animationValues) -> {
+            .getCreatorConfigBuilderFunction()
+            .apply(JFXAnimationCreatorConfig.builder())
+            .build();
 
-                    // calc the percentage duration of total duration.
-                    Duration percentageDuration = animationConfig.getDuration().multiply((percent / 100));
+    creator
+        .getAnimationValues()
+        .forEach(
+            (percent, animationValues) -> {
 
-                    // Create the key values.
-                    JFXKeyValue<?>[] keyValues =
-                        animationValues
-                            .stream()
-                            .flatMap(
-                                animationValue ->
-                                    animationValue.toJFXKeyValues(animationConfig.getInterpolator()))
-                            .toArray(JFXKeyValue<?>[]::new);
+              // calc the percentage duration of total duration.
+              Duration percentageDuration = animationConfig.getDuration().multiply((percent / 100));
 
-                    JFXKeyFrame keyFrame = new JFXKeyFrame(percentageDuration, keyValues);
-                    try {
-                        animationTimer.addKeyFrame(keyFrame);
-                    } catch (Exception e) {
-                        // Nothing happens cause timer can't run at this point.
-                    }
-                });
+              // Create the key values.
+              JFXKeyValue<?>[] keyValues =
+                  animationValues
+                      .stream()
+                      .flatMap(
+                          animationValue ->
+                              animationValue.toJFXKeyValues(animationConfig.getInterpolator()))
+                      .toArray(JFXKeyValue<?>[]::new);
 
-        animationTimer.setOnFinished(() -> animationConfig.handleOnFinish(new ActionEvent()));
+              JFXKeyFrame keyFrame = new JFXKeyFrame(percentageDuration, keyValues);
+              try {
+                animationTimer.addKeyFrame(keyFrame);
+              } catch (Exception e) {
+                // Nothing happens cause timer can't run at this point.
+              }
+            });
 
-        return animationTimer;
-    }
+    animationTimer.setOnFinished(() -> animationConfig.handleOnFinish(new ActionEvent()));
+
+    return animationTimer;
+  }
 }
