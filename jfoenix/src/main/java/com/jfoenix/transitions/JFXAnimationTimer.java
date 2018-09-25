@@ -189,7 +189,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
         private HashMap<WritableValue<?>, Object> endValuesMap = new HashMap<>();
 
-        public AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
+        AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
             this.duration = duration.toMillis();
             currentDuration = this.duration;
             this.keyValues = keyValues;
@@ -210,7 +210,7 @@ public class JFXAnimationTimer extends AnimationTimer {
             }
         }
 
-        public void reverse(double now) {
+        void reverse(double now) {
             currentDuration = duration - (currentDuration - now);
             // update initial values
             for (JFXKeyValue keyValue : keyValues) {
@@ -273,7 +273,7 @@ public class JFXAnimationTimer extends AnimationTimer {
             endValuesMap.clear();
         }
 
-        public void dispose() {
+        void dispose() {
             clear();
             keyValues.clear();
         }
