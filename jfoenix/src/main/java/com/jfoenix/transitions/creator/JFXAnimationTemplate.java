@@ -23,11 +23,11 @@ public class JFXAnimationTemplate<N> {
     this.builder = builder;
   }
 
-  public static <N> CreatorProcess<N> create(Class<N> animationObjectType) {
+  public static <N> TemplateProcess<N> create(Class<N> animationObjectType) {
     return new Builder<>(animationObjectType);
   }
 
-  public static CreatorProcess<Node> create() {
+  public static TemplateProcess<Node> create() {
     return create(Node.class);
   }
 
@@ -52,11 +52,11 @@ public class JFXAnimationTemplate<N> {
     return animationValueMap;
   }
 
-  public JFXAnimationTemplateConfig buildAndGetCreatorConfig() {
+  public JFXAnimationTemplateConfig buildAndGetTemplateConfig() {
     return builder.creatorConfigBuilderFunction.apply(JFXAnimationTemplateConfig.builder()).build();
   }
 
-  public static final class Builder<N> implements CreatorConfig<N> {
+  public static final class Builder<N> implements TemplateConfig<N> {
 
     private final Set<Double> percents = new HashSet<>();
     private final Map<
@@ -77,7 +77,7 @@ public class JFXAnimationTemplate<N> {
     }
 
     @Override
-    public CreatorAction<N> percent(double first, double... rest) {
+    public TemplateAction<N> percent(double first, double... rest) {
       if (clearPercents) {
         percents.clear();
         clearPercents = false;
@@ -94,8 +94,9 @@ public class JFXAnimationTemplate<N> {
     }
 
     @Override
-    public CreatorConfig<N> action(
-        Function<JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
+    public TemplateConfig<N> action(
+        Function<
+                JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
             valueBuilderFunction) {
       for (Double percent : percents) {
         creatorValueBuilderFunctions.get(percent).add(valueBuilderFunction);
@@ -130,31 +131,33 @@ public class JFXAnimationTemplate<N> {
     }
   }
 
-  public interface CreatorProcess<N> {
+  public interface TemplateProcess<N> {
 
-    CreatorAction<N> percent(double percent, double... percents);
+    TemplateAction<N> percent(double percent, double... percents);
 
-    default CreatorAction<N> from() {
+    default TemplateAction<N> from() {
       return percent(0);
     }
 
-    default CreatorAction<N> to() {
+    default TemplateAction<N> to() {
       return percent(100);
     }
   }
 
-  public interface CreatorAction<N> extends CreatorProcess<N> {
+  public interface TemplateAction<N> extends TemplateProcess<N> {
 
-    CreatorConfig<N> action(
-        Function<JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
+    TemplateConfig<N> action(
+        Function<
+                JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
             valueBuilderFunction);
 
-    default CreatorConfig<N> action(JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
+    default TemplateConfig<N> action(
+        JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
       return action(builder -> animationValueBuilder);
     }
   }
 
-  public interface CreatorConfig<N> extends CreatorAction<N> {
+  public interface TemplateConfig<N> extends TemplateAction<N> {
 
     Builder<N> config(
         Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>

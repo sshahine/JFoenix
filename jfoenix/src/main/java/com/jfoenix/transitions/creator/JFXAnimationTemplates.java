@@ -24,7 +24,7 @@ public class JFXAnimationTemplates {
   public static <N> Timeline buildTimeline(JFXAnimationTemplate<N> creator) {
 
     Timeline timeline = new Timeline();
-    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetCreatorConfig();
+    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetTemplateConfig();
 
     creator
         .buildAndGetAnimationValues()
@@ -67,7 +67,7 @@ public class JFXAnimationTemplates {
   public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationTemplate<N> creator) {
 
     JFXAnimationTimer animationTimer = new JFXAnimationTimer();
-    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetCreatorConfig();
+    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetTemplateConfig();
 
     creator
         .buildAndGetAnimationValues()
