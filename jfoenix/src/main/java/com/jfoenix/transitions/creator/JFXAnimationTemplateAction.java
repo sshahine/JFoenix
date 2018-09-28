@@ -1,17 +1,12 @@
 package com.jfoenix.transitions.creator;
 
-import com.jfoenix.transitions.JFXKeyValue;
 import javafx.animation.Interpolator;
-import javafx.animation.KeyValue;
 import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
@@ -19,34 +14,30 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2018-09-22
  */
-public final class JFXAnimationCreatorValue<N, T> {
+public final class JFXAnimationTemplateAction<N, T> {
 
   private final Stream<Function<N, WritableValue<T>>> targetFunctions;
   private final Function<N, T> endValueSupplier;
   private final Function<N, Interpolator> interpolatorSupplier;
   private final boolean animateWhen;
   private final BiConsumer<N, ActionEvent> onFinish;
-  private final N animationHelper;
-  private final String helperObjectKey;
-  private final Class<N> mainHelperType;
+  private final N animationObject;
 
-  private JFXAnimationCreatorValue(Builder<N, T> builder) {
+  private JFXAnimationTemplateAction(Builder<N, T> builder) {
     targetFunctions = builder.targetFunctions;
     endValueSupplier = builder.endValueFunction;
     interpolatorSupplier = builder.interpolatorFunction;
-    animationHelper = builder.animationHelper;
-    animateWhen = builder.animateWhenPredicate.test(animationHelper);
+    animationObject = builder.animationHelper;
+    animateWhen = builder.animateWhenPredicate.test(animationObject);
     onFinish = builder.onFinish;
-    helperObjectKey = builder.helperObjectKey;
-    mainHelperType = builder.mainHelperType;
   }
 
-  public static <N> GenericBuilderWrapper<N> builder(Class<N> clazz) {
-    return new GenericBuilderWrapper<>(clazz, JFXAnimationCreator.DEFAULT_CLASS_KEY);
+  public static <N> InitBuilder<N> builder(Class<N> animationObjectType, String animationObjectId) {
+    return new InitBuilder<>(animationObjectType, animationObjectId);
   }
 
-  public static GenericBuilderWrapper<Node> builder() {
-    return builder(Node.class);
+  public static InitBuilder<Node> builder() {
+    return new InitBuilder<>(Node.class, JFXAnimationTemplate.DEFAULT_ANIMATION_OBJECT_KEY);
   }
 
   public Stream<Function<N, WritableValue<T>>> getTargetFunctions() {
@@ -54,64 +45,37 @@ public final class JFXAnimationCreatorValue<N, T> {
   }
 
   public Optional<WritableValue<T>> getFirstTarget() {
-    return getTargetFunctions().findFirst().map(function -> function.apply(animationHelper));
+    return getTargetFunctions().findFirst().map(function -> function.apply(animationObject));
   }
 
   public T getEndValue() {
-    return endValueSupplier.apply(animationHelper);
+    return endValueSupplier.apply(animationObject);
   }
 
   public Interpolator getInterpolator() {
-    return interpolatorSupplier.apply(animationHelper);
+    return interpolatorSupplier.apply(animationObject);
   }
 
   public void handleOnFinish(ActionEvent actionEvent) {
     if (animateWhen) {
-      onFinish.accept(animationHelper, actionEvent);
+      onFinish.accept(animationObject, actionEvent);
     }
   }
 
-  public String getHelperObjectKey() {
-    return helperObjectKey;
-  }
-
-  public Optional<Class<N>> getMainHelperType() {
-    return Optional.ofNullable(mainHelperType);
-  }
-
-  public Stream<KeyValue> toKeyValues(Interpolator globalInterpolator) {
-    Interpolator interpolator = getInterpolator();
+  @SuppressWarnings("unchecked")
+  public <M> Stream<M> mapTo(Function<WritableValue<Object>, M> mappingFunction) {
     return animateWhen
         ? getTargetFunctions()
             .map(
                 function ->
-                    new KeyValue(
-                        function.apply(animationHelper),
-                        getEndValue(),
-                        interpolator == null ? globalInterpolator : interpolator))
-        : Stream.empty();
-  }
-
-  public Stream<JFXKeyValue> toJFXKeyValues(Interpolator globalInterpolator) {
-    Interpolator interpolator = getInterpolator();
-    return animateWhen
-        ? getTargetFunctions()
-            .map(
-                function ->
-                    JFXKeyValue.builder()
-                        .setTarget(function.apply(animationHelper))
-                        .setEndValue(getEndValue())
-                        .setInterpolator(interpolator == null ? globalInterpolator : interpolator)
-                        .setAnimateCondition(() -> true)
-                        .build())
+                    mappingFunction.apply((WritableValue<Object>) function.apply(animationObject)))
         : Stream.empty();
   }
 
   public static final class Builder<N, T> {
 
-    private final String helperObjectKey;
-    private final Class<N> mainHelperType;
     private final Stream<Function<N, WritableValue<T>>> targetFunctions;
+    private final InitBuilder<N> initBuilder;
     private Function<N, T> endValueFunction = node -> null;
     private Function<N, Interpolator> interpolatorFunction = node -> null;
     private Predicate<N> animateWhenPredicate = node -> true;
@@ -119,9 +83,8 @@ public final class JFXAnimationCreatorValue<N, T> {
     private N animationHelper;
 
     private Builder(
-        Class<N> mainHelperType, String helperObjectKey, Stream<Function<N, WritableValue<T>>> targetFunctions) {
-      this.mainHelperType = mainHelperType;
-      this.helperObjectKey = helperObjectKey;
+        InitBuilder<N> initBuilder, Stream<Function<N, WritableValue<T>>> targetFunctions) {
+      this.initBuilder = initBuilder;
       this.targetFunctions = targetFunctions;
     }
 
@@ -161,24 +124,25 @@ public final class JFXAnimationCreatorValue<N, T> {
       return this;
     }
 
-    public JFXAnimationCreatorValue<N, T> build(Function<String, ?> buildFunction) {
-      this.animationHelper = mainHelperType == null ? null : mainHelperType.cast(buildFunction.apply(helperObjectKey));
-      return new JFXAnimationCreatorValue<>(this);
+    public JFXAnimationTemplateAction<N, T> build(Function<String, ?> buildFunction) {
+      this.animationHelper =
+          initBuilder.animationObjectType.cast(buildFunction.apply(initBuilder.animationObjectId));
+      return new JFXAnimationTemplateAction<>(this);
     }
 
-    public JFXAnimationCreatorValue<N, T> build() {
-      return new JFXAnimationCreatorValue<>(this);
+    public JFXAnimationTemplateAction<N, T> build() {
+      return new JFXAnimationTemplateAction<>(this);
     }
   }
 
-  public static final class GenericBuilderWrapper<N> {
+  public static final class InitBuilder<N> {
 
-    private final String classKey;
-    private final Class<N> clazz;
+    private final Class<N> animationObjectType;
+    private final String animationObjectId;
 
-    private GenericBuilderWrapper(Class<N> clazz, String classKey) {
-      this.clazz = clazz;
-      this.classKey = classKey;
+    private InitBuilder(Class<N> animationObjectType, String animationObjectId) {
+      this.animationObjectType = animationObjectType;
+      this.animationObjectId = animationObjectId;
     }
 
     // Instance method wraps the value create target method for convenience.
@@ -197,15 +161,15 @@ public final class JFXAnimationCreatorValue<N, T> {
         Function<N, WritableValue<T>> targetFunction,
         Function<N, WritableValue<T>>... targetFunctions) {
       return new Builder<>(
-          clazz, classKey, Stream.concat(Stream.of(targetFunction), Stream.of(targetFunctions)));
+          this, Stream.concat(Stream.of(targetFunction), Stream.of(targetFunctions)));
     }
 
     public final Builder<N, ?> noTargets() {
-      return new Builder<>(clazz, classKey, Stream.empty());
+      return new Builder<>(this, Stream.empty());
     }
 
-    public <T> GenericBuilderWrapper<T> withClass(Class<T> clazz, String classKey) {
-      return new GenericBuilderWrapper<>(clazz, classKey);
+    public <T> InitBuilder<T> withAnimationObject(Class<T> clazz, String classKey) {
+      return new InitBuilder<>(clazz, classKey);
     }
   }
 }

@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 
 public class JFXKeyValue<T> {
 
-    private WritableValue<T> target;
+    private WritableValue<? super T> target;
     private Supplier<WritableValue<T>> targetSupplier;
     private Supplier<T> endValueSupplier;
     private T endValue;
@@ -51,7 +51,7 @@ public class JFXKeyValue<T> {
         return endValue == null ? endValueSupplier.get() : endValue;
     }
 
-    public WritableValue<T> getTarget() {
+    public WritableValue<? super T> getTarget() {
         return target == null ? targetSupplier.get() : target;
     }
 
@@ -104,7 +104,7 @@ public class JFXKeyValue<T> {
 
     public static final class JFXKeyValueBuilder<T> {
 
-        private WritableValue<T> target;
+        private WritableValue<? super T> target;
         private Supplier<WritableValue<T>> targetSupplier;
         private Supplier<T> endValueSupplier;
         private T endValue;
@@ -114,7 +114,7 @@ public class JFXKeyValue<T> {
         private JFXKeyValueBuilder() {
         }
 
-        public JFXKeyValueBuilder<T> setTarget(WritableValue<T> target) {
+        public JFXKeyValueBuilder<T> setTarget(WritableValue<? super T> target) {
             this.target = target;
             return this;
         }

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * @version 1.0
  * @since 2018-09-22
  */
-public class JFXAnimationCreatorConfig {
+public class JFXAnimationTemplateConfig {
 
       private final Supplier<Duration> durationSupplier;
       private final Supplier<Integer> cycleCountSupplier;
@@ -23,7 +23,7 @@ public class JFXAnimationCreatorConfig {
       private final Supplier<Double> rateSupplier;
       private final EventHandler<ActionEvent> onFinish;
 
-      private JFXAnimationCreatorConfig(Builder builder) {
+      private JFXAnimationTemplateConfig(Builder builder) {
         durationSupplier = builder.durationSupplier;
         cycleCountSupplier = builder.cycleCountSupplier;
         autoReverseSupplier = builder.autoReverseSupplier;
@@ -33,7 +33,7 @@ public class JFXAnimationCreatorConfig {
         onFinish = builder.onFinish;
       }
 
-      public static JFXAnimationCreatorConfig.Builder builder() {
+      public static JFXAnimationTemplateConfig.Builder builder() {
         return new Builder();
       }
 
@@ -140,8 +140,8 @@ public class JFXAnimationCreatorConfig {
           return this;
         }
 
-        public JFXAnimationCreatorConfig build() {
-          return new JFXAnimationCreatorConfig(this);
+        public JFXAnimationTemplateConfig build() {
+          return new JFXAnimationTemplateConfig(this);
         }
     }
 }
