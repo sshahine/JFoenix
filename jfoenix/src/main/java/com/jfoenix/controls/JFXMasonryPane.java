@@ -66,6 +66,11 @@ public class JFXMasonryPane extends Pane {
         if (change.next()) {
             // flag dirty boxes
             dirtyBoxes = true;
+            
+            // clean removed child nodes from animationMap
+            for (Node removedNode : change.getRemoved()) {
+                animationMap.remove(removedNode);
+            }
         }
         clearLayout();
         requestLayout();
