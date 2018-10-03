@@ -32,12 +32,12 @@ public final class JFXAnimationTemplateAction<N, T> {
     onFinish = builder.onFinish;
   }
 
-  public static <N> InitBuilder<N> builder(Class<N> animationObjectType, String animationObjectId) {
-    return new InitBuilder<>(animationObjectType, animationObjectId);
+  public static <N> InitBuilder<N> builder(Class<N> animationObjectType) {
+    return new InitBuilder<>(animationObjectType, JFXAnimationTemplate.DEFAULT_ANIMATION_OBJECT_KEY);
   }
 
   public static InitBuilder<Node> builder() {
-    return new InitBuilder<>(Node.class, JFXAnimationTemplate.DEFAULT_ANIMATION_OBJECT_KEY);
+    return builder(Node.class);
   }
 
   public Stream<Function<N, WritableValue<T>>> getTargetFunctions() {
