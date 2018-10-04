@@ -33,7 +33,8 @@ public final class JFXAnimationTemplateAction<N, T> {
   }
 
   public static <N> InitBuilder<N> builder(Class<N> animationObjectType) {
-    return new InitBuilder<>(animationObjectType, JFXAnimationTemplate.DEFAULT_ANIMATION_OBJECT_KEY);
+    return new InitBuilder<>(
+        animationObjectType, JFXAnimationTemplate.DEFAULT_ANIMATION_OBJECT_KEY);
   }
 
   public static InitBuilder<Node> builder() {
@@ -164,8 +165,20 @@ public final class JFXAnimationTemplateAction<N, T> {
           this, Stream.concat(Stream.of(targetFunction), Stream.of(targetFunctions)));
     }
 
-    public final Builder<N, ?> noTargets() {
-      return new Builder<>(this, Stream.empty());
+    public final Builder<N, ?> animateWhen(boolean animateWhen) {
+      return new Builder<>(this, Stream.empty()).animateWhen(animateWhen);
+    }
+
+    public final Builder<N, ?> animateWhen(Predicate<N> animateWhenPredicate) {
+      return new Builder<>(this, Stream.empty()).animateWhen(animateWhenPredicate);
+    }
+
+    public Builder<N, ?> ignoreAnimation() {
+      return new Builder<>(this, Stream.empty()).ignoreAnimation();
+    }
+
+    public Builder<N, ?> onFinish(BiConsumer<N, ActionEvent> onFinish) {
+      return new Builder<>(this, Stream.empty()).onFinish(onFinish);
     }
 
     public <T> InitBuilder<T> withAnimationObject(Class<T> clazz, String classKey) {
