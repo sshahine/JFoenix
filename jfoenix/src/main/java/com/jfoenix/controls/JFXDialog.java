@@ -23,19 +23,31 @@ import com.jfoenix.controls.events.JFXDialogEvent;
 import com.jfoenix.converters.DialogTransitionConverter;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -56,7 +68,7 @@ public class JFXDialog extends StackPane {
 
     //	public static enum JFXDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
     public enum DialogTransition {
-        CENTER, TOP, RIGHT, BOTTOM, LEFT
+        CENTER, TOP, RIGHT, BOTTOM, LEFT, NONE
     }
 
     private StackPane contentHolder;
@@ -244,7 +256,7 @@ public class JFXDialog extends StackPane {
      */
     public void show(StackPane dialogContainer) {
         this.setDialogContainer(dialogContainer);
-        animation.play();
+        showDialog();
     }
 
     /**
@@ -256,20 +268,39 @@ public class JFXDialog extends StackPane {
             return;
         }
         this.setDialogContainer(dialogContainer);
-        animation.play();
+        showDialog();
+    }
+
+    private void showDialog() {
+        if (animation != null) {
+            animation.play();
+        } else {
+            setVisible(true);
+            setOpacity(1);
+            Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.OPENED));
+        }
     }
 
     /**
      * close the dialog
      */
     public void close() {
-        animation.setRate(-1);
-        animation.play();
-        animation.setOnFinished(e -> {
+        if (animation != null) {
+            animation.setRate(-1);
+            animation.play();
+            animation.setOnFinished(e -> {
+                resetProperties();
+                Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.CLOSED));
+                dialogContainer.getChildren().remove(this);
+            });
+        } else {
+            setVisible(false);
+            setOpacity(0);
             resetProperties();
             Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.CLOSED));
             dialogContainer.getChildren().remove(this);
-        });
+        }
+
     }
 
     /***************************************************************************
@@ -306,10 +337,17 @@ public class JFXDialog extends StackPane {
                     contentHolder.setTranslateY(offsetY);
                     animation = new BottomTransition();
                     break;
-                default:
+                case CENTER:
                     contentHolder.setScaleX(0);
                     contentHolder.setScaleY(0);
                     animation = new CenterTransition();
+                    break;
+                default:
+                    animation = null;
+                    contentHolder.setScaleX(1);
+                    contentHolder.setScaleY(1);
+                    contentHolder.setTranslateX(0);
+                    contentHolder.setTranslateY(0);
                     break;
             }
         }

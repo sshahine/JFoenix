@@ -98,8 +98,9 @@ public class JFXAlert<R> extends Dialog<R> {
                 Window owner = getOwner();
                 if (owner != null) {
                     return owner.getHeight();
-                }else
+                } else {
                     return super.computePrefHeight(width);
+                }
             }
 
             @Override
@@ -107,8 +108,9 @@ public class JFXAlert<R> extends Dialog<R> {
                 Window owner = getOwner();
                 if (owner != null) {
                     return owner.getWidth();
-                }else
+                } else {
                     return super.computePrefWidth(height);
+                }
             }
 
             @Override
@@ -172,23 +174,22 @@ public class JFXAlert<R> extends Dialog<R> {
 
         // handle animation / owner stage layout changes
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
-            if (getAnimation() != null) {
-                addLayoutListeners();
-                getAnimation().initAnimation(contentContainer.getParent(), dialogPane);
-            }
+            addLayoutListeners();
+            JFXAlertAnimation currentAnimation = getCurrentAnimation();
+            currentAnimation.initAnimation(contentContainer.getParent(), dialogPane);
         });
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWN, event -> {
             if (getOwner() != null) {
                 updateLayout();
             }
-            if (getAnimation() != null) {
-                animateClosing = true;
-                Animation animation = getAnimation().createShowingAnimation(dialogPane.getContent(), dialogPane);
-                if (animation != null) {
-                    animation.play();
-                }
+            animateClosing = true;
+            JFXAlertAnimation currentAnimation = getCurrentAnimation();
+            Animation animation = currentAnimation.createShowingAnimation(dialogPane.getContent(), dialogPane);
+            if (animation != null) {
+                animation.play();
             }
         });
+
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_CLOSE_REQUEST, event -> {
             if (animateClosing) {
                 event.consume();
@@ -204,6 +205,13 @@ public class JFXAlert<R> extends Dialog<R> {
                 }
             }
         });
+    }
+
+    // this method ensure not null value for current animation
+    private JFXAlertAnimation getCurrentAnimation() {
+        JFXAlertAnimation usedAnimation = getAnimation();
+        usedAnimation = usedAnimation == null ? JFXAlertAnimation.NO_ANIMATION : usedAnimation;
+        return usedAnimation;
     }
 
     private void removeLayoutListeners() {
@@ -265,19 +273,20 @@ public class JFXAlert<R> extends Dialog<R> {
      */
     public void hideWithAnimation() {
         if (transition == null || transition.getStatus().equals(Animation.Status.STOPPED)) {
-            if (getAnimation() != null) {
-                Animation animation = getAnimation().createHidingAnimation(getDialogPane().getContent(), getDialogPane());
-                if (animation != null) {
-                    transition = animation;
-                    animation.setOnFinished(finish -> {
-                        animateClosing = false;
-                        this.hide();
-                        this.transition = null;
-                    });
-                    animation.play();
-                } else {
-                    Platform.runLater(this::hide);
-                }
+            JFXAlertAnimation currentAnimation = getCurrentAnimation();
+            Animation animation = currentAnimation.createHidingAnimation(getDialogPane().getContent(), getDialogPane());
+            if (animation != null) {
+                transition = animation;
+                animation.setOnFinished(finish -> {
+                    animateClosing = false;
+                    hide();
+                    transition = null;
+                });
+                animation.play();
+            } else {
+                animateClosing = false;
+                transition = null;
+                Platform.runLater(this::hide);
             }
         }
     }
