@@ -43,6 +43,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -71,6 +72,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     private double initScale = 0.05;
     public final Scale promptTextScale = new Scale(1, 1, 0, 0);
     private final Scale scale = new Scale(initScale, 1);
+    private final Rectangle clip = new Rectangle();
 
     public ObjectProperty<Paint> animatedPromptTextFill;
     public BooleanBinding usePromptText;
@@ -177,6 +179,12 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
 
         promptContainer.setManaged(false);
         promptContainer.setMouseTransparent(true);
+
+        // clip prompt container
+        clip.setSmooth(false);
+        clip.setX(0);
+        clip.widthProperty().bind(promptContainer.widthProperty());
+        promptContainer.setClip(clip);
 
         focusTimer.setOnFinished(() -> animating = false);
         unfocusTimer.setOnFinished(() -> animating = false);
@@ -300,6 +308,8 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
 
     public void layoutLines(double x, double y, double w, double h, double controlHeight, double translateY) {
         this.contentHeight = translateY;
+        clip.setY(-contentHeight);
+        clip.setHeight(controlHeight + contentHeight);
         focusedLine.resizeRelocate(x, controlHeight, w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, controlHeight, w, line.prefHeight(-1));
         promptContainer.resizeRelocate(x, y, w, h);
