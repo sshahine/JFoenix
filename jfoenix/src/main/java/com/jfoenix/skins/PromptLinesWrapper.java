@@ -72,7 +72,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     private double initScale = 0.05;
     public final Scale promptTextScale = new Scale(1, 1, 0, 0);
     private final Scale scale = new Scale(initScale, 1);
-    private final Rectangle clip = new Rectangle();
+    public final Rectangle clip = new Rectangle();
 
     public ObjectProperty<Paint> animatedPromptTextFill;
     public BooleanBinding usePromptText;
