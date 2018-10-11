@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.cache.CacheStrategy;
 import com.jfoenix.controls.events.JFXDrawerEvent;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXDrawerKeyValue;
@@ -26,6 +27,7 @@ import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
@@ -230,6 +232,7 @@ public class JFXDrawer extends StackPane {
         initialize();
 
         contentHolder.setPickOnBounds(false);
+        addEventHandler(JFXDrawerEvent.CLOSED, handler -> Platform.runLater(() -> getCacheStrategy().restore(contentHolder)));
 
         overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1),
             CornerRadii.EMPTY,
@@ -348,6 +351,7 @@ public class JFXDrawer extends StackPane {
                           + activeOffset * directionProperty.get().doubleValue();
             overlayPane.setMouseTransparent(!isOverLayVisible());
             translateTimer.setOnFinished(null);
+            getCacheStrategy().cache(contentHolder);
             translateTimer.start();
         });
     }
@@ -490,6 +494,7 @@ public class JFXDrawer extends StackPane {
                 // enable mouse events
                 this.removeEventFilter(MouseEvent.ANY, eventFilter);
             });
+            getCacheStrategy().cache(contentHolder);
             translateTimer.start();
         };
 
@@ -500,6 +505,7 @@ public class JFXDrawer extends StackPane {
         }
         translateTo = initTranslate.get();
         translateTimer.setOnFinished(onFinished);
+        getCacheStrategy().cache(contentHolder);
         translateTimer.start();
     }
 
@@ -570,6 +576,7 @@ public class JFXDrawer extends StackPane {
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
+        getCacheStrategy().cache(contentHolder);
         translateTimer.reverseAndContinue();
     }
 
@@ -598,6 +605,7 @@ public class JFXDrawer extends StackPane {
                 }
             }
         }
+        getCacheStrategy().cache(contentHolder);
         translateTimer.reverseAndContinue();
     }
 
@@ -694,6 +702,21 @@ public class JFXDrawer extends StackPane {
 
     public void setDirection(DrawerDirection direction) {
         this.directionProperty.set(direction);
+    }
+
+
+    private SimpleObjectProperty<CacheStrategy> cacheStrategy = new SimpleObjectProperty<>(CacheStrategy.NONE);
+
+    public CacheStrategy getCacheStrategy() {
+        return cacheStrategy.get() == null ? CacheStrategy.NONE : cacheStrategy.get();
+    }
+
+    public SimpleObjectProperty<CacheStrategy> cacheStrategyProperty() {
+        return cacheStrategy;
+    }
+
+    public void setCacheStrategy(CacheStrategy cacheStrategy) {
+        this.cacheStrategy.set(cacheStrategy);
     }
 
 
@@ -1047,6 +1070,7 @@ public class JFXDrawer extends StackPane {
             overlayPane.setMouseTransparent(true);
             fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
         });
+        getCacheStrategy().cache(contentHolder);
         translateTimer.start();
     }
 
@@ -1058,11 +1082,12 @@ public class JFXDrawer extends StackPane {
         resizeTo = tempDrawerSize = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
+        getCacheStrategy().cache(contentHolder);
         translateTimer.start();
     }
 
     // TODO:ENHANCE: user should be able to remove values
-    public <T> void addAnimatedKeyValue(Node node, JFXDrawerKeyValue... values){//WritableValue<T> target, Supplier<T> openValue, Supplier<T> closeValue, Supplier<Boolean> validCondition) {
+    public <T> void addAnimatedKeyValue(Node node, JFXDrawerKeyValue... values) {//WritableValue<T> target, Supplier<T> openValue, Supplier<T> closeValue, Supplier<Boolean> validCondition) {
         addAnimatedKeyValue(node, Arrays.asList(values));
     }
 
@@ -1072,7 +1097,7 @@ public class JFXDrawer extends StackPane {
             JFXKeyValue modifiedValue = JFXKeyValue.builder()
                 .setEndValueSupplier(() -> currentValue.get(value.getTarget()).get())
                 .setAnimateCondition(() -> node.getScene() != null && value.isValid())
-                .setTargetSupplier(()-> value.getTarget())
+                .setTargetSupplier(() -> value.getTarget())
                 .setInterpolator(value.getInterpolator()).build();
             modifiedValues.add(modifiedValue);
             currentValue.put(value.getTarget(), isClosed() ? value.getCloseValueSupplier() : value.getOpenValueSupplier());
@@ -1102,5 +1127,11 @@ public class JFXDrawer extends StackPane {
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-drawer";
 
+    private static final String USER_AGENT_STYLESHEET = JFXDrawer.class.getResource("/css/controls/jfx-drawer.css").toExternalForm();
+
+    @Override
+    public String getUserAgentStylesheet() {
+        return USER_AGENT_STYLESHEET;
+    }
 }
 
