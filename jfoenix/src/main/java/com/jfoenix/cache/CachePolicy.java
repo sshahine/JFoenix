@@ -12,13 +12,13 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
-public interface CacheStrategy<T extends Node> {
+public interface CachePolicy<T extends Node> {
 
     void cache(T node);
 
     void restore(T node);
 
-    CacheStrategy<Node> CACHE = new CacheStrategy<Node>() {
+    CachePolicy<Node> CACHE = new CachePolicy<Node>() {
 
         private WeakHashMap<Node, CacheMemento> cache = new WeakHashMap<>();
 
@@ -40,7 +40,7 @@ public interface CacheStrategy<T extends Node> {
         }
     };
 
-    CacheStrategy<Node> NONE = new CacheStrategy<Node>() {
+    CachePolicy<Node> NONE = new CachePolicy<Node>() {
         @Override
         public void cache(Node node) {
             // do nothing
@@ -53,7 +53,7 @@ public interface CacheStrategy<T extends Node> {
     };
 
 
-    CacheStrategy<Pane> IMAGE = new CacheStrategy<Pane>() {
+    CachePolicy<Pane> IMAGE = new CachePolicy<Pane>() {
 
         private WeakHashMap<Node, ArrayList<Node>> cache = new WeakHashMap<>();
 

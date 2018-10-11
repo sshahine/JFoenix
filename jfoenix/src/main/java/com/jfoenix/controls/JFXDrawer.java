@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.cache.CacheStrategy;
+import com.jfoenix.cache.CachePolicy;
 import com.jfoenix.controls.events.JFXDrawerEvent;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXDrawerKeyValue;
@@ -232,7 +232,7 @@ public class JFXDrawer extends StackPane {
         initialize();
 
         contentHolder.setPickOnBounds(false);
-        addEventHandler(JFXDrawerEvent.CLOSED, handler -> Platform.runLater(() -> getCacheStrategy().restore(contentHolder)));
+        addEventHandler(JFXDrawerEvent.CLOSED, handler -> Platform.runLater(() -> getCachePolicy().restore(contentHolder)));
 
         overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1),
             CornerRadii.EMPTY,
@@ -351,7 +351,7 @@ public class JFXDrawer extends StackPane {
                           + activeOffset * directionProperty.get().doubleValue();
             overlayPane.setMouseTransparent(!isOverLayVisible());
             translateTimer.setOnFinished(null);
-            getCacheStrategy().cache(contentHolder);
+            getCachePolicy().cache(contentHolder);
             translateTimer.start();
         });
     }
@@ -494,7 +494,7 @@ public class JFXDrawer extends StackPane {
                 // enable mouse events
                 this.removeEventFilter(MouseEvent.ANY, eventFilter);
             });
-            getCacheStrategy().cache(contentHolder);
+            getCachePolicy().cache(contentHolder);
             translateTimer.start();
         };
 
@@ -505,7 +505,7 @@ public class JFXDrawer extends StackPane {
         }
         translateTo = initTranslate.get();
         translateTimer.setOnFinished(onFinished);
-        getCacheStrategy().cache(contentHolder);
+        getCachePolicy().cache(contentHolder);
         translateTimer.start();
     }
 
@@ -576,7 +576,7 @@ public class JFXDrawer extends StackPane {
         resizeTo = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
-        getCacheStrategy().cache(contentHolder);
+        getCachePolicy().cache(contentHolder);
         translateTimer.reverseAndContinue();
     }
 
@@ -605,7 +605,7 @@ public class JFXDrawer extends StackPane {
                 }
             }
         }
-        getCacheStrategy().cache(contentHolder);
+        getCachePolicy().cache(contentHolder);
         translateTimer.reverseAndContinue();
     }
 
@@ -705,18 +705,18 @@ public class JFXDrawer extends StackPane {
     }
 
 
-    private SimpleObjectProperty<CacheStrategy> cacheStrategy = new SimpleObjectProperty<>(CacheStrategy.NONE);
+    private SimpleObjectProperty<CachePolicy> cachePolicy = new SimpleObjectProperty<>(CachePolicy.NONE);
 
-    public CacheStrategy getCacheStrategy() {
-        return cacheStrategy.get() == null ? CacheStrategy.NONE : cacheStrategy.get();
+    public CachePolicy getCachePolicy() {
+        return cachePolicy.get() == null ? CachePolicy.NONE : cachePolicy.get();
     }
 
-    public SimpleObjectProperty<CacheStrategy> cacheStrategyProperty() {
-        return cacheStrategy;
+    public SimpleObjectProperty<CachePolicy> cachePolicyProperty() {
+        return cachePolicy;
     }
 
-    public void setCacheStrategy(CacheStrategy cacheStrategy) {
-        this.cacheStrategy.set(cacheStrategy);
+    public void setCachePolicy(CachePolicy cachePolicy) {
+        this.cachePolicy.set(cachePolicy);
     }
 
 
@@ -1070,7 +1070,7 @@ public class JFXDrawer extends StackPane {
             overlayPane.setMouseTransparent(true);
             fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
         });
-        getCacheStrategy().cache(contentHolder);
+        getCachePolicy().cache(contentHolder);
         translateTimer.start();
     }
 
@@ -1082,7 +1082,7 @@ public class JFXDrawer extends StackPane {
         resizeTo = tempDrawerSize = getDefaultDrawerSize();
         overlayPane.setMouseTransparent(!isOverLayVisible());
         translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
-        getCacheStrategy().cache(contentHolder);
+        getCachePolicy().cache(contentHolder);
         translateTimer.start();
     }
 

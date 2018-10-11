@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.cache.CacheStrategy;
+import com.jfoenix.cache.CachePolicy;
 import com.jfoenix.utils.JFXNodeUtils;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.HPos;
@@ -126,7 +126,7 @@ public class JFXDrawersStack extends Region {
             return;
         }
 
-        if (drawer.getCacheStrategy().equals(CacheStrategy.IMAGE)) {
+        if (drawer.getCachePolicy().equals(CachePolicy.IMAGE)) {
             throw new RuntimeException("Drawer is using unsupported cache strategy inside JFXDrawerStack");
         }
 
