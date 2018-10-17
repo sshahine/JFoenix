@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.jfoenix.transitions.creator;
+package com.jfoenix.transitions.template;
 
 import javafx.animation.*;
 import javafx.scene.Node;
@@ -42,7 +42,7 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
                   JFXAnimationTemplateAction.InitBuilder<N>,
                   JFXAnimationTemplateAction.Builder<?, ?>>>>
       creatorValueBuilderFunctions = new HashMap<>();
-  final Map<String, Object> animationObjects = new HashMap<>();
+  private final Map<String, Object> animationObjects = new HashMap<>();
   private final Class<N> animationObjectType;
   private Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>
       creatorConfigBuilderFunction;

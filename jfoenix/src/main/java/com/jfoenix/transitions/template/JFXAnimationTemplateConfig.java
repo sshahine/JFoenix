@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.jfoenix.transitions.creator;
+package com.jfoenix.transitions.template;
 
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
