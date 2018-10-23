@@ -152,10 +152,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidat
         return _24HourViewProperty().get();
     }
 
-    public final void setIs24HourView(final boolean value) {
+    public final void set24HourView(final boolean value) {
         _24HourViewProperty().setValue(value);
     }
-
 
     /**
      * The editor for the JFXTimePicker.
