@@ -18,11 +18,11 @@
  */
 package com.jfoenix.transitions.template;
 
-import javafx.animation.*;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -138,7 +138,8 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
   }
 
   @Override
-  public JFXTemplateConfig<N> action(JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
+  public JFXTemplateConfig<N> action(
+      JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
     return action(builder -> animationValueBuilder);
   }
 
@@ -158,9 +159,14 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
   @Override
   public <B> B build(
       Function<JFXAnimationTemplate<N>, B> builderFunction,
-      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>> mapBuilderFunction) {
+      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>>
+          mapBuilderFunction) {
     animationObjects =
         mapBuilderFunction.apply(JFXAnimationObjectMapBuilder.builder()).getAnimationObjects();
+    // Provide a null value as default animation object if it's absent.
+    animationObjects.putIfAbsent(
+        JFXAnimationObjectMapBuilder.DEFAULT_ANIMATION_OBJECT_NAME,
+        Collections.singletonList(null));
     return builderFunction.apply(this);
   }
 
@@ -172,7 +178,8 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
 
   @Override
   public Timeline build(
-      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>> mapBuilderFunction) {
+      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>>
+          mapBuilderFunction) {
     return build(JFXAnimationTemplates::buildTimeline, mapBuilderFunction);
   }
 
@@ -183,7 +190,6 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
 
   @Override
   public Timeline build() {
-    // Provide a null value as default animation object.
-    return build(b -> b.defaultObject(null));
+    return build(Function.identity());
   }
 }

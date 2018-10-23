@@ -24,7 +24,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -155,7 +158,8 @@ public final class JFXAnimationTemplateAction<N, T> {
     public JFXAnimationTemplateAction<N, T> build(
         Function<Collection<String>, Object> buildFunction) {
       this.animationObject =
-          initBuilder.animationObjectType.cast(buildFunction.apply(initBuilder.animationObjectNames));
+          initBuilder.animationObjectType.cast(
+              buildFunction.apply(initBuilder.animationObjectNames));
       return new JFXAnimationTemplateAction<>(this);
     }
 
