@@ -18,11 +18,11 @@
  */
 package com.jfoenix.transitions.template;
 
-import javafx.animation.*;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -30,9 +30,13 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 2018-09-18
  */
-public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuilder<N> {
+public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplateBuilder<N> {
 
-  static final String DEFAULT_ANIMATION_OBJECT_KEY = "_DefaultKey_";
+  private static final String NO_KEY_FOUND_MESSAGE =
+      "No animation objects with key \"%s\" found.\n"
+          + "Please check your build method where the "
+          + "namedAnimationObjects are defined or your "
+          + "withAnimationObject methods where the keys are accessed.";
 
   private final Set<Double> percents = new HashSet<>();
   private final Map<
@@ -42,8 +46,8 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
                   JFXAnimationTemplateAction.InitBuilder<N>,
                   JFXAnimationTemplateAction.Builder<?, ?>>>>
       creatorValueBuilderFunctions = new HashMap<>();
-  private final Map<String, Object> animationObjects = new HashMap<>();
   private final Class<N> animationObjectType;
+  private Map<String, Collection<Object>> animationObjects;
   private Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>
       creatorConfigBuilderFunction;
   private boolean clearPercents;
@@ -52,11 +56,11 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
     this.animationObjectType = animationObjectType;
   }
 
-  public static <N> TemplateProcess<N> create(Class<N> animationObjectType) {
+  public static <N> JFXTemplateProcess<N> create(Class<N> animationObjectType) {
     return new JFXAnimationTemplate<>(animationObjectType);
   }
 
-  public static TemplateProcess<Node> create() {
+  public static JFXTemplateProcess<Node> create() {
     return create(Node.class);
   }
 
@@ -68,15 +72,27 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
           List<JFXAnimationTemplateAction<?, ?>> animationValues =
               animationValueBuilderFunctions
                   .stream()
-                  .map(
+                  .flatMap(
                       builderFunction ->
                           builderFunction
                               .apply(JFXAnimationTemplateAction.builder(animationObjectType))
-                              .build(animationObjects::get))
+                              .buildActions(this::getAnimationObjectsWithKeys))
                   .collect(Collectors.toList());
           animationValueMap.put(percent, animationValues);
         });
     return animationValueMap;
+  }
+
+  private List<Object> getAnimationObjectsWithKeys(Collection<String> keys) {
+    List<Object> animationObjectList = new ArrayList<>();
+    for (String key : keys) {
+      Collection<?> animationObjectsPerKey = animationObjects.get(key);
+      if (animationObjectsPerKey == null) {
+        throw new NoSuchElementException(String.format(NO_KEY_FOUND_MESSAGE, key));
+      }
+      animationObjectList.addAll(animationObjectsPerKey);
+    }
+    return animationObjectList;
   }
 
   public JFXAnimationTemplateConfig buildAndGetTemplateConfig() {
@@ -84,7 +100,7 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
   }
 
   @Override
-  public TemplateAction<N> percent(double first, double... rest) {
+  public JFXTemplateAction<N> percent(double first, double... rest) {
     if (clearPercents) {
       percents.clear();
       clearPercents = false;
@@ -101,17 +117,17 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
   }
 
   @Override
-  public TemplateAction<N> from() {
+  public JFXTemplateAction<N> from() {
     return percent(0);
   }
 
   @Override
-  public TemplateAction<N> to() {
+  public JFXTemplateAction<N> to() {
     return percent(100);
   }
 
   @Override
-  public TemplateConfig<N> action(
+  public JFXTemplateConfig<N> action(
       Function<JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
           valueBuilderFunction) {
     for (Double percent : percents) {
@@ -122,12 +138,13 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
   }
 
   @Override
-  public TemplateConfig<N> action(JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
+  public JFXTemplateConfig<N> action(
+      JFXAnimationTemplateAction.Builder<?, ?> animationValueBuilder) {
     return action(builder -> animationValueBuilder);
   }
 
   @Override
-  public TemplateBuilder<N> config(
+  public JFXTemplateBuilder<N> config(
       Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>
           configBuilderFunction) {
     creatorConfigBuilderFunction = configBuilderFunction;
@@ -135,30 +152,44 @@ public class JFXAnimationTemplate<N> implements TemplateConfig<N>, TemplateBuild
   }
 
   @Override
-  public TemplateBuilder<N> config(JFXAnimationTemplateConfig.Builder configBuilder) {
+  public JFXTemplateBuilder<N> config(JFXAnimationTemplateConfig.Builder configBuilder) {
     return config(builder -> configBuilder);
   }
 
-  public final <B> B build(
+  @Override
+  public <B> B build(
       Function<JFXAnimationTemplate<N>, B> builderFunction,
-      N animationObject,
-      Map<String, ?> animationObjects) {
-    this.animationObjects.put(DEFAULT_ANIMATION_OBJECT_KEY, animationObject);
-    this.animationObjects.putAll(animationObjects);
+      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>>
+          mapBuilderFunction) {
+    animationObjects =
+        mapBuilderFunction.apply(JFXAnimationObjectMapBuilder.builder()).getAnimationObjects();
+    // Provide a null value as default animation object if it's absent.
+    animationObjects.putIfAbsent(
+        JFXAnimationObjectMapBuilder.DEFAULT_ANIMATION_OBJECT_NAME,
+        Collections.singletonList(null));
     return builderFunction.apply(this);
   }
 
   @Override
-  public <B> B build(Function<JFXAnimationTemplate<N>, B> builderFunction, N animationObject) {
-    return build(builderFunction, animationObject, Collections.emptyMap());
-  }
-
-  public final Timeline build(N animationObject, Map<String, ?> animationObjects) {
-    return build(JFXAnimationTemplates::buildTimeline, animationObject, animationObjects);
+  public <B> B build(
+      Function<JFXAnimationTemplate<N>, B> builderFunction, N defaultAnimationObject) {
+    return build(builderFunction, b -> b.defaultObject(defaultAnimationObject));
   }
 
   @Override
-  public Timeline build(N animationObject) {
-    return build(animationObject, Collections.emptyMap());
+  public Timeline build(
+      Function<JFXAnimationObjectMapBuilder<N>, JFXAnimationObjectMapBuilder<N>>
+          mapBuilderFunction) {
+    return build(JFXAnimationTemplates::buildTimeline, mapBuilderFunction);
+  }
+
+  @Override
+  public Timeline build(N defaultAnimationObject) {
+    return build(b -> b.defaultObject(defaultAnimationObject));
+  }
+
+  @Override
+  public Timeline build() {
+    return build(Function.identity());
   }
 }

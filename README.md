@@ -49,6 +49,7 @@ If you would like to support JFoenix project, you can become a backer or sponsor
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 * <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
 * <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
+* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
 
 # Build
 To build JFoenix, execute the following command:
