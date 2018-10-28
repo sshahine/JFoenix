@@ -6,6 +6,7 @@ import com.jfoenix.transitions.template.JFXAnimationTemplate;
 import com.jfoenix.transitions.template.JFXTemplateBuilder;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -82,45 +83,36 @@ public class AnimationTemplateDemo extends Application {
           .config(b -> b.duration(Duration.seconds(1.3)).interpolator(Interpolator.EASE_BOTH));
 
   // For CSS see: https://github.com/daneden/animate.css/blob/master/source/specials/hinge.css
-  private static final JFXTemplateBuilder<Node> HINGE =
-      JFXAnimationTemplate.create()
-          .from()
-          .action(
-              b ->
-                  b.withAnimationObject(Rotate.class, "rotate")
-                      .target(Rotate::angleProperty)
-                      .endValue(0))
-          .percent(20, 60)
-          .action(
-              b ->
-                  b.withAnimationObject(Rotate.class, "rotate")
-                      .target(Rotate::angleProperty)
-                      .endValue(80))
-          .percent(40, 80)
-          .action(
-              b ->
-                  b.withAnimationObject(Rotate.class, "rotate")
-                      .target(Rotate::angleProperty)
-                      .endValue(60))
-          .action(b -> b.target(Node::opacityProperty).endValue(1))
-          .action(b -> b.target(Node::translateYProperty).endValue(0))
-          .to()
-          .action(b -> b.target(Node::opacityProperty).endValue(0))
-          .action(b -> b.target(Node::translateYProperty).endValue(700))
-          // just for resetting the animation.
-          .action(
-              b ->
-                  b.onFinish(
-                      (node, actionEvent) -> {
-                        node.setTranslateY(0);
-                        node.setOpacity(1);
-                      }))
-          // just for resetting the animation.
-          .action(
-              b ->
-                  b.withAnimationObject(Rotate.class, "rotate")
-                      .onFinish((rotate, actionEvent) -> rotate.setAngle(0)))
-          .config(b -> b.duration(Duration.seconds(2)).interpolator(Interpolator.EASE_BOTH));
+  private static JFXTemplateBuilder<Node> hinge() {
+    Rotate rotate = new Rotate(0, 0, 0);
+    return JFXAnimationTemplate.create()
+        .from()
+        // One execution for init behaviour.
+        .action(
+            b -> b.executions(1).onFinish((node, actionEvent) -> node.getTransforms().add(rotate)))
+        .percent(1)
+        .action(b -> b.target(rotate.angleProperty()).endValue(0))
+        .percent(20, 60)
+        .action(b -> b.target(rotate.angleProperty()).endValue(80))
+        .percent(40, 80)
+        .action(b -> b.target(rotate.angleProperty()).endValue(60))
+        .action(b -> b.target(Node::opacityProperty).endValue(1))
+        .action(b -> b.target(Node::translateYProperty).endValue(0))
+        .to()
+        .action(b -> b.target(Node::opacityProperty).endValue(0))
+        .action(b -> b.target(Node::translateYProperty).endValue(700))
+        // just for resetting the animation.
+        .action(
+            b ->
+                b.onFinish(
+                    (node, actionEvent) -> {
+                      rotate.setAngle(0);
+                      node.setTranslateY(0);
+                      node.setOpacity(1);
+                    }))
+        // just for resetting the animation.
+        .config(b -> b.duration(Duration.seconds(2)).interpolator(Interpolator.EASE_BOTH));
+  }
 
   // For CSS see:
   // https://github.com/daneden/animate.css/blob/master/source/attention_seekers/wobble.css
@@ -190,37 +182,37 @@ public class AnimationTemplateDemo extends Application {
           .from()
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "firstRow", "secondRow", "thirdRow")
+                  b.withAnimationObject("firstRow", "secondRow", "thirdRow")
                       .onFinish((node, actionEvent) -> node.setVisible(false)))
           .percent(50)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "firstRow")
+                  b.withAnimationObject("firstRow")
                       .onFinish((node, actionEvent) -> BOUNCE_IN_UP.build(node).play()))
           .percent(51)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "firstRow")
+                  b.withAnimationObject("firstRow")
                       .onFinish((node, actionEvent) -> node.setVisible(true)))
           .percent(62)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "secondRow")
+                  b.withAnimationObject("secondRow")
                       .onFinish((node, actionEvent) -> BOUNCE_IN_UP.build(node).play()))
           .percent(63)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "secondRow")
+                  b.withAnimationObject("secondRow")
                       .onFinish((node, actionEvent) -> node.setVisible(true)))
           .percent(68)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "thirdRow")
+                  b.withAnimationObject("thirdRow")
                       .onFinish((node, actionEvent) -> BOUNCE_IN_UP.build(node).play()))
           .percent(69)
           .action(
               b ->
-                  b.withAnimationObject(Node.class, "thirdRow")
+                  b.withAnimationObject("thirdRow")
                       .onFinish((node, actionEvent) -> node.setVisible(true)))
           .config(b -> b.duration(Duration.millis(700)));
 
@@ -374,11 +366,8 @@ public class AnimationTemplateDemo extends Application {
     animations.put("Tada", TADA.build(header));
     animations.put("BounceIn Up", BOUNCE_IN_UP.build(header));
     animations.put("Wobble", WOBBLE.build(header));
+    animations.put("Hinge", hinge().build(header));
 
-    Rotate rotate = new Rotate(0, 0, 0);
-    header.getTransforms().add(rotate);
-    animations.put(
-        "Hinge", HINGE.build(b -> b.defaultObject(header).namedObject("rotate", rotate)));
     Group body = createBody(animations);
     body.setVisible(false);
 
