@@ -6,7 +6,6 @@ import com.jfoenix.transitions.template.JFXAnimationTemplate;
 import com.jfoenix.transitions.template.JFXTemplateBuilder;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
-import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
