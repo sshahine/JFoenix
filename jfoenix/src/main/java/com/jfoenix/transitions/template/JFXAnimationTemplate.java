@@ -26,6 +26,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * Class which represents a general {@link JFXAnimationTemplate}. <br>
+ * This class is responsible for providing methods where it's possible to build a CSS like
+ * structured animation.
+ *
  * @author Marcel Schlegel (schlegel11)
  * @version 1.0
  * @since 2018-09-18
@@ -56,10 +60,27 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
     this.animationObjectType = animationObjectType;
   }
 
+  /**
+   * Create a {@link JFXTemplateProcess} with a specific default animation type.<br>
+   * The default animation objects with this type are set later in the {@link
+   * JFXTemplateBuilder#build(Object)} method.<br>
+   * These objects are generally used in {@link JFXTemplateAction#action(Function)} methods.
+   *
+   * @param animationObjectType a specific animation object type.
+   * @param <N> the specific type.
+   * @return a {@link JFXTemplateProcess} instance.
+   */
   public static <N> JFXTemplateProcess<N> create(Class<N> animationObjectType) {
     return new JFXAnimationTemplate<>(animationObjectType);
   }
 
+  /**
+   * Same method as {@link #create(Class)} but with the default type {@link Node}. This type is a
+   * general default type in a {@link JFXAnimationTemplate}.
+   *
+   * @see #create(Class)
+   * @return a {@link JFXTemplateProcess} instance.
+   */
   public static JFXTemplateProcess<Node> create() {
     return create(Node.class);
   }
