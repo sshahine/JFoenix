@@ -82,13 +82,13 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
         arc.setFill(Color.TRANSPARENT);
         arc.setStrokeWidth(3);
 
-		track = new Arc();
-		track.setManaged(false);
-		track.setStartAngle(0);
-		track.setLength(360);
-		track.setStrokeWidth(3);
-		track.getStyleClass().setAll("track");
-		track.setFill(Color.TRANSPARENT);
+        track = new Arc();
+        track.setManaged(false);
+        track.setStartAngle(0);
+        track.setLength(360);
+        track.setStrokeWidth(3);
+        track.getStyleClass().setAll("track");
+        track.setFill(Color.TRANSPARENT);
 
         fillRect = new Rectangle();
         fillRect.setFill(Color.TRANSPARENT);
@@ -228,16 +228,7 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
         final double arcSize = snapSize(radius * 2 + strokeWidth);
 
         arcPane.resizeRelocate((contentWidth - arcSize) / 2 + 1, (contentHeight - arcSize) / 2 + 1, arcSize, arcSize);
-        arc.setRadiusX(radius);
-        arc.setRadiusY(radius);
-        arc.setCenterX(arcSize / 2);
-        arc.setCenterY(arcSize / 2);
-
-        track.setRadiusX(radius);
-        track.setRadiusY(radius);
-        track.setCenterX(arcSize / 2);
-        track.setCenterY(arcSize / 2);
-        track.setStrokeWidth(strokeWidth);
+        updateArcLayout(radius, arcSize);
 
         fillRect.setWidth(arcSize);
         fillRect.setHeight(arcSize);
@@ -259,6 +250,19 @@ public class JFXSpinnerSkin extends BehaviorSkinBase<JFXSpinner, BehaviorBase<JF
             }
         }
     }
+
+	private void updateArcLayout(double radius, double arcSize) {
+        arc.setRadiusX(radius);
+        arc.setRadiusY(radius);
+        arc.setCenterX(arcSize / 2);
+        arc.setCenterY(arcSize / 2);
+
+        track.setRadiusX(radius);
+        track.setRadiusY(radius);
+        track.setCenterX(arcSize / 2);
+        track.setCenterY(arcSize / 2);
+        track.setStrokeWidth(arc.getStrokeWidth());
+	}
 
     boolean wasIndeterminate = false;
 
