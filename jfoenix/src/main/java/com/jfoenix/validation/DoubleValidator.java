@@ -40,6 +40,10 @@ public class DoubleValidator extends ValidatorBase {
         setMessage("Value must be a rational number");
     }
 
+    public DoubleValidator(String message) {
+        super(message);
+    }
+
     /**
      * {@inheritDoc}
      */

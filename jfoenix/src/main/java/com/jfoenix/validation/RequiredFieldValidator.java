@@ -36,6 +36,13 @@ import javafx.scene.control.TextInputControl;
 @DefaultProperty(value = "icon")
 public class RequiredFieldValidator extends ValidatorBase {
 
+    public RequiredFieldValidator(String message) {
+        super(message);
+    }
+
+    public RequiredFieldValidator() {
+    }
+
     /**
      * {@inheritDoc}
      */

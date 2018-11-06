@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
 package com.jfoenix.validation;
 
 import com.jfoenix.validation.base.ValidatorBase;
-import java.util.regex.Pattern;
 import javafx.beans.DefaultProperty;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+
+import java.util.regex.Pattern;
 
 
 /**
@@ -38,6 +39,16 @@ import javafx.scene.control.TextInputControl;
 public class RegexValidator extends ValidatorBase {
 
     private String regexPattern;
+
+    public RegexValidator(String message) {
+        super(message);
+    }
+
+    public RegexValidator() {
+
+    }
+
+
     private Pattern regexPatternCompiled;
 
     /**
@@ -60,8 +71,8 @@ public class RegexValidator extends ValidatorBase {
     }
 
     /*
-    * GETTER AND SETTER
-    */
+     * GETTER AND SETTER
+     */
     public void setRegexPattern(String regexPattern) {
         this.regexPattern = regexPattern;
         this.regexPatternCompiled = Pattern.compile(regexPattern);

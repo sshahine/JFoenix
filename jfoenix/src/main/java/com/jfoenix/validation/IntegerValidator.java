@@ -40,6 +40,10 @@ public class IntegerValidator extends ValidatorBase {
         setMessage("Value must be a number");
     }
 
+    public IntegerValidator(String message) {
+        super(message);
+    }
+
     /**
      * {@inheritDoc}
      */
