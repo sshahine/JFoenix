@@ -31,26 +31,37 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
+ * Class which represents a builder and the configuration of animation keyframes. The configuration
+ * methods are based on the methods of a {@link javafx.animation.KeyFrame} and {@link
+ * javafx.animation.KeyValue}.<br>
+ * It is possible that not all methods supported because the specific implementation of an animation
+ * can diverge from general {@link javafx.animation.KeyFrame} and {@link javafx.animation.KeyValue}
+ * implementations.
+ *
  * @author Marcel Schlegel (schlegel11)
  * @version 1.0
  * @since 2018-09-22
  */
 public final class JFXAnimationTemplateAction<N, T> {
 
+  public static final int INFINITE_EXECUTIONS = -1;
   private final Collection<Function<N, WritableValue<T>>> targetFunctions;
   private final Function<N, T> endValueSupplier;
   private final Function<N, Interpolator> interpolatorSupplier;
-  private final boolean animateWhen;
+  private final Predicate<N> executeWhenPredicate;
   private final BiConsumer<N, ActionEvent> onFinish;
+  private final Function<N, Integer> executionsFunction;
   private final N animationObject;
+  private int executionsCounter;
 
   private JFXAnimationTemplateAction(Builder<N, T> builder) {
     targetFunctions = builder.targetFunctions;
     endValueSupplier = builder.endValueFunction;
     interpolatorSupplier = builder.interpolatorFunction;
     animationObject = builder.animationObject;
-    animateWhen = builder.animateWhenPredicate.test(animationObject);
+    executeWhenPredicate = builder.executeWhenPredicate;
     onFinish = builder.onFinish;
+    executionsFunction = builder.executionsFunction;
   }
 
   public static <N> InitBuilder<N> builder(Class<N> animationObjectType) {
@@ -78,25 +89,56 @@ public final class JFXAnimationTemplateAction<N, T> {
     return endValueSupplier.apply(animationObject);
   }
 
-  public Interpolator getInterpolator() {
-    return interpolatorSupplier.apply(animationObject);
+  public Optional<Interpolator> getInterpolator() {
+    return Optional.ofNullable(interpolatorSupplier.apply(animationObject));
+  }
+
+  public boolean isExecuteWhen() {
+    return executeWhenPredicate.test(animationObject);
+  }
+
+  public int getExecutions() {
+    return Math.max(executionsFunction.apply(animationObject), INFINITE_EXECUTIONS);
+  }
+
+  public void addExecution(int count) {
+    int maxExecutions = getExecutions();
+    if (count >= 0 && executionsCounter < maxExecutions) {
+      executionsCounter = Math.min(executionsCounter + count, maxExecutions);
+    }
+  }
+
+  public int getRemainingExecutions() {
+    int maxExecutions = getExecutions();
+    return maxExecutions == INFINITE_EXECUTIONS
+        ? INFINITE_EXECUTIONS
+        : Math.max(0, maxExecutions - executionsCounter);
+  }
+
+  public boolean hasRemainingExecutions() {
+    return getRemainingExecutions() > 0 || getRemainingExecutions() == INFINITE_EXECUTIONS;
+  }
+
+  /**
+   * True if {@link #hasRemainingExecutions()} and {@link #isExecuteWhen()} is {@code true}.
+   *
+   * @return a boolean.
+   */
+  public boolean isExecuted() {
+    return hasRemainingExecutions() && isExecuteWhen();
   }
 
   public void handleOnFinish(ActionEvent actionEvent) {
-    if (animateWhen) {
-      onFinish.accept(animationObject, actionEvent);
-    }
+    onFinish.accept(animationObject, actionEvent);
   }
 
   @SuppressWarnings("unchecked")
   public <M> Stream<M> mapTo(Function<WritableValue<Object>, M> mappingFunction) {
-    return animateWhen
-        ? getTargetFunctions()
-            .stream()
-            .map(
-                function ->
-                    mappingFunction.apply((WritableValue<Object>) function.apply(animationObject)))
-        : Stream.empty();
+    return getTargetFunctions()
+        .stream()
+        .map(
+            function ->
+                mappingFunction.apply((WritableValue<Object>) function.apply(animationObject)));
   }
 
   public static final class Builder<N, T> {
@@ -105,8 +147,9 @@ public final class JFXAnimationTemplateAction<N, T> {
     private final InitBuilder<N> initBuilder;
     private Function<N, T> endValueFunction = node -> null;
     private Function<N, Interpolator> interpolatorFunction = node -> null;
-    private Predicate<N> animateWhenPredicate = node -> true;
+    private Predicate<N> executeWhenPredicate = node -> true;
     private BiConsumer<N, ActionEvent> onFinish = (node, event) -> {};
+    private Function<N, Integer> executionsFunction = node -> INFINITE_EXECUTIONS;
     private N animationObject;
 
     private Builder(
@@ -119,40 +162,124 @@ public final class JFXAnimationTemplateAction<N, T> {
       this(initBuilder, Collections.emptyList());
     }
 
+    /**
+     * The end value of the interpolation.
+     *
+     * @param endValue the end value.
+     * @return the {@link Builder} instance.
+     */
     public Builder<N, T> endValue(T endValue) {
       return endValue(node -> endValue);
     }
 
+    /**
+     * The lazy version of {@link #endValue(Object)} which is computed when the {@link
+     * JFXAnimationTemplateAction} is build.<br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #endValue(Object)
+     * @param endValueFunction the end value {@link Function}.
+     * @return the {@link Builder} instance.
+     */
     public Builder<N, T> endValue(Function<N, T> endValueFunction) {
       this.endValueFunction = endValueFunction;
       return this;
     }
 
+    /**
+     * The {@link Interpolator} of the animation.
+     *
+     * @param interpolator the {@link Interpolator}.
+     * @return the {@link Builder} instance.
+     */
     public Builder<N, T> interpolator(Interpolator interpolator) {
       return interpolator(node -> interpolator);
     }
 
+    /**
+     * The lazy version of {@link #interpolator(Interpolator)} which is computed when the {@link
+     * JFXAnimationTemplateAction} is build.<br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #interpolator(Interpolator)
+     * @param interpolatorFunction the interpolator {@link Function}.
+     * @return the {@link Builder} instance.
+     */
     public Builder<N, T> interpolator(Function<N, Interpolator> interpolatorFunction) {
       this.interpolatorFunction = interpolatorFunction;
       return this;
     }
 
-    public Builder<N, T> animateWhen(boolean animateWhen) {
-      return animateWhen(n -> animateWhen);
+    /**
+     * Executes the {@link JFXTemplateAction} if the condition is true.
+     *
+     * @param executeWhen the execute condition.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> executeWhen(boolean executeWhen) {
+      return executeWhen(n -> executeWhen);
     }
 
-    public Builder<N, T> animateWhen(Predicate<N> animateWhenPredicate) {
-      this.animateWhenPredicate = animateWhenPredicate;
+    /**
+     * The lazy version of {@link #executeWhen(boolean)} which is computed when the {@link
+     * JFXAnimationTemplateAction} is build.<br>
+     * The {@link Predicate} provides also a reference of the current animation object.
+     *
+     * @see #executeWhen(boolean)
+     * @param executeWhenPredicate the condition {@link Predicate}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> executeWhen(Predicate<N> executeWhenPredicate) {
+      this.executeWhenPredicate = executeWhenPredicate;
       return this;
     }
 
-    public Builder<N, T> ignoreAnimation() {
-      return animateWhen(false);
+    /**
+     * Ignores the current {@link JFXTemplateAction} so the action is never executed.
+     *
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> ignore() {
+      return executeWhen(false).executions(0);
     }
 
+    /**
+     * The on finish {@link ActionEvent} which is executed at the end of the current {@link
+     * JFXTemplateAction}. <br>
+     * The {@link BiConsumer} provides beside the {@link ActionEvent} also a reference of the
+     * current animation object.
+     *
+     * @param onFinish the on finish {@link ActionEvent}.
+     * @return the {@link Builder} instance.
+     */
     public Builder<N, T> onFinish(BiConsumer<N, ActionEvent> onFinish) {
       this.onFinish = onFinish;
       return this;
+    }
+
+    /**
+     * The lazy version of {@link #executions(int)} which is computed when the {@link
+     * JFXAnimationTemplateAction} is build.<br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #executions(int)
+     * @param executionsFunction the number of executions {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> executions(Function<N, Integer> executionsFunction) {
+      this.executionsFunction = executionsFunction;
+      return this;
+    }
+
+    /**
+     * Executes the current {@link JFXTemplateAction} N times, until the given number of executions
+     * is reached.
+     *
+     * @param executions the number of executions.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> executions(int executions) {
+      return executions(node -> executions);
     }
 
     public JFXAnimationTemplateAction<N, T> build(
@@ -192,6 +319,14 @@ public final class JFXAnimationTemplateAction<N, T> {
       this.animationObjectNames.addAll(Arrays.asList(animationObjectNames));
     }
 
+    /**
+     * The target or targets of the interpolation.
+     *
+     * @param target the interpolation target.
+     * @param targets the interpolation targets.
+     * @param <T> the target {@link WritableValue} type.
+     * @return the {@link Builder} instance.
+     */
     @SafeVarargs
     public final <T> Builder<N, T> target(WritableValue<T> target, WritableValue<T>... targets) {
       Function<N, WritableValue<T>>[] targetFunctions =
@@ -201,6 +336,16 @@ public final class JFXAnimationTemplateAction<N, T> {
       return target(node -> target, targetFunctions);
     }
 
+    /**
+     * The lazy version of {@link #target(WritableValue, WritableValue[])} which is computed when
+     * the {@link JFXAnimationTemplateAction} is build.<br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @param targetFunction the interpolation target.
+     * @param targetFunctions the interpolation targets.
+     * @param <T> the target {@link WritableValue} type.
+     * @return the {@link Builder} instance.
+     */
     @SafeVarargs
     public final <T> Builder<N, T> target(
         Function<N, WritableValue<T>> targetFunction,
@@ -211,25 +356,63 @@ public final class JFXAnimationTemplateAction<N, T> {
       return new Builder<>(this, functions);
     }
 
-    public final Builder<N, ?> animateWhen(boolean animateWhen) {
-      return new Builder<>(this).animateWhen(animateWhen);
+    /** @see Builder#executeWhen(boolean) */
+    public final Builder<N, ?> executeWhen(boolean animateWhen) {
+      return new Builder<>(this).executeWhen(animateWhen);
     }
 
-    public final Builder<N, ?> animateWhen(Predicate<N> animateWhenPredicate) {
-      return new Builder<>(this).animateWhen(animateWhenPredicate);
+    /** @see Builder#executeWhen(Predicate) */
+    public final Builder<N, ?> executeWhen(Predicate<N> executeWhenPredicate) {
+      return new Builder<>(this).executeWhen(executeWhenPredicate);
     }
 
-    public Builder<N, ?> ignoreAnimation() {
-      return new Builder<>(this).ignoreAnimation();
+    /** @see Builder#ignore() */
+    public Builder<N, ?> ignore() {
+      return new Builder<>(this).ignore();
     }
 
+    /** @see Builder#onFinish(BiConsumer) */
     public Builder<N, ?> onFinish(BiConsumer<N, ActionEvent> onFinish) {
       return new Builder<>(this).onFinish(onFinish);
     }
 
+    /** @see Builder#executions(Function) */
+    public Builder<N, ?> executions(Function<N, Integer> executionsFunction) {
+      return new Builder<>(this).executions(executionsFunction);
+    }
+
+    /** @see Builder#executions(int) */
+    public Builder<N, ?> executions(int executions) {
+      return new Builder<>(this).executions(executions);
+    }
+
+    /**
+     * Call named animation objects with a specific {@link Class} type and a name.<br>
+     * The named animation objects are set when the {@link JFXAnimationTemplate} is build.
+     *
+     * @param clazz the specific type of the named animation objects.
+     * @param animationObjectName the named animation object name.
+     * @param animationObjectNames the named animation object names.
+     * @param <T> the specific named animation object type.
+     * @return the {@link InitBuilder} instance.
+     */
     public <T> InitBuilder<T> withAnimationObject(
         Class<T> clazz, String animationObjectName, String... animationObjectNames) {
       return new InitBuilder<>(clazz, animationObjectName, animationObjectNames);
+    }
+
+    /**
+     * Same as {@link #withAnimationObject(Class, String, String...)} but with a default type {@link
+     * Node}.
+     *
+     * @see #withAnimationObject(Class, String, String...)
+     * @param animationObjectName the named animation object name.
+     * @param animationObjectNames the named animation object names.
+     * @return the {@link InitBuilder} instance.
+     */
+    public InitBuilder<Node> withAnimationObject(
+        String animationObjectName, String... animationObjectNames) {
+      return withAnimationObject(Node.class, animationObjectName, animationObjectNames);
     }
   }
 }

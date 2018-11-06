@@ -29,16 +29,23 @@ import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
+ * Class which represents the specific animation implementations.
+ *
  * @author Marcel Schlegel (schlegel11)
  * @version 1.0
  * @since 2018-09-22
  */
 public class JFXAnimationTemplates {
 
+  /**
+   * The {@link Timeline} implementation which supports all {@link JFXAnimationTemplateAction} and
+   * {@link JFXAnimationTemplateConfig} methods.
+   */
   public static <N> Timeline buildTimeline(JFXAnimationTemplate<N> creator) {
 
     Timeline timeline = new Timeline();
@@ -66,7 +73,15 @@ public class JFXAnimationTemplates {
               Consumer<ActionEvent> onFinish =
                   animationValues
                       .stream()
-                      .map(animationValue -> (Consumer<ActionEvent>) animationValue::handleOnFinish)
+                      .map(
+                          animationValue ->
+                              (Consumer<ActionEvent>)
+                                  actionEvent -> {
+                                    if (animationValue.isExecuted()) {
+                                      animationValue.handleOnFinish(actionEvent);
+                                      animationValue.addExecution(1);
+                                    }
+                                  })
                       .reduce(action -> {}, Consumer::andThen);
 
               KeyFrame keyFrame = new KeyFrame(percentageDuration, onFinish::accept, keyValues);
@@ -82,6 +97,22 @@ public class JFXAnimationTemplates {
     return timeline;
   }
 
+  /**
+   * The {@link JFXAnimationTimer} implementation which supports a subset of {@link
+   * JFXAnimationTemplateAction} and {@link JFXAnimationTemplateAction} methods.<br>
+   * Unsupported methods are:<br>
+   * In {@link JFXAnimationTemplateAction}:<br>
+   * - {@link JFXAnimationTemplateAction.Builder#executions(int)}<br>
+   * - {@link JFXAnimationTemplateAction.Builder#onFinish(BiConsumer)}<br>
+   *
+   * <p>
+   *
+   * <p>In {@link JFXAnimationTemplateConfig}:<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#rate(double)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#delay(Duration)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#autoReverse(boolean)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#cycleCount(int)}<br>
+   */
   public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationTemplate<N> creator) {
 
     JFXAnimationTimer animationTimer = new JFXAnimationTimer();
@@ -122,23 +153,23 @@ public class JFXAnimationTemplates {
   private static Function<WritableValue<Object>, KeyValue> createKeyValue(
       Interpolator globalInterpolator, JFXAnimationTemplateAction<?, ?> animationValue) {
     return (writableValue) -> {
-      Interpolator interpolator = animationValue.getInterpolator();
+      Interpolator interpolator = animationValue.getInterpolator().orElse(globalInterpolator);
       return new KeyValue(
           writableValue,
           animationValue.getEndValue(),
-          interpolator == null ? globalInterpolator : interpolator);
+          new ConditionalInterpolator(interpolator, writableValue, animationValue::isExecuted));
     };
   }
 
   private static Function<WritableValue<Object>, JFXKeyValue<?>> createJFXKeyValue(
       Interpolator globalInterpolator, JFXAnimationTemplateAction<?, ?> animationValue) {
     return (writableValue) -> {
-      Interpolator interpolator = animationValue.getInterpolator();
+      Interpolator interpolator = animationValue.getInterpolator().orElse(globalInterpolator);
       return JFXKeyValue.builder()
           .setTarget(writableValue)
           .setEndValue(animationValue.getEndValue())
-          .setInterpolator(interpolator == null ? globalInterpolator : interpolator)
-          .setAnimateCondition(() -> true)
+          .setInterpolator(interpolator)
+          .setAnimateCondition(animationValue::isExecuteWhen)
           .build();
     };
   }

@@ -27,7 +27,7 @@
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
-If you would like to support JFoenix project, you can become a backer or sponsor on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
+If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
@@ -50,6 +50,7 @@ If you would like to support JFoenix project, you can become a backer or sponsor
 * <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
 * <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
 * <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
+* <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
 
 # Build
 To build JFoenix, execute the following command:
