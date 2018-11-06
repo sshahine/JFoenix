@@ -27,7 +27,7 @@
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
-If you would like to support JFoenix project, you can become a backer or sponsor on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
+If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
