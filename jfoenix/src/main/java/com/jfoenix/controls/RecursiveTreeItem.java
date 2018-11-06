@@ -19,7 +19,7 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.concurrency.JFXUtilities;
+import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

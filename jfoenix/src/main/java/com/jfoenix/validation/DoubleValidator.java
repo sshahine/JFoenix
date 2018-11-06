@@ -36,6 +36,10 @@ import javafx.scene.control.TextInputControl;
 @DefaultProperty(value = "icon")
 public class DoubleValidator extends ValidatorBase {
 
+    public DoubleValidator() {
+        setMessage("Value must be a rational number");
+    }
+
     /**
      * {@inheritDoc}
      */

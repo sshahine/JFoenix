@@ -19,7 +19,7 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.concurrency.JFXUtilities;
+import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.controls.base.IFXStaticControl;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.base.ValidatorBase;

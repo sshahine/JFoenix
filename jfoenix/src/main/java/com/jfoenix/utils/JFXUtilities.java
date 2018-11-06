@@ -17,11 +17,13 @@
  * under the License.
  */
 
-package com.jfoenix.concurrency;
+package com.jfoenix.utils;
 
 import javafx.application.Platform;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Function;
 
 
 /**
@@ -76,5 +78,14 @@ public class JFXUtilities {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    public static <T> T[] concat(T[] a, T[] b, Function<Integer, T[]> supplier) {
+        final int aLen = a.length;
+        final int bLen = b.length;
+        T[] array = supplier.apply(aLen + bLen);
+        System.arraycopy(a, 0, array, 0, aLen);
+        System.arraycopy(b, 0, array, aLen, bLen);
+        return array;
     }
 }

@@ -36,10 +36,15 @@ import javafx.scene.control.TextInputControl;
 @DefaultProperty(value = "icon")
 public class IntegerValidator extends ValidatorBase {
 
+    public IntegerValidator() {
+        setMessage("Value must be a number");
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
+
     protected void eval() {
         if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
@@ -50,9 +55,10 @@ public class IntegerValidator extends ValidatorBase {
         TextInputControl textField = (TextInputControl) srcControl.get();
         String text = textField.getText();
         try {
-        	hasErrors.set(false);
-        	if (!text.isEmpty())
-        		Integer.parseInt(text);
+            hasErrors.set(false);
+            if (!text.isEmpty()) {
+                Integer.parseInt(text);
+            }
         } catch (Exception e) {
             hasErrors.set(true);
         }

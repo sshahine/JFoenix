@@ -25,25 +25,29 @@ import javafx.scene.AccessibleAttribute;
 
 /**
  * JFXTextField used in pickers {@link JFXDatePicker}, {@link JFXTimePicker}
- *
+ * <p>
  * Created by sshahine on 6/8/2017.
  */
 final class FakeFocusJFXTextField extends JFXTextField {
-    @Override public void requestFocus() {
+    @Override
+    public void requestFocus() {
         if (getParent() != null) {
             getParent().requestFocus();
         }
     }
+
     public void setFakeFocus(boolean b) {
         setFocused(b);
     }
+
     @Override
     public Object queryAccessibleAttribute(AccessibleAttribute attribute, Object... parameters) {
         switch (attribute) {
             case FOCUS_ITEM:
                 // keep focus on parent control
                 return getParent();
-            default: return super.queryAccessibleAttribute(attribute, parameters);
+            default:
+                return super.queryAccessibleAttribute(attribute, parameters);
         }
     }
 
