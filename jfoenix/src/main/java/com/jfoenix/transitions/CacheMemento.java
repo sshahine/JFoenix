@@ -23,16 +23,15 @@ import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
 
-import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CacheMemento {
-    private static HashMap<Node, CacheMemento> history = new HashMap<>();
-
     private boolean cache;
     private boolean cacheShape;
     private boolean snapToPixel;
     private CacheHint cacheHint = CacheHint.DEFAULT;
     private Node node;
+    private AtomicBoolean isCached = new AtomicBoolean(false);
 
     public CacheMemento(Node node) {
         this.node = node;
@@ -42,7 +41,7 @@ public class CacheMemento {
      * this method will cache the node only if it wasn't cached before
      */
     public void cache() {
-        if (!history.containsKey(node)) {
+        if (!isCached.getAndSet(true)) {
             this.cache = node.isCache();
             this.cacheHint = node.getCacheHint();
             node.setCache(true);
@@ -53,24 +52,17 @@ public class CacheMemento {
                 ((Region) node).setCacheShape(true);
                 ((Region) node).setSnapToPixel(true);
             }
-            history.put(node, this);
-        } else {
-            CacheMemento cached = new CacheMemento(node);
-            this.cache = cached.cache;
-            this.cacheHint = cached.cacheHint;
-            this.cacheShape = cached.cacheShape;
-            this.snapToPixel = cached.snapToPixel;
         }
-
     }
 
     public void restore() {
-        node.setCache(cache);
-        node.setCacheHint(cacheHint);
-        if (node instanceof Region) {
-            ((Region) node).setCacheShape(cacheShape);
-            ((Region) node).setSnapToPixel(snapToPixel);
+        if (isCached.getAndSet(false)) {
+            node.setCache(cache);
+            node.setCacheHint(cacheHint);
+            if (node instanceof Region) {
+                ((Region) node).setCacheShape(cacheShape);
+                ((Region) node).setSnapToPixel(snapToPixel);
+            }
         }
-        history.remove(node);
     }
 }
