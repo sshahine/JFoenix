@@ -177,8 +177,14 @@ dependencies {
 
 ## Contributors
 
-This project exists thanks to all the people who contribute. 
+This project exists thanks to all the people who contribute.
+
 <a href="https://github.com/jfoenixadmin/JFoenix/contributors"><img src="https://opencollective.com/JFoenix/contributors.svg?width=890&button=false" /></a>
+
+
+## Special Thanks
+
+Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.
 
 
 ## Backers
