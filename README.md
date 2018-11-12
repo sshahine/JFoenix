@@ -29,7 +29,7 @@
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
-If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
+If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
@@ -185,28 +185,4 @@ This project exists thanks to all the people who contribute.
 ## Special Thanks
 
 Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.
-
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/JFoenix#backer)]
-
-<a href="https://opencollective.com/JFoenix#backers" target="_blank"><img src="https://opencollective.com/JFoenix/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/JFoenix#sponsor)]
-
-<a href="https://opencollective.com/JFoenix/sponsor/0/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/1/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/2/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/3/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/4/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/5/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/6/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/7/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/8/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/JFoenix/sponsor/9/website" target="_blank"><img src="https://opencollective.com/JFoenix/sponsor/9/avatar.svg"></a>
-
 
