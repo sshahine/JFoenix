@@ -4,7 +4,6 @@
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
 [![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
-[![Sponsors on Open Collective](https://opencollective.com/JFoenix/sponsors/badge.svg)](#sponsors) 
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
 [![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
 [![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
@@ -29,7 +28,7 @@
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
-If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
+If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
