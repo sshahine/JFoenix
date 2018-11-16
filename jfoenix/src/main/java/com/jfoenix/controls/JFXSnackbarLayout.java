@@ -31,9 +31,9 @@ import javafx.scene.layout.StackPane;
 /**
  * JFXSnackbarLayout default layout for snackbar content
  *
- * @author Bashir Elias & Shadi Shaheen
+ * @author Shadi Shaheen
  * @version 1.0
- * @since 2016-03-09
+ * @since 2018-11-16
  */
 public class JFXSnackbarLayout extends BorderPane {
 
