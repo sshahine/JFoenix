@@ -3,6 +3,7 @@
 [![][mavenbadge img]][mavenbadge]
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
+[![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
 [![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
 [![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
@@ -27,7 +28,7 @@
 Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
-If you would like to support JFoenix project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a>.
+If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
@@ -172,3 +173,15 @@ dependencies {
 [gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
 
 [the wiki]: https://github.com/jfoenixadmin/JFoenix/wiki#trying-the-demo
+
+## Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/jfoenixadmin/JFoenix/contributors"><img src="https://opencollective.com/JFoenix/contributors.svg?width=890&button=false" /></a>
+
+
+## Special Thanks
+
+Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.
+
