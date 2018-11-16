@@ -122,15 +122,15 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 
     @Override
     public void cancelEdit() {
-        super.cancelEdit();
-        builder.cancelEdit();
-        builder.setValue(getValue());
-        setContentDisplay(ContentDisplay.TEXT_ONLY);
         //Once the edit has been cancelled we no longer need the editor
         //so we mark it for cleanup here. Note though that you have to handle
         //this situation in the focus listener which gets fired at the end
         //of the editing.
         editorNode = null;
+        super.cancelEdit();
+        builder.cancelEdit();
+        builder.setValue(getValue());
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
     /**
