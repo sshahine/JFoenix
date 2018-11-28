@@ -52,6 +52,9 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
 * <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
 * <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
+* <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
+
+
 
 # Build
 To build JFoenix, execute the following command:
