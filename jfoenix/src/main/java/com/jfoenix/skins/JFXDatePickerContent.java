@@ -201,8 +201,8 @@ public class JFXDatePickerContent extends VBox {
     private ObjectProperty<YearMonth> selectedYearMonth = new SimpleObjectProperty<>(this, "selectedYearMonth");
 
 
-    JFXDatePickerContent(final DatePicker datePicker) {
-        this.datePicker = (JFXDatePicker) datePicker;
+    JFXDatePickerContent(final JFXDatePicker datePicker) {
+        this.datePicker = datePicker;
         getStyleClass().add("date-picker-popup");
 
         LocalDate date = datePicker.getValue();

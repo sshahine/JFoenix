@@ -17,7 +17,7 @@
  * under the License.
  */
 
-.jfx-date-picker{
+.jfx-date-picker {
     -jfx-default-color: #009688;
 }
 
@@ -36,6 +36,10 @@
 }
 
 .jfx-date-picker > .arrow-button > .jfx-svg-glyph {
+    -fx-background-color: -jfx-default-color;
+}
+
+.date-picker-popup > .month-year-pane {
     -fx-background-color: -jfx-default-color;
 }
 
