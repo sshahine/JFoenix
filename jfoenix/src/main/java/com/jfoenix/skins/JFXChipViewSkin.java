@@ -133,6 +133,12 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             createChip(item);
         }
         control.getChips().addListener(new WeakListChangeListener<>(chipsChangeListeners));
+        
+        control.promptTextProperty().addListener((change, oldVal, newVal) -> {
+            if (editor != null) {
+                editor.setPromptText(newVal);
+            }
+        });
     }
 
     @Override
@@ -145,6 +151,7 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
         editor.setManaged(false);
         editor.getStyleClass().add("editor");
         editor.setWrapText(true);
+        editor.setPromptText(control.getPromptText());
         editor.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() != KeyCode.ENTER) {
                 getSkinnable().pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
