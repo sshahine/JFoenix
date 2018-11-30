@@ -140,7 +140,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidat
     }
 
     private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT,
-        Locale.ENGLISH);
+        Locale.getDefault());
 
     private BooleanProperty _24HourView = new SimpleBooleanProperty(false);
 
