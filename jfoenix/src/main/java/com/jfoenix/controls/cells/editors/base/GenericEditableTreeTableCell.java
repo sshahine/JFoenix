@@ -22,10 +22,7 @@ package com.jfoenix.controls.cells.editors.base;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
@@ -36,6 +33,7 @@ import javafx.scene.layout.Region;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * <h1>Generic Editable Tree Table cell</h1>
@@ -112,7 +110,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             super.startEdit();
             if (editorNode == null) {
                 createEditorNode();
-            }else{
+            } else {
                 // set current value if the editor is already created
                 builder.setValue(getValue());
             }
@@ -124,15 +122,15 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 
     @Override
     public void cancelEdit() {
-        super.cancelEdit();
-        builder.cancelEdit();
-        builder.setValue(getValue());
-        setContentDisplay(ContentDisplay.TEXT_ONLY);
         //Once the edit has been cancelled we no longer need the editor
         //so we mark it for cleanup here. Note though that you have to handle
         //this situation in the focus listener which gets fired at the end
         //of the editing.
         editorNode = null;
+        super.cancelEdit();
+        builder.cancelEdit();
+        builder.setValue(getValue());
+        setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
     /**
@@ -195,11 +193,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
                 cancelEdit();
             } else if (t.getCode() == KeyCode.TAB) {
                 commitHelper(false);
-
-                TreeTableColumn nextColumn = getNextColumn(!t.isShiftDown());
-                if (nextColumn != null) {
-                    getTreeTableView().edit(getIndex(), nextColumn);
-                }
+                editNext(!t.isShiftDown());
             }
         };
 
@@ -217,32 +211,51 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         editorNode = builder.createNode(getValue(), keyEventsHandler, focusChangeListener);
     }
 
+    private BiFunction<Integer, Integer, Integer> stepFunction = (index, direction) -> 0;
+
+    public BiFunction<Integer, Integer, Integer> getStepFunction() {
+        return stepFunction;
+    }
+
+    public void setStepFunction(BiFunction<Integer, Integer, Integer> stepFunction) {
+        this.stepFunction = stepFunction;
+    }
+
     /**
      * @param forward true gets the column to the right, false the column to the left of the current column
      * @return
      */
-    private TreeTableColumn<S, ?> getNextColumn(boolean forward) {
+    private void editNext(boolean forward) {
         List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
         for (TreeTableColumn<S, ?> column : getTreeTableView().getColumns()) {
             columns.addAll(getLeaves(column));
         }
         //There is no other column that supports editing.
-        if (columns.size() < 2) {
-            return null;
-        }
+        int index = getIndex();
         int nextIndex = columns.indexOf(getTableColumn());
         if (forward) {
             nextIndex++;
             if (nextIndex > columns.size() - 1) {
                 nextIndex = 0;
+                index += stepFunction.apply(index, 1);
             }
         } else {
             nextIndex--;
             if (nextIndex < 0) {
                 nextIndex = columns.size() - 1;
+                index += stepFunction.apply(index, -1);
             }
         }
-        return columns.get(nextIndex);
+
+        if (columns.size() < 2 && index == getIndex()) {
+            return;
+        }
+
+        TreeTableColumn<S, ?> nextColumn = columns.get(nextIndex);
+        if (nextColumn != null) {
+            getTreeTableView().edit(index, nextColumn);
+            getTreeTableView().scrollToColumn(nextColumn);
+        }
     }
 
 

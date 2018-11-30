@@ -94,9 +94,9 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             () -> promptText);
 
         linesWrapper.init(() -> createPromptNode());
+        linesWrapper.clip.widthProperty().bind(linesWrapper.promptContainer.widthProperty().subtract(arrowButton.widthProperty()));
 
         errorContainer = new ValidationPane<>(comboBox);
-
 
         getChildren().addAll(linesWrapper.line, linesWrapper.focusedLine, linesWrapper.promptContainer, errorContainer);
 

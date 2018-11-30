@@ -24,14 +24,25 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.skin.CheckBoxSkin;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -85,7 +96,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         updateRippleColor();
 
         // add listeners
-        control.selectedProperty().addListener( observable -> {
+        control.selectedProperty().addListener(observable -> {
             updateRippleColor();
             playSelectAnimation(control.isSelected(), true);
         });
@@ -96,7 +107,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
 
         // show focused state
         control.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if(!control.isDisableVisualFocus()){
+            if (!control.isDisableVisualFocus()) {
                 if (newVal) {
                     if (!getSkinnable().isPressed()) {
                         rippler.setOverlayVisible(true);
@@ -114,18 +125,18 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         indeterminateTransition = new CheckBoxTransition(indeterminateMark);
         createFillTransition();
 
-        registerChangeListener(control.checkedColorProperty(), obs->createFillTransition());
+        registerChangeListener(control.checkedColorProperty(), obs -> createFillTransition());
     }
 
     private void updateRippleColor() {
-        rippler.setRipplerFill(getSkinnable().isSelected() ? ((JFXCheckBox) getSkinnable()).getCheckedColor() : ((JFXCheckBox) getSkinnable())
-            .getUnCheckedColor());
+        rippler.setRipplerFill(getSkinnable().isSelected() ?
+            ((JFXCheckBox) getSkinnable()).getCheckedColor() : ((JFXCheckBox) getSkinnable()).getUnCheckedColor());
     }
 
     @Override
     protected void updateChildren() {
         super.updateChildren();
-        getChildren().removeIf(node->node.getStyleClass().contains("box"));
+        getChildren().removeIf(node -> node.getStyleClass().contains("box"));
         if (rippler != null) {
             getChildren().add(rippler);
         }
@@ -143,12 +154,14 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
                + snapSize(box.prefWidth(-1)) + getLabelOffset();
     }
 
-    @Override protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    @Override
+    protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         return Math.max(super.computeMinHeight(width - box.minWidth(-1), topInset, rightInset, bottomInset, leftInset),
             topInset + box.minHeight(-1) + bottomInset);
     }
 
-    @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         return Math.max(super.computePrefHeight(width - box.prefWidth(-1), topInset, rightInset, bottomInset, leftInset),
             topInset + box.prefHeight(-1) + bottomInset);
     }
@@ -167,9 +180,9 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         final double yOffset = computeYOffset(h, maxHeight, checkBox.getAlignment().getVpos()) + x;
 
         if (invalid) {
-            if(checkBox.isIndeterminate()){
+            if (checkBox.isIndeterminate()) {
                 playIndeterminateAnimation(true, false);
-            }else if (checkBox.isSelected()) {
+            } else if (checkBox.isSelected()) {
                 playSelectAnimation(true, false);
             }
             invalid = false;
@@ -277,13 +290,8 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
             }
         }
 
-        if(getSkinnable().isSelected()){
-            if(indeterminate)
-                mark.setVisible(false);
+        if (getSkinnable().isSelected()) {
             playSelectAnimation(!indeterminate, playAnimation);
-        }else if(!getSkinnable().isSelected()){
-            if(!indeterminate)
-                mark.setVisible(false);
         }
     }
 
@@ -296,8 +304,10 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
     }
 
     private final static class CheckBoxTransition extends CachedTransition {
+        protected Node mark;
+
         CheckBoxTransition(Node mark) {
-            super(mark, new Timeline(
+            super(null, new Timeline(
                     new KeyFrame(
                         Duration.ZERO,
                         new KeyValue(mark.opacityProperty(), 0, Interpolator.EASE_OUT),
@@ -319,6 +329,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
             // reduce the number to increase the shifting , increase number to reduce shifting
             setCycleDuration(Duration.seconds(0.12));
             setDelay(Duration.seconds(0.05));
+            this.mark = mark;
         }
 
         @Override
@@ -329,8 +340,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         @Override
         protected void stopping() {
             super.stopping();
-            node.setOpacity(getRate() == 1 ? 1 : 0);
-            node.setVisible(true);
+            mark.setOpacity(getRate() == 1 ? 1 : 0);
         }
     }
 }

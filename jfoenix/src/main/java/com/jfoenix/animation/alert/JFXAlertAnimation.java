@@ -21,6 +21,8 @@ package com.jfoenix.animation.alert;
 
 import com.jfoenix.controls.JFXAlert;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyValue;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 
@@ -140,6 +142,23 @@ public interface JFXAlertAnimation {
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
             return inverseAnimation.apply(new CenterTransition(contentContainer, overlay));
+        }
+    };
+
+    public static JFXAlertAnimation NO_ANIMATION = new JFXAlertAnimation() {
+        @Override
+        public void initAnimation(Node contentContainer, Node overlay) {
+
+        }
+
+        @Override
+        public Animation createShowingAnimation(Node contentContainer, Node overlay) {
+            return null;
+        }
+
+        @Override
+        public Animation createHidingAnimation(Node contentContainer, Node overlay) {
+            return null;
         }
     };
 }

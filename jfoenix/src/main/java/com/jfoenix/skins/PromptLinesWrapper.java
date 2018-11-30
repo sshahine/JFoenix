@@ -19,7 +19,6 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
@@ -34,10 +33,17 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
-import javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -66,6 +72,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     private double initScale = 0.05;
     public final Scale promptTextScale = new Scale(1, 1, 0, 0);
     private final Scale scale = new Scale(initScale, 1);
+    public final Rectangle clip = new Rectangle();
 
     public ObjectProperty<Paint> animatedPromptTextFill;
     public BooleanBinding usePromptText;
@@ -173,6 +180,12 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         promptContainer.setManaged(false);
         promptContainer.setMouseTransparent(true);
 
+        // clip prompt container
+        clip.setSmooth(false);
+        clip.setX(0);
+        clip.widthProperty().bind(promptContainer.widthProperty());
+        promptContainer.setClip(clip);
+
         focusTimer.setOnFinished(() -> animating = false);
         unfocusTimer.setOnFinished(() -> animating = false);
         focusTimer.setCacheNodes(cachedNodes);
@@ -244,7 +257,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     private Object validateComboBox(Object text) {
         if (control instanceof ComboBox && ((ComboBox) control).isEditable()) {
             final String editorText = ((ComboBox<?>) control).getEditor().getText();
-            text = editorText.isEmpty() ? null : text;
+            text = editorText == null || editorText.isEmpty() ? null : text;
         }
         return text;
     }
@@ -295,6 +308,8 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
 
     public void layoutLines(double x, double y, double w, double h, double controlHeight, double translateY) {
         this.contentHeight = translateY;
+        clip.setY(-contentHeight);
+        clip.setHeight(controlHeight + contentHeight);
         focusedLine.resizeRelocate(x, controlHeight, w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, controlHeight, w, line.prefHeight(-1));
         promptContainer.resizeRelocate(x, y, w, h);

@@ -684,6 +684,10 @@
     -fx-stroke: #4285f4;
 }
 
+.blue-spinner .track {
+    -fx-stroke: #d0d0d0;
+}
+
 .red-spinner .arc {
     -fx-stroke: #db4437;
 }
@@ -1056,10 +1060,3 @@
 .jfx-chips-popup .autocomplete-list .jfx-list-cell{
     -fx-text-fill: rgba(0,0,0,.87);
 }
-
-.jfx-drawer .jfx-drawer-side-pane{
-    -fx-border-color: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0) 100%);
-    -fx-border-width: 0px 7px 0px 0px;
-    -fx-border-insets: 0px -7px 0px 0px;
-}
-

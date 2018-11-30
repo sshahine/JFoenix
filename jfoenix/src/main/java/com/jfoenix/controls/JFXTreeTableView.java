@@ -20,9 +20,9 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.assets.JFoenixResources;
-import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.jfoenix.skins.JFXTreeTableViewSkin;
+import com.jfoenix.utils.JFXUtilities;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -36,7 +36,11 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.MouseEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

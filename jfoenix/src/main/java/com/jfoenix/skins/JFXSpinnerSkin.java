@@ -56,6 +56,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
     private Color blueColor;
     private Timeline timeline;
     private Arc arc;
+    private Arc track;
     private final StackPane arcPane;
     private final Rectangle fillRect;
     private double arcLength = -1;
@@ -79,11 +80,19 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         arc.setFill(Color.TRANSPARENT);
         arc.setStrokeWidth(3);
 
+        track = new Arc();
+        track.setManaged(false);
+        track.setStartAngle(0);
+        track.setLength(360);
+        track.setStrokeWidth(3);
+        track.getStyleClass().setAll("track");
+        track.setFill(Color.TRANSPARENT);
+
         fillRect = new Rectangle();
         fillRect.setFill(Color.TRANSPARENT);
         text = new Text();
         text.getStyleClass().setAll("text", "percentage");
-        final Group group = new Group(fillRect, arc, text);
+        final Group group = new Group(fillRect, track, arc, text);
         group.setManaged(false);
         arcPane = new StackPane(group);
         arcPane.setPrefSize(50, 50);
@@ -201,10 +210,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         final double arcSize = snapSize(radius * 2 + strokeWidth);
 
         arcPane.resizeRelocate((contentWidth - arcSize) / 2 + 1, (contentHeight - arcSize) / 2 + 1, arcSize, arcSize);
-        arc.setRadiusX(radius);
-        arc.setRadiusY(radius);
-        arc.setCenterX(arcSize / 2);
-        arc.setCenterY(arcSize / 2);
+        updateArcLayout(radius, arcSize);
 
         fillRect.setWidth(arcSize);
         fillRect.setHeight(arcSize);
@@ -226,6 +232,19 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
             }
         }
     }
+
+	private void updateArcLayout(double radius, double arcSize) {
+        arc.setRadiusX(radius);
+        arc.setRadiusY(radius);
+        arc.setCenterX(arcSize / 2);
+        arc.setCenterY(arcSize / 2);
+
+        track.setRadiusX(radius);
+        track.setRadiusY(radius);
+        track.setCenterX(arcSize / 2);
+        track.setCenterY(arcSize / 2);
+        track.setStrokeWidth(arc.getStrokeWidth());
+	}
 
     boolean wasIndeterminate = false;
 
@@ -296,6 +315,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         super.dispose();
         clearAnimation();
         arc = null;
+        track = null;
         control = null;
     }
 }

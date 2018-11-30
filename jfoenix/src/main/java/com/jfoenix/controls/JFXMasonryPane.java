@@ -20,8 +20,18 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.transitions.CachedTransition;
-import javafx.animation.*;
-import javafx.beans.property.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.WeakListChangeListener;
 import javafx.geometry.BoundingBox;
@@ -66,6 +76,11 @@ public class JFXMasonryPane extends Pane {
         if (change.next()) {
             // flag dirty boxes
             dirtyBoxes = true;
+
+            // clean removed child nodes from animationMap
+            for (Node removedNode : change.getRemoved()) {
+                animationMap.remove(removedNode);
+            }
         }
         clearLayout();
         requestLayout();
@@ -99,8 +114,7 @@ public class JFXMasonryPane extends Pane {
             return;
         }
         //(int) Math.floor(this.getHeight() / (cellH + 2*vSpacing));
-        row = 100;
-        row = getLimitRow() != -1 && row > getLimitRow() ? getLimitRow() : row;
+        row = getLimitRow();
 
         matrix = new int[row][col];
         double minWidth = -1;
@@ -326,7 +340,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * the cell height of masonry grid
      */
-    private DoubleProperty cellHeight = new SimpleDoubleProperty(70){
+    private DoubleProperty cellHeight = new SimpleDoubleProperty(70) {
         @Override
         protected void invalidated() {
             requestLayout();
@@ -357,7 +371,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * horizontal spacing between nodes in grid
      */
-    private DoubleProperty hSpacing = new SimpleDoubleProperty(5){
+    private DoubleProperty hSpacing = new SimpleDoubleProperty(5) {
         @Override
         protected void invalidated() {
             requestLayout();
@@ -388,7 +402,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * vertical spacing between nodes in the grid
      */
-    private DoubleProperty vSpacing = new SimpleDoubleProperty(5){
+    private DoubleProperty vSpacing = new SimpleDoubleProperty(5) {
         @Override
         protected void invalidated() {
             requestLayout();
@@ -419,7 +433,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * limit the grid columns to certain number
      */
-    private IntegerProperty limitColumn = new SimpleIntegerProperty(-1){
+    private IntegerProperty limitColumn = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
             requestLayout();
@@ -450,7 +464,7 @@ public class JFXMasonryPane extends Pane {
     /**
      * limit the grid rows to certain number
      */
-    private IntegerProperty limitRow = new SimpleIntegerProperty(-1){
+    private IntegerProperty limitRow = new SimpleIntegerProperty(100) {
         @Override
         protected void invalidated() {
             requestLayout();

@@ -45,7 +45,7 @@ public class JFXAnimationTimer extends AnimationTimer {
     private Set<AnimationHandler> animationHandlers = new HashSet<>();
     private long startTime = -1;
     private boolean running = false;
-    private List<CacheMomento> caches = new ArrayList<>();
+    private List<CacheMemento> caches = new ArrayList<>();
     private double totalElapsedMilliseconds;
 
 
@@ -90,7 +90,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         for (AnimationHandler animationHandler : animationHandlers) {
             animationHandler.init();
         }
-        for (CacheMomento cache : caches) {
+        for (CacheMemento cache : caches) {
             cache.cache();
         }
     }
@@ -135,7 +135,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         for (AnimationHandler handler : animationHandlers) {
             handler.clear();
         }
-        for (CacheMomento cache : caches) {
+        for (CacheMemento cache : caches) {
             cache.restore();
         }
         if (onFinished != null) {
@@ -167,7 +167,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         caches.clear();
         if (nodesToCache != null) {
             for (Node node : nodesToCache) {
-                caches.add(new CacheMomento(node));
+                caches.add(new CacheMemento(node));
             }
         }
     }
@@ -189,7 +189,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
         private HashMap<WritableValue<?>, Object> endValuesMap = new HashMap<>();
 
-        public AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
+        AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
             this.duration = duration.toMillis();
             currentDuration = this.duration;
             this.keyValues = keyValues;
@@ -210,7 +210,7 @@ public class JFXAnimationTimer extends AnimationTimer {
             }
         }
 
-        public void reverse(double now) {
+        void reverse(double now) {
             currentDuration = duration - (currentDuration - now);
             // update initial values
             for (JFXKeyValue keyValue : keyValues) {
@@ -273,7 +273,7 @@ public class JFXAnimationTimer extends AnimationTimer {
             endValuesMap.clear();
         }
 
-        public void dispose() {
+        void dispose() {
             clear();
             keyValues.clear();
         }

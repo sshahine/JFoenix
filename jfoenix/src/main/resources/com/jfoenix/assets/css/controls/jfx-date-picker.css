@@ -17,7 +17,7 @@
  * under the License.
  */
 
-.jfx-date-picker{
+.jfx-date-picker {
     -jfx-default-color: #009688;
 }
 
@@ -46,6 +46,10 @@
     -fx-background-color: -jfx-default-color;
 }
 
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: -jfx-default-color;
+}
+
 .date-picker-popup > * > .spinner {
     -fx-spacing: 0.25em; /* 3 */
     -fx-alignment: CENTER;
@@ -55,4 +59,26 @@
 
 .date-picker-popup > * > .spinner > .label {
     -fx-alignment: CENTER;
+}
+
+.date-picker-popup > * > .date-picker-list-view > .virtual-flow > .clipped-container > .sheet > .data-picker-list-cell {
+    -fx-font-size: 16;
+    -fx-font-weight: NORMAL;
+    -fx-background-color: WHITE;
+    -fx-alignment: center;
+    -fx-text-fill: #313131;
+}
+
+.date-picker-popup > * > .date-picker-list-view > .virtual-flow > .clipped-container > .sheet > .data-picker-list-cell > .jfx-rippler {
+    -jfx-rippler-fill: grey;
+}
+
+.date-picker-popup > * > .date-picker-list-view > .virtual-flow > .clipped-container > .sheet > .data-picker-list-cell:hover {
+    -fx-background-color: #EDEDED;
+}
+
+.date-picker-popup > * > .date-picker-list-view > .virtual-flow > .clipped-container > .sheet > .data-picker-list-cell:selected-year {
+    -fx-font-size: 24;
+    -fx-font-weight: BOLD;
+    -fx-text-fill: -jfx-default-color;
 }

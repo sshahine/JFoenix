@@ -19,15 +19,15 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.cache.CachePolicy;
 import com.jfoenix.utils.JFXNodeUtils;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -36,9 +36,10 @@ import java.util.List;
 
 /**
  * DrawersStack is used to show multiple drawers at once
- *
+ * <p>
  * UPDATE : DrawersStack extends Region instead of StackPane to
  * encapsulate the getChildren() method and hide it from the user.
+ *
  * @author Shadi Shaheen
  * @version 1.0
  * @since 2016-03-09
@@ -61,14 +62,16 @@ public class JFXDrawersStack extends Region {
     }
 
 
-    @Override public void requestLayout() {
+    @Override
+    public void requestLayout() {
         if (performingLayout) {
             return;
         }
         super.requestLayout();
     }
 
-    @Override protected void layoutChildren() {
+    @Override
+    protected void layoutChildren() {
         performingLayout = true;
         List<Node> managed = getManagedChildren();
         final double width = getWidth();
@@ -112,14 +115,19 @@ public class JFXDrawersStack extends Region {
 
     /**
      * add JFXDrawer to the stack
-     *
-     * NOTE: this method will also be called when {@link JFXDrawersStack#toggle(JFXDrawer)} to add
+     * <p>
+     * NOTE: this method is also called inside {@link JFXDrawersStack#toggle(JFXDrawer)} to add
      * the drawer if not added
+     *
      * @param drawer
      */
     public void addDrawer(JFXDrawer drawer) {
         if (drawer == null) {
             return;
+        }
+
+        if (drawer.getCachePolicy().equals(CachePolicy.IMAGE)) {
+            throw new RuntimeException("Drawer is using unsupported cache strategy inside JFXDrawerStack");
         }
 
         if (drawers.isEmpty()) {
@@ -201,5 +209,17 @@ public class JFXDrawersStack extends Region {
         }
     }
 
-
+    /**
+     * @return a list of sides that corresponds to the current drawers order
+     */
+    public List<Side> getOpenedDrawersOrder() {
+        List<Side> order = new ArrayList<>();
+        for (int i = 0, drawersSize = drawers.size(); i < drawersSize; i++) {
+            final JFXDrawer jfxDrawer = drawers.get(i);
+            if (jfxDrawer.isOpened()) {
+                order.add(Side.valueOf(jfxDrawer.getDirection().toString()));
+            }
+        }
+        return order;
+    }
 }

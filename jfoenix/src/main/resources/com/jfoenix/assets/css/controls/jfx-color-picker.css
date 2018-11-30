@@ -24,6 +24,8 @@
     -fx-background-color: TRANSPARENT, TRANSPARENT, TRANSPARENT, TRANSPARENT;
     -fx-background-radius: 3px;
     -fx-background-insets: 0px;
+    -fx-pref-height: 25px;
+    -fx-min-height: -fx-pref-height;
 }
 
 

@@ -3,6 +3,7 @@
 [![][mavenbadge img]][mavenbadge]
 [![][sonardebt img]][sonardebt]
 [![][gitter img]][gitter]
+[![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
 [![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
 [![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
@@ -18,14 +19,16 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JFoenix for Java 9 - [download jar](http://www.jfoenix.com/download/jfoenix-9.0.5.jar) (9.x.x)
-* JFoenix for Java 8 - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.5.jar) (8.x.x)
-* JFoenix for Android - [download jar](http://www.jfoenix.com/download/jfoenix-8.0.5-retrolambda.jar)
+* JFoenix for Java 9 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/9.0.6/jfoenix-9.0.6.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.7/jfoenix-8.0.7.jar) (8.x.x)
+* JFoenix for Android - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.7/jfoenix-8.0.7-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
-Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github/website.
+Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
+
+If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
@@ -45,6 +48,13 @@ Feel free to submit your project info to the following <a href="mailto:developer
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
+* <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
+* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
+* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
+* <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
+* <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
+
+
 
 # Build
 To build JFoenix, execute the following command:
@@ -75,8 +85,8 @@ repositories {
 Reference the repository from this location using:
 ```
 dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.5' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.5' // Java 9
+    compile 'com.jfoenix:jfoenix:8.0.7' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.6' // Java 9
 }
 ```
 
@@ -150,7 +160,7 @@ dependencies {
 ![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
 
 
-[mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
+[mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
@@ -166,3 +176,15 @@ dependencies {
 [gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
 
 [the wiki]: https://github.com/jfoenixadmin/JFoenix/wiki#trying-the-demo
+
+## Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/jfoenixadmin/JFoenix/contributors"><img src="https://opencollective.com/JFoenix/contributors.svg?width=890&button=false" /></a>
+
+
+## Special Thanks
+
+Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.
+

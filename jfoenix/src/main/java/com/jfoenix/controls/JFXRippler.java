@@ -556,6 +556,7 @@ public class JFXRippler extends StackPane {
 
         public void clear() {
             getChildren().clear();
+            rippler.overlayRect = null;
             generating.set(false);
         }
     }

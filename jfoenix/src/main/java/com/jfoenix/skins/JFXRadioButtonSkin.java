@@ -221,6 +221,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         for (int i = 0; i < getChildren().size(); i++) {
             if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
                 getChildren().remove(i);
+                break;
             }
         }
     }
@@ -239,7 +240,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             topInset,
             rightInset,
             bottomInset,
-            leftInset) + snapSize(radio.minWidth(-1)) + padding / 3;
+            leftInset) + snapSizeX(radio.minWidth(-1)) + padding / 3;
     }
 
     @Override

@@ -36,13 +36,12 @@ import javafx.util.Duration;
 public class CachedTransition extends Transition {
     protected final Node node;
     protected ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>();
-    private CacheMomento[] momentos = new CacheMomento[0];
-    private CacheMomento nodeCacheMomento;
+    private CacheMemento[] mementos = new CacheMemento[0];
 
     public CachedTransition(final Node node, final Timeline timeline) {
         this.node = node;
-        nodeCacheMomento = new CacheMomento(node);
         this.timeline.set(timeline);
+        mementos = node == null ? mementos : new CacheMemento[]{new CacheMemento(node)};
         statusProperty().addListener(observable -> {
             switch (getStatus()) {
                 case RUNNING:
@@ -55,11 +54,14 @@ public class CachedTransition extends Transition {
         });
     }
 
-    public CachedTransition(final Node node, final Timeline timeline, CacheMomento... cacheMomentos) {
+    public CachedTransition(final Node node, final Timeline timeline, CacheMemento... cacheMomentos) {
         this.node = node;
-        nodeCacheMomento = new CacheMomento(node);
         this.timeline.set(timeline);
-        this.momentos = cacheMomentos;
+        mementos = new CacheMemento[(node == null ? 0 : 1) + cacheMomentos.length];
+        if (node != null) {
+            mementos[0] = new CacheMemento(node);
+        }
+        System.arraycopy(cacheMomentos, 0, mementos, node == null ? 0 : 1, cacheMomentos.length);
         statusProperty().addListener(observable -> {
             switch (getStatus()) {
                 case RUNNING:
@@ -76,10 +78,9 @@ public class CachedTransition extends Transition {
      * Called when the animation is starting
      */
     protected void starting() {
-        nodeCacheMomento.cache();
-        if (momentos != null) {
-            for (int i = 0; i < momentos.length; i++) {
-                momentos[i].cache();
+        if (mementos != null) {
+            for (int i = 0; i < mementos.length; i++) {
+                mementos[i].cache();
             }
         }
     }
@@ -88,10 +89,9 @@ public class CachedTransition extends Transition {
      * Called when the animation is stopping
      */
     protected void stopping() {
-        nodeCacheMomento.restore();
-        if (momentos != null) {
-            for (int i = 0; i < momentos.length; i++) {
-                momentos[i].restore();
+        if (mementos != null) {
+            for (int i = 0; i < mementos.length; i++) {
+                mementos[i].restore();
             }
         }
     }

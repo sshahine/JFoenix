@@ -25,30 +25,36 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 
+import java.util.regex.Pattern;
+
+
 /**
- * An example of Number field validation, that is applied on text input controls
- * such as {@link TextField} and {@link TextArea}
+ * Regex validation, that is applied on text input controls
+ * such as {@link TextField} and {@link TextArea}.
  *
- * @author Shadi Shaheen
  * @version 1.0
- * @since 2016-03-09
+ * @since 2018-08-06
  */
 @DefaultProperty(value = "icon")
-public class IntegerValidator extends ValidatorBase {
+public class RegexValidator extends ValidatorBase {
 
-    public IntegerValidator() {
-        setMessage("Value must be a number");
-    }
+    private String regexPattern;
 
-    public IntegerValidator(String message) {
+    public RegexValidator(String message) {
         super(message);
     }
+
+    public RegexValidator() {
+
+    }
+
+
+    private Pattern regexPatternCompiled;
 
     /**
      * {@inheritDoc}
      */
     @Override
-
     protected void eval() {
         if (srcControl.get() instanceof TextInputControl) {
             evalTextInputField();
@@ -57,14 +63,22 @@ public class IntegerValidator extends ValidatorBase {
 
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
-        String text = textField.getText();
-        try {
+        if (regexPatternCompiled.matcher(textField.getText()).matches()) {
             hasErrors.set(false);
-            if (!text.isEmpty()) {
-                Integer.parseInt(text);
-            }
-        } catch (Exception e) {
+        } else {
             hasErrors.set(true);
         }
+    }
+
+    /*
+     * GETTER AND SETTER
+     */
+    public void setRegexPattern(String regexPattern) {
+        this.regexPattern = regexPattern;
+        this.regexPatternCompiled = Pattern.compile(regexPattern);
+    }
+
+    public String getRegexPattern() {
+        return regexPattern;
     }
 }
