@@ -24,8 +24,8 @@ import com.jfoenix.controls.JFXChip;
 import com.jfoenix.controls.JFXChipView;
 import com.jfoenix.controls.JFXDefaultChip;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
-import com.sun.javafx.scene.control.behavior.KeyBinding;
-import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
+import com.sun.javafx.scene.control.behavior.FocusTraversalInputMap;
+import com.sun.javafx.scene.control.inputmap.InputMap;
 import com.sun.javafx.scene.traversal.Direction;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -37,6 +37,7 @@ import javafx.geometry.VPos;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
@@ -59,7 +60,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2018-02-01
  */
-public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChipViewSkin.ChipViewBehaviorBase<T>> {
+public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
 
     private static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 
@@ -93,11 +94,12 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
     };
 
     private final ScrollPane scrollPane;
+    private ChipViewBehaviorBase<T> behavior;
 
     public JFXChipViewSkin(JFXChipView<T> control) {
-        super(control, new ChipViewBehaviorBase<T>(control, null));
+        super(control);
         this.control = control;
-
+        this.behavior = new JFXChipViewSkin.ChipViewBehaviorBase<>(control);
         root = new CustomFlowPane();
         root.getStyleClass().add("chips-pane");
         setupEditor();
@@ -172,9 +174,9 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
                 case TAB:
                     if (editor.getText().trim().isEmpty()) {
                         if (event.isShiftDown()) {
-                            getBehavior().traverse(getSkinnable(), Direction.PREVIOUS);
+                            behavior.traverse(getSkinnable(), Direction.PREVIOUS);
                         } else {
-                            getBehavior().traverse(editor, Direction.NEXT);
+                            behavior.traverse(editor, Direction.NEXT);
                         }
                     }
                     event.consume();
@@ -287,7 +289,9 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
             // scrolling values range from 0 to 1
             scrollPane.setVvalue(y / height);
             // just for usability
-            node.requestFocus();
+            if (getSkinnable().isFocused()) {
+                node.requestFocus();
+            }
         }
 
 
@@ -440,14 +444,25 @@ public class JFXChipViewSkin<T> extends BehaviorSkinBase<JFXChipView<T>, JFXChip
         }
     }
 
+    public void dispose() {
+        super.dispose();
+        if (this.behavior != null) {
+            this.behavior.dispose();
+        }
+    }
+
     final static class ChipViewBehaviorBase<T> extends BehaviorBase<JFXChipView<T>> {
-        public ChipViewBehaviorBase(JFXChipView<T> control, List<KeyBinding> keyBindings) {
-            super(control, keyBindings);
+        public ChipViewBehaviorBase(JFXChipView<T> control) {
+            super(control);
         }
 
         @Override
+        public InputMap<JFXChipView<T>> getInputMap() {
+            return new InputMap<>(getNode());
+        }
+
         public void traverse(Node node, Direction dir) {
-            super.traverse(node, dir);
+            FocusTraversalInputMap.traverse(node, dir);
         }
     }
 }

@@ -64,16 +64,19 @@ subprojects {
                     "--add-exports=javafx.graphics/com.sun.javafx.geom=com.jfoenix",
                     "--add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix",
                     "--add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix",
+                    "--add-exports=javafx.graphics/com.sun.javafx.scene.traversal=com.jfoenix",
 
                     // For various behaviors across controls
                     "--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
                     "--add-exports=javafx.controls/com.sun.javafx.scene.control=com.jfoenix",
+                    "--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=com.jfoenix",
                     "--add-exports=javafx.base/com.sun.javafx.binding=com.jfoenix",
                     // For ReadOnlyUnbackedObservableList across files
 //                    "--add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED",
                     // For InputMap used in behavior classes
 //                    "--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=ALL-UNNAMED",
                     // For EventHandlerManager across files
+                    "--add-exports=javafx.base/com.sun.javafx.event=com.jfoenix",
                     "--add-exports=javafx.base/com.sun.javafx.event=com.jfoenix",
                     // For MappingChange, NonIterableChange across files
 //                    "--add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED",

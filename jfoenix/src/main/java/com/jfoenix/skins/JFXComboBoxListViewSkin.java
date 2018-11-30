@@ -27,7 +27,9 @@ import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.css.converter.PaintConverter;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.skin.ComboBoxListViewSkin;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -94,7 +96,16 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             () -> promptText);
 
         linesWrapper.init(() -> createPromptNode());
-        linesWrapper.clip.widthProperty().bind(linesWrapper.promptContainer.widthProperty().subtract(arrowButton.widthProperty()));
+        Pane arrowButton = null;
+        for (Node node : getChildren()) {
+            if (node.getId().equals("arrow-button")) {
+                arrowButton = (Pane) node;
+                break;
+            }
+        }
+        if (arrowButton != null) {
+            linesWrapper.clip.widthProperty().bind(linesWrapper.promptContainer.widthProperty().subtract(arrowButton.widthProperty()));
+        }
 
         errorContainer = new ValidationPane<>(comboBox);
 
@@ -125,7 +136,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         super.layoutChildren(x, y, w, h);
         final double height = getSkinnable().getHeight();
         linesWrapper.layoutLines(x, y, w, h, height,
-            promptText == null ? 0 : snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
+            promptText == null ? 0 : snapPositionX(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
         errorContainer.layoutPane(x, height + linesWrapper.focusedLine.getHeight(), w, h);
 
         linesWrapper.updateLabelFloatLayout();
@@ -155,7 +166,7 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
         linesWrapper.promptContainer.getChildren().add(promptText);
 
         if (getSkinnable().isFocused() && ((JFXComboBox<T>) getSkinnable()).isLabelFloat()) {
-            promptText.setTranslateY(-snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
+            promptText.setTranslateY(-snapPositionY(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
             linesWrapper.promptTextScale.setX(0.85);
             linesWrapper.promptTextScale.setY(0.85);
         }

@@ -24,6 +24,7 @@ module com.jfoenix{
     requires jdk.unsupported;
 
     exports com.jfoenix.assets;
+    exports com.jfoenix.cache;
     exports com.jfoenix.controls;
     exports com.jfoenix.effects;
     exports com.jfoenix.responsive;
@@ -34,7 +35,7 @@ module com.jfoenix{
     exports com.jfoenix.transitions;
     exports com.jfoenix.animation;
     exports com.jfoenix.transitions.hamburger;
-    exports com.jfoenix.concurrency;
+    exports com.jfoenix.transitions.template;
     exports com.jfoenix.utils;
 
     exports com.jfoenix.controls.datamodels.treetable;
@@ -46,4 +47,5 @@ module com.jfoenix{
     opens com.jfoenix.assets.css;
     opens com.jfoenix.assets.css.controls;
     opens com.jfoenix.assets.font.roboto;
+
 }
