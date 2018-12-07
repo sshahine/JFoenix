@@ -22,6 +22,8 @@ package com.jfoenix.controls;
 import com.jfoenix.skins.JFXChipViewSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
@@ -141,6 +143,24 @@ public class JFXChipView<T> extends Control {
     public void setSelectionHandler(Function<T, T> selectionHandler) {
         selectionHandlerProperty().set(selectionHandler);
     }
+    
+    
+    /**
+     * The prompt text to display in the TextArea.
+     */
+    private StringProperty promptText = new SimpleStringProperty(this, "promptText", "");
+    
+    public final StringProperty promptTextProperty() { 
+        return promptText; 
+    }
+    
+    public final String getPromptText() { 
+        return promptText.get(); 
+    }
+    
+    public final void setPromptText(String value) { 
+        promptText.set(value); 
+    }    
 
 
     private JFXAutoCompletePopup<T> autoCompletePopup = new JFXChipViewSkin.ChipsAutoComplete<T>();
