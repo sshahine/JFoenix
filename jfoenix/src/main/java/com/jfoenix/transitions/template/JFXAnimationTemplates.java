@@ -18,10 +18,10 @@
  */
 package com.jfoenix.transitions.template;
 
-import com.jfoenix.transitions.JFXAnimationTimer;
-import com.jfoenix.transitions.JFXKeyFrame;
-import com.jfoenix.transitions.JFXKeyValue;
-import javafx.animation.Interpolator;
+import com.jfoenix.transitions.template.helper.FromToKeyValueCreator;
+import com.jfoenix.transitions.template.helper.InterpolatorFactory;
+import com.jfoenix.transitions.template.helper.KeyValueWrapper;
+import com.jfoenix.transitions.template.helper.TargetResetHelper;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -29,9 +29,12 @@ import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 
-import java.util.function.BiConsumer;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Class which represents the specific animation implementations.
@@ -42,6 +45,8 @@ import java.util.function.Function;
  */
 public class JFXAnimationTemplates {
 
+  private JFXAnimationTemplates() {}
+
   /**
    * The {@link Timeline} implementation which supports all {@link JFXAnimationTemplateAction} and
    * {@link JFXAnimationTemplateConfig} methods.
@@ -49,128 +54,133 @@ public class JFXAnimationTemplates {
   public static <N> Timeline buildTimeline(JFXAnimationTemplate<N> creator) {
 
     Timeline timeline = new Timeline();
-    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetTemplateConfig();
+    JFXAnimationTemplateConfig templateConfig = creator.buildAndGetConfig();
 
-    creator
-        .buildAndGetAnimationValues()
-        .forEach(
-            (percent, animationValues) -> {
+    AtomicReference<Duration> maxDuration = new AtomicReference<>(templateConfig.getDuration());
+    Map<Duration, List<JFXAnimationTemplateAction<?, ?>>> actionMap =
+        creator.buildAndGetActions(
+            key -> {
+              Duration duration = calcActionDuration(key, templateConfig);
+              // Get the maximal duration during key mapping.
+              if (duration.greaterThan(maxDuration.get())) {
+                maxDuration.set(duration);
+              }
+              return duration;
+            });
 
-              // calc the percentage duration of total duration.
-              Duration percentageDuration = creatorConfig.getDuration().multiply((percent / 100));
+    FromToKeyValueCreator<KeyValueWrapper<KeyValue>> fromToKeyValueCreator =
+        new FromToKeyValueCreator<>(Duration.ZERO, maxDuration.get());
+    TargetResetHelper<KeyValueWrapper<KeyValue>> targetResetHelper = new TargetResetHelper<>();
 
-              // Create the key values.
-              KeyValue[] keyValues =
-                  animationValues
-                      .stream()
-                      .flatMap(
-                          animationValue ->
-                              animationValue.mapTo(
-                                  createKeyValue(creatorConfig.getInterpolator(), animationValue)))
-                      .toArray(KeyValue[]::new);
+    actionMap.forEach(
+        (duration, actions) -> {
 
-              // Reduce the onFinish events to one consumer.
-              Consumer<ActionEvent> onFinish =
-                  animationValues
-                      .stream()
-                      .map(
-                          animationValue ->
-                              (Consumer<ActionEvent>)
-                                  actionEvent -> {
-                                    if (animationValue.isExecuted()) {
-                                      animationValue.handleOnFinish(actionEvent);
-                                      animationValue.addExecution(1);
-                                    }
-                                  })
-                      .reduce(action -> {}, Consumer::andThen);
+          // Create the key values.
+          KeyValue[] keyValues =
+              actions
+                  .stream()
+                  .flatMap(action -> action.mapTo(createKeyValueFunction(templateConfig, action)))
+                  .toArray(KeyValue[]::new);
 
-              KeyFrame keyFrame = new KeyFrame(percentageDuration, onFinish::accept, keyValues);
+          // Reduce the onFinish events to one consumer.
+          Consumer<ActionEvent> onFinish =
+              actions
+                  .stream()
+                  .map(
+                      action ->
+                          (Consumer<ActionEvent>)
+                              actionEvent -> {
+                                if (action.isExecuted()) {
+                                  action.handleOnFinish(actionEvent);
+                                  action.addExecution(1);
+                                }
+                                action.handleOnFinishInternal();
+                              })
+                  .reduce(action -> {}, Consumer::andThen);
+
+          KeyFrame keyFrame = new KeyFrame(duration, onFinish::accept, keyValues);
+          timeline.getKeyFrames().add(keyFrame);
+
+          if (templateConfig.isFromToAutoGen() || templateConfig.isAutoReset()) {
+            List<KeyValueWrapper<KeyValue>> keyValueWrappers =
+                actions
+                    .stream()
+                    .flatMap(
+                        action ->
+                            action.mapTo(
+                                writableValue ->
+                                    new KeyValueWrapper<>(
+                                        new KeyValue(
+                                            writableValue,
+                                            writableValue.getValue(),
+                                            InterpolatorFactory
+                                                .createFromToAutoKeyFrameInterpolator(
+                                                    writableValue, templateConfig, action)),
+                                        writableValue)))
+                    .collect(Collectors.toList());
+
+            if (templateConfig.isFromToAutoGen()) {
+              keyValueWrappers.forEach(
+                  keyValueWrapper ->
+                      fromToKeyValueCreator.computeKeyValue(duration, keyValueWrapper));
+            }
+
+            if (templateConfig.isAutoReset()) {
+              targetResetHelper.computeKeyValues(
+                  keyValueWrappers,
+                  keyValueWrapper -> {
+                    KeyValue keyValue = keyValueWrapper.getKeyValue();
+                    keyValueWrapper.getWritableValue().setValue(keyValue.getEndValue());
+                  });
+            }
+          }
+        });
+
+    fromToKeyValueCreator
+        .getStartKeyValues()
+        .map(values -> values.stream().map(KeyValueWrapper::getKeyValue).toArray(KeyValue[]::new))
+        .ifPresent(
+            keyValues -> {
+              KeyFrame keyFrame = new KeyFrame(fromToKeyValueCreator.getStartDuration(), keyValues);
               timeline.getKeyFrames().add(keyFrame);
             });
 
-    timeline.setAutoReverse(creatorConfig.isAutoReverse());
-    timeline.setCycleCount(creatorConfig.getCycleCount());
-    timeline.setDelay(creatorConfig.getDelay());
-    timeline.setRate(creatorConfig.getRate());
-    timeline.setOnFinished(creatorConfig::handleOnFinish);
+    fromToKeyValueCreator
+        .getEndKeyValues()
+        .map(values -> values.stream().map(KeyValueWrapper::getKeyValue).toArray(KeyValue[]::new))
+        .ifPresent(
+            keyValues -> {
+              KeyFrame keyFrame = new KeyFrame(fromToKeyValueCreator.getEndDuration(), keyValues);
+              timeline.getKeyFrames().add(keyFrame);
+            });
+
+    timeline.setAutoReverse(templateConfig.isAutoReverse());
+    timeline.setCycleCount(templateConfig.getCycleCount());
+    timeline.setDelay(templateConfig.getDelay());
+    timeline.setRate(templateConfig.getRate());
+    timeline.setOnFinished(
+        event -> {
+          templateConfig.handleOnFinish(event);
+          targetResetHelper.reset();
+        });
 
     return timeline;
   }
 
-  /**
-   * The {@link JFXAnimationTimer} implementation which supports a subset of {@link
-   * JFXAnimationTemplateAction} and {@link JFXAnimationTemplateAction} methods.<br>
-   * Unsupported methods are:<br>
-   * In {@link JFXAnimationTemplateAction}:<br>
-   * - {@link JFXAnimationTemplateAction.Builder#executions(int)}<br>
-   * - {@link JFXAnimationTemplateAction.Builder#onFinish(BiConsumer)}<br>
-   *
-   * <p>
-   *
-   * <p>In {@link JFXAnimationTemplateConfig}:<br>
-   * - {@link JFXAnimationTemplateConfig.Builder#rate(double)}<br>
-   * - {@link JFXAnimationTemplateConfig.Builder#delay(Duration)}<br>
-   * - {@link JFXAnimationTemplateConfig.Builder#autoReverse(boolean)}<br>
-   * - {@link JFXAnimationTemplateConfig.Builder#cycleCount(int)}<br>
-   */
-  public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationTemplate<N> creator) {
-
-    JFXAnimationTimer animationTimer = new JFXAnimationTimer();
-    JFXAnimationTemplateConfig creatorConfig = creator.buildAndGetTemplateConfig();
-
-    creator
-        .buildAndGetAnimationValues()
-        .forEach(
-            (percent, animationValues) -> {
-
-              // calc the percentage duration of total duration.
-              Duration percentageDuration = creatorConfig.getDuration().multiply((percent / 100));
-
-              // Create the key values.
-              JFXKeyValue<?>[] keyValues =
-                  animationValues
-                      .stream()
-                      .flatMap(
-                          animationValue ->
-                              animationValue.mapTo(
-                                  createJFXKeyValue(
-                                      creatorConfig.getInterpolator(), animationValue)))
-                      .toArray(JFXKeyValue<?>[]::new);
-
-              JFXKeyFrame keyFrame = new JFXKeyFrame(percentageDuration, keyValues);
-              try {
-                animationTimer.addKeyFrame(keyFrame);
-              } catch (Exception e) {
-                // Nothing happens cause timer can't run at this point.
-              }
-            });
-
-    animationTimer.setOnFinished(() -> creatorConfig.handleOnFinish(new ActionEvent()));
-
-    return animationTimer;
+  private static Function<WritableValue<Object>, KeyValue> createKeyValueFunction(
+      JFXAnimationTemplateConfig config, JFXAnimationTemplateAction<?, ?> action) {
+    return (writableValue) ->
+        new KeyValue(
+            writableValue,
+            action.getEndValue(),
+            InterpolatorFactory.createKeyFrameInterpolator(writableValue, config, action));
   }
 
-  private static Function<WritableValue<Object>, KeyValue> createKeyValue(
-      Interpolator globalInterpolator, JFXAnimationTemplateAction<?, ?> animationValue) {
-    return (writableValue) -> {
-      Interpolator interpolator = animationValue.getInterpolator().orElse(globalInterpolator);
-      return new KeyValue(
-          writableValue,
-          animationValue.getEndValue(),
-          new ConditionalInterpolator(interpolator, writableValue, animationValue::isExecuted));
-    };
-  }
-
-  private static Function<WritableValue<Object>, JFXKeyValue<?>> createJFXKeyValue(
-      Interpolator globalInterpolator, JFXAnimationTemplateAction<?, ?> animationValue) {
-    return (writableValue) -> {
-      Interpolator interpolator = animationValue.getInterpolator().orElse(globalInterpolator);
-      return JFXKeyValue.builder()
-          .setTarget(writableValue)
-          .setEndValue(animationValue.getEndValue())
-          .setInterpolator(interpolator)
-          .setAnimateCondition(animationValue::isExecuteWhen)
-          .build();
-    };
+  private static Duration calcActionDuration(
+      JFXAnimationTemplate.ActionKey key, JFXAnimationTemplateConfig config) {
+    return key.getPercentOptional()
+        // calc the percentage duration of total duration.
+        .map(percent -> config.getDuration().multiply((percent / 100)))
+        .orElse(key.getTime());
   }
 }

@@ -20,6 +20,7 @@ package com.jfoenix.transitions.template;
 
 import javafx.animation.Timeline;
 import javafx.scene.Node;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.function.Function;
@@ -42,19 +43,19 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
           + "namedAnimationObjects are defined or your "
           + "withAnimationObject methods where the keys are accessed.";
 
-  private final Set<Double> percents = new HashSet<>();
+  private final Set<ActionKey> actionKeys = new HashSet<>();
   private final Map<
-          Double,
+          ActionKey,
           List<
               Function<
                   JFXAnimationTemplateAction.InitBuilder<N>,
                   JFXAnimationTemplateAction.Builder<?, ?>>>>
-      creatorValueBuilderFunctions = new HashMap<>();
+      actionBuilderFunctionMap = new HashMap<>();
   private final Class<N> animationObjectType;
   private Map<String, Collection<Object>> animationObjects;
   private Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>
-      creatorConfigBuilderFunction;
-  private boolean clearPercents;
+      configBuilderFunction;
+  private boolean clearActionKeys;
 
   private JFXAnimationTemplate(Class<N> animationObjectType) {
     this.animationObjectType = animationObjectType;
@@ -85,26 +86,31 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
     return create(Node.class);
   }
 
-  public Map<Double, List<JFXAnimationTemplateAction<?, ?>>> buildAndGetAnimationValues() {
+  public Map<ActionKey, List<JFXAnimationTemplateAction<?, ?>>> buildAndGetActions() {
+    return buildAndGetActions(Function.identity());
+  }
 
-    Map<Double, List<JFXAnimationTemplateAction<?, ?>>> animationValueMap = new HashMap<>();
-    creatorValueBuilderFunctions.forEach(
-        (percent, animationValueBuilderFunctions) -> {
-          List<JFXAnimationTemplateAction<?, ?>> animationValues =
-              animationValueBuilderFunctions
+  public <KM> Map<KM, List<JFXAnimationTemplateAction<?, ?>>> buildAndGetActions(
+      Function<ActionKey, KM> keyMappingFunction) {
+
+    Map<KM, List<JFXAnimationTemplateAction<?, ?>>> actionMap = new HashMap<>();
+    actionBuilderFunctionMap.forEach(
+        (key, actionBuilderFunctions) -> {
+          List<JFXAnimationTemplateAction<?, ?>> actions =
+              actionBuilderFunctions
                   .stream()
                   .flatMap(
                       builderFunction ->
                           builderFunction
                               .apply(JFXAnimationTemplateAction.builder(animationObjectType))
-                              .buildActions(this::getAnimationObjectsWithKeys))
+                              .buildActions(this::getAnimationObjectsByKeys))
                   .collect(Collectors.toList());
-          animationValueMap.put(percent, animationValues);
+          actionMap.put(keyMappingFunction.apply(key), actions);
         });
-    return animationValueMap;
+    return actionMap;
   }
 
-  private List<Object> getAnimationObjectsWithKeys(Collection<String> keys) {
+  private List<Object> getAnimationObjectsByKeys(Collection<String> keys) {
     List<Object> animationObjectList = new ArrayList<>();
     for (String key : keys) {
       Collection<?> animationObjectsPerKey = animationObjects.get(key);
@@ -116,23 +122,23 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
     return animationObjectList;
   }
 
-  public JFXAnimationTemplateConfig buildAndGetTemplateConfig() {
-    return creatorConfigBuilderFunction.apply(JFXAnimationTemplateConfig.builder()).build();
+  public JFXAnimationTemplateConfig buildAndGetConfig() {
+    return configBuilderFunction.apply(JFXAnimationTemplateConfig.builder()).build();
   }
 
   @Override
   public JFXTemplateAction<N> percent(double first, double... rest) {
-    if (clearPercents) {
-      percents.clear();
-      clearPercents = false;
+    tryClearActionKeys();
+
+    // Ignore if smaller 0% or bigger 100%
+    if (first >= 0 && first <= 100) {
+      saveActionKey(new ActionKey(first));
     }
-    // Clamp value between 0 and 100.
-    percents.add(Math.max(0, Math.min(100, first)));
-    creatorValueBuilderFunctions.put(first, new ArrayList<>());
 
     for (double percent : rest) {
-      percents.add(Math.max(0, Math.min(100, percent)));
-      creatorValueBuilderFunctions.put(percent, new ArrayList<>());
+      if (first >= 0 && first <= 100) {
+        saveActionKey(new ActionKey(percent));
+      }
     }
     return this;
   }
@@ -148,13 +154,41 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
   }
 
   @Override
+  public JFXTemplateAction<N> time(Duration time, Duration... times) {
+    tryClearActionKeys();
+
+    if (time != null) {
+      saveActionKey(new ActionKey(time));
+    }
+
+    for (Duration elem : times) {
+      if (elem != null) {
+        saveActionKey(new ActionKey(elem));
+      }
+    }
+    return this;
+  }
+
+  private void saveActionKey(ActionKey actionKey) {
+    actionKeys.add(actionKey);
+    actionBuilderFunctionMap.put(actionKey, new ArrayList<>());
+  }
+
+  private void tryClearActionKeys() {
+    if (clearActionKeys) {
+      actionKeys.clear();
+      clearActionKeys = false;
+    }
+  }
+
+  @Override
   public JFXTemplateConfig<N> action(
       Function<JFXAnimationTemplateAction.InitBuilder<N>, JFXAnimationTemplateAction.Builder<?, ?>>
           valueBuilderFunction) {
-    for (Double percent : percents) {
-      creatorValueBuilderFunctions.get(percent).add(valueBuilderFunction);
+    for (ActionKey actionKey : actionKeys) {
+      actionBuilderFunctionMap.get(actionKey).add(valueBuilderFunction);
     }
-    clearPercents = true;
+    clearActionKeys = true;
     return this;
   }
 
@@ -168,7 +202,7 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
   public JFXTemplateBuilder<N> config(
       Function<JFXAnimationTemplateConfig.Builder, JFXAnimationTemplateConfig.Builder>
           configBuilderFunction) {
-    creatorConfigBuilderFunction = configBuilderFunction;
+    this.configBuilderFunction = configBuilderFunction;
     return this;
   }
 
@@ -212,5 +246,49 @@ public class JFXAnimationTemplate<N> implements JFXTemplateConfig<N>, JFXTemplat
   @Override
   public Timeline build() {
     return build(Function.identity());
+  }
+
+  public static class ActionKey {
+
+    private double percent = Double.NaN;
+    private Duration time;
+
+    private ActionKey(double percent) {
+      this.percent = percent;
+    }
+
+    private ActionKey(Duration time) {
+      this.time = time;
+    }
+
+    public double getPercent() {
+      return percent;
+    }
+
+    public Optional<Double> getPercentOptional() {
+      return Double.isNaN(getPercent()) ? Optional.empty() : Optional.of(getPercent());
+    }
+
+    public Duration getTime() {
+      return time;
+    }
+
+    public Optional<Duration> getTimeOptional() {
+      return Optional.ofNullable(getTime());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      ActionKey actionKey = (ActionKey) o;
+      return Double.compare(actionKey.percent, percent) == 0
+          && Objects.equals(time, actionKey.time);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(percent, time);
+    }
   }
 }

@@ -18,16 +18,15 @@
  */
 package com.jfoenix.transitions.template;
 
+import com.jfoenix.transitions.template.helper.Direction;
+import com.jfoenix.transitions.template.helper.InterpretationMode;
 import javafx.animation.Interpolator;
 import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
@@ -46,22 +45,29 @@ public final class JFXAnimationTemplateAction<N, T> {
 
   public static final int INFINITE_EXECUTIONS = -1;
   private final Collection<Function<N, WritableValue<T>>> targetFunctions;
-  private final Function<N, T> endValueSupplier;
-  private final Function<N, Interpolator> interpolatorSupplier;
+  private final Function<N, T> endValueFunction;
+  private final Function<N, InterpretationMode> endValueInterpretationModeFunction;
+  private final Function<N, Interpolator> interpolatorFunction;
+  private final Function<N, InterpretationMode> interpolatorInterpretationModeFunction;
   private final Predicate<N> executeWhenPredicate;
   private final BiConsumer<N, ActionEvent> onFinish;
+  private Consumer<ActionEvent> onFinishInternal = actionEvent -> {};
   private final Function<N, Integer> executionsFunction;
+  private final Function<N, Direction> fluentTransitionFunction;
   private final N animationObject;
   private int executionsCounter;
 
   private JFXAnimationTemplateAction(Builder<N, T> builder) {
     targetFunctions = builder.targetFunctions;
-    endValueSupplier = builder.endValueFunction;
-    interpolatorSupplier = builder.interpolatorFunction;
+    endValueFunction = builder.endValueFunction;
+    endValueInterpretationModeFunction = builder.endValueInterpretationModeFunction;
+    interpolatorFunction = builder.interpolatorFunction;
+    interpolatorInterpretationModeFunction = builder.interpolatorInterpretationModeFunction;
     animationObject = builder.animationObject;
     executeWhenPredicate = builder.executeWhenPredicate;
     onFinish = builder.onFinish;
     executionsFunction = builder.executionsFunction;
+    fluentTransitionFunction = builder.fluentTransitionFunction;
   }
 
   public static <N> InitBuilder<N> builder(Class<N> animationObjectType) {
@@ -86,15 +92,31 @@ public final class JFXAnimationTemplateAction<N, T> {
   }
 
   public T getEndValue() {
-    return endValueSupplier.apply(animationObject);
+    return endValueFunction.apply(animationObject);
   }
 
-  public Optional<Interpolator> getInterpolator() {
-    return Optional.ofNullable(interpolatorSupplier.apply(animationObject));
+  public InterpretationMode getEndValueInterpretationMode() {
+    return endValueInterpretationModeFunction.apply(animationObject);
+  }
+
+  public boolean hasInterpolator() {
+    return interpolatorFunction != null;
+  }
+
+  public Interpolator getInterpolator() {
+    return interpolatorFunction.apply(animationObject);
+  }
+
+  public InterpretationMode getInterpolatorInterpretationMode() {
+    return interpolatorInterpretationModeFunction.apply(animationObject);
   }
 
   public boolean isExecuteWhen() {
-    return executeWhenPredicate.test(animationObject);
+    return !hasExecuteWhen() || executeWhenPredicate.test(animationObject);
+  }
+
+  public boolean hasExecuteWhen() {
+    return executeWhenPredicate != null;
   }
 
   public int getExecutions() {
@@ -132,6 +154,22 @@ public final class JFXAnimationTemplateAction<N, T> {
     onFinish.accept(animationObject, actionEvent);
   }
 
+  public void addOnFinishInternal(Runnable onFinish) {
+    onFinishInternal = onFinishInternal.andThen(n -> onFinish.run());
+  }
+
+  public void handleOnFinishInternal() {
+    onFinishInternal.accept(null);
+  }
+
+  public boolean hasFluentTransition() {
+    return fluentTransitionFunction != null;
+  }
+
+  public Direction getFluentTransition() {
+    return fluentTransitionFunction.apply(animationObject);
+  }
+
   @SuppressWarnings("unchecked")
   public <M> Stream<M> mapTo(Function<WritableValue<Object>, M> mappingFunction) {
     return getTargetFunctions()
@@ -145,11 +183,16 @@ public final class JFXAnimationTemplateAction<N, T> {
 
     private final Collection<Function<N, WritableValue<T>>> targetFunctions;
     private final InitBuilder<N> initBuilder;
-    private Function<N, T> endValueFunction = node -> null;
-    private Function<N, Interpolator> interpolatorFunction = node -> null;
-    private Predicate<N> executeWhenPredicate = node -> true;
-    private BiConsumer<N, ActionEvent> onFinish = (node, event) -> {};
-    private Function<N, Integer> executionsFunction = node -> INFINITE_EXECUTIONS;
+    private Function<N, T> endValueFunction = animationObject -> null;
+    private Function<N, InterpretationMode> endValueInterpretationModeFunction =
+        animationObject -> InterpretationMode.STATIC;
+    private Function<N, Interpolator> interpolatorFunction;
+    private Function<N, InterpretationMode> interpolatorInterpretationModeFunction =
+        animationObject -> InterpretationMode.STATIC;
+    private Predicate<N> executeWhenPredicate;
+    private BiConsumer<N, ActionEvent> onFinish = (animationObject, event) -> {};
+    private Function<N, Integer> executionsFunction = animationObject -> INFINITE_EXECUTIONS;
+    private Function<N, Direction> fluentTransitionFunction;
     private N animationObject;
 
     private Builder(
@@ -163,7 +206,8 @@ public final class JFXAnimationTemplateAction<N, T> {
     }
 
     /**
-     * The end value of the interpolation.
+     * The end value of the interpolation. <br>
+     * The {@link InterpretationMode} is {@link InterpretationMode#STATIC}.
      *
      * @param endValue the end value.
      * @return the {@link Builder} instance.
@@ -187,7 +231,40 @@ public final class JFXAnimationTemplateAction<N, T> {
     }
 
     /**
-     * The {@link Interpolator} of the animation.
+     * The lazy version of {@link #endValue(InterpretationMode, Function)} where the {@link
+     * InterpretationMode} is computed when the {@link JFXAnimationTemplateAction} is build. <br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #endValue(InterpretationMode, Function)
+     * @param endValueInterpretationModeFunction the {@link InterpretationMode} {@link Function}.
+     * @param endValueFunction the end value {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> endValue(
+        Function<N, InterpretationMode> endValueInterpretationModeFunction,
+        Function<N, T> endValueFunction) {
+      this.endValueInterpretationModeFunction = endValueInterpretationModeFunction;
+      this.endValueFunction = endValueFunction;
+      return this;
+    }
+
+    /**
+     * Same as {@link #endValue(Function)} but with an {@link InterpretationMode}. <br>
+     * If {@link InterpretationMode#DYNAMIC} is defined, the end value is evaluated during animation
+     * runtime which means, that the end value is exchangeable while an animation is running.
+     *
+     * @param endValueInterpretationMode the {@link InterpretationMode}.
+     * @param endValueFunction the end value {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> endValue(
+        InterpretationMode endValueInterpretationMode, Function<N, T> endValueFunction) {
+      return endValue(node -> endValueInterpretationMode, endValueFunction);
+    }
+
+    /**
+     * The {@link Interpolator} of the animation. <br>
+     * The {@link InterpretationMode} is {@link InterpretationMode#STATIC}.
      *
      * @param interpolator the {@link Interpolator}.
      * @return the {@link Builder} instance.
@@ -208,6 +285,41 @@ public final class JFXAnimationTemplateAction<N, T> {
     public Builder<N, T> interpolator(Function<N, Interpolator> interpolatorFunction) {
       this.interpolatorFunction = interpolatorFunction;
       return this;
+    }
+
+    /**
+     * The lazy version of {@link #interpolator(InterpretationMode, Function)} where the {@link
+     * InterpretationMode} is computed when the {@link JFXAnimationTemplateAction} is build. <br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #interpolator(InterpretationMode, Function)
+     * @param interpolatorInterpretationModeFunction the {@link InterpretationMode} {@link
+     *     Function}.
+     * @param interpolatorFunction the interpolator {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> interpolator(
+        Function<N, InterpretationMode> interpolatorInterpretationModeFunction,
+        Function<N, Interpolator> interpolatorFunction) {
+      this.interpolatorInterpretationModeFunction = interpolatorInterpretationModeFunction;
+      this.interpolatorFunction = interpolatorFunction;
+      return this;
+    }
+
+    /**
+     * Same as {@link #interpolator(Function)} but with an {@link InterpretationMode}. <br>
+     * If {@link InterpretationMode#DYNAMIC} is defined, the {@link Interpolator} is evaluated
+     * during animation runtime which means, that the {@link Interpolator} is exchangeable while an
+     * animation is running.
+     *
+     * @param interpolatorInterpretationMode the {@link InterpretationMode}.
+     * @param interpolatorFunction the interpolator {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> interpolator(
+        InterpretationMode interpolatorInterpretationMode,
+        Function<N, Interpolator> interpolatorFunction) {
+      return interpolator(node -> interpolatorInterpretationMode, interpolatorFunction);
     }
 
     /**
@@ -282,6 +394,46 @@ public final class JFXAnimationTemplateAction<N, T> {
       return executions(node -> executions);
     }
 
+    /**
+     * The lazy version of {@link #fluentTransition(Direction)} which is computed when the {@link
+     * JFXAnimationTemplateAction} is build. <br>
+     * The {@link Function} provides also a reference of the current animation object.
+     *
+     * @see #fluentTransition(Direction)
+     * @param fluentTransitionFunction the {@link FluentTransitionInterpolator} {@link Direction}
+     *     {@link Function}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> fluentTransition(Function<N, Direction> fluentTransitionFunction) {
+      this.fluentTransitionFunction = fluentTransitionFunction;
+      return this;
+    }
+
+    /**
+     * Defines a {@link FluentTransitionInterpolator} for the current action. <br>
+     * This {@link Interpolator} uses the current value from {@link
+     * InitBuilder#target(WritableValue, WritableValue[])} as start- or end value. <br>
+     * Useful if an animation action is interpolated after an interruption which gets otherwise
+     * clipped.
+     *
+     * @param fluentTransitionDirection the {@link Direction} of the {@link
+     *     FluentTransitionInterpolator}.
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> fluentTransition(Direction fluentTransitionDirection) {
+      return fluentTransition(n -> fluentTransitionDirection);
+    }
+
+    /**
+     * The default {@link Direction#FORWARDS} version of {@link #fluentTransition(Direction)}.
+     *
+     * @see #fluentTransition(Direction)
+     * @return the {@link Builder} instance.
+     */
+    public Builder<N, T> fluentTransition() {
+      return fluentTransition(Direction.FORWARDS);
+    }
+
     public JFXAnimationTemplateAction<N, T> build(
         Function<Collection<String>, Object> buildFunction) {
       this.animationObject =
@@ -313,9 +465,9 @@ public final class JFXAnimationTemplateAction<N, T> {
     private final Collection<String> animationObjectNames = new ArrayList<>();
 
     private InitBuilder(
-        Class<N> animationObjectType, String animationObjectId, String... animationObjectNames) {
+        Class<N> animationObjectType, String animationObjectName, String... animationObjectNames) {
       this.animationObjectType = animationObjectType;
-      this.animationObjectNames.add(animationObjectId);
+      this.animationObjectNames.add(animationObjectName);
       this.animationObjectNames.addAll(Arrays.asList(animationObjectNames));
     }
 
