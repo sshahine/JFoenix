@@ -18,6 +18,9 @@
  */
 package com.jfoenix.transitions.template;
 
+import com.jfoenix.transitions.JFXAnimationTimer;
+import com.jfoenix.transitions.JFXKeyFrame;
+import com.jfoenix.transitions.JFXKeyValue;
 import com.jfoenix.transitions.template.helper.FromToKeyValueCreator;
 import com.jfoenix.transitions.template.helper.InterpolatorFactory;
 import com.jfoenix.transitions.template.helper.KeyValueWrapper;
@@ -32,6 +35,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -107,16 +111,7 @@ public class JFXAnimationTemplates {
                     .stream()
                     .flatMap(
                         action ->
-                            action.mapTo(
-                                writableValue ->
-                                    new KeyValueWrapper<>(
-                                        new KeyValue(
-                                            writableValue,
-                                            writableValue.getValue(),
-                                            InterpolatorFactory
-                                                .createFromToAutoKeyFrameInterpolator(
-                                                    writableValue, templateConfig, action)),
-                                        writableValue)))
+                            action.mapTo(createKeyValueWrapperFunction(templateConfig, action)))
                     .collect(Collectors.toList());
 
             if (templateConfig.isFromToAutoGen()) {
@@ -167,13 +162,177 @@ public class JFXAnimationTemplates {
     return timeline;
   }
 
+  /**
+   * The {@link JFXAnimationTimer} implementation which supports a subset of {@link
+   * JFXAnimationTemplateAction} and {@link JFXAnimationTemplateAction} methods.<br>
+   * Unsupported methods are:<br>
+   * In {@link JFXAnimationTemplateAction}:<br>
+   * - {@link JFXAnimationTemplateAction.Builder#executions(int)}<br>
+   * - {@link JFXAnimationTemplateAction.Builder#onFinish(BiConsumer)}<br>
+   *
+   * <p>
+   *
+   * <p>In {@link JFXAnimationTemplateConfig}:<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#rate(double)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#delay(Duration)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#autoReverse(boolean)}<br>
+   * - {@link JFXAnimationTemplateConfig.Builder#cycleCount(int)}<br>
+   */
+  public static <N> JFXAnimationTimer buildAnimationTimer(JFXAnimationTemplate<N> creator) {
+
+    JFXAnimationTimer animationTimer = new JFXAnimationTimer();
+
+    JFXAnimationTemplateConfig templateConfig = creator.buildAndGetConfig();
+
+    AtomicReference<Duration> maxDuration = new AtomicReference<>(templateConfig.getDuration());
+    Map<Duration, List<JFXAnimationTemplateAction<?, ?>>> actionMap =
+        creator.buildAndGetActions(
+            key -> {
+              Duration duration = calcActionDuration(key, templateConfig);
+              // Get the maximal duration during key mapping.
+              if (duration.greaterThan(maxDuration.get())) {
+                maxDuration.set(duration);
+              }
+              return duration;
+            });
+
+    FromToKeyValueCreator<KeyValueWrapper<JFXKeyValue<?>>> fromToKeyValueCreator =
+        new FromToKeyValueCreator<>(Duration.ZERO, maxDuration.get());
+    TargetResetHelper<KeyValueWrapper<JFXKeyValue<?>>> targetResetHelper =
+        new TargetResetHelper<>();
+
+    actionMap.forEach(
+        (duration, actions) -> {
+
+          // Create the key values.
+          JFXKeyValue<?>[] keyValues =
+              actions
+                  .stream()
+                  .flatMap(
+                      action -> action.mapTo(createJFXKeyValueFunction(templateConfig, action)))
+                  .toArray(JFXKeyValue<?>[]::new);
+
+          JFXKeyFrame keyFrame = new JFXKeyFrame(duration, keyValues);
+          try {
+            animationTimer.addKeyFrame(keyFrame);
+          } catch (Exception e) {
+            // Nothing happens cause timer can't run at this point.
+          }
+
+          if (templateConfig.isFromToAutoGen() || templateConfig.isAutoReset()) {
+            List<KeyValueWrapper<JFXKeyValue<?>>> keyValueWrappers =
+                actions
+                    .stream()
+                    .flatMap(
+                        action ->
+                            action.mapTo(createJFXKeyValueWrapperFunction(templateConfig, action)))
+                    .collect(Collectors.toList());
+
+            if (templateConfig.isFromToAutoGen()) {
+              keyValueWrappers.forEach(
+                  keyValueWrapper ->
+                      fromToKeyValueCreator.computeKeyValue(duration, keyValueWrapper));
+            }
+
+            if (templateConfig.isAutoReset()) {
+              targetResetHelper.computeKeyValues(
+                  keyValueWrappers,
+                  keyValueWrapper -> {
+                    JFXKeyValue<?> keyValue = keyValueWrapper.getKeyValue();
+                    keyValueWrapper.getWritableValue().setValue(keyValue.getEndValue());
+                  });
+            }
+          }
+        });
+
+    fromToKeyValueCreator
+        .getStartKeyValues()
+        .map(
+            values ->
+                values.stream().map(KeyValueWrapper::getKeyValue).toArray(JFXKeyValue<?>[]::new))
+        .ifPresent(
+            keyValues -> {
+              JFXKeyFrame keyFrame =
+                  new JFXKeyFrame(fromToKeyValueCreator.getStartDuration(), keyValues);
+              try {
+                animationTimer.addKeyFrame(keyFrame);
+              } catch (Exception e) {
+                // Nothing happens cause timer can't run at this point.
+              }
+            });
+
+    fromToKeyValueCreator
+        .getEndKeyValues()
+        .map(
+            values ->
+                values.stream().map(KeyValueWrapper::getKeyValue).toArray(JFXKeyValue<?>[]::new))
+        .ifPresent(
+            keyValues -> {
+              JFXKeyFrame keyFrame =
+                  new JFXKeyFrame(fromToKeyValueCreator.getEndDuration(), keyValues);
+              try {
+                animationTimer.addKeyFrame(keyFrame);
+              } catch (Exception e) {
+                // Nothing happens cause timer can't run at this point.
+              }
+            });
+
+    animationTimer.setOnFinished(
+        () -> {
+          templateConfig.handleOnFinish(new ActionEvent());
+          targetResetHelper.reset();
+        });
+
+    return animationTimer;
+  }
+
   private static Function<WritableValue<Object>, KeyValue> createKeyValueFunction(
       JFXAnimationTemplateConfig config, JFXAnimationTemplateAction<?, ?> action) {
-    return (writableValue) ->
+    return writableValue ->
         new KeyValue(
             writableValue,
             action.getEndValue(),
             InterpolatorFactory.createKeyFrameInterpolator(writableValue, config, action));
+  }
+
+  private static Function<WritableValue<Object>, KeyValueWrapper<KeyValue>>
+      createKeyValueWrapperFunction(
+          JFXAnimationTemplateConfig config, JFXAnimationTemplateAction<?, ?> action) {
+    return writableValue ->
+        new KeyValueWrapper<>(
+            new KeyValue(
+                writableValue,
+                writableValue.getValue(),
+                InterpolatorFactory.createFromToAutoKeyFrameInterpolator(
+                    writableValue, config, action)),
+            writableValue);
+  }
+
+  private static Function<WritableValue<Object>, JFXKeyValue<?>> createJFXKeyValueFunction(
+      JFXAnimationTemplateConfig config, JFXAnimationTemplateAction<?, ?> action) {
+    return writableValue ->
+        JFXKeyValue.builder()
+            .setTarget(writableValue)
+            .setEndValue(action.getEndValue())
+            .setInterpolator(
+                InterpolatorFactory.createKeyFrameInterpolator(writableValue, config, action))
+            .setAnimateCondition(action::isExecuteWhen)
+            .build();
+  }
+
+  private static Function<WritableValue<Object>, KeyValueWrapper<JFXKeyValue<?>>>
+      createJFXKeyValueWrapperFunction(
+          JFXAnimationTemplateConfig config, JFXAnimationTemplateAction<?, ?> action) {
+    return writableValue ->
+        new KeyValueWrapper<>(
+            JFXKeyValue.builder()
+                .setTarget(writableValue)
+                .setEndValue(writableValue.getValue())
+                .setInterpolator(
+                    InterpolatorFactory.createFromToAutoKeyFrameInterpolator(
+                        writableValue, config, action))
+                .build(),
+            writableValue);
   }
 
   private static Duration calcActionDuration(
