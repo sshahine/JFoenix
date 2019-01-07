@@ -42,18 +42,18 @@ If you like JFoenix :) and want to support this project, you can become a backer
 <a href="https://github.com/anongrp/Portume">Portume</a>
 * By <a href="https://github.com/goxr3plus">GOXR3PLUS</a> in:
 <a href="https://github.com/goxr3plus/XR3Player">XR3Player</a>,
-<a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>,
+<a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>
 * <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
 * <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
-* Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
-<a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
-<a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 * <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
 * <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
 * <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
 * <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
 * <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
-
+* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java.
+* Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
+<a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
+<a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 
 
 # Build
