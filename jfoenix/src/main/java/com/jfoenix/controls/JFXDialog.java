@@ -306,8 +306,10 @@ public class JFXDialog extends StackPane {
             tempImage.setCacheHint(CacheHint.SPEED);
             dialogContainer.getChildren().setAll(tempImage, this);
         } else {
-            tempContent = null;
-            dialogContainer.getChildren().add(this);
+        	//prevent error if opening an already opened dialog
+        	dialogContainer.getChildren().remove(this);
+        	tempContent = null;
+        	dialogContainer.getChildren().add(this);
         }
 
         if (animation != null) {
