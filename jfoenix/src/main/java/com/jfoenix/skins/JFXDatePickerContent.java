@@ -763,7 +763,8 @@ public class JFXDatePickerContent extends VBox {
     }
 
     private void goToDayCell(DateCell dateCell, int offset, ChronoUnit unit, boolean focusDayCell) {
-        goToDate(dayCellDate(dateCell).plus(offset, unit), focusDayCell);
+        YearMonth yearMonth = selectedYearMonth.get().plus(offset, unit);
+        goToDate(dayCellDate(dateCell).plus(offset, unit).withYear(yearMonth.getYear()), focusDayCell);
     }
 
     private void goToDate(LocalDate date, boolean focusDayCell) {
