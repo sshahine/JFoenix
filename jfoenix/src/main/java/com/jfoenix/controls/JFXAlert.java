@@ -44,7 +44,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
@@ -73,7 +72,7 @@ public class JFXAlert<R> extends Dialog<R> {
         this(null);
     }
 
-    public JFXAlert(Stage stage) {
+    public JFXAlert(Window window) {
         // create content
         contentContainer = new StackPane();
         contentContainer.getStyleClass().add("jfx-alert-content-container");
@@ -154,10 +153,10 @@ public class JFXAlert<R> extends Dialog<R> {
         setDialogPane(dialogPane);
         dialogPane.getScene().setFill(Color.TRANSPARENT);
 
-        if (stage != null) {
-            // set the stage to transparent
+        if (window != null) {
+            // set the window to transparent
             initStyle(StageStyle.TRANSPARENT);
-            initOwner(stage);
+            initOwner(window);
 
             // init style for overlay
             dialogPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -165,14 +164,14 @@ public class JFXAlert<R> extends Dialog<R> {
                     hide();
                 }
             });
-            // bind dialog position to stage position
+            // bind dialog position to window position
             widthListener = observable -> updateWidth();
             heightListener = observable -> updateHeight();
             xListener = observable -> updateX();
             yListener = observable -> updateY();
         }
 
-        // handle animation / owner stage layout changes
+        // handle animation / owner window layout changes
         eventHandlerManager.addEventHandler(DialogEvent.DIALOG_SHOWING, event -> {
             addLayoutListeners();
             JFXAlertAnimation currentAnimation = getCurrentAnimation();
