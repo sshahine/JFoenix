@@ -106,6 +106,8 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
     public void startEdit() {
         if (isEditable()) {
             super.startEdit();
+            // focus cell (in case of validation error the focus will remain)
+            getTableView().getFocusModel().focus(getTableRow().getIndex(), getTableColumn());
             if (editorNode == null) {
                 createEditorNode();
             } else {
