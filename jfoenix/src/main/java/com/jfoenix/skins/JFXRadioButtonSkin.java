@@ -26,6 +26,7 @@ import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
 import com.sun.javafx.scene.control.skin.RadioButtonSkin;
+import java.util.List;
 import javafx.animation.Interpolator;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -208,8 +209,12 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
 
         layoutLabelInArea(xOffset + contWidth + padding / 3, yOffset, labelWidth, maxHeight, radioButton.getAlignment());
-        ((Text) getChildren().get((getChildren().get(0) instanceof Text) ? 0 : 1)).
-            textProperty().set(getSkinnable().textProperty().get());
+        
+        if (getChildren().get(0) instanceof Text) {
+            ((Text) getChildren().get(0)).textProperty().set(getSkinnable().textProperty().get());
+        } else if (getChildren().get(1) instanceof Text) {
+            ((Text) getChildren().get(1)).textProperty().set(getSkinnable().textProperty().get());
+        }
 
         container.resize(width, height);
         positionInArea(container,
@@ -230,7 +235,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 
     private void removeRadio() {
         for (int i = 0; i < getChildren().size(); i++) {
-            if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
+            List classes = getChildren().get(i).getStyleClass();
+            if (!classes.isEmpty() && "radio".equals(getChildren().get(i).getStyleClass().get(0))) {
                 getChildren().remove(i);
                 break;
             }
