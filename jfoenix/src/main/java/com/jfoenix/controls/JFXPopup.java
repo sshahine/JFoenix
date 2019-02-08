@@ -73,6 +73,7 @@ public class JFXPopup extends PopupControl {
         this.setHideOnEscape(true);
         this.setConsumeAutoHidingEvents(false);
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+        getScene().getRoot().setStyle("-fx-background-color: TRANSPARENT");
     }
 
     @Override
