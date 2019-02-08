@@ -248,7 +248,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(ComboBoxBaseSkin.getClassCssMetaData());
+                new ArrayList<>(ComboBoxPopupControl.getClassCssMetaData());
             styleables.add(COLOR_LABEL_VISIBLE);
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
