@@ -1104,7 +1104,7 @@ public class JFXDrawer extends StackPane {
             initValues.put(value.getTarget(), value);
         }
         animatedValues.addAll(modifiedValues);
-        final JFXKeyFrame keyFrame = new JFXKeyFrame(Duration.millis(450), modifiedValues.toArray(new JFXKeyValue[modifiedValues.size()]));
+        final JFXKeyFrame keyFrame = new JFXKeyFrame(Duration.millis(450), modifiedValues.toArray(new JFXKeyValue[0]));
         try {
             translateTimer.addKeyFrame(keyFrame);
         } catch (Exception e) {
