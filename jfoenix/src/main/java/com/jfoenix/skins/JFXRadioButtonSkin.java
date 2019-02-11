@@ -36,7 +36,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -156,6 +155,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 
         updateColors();
         timer.applyEndValues();
+
     }
 
     @Override
@@ -207,11 +207,8 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
         final double xOffset = computeXOffset(w, labelWidth + contWidth, radioButton.getAlignment().getHpos()) + x;
         final double yOffset = computeYOffset(h, maxHeight, radioButton.getAlignment().getVpos()) + x;
 
-        layoutLabelInArea(xOffset + contWidth + padding / 3, yOffset, labelWidth, maxHeight, radioButton.getAlignment());
-        ((Text) getChildren().get((getChildren().get(0) instanceof Text) ? 0 : 1)).
-            textProperty().set(getSkinnable().textProperty().get());
-
         container.resize(width, height);
+        layoutLabelInArea(xOffset + contWidth + padding / 3, yOffset, labelWidth, maxHeight, radioButton.getAlignment());
         positionInArea(container,
             xOffset,
             yOffset,
@@ -220,7 +217,6 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
             0,
             radioButton.getAlignment().getHpos(),
             radioButton.getAlignment().getVpos());
-
         final double ripplerWidth = width + 2 * padding;
         final double ripplerHeight = height + 2 * padding;
         rippler.resizeRelocate((width / 2 + xOffset) - ripplerWidth / 2,
@@ -230,7 +226,7 @@ public class JFXRadioButtonSkin extends RadioButtonSkin {
 
     private void removeRadio() {
         for (int i = 0; i < getChildren().size(); i++) {
-            if ("radio".equals(getChildren().get(i).getStyleClass().get(0))) {
+            if (getChildren().get(i).getStyleClass().contains("radio")) {
                 getChildren().remove(i);
                 break;
             }
