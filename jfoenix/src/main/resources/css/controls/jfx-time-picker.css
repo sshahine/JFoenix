@@ -39,13 +39,13 @@
     -fx-background-color: -jfx-default-color;
 }
 
-.date-picker-popup > * > .spinner {
+.time-picker-popup > * > .spinner {
     -fx-spacing: 0.25em; /* 3 */
     -fx-alignment: CENTER;
     -fx-fill-height: false;
     -fx-background-color: transparent;
 }
 
-.date-picker-popup > * > .spinner > .label {
+.time-picker-popup > * > .spinner > .label {
     -fx-alignment: CENTER;
 }

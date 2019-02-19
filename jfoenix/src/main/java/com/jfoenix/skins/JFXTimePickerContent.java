@@ -87,7 +87,7 @@ public class JFXTimePickerContent extends VBox {
         is24HourView = this.timePicker.is24HourView();
 
         this.timePicker.valueProperty().addListener((o, oldVal, newVal) -> goToTime(newVal));
-        getStyleClass().add("date-picker-popup");
+        getStyleClass().add("time-picker-popup");
 
         // create the header pane
         getChildren().add(createHeaderPane(time, is24HourView));
