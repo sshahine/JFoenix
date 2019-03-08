@@ -153,6 +153,7 @@ public class JFXDrawer extends StackPane {
     // used to cache the drawer size
     private double tempDrawerSize = getDefaultDrawerSize();
 
+    private Duration duration;
     private JFXAnimationTimer translateTimer;
 
     public JFXDrawer() {
@@ -164,6 +165,7 @@ public class JFXDrawer extends StackPane {
      */
     public JFXDrawer(Duration duration) {
         initialize();
+        this.duration = duration;
         translateTimer = createDrawerAnimation(duration);
         contentHolder.setPickOnBounds(false);
         addEventHandler(JFXDrawerEvent.CLOSED, handler -> Platform.runLater(() -> getCachePolicy().restore(contentHolder)));
@@ -1111,7 +1113,7 @@ public class JFXDrawer extends StackPane {
             initValues.put(value.getTarget(), value);
         }
         animatedValues.addAll(modifiedValues);
-        final JFXKeyFrame keyFrame = new JFXKeyFrame(Duration.millis(450), modifiedValues.toArray(new JFXKeyValue[0]));
+        final JFXKeyFrame keyFrame = new JFXKeyFrame(duration, modifiedValues.toArray(new JFXKeyValue[0]));
         try {
             translateTimer.addKeyFrame(keyFrame);
         } catch (Exception e) {
