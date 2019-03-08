@@ -99,7 +99,7 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
      * Provides the string representation of the value of this cell when the cell is not being edited.
      */
     protected Object getValue() {
-        return getItem() == null ? "" : getItem();
+        return getItem();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
                     setGraphic((Node) value);
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                 } else {
-                    setText(value.toString());
+                    setText(value == null ? null : String.valueOf(value));
                     setContentDisplay(ContentDisplay.TEXT_ONLY);
                 }
             }

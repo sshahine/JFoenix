@@ -70,7 +70,7 @@ public abstract class TextFieldEditorBase<T> implements EditorNodeBuilder<T> {
 
     @Override
     public Region createNode(T value, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        textField = new JFXTextField(String.valueOf(value));
+        textField = value == null ? new JFXTextField() : new JFXTextField(String.valueOf(value));
         textField.setOnKeyPressed(keyEventsHandler);
         textField.getValidators().addAll(validators);
         textField.focusedProperty().addListener(focusChangeListener);
@@ -79,7 +79,7 @@ public abstract class TextFieldEditorBase<T> implements EditorNodeBuilder<T> {
 
     @Override
     public void setValue(T value) {
-        textField.setText(String.valueOf(value));
+        textField.setText(value == null ? null : String.valueOf(value));
     }
 
     @Override
