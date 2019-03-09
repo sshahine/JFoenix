@@ -99,8 +99,6 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         getChildren().setAll(rippler);
         JFXDepthManager.setDepth(getSkinnable(), 1);
         getSkinnable().setPickOnBounds(false);
-        // to improve the performance on 1st click
-        getPopupContent();
 
         colorPicker.focusedProperty().addListener(observable -> {
             if (colorPicker.isFocused()) {
