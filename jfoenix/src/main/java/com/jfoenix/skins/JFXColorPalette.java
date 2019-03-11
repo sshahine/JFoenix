@@ -129,20 +129,6 @@ class JFXColorPalette extends Region {
         setFocusedSquare(null);
 
         getChildren().addAll(paletteBox, hoverSquare);
-        Platform.runLater(() -> {
-            customColorDialog = new JFXCustomColorPickerDialog(popupControl);
-            customColorDialog.customColorProperty().addListener((ov, t1, t2) -> {
-                colorPicker.setValue(customColorDialog.customColorProperty().get());
-            });
-            customColorDialog.setOnSave(() -> {
-                Color customColor = customColorDialog.customColorProperty().get();
-                buildCustomColors();
-                colorPicker.getCustomColors().add(customColor);
-                updateSelection(customColor);
-                Event.fireEvent(colorPicker, new ActionEvent());
-                colorPicker.hide();
-            });
-        });
     }
 
     private void setFocusedSquare(ColorSquare square) {

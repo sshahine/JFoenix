@@ -19,25 +19,31 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXClippedPane;
+import com.jfoenix.controls.JFXColorPicker;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.behavior.JFXColorPickerBehavior;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.scene.control.skin.ComboBoxBaseSkin;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -45,7 +51,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Shadi Shaheen
@@ -53,8 +58,7 @@ import java.util.Locale;
 public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
 
     private Label displayNode;
-    private Pane colorBox;
-    private Region pickerColorClip;
+    private JFXClippedPane colorBox;
     private JFXColorPalette popupContent;
     StyleableBooleanProperty colorLabelVisible = new SimpleStyleableBooleanProperty(StyleableProperties.COLOR_LABEL_VISIBLE,
         JFXColorPickerSkin.this,
@@ -71,29 +75,11 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         displayNode.setMouseTransparent(true);
 
         // label graphic
-        colorBox = new Pane();
+        colorBox = new JFXClippedPane();
         colorBox.getStyleClass().add("color-box");
         colorBox.setManaged(false);
-
-        pickerColorClip = new Region();
-        pickerColorClip.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-            return new Background(new BackgroundFill(Color.WHITE,
-                colorBox.backgroundProperty()
-                    .get() != null ? colorBox.getBackground()
-                    .getFills()
-                    .get(0)
-                    .getRadii() : new CornerRadii(
-                    3),
-                colorBox.backgroundProperty()
-                    .get() != null ? colorBox.getBackground()
-                    .getFills()
-                    .get(0)
-                    .getInsets() : Insets.EMPTY));
-        }, colorBox.backgroundProperty()));
-        colorBox.setClip(pickerColorClip);
-
         colorBox.getChildren().add(displayNode);
-        updateColor();
+        initColor();
         final JFXRippler rippler = new JFXRippler(colorBox, JFXRippler.RipplerMask.FIT);
         rippler.ripplerFillProperty().bind(displayNode.textFillProperty());
         getChildren().setAll(rippler);
@@ -139,7 +125,6 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         double width = w + hInsets;
         double height = h + vInsets;
         colorBox.resizeRelocate(0, 0, width, height);
-        pickerColorClip.resizeRelocate(0,0, width, height);
     }
 
     @Override
@@ -185,22 +170,42 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     private void updateColor() {
         final ColorPicker colorPicker = (ColorPicker) getSkinnable();
         Color color = colorPicker.getValue();
-        // update picker box color
         Color circleColor = color == null ? Color.WHITE : color;
-        Circle colorCircle = new Circle();
-        colorCircle.setFill(circleColor);
-        colorCircle.setLayoutX(colorBox.getWidth() / 4);
-        colorCircle.setLayoutY(colorBox.getHeight() / 2);
-        colorBox.getChildren().add(colorCircle);
-        Timeline animateColor = new Timeline(new KeyFrame(Duration.millis(240),
-            new KeyValue(colorCircle.radiusProperty(),
-                200,
-                Interpolator.EASE_BOTH)));
-        animateColor.setOnFinished((finish) -> {
-            JFXNodeUtils.updateBackground(colorBox.getBackground(), colorBox, colorCircle.getFill());
-            colorBox.getChildren().remove(colorCircle);
-        });
-        animateColor.play();
+        // update picker box color
+        if (((JFXColorPicker) getSkinnable()).isDisableAnimation()) {
+            JFXNodeUtils.updateBackground(colorBox.getBackground(), colorBox, circleColor);
+        } else {
+            Circle colorCircle = new Circle();
+            colorCircle.setFill(circleColor);
+            colorCircle.setLayoutX(colorBox.getWidth() / 4);
+            colorCircle.setLayoutY(colorBox.getHeight() / 2);
+            colorBox.getChildren().add(colorCircle);
+            Timeline animateColor = new Timeline(new KeyFrame(Duration.millis(240),
+                new KeyValue(colorCircle.radiusProperty(),
+                    200,
+                    Interpolator.EASE_BOTH)));
+            animateColor.setOnFinished((finish) -> {
+                JFXNodeUtils.updateBackground(colorBox.getBackground(), colorBox, colorCircle.getFill());
+                colorBox.getChildren().remove(colorCircle);
+            });
+            animateColor.play();
+        }
+        // update label color
+        displayNode.setTextFill(circleColor.grayscale().getRed() < 0.5 ? Color.valueOf(
+            "rgba(255, 255, 255, 0.87)") : Color.valueOf("rgba(0, 0, 0, 0.87)"));
+        if (colorLabelVisible.get()) {
+            displayNode.setText(JFXNodeUtils.colorToHex(circleColor));
+        } else {
+            displayNode.setText("");
+        }
+    }
+
+    private void initColor() {
+        final ColorPicker colorPicker = (ColorPicker) getSkinnable();
+        Color color = colorPicker.getValue();
+        Color circleColor = color == null ? Color.WHITE : color;
+        // update picker box color
+        colorBox.setBackground(new Background(new BackgroundFill(circleColor, new CornerRadii(3), Insets.EMPTY)));
         // update label color
         displayNode.setTextFill(circleColor.grayscale().getRed() < 0.5 ? Color.valueOf(
             "rgba(255, 255, 255, 0.87)") : Color.valueOf("rgba(0, 0, 0, 0.87)"));
