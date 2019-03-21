@@ -33,6 +33,8 @@ public  class JFXRippleRect extends Rectangle {
     */
     public void Ripple(Paint p, int duration){  
         this.setFill(p);
+  
+
             if(rippled==false){
              rippled = true;
             double r = this.getWidth()/2;
