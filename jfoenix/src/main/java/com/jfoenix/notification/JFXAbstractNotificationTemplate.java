@@ -9,7 +9,7 @@ public abstract class JFXAbstractNotificationTemplate extends VBox {
 
     private JFXNotificationBar notificationBar;
 
-    public abstract void setHeader(Node icon, String title);
+//    public abstract void setHeader(Node icon, String title);
 
     public void setNotificationPane(JFXNotificationBar abstractNotificationPane){
         this.notificationBar = abstractNotificationPane;
@@ -22,12 +22,17 @@ public abstract class JFXAbstractNotificationTemplate extends VBox {
     public void hide(){
         this.notificationBar.hide();
     }
-
-    public abstract void setHeader(Node icon, String heading, boolean closeButton);
-
-    public abstract void setBody(String title, String subTitle);
-
-    public abstract void setActions(JFXButton... actions);
+//
+////    public abstract void setHeader(Node icon, String heading, boolean closeButton);
+//
+//    public abstract void setHeader(Node nodeHeader);
+//
+////    public abstract void setBody(String title, String subTitle);
+//    public abstract void setBody(Node nodeBody);
+//
+//    public abstract void setActions(Node nodeActions);
+//
+////    public abstract void setActions(JFXButton... actions);
 
 }
 

@@ -23,7 +23,6 @@ public class JFXSimpleNotificationTemplate extends JFXAbstractNotificationTempla
         getChildren().setAll(header, body, actions);
     }
 
-    @Override
     public void setHeader(Node icon, String heading, boolean closeButton) {
         Label labelTitle = new Label(heading);
         labelTitle.getStyleClass().addAll("label-header");
@@ -44,12 +43,10 @@ public class JFXSimpleNotificationTemplate extends JFXAbstractNotificationTempla
         }
     }
 
-    @Override
     public void setHeader(Node icon, String heading) {
         setHeader(icon,heading,true);
     }
 
-    @Override
     public void setBody(String subTitle, String message) {
         Label labelSubTitle = new Label(subTitle);
         Label labelMessage = new Label(message);
@@ -64,7 +61,6 @@ public class JFXSimpleNotificationTemplate extends JFXAbstractNotificationTempla
         body.getChildren().add(bodyContent);
     }
 
-    @Override
     public void setActions(JFXButton... actions) {
         Arrays.asList(actions).forEach(button -> {
             button.getStyleClass().add("btn-action");
