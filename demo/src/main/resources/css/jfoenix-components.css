@@ -340,4 +340,23 @@
     -fx-padding: 5 0 5 0;
 }
 
+.jfx-notification-template .jfx-notification-action {
+    -fx-spacing: 5;
+}
 
+.jfx-notification-template .jfx-notification-action > .btn-action {
+    -jfx-disable-visual-focus: true;
+    -fx-text-fill: #2E7D32;
+    -fx-background-insets: 0;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+    -fx-font-family: "Roboto Medium";
+    -fx-cursor: HAND;
+    -fx-pref-width: 90;
+    -fx-pref-height: 30;
+}
+
+.jfx-notification-template .jfx-notification-header > .glyph-icon{
+    -glyph-size: 16;
+    -fx-fill: #2E7D32;
+}
