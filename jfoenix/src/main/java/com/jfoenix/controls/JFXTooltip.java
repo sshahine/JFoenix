@@ -29,10 +29,9 @@ import javafx.animation.Timeline;
 import javafx.event.EventDispatchChain;
 import javafx.event.EventHandler;
 import javafx.event.WeakEventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.NodeOrientation;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Skin;
@@ -159,7 +158,6 @@ public class JFXTooltip extends Tooltip {
             root.setOpacity(0);
             root.setScaleY(0.8);
             root.setScaleX(0.8);
-            hiding = false;
             animation.setOnFinished(null);
         });
         eventHandlerManager.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
@@ -267,17 +265,16 @@ public class JFXTooltip extends Tooltip {
     public void show(Node ownerNode, double anchorX, double anchorY) {
         // if tooltip hide animation still running, then hide method is not called yet
         // thus only reverse the animation to show the tooltip again
+        hiding = false;
         if (isShowing()) {
             animation.setOnFinished(null);
-            hiding = false;
             animation.reverseAndContinue();
         } else {
             // tooltip was not showing compute its anchors and show it
             Window parent = ownerNode.getScene().getWindow();
-            final Point2D origin = ownerNode.localToScene(0, 0);
-            anchorX = parent.getX() + origin.getX() + ownerNode.getScene().getX() + getHPosForNode(ownerNode);
-            anchorY = parent.getY() + origin.getY() + ownerNode.getScene().getY() + getVPosForNode(ownerNode);
-            // TODO: ensue tool tip is in screen bounds
+            final Bounds origin = ownerNode.localToScene(ownerNode.getBoundsInLocal());
+            anchorX = parent.getX() + origin.getMinX() + getHPosForNode(ownerNode);
+            anchorY = parent.getY() + origin.getMinY() + getVPosForNode(ownerNode);
             super.show(ownerNode, anchorX, anchorY);
         }
     }
@@ -286,10 +283,10 @@ public class JFXTooltip extends Tooltip {
         double hx = -margin;
         switch (pos.getHpos()) {
             case CENTER:
-                hx = (node.getLayoutBounds().getWidth() / 2);
+                hx = (node.getBoundsInParent().getWidth() / 2);
                 break;
             case RIGHT:
-                hx = node.getLayoutBounds().getWidth() + margin;
+                hx = node.getBoundsInParent().getWidth() + margin;
                 break;
         }
         return hx;
@@ -299,10 +296,10 @@ public class JFXTooltip extends Tooltip {
         double vy = -margin;
         switch (pos.getVpos()) {
             case CENTER:
-                vy = (node.getLayoutBounds().getHeight() / 2);
+                vy = (node.getBoundsInParent().getHeight() / 2);
                 break;
             case BOTTOM:
-                vy = node.getLayoutBounds().getHeight() + margin;
+                vy = node.getBoundsInParent().getHeight() + margin;
                 break;
         }
         return vy;
@@ -317,8 +314,6 @@ public class JFXTooltip extends Tooltip {
             {
                 Node node = getNode();
                 node.setEffect(null);
-                node.setCache(true);
-                node.setCacheHint(CacheHint.SCALE);
             }
         };
     }
@@ -475,6 +470,9 @@ public class JFXTooltip extends Tooltip {
                 uninstall(node);
                 return;
             }
+            node.removeEventHandler(MouseEvent.MOUSE_MOVED, weakMoveHandler);
+            node.removeEventHandler(MouseEvent.MOUSE_EXITED, weakExitHandler);
+            node.removeEventHandler(MouseEvent.MOUSE_PRESSED, weakPressedHandler);
             node.addEventHandler(MouseEvent.MOUSE_MOVED, weakMoveHandler);
             node.addEventHandler(MouseEvent.MOUSE_EXITED, weakExitHandler);
             node.addEventHandler(MouseEvent.MOUSE_PRESSED, weakPressedHandler);
