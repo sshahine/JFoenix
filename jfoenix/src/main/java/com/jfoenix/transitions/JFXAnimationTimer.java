@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Custom AnimationTimer that can be created the same way as a timeline,
@@ -51,10 +52,10 @@ public class JFXAnimationTimer extends AnimationTimer {
 
     public JFXAnimationTimer(JFXKeyFrame... keyFrames) {
         for (JFXKeyFrame keyFrame : keyFrames) {
-            Duration duration = keyFrame.getTime();
+            Duration duration = keyFrame.getDuration();
             final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
             if (!keyValuesSet.isEmpty()) {
-                animationHandlers.add(new AnimationHandler(duration, keyFrame.getValues()));
+                animationHandlers.add(new AnimationHandler(duration, keyFrame.getAnimateCondition(), keyFrame.getValues()));
             }
         }
     }
@@ -65,10 +66,10 @@ public class JFXAnimationTimer extends AnimationTimer {
         if (isRunning()) {
             throw new Exception("Can't update animation timer while running");
         }
-        Duration duration = keyFrame.getTime();
+        Duration duration = keyFrame.getDuration();
         final Set<JFXKeyValue<?>> keyValuesSet = keyFrame.getValues();
         if (!keyValuesSet.isEmpty()) {
-            final AnimationHandler handler = new AnimationHandler(duration, keyFrame.getValues());
+            final AnimationHandler handler = new AnimationHandler(duration, keyFrame.getAnimateCondition(), keyFrame.getValues());
             animationHandlers.add(handler);
             mutableFrames.put(keyFrame, handler);
         }
@@ -184,19 +185,21 @@ public class JFXAnimationTimer extends AnimationTimer {
         private double duration;
         private double currentDuration;
         private Set<JFXKeyValue<?>> keyValues;
+        private Supplier<Boolean> animationCondition = null;
         private boolean finished = false;
 
         private HashMap<WritableValue<?>, Object> initialValuesMap = new HashMap<>();
         private HashMap<WritableValue<?>, Object> endValuesMap = new HashMap<>();
 
-        AnimationHandler(Duration duration, Set<JFXKeyValue<?>> keyValues) {
+        AnimationHandler(Duration duration, Supplier<Boolean> animationCondition, Set<JFXKeyValue<?>> keyValues) {
             this.duration = duration.toMillis();
             currentDuration = this.duration;
             this.keyValues = keyValues;
+            this.animationCondition = animationCondition;
         }
 
         public void init() {
-            finished = false;
+            finished = animationCondition == null ? false : !animationCondition.get();
             for (JFXKeyValue keyValue : keyValues) {
                 if (keyValue.getTarget() != null) {
                     // replaced putIfAbsent for mobile compatibility
@@ -211,6 +214,7 @@ public class JFXAnimationTimer extends AnimationTimer {
         }
 
         void reverse(double now) {
+            finished = animationCondition == null ? false : !animationCondition.get();
             currentDuration = duration - (currentDuration - now);
             // update initial values
             for (JFXKeyValue keyValue : keyValues) {
@@ -224,6 +228,10 @@ public class JFXAnimationTimer extends AnimationTimer {
 
         // now in milliseconds
         public void animate(double now) {
+            // if animate condition for the key frame is not met then do nothing
+            if (finished) {
+                return;
+            }
             if (now <= currentDuration) {
                 for (JFXKeyValue keyValue : keyValues) {
                     if (keyValue.isValid()) {

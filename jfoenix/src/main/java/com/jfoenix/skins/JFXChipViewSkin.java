@@ -135,6 +135,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             createChip(item);
         }
         control.getChips().addListener(new WeakListChangeListener<>(chipsChangeListeners));
+        
     }
 
     @Override
@@ -222,6 +223,8 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 autoCompletePopup.show(editor);
             }
         });
+        
+        editor.promptTextProperty().bind(control.promptTextProperty());
         root.getChildren().add(editor);
 
         // add control listeners

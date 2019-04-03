@@ -306,8 +306,10 @@ public class JFXDialog extends StackPane {
             tempImage.setCacheHint(CacheHint.SPEED);
             dialogContainer.getChildren().setAll(tempImage, this);
         } else {
-            tempContent = null;
-            dialogContainer.getChildren().add(this);
+        	//prevent error if opening an already opened dialog
+        	dialogContainer.getChildren().remove(this);
+        	tempContent = null;
+        	dialogContainer.getChildren().add(this);
         }
 
         if (animation != null) {
@@ -582,7 +584,7 @@ public class JFXDialog extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
+                new ArrayList<>(StackPane.getClassCssMetaData());
             Collections.addAll(styleables,
                 DIALOG_TRANSITION
             );
@@ -590,19 +592,9 @@ public class JFXDialog extends StackPane {
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(StackPane.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

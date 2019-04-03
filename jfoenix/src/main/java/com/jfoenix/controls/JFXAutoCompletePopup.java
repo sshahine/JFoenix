@@ -189,7 +189,7 @@ public class JFXAutoCompletePopup<T> extends PopupControl {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<CssMetaData<? extends Styleable, ?>>(PopupControl.getClassCssMetaData());
+                new ArrayList<>(PopupControl.getClassCssMetaData());
             styleables.add(FIXED_CELL_SIZE);
             styleables.add(CELL_LIMIT);
             STYLEABLES = Collections.unmodifiableList(styleables);

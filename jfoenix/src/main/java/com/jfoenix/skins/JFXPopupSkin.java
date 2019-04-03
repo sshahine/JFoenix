@@ -65,7 +65,7 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
         container.setOpacity(0);
         root = JFXDepthManager.createMaterialNode(container, 4);
         animation = getAnimation();
-    }
+}
 
 
     public void reset(PopupVPosition vAlign, PopupHPosition hAlign, double offsetX, double offsetY) {
@@ -139,7 +139,7 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
     public void init() {
         animation.stop();
         container.setOpacity(0);
-        scale.setX(0);
-        scale.setY(0);
+        scale.setX(1);
+        scale.setY(0.1);
     }
 }

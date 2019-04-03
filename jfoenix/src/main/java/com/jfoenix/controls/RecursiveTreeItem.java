@@ -19,8 +19,8 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.jfoenix.utils.JFXUtilities;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

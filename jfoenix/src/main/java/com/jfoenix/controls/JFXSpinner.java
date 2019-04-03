@@ -161,10 +161,7 @@ public class JFXSpinner extends ProgressIndicator {
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                 new ArrayList<>(ProgressIndicator.getClassCssMetaData());
-            Collections.addAll(styleables,
-                RADIUS,
-                STARTING_ANGLE
-            );
+            Collections.addAll(styleables, RADIUS, STARTING_ANGLE);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }

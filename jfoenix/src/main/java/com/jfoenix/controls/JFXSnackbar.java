@@ -42,11 +42,30 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @see <a href= "http://www.google.com/design/spec/components/snackbars-toasts.html#"> Snackbars & toasts</a>
+ * "Snackbars provide brief messages about app processes at the bottom of the screen"
+ * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
  * <p>
- * The use of a javafx Popup or PopupContainer for notifications would seem intuitive but Popups are displayed in their
- * own dedicated windows and alligning the popup window and handling window on top layering is more trouble then it is
- * worth.
+ * To show a snackbar you need to
+ * <ol>
+ * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+ * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+ * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+ * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+ * method} works as intended.</li></ul>
+ * </li>
+ * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+ * but any arbitrary {@link Node} will do.</li>
+ * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+ * duration.</li>
+ * </ol>
+ * <p>
+ * Finally, with all those things prepared, show your snackbar using
+ * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+ * <p>
+ * It's most convenient to create functions to do most of this (creating the layout and event) with the default
+ * settings; that way all you need to do to show a snackbar is specify the message or just the message and the duration.
+ *
+ * @see <a href="https://material.io/design/components/snackbars.html#"> The Material Design Snackbar</a>
  */
 public class JFXSnackbar extends Group {
 
@@ -66,10 +85,60 @@ public class JFXSnackbar extends Group {
     private PseudoClass activePseudoClass = null;
     private PauseTransition pauseTransition;
 
+    /**
+     * This constructor assumes that you will eventually call the {@link #registerSnackbarContainer(Pane)} method before
+     * calling the {@link #enqueue(SnackbarEvent)} method. Otherwise, how will the snackbar know where to show itself?
+     * <p><p>
+     * "Snackbars provide brief messages about app processes at the bottom of the screen"
+     * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
+     * <p>
+     * To show a snackbar you need to
+     * <ol>
+     * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+     * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+     * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+     * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+     * method} works as intended.</li></ul>
+     * </li>
+     * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+     * but any arbitrary {@link Node} will do.</li>
+     * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+     * duration.</li>
+     * </ol>
+     * <p>
+     * Finally, with all those things prepared, show your snackbar using
+     * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+     * <p>
+     */
     public JFXSnackbar() {
         this(null);
     }
 
+    /**
+     * "Snackbars provide brief messages about app processes at the bottom of the screen"
+     * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
+     * <p>
+     * To show a snackbar you need to
+     * <ol>
+     * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+     * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+     * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+     * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+     * method} works as intended.</li></ul>
+     * </li>
+     * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+     * but any arbitrary {@link Node} will do.</li>
+     * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+     * duration.</li>
+     * </ol>
+     * <p>
+     * Finally, with all those things prepared, show your snackbar using
+     * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+     * <p>
+     *
+     * @param snackbarContainer where the snackbar will appear. Using a single snackbar instead of many, will ensure that
+     *                          the {@link #enqueue(SnackbarEvent)} method works correctly.
+     */
     public JFXSnackbar(Pane snackbarContainer) {
         initialize();
         content = new StackPane();
@@ -93,9 +162,10 @@ public class JFXSnackbar extends Group {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
-    /***************************************************************************
-     * * Setters / Getters * *
-     **************************************************************************/
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Setters / Getters
+    ///////////////////////////////////////////////////////////////////////////
 
     public Pane getPopupContainer() {
         return snackbarContainer;
@@ -109,9 +179,9 @@ public class JFXSnackbar extends Group {
         return content.getPrefWidth();
     }
 
-    /***************************************************************************
-     * * Public API * *
-     **************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // Public API
+    ///////////////////////////////////////////////////////////////////////////
 
     public void registerSnackbarContainer(Pane snackbarContainer) {
         if (snackbarContainer != null) {
@@ -226,6 +296,11 @@ public class JFXSnackbar extends Group {
         return currentEvent;
     }
 
+    /**
+     * Shows {@link SnackbarEvent SnackbarEvents} one by one. The next event will be shown after the current event's duration.
+     *
+     * @param event the {@link SnackbarEvent event} to put in the queue.
+     */
     public void enqueue(SnackbarEvent event) {
         synchronized (this) {
             if (!eventsSet.contains(event)) {
@@ -273,26 +348,73 @@ public class JFXSnackbar extends Group {
 
     }
 
-    /***************************************************************************
-     * * Event API * *
-     **************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // Event API
+    ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Specifies <em>what</em> and <em>how long</em> to show a {@link JFXSnackbar}.
+     * <p>
+     * The <em>what</em> can be any arbitrary {@link Node}; the {@link JFXSnackbarLayout} is a great choice.
+     * <p>
+     * The <em>how long</em> is specified in the form of a {@link javafx.util.Duration javafx.util.Duration}, not to be
+     * confused with the {@link java.time.Duration}.
+     */
     public static class SnackbarEvent extends Event {
 
         public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
+
+        /**
+         * The amount of time the snackbar will show for, if not otherwise specified.
+         * <p>
+         * It's 1.5 seconds.
+         */
+        public static Duration DEFAULT_DURATION = Duration.seconds(1.5);
 
         private final Node content;
         private final PseudoClass pseudoClass;
         private final Duration timeout;
 
+        /**
+         * Creates a {@link SnackbarEvent} with the {@link #DEFAULT_DURATION default duration} and no pseudoClass.
+         *
+         * @param content what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         */
         public SnackbarEvent(Node content) {
-            this(content, Duration.millis(1500), null);
+            this(content, DEFAULT_DURATION, null);
         }
 
+        /**
+         * Creates a {@link SnackbarEvent} with the {@link #DEFAULT_DURATION default duration}; you specify the contents and
+         * pseudoClass.
+         *
+         * @param content     what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param pseudoClass
+         */
         public SnackbarEvent(Node content, PseudoClass pseudoClass) {
-            this(content, Duration.millis(1500), pseudoClass);
+            this(content, DEFAULT_DURATION, pseudoClass);
         }
 
+        /**
+         * Creates a SnackbarEvent with no pseudoClass; you specify the contents and duration.
+         * pseudoClass.
+         *
+         * @param content what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param timeout the amount of time you want the snackbar to show for.
+         */
+        public SnackbarEvent(Node content, Duration timeout) {
+            this(content, timeout, null);
+        }
+
+        /**
+         * Creates a SnackbarEvent; you specify the contents, duration and pseudoClass.
+         * <p>
+         * If you don't need so much customization, try one of the other constructors.
+         *
+         * @param content     what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param timeout     the amount of time you want the snackbar to show for.
+         * @param pseudoClass
+         */
         public SnackbarEvent(Node content, Duration timeout, PseudoClass pseudoClass) {
             super(SNACKBAR);
             this.content = content;

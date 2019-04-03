@@ -20,11 +20,15 @@
 package com.jfoenix.animation.alert;
 
 import com.jfoenix.controls.JFXAlert;
+import com.jfoenix.transitions.CachedTransition;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.scene.Node;
+import javafx.util.Duration;
 
 import java.util.function.Function;
 
@@ -44,13 +48,13 @@ public interface JFXAlertAnimation {
         return transition;
     };
 
-    public void initAnimation(Node contentContainer, Node overlay);
+    void initAnimation(Node contentContainer, Node overlay);
 
-    public Animation createShowingAnimation(Node contentContainer, Node overlay);
+    Animation createShowingAnimation(Node contentContainer, Node overlay);
 
-    public Animation createHidingAnimation(Node contentContainer, Node overlay);
+    Animation createHidingAnimation(Node contentContainer, Node overlay);
 
-    public static JFXAlertAnimation LEFT_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation LEFT_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
             overlay.setOpacity(0);
@@ -69,7 +73,7 @@ public interface JFXAlertAnimation {
         }
     };
 
-    public static JFXAlertAnimation RIGHT_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation RIGHT_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
             overlay.setOpacity(0);
@@ -88,7 +92,7 @@ public interface JFXAlertAnimation {
         }
     };
 
-    public static JFXAlertAnimation TOP_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation TOP_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
             overlay.setOpacity(0);
@@ -107,7 +111,7 @@ public interface JFXAlertAnimation {
         }
     };
 
-    public static JFXAlertAnimation BOTTOM_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation BOTTOM_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
             overlay.setOpacity(0);
@@ -126,7 +130,7 @@ public interface JFXAlertAnimation {
         }
     };
 
-    public static JFXAlertAnimation CENTER_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation CENTER_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
             overlay.setOpacity(0);
@@ -145,7 +149,7 @@ public interface JFXAlertAnimation {
         }
     };
 
-    public static JFXAlertAnimation NO_ANIMATION = new JFXAlertAnimation() {
+    JFXAlertAnimation NO_ANIMATION = new JFXAlertAnimation() {
         @Override
         public void initAnimation(Node contentContainer, Node overlay) {
 
@@ -159,6 +163,43 @@ public interface JFXAlertAnimation {
         @Override
         public Animation createHidingAnimation(Node contentContainer, Node overlay) {
             return null;
+        }
+    };
+
+    JFXAlertAnimation SMOOTH = new JFXAlertAnimation() {
+        @Override
+        public void initAnimation(Node contentContainer, Node overlay) {
+            overlay.setOpacity(0);
+            contentContainer.setScaleX(.80);
+            contentContainer.setScaleY(.80);
+        }
+
+        @Override
+        public Animation createShowingAnimation(Node contentContainer, Node overlay) {
+            return new CachedTransition(contentContainer, new Timeline(
+                new KeyFrame(Duration.millis(1000),
+                    new KeyValue(contentContainer.scaleXProperty(), 1, Interpolator.EASE_OUT),
+                    new KeyValue(contentContainer.scaleYProperty(), 1, Interpolator.EASE_OUT),
+                    new KeyValue(overlay.opacityProperty(), 1, Interpolator.EASE_BOTH)
+                ))) {
+                {
+                    setCycleDuration(Duration.millis(160));
+                    setDelay(Duration.seconds(0));
+                }
+            };
+        }
+
+        @Override
+        public Animation createHidingAnimation(Node contentContainer, Node overlay) {
+            return new CachedTransition(contentContainer, new Timeline(
+                new KeyFrame(Duration.millis(1000),
+                    new KeyValue(overlay.opacityProperty(), 0, Interpolator.EASE_BOTH)
+                ))) {
+                {
+                    setCycleDuration(Duration.millis(160));
+                    setDelay(Duration.seconds(0));
+                }
+            };
         }
     };
 }

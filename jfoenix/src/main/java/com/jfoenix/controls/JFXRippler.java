@@ -798,7 +798,7 @@ public class JFXRippler extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
+                new ArrayList<>(StackPane.getClassCssMetaData());
             Collections.addAll(styleables,
                 RIPPLER_RECENTER,
                 RIPPLER_RADIUS,

@@ -19,17 +19,26 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.controls.base.IFXStaticControl;
 import com.jfoenix.controls.base.IFXValidatableControl;
+import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.validation.base.ValidatorBase;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -63,12 +72,14 @@ public class ValidationPane<T extends Region & IFXValidatableControl & IFXStatic
 
         errorLabel.getStyleClass().add("error-label");
 
-        getChildren().setAll(new StackPane(errorLabel), errorIcon);
-        StackPane.setAlignment(errorLabel, Pos.TOP_LEFT);
+        final StackPane labelContainer = new StackPane(errorLabel);
+        labelContainer.getStyleClass().add("error-label-container");
+        labelContainer.setAlignment(Pos.TOP_LEFT);
+        getChildren().setAll(labelContainer, errorIcon);
+        HBox.setHgrow(labelContainer, Priority.ALWAYS);
+
         setSpacing(8);
         setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(errorLabel.getParent(), Priority.ALWAYS);
-
         setPadding(new Insets(4, 0, 0, 0));
         setVisible(false);
         setOpacity(0);

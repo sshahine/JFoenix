@@ -28,8 +28,7 @@
     -fx-min-height: -fx-pref-height;
 }
 
-
-.jfx-color-picker .color-box {
+.jfx-color-picker > .jfx-rippler > .color-box {
     -fx-background-color: #fafafa;
     -fx-background-radius: 3px;
     -fx-background-insets: 0px;

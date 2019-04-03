@@ -407,7 +407,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         if (!groupOrder.isEmpty()) {
             ArrayList<TreeTableColumn<S, ?>> tempGroups = new ArrayList<>(groupOrder);
             groupOrder.clear();
-            group(tempGroups.toArray(new TreeTableColumn[tempGroups.size()]));
+            group(tempGroups.toArray(new TreeTableColumn[0]));
         }
     }
 

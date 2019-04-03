@@ -19,33 +19,31 @@
 
 package com.jfoenix.controls.cells.editors.base;
 
-import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.cells.editors.TextFieldEditorBuilder;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * <h1>Generic Editable Tree Table cell</h1>
+ * <h1>Generic Editable Table cell</h1>
  * Provides the base for an editable table cell using a text field. Sub-classes can provide formatters for display and a
  * commitHelper to control when editing is committed.
  * <p>
  *
  * @author Shadi Shaheen
  * @version 1.0
- * @since 2016-03-09
+ * @since 2019-02-04
  */
-public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
+public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
     protected EditorNodeBuilder builder;
     protected Region editorNode;
 
@@ -55,15 +53,15 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
      *
      * @param builder
      */
-    public GenericEditableTreeTableCell(EditorNodeBuilder builder) {
+    public GenericEditableTableCell(EditorNodeBuilder builder) {
         this.builder = builder;
     }
 
     /**
-     * constructor that creates the default {@link com.jfoenix.controls.cells.editors.TextFieldEditorBuilder TextField}
+     * constructor that creates the default {@link TextFieldEditorBuilder TextField}
      * editor node to edit the cell
      */
-    public GenericEditableTreeTableCell() {
+    public GenericEditableTableCell() {
         builder = new TextFieldEditorBuilder();
     }
 
@@ -106,8 +104,10 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
 
     @Override
     public void startEdit() {
-        if (isEditable() && checkGroupedColumn()) {
+        if (isEditable()) {
             super.startEdit();
+            // focus cell (in case of validation error the focus will remain)
+            getTableView().getFocusModel().focus(getTableRow().getIndex(), getTableColumn());
             if (editorNode == null) {
                 createEditorNode();
             } else {
@@ -133,31 +133,6 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
-    /**
-     * only allows editing for items that are not grouped
-     *
-     * @return whether the item is grouped or not
-     */
-    private boolean checkGroupedColumn() {
-        boolean allowEdit = true;
-        if (getTreeTableRow().getTreeItem() != null) {
-            Object rowObject = getTreeTableRow().getTreeItem().getValue();
-            if (rowObject instanceof RecursiveTreeObject && rowObject.getClass() == RecursiveTreeObject.class) {
-                allowEdit = false;
-            } else {
-                // check grouped columns in the tableview
-                if (getTableColumn() instanceof JFXTreeTableColumn && ((JFXTreeTableColumn) getTableColumn()).isGrouped()) {
-                    // make sure that the object is a direct child to a group node
-                    if (getTreeTableRow().getTreeItem().getParent() != null &&
-                        getTreeTableRow().getTreeItem().getParent().getValue().getClass() == RecursiveTreeObject.class) {
-                        allowEdit = false;
-                    }
-                }
-            }
-        }
-        return allowEdit;
-    }
-
     @Override
     public void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
@@ -165,7 +140,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             setText(null);
             setGraphic(null);
         } else {
-            if (isEditing() && checkGroupedColumn()) {
+            if (isEditing()) {
                 if (editorNode != null) {
                     builder.setValue(getValue());
                 }
@@ -226,10 +201,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
      * @return
      */
     private void editNext(boolean forward) {
-        List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
-        for (TreeTableColumn<S, ?> column : getTreeTableView().getColumns()) {
-            columns.addAll(getLeaves(column));
-        }
+        List<TableColumn<S, ?>> columns = getTableView().getColumns();
         //There is no other column that supports editing.
         int index = getIndex();
         int nextIndex = columns.indexOf(getTableColumn());
@@ -251,27 +223,10 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
             return;
         }
 
-        TreeTableColumn<S, ?> nextColumn = columns.get(nextIndex);
+        TableColumn<S, ?> nextColumn = columns.get(nextIndex);
         if (nextColumn != null) {
-            getTreeTableView().edit(index, nextColumn);
-            getTreeTableView().scrollToColumn(nextColumn);
-        }
-    }
-
-
-    private List<TreeTableColumn<S, ?>> getLeaves(TreeTableColumn<S, ?> root) {
-        List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
-        if (root.getColumns().isEmpty()) {
-            //We only want the leaves that are editable.
-            if (root.isEditable()) {
-                columns.add(root);
-            }
-            return columns;
-        } else {
-            for (TreeTableColumn<S, ?> column : root.getColumns()) {
-                columns.addAll(getLeaves(column));
-            }
-            return columns;
+            getTableView().edit(index, nextColumn);
+            getTableView().scrollToColumn(nextColumn);
         }
     }
 }

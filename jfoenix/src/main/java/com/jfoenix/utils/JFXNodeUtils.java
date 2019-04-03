@@ -35,6 +35,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 import java.util.Locale;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -113,6 +114,21 @@ public class JFXNodeUtils {
 
     public static <T> InvalidationListener addDelayedPropertyInvalidationListener(ObservableValue<T> property,
                                                                                   Duration delayTime,
+                                                                                  BiConsumer<T, InvalidationListener> consumer) {
+        Wrapper<T> eventWrapper = new Wrapper<>();
+        PauseTransition holdTimer = new PauseTransition(delayTime);
+        final InvalidationListener invalidationListener = observable -> {
+            eventWrapper.content = property.getValue();
+            holdTimer.playFromStart();
+        };
+        holdTimer.setOnFinished(event -> consumer.accept(eventWrapper.content, invalidationListener));
+        property.addListener(invalidationListener);
+        return invalidationListener;
+    }
+
+
+    public static <T> InvalidationListener addDelayedPropertyInvalidationListener(ObservableValue<T> property,
+                                                                                  Duration delayTime,
                                                                                   Consumer<T> justInTimeConsumer,
                                                                                   Consumer<T> delayedConsumer) {
         Wrapper<T> eventWrapper = new Wrapper<>();
@@ -129,8 +145,8 @@ public class JFXNodeUtils {
 
 
     public static <T extends Event> EventHandler<? super T> addDelayedEventHandler(Node control, Duration delayTime,
-                                                             final EventType<T> eventType,
-                                                             final EventHandler<? super T> eventHandler) {
+                                                                                   final EventType<T> eventType,
+                                                                                   final EventHandler<? super T> eventHandler) {
         Wrapper<T> eventWrapper = new Wrapper<>();
         PauseTransition holdTimer = new PauseTransition(delayTime);
         holdTimer.setOnFinished(finish -> eventHandler.handle(eventWrapper.content));

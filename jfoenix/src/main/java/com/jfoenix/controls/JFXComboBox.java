@@ -41,7 +41,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
@@ -82,11 +81,11 @@ public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl 
 
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
-        this.setCellFactory(listView -> new JFXListCell<T>(){
+        this.setCellFactory(listView -> new JFXListCell<T>() {
             @Override
             public void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
-                updateDisplayText(this,item,empty);
+                updateDisplayText(this, item, empty);
             }
         });
 
@@ -97,11 +96,12 @@ public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl 
                 // fixed clearing the combo box value is causing
                 // java prompt text to be shown because the button cell is not updated
                 JFXComboBox.this.valueProperty().addListener(observable -> {
-                  if(JFXComboBox.this.getValue() == null){
-                      updateItem(null, true );
-                  }
+                    if (JFXComboBox.this.getValue() == null) {
+                        updateItem(null, true);
+                    }
                 });
             }
+
             @Override
             protected void updateItem(T item, boolean empty) {
                 updateDisplayText(this, item, empty);
@@ -424,25 +424,15 @@ public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl 
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
-            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>();
+            final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(ComboBox.getClassCssMetaData());
             Collections.addAll(styleables, UNFOCUS_COLOR, FOCUS_COLOR, LABEL_FLOAT, DISABLE_ANIMATION);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            styleables.addAll(ComboBox.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

@@ -580,8 +580,9 @@ public class JFXDatePickerContent extends VBox {
         for (int i = 0; i < daysPerWeek; i++) {
             String name = weekDayNameFormatter.withLocale(getLocale()).format(date.plus(i, DAYS));
             // Fix Chinese environment week display incorrectly
+            // Take the last character of the Chinese weekday names
             if (weekDayNameFormatter.getLocale() == java.util.Locale.CHINA) {
-                name = name.substring(2, 3).toUpperCase();
+                name = name.substring(name.length() - 1).toUpperCase();
             } else {
                 name = name.substring(0, 1).toUpperCase();
             }
@@ -763,7 +764,8 @@ public class JFXDatePickerContent extends VBox {
     }
 
     private void goToDayCell(DateCell dateCell, int offset, ChronoUnit unit, boolean focusDayCell) {
-        goToDate(dayCellDate(dateCell).plus(offset, unit), focusDayCell);
+        YearMonth yearMonth = selectedYearMonth.get().plus(offset, unit);
+        goToDate(dayCellDate(dateCell).plus(offset, unit).withYear(yearMonth.getYear()), focusDayCell);
     }
 
     private void goToDate(LocalDate date, boolean focusDayCell) {
