@@ -54,10 +54,10 @@ public class JFXScrollPane extends StackPane {
 
     private static final String DEFAULT_STYLE_CLASS = "jfx-scroll-pane";
 
-    private final VBox contentContainer = new VBox();
-    private final StackPane headerSpace = new StackPane();
-    private final StackPane condensedHeaderBackground = new StackPane();
-    private final StackPane headerBackground = new StackPane();
+    public final VBox contentContainer = new VBox();
+    public final StackPane headerSpace = new StackPane();
+    public final StackPane condensedHeaderBackground = new StackPane();
+    public final StackPane headerBackground = new StackPane();
 
     private double initY = -1;
     private double maxHeight = -1;
