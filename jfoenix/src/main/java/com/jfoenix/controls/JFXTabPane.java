@@ -37,6 +37,7 @@ import java.util.List;
 /**
  * JFXTabPane is the material design implementation of a tab pane.
  *
+ * TODO: REWORK SWITCH ANIMATION
  * @author Shadi Shaheen
  * @version 1.0
  * @since 2016-03-09
