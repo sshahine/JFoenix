@@ -39,7 +39,9 @@ public class OnPressedEditableTableCell<S, T> extends GenericEditableTableCell<S
     @Override
     public void startEdit() {
         super.startEdit();
-        getTableView().getProperties().put(OnPressedEditableTableCell.class, this);
+        if (isEditing()) {
+            getTableView().getProperties().put(OnPressedEditableTableCell.class, this);
+        }
     }
 
     @Override

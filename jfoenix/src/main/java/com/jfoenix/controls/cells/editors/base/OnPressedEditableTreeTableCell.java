@@ -39,7 +39,9 @@ public class OnPressedEditableTreeTableCell<S, T> extends GenericEditableTreeTab
     @Override
     public void startEdit() {
         super.startEdit();
-        getTreeTableView().getProperties().put(OnPressedEditableTreeTableCell.class, this);
+        if (isEditing()) {
+            getTreeTableView().getProperties().put(OnPressedEditableTreeTableCell.class, this);
+        }
     }
 
     @Override
