@@ -91,4 +91,9 @@ public interface EditorNodeBuilder<T> {
      * @throws Exception
      */
     void validateValue() throws Exception;
+
+    /**
+     * set ui nodes to null for memory efficiency
+     */
+    void nullEditorNode();
 }
