@@ -30,6 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -208,7 +209,10 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
      * @return
      */
     private void editNext(boolean forward) {
-        List<TableColumn<S, ?>> columns = getTableView().getColumns();
+        List<TableColumn<S, ?>> columns = new ArrayList<>();
+        for (TableColumn<S, ?> column : getTableView().getColumns()) {
+            columns.addAll(getLeaves(column));
+        }
         //There is no other column that supports editing.
         int index = getIndex();
         int nextIndex = columns.indexOf(getTableColumn());
@@ -234,6 +238,22 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
         if (nextColumn != null) {
             getTableView().edit(index, nextColumn);
             getTableView().scrollToColumn(nextColumn);
+        }
+    }
+
+    private List<TableColumn<S, ?>> getLeaves(TableColumn<S, ?> rootColumn) {
+        List<TableColumn<S, ?>> columns = new ArrayList<>();
+        if (rootColumn.getColumns().isEmpty()) {
+            //We only want the leaves that are editable.
+            if (rootColumn.isEditable()) {
+                columns.add(rootColumn);
+            }
+            return columns;
+        } else {
+            for (TableColumn<S, ?> column : rootColumn.getColumns()) {
+                columns.addAll(getLeaves(column));
+            }
+            return columns;
         }
     }
 }
