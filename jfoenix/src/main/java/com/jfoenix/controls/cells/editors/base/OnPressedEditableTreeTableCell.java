@@ -30,7 +30,7 @@ public class OnPressedEditableTreeTableCell<S, T> extends GenericEditableTreeTab
             }
         });
         addEventFilter(MouseEvent.MOUSE_RELEASED, click -> {
-            if (isEditable() && !isEditing() && getTableColumn().isEditable()) {
+            if (!isEmpty() && isEditable() && !isEditing() && getTableColumn().isEditable()) {
                 getTreeTableView().edit(getIndex(), getTableColumn());
             }
         });

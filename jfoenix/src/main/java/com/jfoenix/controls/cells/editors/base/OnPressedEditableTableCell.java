@@ -30,7 +30,7 @@ public class OnPressedEditableTableCell<S, T> extends GenericEditableTableCell<S
             }
         });
         addEventFilter(MouseEvent.MOUSE_RELEASED, click -> {
-            if (isEditable() && !isEditing() && getTableColumn().isEditable()) {
+            if (!isEmpty() && isEditable() && !isEditing() && getTableColumn().isEditable()) {
                 getTableView().edit(getIndex(), getTableColumn());
             }
         });
