@@ -71,14 +71,12 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         // create displayNode
         displayNode = new Label("");
         displayNode.getStyleClass().add("color-label");
-        displayNode.setManaged(false);
         displayNode.setMouseTransparent(true);
 
         // label graphic
-        colorBox = new JFXClippedPane();
+        colorBox = new JFXClippedPane(displayNode);
         colorBox.getStyleClass().add("color-box");
         colorBox.setManaged(false);
-        colorBox.getChildren().add(displayNode);
         initColor();
         final JFXRippler rippler = new JFXRippler(colorBox, JFXRippler.RipplerMask.FIT);
         rippler.ripplerFillProperty().bind(displayNode.textFillProperty());
@@ -113,8 +111,19 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     @Override
     protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
         double width = 100;
+        String displayNodeText = displayNode.getText();
+        displayNode.setText("#DDDDDD");
         width = Math.max(width, super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset));
+        displayNode.setText(displayNodeText);
         return width + rightInset + leftInset;
+    }
+
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        if (colorBox == null) {
+            updateDisplayArea();
+        }
+        return topInset + colorBox.prefHeight(width) + bottomInset;
     }
 
     @Override
@@ -159,6 +168,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         } else if ("VALUE".equals(p)) {
             // change the selected color
             updateColor();
+
         }
     }
 
@@ -177,6 +187,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
         } else {
             Circle colorCircle = new Circle();
             colorCircle.setFill(circleColor);
+            colorCircle.setManaged(false);
             colorCircle.setLayoutX(colorBox.getWidth() / 4);
             colorCircle.setLayoutY(colorBox.getHeight() / 2);
             colorBox.getChildren().add(colorCircle);
