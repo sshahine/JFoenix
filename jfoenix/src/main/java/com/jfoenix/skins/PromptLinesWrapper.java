@@ -29,6 +29,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -76,9 +77,9 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
 
     public ObjectProperty<Paint> animatedPromptTextFill;
     public BooleanBinding usePromptText;
-    ObjectProperty<Paint> promptTextFill;
-    ObservableValue<?> valueProperty;
-    ObservableValue<String> promptTextProperty;
+    private ObjectProperty<Paint> promptTextFill;
+    private ObservableValue<?> valueProperty;
+    private ObservableValue<String> promptTextProperty;
 
     private boolean animating = false;
     private double contentHeight = 0;
@@ -125,6 +126,9 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
             control.requestLayout();
         });
 
+        final Supplier<WritableValue<Number>> promptTargetSupplier =
+            () -> promptTextSupplier.get() == null ? null : promptTextSupplier.get().translateYProperty();
+
         focusTimer = new JFXAnimationTimer(
             new JFXKeyFrame(Duration.millis(1),
                 JFXKeyValue.builder()
@@ -145,7 +149,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
                     .setInterpolator(Interpolator.EASE_BOTH)
                     .setAnimateCondition(() -> control.isFocused() && control.isLabelFloat()).build(),
                 JFXKeyValue.builder()
-                    .setTargetSupplier(() -> promptTextSupplier.get() == null ? null : promptTextSupplier.get().translateYProperty())
+                    .setTargetSupplier(promptTargetSupplier)
                     .setEndValueSupplier(() -> -contentHeight)
                     .setAnimateCondition(() -> control.isLabelFloat())
                     .setInterpolator(Interpolator.EASE_BOTH).build(),
@@ -164,7 +168,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         unfocusTimer = new JFXAnimationTimer(
             new JFXKeyFrame(Duration.millis(160),
                 JFXKeyValue.builder()
-                    .setTargetSupplier(() -> promptTextSupplier.get() == null ? null : promptTextSupplier.get().translateYProperty())
+                    .setTargetSupplier(promptTargetSupplier)
                     .setEndValue(0)
                     .setInterpolator(Interpolator.EASE_BOTH).build(),
                 JFXKeyValue.builder()
@@ -201,12 +205,26 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         });
 
         promptTextFill.addListener(observable -> {
-            if (!control.isLabelFloat() || (control.isLabelFloat() && !control.isFocused())) {
+            if (!control.isLabelFloat() || !control.isFocused()) {
                 animatedPromptTextFill.set(promptTextFill.get());
             }
         });
 
         updateDisabled();
+    }
+
+    private Object getControlValue() {
+        Object text = valueProperty.getValue();
+        text = validateComboBox(text);
+        return text;
+    }
+
+    private Object validateComboBox(Object text) {
+        if (control instanceof ComboBox && ((ComboBox) control).isEditable()) {
+            final String editorText = ((ComboBox<?>) control).getEditor().getText();
+            text = editorText == null || editorText.isEmpty() ? null : text;
+        }
+        return text;
     }
 
     private void focus() {
@@ -221,8 +239,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         focusedLine.setOpacity(0);
         if (control.isLabelFloat()) {
             animatedPromptTextFill.set(promptTextFill.get());
-            Object text = valueProperty.getValue();
-            text = validateComboBox(text);
+            Object text = getControlValue();
             if (text == null || text.toString().isEmpty()) {
                 animating = true;
                 runTimer(unfocusTimer, true);
@@ -247,26 +264,17 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
             if (control.isFocused()) {
                 animateFloatingLabel(true, animation);
             } else {
-                Object text = valueProperty.getValue();
-                text = validateComboBox(text);
+                Object text = getControlValue();
                 animateFloatingLabel(!(text == null || text.toString().isEmpty()), animation);
             }
         }
-    }
-
-    private Object validateComboBox(Object text) {
-        if (control instanceof ComboBox && ((ComboBox) control).isEditable()) {
-            final String editorText = ((ComboBox<?>) control).getEditor().getText();
-            text = editorText == null || editorText.isEmpty() ? null : text;
-        }
-        return text;
     }
 
     /**
      * this method is called when the text property is changed when the
      * field is not focused (changed in code)
      *
-     * @param up
+     * @param up direction of the prompt label
      */
     private void animateFloatingLabel(boolean up, boolean animation) {
         if (promptTextSupplier.get() == null) {
@@ -296,8 +304,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     }
 
     private boolean usePromptText() {
-        Object txt = valueProperty.getValue();
-        txt = validateComboBox(txt);
+        Object txt = getControlValue();
         String promptTxt = promptTextProperty.getValue();
         boolean isLabelFloat = control.isLabelFloat();
         return isLabelFloat || (promptTxt != null
@@ -319,6 +326,10 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
     public void updateLabelFloatLayout() {
         if (!animating) {
             updateLabelFloat(false);
+        } else if (unfocusTimer.isRunning()) {
+            // handle the case when changing the control value when losing focus
+            unfocusTimer.stop();
+            updateLabelFloat(true);
         }
     }
 
