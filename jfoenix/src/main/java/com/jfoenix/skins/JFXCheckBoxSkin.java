@@ -24,6 +24,7 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
+import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.scene.control.behavior.ButtonBehavior;
 import com.sun.javafx.scene.control.skin.LabeledSkinBase;
 import javafx.animation.Interpolator;
@@ -45,6 +46,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 /**
@@ -97,7 +99,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         updateRippleColor();
 
         // add listeners
-        control.selectedProperty().addListener( observable -> {
+        control.selectedProperty().addListener(observable -> {
             updateRippleColor();
             playSelectAnimation(control.isSelected(), true);
         });
@@ -108,7 +110,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
 
         // show focused state
         control.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if(!control.isDisableVisualFocus()){
+            if (!control.isDisableVisualFocus()) {
                 if (newVal) {
                     if (!getSkinnable().isPressed()) {
                         rippler.setOverlayVisible(true);
@@ -127,6 +129,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         createFillTransition();
 
         registerChangeListener(control.checkedColorProperty(), "CHECKED_COLOR");
+        registerChangeListener(control.unCheckedColorProperty(), "UNCHECKED_COLOR");
     }
 
     private void updateRippleColor() {
@@ -138,8 +141,24 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
     protected void handleControlPropertyChanged(String p) {
         super.handleControlPropertyChanged(p);
         if ("CHECKED_COLOR".equals(p)) {
+            select.stop();
             createFillTransition();
+            updateColors();
+        } else if ("UNCHECKED_COLOR".equals(p)) {
+            updateColors();
         }
+    }
+
+    private void updateColors() {
+        final Paint color = getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : getSkinnable().getUnCheckedColor();
+        JFXNodeUtils.updateBackground(indeterminateMark.getBackground(), indeterminateMark, getSkinnable().getCheckedColor());
+        JFXNodeUtils.updateBackground(box.getBackground(), box, getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : Color.TRANSPARENT);
+        rippler.setRipplerFill(color);
+        final BorderStroke borderStroke = box.getBorder().getStrokes().get(0);
+        box.setBorder(new Border(new BorderStroke(color,
+            borderStroke.getTopStyle(),
+            borderStroke.getRadii(),
+            borderStroke.getWidths())));
     }
 
     @Override
@@ -162,12 +181,14 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
                + snapSize(box.prefWidth(-1)) + getLabelOffset();
     }
 
-    @Override protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    @Override
+    protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         return Math.max(super.computeMinHeight(width - box.minWidth(-1), topInset, rightInset, bottomInset, leftInset),
             topInset + box.minHeight(-1) + bottomInset);
     }
 
-    @Override protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         return Math.max(super.computePrefHeight(width - box.prefWidth(-1), topInset, rightInset, bottomInset, leftInset),
             topInset + box.prefHeight(-1) + bottomInset);
     }
@@ -186,9 +207,9 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         final double yOffset = computeYOffset(h, maxHeight, checkBox.getAlignment().getVpos()) + x;
 
         if (invalid) {
-            if(checkBox.isIndeterminate()){
+            if (checkBox.isIndeterminate()) {
                 playIndeterminateAnimation(true, false);
-            }else if (checkBox.isSelected()) {
+            } else if (checkBox.isSelected()) {
                 playSelectAnimation(true, false);
             }
             invalid = false;
@@ -296,7 +317,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
             }
         }
 
-        if(getSkinnable().isSelected()){
+        if (getSkinnable().isSelected()) {
             playSelectAnimation(!indeterminate, playAnimation);
         }
     }
@@ -311,6 +332,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
 
     private final static class CheckBoxTransition extends CachedTransition {
         protected Node mark;
+
         CheckBoxTransition(Node mark) {
             super(null, new Timeline(
                     new KeyFrame(
