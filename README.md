@@ -56,7 +56,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
-
+* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application.
 
 # Build
 To build JFoenix, execute the following command:
