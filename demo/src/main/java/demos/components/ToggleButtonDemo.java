@@ -28,6 +28,7 @@ public class ToggleButtonDemo extends Application {
         pane.getChildren().add(toggleButton);
 
         JFXToggleNode node = new JFXToggleNode();
+        node.setStyle("-fx-padding: 10");
         node.setGraphic(new FontIcon(FontAwesomeSolid.HEART));
 
         pane.getChildren().add(node);
