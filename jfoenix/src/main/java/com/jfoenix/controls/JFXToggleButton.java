@@ -19,19 +19,11 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXToggleButtonSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableBooleanProperty;
-import javafx.css.SimpleStyleableDoubleProperty;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.StyleConverter;
-import javafx.css.Styleable;
-import javafx.css.StyleableBooleanProperty;
-import javafx.css.StyleableDoubleProperty;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
@@ -106,7 +98,7 @@ public class JFXToggleButton extends ToggleButton {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXToggleButton.class.getResource("/css/controls/jfx-toggle-button.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-toggle-button.css").toExternalForm();
     }
 
 

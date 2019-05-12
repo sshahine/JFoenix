@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
@@ -119,7 +120,7 @@ public class JFXDialogLayout extends VBox {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXDialogLayout.class.getResource("/css/controls/jfx-dialog-layout.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-dialog-layout.css").toExternalForm();
     }
 
     private void initialize() {

@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXChipViewSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -91,7 +92,7 @@ public class JFXChipView<T> extends Control {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXChipView.class.getResource("/css/controls/jfx-chip-view.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-chip-view.css").toExternalForm();
     }
 
     /**

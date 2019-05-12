@@ -19,13 +19,12 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXCheckBoxSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
 import javafx.css.*;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -101,7 +100,7 @@ public class JFXCheckBox extends CheckBox {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-check-box";
-    private static final String USER_AGENT_STYLESHEET = JFXCheckBox.class.getResource("/css/controls/jfx-check-box.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-check-box.css").toExternalForm();
     /**
      * checkbox color property when selected
      */
