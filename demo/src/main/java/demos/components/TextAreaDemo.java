@@ -2,9 +2,6 @@ package demos.components;
 
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.validation.RequiredFieldValidator;
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -12,6 +9,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class TextAreaDemo extends Application {
 
@@ -31,11 +30,9 @@ public class TextAreaDemo extends Application {
         RequiredFieldValidator validator = new RequiredFieldValidator();
         // NOTE adding error class to text area is causing the cursor to disapper
         validator.setMessage("Please type something!");
-        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-            .glyph(FontAwesomeIcon.WARNING)
-            .size("1em")
-            .styleClass("error")
-            .build());
+        FontIcon warnIcon = new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+        warnIcon.getStyleClass().add("error");
+        validator.setIcon(warnIcon);
         jfxTextArea.getValidators().add(validator);
         jfxTextArea.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {

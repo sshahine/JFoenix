@@ -2,16 +2,14 @@ package demos.components;
 
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXToggleNode;
-import de.jensd.fx.glyphs.GlyphIcon;
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class ToggleButtonDemo extends Application {
 
@@ -30,11 +28,7 @@ public class ToggleButtonDemo extends Application {
         pane.getChildren().add(toggleButton);
 
         JFXToggleNode node = new JFXToggleNode();
-        final GlyphIcon heartIcon = GlyphsBuilder.create(FontAwesomeIconView.class)
-            .glyph(FontAwesomeIcon.HEART)
-            .build();
-        heartIcon.setStyle("-fx-padding: 10");
-        node.setGraphic(heartIcon);
+        node.setGraphic(new FontIcon(FontAwesomeSolid.HEART));
 
         pane.getChildren().add(node);
 

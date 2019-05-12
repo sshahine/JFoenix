@@ -3,20 +3,18 @@ package demos.components;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class TextFieldDemo extends Application {
 
     private static final String FX_LABEL_FLOAT_TRUE = "-fx-label-float:true;";
-    private static final String EM1 = "1em";
     private static final String ERROR = "error";
 
     @Override
@@ -45,11 +43,9 @@ public class TextFieldDemo extends Application {
         validationField.setPromptText("With Validation..");
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("Input Required");
-        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-            .glyph(FontAwesomeIcon.WARNING)
-            .size(EM1)
-            .styleClass(ERROR)
-            .build());
+        FontIcon warnIcon = new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+        warnIcon.getStyleClass().add(ERROR);
+        validator.setIcon(warnIcon);
         validationField.getValidators().add(validator);
         validationField.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {
@@ -64,11 +60,9 @@ public class TextFieldDemo extends Application {
         passwordField.setPromptText("Password");
         validator = new RequiredFieldValidator();
         validator.setMessage("Password Can't be empty");
-        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
-            .glyph(FontAwesomeIcon.WARNING)
-            .size(EM1)
-            .styleClass(ERROR)
-            .build());
+        warnIcon = new FontIcon(FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+        warnIcon.getStyleClass().add(ERROR);
+        validator.setIcon(warnIcon);
         passwordField.getValidators().add(validator);
         passwordField.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {
