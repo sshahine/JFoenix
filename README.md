@@ -108,103 +108,99 @@ dependencies {
 </dependency>
 ```
 # Components
-<details><summary>JFXButton</summary><p>
-    <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a>
+<details><summary><i>JFXButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a></summary><p>
 
 ![Button Demo](http://jfoenix.com/gif/button.gif "Button Demo")
 </p></details>
 
-<details><summary>JFXCheckBox</summary><p>
- <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox"><b>Usage</b></a>
+<details><summary><i>JFXCheckBox </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox"><b>Usage</b></a></summary><p>
 
 ![Check Box Demo](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
 </p></details>
 
-<details><summary>JFXToggleButton</summary><p>
- <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button"><b>Usage</b></a>
+<details><summary><i>JFXToggleButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button"><b>Usage</b></a></summary><p>
 
 ![Toggle Button Demo](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
 </p></details>
 
-<details><summary>JFXDialog</summary><p>
+<details><summary><i>JFXDialog</i></summary><p>
 
 
 ![Dialog Demo](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
 </p></details>
 
-<details><summary>JFXListView</summary><p>
+<details><summary><i>JFXListView</i></summary><p>
 
     
 ![List View Demo](http://jfoenix.com/gif/listview.gif "List View Demo")
 </p></details>
 
-<details><summary>JFXHighlighter</summary><p>
+<details><summary><i>JFXHighlighter</i></summary><p>
 
     
 ![Highlighter](http://jfoenix.com/gif/highlighter.gif "Highlighter")
 </p></details>
 
-<details><summary>JFXChipView</summary><p>
+<details><summary><i>JFXChipView</i></summary><p>
 
     
 ![Chip View](http://jfoenix.com/gif/chipview.gif "Chip View")
 </p></details>
 
-<details><summary>JFXNodesList</summary><p>
+<details><summary><i>JFXNodesList</i></summary><p>
 
     
 ![Nodes List Demo](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
 </p></details>
 
-<details><summary>JFXMasonryPane</summary><p>
+<details><summary><i>JFXMasonryPane</i></summary><p>
 
     
 ![Masonry Demo](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
 </p></details>
 
-<details><summary>JFXSlider</summary><p>
- <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Slider"><b>Usage</b></a>
+<details><summary><i>JFXSlider </i> <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Slider"><b>Usage</b></a></summary><p>
 
 ![Slider Demo](http://jfoenix.com/gif/slider.gif "Slider Demo")
 </p></details>
 
-<details><summary>JFXSpinner</summary><p>
+<details><summary><i>JFXSpinner</i></summary><p>
 
     
 ![Spinner Demo](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
 </p></details>
 
-<details><summary>JFXSnackbar</summary><p>
+<details><summary><i>JFXSnackbar</i></summary><p>
 
     
 ![Icons-Snackbar Demo](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
 </p></details>
 
-<details><summary>JFXColorPicker</summary><p>
+<details><summary><i>JFXColorPicker</i></summary><p>
 
     
 ![Color Picker Demo](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
 </p></details>
 
-<details><summary>JFXDatePicker</summary><p>
+<details><summary><i>JFXDatePicker</i></summary><p>
 
     
 ![Date Picker Demo](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
 </p></details>
 
-<details><summary>JFXTimePicker</summary><p>
+<details><summary><i>JFXTimePicker</i></summary><p>
 
     
 ![Time Picker Demo](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
 </p></details>
 
-<details><summary>JFXTreeTableView</summary><p>
+<details><summary><i>JFXTreeTableView</i></summary><p>
 
     
 ![Tree Table View](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
 </p></details>
 
-<details><summary>Grouping</summary><p>
+<details><summary><i>Grouping</i></summary><p>
     
 ![Grouping Demo](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
 </p></details>
