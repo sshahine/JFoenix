@@ -20,6 +20,7 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.effects.JFXDepthManager;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.animation.Animation;
@@ -140,7 +141,7 @@ public class JFXAlert<R> extends Dialog<R> {
             }
 
             public String getUserAgentStylesheet() {
-                return JFXAlert.class.getResource("/css/controls/jfx-alert.css").toExternalForm();
+                return JFoenixResources.load("css/controls/jfx-alert.css").toExternalForm();
             }
 
             @Override

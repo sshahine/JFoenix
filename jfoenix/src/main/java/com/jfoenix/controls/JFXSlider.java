@@ -19,13 +19,13 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.IndicatorPositionConverter;
 import com.jfoenix.skins.JFXSliderSkin;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 import javafx.util.Callback;
@@ -72,7 +72,7 @@ public class JFXSlider extends Slider {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXSlider.class.getResource("/css/controls/jfx-slider.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-slider.css").toExternalForm();
     }
 
     private void initialize() {
