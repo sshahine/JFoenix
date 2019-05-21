@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXListView?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.*?>
 <JFXListView fx:id="popupList" styleClass="popup-list-view"
              xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <Label>
         Item 1
         <graphic>
             <StackPane styleClass="custom-jfx-list-view-icon-container">
-                <FontAwesomeIconView glyphName="STAR" size="1.5em"
-                                     styleClass="custom-jfx-list-view-icon"/>
+                <FontIcon iconLiteral="fas-star" iconSize="18" styleClass="custom-jfx-list-view-icon"/>
             </StackPane>
         </graphic>
     </Label>
@@ -19,8 +18,7 @@
         Item 2
         <graphic>
             <StackPane styleClass="custom-jfx-list-view-icon-container">
-                <FontAwesomeIconView glyphName="HEART" size="1.5em"
-                                     styleClass="custom-jfx-list-view-icon"/>
+                <FontIcon iconLiteral="fas-heart" iconSize="18" styleClass="custom-jfx-list-view-icon"/>
             </StackPane>
         </graphic>
     </Label>
@@ -28,8 +26,7 @@
         Item 3
         <graphic>
             <StackPane styleClass="custom-jfx-list-view-icon-container">
-                <FontAwesomeIconView glyphName="WARNING" size="1.5em"
-                                     styleClass="custom-jfx-list-view-icon"/>
+                <FontIcon iconLiteral="fas-exclamation-triangle" iconSize="18" styleClass="custom-jfx-list-view-icon"/>
             </StackPane>
         </graphic>
     </Label>
@@ -37,8 +34,7 @@
         Item 4
         <graphic>
             <StackPane styleClass="custom-jfx-list-view-icon-container">
-                <FontAwesomeIconView glyphName="UNIVERSITY"
-                                     size="1.5em" styleClass="custom-jfx-list-view-icon"/>
+                <FontIcon iconLiteral="fas-university" iconSize="18" styleClass="custom-jfx-list-view-icon"/>
             </StackPane>
         </graphic>
     </Label>
@@ -46,8 +42,7 @@
         Item 5
         <graphic>
             <StackPane styleClass="custom-jfx-list-view-icon-container">
-                <FontAwesomeIconView glyphName="TABLET" size="1.5em"
-                                     styleClass="custom-jfx-list-view-icon"/>
+                <FontIcon iconLiteral="fas-tablet-alt" iconSize="18" styleClass="custom-jfx-list-view-icon"/>
             </StackPane>
         </graphic>
     </Label>

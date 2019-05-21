@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXNodesList?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.StackPane?>
-
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <StackPane stylesheets="@/css/jfoenix-components.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <JFXNodesList fx:id="nodesList" rotate="180.0" spacing="15"
@@ -14,23 +12,22 @@
                 <JFXButton fx:id="newButton" contentDisplay="GRAPHIC_ONLY"
                            styleClass="main-button">
                     <graphic>
-                        <FontAwesomeIconView glyphName="PLUS" size="24" styleClass="main-icon"/>
+                        <FontIcon iconLiteral="fas-plus" iconSize="24" styleClass="main-icon"/>
                     </graphic>
                 </JFXButton>
                 <JFXButton fx:id="fileButton" contentDisplay="GRAPHIC_ONLY" onAction="#onNewFile" styleClass="animated-option-button">
                     <graphic>
-                        <FontAwesomeIconView glyphName="FILE_TEXT" size="24"
-                                             styleClass="sub-icon" />
+                        <FontIcon iconLiteral="far-file-alt" iconSize="24" styleClass="sub-icon" />
                     </graphic>
                 </JFXButton>
                 <JFXButton fx:id="commentButton" contentDisplay="GRAPHIC_ONLY" onAction="#onNewComment" styleClass="animated-option-button">
                     <graphic>
-                        <FontAwesomeIconView glyphName="COMMENT" size="24" styleClass="sub-icon" />
+                        <FontIcon iconLiteral="fas-comment" iconSize="24" styleClass="sub-icon" />
                     </graphic>
                 </JFXButton>
                 <JFXButton fx:id="filterButton" contentDisplay="GRAPHIC_ONLY" onAction="#onNewFilter" styleClass="animated-option-button">
                     <graphic>
-                        <FontAwesomeIconView glyphName="FILTER" size="24" styleClass="sub-icon" />
+                        <FontIcon iconLiteral="fas-filter" iconSize="24" styleClass="sub-icon" />
                     </graphic>
                 </JFXButton>
             </children>
