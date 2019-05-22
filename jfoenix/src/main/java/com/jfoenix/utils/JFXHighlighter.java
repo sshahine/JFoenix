@@ -113,7 +113,7 @@ public class JFXHighlighter {
             }
         }
 
-        Platform.runLater(()-> getParentChildren(pane).addAll(allRectangles));
+        JFXUtilities.runInFXAndWait(()-> getParentChildren(pane).addAll(allRectangles));
     }
 
     private class HighLightRectangle extends Rectangle{
@@ -219,7 +219,7 @@ public class JFXHighlighter {
             flatBoxes.addAll(box);
         }
         boxes.clear();
-        if(parent!=null) JFXUtilities.runInFX(()-> getParentChildren(parent).removeAll(flatBoxes));
+        if(parent!=null) JFXUtilities.runInFXAndWait(()-> getParentChildren(parent).removeAll(flatBoxes));
     }
 
     public Paint getPaint() {
