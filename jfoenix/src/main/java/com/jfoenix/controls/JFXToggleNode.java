@@ -31,8 +31,6 @@ import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
@@ -59,6 +57,11 @@ public class JFXToggleNode extends ToggleButton {
      * {@inheritDoc}
      */
     public JFXToggleNode() {
+        initialize();
+    }
+
+    public JFXToggleNode(String text) {
+        super(text);
         initialize();
     }
 
