@@ -2,10 +2,10 @@
 
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.validation.RequiredFieldValidator?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.*?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
     <HBox spacing="100" maxWidth="500" maxHeight="300" alignment="BASELINE_CENTER">
@@ -19,7 +19,7 @@
                             Item 1
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="STAR" size="1.5em"
+                                    <FontIcon iconLiteral="fas-star" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -28,7 +28,7 @@
                             Item 2
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="HEART" size="1.5em"
+                                     <FontIcon iconLiteral="fas-heart" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -37,7 +37,7 @@
                             Item 3
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="WARNING" size="1.5em"
+                                     <FontIcon iconLiteral="fas-exclamation-triangle" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -46,7 +46,7 @@
                             Item 4
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em"
+                                     <FontIcon iconLiteral="fas-university" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -55,8 +55,8 @@
                             Item 5
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="TABLET" size="1.5em"
-                                                         styleClass="custom-jfx-list-view-icon"/>
+                                     <FontIcon iconLiteral="fas-tablet-alt" iconSize="18"
+                                               styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
                         </Label>
@@ -64,7 +64,7 @@
                 </items>
                 <validators>
                     <RequiredFieldValidator message="Input Required!">
-                        <FontAwesomeIconView glyphName="WARNING" styleClass="error-icon"/>
+                         <FontIcon iconLiteral="fas-exclamation-triangle" styleClass="error-icon"/>
                     </RequiredFieldValidator>
                 </validators>
             </JFXComboBox>
@@ -81,7 +81,7 @@
                             Item 1
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="STAR" size="1.5em"
+                                     <FontIcon iconLiteral="fas-star" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -90,7 +90,7 @@
                             Item 2
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="HEART" size="1.5em"
+                                     <FontIcon iconLiteral="fas-heart" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -99,7 +99,7 @@
                             Item 3
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="WARNING" size="1.5em"
+                                     <FontIcon iconLiteral="fas-exclamation-triangle" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -108,7 +108,7 @@
                             Item 4
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="UNIVERSITY" size="1.5em"
+                                     <FontIcon iconLiteral="fas-university" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -117,7 +117,7 @@
                             Item 5
                             <graphic>
                                 <StackPane styleClass="custom-jfx-list-view-icon-container">
-                                    <FontAwesomeIconView glyphName="TABLET" size="1.5em"
+                                     <FontIcon iconLiteral="fas-tablet-alt" iconSize="18"
                                                          styleClass="custom-jfx-list-view-icon"/>
                                 </StackPane>
                             </graphic>
@@ -126,8 +126,7 @@
                 </items>
                 <validators>
                     <RequiredFieldValidator message="Input Required!">
-                        <FontAwesomeIconView glyphName="WARNING"
-                                             style="-fx-font-family: FontAwesome;"/>
+                         <FontIcon iconLiteral="fas-exclamation-triangle" styleClass="error-icon"/>
                     </RequiredFieldValidator>
                 </validators>
             </JFXComboBox>

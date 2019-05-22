@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
 
@@ -11,31 +11,25 @@
         <Label styleClass="title-label">Toggle Buttons</Label>
         <FlowPane hgap="26" style="-fx-padding:0 0 0 50">
             <Label styleClass="toggle-label">Wifi (separate label)</Label>
-            <JFXToggleButton styleClass="custom-jfx-toggle-button-red">
-            </JFXToggleButton>
+            <JFXToggleButton styleClass="custom-jfx-toggle-button-red"/>
         </FlowPane>
         <FlowPane hgap="60" style="-fx-padding:0 0 0 50">
-            <JFXToggleButton styleClass="custom-jfx-toggle-button" text="Bluetooth">
-            </JFXToggleButton>
-
-            <JFXToggleButton text="Wifi">
-            </JFXToggleButton>
-
+            <JFXToggleButton styleClass="custom-jfx-toggle-button" text="Bluetooth"/>
+            <JFXToggleButton text="Wifi" />
         </FlowPane>
 
         <Label styleClass="title-label">Toggle Icons</Label>
 
         <FlowPane hgap="60" style="-fx-padding:0 0 0 50">
             <JFXToggleNode styleClass="toggle-icon1" pickOnBounds="false">
-                <FontAwesomeIconView glyphName="PHONE" size="2em" styleClass="icon"/>
+                <FontIcon iconLiteral="fas-phone" iconSize="24" styleClass="icon"/>
             </JFXToggleNode>
             <JFXToggleNode styleClass="toggle-icon2" pickOnBounds="false">
-                <FontAwesomeIconView glyphName="HEART" size="2em" styleClass="icon"/>
+                <FontIcon iconLiteral="fas-heart" iconSize="24" styleClass="icon"/>
             </JFXToggleNode>
             <JFXToggleNode styleClass="toggle-icon3" pickOnBounds="false">
-                <FontAwesomeIconView glyphName="KEY" size="2em" styleClass="icon"/>
+                <FontIcon iconLiteral="fas-key" iconSize="24" styleClass="icon"/>
             </JFXToggleNode>
-
         </FlowPane>
 
     </VBox>
