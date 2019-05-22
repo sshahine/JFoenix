@@ -1,6 +1,6 @@
 package demos;
 
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.svg.SVGGlyph;
 import com.jfoenix.svg.SVGGlyphLoader;
@@ -47,7 +47,7 @@ public class MainDemo extends Application {
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
         decorator.setGraphic(new SVGGlyph(""));
-        
+
         stage.setTitle("JFoenix Demo");
 
         double width = 800;
@@ -60,8 +60,8 @@ public class MainDemo extends Application {
 
         Scene scene = new Scene(decorator, width, height);
         final ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.addAll(MainDemo.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                           MainDemo.class.getResource("/css/jfoenix-design.css").toExternalForm(),
+        stylesheets.addAll(JFoenixResources.load("css/jfoenix-fonts.css").toExternalForm(),
+                           JFoenixResources.load("css/jfoenix-design.css").toExternalForm(),
                            MainDemo.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
         stage.setScene(scene);
         stage.show();

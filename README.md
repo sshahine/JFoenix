@@ -79,13 +79,13 @@ You can download the source code of the library and build it as mentioned previo
 
 ## Gradle
 ### How to Include In Gradle Project
-```
+```groovy
 repositories {
     mavenCentral()
 }
 ```
 Reference the repository from this location using:
-```
+```groovy
 dependencies {
     compile 'com.jfoenix:jfoenix:8.0.8' // Java 8
     compile 'com.jfoenix:jfoenix:9.0.8' // Java 9
@@ -108,59 +108,102 @@ dependencies {
 </dependency>
 ```
 # Components
-### [JFXButton](https://github.com/jfoenixadmin/JFoenix/wiki/Button)
+<details><summary><i>JFXButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
+![Button Demo](http://jfoenix.com/gif/button.gif "Button Demo")
+</p></details>
 
-### [JFXCheckBox](https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox)
+<details><summary><i>JFXCheckBox </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
+![Check Box Demo](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
+</p></details>
 
-### [JFXToggleButton](https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button)
+<details><summary><i>JFXToggleButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
+![Toggle Button Demo](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
+</p></details>
 
-### JFXDialog
-![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
+<details><summary><i>JFXDialog</i></summary><p>
 
-### JFXListView
-![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
 
-### JFXHighlighter
-![Alt text](http://jfoenix.com/gif/highlighter.gif "Highlighter")
+![Dialog Demo](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
+</p></details>
 
-### JFXChipView
-![Alt text](http://jfoenix.com/gif/chipview.gif "Chip View")
+<details><summary><i>JFXListView</i></summary><p>
 
-### JFXNodesList
-![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
+    
+![List View Demo](http://jfoenix.com/gif/listview.gif "List View Demo")
+</p></details>
 
-### JFXMasonryPane
-![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
+<details><summary><i>JFXHighlighter</i></summary><p>
 
-### [JFXSlider](https://github.com/jfoenixadmin/JFoenix/wiki/Slider)
-![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
+    
+![Highlighter](http://jfoenix.com/gif/highlighter.gif "Highlighter")
+</p></details>
 
-### JFXSpinner
-![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
+<details><summary><i>JFXChipView</i></summary><p>
 
-### JFXSnackbar
-![Alt text](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
+    
+![Chip View](http://jfoenix.com/gif/chipview.gif "Chip View")
+</p></details>
 
-### JFXColorPicker
-![Alt text](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
+<details><summary><i>JFXNodesList</i></summary><p>
 
-### JFXDatePicker
-![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
+    
+![Nodes List Demo](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
+</p></details>
 
-### JFXTimePicker
-![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
+<details><summary><i>JFXMasonryPane</i></summary><p>
 
-### JFXTreeTableView
-![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
+    
+![Masonry Demo](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
+</p></details>
 
-![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
+<details><summary><i>JFXSlider </i> <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Slider"><b>Usage</b></a></summary><p>
 
+![Slider Demo](http://jfoenix.com/gif/slider.gif "Slider Demo")
+</p></details>
+
+<details><summary><i>JFXSpinner</i></summary><p>
+
+    
+![Spinner Demo](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
+</p></details>
+
+<details><summary><i>JFXSnackbar</i></summary><p>
+
+    
+![Icons-Snackbar Demo](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
+</p></details>
+
+<details><summary><i>JFXColorPicker</i></summary><p>
+
+    
+![Color Picker Demo](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
+</p></details>
+
+<details><summary><i>JFXDatePicker</i></summary><p>
+
+    
+![Date Picker Demo](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
+</p></details>
+
+<details><summary><i>JFXTimePicker</i></summary><p>
+
+    
+![Time Picker Demo](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
+</p></details>
+
+<details><summary><i>JFXTreeTableView</i></summary><p>
+
+    
+![Tree Table View](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
+</p></details>
+
+<details><summary><i>Grouping</i></summary><p>
+    
+![Grouping Demo](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
+</p></details>
 
 [mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
@@ -189,4 +232,3 @@ This project exists thanks to all the people who contribute.
 ## Special Thanks
 
 Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.
-

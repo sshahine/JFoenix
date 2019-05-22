@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
@@ -27,8 +28,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Paint;
 
@@ -143,7 +142,7 @@ public class JFXButton extends Button {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-button";
-    private static final String USER_AGENT_STYLESHEET = JFXButton.class.getResource("/css/controls/jfx-button.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-button.css").toExternalForm();
 
     public enum ButtonType {FLAT, RAISED}
 

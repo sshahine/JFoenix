@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -27,10 +28,8 @@ import com.sun.javafx.css.converters.PaintConverter;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.css.*;
-import javafx.scene.control.Control;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Skin;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -131,7 +130,7 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-password-field";
-    private static final String USER_AGENT_STYLESHEET = JFXPasswordField.class.getResource("/css/controls/jfx-password-field.css").toExternalForm();
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-password-field.css").toExternalForm();
 
     /**
      * set true to show a float the prompt text when focusing the field

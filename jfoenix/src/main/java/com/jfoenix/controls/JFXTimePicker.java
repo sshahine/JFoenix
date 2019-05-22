@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.skins.JFXTimePickerSkin;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -29,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -80,7 +80,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidat
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXTimePicker.class.getResource("/css/controls/jfx-time-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     /**

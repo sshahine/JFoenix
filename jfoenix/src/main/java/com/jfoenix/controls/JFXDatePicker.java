@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.skins.JFXDatePickerSkin;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -30,7 +31,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.css.*;
-import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
@@ -93,7 +93,7 @@ public class JFXDatePicker extends DatePicker implements IFXValidatableControl {
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXDatePicker.class.getResource("/css/controls/jfx-date-picker.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-date-picker.css").toExternalForm();
     }
 
     /**

@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.converters.base.NodeConverter;
 import com.jfoenix.skins.JFXComboBoxListViewSkin;
@@ -29,13 +30,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableBooleanProperty;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableBooleanProperty;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -115,7 +110,7 @@ public class JFXComboBox<T> extends ComboBox<T> implements IFXLabelFloatControl 
      */
     @Override
     public String getUserAgentStylesheet() {
-        return JFXComboBox.class.getResource("/css/controls/jfx-combo-box.css").toExternalForm();
+        return JFoenixResources.load("css/controls/jfx-combo-box.css").toExternalForm();
     }
 
     /**
