@@ -81,6 +81,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
         circlePane.setPadding(new Insets(circleRadius * 1.5));
 
         JFXRippler rippler = new JFXRippler(circlePane, RipplerMask.CIRCLE, RipplerPos.BACK);
+        rippler.setRipplerFill(getSkinnable().isSelected() ? toggleButton.getToggleLineColor() : toggleButton.getUnToggleLineColor());
         rippler.setTranslateX(computeTranslation(circleRadius, line));
 
         final StackPane main = new StackPane();
@@ -110,6 +111,7 @@ public class JFXToggleButtonSkin extends ToggleButtonSkin {
 
         // add change listener to selected property
         getSkinnable().selectedProperty().addListener(observable -> {
+            rippler.setRipplerFill(toggleButton.isSelected() ? toggleButton.getToggleLineColor() : toggleButton.getUnToggleLineColor());
             if (!toggleButton.isDisableAnimation()) {
                 timer.reverseAndContinue();
             } else {
