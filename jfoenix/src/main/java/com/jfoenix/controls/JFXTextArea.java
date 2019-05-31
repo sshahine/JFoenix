@@ -28,7 +28,6 @@ import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;

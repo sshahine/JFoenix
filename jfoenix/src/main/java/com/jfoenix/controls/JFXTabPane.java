@@ -26,7 +26,6 @@ import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.converter.BooleanConverter;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +37,7 @@ import java.util.List;
 /**
  * JFXTabPane is the material design implementation of a tab pane.
  *
+ * TODO: REWORK SWITCH ANIMATION
  * @author Shadi Shaheen
  * @version 1.0
  * @since 2016-03-09

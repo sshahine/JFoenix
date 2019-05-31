@@ -638,7 +638,7 @@ public class JFXDecorator extends VBox {
         graphic = node;
     }
 
-    public Node getGraphic(Node node) {
+    public Node getGraphic() {
         return graphic;
     }
 }

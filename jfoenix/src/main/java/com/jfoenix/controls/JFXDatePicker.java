@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.adapters.ReflectionHelper;
 import com.jfoenix.assets.JFoenixResources;
@@ -32,7 +33,6 @@ import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
-import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;

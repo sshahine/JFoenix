@@ -26,7 +26,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 import javafx.util.Callback;

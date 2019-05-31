@@ -30,8 +30,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 /**
  * <h1>Generic Editable Table cell</h1>
@@ -46,7 +48,15 @@ import java.util.function.BiFunction;
 public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
     protected EditorNodeBuilder builder;
     protected Region editorNode;
+    protected Consumer<Exception> commitExceptionConsumer = null;
 
+    /**
+     * constructor that creates the default {@link TextFieldEditorBuilder TextField}
+     * editor node to edit the cell
+     */
+    public GenericEditableTableCell() {
+        this(new TextFieldEditorBuilder());
+    }
 
     /**
      * constructor that takes a custom builder to edit the cell
@@ -54,15 +64,12 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
      * @param builder
      */
     public GenericEditableTableCell(EditorNodeBuilder builder) {
-        this.builder = builder;
+        this(builder, null);
     }
 
-    /**
-     * constructor that creates the default {@link TextFieldEditorBuilder TextField}
-     * editor node to edit the cell
-     */
-    public GenericEditableTableCell() {
-        builder = new TextFieldEditorBuilder();
+    public GenericEditableTableCell(EditorNodeBuilder builder, Consumer<Exception> exConsumer) {
+        this.builder = builder;
+        this.commitExceptionConsumer = exConsumer;
     }
 
     /**
@@ -82,12 +89,12 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
         try {
             builder.validateValue();
             commitEdit((T) builder.getValue());
+            builder.nullEditorNode();
+            editorNode = null;
         } catch (Exception ex) {
-            //Most of the time we don't mind if there is a parse exception as it
-            //indicates duff user data but in the case where we are losing focus
-            //it means the user has clicked away with bad data in the cell. In that
-            //situation we want to just cancel the editing and show them the old
-            //value.
+            if (commitExceptionConsumer != null) {
+                commitExceptionConsumer.accept(ex);
+            }
             if (losingFocus) {
                 cancelEdit();
             }
@@ -130,6 +137,7 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
         super.cancelEdit();
         builder.cancelEdit();
         builder.setValue(getValue());
+        builder.nullEditorNode();
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
@@ -201,7 +209,10 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
      * @return
      */
     private void editNext(boolean forward) {
-        List<TableColumn<S, ?>> columns = getTableView().getColumns();
+        List<TableColumn<S, ?>> columns = new ArrayList<>();
+        for (TableColumn<S, ?> column : getTableView().getColumns()) {
+            columns.addAll(getLeaves(column));
+        }
         //There is no other column that supports editing.
         int index = getIndex();
         int nextIndex = columns.indexOf(getTableColumn());
@@ -227,6 +238,22 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
         if (nextColumn != null) {
             getTableView().edit(index, nextColumn);
             getTableView().scrollToColumn(nextColumn);
+        }
+    }
+
+    private List<TableColumn<S, ?>> getLeaves(TableColumn<S, ?> rootColumn) {
+        List<TableColumn<S, ?>> columns = new ArrayList<>();
+        if (rootColumn.getColumns().isEmpty()) {
+            //We only want the leaves that are editable.
+            if (rootColumn.isEditable()) {
+                columns.add(rootColumn);
+            }
+            return columns;
+        } else {
+            for (TableColumn<S, ?> column : rootColumn.getColumns()) {
+                columns.addAll(getLeaves(column));
+            }
+            return columns;
         }
     }
 }

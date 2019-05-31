@@ -30,7 +30,6 @@ import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;

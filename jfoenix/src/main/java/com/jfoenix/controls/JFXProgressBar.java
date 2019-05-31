@@ -22,10 +22,8 @@ package com.jfoenix.controls;
 import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXProgressBarSkin;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Skin;
 
 /**

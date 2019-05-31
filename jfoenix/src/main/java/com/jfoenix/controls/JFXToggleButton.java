@@ -21,16 +21,7 @@ package com.jfoenix.controls;
 
 import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXToggleButtonSkin;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableBooleanProperty;
-import javafx.css.SimpleStyleableDoubleProperty;
-import javafx.css.SimpleStyleableObjectProperty;
-import javafx.css.StyleConverter;
-import javafx.css.Styleable;
-import javafx.css.StyleableBooleanProperty;
-import javafx.css.StyleableDoubleProperty;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
 import javafx.css.converter.PaintConverter;
 import javafx.scene.control.Skin;

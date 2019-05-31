@@ -141,7 +141,7 @@ public class JFXAlert<R> extends Dialog<R> {
             }
 
             public String getUserAgentStylesheet() {
-                    return JFoenixResources.load("css/controls/jfx-alert.css").toExternalForm();
+                return JFoenixResources.load("css/controls/jfx-alert.css").toExternalForm();
             }
 
             @Override

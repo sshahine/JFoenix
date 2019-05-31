@@ -24,6 +24,7 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXRippler.RipplerMask;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.transitions.JFXFillTransition;
+import com.jfoenix.utils.JFXNodeUtils;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -44,6 +45,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 /**
@@ -126,6 +128,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         createFillTransition();
 
         registerChangeListener(control.checkedColorProperty(), obs -> createFillTransition());
+        registerChangeListener(control.unCheckedColorProperty(), "UNCHECKED_COLOR");
     }
 
     private void updateRippleColor() {
@@ -134,6 +137,22 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
     }
 
     @Override
+            select.stop();
+            updateColors();
+        } else if ("UNCHECKED_COLOR".equals(p)) {
+            updateColors();
+    private void updateColors() {
+        final Paint color = getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : getSkinnable().getUnCheckedColor();
+        JFXNodeUtils.updateBackground(indeterminateMark.getBackground(), indeterminateMark, getSkinnable().getCheckedColor());
+        JFXNodeUtils.updateBackground(box.getBackground(), box, getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : Color.TRANSPARENT);
+        rippler.setRipplerFill(color);
+        final BorderStroke borderStroke = box.getBorder().getStrokes().get(0);
+        box.setBorder(new Border(new BorderStroke(color,
+            borderStroke.getTopStyle(),
+            borderStroke.getRadii(),
+            borderStroke.getWidths())));
+    }
+
     protected void updateChildren() {
         super.updateChildren();
         getChildren().removeIf(node -> node.getStyleClass().contains("box"));

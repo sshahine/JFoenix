@@ -88,4 +88,9 @@ public abstract class TextFieldEditorBase<T> implements EditorNodeBuilder<T> {
             throw new Exception("Invalid value");
         }
     }
+
+    @Override
+    public void nullEditorNode() {
+        textField = null;
+    }
 }

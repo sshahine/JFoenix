@@ -34,6 +34,7 @@ import javafx.scene.layout.Region;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 /**
  * <h1>Generic Editable Tree Table cell</h1>
@@ -48,7 +49,15 @@ import java.util.function.BiFunction;
 public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
     protected EditorNodeBuilder builder;
     protected Region editorNode;
+    protected Consumer<Exception> commitExceptionConsumer = null;
 
+    /**
+     * constructor that creates the default {@link com.jfoenix.controls.cells.editors.TextFieldEditorBuilder TextField}
+     * editor node to edit the cell
+     */
+    public GenericEditableTreeTableCell() {
+        this(new TextFieldEditorBuilder());
+    }
 
     /**
      * constructor that takes a custom builder to edit the cell
@@ -56,15 +65,12 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
      * @param builder
      */
     public GenericEditableTreeTableCell(EditorNodeBuilder builder) {
-        this.builder = builder;
+        this(builder, null);
     }
 
-    /**
-     * constructor that creates the default {@link com.jfoenix.controls.cells.editors.TextFieldEditorBuilder TextField}
-     * editor node to edit the cell
-     */
-    public GenericEditableTreeTableCell() {
-        builder = new TextFieldEditorBuilder();
+    public GenericEditableTreeTableCell(EditorNodeBuilder builder, Consumer<Exception> exConsumer) {
+        this.builder = builder;
+        this.commitExceptionConsumer = exConsumer;
     }
 
     /**
@@ -84,12 +90,12 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         try {
             builder.validateValue();
             commitEdit((T) builder.getValue());
+            builder.nullEditorNode();
+            editorNode = null;
         } catch (Exception ex) {
-            //Most of the time we don't mind if there is a parse exception as it
-            //indicates duff user data but in the case where we are losing focus
-            //it means the user has clicked away with bad data in the cell. In that
-            //situation we want to just cancel the editing and show them the old
-            //value.
+            if (commitExceptionConsumer != null) {
+                commitExceptionConsumer.accept(ex);
+            }
             if (losingFocus) {
                 cancelEdit();
             }
@@ -130,6 +136,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         super.cancelEdit();
         builder.cancelEdit();
         builder.setValue(getValue());
+        builder.nullEditorNode();
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 

@@ -28,8 +28,6 @@ import javafx.css.*;
 import javafx.css.converter.BooleanConverter;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Paint;
 

@@ -19,6 +19,7 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
