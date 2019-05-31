@@ -127,8 +127,12 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         indeterminateTransition = new CheckBoxTransition(indeterminateMark);
         createFillTransition();
 
-        registerChangeListener(control.checkedColorProperty(), obs -> createFillTransition());
-        registerChangeListener(control.unCheckedColorProperty(), "UNCHECKED_COLOR");
+        registerChangeListener(control.checkedColorProperty(), obs -> {
+            select.stop();
+            createFillTransition();
+            updateColors();
+        });
+        registerChangeListener(control.unCheckedColorProperty(), obs -> updateColors());
     }
 
     private void updateRippleColor() {
@@ -136,15 +140,10 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
             ((JFXCheckBox) getSkinnable()).getCheckedColor() : ((JFXCheckBox) getSkinnable()).getUnCheckedColor());
     }
 
-    @Override
-            select.stop();
-            updateColors();
-        } else if ("UNCHECKED_COLOR".equals(p)) {
-            updateColors();
     private void updateColors() {
-        final Paint color = getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : getSkinnable().getUnCheckedColor();
-        JFXNodeUtils.updateBackground(indeterminateMark.getBackground(), indeterminateMark, getSkinnable().getCheckedColor());
-        JFXNodeUtils.updateBackground(box.getBackground(), box, getSkinnable().isSelected() ? getSkinnable().getCheckedColor() : Color.TRANSPARENT);
+        final Paint color = getSkinnable().isSelected() ? ((JFXCheckBox) getSkinnable()).getCheckedColor() : ((JFXCheckBox) getSkinnable()).getUnCheckedColor();
+        JFXNodeUtils.updateBackground(indeterminateMark.getBackground(), indeterminateMark, ((JFXCheckBox) getSkinnable()).getCheckedColor());
+        JFXNodeUtils.updateBackground(box.getBackground(), box, getSkinnable().isSelected() ? ((JFXCheckBox) getSkinnable()).getCheckedColor() : Color.TRANSPARENT);
         rippler.setRipplerFill(color);
         final BorderStroke borderStroke = box.getBorder().getStrokes().get(0);
         box.setBorder(new Border(new BorderStroke(color,

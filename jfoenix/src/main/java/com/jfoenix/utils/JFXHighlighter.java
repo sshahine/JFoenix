@@ -20,6 +20,7 @@
 package com.jfoenix.utils;
 
 import com.sun.javafx.geom.RectBounds;
+import com.sun.javafx.scene.NodeHelper;
 import com.sun.javafx.scene.text.TextLayout;
 import com.sun.javafx.scene.text.TextLine;
 import javafx.application.Platform;
@@ -91,7 +92,7 @@ public class JFXHighlighter {
         for (Node node : nodes) {
             Text text = ((Text) node);
             final int beginIndex = text.getText().toLowerCase().indexOf(query.toLowerCase());
-            if (beginIndex > -1 && node.impl_isTreeVisible()) {
+            if (beginIndex > -1 && NodeHelper.isTreeVisible(node)) {
                 ArrayList<Bounds> boundingBoxes = getMatchingBounds(query, text);
                 ArrayList<Rectangle> rectangles = new ArrayList<>();
                 for (Bounds boundingBox : boundingBoxes) {

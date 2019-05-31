@@ -121,7 +121,7 @@ public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         if (colorBox == null) {
-            updateDisplayArea();
+            reflectUpdateDisplayArea();
         }
         return topInset + colorBox.prefHeight(width) + bottomInset;
     }
@@ -152,7 +152,6 @@ public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
     }
 
     @Override
-
     public Node getDisplayNode() {
         return displayNode;
     }

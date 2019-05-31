@@ -25,8 +25,8 @@ module demo.main {
     requires flow;
     requires javafx.fxml;
     requires java.xml.ws.annotation;
-    requires de.jensd.fx.glyphs.commons;
-    requires de.jensd.fx.glyphs.fontawesome;
+    requires org.kordamp.ikonli.fontawesome5;
+    requires org.kordamp.ikonli.javafx;
 
     exports demos.components to javafx.graphics;
 }

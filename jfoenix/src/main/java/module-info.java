@@ -35,7 +35,6 @@ module com.jfoenix{
     exports com.jfoenix.transitions;
     exports com.jfoenix.animation;
     exports com.jfoenix.transitions.hamburger;
-    exports com.jfoenix.transitions.template;
     exports com.jfoenix.utils;
 
     exports com.jfoenix.controls.datamodels.treetable;
