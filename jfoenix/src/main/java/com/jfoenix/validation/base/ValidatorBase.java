@@ -36,14 +36,22 @@ import javafx.scene.control.Tooltip;
 public abstract class ValidatorBase extends Parent {
 
     public static final String DEFAULT_ERROR_STYLE_CLASS = "error";
+    
     /**
      * this style class will be activated when a validation error occurs
      */
     public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
     
-	/**
-     * If the srcControl has a tooltip, it's saved here so that we can replace it with a tooltip
-	 * containing the validator's error message.
+    /**
+     * When using {@code Tooltip.install(node, tooltip)}, the given tooltip is stored in the Node's properties
+     * under this key.
+     * @see Tooltip#install(Node, Tooltip) 
+     */
+    private static final String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
+
+    /**
+     * If the {@link #srcControl} has a tooltip, it's saved here so that we can replace it with a tooltip
+     * containing the validator's error message.
      */
     private Tooltip savedTooltip = null;
 
@@ -90,36 +98,49 @@ public abstract class ValidatorBase extends Parent {
         if (hasErrors.get()) {
             /*
              * TODO
-			 * NOTE: NEED TO FIX adding error style class to text area
-			 * is causing the caret to disappear
-			 */
+             * NOTE: NEED TO FIX adding error style class to text area
+             * is causing the caret to disappear
+             */
             if (!control.getStyleClass().contains(errorStyleClass.get())) {
                 control.getStyleClass().add(errorStyleClass.get());
             }
 
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
 
+            Tooltip errorTooltip = new Tooltip();
+            errorTooltip.getStyleClass().add("error-tooltip");
+            errorTooltip.setText(getMessage());
+            
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
                 if (controlTooltip != null && !controlTooltip.getStyleClass().contains("error-tooltip")) {
                     savedTooltip = controlTooltip;
                 }
-                Tooltip errorTooltip = new Tooltip();
-                errorTooltip.getStyleClass().add("error-tooltip");
-                errorTooltip.setText(getMessage());
+                
                 ((Control) control).setTooltip(errorTooltip);
             } else {
+                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
+                if (installedTooltip != null && !installedTooltip.getStyleClass().contains("error-tooltip")) {
+                    savedTooltip = installedTooltip;
+                }
                 
+                Tooltip.install(control, errorTooltip);
             }
         } else {
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
                 if ((controlTooltip != null && controlTooltip.getStyleClass().contains("error-tooltip"))
-                    || (controlTooltip == null && savedTooltip != null)) {
-                    ((Control) control).setTooltip(tooltip);
+                        || (controlTooltip == null && savedTooltip != null)) {
+                    ((Control) control).setTooltip(savedTooltip);
                 }
-                savedTooltip = null;
+            } else {
+                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
+                if ((installedTooltip != null && installedTooltip.getStyleClass().contains("error-tooltip"))
+                        || (installedTooltip == null && savedTooltip != null)) {
+                    Tooltip.install(control, savedTooltip);
+                }
             }
+            savedTooltip = null;
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
             control.getStyleClass().remove(errorStyleClass.get());
         }
