@@ -40,8 +40,12 @@ public abstract class ValidatorBase extends Parent {
      * this style class will be activated when a validation error occurs
      */
     public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
-
-    private Tooltip tooltip = null;
+    
+	/**
+     * If the srcControl has a tooltip, it's saved here so that we can replace it with a tooltip
+	 * containing the validator's error message.
+     */
+    private Tooltip savedTooltip = null;
 
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
@@ -98,21 +102,23 @@ public abstract class ValidatorBase extends Parent {
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
                 if (controlTooltip != null && !controlTooltip.getStyleClass().contains("error-tooltip")) {
-                    tooltip = ((Control) control).getTooltip();
+                    savedTooltip = controlTooltip;
                 }
                 Tooltip errorTooltip = new Tooltip();
                 errorTooltip.getStyleClass().add("error-tooltip");
                 errorTooltip.setText(getMessage());
                 ((Control) control).setTooltip(errorTooltip);
+            } else {
+                
             }
         } else {
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
                 if ((controlTooltip != null && controlTooltip.getStyleClass().contains("error-tooltip"))
-                    || (controlTooltip == null && tooltip != null)) {
+                    || (controlTooltip == null && savedTooltip != null)) {
                     ((Control) control).setTooltip(tooltip);
                 }
-                tooltip = null;
+                savedTooltip = null;
             }
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
             control.getStyleClass().remove(errorStyleClass.get());
