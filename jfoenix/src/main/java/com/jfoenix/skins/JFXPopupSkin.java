@@ -23,13 +23,10 @@ import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
 import com.jfoenix.effects.JFXDepthManager;
-import com.jfoenix.transitions.CacheMomento;
+import com.jfoenix.transitions.CacheMemento;
 import com.jfoenix.transitions.CachedTransition;
+import javafx.animation.*;
 import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
@@ -40,23 +37,26 @@ import javafx.util.Duration;
 
 /**
  * <h1>Material Design Popup Skin</h1>
- *
+ * TODO: REWORK
  * @author Shadi Shaheen
  * @version 2.0
  * @since 2017-03-01
  */
 public class JFXPopupSkin implements Skin<JFXPopup> {
 
-    private final JFXPopup control;
-    private final StackPane container = new StackPane();
-    private Node root;
-    private PopupTransition t;
-    private Scale scale;
-    private Region popupContent;
+    protected JFXPopup control;
+    protected StackPane container = new StackPane();
+    protected Region popupContent;
+    protected Node root;
+
+    private Animation animation;
+    protected Scale scale;
 
     public JFXPopupSkin(JFXPopup control) {
         this.control = control;
-        scale = new Scale(1, 0, 0, 0);
+        // set scale y to 0.01 instead of 0 to allow layout of the content,
+        // otherwise it will cause exception in traverse engine, when focusing the 1st node
+        scale = new Scale(1, 0.01, 0, 0);
         popupContent = control.getPopupContent();
         container.getStyleClass().add("jfx-popup-container");
         container.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -64,8 +64,8 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
         container.getTransforms().add(scale);
         container.setOpacity(0);
         root = JFXDepthManager.createMaterialNode(container, 4);
-        t = new PopupTransition();
-    }
+        animation = getAnimation();
+}
 
 
     public void reset(PopupVPosition vAlign, PopupHPosition hAlign, double offsetX, double offsetY) {
@@ -76,9 +76,9 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
         root.setTranslateY(vAlign == PopupVPosition.BOTTOM ? -container.getHeight() + offsetY : offsetY);
     }
 
-    public void animate() {
-        if (t.getStatus() == Status.STOPPED) {
-            t.play();
+    public final void animate() {
+        if (animation.getStatus() == Status.STOPPED) {
+            animation.play();
         }
     }
 
@@ -94,6 +94,16 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
 
     @Override
     public void dispose() {
+        animation.stop();
+        animation = null;
+        container = null;
+        control = null;
+        popupContent = null;
+        root = null;
+    }
+
+    protected Animation getAnimation() {
+        return new PopupTransition();
     }
 
     private final class PopupTransition extends CachedTransition {
@@ -114,7 +124,7 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
                         new KeyValue(scale.yProperty(), 1, Interpolator.EASE_BOTH)
                     )
                 )
-                , new CacheMomento(popupContent));
+                , new CacheMemento(popupContent));
             setCycleDuration(Duration.seconds(.4));
             setDelay(Duration.seconds(0));
         }
@@ -127,9 +137,9 @@ public class JFXPopupSkin implements Skin<JFXPopup> {
     }
 
     public void init() {
-        t.stop();
+        animation.stop();
         container.setOpacity(0);
-        scale.setX(0);
-        scale.setY(0);
+        scale.setX(1);
+        scale.setY(0.1);
     }
 }

@@ -41,8 +41,7 @@ public class SliderDemo extends Application {
         hbox.getChildren().addAll(verRightSlider, verLeftSlider);
 
         VBox vbox = new VBox();
-        Button click = new Button("Click");
-        vbox.getChildren().addAll(horRightSlider, horLeftSlider, hbox, click);
+        vbox.getChildren().addAll(horRightSlider, horLeftSlider, hbox);
         vbox.setSpacing(100);
         vbox.setPadding(new Insets(100, 50, 50, 150));
 
@@ -55,31 +54,9 @@ public class SliderDemo extends Application {
         stage.show();
         stage.setTitle("JFX Slider Demo");
 
-        MyDialog dilaog = new MyDialog(stage);
-        dilaog.initStyle(StageStyle.UNDECORATED);
-        dilaog.initOwner(stage);
-        dilaog.initModality(Modality.NONE);
-        click.setOnAction((action) -> dilaog.show());
     }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    private static final class MyDialog extends Dialog {
-        MyDialog(Stage stage) {
-            stage.getScene().widthProperty().addListener((o, oldVal, newVal) -> {
-                setWidth(newVal.doubleValue());
-            });
-            stage.getScene().heightProperty().addListener((o, oldVal, newVal) -> {
-                setHeight(newVal.doubleValue());
-            });
-            stage.xProperty().addListener((o, oldVal, newVal) -> {
-                setX(newVal.doubleValue());
-            });
-            stage.yProperty().addListener((o, oldVal, newVal) -> {
-                setY(newVal.doubleValue());
-            });
-        }
     }
 }

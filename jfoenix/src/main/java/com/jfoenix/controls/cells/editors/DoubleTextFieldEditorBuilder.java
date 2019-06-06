@@ -19,16 +19,9 @@
 
 package com.jfoenix.controls.cells.editors;
 
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
+import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.validation.DoubleValidator;
-import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import com.jfoenix.validation.base.ValidatorBase;
 
 /**
  * <h1>Text field cell editor (numbers only) </h1>
@@ -40,60 +33,17 @@ import javafx.scene.layout.StackPane;
  * @version 1.0
  * @since 2017-01-27
  */
-public class DoubleTextFieldEditorBuilder implements EditorNodeBuilder<Double> {
+public class DoubleTextFieldEditorBuilder extends TextFieldEditorBase<Double> {
 
-    private JFXTextField textField;
-
-    @Override
-    public void startEdit() {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public void cancelEdit() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void updateItem(Double item, boolean empty) {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public Region createNode(Double value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
-        textField = new JFXTextField(value + "");
-        textField.minWidthProperty().bind(minWidthBinding);
-        textField.setOnKeyPressed(keyEventsHandler);
-        textField.focusedProperty().addListener(focusChangeListener);
-        DoubleValidator validator = new DoubleValidator();
-        validator.setMessage("Value must be a rational number");
-        textField.getValidators().add(validator);
-        pane.getChildren().add(textField);
-        return pane;
-    }
-
-    @Override
-    public void setValue(Double value) {
-        textField.setText(value + "");
+    public DoubleTextFieldEditorBuilder(ValidatorBase... validators) {
+        super(JFXUtilities.concat(
+            new ValidatorBase[] {new DoubleValidator()},
+            validators,
+            len -> new ValidatorBase[len]));
     }
 
     @Override
     public Double getValue() {
-        return Double.parseDouble(textField.getText());
-    }
-
-    @Override
-    public void validateValue() throws Exception {
-        if (!textField.validate()) {
-            throw new Exception();
-        }
+        return Double.valueOf(textField.getText());
     }
 }

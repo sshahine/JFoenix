@@ -14,7 +14,7 @@ public class TextFieldController {
     @FXML
     private JFXTextField validatedText;
     @FXML
-    private JFXPasswordField validatedPassowrd;
+    private JFXPasswordField validatedPassword;
     @FXML
     private JFXTextArea jfxTextArea;
 
@@ -28,9 +28,9 @@ public class TextFieldController {
                 validatedText.validate();
             }
         });
-        validatedPassowrd.focusedProperty().addListener((o, oldVal, newVal) -> {
+        validatedPassword.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {
-                validatedPassowrd.validate();
+                validatedPassword.validate();
             }
         });
         jfxTextArea.focusedProperty().addListener((o, oldVal, newVal) -> {

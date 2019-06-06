@@ -24,19 +24,16 @@ import com.jfoenix.controls.JFXButton.ButtonType;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
+import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.scene.control.skin.ButtonSkin;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -48,177 +45,90 @@ import javafx.util.Duration;
  */
 public class JFXButtonSkin extends ButtonSkin {
 
-    private final StackPane buttonContainer = new StackPane();
-    private JFXRippler buttonRippler;
     private Transition clickedAnimation;
-    private final CornerRadii defaultRadii = new CornerRadii(3);
-
-    private boolean invalid = true;
+    private JFXRippler buttonRippler;
     private Runnable releaseManualRippler = null;
+    private boolean invalid = true;
+    private boolean mousePressed = false;
 
     public JFXButtonSkin(JFXButton button) {
         super(button);
 
-        buttonRippler = new JFXRippler(new StackPane()) {
+        buttonRippler = new JFXRippler(getSkinnable()) {
             @Override
             protected Node getMask() {
                 StackPane mask = new StackPane();
-                mask.shapeProperty().bind(buttonContainer.shapeProperty());
-                mask.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-                    return new Background(new BackgroundFill(Color.WHITE,
-                        buttonContainer.backgroundProperty()
-                            .get() != null && buttonContainer.getBackground()
-                            .getFills()
-                            .size() > 0 ? buttonContainer
-                            .getBackground()
-                            .getFills()
-                            .get(0)
-                            .getRadii() : defaultRadii,
-                        buttonContainer.backgroundProperty()
-                            .get() != null && buttonContainer.getBackground()
-                            .getFills()
-                            .size() > 0 ? buttonContainer
-                            .getBackground()
-                            .getFills()
-                            .get(0)
-                            .getInsets() : Insets.EMPTY));
-                }, buttonContainer.backgroundProperty()));
-                mask.resize(buttonContainer.getWidth() - buttonContainer.snappedRightInset() - buttonContainer.snappedLeftInset(),
-                    buttonContainer.getHeight() - buttonContainer.snappedBottomInset() - buttonContainer.snappedTopInset());
+                mask.shapeProperty().bind(getSkinnable().shapeProperty());
+                JFXNodeUtils.updateBackground(getSkinnable().getBackground(), mask);
+                mask.resize(getWidth() - snappedRightInset() - snappedLeftInset(),
+                    getHeight() - snappedBottomInset() - snappedTopInset());
                 return mask;
             }
 
             @Override
-            protected void initListeners() {
-                ripplerPane.setOnMousePressed((event) -> {
-                    if (releaseManualRippler != null) {
-                        releaseManualRippler.run();
-                    }
-                    releaseManualRippler = null;
-                    createRipple(event.getX(), event.getY());
-                });
+            protected void positionControl(Node control) {
+                // do nothing as the controls is not inside the ripple
             }
         };
 
-        getSkinnable().armedProperty().addListener((o, oldVal, newVal) -> {
+        // add listeners to the button and bind properties
+        button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> playClickAnimation(1));
+//        button.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> playClickAnimation(-1));
+        button.addEventFilter(MouseEvent.MOUSE_PRESSED, e-> mousePressed = true);
+        button.addEventFilter(MouseEvent.MOUSE_RELEASED, e-> mousePressed = false);
+        button.addEventFilter(MouseEvent.MOUSE_DRAGGED, e-> mousePressed = false);
+
+        button.ripplerFillProperty().addListener((o, oldVal, newVal) -> buttonRippler.setRipplerFill(newVal));
+
+        button.armedProperty().addListener((o, oldVal, newVal) -> {
             if (newVal) {
-                releaseManualRippler = buttonRippler.createManualRipple();
-                if (clickedAnimation != null) {
-                    clickedAnimation.setRate(1);
-                    clickedAnimation.play();
+                if (!mousePressed) {
+                    releaseManualRippler = buttonRippler.createManualRipple();
+                    playClickAnimation(1);
                 }
             } else {
                 if (releaseManualRippler != null) {
                     releaseManualRippler.run();
+                    releaseManualRippler = null;
                 }
-                if (clickedAnimation != null) {
-                    clickedAnimation.setRate(-1);
-                    clickedAnimation.play();
-                }
-            }
-        });
-
-        buttonContainer.getChildren().add(buttonRippler);
-
-
-        // add listeners to the button and bind properties
-        button.buttonTypeProperty().addListener((o, oldVal, newVal) -> updateButtonType(newVal));
-        button.setOnMousePressed(e -> {
-            if (clickedAnimation != null) {
-                clickedAnimation.setRate(1);
-                clickedAnimation.play();
-            }
-        });
-        button.setOnMouseReleased(e -> {
-            if (clickedAnimation != null) {
-                clickedAnimation.setRate(-1);
-                clickedAnimation.play();
+                playClickAnimation(-1);
             }
         });
 
         // show focused state
         button.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                if (!getSkinnable().isPressed()) {
-                    buttonRippler.showOverlay();
+            if(!button.disableVisualFocusProperty().get()){
+                if (newVal){
+                    if (!getSkinnable().isPressed()){
+                        buttonRippler.setOverlayVisible(true);
+                    }
+                } else{
+                    buttonRippler.setOverlayVisible(false);
                 }
-            } else {
-                buttonRippler.hideOverlay();
             }
         });
-        button.pressedProperty().addListener((o, oldVal, newVal) -> buttonRippler.hideOverlay());
+
+        button.buttonTypeProperty().addListener((o, oldVal, newVal) -> updateButtonType(newVal));
 
 		/*
          * disable action when clicking on the button shadow
 		 */
         button.setPickOnBounds(false);
-        buttonContainer.setPickOnBounds(false);
-        buttonContainer.shapeProperty().bind(getSkinnable().shapeProperty());
-        buttonContainer.borderProperty().bind(getSkinnable().borderProperty());
-        buttonContainer.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-            // reset button background to transparent if its set to java default values
-            if (button.getBackground() == null || isJavaDefaultBackground(button.getBackground()) || isJavaDefaultClickedBackground(
-                button.getBackground())) {
-                button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
-            }
-            try {
-                //Insets always Empty
-                if (getSkinnable().getBackground() != null && getSkinnable().getBackground()
-                    .getFills()
-                    .get(0)
-                    .getInsets()
-                    .equals(new Insets(-0.2,
-                        -0.2,
-                        -0.2,
-                        -0.2))) {
-                    return new Background(new BackgroundFill(getSkinnable().getBackground() != null ? getSkinnable().getBackground()
-                        .getFills()
-                        .get(
-                            0)
-                        .getFill() : Color.TRANSPARENT,
-                        getSkinnable().backgroundProperty()
-                            .get() != null ? getSkinnable().getBackground()
-                            .getFills()
-                            .get(0)
-                            .getRadii() : defaultRadii,
-                        Insets.EMPTY/*new Insets(0,0,-1.0,0)*/));
-                } else {
-                    return new Background(new BackgroundFill(getSkinnable().getBackground() != null ? getSkinnable().getBackground()
-                        .getFills()
-                        .get(
-                            0)
-                        .getFill() : Color.TRANSPARENT,
-                                                             getSkinnable().getBackground() != null ? getSkinnable().getBackground()
-                            .getFills()
-                            .get(
-                                0)
-                            .getRadii() : defaultRadii,
-                                                             Insets.EMPTY));
-                }
-            } catch (Exception ignored) {
-                return getSkinnable().getBackground();
-            }
-        }, getSkinnable().backgroundProperty()));
-
-        button.ripplerFillProperty().addListener((o, oldVal, newVal) -> buttonRippler.setRipplerFill(newVal));
-
-        // set default background to transparent
-        if (button.getBackground() == null || isJavaDefaultBackground(button.getBackground())) {
-            button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, defaultRadii, null)));
-        }
 
         updateButtonType(button.getButtonType());
+
         updateChildren();
     }
 
     @Override
     protected void updateChildren() {
         super.updateChildren();
-        if (buttonContainer != null) {
-            getChildren().add(0, buttonContainer);
-        }
+        if(buttonRippler!=null)
+            getChildren().add(0, buttonRippler);
         for (int i = 1; i < getChildren().size(); i++) {
-            getChildren().get(i).setMouseTransparent(true);
+            final Node child = getChildren().get(i);
+            if(child instanceof Text)
+                child.setMouseTransparent(true);
         }
     }
 
@@ -247,75 +157,63 @@ public class JFXButtonSkin extends ButtonSkin {
             }
             invalid = false;
         }
-        double shift = 1;
-        buttonContainer.resizeRelocate(getSkinnable().getLayoutBounds().getMinX() - shift,
-            getSkinnable().getLayoutBounds().getMinY() - shift,
-            getSkinnable().getWidth() + (2 * shift),
-            getSkinnable().getHeight() + (2 * shift));
+        buttonRippler.resizeRelocate(
+            getSkinnable().getLayoutBounds().getMinX(),
+            getSkinnable().getLayoutBounds().getMinY(),
+            getSkinnable().getWidth(), getSkinnable().getHeight());
         layoutLabelInArea(x, y, w, h);
     }
 
-    private boolean isJavaDefaultBackground(Background background) {
-        try {
-            final String firstFill = background.getFills().get(0).getFill().toString();
-            return "0xffffffba".equals(firstFill)
-                || "0xffffffbf".equals(firstFill)
-                || "0xffffffbd".equals(firstFill);
-        } catch (Exception ignored) {
-            return false;
-        }
-    }
-
-    private boolean isJavaDefaultClickedBackground(Background background) {
-        try {
-            return "0x039ed3ff".equals(background.getFills().get(0).getFill().toString());
-        } catch (Exception ignored) {
-            return false;
-        }
-    }
 
     private void updateButtonType(ButtonType type) {
         switch (type) {
             case RAISED:
-                JFXDepthManager.setDepth(buttonContainer, 2);
-                clickedAnimation = new ButtonClickTransition();
+                JFXDepthManager.setDepth(getSkinnable(), 2);
+                clickedAnimation = new ButtonClickTransition(getSkinnable(), (DropShadow) getSkinnable().getEffect());
                 break;
             default:
-                buttonContainer.setEffect(null);
+                getSkinnable().setEffect(null);
                 break;
         }
     }
 
+    private void playClickAnimation(double rate) {
+        if (clickedAnimation != null) {
+            if(!clickedAnimation.getCurrentTime().equals(clickedAnimation.getCycleDuration()) || rate != 1){
+                clickedAnimation.setRate(rate);
+                clickedAnimation.play();
+            }
+        }
+    }
 
-    private class ButtonClickTransition extends CachedTransition {
-
-        public ButtonClickTransition() {
-            super(buttonContainer, new Timeline(
+    private static class ButtonClickTransition extends CachedTransition {
+        ButtonClickTransition(Node node, DropShadow shadowEffect) {
+            super(node, new Timeline(
                     new KeyFrame(Duration.ZERO,
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).radiusProperty(),
+                        new KeyValue(shadowEffect.radiusProperty(),
                             JFXDepthManager.getShadowAt(2).radiusProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).spreadProperty(),
+                        new KeyValue(shadowEffect.spreadProperty(),
                             JFXDepthManager.getShadowAt(2).spreadProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).offsetXProperty(),
+                        new KeyValue(shadowEffect.offsetXProperty(),
                             JFXDepthManager.getShadowAt(2).offsetXProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).offsetYProperty(),
+                        new KeyValue(shadowEffect.offsetYProperty(),
                             JFXDepthManager.getShadowAt(2).offsetYProperty().get(),
                             Interpolator.EASE_BOTH)
                     ),
                     new KeyFrame(Duration.millis(1000),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).radiusProperty(),
+                        new KeyValue(shadowEffect.radiusProperty(),
                             JFXDepthManager.getShadowAt(5).radiusProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).spreadProperty(),
+                        new KeyValue(shadowEffect.spreadProperty(),
                             JFXDepthManager.getShadowAt(5).spreadProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).offsetXProperty(),
+                        new KeyValue(shadowEffect.offsetXProperty(),
                             JFXDepthManager.getShadowAt(5).offsetXProperty().get(),
                             Interpolator.EASE_BOTH),
-                        new KeyValue(((DropShadow) buttonContainer.getEffect()).offsetYProperty(),
+                        new KeyValue(shadowEffect.offsetYProperty(),
                             JFXDepthManager.getShadowAt(5).offsetYProperty().get(),
                             Interpolator.EASE_BOTH)
                     )
@@ -325,8 +223,5 @@ public class JFXButtonSkin extends ButtonSkin {
             setCycleDuration(Duration.seconds(0.2));
             setDelay(Duration.seconds(0));
         }
-
     }
-
-
 }

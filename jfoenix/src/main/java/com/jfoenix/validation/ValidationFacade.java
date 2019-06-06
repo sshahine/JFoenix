@@ -19,7 +19,7 @@
 
 package com.jfoenix.validation;
 
-import com.jfoenix.concurrency.JFXUtilities;
+import com.jfoenix.utils.JFXUtilities;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -44,6 +44,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * this class has been deprecated and will be removed in later versions of JFoenix,
+ * we are moving validations into each control that implements the interface
+ * {@Link IFXValidatableControl}. Validation will be applied through the control itself
+ * similar to {@link com.jfoenix.controls.JFXTextField}, it's straight forward and
+ * simpler than using the ValidationFacade.
+ */
+@Deprecated
 public class ValidationFacade extends VBox {
 
     /**
@@ -206,9 +214,7 @@ public class ValidationFacade extends VBox {
     public static boolean validate(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
         for (ValidatorBase validator : facade.validators) {
-            if (validator.getSrcControl() == null) {
-                validator.setSrcControl(facade.controlProperty.get());
-            }
+            validator.setSrcControl(facade.controlProperty.get());
             validator.validate();
             if (validator.getHasErrors()) {
                 facade.activeValidator.set(validator);
@@ -223,8 +229,6 @@ public class ValidationFacade extends VBox {
 
     public static void reset(Control control) {
         ValidationFacade facade = (ValidationFacade) control.getParent();
-        control.getStyleClass()
-            .remove(facade.activeValidator.get() == null ? "" : facade.activeValidator.get().getErrorStyleClass());
         control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
         facade.activeValidator.set(null);
     }

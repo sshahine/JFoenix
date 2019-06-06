@@ -19,21 +19,19 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
+import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.skins.JFXTimePickerSkin;
+import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.css.*;
-import javafx.geometry.Insets;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -54,7 +52,7 @@ import java.util.Locale;
  * @version 1.0
  * @since 2017-03-01
  */
-public class JFXTimePicker extends ComboBoxBase<LocalTime> {
+public class JFXTimePicker extends ComboBoxBase<LocalTime> implements IFXValidatableControl {
 
     /**
      * {@inheritDoc}
@@ -74,8 +72,15 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     private void initialize() {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
         setAccessibleRole(AccessibleRole.DATE_PICKER);
-        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
         setEditable(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFoenixResources.load("css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     /**
@@ -135,7 +140,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     }
 
     private StringConverter<LocalTime> defaultConverter = new LocalTimeStringConverter(FormatStyle.SHORT,
-        Locale.ENGLISH);
+        Locale.getDefault());
 
     private BooleanProperty _24HourView = new SimpleBooleanProperty(false);
 
@@ -147,10 +152,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
         return _24HourViewProperty().get();
     }
 
-    public final void setIs24HourView(final boolean value) {
+    public final void set24HourView(final boolean value) {
         _24HourViewProperty().setValue(value);
     }
-
 
     /**
      * The editor for the JFXTimePicker.
@@ -166,9 +170,48 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     public final ReadOnlyObjectProperty<TextField> editorProperty() {
         if (editor == null) {
             editor = new ReadOnlyObjectWrapper<>(this, "editor");
-            editor.set(new ComboBoxListViewSkin.FakeFocusTextField());
+            final FakeFocusJFXTextField editorNode = new FakeFocusJFXTextField();
+            this.focusedProperty().addListener((obj, oldVal, newVal) -> {
+                if (getEditor() != null) {
+                    editorNode.setFakeFocus(newVal);
+                }
+            });
+            editorNode.activeValidatorWritableProperty().bind(activeValidatorProperty());
+            editor.set(editorNode);
         }
         return editor.getReadOnlyProperty();
+    }
+
+    private ValidationControl validationControl = new ValidationControl(this);
+
+    @Override
+    public ValidatorBase getActiveValidator() {
+        return validationControl.getActiveValidator();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<ValidatorBase> activeValidatorProperty() {
+        return validationControl.activeValidatorProperty();
+    }
+
+    @Override
+    public ObservableList<ValidatorBase> getValidators() {
+        return validationControl.getValidators();
+    }
+
+    @Override
+    public void setValidators(ValidatorBase... validators) {
+        validationControl.setValidators(validators);
+    }
+
+    @Override
+    public boolean validate() {
+        return validationControl.validate();
+    }
+
+    @Override
+    public void resetValidation() {
+        validationControl.resetValidation();
     }
 
     /***************************************************************************
@@ -231,7 +274,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
     private static class StyleableProperties {
         private static final CssMetaData<JFXTimePicker, Paint> DEFAULT_COLOR =
             new CssMetaData<JFXTimePicker, Paint>("-jfx-default-color",
-                PaintConverter.getInstance(), Color.valueOf("#5A5A5A")) {
+                PaintConverter.getInstance(), Color.valueOf("#009688")) {
                 @Override
                 public boolean isSettable(JFXTimePicker control) {
                     return control.defaultColor == null || !control.defaultColor.isBound();
@@ -261,7 +304,7 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
+                new ArrayList<>(ComboBoxBase.getClassCssMetaData());
             Collections.addAll(styleables,
                 DEFAULT_COLOR,
                 OVERLAY);
@@ -269,19 +312,9 @@ public class JFXTimePicker extends ComboBoxBase<LocalTime> {
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(Control.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

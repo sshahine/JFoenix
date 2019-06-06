@@ -71,7 +71,9 @@ public class JFXPopup extends PopupControl {
         this.setAutoFix(false);
         this.setAutoHide(true);
         this.setHideOnEscape(true);
+        this.setConsumeAutoHidingEvents(false);
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+        getScene().getRoot().setStyle("-fx-background-color: TRANSPARENT");
     }
 
     @Override
@@ -142,6 +144,20 @@ public class JFXPopup extends PopupControl {
             final double anchorY = parent.getY() + origin.getY()
                 + node.getScene()
                       .getY() + (vAlign == PopupVPosition.BOTTOM ? ((Region) node).getHeight() : 0);
+            this.show(parent, anchorX, anchorY);
+            ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
+            Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());
+        }
+    }
+
+    public void show(Window window, double x, double y, PopupVPosition vAlign, PopupHPosition hAlign, double initOffsetX, double initOffsetY) {
+        if (!isShowing()) {
+            if (window == null) {
+                throw new IllegalStateException("Can not show popup. The node must be attached to a scene/window.");
+            }
+            Window parent = window;
+            final double anchorX = parent.getX() + x + initOffsetX;
+            final double anchorY = parent.getY() + y + initOffsetY;
             this.show(parent, anchorX, anchorY);
             ((JFXPopupSkin) getSkin()).reset(vAlign, hAlign, initOffsetX, initOffsetY);
             Platform.runLater(() -> ((JFXPopupSkin) getSkin()).animate());

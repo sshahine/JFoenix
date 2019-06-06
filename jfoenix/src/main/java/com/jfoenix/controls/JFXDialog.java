@@ -23,18 +23,36 @@ import com.jfoenix.controls.events.JFXDialogEvent;
 import com.jfoenix.converters.DialogTransitionConverter;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -55,7 +73,7 @@ public class JFXDialog extends StackPane {
 
     //	public static enum JFXDialogLayout{PLAIN, HEADING, ACTIONS, BACKDROP};
     public enum DialogTransition {
-        CENTER, TOP, RIGHT, BOTTOM, LEFT
+        CENTER, TOP, RIGHT, BOTTOM, LEFT, NONE
     }
 
     private StackPane contentHolder;
@@ -119,8 +137,8 @@ public class JFXDialog extends StackPane {
      * @param overlayClose
      */
     public JFXDialog(StackPane dialogContainer, Region content, DialogTransition transitionType, boolean overlayClose) {
-        initialize();
         setOverlayClose(overlayClose);
+        initialize();
         setContent(content);
         setDialogContainer(dialogContainer);
         this.transitionType.set(transitionType);
@@ -185,14 +203,9 @@ public class JFXDialog extends StackPane {
     public void setDialogContainer(StackPane dialogContainer) {
         if (dialogContainer != null) {
             this.dialogContainer = dialogContainer;
-            if (this.dialogContainer.getChildren().indexOf(this) == -1
-                || this.dialogContainer.getChildren().indexOf(this) != this.dialogContainer.getChildren().size() - 1) {
-                this.dialogContainer.getChildren().remove(this);
-                this.dialogContainer.getChildren().add(this);
-            }
             // FIXME: need to be improved to consider only the parent boundary
-            offsetX = this.getParent().getBoundsInLocal().getWidth();
-            offsetY = this.getParent().getBoundsInLocal().getHeight();
+            offsetX = dialogContainer.getBoundsInLocal().getWidth();
+            offsetY = dialogContainer.getBoundsInLocal().getHeight();
             animation = getShowAnimation(transitionType.get());
         }
     }
@@ -213,7 +226,7 @@ public class JFXDialog extends StackPane {
         if (content != null) {
             this.content = content;
             this.content.setPickOnBounds(false);
-            contentHolder.getChildren().add(content);
+            contentHolder.getChildren().setAll(content);
         }
     }
 
@@ -237,38 +250,103 @@ public class JFXDialog extends StackPane {
     }
 
     /**
+     * if sets to true, the content of dialog container will be cached and replaced with an image
+     * when displaying the dialog (better performance).
+     * this is recommended if the content behind the dialog will not change during the showing
+     * period
+     */
+    private BooleanProperty cacheContainer = new SimpleBooleanProperty(false);
+
+    public boolean isCacheContainer() {
+        return cacheContainer.get();
+    }
+
+    public BooleanProperty cacheContainerProperty() {
+        return cacheContainer;
+    }
+
+    public void setCacheContainer(boolean cacheContainer) {
+        this.cacheContainer.set(cacheContainer);
+    }
+
+    /**
      * it will show the dialog in the specified container
      *
      * @param dialogContainer
      */
     public void show(StackPane dialogContainer) {
         this.setDialogContainer(dialogContainer);
-        animation.play();
+        showDialog();
     }
+
+    private ArrayList<Node> tempContent;
 
     /**
      * show the dialog inside its parent container
      */
     public void show() {
-        if (dialogContainer == null) {
-            System.err.println("ERROR: JFXDialog container is not set!");
-            return;
-        }
         this.setDialogContainer(dialogContainer);
-        animation.play();
+        showDialog();
+    }
+
+    private void showDialog() {
+        if (dialogContainer == null) {
+            throw new RuntimeException("ERROR: JFXDialog container is not set!");
+        }
+        if (isCacheContainer()) {
+            tempContent = new ArrayList<>(dialogContainer.getChildren());
+
+            SnapshotParameters snapShotparams = new SnapshotParameters();
+            snapShotparams.setFill(Color.TRANSPARENT);
+            WritableImage temp = dialogContainer.snapshot(snapShotparams,
+                new WritableImage((int) dialogContainer.getWidth(),
+                    (int) dialogContainer.getHeight()));
+            ImageView tempImage = new ImageView(temp);
+            tempImage.setCache(true);
+            tempImage.setCacheHint(CacheHint.SPEED);
+            dialogContainer.getChildren().setAll(tempImage, this);
+        } else {
+        	//prevent error if opening an already opened dialog
+        	dialogContainer.getChildren().remove(this);
+        	tempContent = null;
+        	dialogContainer.getChildren().add(this);
+        }
+
+        if (animation != null) {
+            animation.play();
+        } else {
+            setVisible(true);
+            setOpacity(1);
+            Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.OPENED));
+        }
     }
 
     /**
      * close the dialog
      */
     public void close() {
-        animation.setRate(-1);
-        animation.play();
-        animation.setOnFinished(e -> {
-            resetProperties();
-            onDialogClosedProperty.get().handle(new JFXDialogEvent(JFXDialogEvent.CLOSED));
+        if (animation != null) {
+            animation.setRate(-1);
+            animation.play();
+            animation.setOnFinished(e -> {
+                closeDialog();
+            });
+        } else {
+            setOpacity(0);
+            setVisible(false);
+            closeDialog();
+        }
+
+    }
+
+    private void closeDialog() {
+        resetProperties();
+        Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.CLOSED));
+        if (tempContent == null) {
             dialogContainer.getChildren().remove(this);
-        });
+        } else {
+            dialogContainer.getChildren().setAll(tempContent);
+        }
     }
 
     /***************************************************************************
@@ -305,17 +383,23 @@ public class JFXDialog extends StackPane {
                     contentHolder.setTranslateY(offsetY);
                     animation = new BottomTransition();
                     break;
-                default:
+                case CENTER:
                     contentHolder.setScaleX(0);
                     contentHolder.setScaleY(0);
                     animation = new CenterTransition();
                     break;
+                default:
+                    animation = null;
+                    contentHolder.setScaleX(1);
+                    contentHolder.setScaleY(1);
+                    contentHolder.setTranslateX(0);
+                    contentHolder.setTranslateY(0);
+                    break;
             }
         }
         if (animation != null) {
-            animation.setOnFinished((finish) -> onDialogOpenedProperty.get()
-                .handle(new JFXDialogEvent(
-                    JFXDialogEvent.OPENED)));
+            animation.setOnFinished(finish ->
+                Event.fireEvent(JFXDialog.this, new JFXDialogEvent(JFXDialogEvent.OPENED)));
         }
         return animation;
     }
@@ -329,7 +413,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class LeftTransition extends CachedTransition {
-        public LeftTransition() {
+        LeftTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateXProperty(), -offsetX, Interpolator.EASE_BOTH),
@@ -351,7 +435,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class RightTransition extends CachedTransition {
-        public RightTransition() {
+        RightTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateXProperty(), offsetX, Interpolator.EASE_BOTH),
@@ -372,7 +456,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class TopTransition extends CachedTransition {
-        public TopTransition() {
+        TopTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateYProperty(), -offsetY, Interpolator.EASE_BOTH),
@@ -393,7 +477,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class BottomTransition extends CachedTransition {
-        public BottomTransition() {
+        BottomTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.translateYProperty(), offsetY, Interpolator.EASE_BOTH),
@@ -414,7 +498,7 @@ public class JFXDialog extends StackPane {
     }
 
     private class CenterTransition extends CachedTransition {
-        public CenterTransition() {
+        CenterTransition() {
             super(contentHolder, new Timeline(
                 new KeyFrame(Duration.ZERO,
                     new KeyValue(contentHolder.scaleXProperty(), 0, Interpolator.EASE_BOTH),
@@ -459,6 +543,7 @@ public class JFXDialog extends StackPane {
      * <li>RIGHT</li>
      * <li>BOTTOM</li>
      * <li>LEFT</li>
+     * <li>NONE</li>
      * </ul>
      */
     private StyleableObjectProperty<DialogTransition> transitionType = new SimpleStyleableObjectProperty<>(
@@ -499,7 +584,7 @@ public class JFXDialog extends StackPane {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
+                new ArrayList<>(StackPane.getClassCssMetaData());
             Collections.addAll(styleables,
                 DIALOG_TRANSITION
             );
@@ -507,19 +592,9 @@ public class JFXDialog extends StackPane {
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Parent.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(StackPane.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
@@ -533,34 +608,70 @@ public class JFXDialog extends StackPane {
      *                                                                         *
      **************************************************************************/
 
-    private ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogClosedProperty = new SimpleObjectProperty<>((closed) -> {
-    });
+    private final ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogClosedProperty = new ObjectPropertyBase<EventHandler<? super JFXDialogEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDialogEvent.CLOSED, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return JFXDialog.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onClosed";
+        }
+    };
 
     /**
      * Defines a function to be called when the dialog is closed.
      * Note: it will be triggered after the close animation is finished.
      */
+    public ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogClosedProperty() {
+        return onDialogClosedProperty;
+    }
+
     public void setOnDialogClosed(EventHandler<? super JFXDialogEvent> handler) {
-        onDialogClosedProperty.set(handler);
+        onDialogClosedProperty().set(handler);
     }
 
     public EventHandler<? super JFXDialogEvent> getOnDialogClosed() {
-        return onDialogClosedProperty.get();
+        return onDialogClosedProperty().get();
     }
 
 
-    private ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogOpenedProperty = new SimpleObjectProperty<>((opened) -> {
-    });
+    private ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogOpenedProperty = new ObjectPropertyBase<EventHandler<? super JFXDialogEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDialogEvent.OPENED, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return JFXDialog.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onOpened";
+        }
+    };
 
     /**
      * Defines a function to be called when the dialog is opened.
      * Note: it will be triggered after the show animation is finished.
      */
+    public ObjectProperty<EventHandler<? super JFXDialogEvent>> onDialogOpenedProperty() {
+        return onDialogOpenedProperty;
+    }
+
     public void setOnDialogOpened(EventHandler<? super JFXDialogEvent> handler) {
-        onDialogOpenedProperty.set(handler);
+        onDialogOpenedProperty().set(handler);
     }
 
     public EventHandler<? super JFXDialogEvent> getOnDialogOpened() {
-        return onDialogOpenedProperty.get();
+        return onDialogOpenedProperty().get();
     }
 }

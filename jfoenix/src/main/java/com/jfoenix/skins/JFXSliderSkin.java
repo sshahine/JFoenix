@@ -29,16 +29,10 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.css.PseudoClass;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -55,7 +49,9 @@ import javafx.util.Duration;
 public class JFXSliderSkin extends SliderSkin {
 
 
-    private Paint thumbColor = Color.valueOf("#0F9D58"), trackColor = Color.valueOf("#CCCCCC");
+    private final Pane mouseHandlerPane = new Pane();
+    private static final PseudoClass MIN_VALUE = PseudoClass.getPseudoClass("min");
+    private static final PseudoClass MAX_VALUE = PseudoClass.getPseudoClass("max");
 
     private Text sliderValue;
     private StackPane coloredTrack;
@@ -77,38 +73,23 @@ public class JFXSliderSkin extends SliderSkin {
         track = (StackPane) getSkinnable().lookup(".track");
         thumb = (StackPane) getSkinnable().lookup(".thumb");
 
-        track.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(5), Insets.EMPTY)));
-        thumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(20), Insets.EMPTY)));
-        track.setPrefHeight(2);
-        track.setPrefWidth(2);
-
         coloredTrack = new StackPane();
-        coloredTrack.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-            BackgroundFill trackBackgroundFill = track.getBackground().getFills().get(0);
-            return new Background(new BackgroundFill(thumb.getBackground().getFills().get(0).getFill(),
-                trackBackgroundFill.getRadii(),
-                trackBackgroundFill.getInsets()));
-        }, track.backgroundProperty(), thumb.backgroundProperty()));
+        coloredTrack.getStyleClass().add("colored-track");
         coloredTrack.setMouseTransparent(true);
 
         sliderValue = new Text();
-        sliderValue.setStroke(Color.WHITE);
-        sliderValue.setFont(new Font(10));
         sliderValue.getStyleClass().setAll("slider-value");
 
         animatedThumb = new StackPane();
         animatedThumb.getStyleClass().add("animated-thumb");
         animatedThumb.getChildren().add(sliderValue);
         animatedThumb.setMouseTransparent(true);
-        animatedThumb.setPrefSize(30, 30);
-        animatedThumb.setBackground(new Background(new BackgroundFill(thumbColor,
-            new CornerRadii(50, 50, 50, 0, true),
-            null)));
         animatedThumb.setScaleX(0);
         animatedThumb.setScaleY(0);
 
         getChildren().add(getChildren().indexOf(thumb), coloredTrack);
         getChildren().add(getChildren().indexOf(thumb), animatedThumb);
+        getChildren().add(0, mouseHandlerPane);
 
         registerChangeListener(slider.valueFactoryProperty(), "VALUE_FACTORY");
 
@@ -133,10 +114,9 @@ public class JFXSliderSkin extends SliderSkin {
                 if (getSkinnable().getLabelFormatter() != null) {
                     return getSkinnable().getLabelFormatter().toString(getSkinnable().getValue());
                 } else {
-                    return Math.round(getSkinnable().getValue()) + "";
+                    return String.valueOf(Math.round(getSkinnable().getValue()));
                 }
             }, getSkinnable().valueProperty()));
-
         }
     }
 
@@ -170,69 +150,29 @@ public class JFXSliderSkin extends SliderSkin {
         }
 
         coloredTrack.resizeRelocate(layoutX, layoutY, width, height);
-
-
+        mouseHandlerPane.resizeRelocate(x, y, w, h);
     }
 
-    private boolean internalChange = false;
 
     private void initializeVariables() {
-
         shifting = 30 + thumb.getWidth();
-
         if (getSkinnable().getOrientation() != Orientation.HORIZONTAL) {
             horizontalRotation = -90;
         }
-
         if (((JFXSlider) getSkinnable()).getIndicatorPosition() != IndicatorPosition.LEFT) {
             indicatorRotation = 180;
             shifting = -shifting;
         }
-
         final double rotationAngle = 45;
         sliderValue.setRotate(rotationAngle + indicatorRotation + 3 * horizontalRotation);
-
         animatedThumb.setRotate(-rotationAngle + indicatorRotation + horizontalRotation);
-        thumb.backgroundProperty().addListener((o, oldVal, newVal) -> {
-            if (animatedThumb.getBackground() != null) {
-                animatedThumb.setBackground(new Background(new BackgroundFill(newVal.getFills().get(0).getFill(),
-                    animatedThumb.getBackground()
-                        .getFills()
-                        .get(0)
-                        .getRadii(),
-                    animatedThumb.getBackground()
-                        .getFills()
-                        .get(0)
-                        .getInsets())));
-            } else {
-                animatedThumb.setBackground(new Background(new BackgroundFill(newVal.getFills().get(0).getFill(),
-                    new CornerRadii(50, 50, 50, 0, true),
-                    null)));
-            }
-        });
     }
-
 
     private void initListeners() {
         // delegate slider mouse events to track node
-        getSkinnable().setOnMousePressed(me -> {
-            if (!me.isConsumed()) {
-                me.consume();
-                track.fireEvent(me);
-            }
-        });
-        getSkinnable().setOnMouseReleased(me -> {
-            if (!me.isConsumed()) {
-                me.consume();
-                track.fireEvent(me);
-            }
-        });
-        getSkinnable().setOnMouseDragged(me -> {
-            if (!me.isConsumed()) {
-                me.consume();
-                track.fireEvent(me);
-            }
-        });
+        mouseHandlerPane.setOnMousePressed(this::delegateToTrack);
+        mouseHandlerPane.setOnMouseReleased(this::delegateToTrack);
+        mouseHandlerPane.setOnMouseDragged(this::delegateToTrack);
 
         // animate value node
         track.addEventHandler(MouseEvent.MOUSE_PRESSED, (event) -> {
@@ -252,45 +192,23 @@ public class JFXSliderSkin extends SliderSkin {
             timeline.play();
         });
 
-        track.backgroundProperty().addListener((o, oldVal, newVal) -> {
-            // prevent internal color change
-            if (!internalChange && newVal != null) {
-                trackColor = newVal.getFills().get(0).getFill();
-            }
-        });
-
-        thumb.backgroundProperty().addListener((o, oldVal, newVal) -> {
-            // prevent internal color change
-            if (!internalChange && newVal != null) {
-                thumbColor = newVal.getFills().get(0).getFill();
-                if (getSkinnable().getValue() == getSkinnable().getMin()) {
-                    internalChange = true;
-                    thumb.setBackground(new Background(new BackgroundFill(trackColor,
-                        new CornerRadii(20),
-                        Insets.EMPTY)));
-                    internalChange = false;
-                }
-            }
-        });
-
         refreshSliderValueBinding();
+        updateValueStyleClass();
 
-        getSkinnable().valueProperty().addListener((o, oldVal, newVal) -> {
-            internalChange = true;
-            if (getSkinnable().getMin() == newVal.doubleValue()) {
-                thumb.setBackground(new Background(new BackgroundFill(trackColor, new CornerRadii(20), Insets.EMPTY)));
-                animatedThumb.pseudoClassStateChanged(PseudoClass.getPseudoClass("min"), true);
-            } else if (oldVal.doubleValue() == getSkinnable().getMin()) {
-                thumb.setBackground(new Background(new BackgroundFill(thumbColor, new CornerRadii(20), Insets.EMPTY)));
-                animatedThumb.pseudoClassStateChanged(PseudoClass.getPseudoClass("min"), false);
-            }
-            internalChange = false;
-        });
+        getSkinnable().valueProperty().addListener(observable -> updateValueStyleClass());
+        getSkinnable().orientationProperty().addListener(observable -> initAnimation(getSkinnable().getOrientation()));
+    }
 
+    private void delegateToTrack(MouseEvent event) {
+        if (!event.isConsumed()) {
+            event.consume();
+            track.fireEvent(event);
+        }
+    }
 
-        getSkinnable().orientationProperty().addListener((o, oldVal, newVal) -> initAnimation(newVal));
-        animatedThumb.layoutBoundsProperty()
-            .addListener((o, oldVal, newVal) -> initAnimation(getSkinnable().getOrientation()));
+    private void updateValueStyleClass() {
+        getSkinnable().pseudoClassStateChanged(MIN_VALUE, getSkinnable().getMin() == getSkinnable().getValue());
+        getSkinnable().pseudoClassStateChanged(MAX_VALUE, getSkinnable().getMax() == getSkinnable().getValue());
     }
 
 
@@ -303,8 +221,9 @@ public class JFXSliderSkin extends SliderSkin {
                 thumbPos = thumb.getLayoutY() - thumb.getHeight();
                 thumbNewPos = thumbPos - shifting;
             } else {
-                thumbPos = thumb.getLayoutY() - animatedThumb.getHeight() / 2;
-                thumbNewPos = thumb.getLayoutY() - animatedThumb.getHeight() - thumb.getHeight();
+                double height = animatedThumb.prefHeight(animatedThumb.prefWidth(-1));
+                thumbPos = thumb.getLayoutY() - height / 2;
+                thumbNewPos = thumb.getLayoutY() - height - thumb.getHeight();
             }
             layoutProperty = animatedThumb.translateYProperty();
         } else {
@@ -312,12 +231,14 @@ public class JFXSliderSkin extends SliderSkin {
                 thumbPos = thumb.getLayoutX() - thumb.getWidth();
                 thumbNewPos = thumbPos - shifting;
             } else {
-                thumbPos = thumb.getLayoutX() - animatedThumb.getWidth() / 2;
-                thumbNewPos = thumb.getLayoutX() - animatedThumb.getWidth() - thumb.getWidth();
+                double width = animatedThumb.prefWidth(-1);
+                thumbPos = thumb.getLayoutX() - width / 2;
+                thumbNewPos = thumb.getLayoutX() - width - thumb.getWidth();
             }
             layoutProperty = animatedThumb.translateXProperty();
         }
 
+        clearAnimation();
 
         timeline = new Timeline(
             new KeyFrame(
@@ -332,4 +253,17 @@ public class JFXSliderSkin extends SliderSkin {
                 new KeyValue(layoutProperty, thumbNewPos, Interpolator.EASE_BOTH)));
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        clearAnimation();
+    }
+
+    private void clearAnimation() {
+        if (timeline != null) {
+            timeline.stop();
+            timeline.getKeyFrames().clear();
+            timeline = null;
+        }
+    }
 }

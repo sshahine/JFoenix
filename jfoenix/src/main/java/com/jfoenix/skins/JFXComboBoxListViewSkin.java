@@ -19,24 +19,23 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.concurrency.JFXUtilities;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.transitions.CachedTransition;
+import com.sun.javafx.css.converters.PaintConverter;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import javafx.animation.*;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Pos;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
-import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <h1>Material Design ComboBox Skin</h1>
@@ -56,35 +55,26 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
 
     private boolean invalid = true;
 
-    private StackPane customPane;
-    private StackPane line = new StackPane();
-    private StackPane focusedLine = new StackPane();
-    private Text promptText = new Text();
+    private Text promptText;
+    private ValidationPane<JFXComboBox> errorContainer;
+    private PromptLinesWrapper<JFXComboBox> linesWrapper;
 
-    private double initScale = 0.05;
-    private Scale scale = new Scale(initScale, 1);
-    private Timeline linesAnimation = new Timeline(
-        new KeyFrame(Duration.ZERO,
-            new KeyValue(scale.xProperty(), initScale, Interpolator.EASE_BOTH),
-            new KeyValue(focusedLine.opacityProperty(), 0, Interpolator.EASE_BOTH)),
-        new KeyFrame(Duration.millis(1),
-            new KeyValue(focusedLine.opacityProperty(), 1, Interpolator.EASE_BOTH)),
-        new KeyFrame(Duration.millis(160),
-            new KeyValue(scale.xProperty(), 1, Interpolator.EASE_BOTH))
-    );
+    protected final ObjectProperty<Paint> promptTextFill = new StyleableObjectProperty<Paint>(Color.GRAY) {
+        @Override
+        public Object getBean() {
+            return JFXComboBoxListViewSkin.this;
+        }
 
-    private ParallelTransition transition;
-    private CachedTransition promptTextUpTransition;
-    private CachedTransition promptTextDownTransition;
-    private CachedTransition promptTextColorTransition;
-    private Scale promptTextScale = new Scale(1, 1, 0, 0);
-    private Paint oldPromptTextFill;
-    protected final ObjectProperty<Paint> promptTextFill = new SimpleObjectProperty<>(Color.valueOf("#B2B2B2"));
+        @Override
+        public String getName() {
+            return "promptTextFill";
+        }
 
-    private BooleanBinding usePromptText = Bindings.createBooleanBinding(() -> usePromptText(),
-        ((JFXComboBox<?>) getSkinnable()).valueProperty(),
-        getSkinnable().promptTextProperty());
-
+        @Override
+        public CssMetaData<JFXComboBox, Paint> getCssMetaData() {
+            return StyleableProperties.PROMPT_TEXT_FILL;
+        }
+    };
 
     /***************************************************************************
      *                                                                         *
@@ -93,135 +83,53 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
      **************************************************************************/
 
     public JFXComboBoxListViewSkin(final JFXComboBox<T> comboBox) {
-
         super(comboBox);
-        // customize combo box
-        arrowButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
-        // create my custom pane for the prompt node
-        promptText.textProperty().bind(comboBox.promptTextProperty());
-        promptText.fillProperty().bind(promptTextFill);
-        promptText.getStyleClass().addAll("text", "prompt-text");
-        promptText.getTransforms().add(promptTextScale);
-        if (!comboBox.isLabelFloat()) {
-            promptText.visibleProperty().bind(usePromptText);
-        }
 
-        customPane = new StackPane();
-        customPane.setMouseTransparent(true);
-        customPane.getStyleClass().add("combo-box-button-container");
-        customPane.backgroundProperty().bindBidirectional(getSkinnable().backgroundProperty());
-        customPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-        customPane.getChildren().add(promptText);
-        getChildren().add(0, customPane);
-        StackPane.setAlignment(promptText, Pos.CENTER_LEFT);
+        linesWrapper = new PromptLinesWrapper<>(
+            comboBox,
+            promptTextFill,
+            comboBox.valueProperty(),
+            comboBox.promptTextProperty(),
+            () -> promptText);
 
-        // add lines
-        line.getStyleClass().add("input-line");
-        focusedLine.getStyleClass().add("input-focused-line");
+        linesWrapper.init(() -> createPromptNode());
+        linesWrapper.clip.widthProperty().bind(linesWrapper.promptContainer.widthProperty().subtract(arrowButton.widthProperty()));
 
-        getChildren().add(line);
-        getChildren().add(focusedLine);
-        line.setPrefHeight(1);
-        line.setTranslateY(1); // translate = prefHeight + init_translation
-        line.setManaged(false);
-        line.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-            CornerRadii.EMPTY, Insets.EMPTY)));
-        if (getSkinnable().isDisabled()) {
-            line.setBorder(new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-                BorderStrokeStyle.DASHED,
-                CornerRadii.EMPTY,
-                new BorderWidths(1))));
-            line.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,
-                CornerRadii.EMPTY, Insets.EMPTY)));
-        }
-        // focused line
-        focusedLine.setPrefHeight(2);
-        focusedLine.setTranslateY(0); // translate = prefHeight + init_translation(-1)
-        focusedLine.setBackground(new Background(new BackgroundFill(((JFXComboBox<?>) getSkinnable()).getFocusColor(),
-            CornerRadii.EMPTY, Insets.EMPTY)));
-        focusedLine.setOpacity(0);
-        focusedLine.getTransforms().add(scale);
-        focusedLine.setManaged(false);
+        errorContainer = new ValidationPane<>(comboBox);
+
+        getChildren().addAll(linesWrapper.line, linesWrapper.focusedLine, linesWrapper.promptContainer, errorContainer);
 
         if (comboBox.isEditable()) {
-            comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 4 0 4 0");
+            comboBox.getEditor().setStyle("-fx-background-color:TRANSPARENT;-fx-padding: 0.333333em 0em;");
             comboBox.getEditor().promptTextProperty().unbind();
             comboBox.getEditor().setPromptText(null);
             comboBox.getEditor().textProperty().addListener((o, oldVal, newVal) -> {
-                usePromptText.invalidate();
+                linesWrapper.usePromptText.invalidate();
                 comboBox.setValue(getConverter().fromString(newVal));
             });
         }
 
-        comboBox.labelFloatProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                promptText.visibleProperty().unbind();
-                JFXUtilities.runInFX(() -> createFloatingAnimation());
-            } else {
-                promptText.visibleProperty().bind(usePromptText);
-            }
-            createFocusTransition();
-        });
+        registerChangeListener(comboBox.disableProperty(), "DISABLE_NODE");
+        registerChangeListener(comboBox.focusColorProperty(), "FOCUS_COLOR");
+        registerChangeListener(comboBox.unFocusColorProperty(), "UNFOCUS_COLOR");
+        registerChangeListener(comboBox.disableAnimationProperty(), "DISABLE_ANIMATION");
+    }
 
-        comboBox.focusColorProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null) {
-                focusedLine.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
-                if (((JFXComboBox<?>) getSkinnable()).isLabelFloat()) {
-                    promptTextColorTransition = new CachedTransition(customPane, new Timeline(
-                        new KeyFrame(Duration.millis(1300),
-                            new KeyValue(promptTextFill, newVal, Interpolator.EASE_BOTH)))) {
-                        {
-                            setDelay(Duration.millis(0));
-                            setCycleDuration(Duration.millis(160));
-                        }
-
-                        protected void starting() {
-                            super.starting();
-                            oldPromptTextFill = promptTextFill.get();
-                        }
-                    };
-                    // reset transition
-                    transition = null;
-                }
-            }
-        });
-
-        comboBox.unFocusColorProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null) {
-                line.setBackground(new Background(new BackgroundFill(newVal, CornerRadii.EMPTY, Insets.EMPTY)));
-            }
-        });
-
-        comboBox.disabledProperty().addListener((o, oldVal, newVal) -> {
-            line.setBorder(newVal ? new Border(new BorderStroke(((JFXComboBox<?>) getSkinnable()).getUnFocusColor(),
-                BorderStrokeStyle.DASHED,
-                CornerRadii.EMPTY,
-                new BorderWidths(line.getHeight()))) : Border.EMPTY);
-            line.setBackground(new Background(new BackgroundFill(newVal ? Color.TRANSPARENT : ((JFXComboBox<?>) getSkinnable())
-                .getUnFocusColor(),
-                CornerRadii.EMPTY, Insets.EMPTY)));
-        });
-
-        // handle animation on focus gained/lost event
-        comboBox.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal) {
-                focus();
-            } else {
-                unFocus();
-            }
-        });
-
-        // handle animation on value changed
-        comboBox.valueProperty().addListener((o, oldVal, newVal) -> {
-            if (((JFXComboBox<?>) getSkinnable()).isLabelFloat()) {
-                if (newVal == null || newVal.toString().isEmpty()) {
-                    animateFloatingLabel(false);
-                } else {
-                    animateFloatingLabel(true);
-                }
-            }
-        });
+    @Override
+    protected void handleControlPropertyChanged(String propertyReference) {
+        if ("DISABLE_NODE".equals(propertyReference)) {
+            linesWrapper.updateDisabled();
+        } else if ("FOCUS_COLOR".equals(propertyReference)) {
+            linesWrapper.updateFocusColor();
+        } else if ("UNFOCUS_COLOR".equals(propertyReference)) {
+            linesWrapper.updateUnfocusColor();
+        } else if ("DISABLE_ANIMATION".equals(propertyReference)) {
+            // remove error clip if animation is disabled
+            errorContainer.updateClip();
+        } else {
+            super.handleControlPropertyChanged(propertyReference);
+        }
     }
 
     /***************************************************************************
@@ -234,133 +142,87 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
     protected void layoutChildren(final double x, final double y,
                                   final double w, final double h) {
         super.layoutChildren(x, y, w, h);
-        customPane.resizeRelocate(x, y, w, h);
+        final double height = getSkinnable().getHeight();
+        linesWrapper.layoutLines(x, y, w, h, height,
+            promptText == null ? 0 : snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
+        errorContainer.layoutPane(x, height + linesWrapper.focusedLine.getHeight(), w, h);
+
+        linesWrapper.updateLabelFloatLayout();
+
         if (invalid) {
             invalid = false;
-            // create floating label
-            createFloatingAnimation();
-            if(getSkinnable().getValue()!=null)
-                animateFloatingLabel(true);
+            // update validation container
+            errorContainer.invalid(w);
+            // focus
+            linesWrapper.invalid();
         }
-        focusedLine.resizeRelocate(x, getSkinnable().getHeight(), w, focusedLine.prefHeight(-1));
-        line.resizeRelocate(x, getSkinnable().getHeight(), w, line.prefHeight(-1));
-        scale.setPivotX(w / 2);
     }
 
-    private void createFloatingAnimation() {
-        // TODO: the 6.05 should be computed, for now its hard coded to keep the alignment with other controls
-        promptTextUpTransition = new CachedTransition(customPane, new Timeline(
-            new KeyFrame(Duration.millis(1300),
-                new KeyValue(promptText.translateYProperty(),
-                    -customPane.getHeight() + 6.05,
-                    Interpolator.EASE_BOTH),
-                new KeyValue(promptTextScale.xProperty(), 0.85, Interpolator.EASE_BOTH),
-                new KeyValue(promptTextScale.yProperty(), 0.85, Interpolator.EASE_BOTH)))) {{
-            setDelay(Duration.millis(0));
-            setCycleDuration(Duration.millis(240));
-        }};
+    private void createPromptNode() {
+        if (promptText != null || !linesWrapper.usePromptText.get()) {
+            return;
+        }
+        promptText = new Text();
+        StackPane.setAlignment(promptText, Pos.CENTER_LEFT);
+        // create my custom pane for the prompt node
+        promptText.textProperty().bind(getSkinnable().promptTextProperty());
+        promptText.fillProperty().bind(linesWrapper.animatedPromptTextFill);
+        promptText.getStyleClass().addAll("text");
+        promptText.getTransforms().add(linesWrapper.promptTextScale);
+        promptText.visibleProperty().bind(linesWrapper.usePromptText);
+        promptText.setTranslateX(1);
+        linesWrapper.promptContainer.getChildren().add(promptText);
 
-        promptTextColorTransition = new CachedTransition(customPane, new Timeline(
-            new KeyFrame(Duration.millis(1300),
-                new KeyValue(promptTextFill,
-                    ((JFXComboBox<?>) getSkinnable()).getFocusColor(),
-                    Interpolator.EASE_BOTH)))) {
-            {
-                setDelay(Duration.millis(0));
-                setCycleDuration(Duration.millis(160));
-            }
-
-            protected void starting() {
-                super.starting();
-                oldPromptTextFill = promptTextFill.get();
-            }
-
-        };
-
-        promptTextDownTransition = new CachedTransition(customPane, new Timeline(
-            new KeyFrame(Duration.millis(1300),
-                new KeyValue(promptText.translateYProperty(), 0, Interpolator.EASE_BOTH),
-                new KeyValue(promptTextScale.xProperty(), 1, Interpolator.EASE_BOTH),
-                new KeyValue(promptTextScale.yProperty(), 1, Interpolator.EASE_BOTH)))) {{
-            setDelay(Duration.millis(0));
-            setCycleDuration(Duration.millis(240));
-        }};
-        promptTextDownTransition.setOnFinished((finish) -> {
-            promptText.setTranslateY(0);
-            promptTextScale.setX(1);
-            promptTextScale.setY(1);
-        });
+        if (getSkinnable().isFocused() && ((JFXComboBox<T>) getSkinnable()).isLabelFloat()) {
+            promptText.setTranslateY(-snapPosition(promptText.getBaselineOffset() + promptText.getLayoutBounds().getHeight() * .36));
+            linesWrapper.promptTextScale.setX(0.85);
+            linesWrapper.promptTextScale.setY(0.85);
+        }
     }
 
-    private void focus() {
-        // create the focus animations
-        if (transition == null) {
-            createFocusTransition();
+    private static class StyleableProperties {
+        private static final CssMetaData<JFXComboBox, Paint> PROMPT_TEXT_FILL =
+            new CssMetaData<JFXComboBox, Paint>("-fx-prompt-text-fill",
+                PaintConverter.getInstance(), Color.GRAY) {
+
+                @Override
+                public boolean isSettable(JFXComboBox n) {
+                    final JFXComboBoxListViewSkin<?> skin = (JFXComboBoxListViewSkin<?>) n.getSkin();
+                    return skin.promptTextFill == null || !skin.promptTextFill.isBound();
+                }
+
+                @Override
+                @SuppressWarnings("unchecked")
+                public StyleableProperty<Paint> getStyleableProperty(JFXComboBox n) {
+                    final JFXComboBoxListViewSkin<?> skin = (JFXComboBoxListViewSkin<?>) n.getSkin();
+                    return (StyleableProperty<Paint>) skin.promptTextFill;
+                }
+            };
+
+        private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
+        static {
+            List<CssMetaData<? extends Styleable, ?>> styleables =
+                new ArrayList<>(ComboBoxListViewSkin.getClassCssMetaData());
+            styleables.add(PROMPT_TEXT_FILL);
+            STYLEABLES = Collections.unmodifiableList(styleables);
         }
-        transition.play();
+    }
+
+
+    /**
+     * @return The CssMetaData associated with this class, which may include the
+     * CssMetaData of its super classes.
+     */
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.STYLEABLES;
     }
 
     /**
-     * this method is called when the text property is changed when the
-     * field is not focused (changed in code)
-     *
-     * @param up
+     * {@inheritDoc}
      */
-    private void animateFloatingLabel(boolean up) {
-        if (promptText == null) {
-            Platform.runLater(() -> animateFloatingLabel(up));
-        } else {
-            if (transition != null) {
-                transition.stop();
-                transition.getChildren().remove(promptTextUpTransition);
-                transition.getChildren().remove(promptTextColorTransition);
-                transition = null;
-            }
-            if (up && promptText.getTranslateY() == 0) {
-                promptTextDownTransition.stop();
-                promptTextUpTransition.play();
-                if (getSkinnable().isFocused()) {
-                    promptTextColorTransition.play();
-                }
-            } else if (!up) {
-                promptTextUpTransition.stop();
-                if (getSkinnable().isFocused()) {
-                    promptTextFill.set(oldPromptTextFill);
-                }
-                promptTextDownTransition.play();
-            }
-        }
-    }
-
-    private void createFocusTransition() {
-        transition = new ParallelTransition();
-        if (((JFXComboBox<?>) getSkinnable()).isLabelFloat()) {
-            transition.getChildren().add(promptTextUpTransition);
-            transition.getChildren().add(promptTextColorTransition);
-        }
-        transition.getChildren().add(linesAnimation);
-    }
-
-    private void unFocus() {
-        if (transition != null) {
-            transition.stop();
-        }
-        scale.setX(initScale);
-        focusedLine.setOpacity(0);
-        if (((JFXComboBox<?>) getSkinnable()).isLabelFloat() && oldPromptTextFill != null) {
-            promptTextFill.set(oldPromptTextFill);
-            if (usePromptText()) {
-                promptTextDownTransition.play();
-            }
-        }
-    }
-
-    private boolean usePromptText() {
-        Object txt = ((JFXComboBox<?>) getSkinnable()).getValue();
-        String promptTxt = getSkinnable().getPromptText();
-        return (txt == null || txt.toString()
-            .isEmpty()) && promptTxt != null && !promptTxt.isEmpty() && !promptTextFill
-            .get()
-            .equals(Color.TRANSPARENT);
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return getClassCssMetaData();
     }
 }

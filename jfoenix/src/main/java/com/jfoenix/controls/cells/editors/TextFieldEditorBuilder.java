@@ -19,16 +19,6 @@
 
 package com.jfoenix.controls.cells.editors;
 
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
-import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-
 /**
  * <h1>Text field cell editor</h1>
  * this an example of the cell editor, it creates a JFXTextField node to
@@ -39,56 +29,10 @@ import javafx.scene.layout.StackPane;
  * @version 1.0
  * @since 2016-03-09
  */
-public class TextFieldEditorBuilder implements EditorNodeBuilder<String> {
-
-    private JFXTextField textField;
-
-    @Override
-    public void startEdit() {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public void cancelEdit() {
-
-    }
-
-    @Override
-    public void updateItem(String item, boolean empty) {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public Region createNode(String value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
-        textField = new JFXTextField(value);
-        textField.setStyle("-fx-background-color:TRANSPARENT;");
-        textField.minWidthProperty().bind(minWidthBinding);
-        textField.setOnKeyPressed(keyEventsHandler);
-        textField.focusedProperty().addListener(focusChangeListener);
-        pane.getChildren().add(textField);
-        return pane;
-    }
-
-    @Override
-    public void setValue(String value) {
-        textField.setText(value);
-    }
+public class TextFieldEditorBuilder extends TextFieldEditorBase<String> {
 
     @Override
     public String getValue() {
         return textField.getText();
-    }
-
-    @Override
-    public void validateValue() throws Exception {
-        // Do nothing because there is no validation constraints
     }
 }

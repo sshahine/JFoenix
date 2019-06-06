@@ -19,16 +19,9 @@
 
 package com.jfoenix.controls.cells.editors;
 
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.cells.editors.base.EditorNodeBuilder;
-import com.jfoenix.validation.NumberValidator;
-import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import com.jfoenix.utils.JFXUtilities;
+import com.jfoenix.validation.IntegerValidator;
+import com.jfoenix.validation.base.ValidatorBase;
 
 /**
  * <h1>Text field cell editor (numbers only) </h1>
@@ -40,60 +33,17 @@ import javafx.scene.layout.StackPane;
  * @version 1.0
  * @since 2016-03-09
  */
-public class IntegerTextFieldEditorBuilder implements EditorNodeBuilder<Integer> {
+public class IntegerTextFieldEditorBuilder extends TextFieldEditorBase<Integer> {
 
-    private JFXTextField textField;
-
-    @Override
-    public void startEdit() {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public void cancelEdit() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void updateItem(Integer item, boolean empty) {
-        Platform.runLater(() -> {
-            textField.selectAll();
-            textField.requestFocus();
-        });
-    }
-
-    @Override
-    public Region createNode(Integer value, DoubleBinding minWidthBinding, EventHandler<KeyEvent> keyEventsHandler, ChangeListener<Boolean> focusChangeListener) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-padding:-10 0 -10 0");
-        textField = new JFXTextField(value + "");
-        textField.minWidthProperty().bind(minWidthBinding);
-        textField.setOnKeyPressed(keyEventsHandler);
-        textField.focusedProperty().addListener(focusChangeListener);
-        NumberValidator validator = new NumberValidator();
-        validator.setMessage("Value must be a number");
-        textField.getValidators().add(validator);
-        pane.getChildren().add(textField);
-        return pane;
-    }
-
-    @Override
-    public void setValue(Integer value) {
-        textField.setText(value + "");
+    public IntegerTextFieldEditorBuilder(ValidatorBase... validators) {
+        super(JFXUtilities.concat(
+            new ValidatorBase[] {new IntegerValidator()},
+            validators,
+            len -> new ValidatorBase[len]));
     }
 
     @Override
     public Integer getValue() {
-        return Integer.parseInt(textField.getText());
-    }
-
-    @Override
-    public void validateValue() throws Exception {
-        if (!textField.validate()) {
-            throw new Exception();
-        }
+        return Integer.valueOf(textField.getText());
     }
 }

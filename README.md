@@ -1,20 +1,62 @@
-
+[![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
-[![][versioneye img]][versioneye]
 [![][sonardebt img]][sonardebt]
+[![][gitter img]][gitter]
+[![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
+[![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
+[![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
+[![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
+---
 
-Join chat [![Join the chat at https://gitter.im/JFoenix/Lobby](https://badges.gitter.im/JFoenix/Lobby.svg)](https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<h1 align="center">
+    <img src="http://www.jfoenix.com/img/logo-JFX.png">
+</h1>
+<p align="center">
+<sup>
+<b>JFoenix is an open source Java library, that implements Google Material Design using Java components</b>
+</sup>
+</p>
 
-# JFoenix
-
-* JavaFX Material Design Library [download jar](http://www.jfoenix.com/download/jfoenix.jar)
-* JFoenix android build [download](http://www.jfoenix.com/download/jfoenix-0.0.0-SNAPSHOT-retrolambda.jar)
 * [JFoenix Site](http://www.jfoenix.com)
+* JFoenix for Java 9 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/9.0.8/jfoenix-9.0.8.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.8/jfoenix-8.0.8.jar) (8.x.x)
+* JFoenix for Android - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.8/jfoenix-8.0.8-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
-# Summary
-JFoenix is an open source Java library, that implements Google Material Design using Java components.
+# Using JFoenix already?
+Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
+* One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
+
+If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
+
+# Projects using JFoenix
+* <a href="http://bcozy.org">BCozy</a>
+* <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
+* <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
+* <a href="https://github.com/badarshahzad/Jfx-Browser">JFX-Browser</a>
+* <a href="https://github.com/huanghongxun/HMCL">HMCL</a> - Hello Minecraft! Launcher 
+* By <a href="https://github.com/anongrp">Anongrp</a> in several projects: 
+<a href="https://github.com/anongrp/Phony">Phony</a>,
+<a href="https://github.com/anongrp/ThunderGet">ThunderGet</a>,
+<a href="https://github.com/anongrp/Portume">Portume</a>
+* By <a href="https://github.com/goxr3plus">GOXR3PLUS</a> in:
+<a href="https://github.com/goxr3plus/XR3Player">XR3Player</a>,
+<a href="https://github.com/goxr3plus/JavaFX-Web-Browser">JAVAFX WEB Browser</a>
+* <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
+* <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
+* <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
+* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
+* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
+* <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
+* <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
+* <a href="https://github.com/silentsoft/actlist">Actlist</a> An utility platform to execute your desire things.
+* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java.
+* <a href="https://github.com/Shehanka/RentLio">RentLio</a> Vehicle Reservation System with RMI Technology.
+* Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
+<a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
+<a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
+* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application.
 
 # Build
 To build JFoenix, execute the following command:
@@ -24,65 +66,147 @@ To build JFoenix, execute the following command:
 To run the main demo, execute the following command:
 
     gradlew run
-    
+
 **NOTE** : You need to set JAVA_HOME environment variable to point to Java 1.8 directory.
 
-**NOTE** : JFoenix requires **Java 1.8 u60** and above.
+**NOTE** : JFoenix requires **Java 1.8u60** and above.
 
-# How Can I Use JFoenix?
- You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix.jar under the build/dist folder. To use JFoenix, import jfoenix.jar into your project and start using the new material design Java components :).
- 
+# Demo
+For detailed steps on getting the demo running, see [the wiki].
+
+# How can I use JFoenix?
+You can download the source code of the library and build it as mentioned previously. Building JFoenix will generate jfoenix-0.0.0-SNAPSHOT.jar under the jfoenix/build/libs folder. To use JFoenix, import jfoenix-0.0.0-SNAPSHOT.jar into your project and start using the new material design Java components :).
+
 ## Gradle
 ### How to Include In Gradle Project
-
-    repositories {
-        mavenCentral()
-    }
-
+```groovy
+repositories {
+    mavenCentral()
+}
+```
 Reference the repository from this location using:
+```groovy
+dependencies {
+    compile 'com.jfoenix:jfoenix:8.0.8' // Java 8
+    compile 'com.jfoenix:jfoenix:9.0.8' // Java 9
+}
+```
 
-    dependencies {
-      compile 'com.jfoenix:jfoenix:1.2.0'
-    }
+## Maven
+### How to Include In Maven Project
+```xml
+<dependency>
+    <groupId>com.jfoenix</groupId>
+    <artifactId>jfoenix</artifactId>
+    <version>9.0.8</version>
+</dependency>
 
-# Pics
+<dependency>
+    <groupId>com.jfoenix</groupId>
+    <artifactId>jfoenix</artifactId>
+    <version>8.0.8</version>
+</dependency>
+```
+# Components
+<details><summary><i>JFXButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/button.gif "Button Demo")
+![Button Demo](http://jfoenix.com/gif/button.gif "Button Demo")
+</p></details>
 
-![Alt text](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
+<details><summary><i>JFXCheckBox </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Checkbox"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/toggle-button.gif "Toggle Buton Demo")
+![Check Box Demo](http://jfoenix.com/gif/checkbox.gif "Check Box Demo")
+</p></details>
 
-![Alt text](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
+<details><summary><i>JFXToggleButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Toggle-Button"><b>Usage</b></a></summary><p>
 
-![Alt text](http://jfoenix.com/gif/listview.gif "List View Demo")
+![Toggle Button Demo](http://jfoenix.com/gif/toggle-button.gif "Toggle Button Demo")
+</p></details>
 
-![Alt text](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
-
-![Alt text](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
-
-![Alt text](http://jfoenix.com/gif/slider.gif "Slider Demo")
-
-![Alt text](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
-
-![Alt text](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
-
-![Alt text](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
-
-![Alt text](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
-
-![Alt text](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
-
-![Alt text](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
-
-![Alt text](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
+<details><summary><i>JFXDialog</i></summary><p>
 
 
-[mavenbadge]:https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jfoenix%22%20AND%20a%3A%22jfoenix%22
+![Dialog Demo](http://jfoenix.com/gif/dialog.gif "Dialog Demo")
+</p></details>
+
+<details><summary><i>JFXListView</i></summary><p>
+
+    
+![List View Demo](http://jfoenix.com/gif/listview.gif "List View Demo")
+</p></details>
+
+<details><summary><i>JFXHighlighter</i></summary><p>
+
+    
+![Highlighter](http://jfoenix.com/gif/highlighter.gif "Highlighter")
+</p></details>
+
+<details><summary><i>JFXChipView</i></summary><p>
+
+    
+![Chip View](http://jfoenix.com/gif/chipview.gif "Chip View")
+</p></details>
+
+<details><summary><i>JFXNodesList</i></summary><p>
+
+    
+![Nodes List Demo](http://jfoenix.com/gif/nodes-list.gif "Nodes List Demo")
+</p></details>
+
+<details><summary><i>JFXMasonryPane</i></summary><p>
+
+    
+![Masonry Demo](http://jfoenix.com/gif/masonry.gif "Masonry Demo")
+</p></details>
+
+<details><summary><i>JFXSlider </i> <a href="https://github.com/jfoenixadmin/JFoenix/wiki/Slider"><b>Usage</b></a></summary><p>
+
+![Slider Demo](http://jfoenix.com/gif/slider.gif "Slider Demo")
+</p></details>
+
+<details><summary><i>JFXSpinner</i></summary><p>
+
+    
+![Spinner Demo](http://jfoenix.com/gif/spinner.gif "Spinner Demo")
+</p></details>
+
+<details><summary><i>JFXSnackbar</i></summary><p>
+
+    
+![Icons-Snackbar Demo](http://jfoenix.com/gif/icons-snackbar.gif "Icons-Snackbar Demo")
+</p></details>
+
+<details><summary><i>JFXColorPicker</i></summary><p>
+
+    
+![Color Picker Demo](http://jfoenix.com/gif/colorpicker-beta.gif "Color Picker Demo")
+</p></details>
+
+<details><summary><i>JFXDatePicker</i></summary><p>
+
+    
+![Date Picker Demo](http://jfoenix.com/gif/datepicker.gif "Date Picker Demo")
+</p></details>
+
+<details><summary><i>JFXTimePicker</i></summary><p>
+
+    
+![Time Picker Demo](http://jfoenix.com/gif/timepicker.gif "Time Picker Demo")
+</p></details>
+
+<details><summary><i>JFXTreeTableView</i></summary><p>
+
+    
+![Tree Table View](http://jfoenix.com/gif/treetableview.gif "Tree Table View")
+</p></details>
+
+<details><summary><i>Grouping</i></summary><p>
+    
+![Grouping Demo](http://jfoenix.com/gif/grouping.gif "Grouping Demo")
+</p></details>
+
+[mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
-
-[versioneye]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361
-[versioneye img]:https://www.versioneye.com/user/projects/58da091024ef3e0045217361/badge.svg
 
 [sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
 [sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root
@@ -91,4 +215,20 @@ Reference the repository from this location using:
 [sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
 
 [CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
-[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=svg
+[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=shield
+
+[gitter]:https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
+
+[the wiki]: https://github.com/jfoenixadmin/JFoenix/wiki#trying-the-demo
+
+## Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/jfoenixadmin/JFoenix/contributors"><img src="https://opencollective.com/JFoenix/contributors.svg?width=890&button=false" /></a>
+
+
+## Special Thanks
+
+Special thanks to <a href="https://www.jetbrains.com">JetBrains</a> and <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a> for their support to this project.

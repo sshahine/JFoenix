@@ -1,14 +1,17 @@
 package demos.gui.uicomponents;
 
 import com.jfoenix.controls.JFXBadge;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
+import com.jfoenix.controls.JFXSnackbarLayout;
 import io.datafx.controller.ViewController;
 import javafx.animation.Transition;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import javax.annotation.PostConstruct;
 
@@ -29,7 +32,6 @@ public class IconsController {
 
     @FXML
     private StackPane root;
-    @FXML
     private JFXSnackbar snackbar;
     private int count = 1;
 
@@ -45,7 +47,8 @@ public class IconsController {
         bindAction(burger3);
         bindAction(burger4);
 
-        snackbar.registerSnackbarContainer(root);
+        snackbar = new JFXSnackbar(root);
+        snackbar.setPrefWidth(300);
 
         badge1.setOnMouseClicked((click) -> {
             int value = Integer.parseInt(badge1.getText());
@@ -64,17 +67,19 @@ public class IconsController {
 
             // trigger snackbar
             if (count++ % 2 == 0) {
-                snackbar.fireEvent(new SnackbarEvent("Toast Message " + count));
+                snackbar.fireEvent(new SnackbarEvent(new JFXSnackbarLayout("Toast Message " + count)));
             } else {
                 if (count % 4 == 0) {
-                    snackbar.fireEvent(new SnackbarEvent("Snackbar Message Persistant " + count,
-                                                         "CLOSE",
-                                                         3000,
-                                                         true,
-                                                         b -> snackbar.close()));
+                    JFXButton button = new JFXButton("CLOSE");
+                    button.setOnAction(action -> snackbar.close());
+                    snackbar.fireEvent(new SnackbarEvent(
+                        new JFXSnackbarLayout("Snackbar Message Persistent " + count, "CLOSE", action -> snackbar.close()),
+                        Duration.INDEFINITE, null));
+
                 } else {
-                    snackbar.fireEvent(new SnackbarEvent("Snackbar Message " + count, "UNDO", 3000, false, (b) -> {
-                    }));
+                    snackbar.fireEvent(new SnackbarEvent(
+                        new JFXSnackbarLayout("Snackbar Message" + count, "UNDO", null),
+                        Duration.millis(3000), null));
                 }
             }
         });

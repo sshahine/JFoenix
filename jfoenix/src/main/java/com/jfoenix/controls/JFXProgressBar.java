@@ -19,7 +19,10 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXProgressBarSkin;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Skin;
 
@@ -58,6 +61,14 @@ public class JFXProgressBar extends ProgressBar {
      * {@inheritDoc}
      */
     @Override
+    public String getUserAgentStylesheet() {
+        return JFoenixResources.load("css/controls/jfx-progress-bar.css").toExternalForm();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected Skin<?> createDefaultSkin() {
         return new JFXProgressBarSkin(this);
     }
@@ -68,4 +79,17 @@ public class JFXProgressBar extends ProgressBar {
     }
 
 
+    private DoubleProperty secondaryProgress = new SimpleDoubleProperty(INDETERMINATE_PROGRESS);
+
+    public double getSecondaryProgress() {
+        return secondaryProgress == null ? INDETERMINATE_PROGRESS : secondaryProgress.get();
+    }
+
+    public DoubleProperty secondaryProgressProperty() {
+        return secondaryProgress;
+    }
+
+    public void setSecondaryProgress(double secondaryProgress) {
+        secondaryProgressProperty().set(secondaryProgress);
+    }
 }

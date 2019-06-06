@@ -47,7 +47,7 @@ public class JFXDepthManager {
      * this method is used to add shadow effect to the node,
      * however the shadow is not real ( gets affected with node transformations)
      * <p>
-     * use {@link #createMaterialNode()} instead to generate a real shadow
+     * use {@link #createMaterialNode(Node, int)} instead to generate a real shadow
      */
     public static void setDepth(Node control, int level) {
         level = level < 0 ? 0 : level;
@@ -74,8 +74,29 @@ public class JFXDepthManager {
      * (which makes it looks as a real shadow)
      */
     public static Node createMaterialNode(Node control, int level) {
-        Node container = new Pane(control);
+        Node container = new Pane(control){
+            @Override
+            protected double computeMaxWidth(double height) {
+                return computePrefWidth(height);
+            }
+
+            @Override
+            protected double computeMaxHeight(double width) {
+                return computePrefHeight(width);
+            }
+
+            @Override
+            protected double computePrefWidth(double height) {
+                return control.prefWidth(height);
+            }
+
+            @Override
+            protected double computePrefHeight(double width) {
+                return control.prefHeight(width);
+            }
+        };
         container.getStyleClass().add("depth-container");
+        container.setPickOnBounds(false);
         level = level < 0 ? 0 : level;
         level = level > 5 ? 5 : level;
         container.setEffect(new DropShadow(BlurType.GAUSSIAN,
