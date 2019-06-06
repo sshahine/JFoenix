@@ -37,6 +37,7 @@ public class DrawerDemo extends Application {
         leftDrawerPane.getChildren().add(new JFXButton("Left Content"));
         leftDrawer.setSidePane(leftDrawerPane);
         leftDrawer.setDefaultDrawerSize(150);
+        leftDrawer.setResizeContent(true);
         leftDrawer.setOverLayVisible(false);
         leftDrawer.setResizableOnDrag(true);
 
@@ -48,6 +49,7 @@ public class DrawerDemo extends Application {
         bottomDrawer.setDefaultDrawerSize(150);
         bottomDrawer.setDirection(DrawerDirection.BOTTOM);
         bottomDrawer.setSidePane(bottomDrawerPane);
+        bottomDrawer.setResizeContent(true);
         bottomDrawer.setOverLayVisible(false);
         bottomDrawer.setResizableOnDrag(true);
 

@@ -19,12 +19,8 @@
 
 package com.jfoenix.controls;
 
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-
-import java.util.HashMap;
 
 /**
  * JFXTreeView is the material design implementation of a TreeView
@@ -35,6 +31,8 @@ import java.util.HashMap;
  * @since 2017-02-15
  */
 public class JFXTreeView<T> extends TreeView<T> {
+
+    private static final String DEFAULT_STYLE_CLASS = "jfx-tree-view";
 
     public JFXTreeView() {
         init();
@@ -47,42 +45,6 @@ public class JFXTreeView<T> extends TreeView<T> {
 
     private void init() {
         this.setCellFactory((view) -> new JFXTreeCell<>());
-    }
-
-    double height = 0;
-    int animateRow = -1;
-    int sibRow = -1;
-    double layoutY = -1;
-    boolean expand = false;
-    boolean disableSiblings = false;
-    ParallelTransition trans = new ParallelTransition();
-    HashMap<Integer, CellAnimation> sibAnimationMap = new HashMap<>();
-    HashMap<Integer, CellAnimation> childrenAnimationMap = new HashMap<>();
-
-    void clearAnimation() {
-        this.trans.stop();
-        this.trans.getChildren().clear();
-        this.sibAnimationMap.clear();
-        this.childrenAnimationMap.clear();
-        this.height = 0;
-        this.sibRow = -1;
-    }
-
-    static class CellAnimation {
-        JFXTreeCell<?> cell;
-        Animation animation;
-
-        public CellAnimation(JFXTreeCell<?> cell, Animation animation) {
-            this.cell = cell;
-            this.animation = animation;
-        }
-
-        public JFXTreeCell<?> getCell() {
-            return cell;
-        }
-
-        public Animation getAnimation() {
-            return animation;
-        }
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 }

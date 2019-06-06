@@ -1,8 +1,13 @@
 package demos.gui.main;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
+import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXTooltip;
 import demos.datafx.ExtendedAnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
 import demos.gui.uicomponents.ButtonController;
@@ -15,6 +20,7 @@ import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -51,18 +57,22 @@ public final class MainController {
     @PostConstruct
     public void init() throws Exception {
         // init the title hamburger icon
+        final JFXTooltip burgerTooltip = new JFXTooltip("Open drawer");
+
         drawer.setOnDrawerOpening(e -> {
             final Transition animation = titleBurger.getAnimation();
+            burgerTooltip.setText("Close drawer");
             animation.setRate(1);
             animation.play();
         });
         drawer.setOnDrawerClosing(e -> {
             final Transition animation = titleBurger.getAnimation();
+            burgerTooltip.setText("Open drawer");
             animation.setRate(-1);
             animation.play();
         });
         titleBurgerContainer.setOnMouseClicked(e -> {
-            if (drawer.isHidden() || drawer.isHiding()) {
+            if (drawer.isClosed() || drawer.isClosing()) {
                 drawer.open();
             } else {
                 drawer.close();
@@ -73,11 +83,14 @@ public final class MainController {
         loader.setController(new InputController());
         toolbarPopup = new JFXPopup(loader.load());
 
-        optionsBurger.setOnMouseClicked(e -> toolbarPopup.show(optionsBurger,
-                                                               PopupVPosition.TOP,
-                                                               PopupHPosition.RIGHT,
-                                                               -12,
-                                                               15));
+        optionsBurger.setOnMouseClicked(e ->
+            toolbarPopup.show(optionsBurger,
+                PopupVPosition.TOP,
+                PopupHPosition.RIGHT,
+                -12,
+                15));
+        JFXTooltip.setVisibleDuration(Duration.millis(3000));
+        JFXTooltip.install(titleBurgerContainer, burgerTooltip, Pos.BOTTOM_CENTER);
 
         // create the inner flow and content
         context = new ViewFlowContext();
@@ -95,7 +108,7 @@ public final class MainController {
         Flow sideMenuFlow = new Flow(SideMenuController.class);
         final FlowHandler sideMenuFlowHandler = sideMenuFlow.createHandler(context);
         drawer.setSidePane(sideMenuFlowHandler.start(new ExtendedAnimatedFlowContainer(containerAnimationDuration,
-                                                                                       SWIPE_LEFT)));
+            SWIPE_LEFT)));
     }
 
     public static final class InputController {

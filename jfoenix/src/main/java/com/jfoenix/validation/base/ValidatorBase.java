@@ -26,8 +26,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
+import java.util.function.Supplier;
+
 /**
- * An abstract class that defines the basic validation functionalities for a certain control.
+ * An abstract class that defines the basic validation functionality for a certain control.
  *
  * @author Shadi Shaheen
  * @version 1.0
@@ -35,8 +37,6 @@ import javafx.scene.control.Tooltip;
  */
 public abstract class ValidatorBase extends Parent {
 
-    public static final String DEFAULT_ERROR_STYLE_CLASS = "error";
-    
     /**
      * this style class will be activated when a validation error occurs
      */
@@ -54,9 +54,17 @@ public abstract class ValidatorBase extends Parent {
      * containing the validator's error message.
      */
     private Tooltip savedTooltip = null;
+    private Tooltip errorTooltip = null;
+
+    public ValidatorBase(String message) {
+        this();
+        this.setMessage(message);
+    }
 
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
+        errorTooltip = new Tooltip();
+        errorTooltip.getStyleClass().add("error-tooltip");
     }
 
     /***************************************************************************
@@ -101,8 +109,8 @@ public abstract class ValidatorBase extends Parent {
              * NOTE: NEED TO FIX adding error style class to text area
              * is causing the caret to disappear
              */
-            if (!control.getStyleClass().contains(errorStyleClass.get())) {
-                control.getStyleClass().add(errorStyleClass.get());
+            if (!control.getStyleClass().contains(PSEUDO_CLASS_ERROR.getPseudoClassName())) {
+                control.getStyleClass().add(PSEUDO_CLASS_ERROR.getPseudoClassName());
             }
 
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
@@ -116,7 +124,9 @@ public abstract class ValidatorBase extends Parent {
                 if (controlTooltip != null && !controlTooltip.getStyleClass().contains("error-tooltip")) {
                     savedTooltip = controlTooltip;
                 }
-                
+
+                errorTooltip.setText(getMessage());
+
                 ((Control) control).setTooltip(errorTooltip);
             } else {
                 Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
@@ -142,7 +152,6 @@ public abstract class ValidatorBase extends Parent {
             }
             savedTooltip = null;
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
-            control.getStyleClass().remove(errorStyleClass.get());
         }
     }
 
@@ -220,41 +229,38 @@ public abstract class ValidatorBase extends Parent {
         return this.message;
     }
 
-    /***** Awsome Icon *****/
-    protected SimpleObjectProperty<Node> icon = new SimpleObjectProperty<Node>() {
+    /***** Icon *****/
+    protected SimpleObjectProperty<Supplier<Node>> iconSupplier = new SimpleObjectProperty<Supplier<Node>>() {
         @Override
         protected void invalidated() {
             updateSrcControl();
         }
     };
 
+    public void setIconSupplier(Supplier<Node> icon) {
+        this.iconSupplier.set(icon);
+    }
+
+    public SimpleObjectProperty<Supplier<Node>> iconSupplierProperty() {
+        return this.iconSupplier;
+    }
+
+    public Supplier<Node> getIconSupplier() {
+        return iconSupplier.get();
+    }
+
     public void setIcon(Node icon) {
-        icon.getStyleClass().add("error-icon");
-        this.icon.set(icon);
+        iconSupplier.set(() -> icon);
     }
 
     public Node getIcon() {
-        return this.icon.get();
+        if (iconSupplier.get() == null) {
+            return null;
+        }
+        Node icon = iconSupplier.get().get();
+        if (icon != null) {
+            icon.getStyleClass().add("error-icon");
+        }
+        return icon;
     }
-
-    public SimpleObjectProperty<Node> iconProperty() {
-        return this.icon;
-    }
-
-
-    /***** error style class *****/
-    protected SimpleStringProperty errorStyleClass = new SimpleStringProperty(DEFAULT_ERROR_STYLE_CLASS);
-
-    public void setErrorStyleClass(String styleClass) {
-        this.errorStyleClass.set(styleClass);
-    }
-
-    public String getErrorStyleClass() {
-        return this.errorStyleClass.get();
-    }
-
-    public StringProperty errorStyleClassProperty() {
-        return this.errorStyleClass;
-    }
-
 }

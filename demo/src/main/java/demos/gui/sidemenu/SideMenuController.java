@@ -10,6 +10,7 @@ import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -77,6 +78,15 @@ public class SideMenuController {
     @ActionTrigger("scrollpane")
     private Label scrollpane;
     @FXML
+    @ActionTrigger("chipview")
+    private Label chipview;
+    @FXML
+    @ActionTrigger("nodeslist")
+    private Label nodesList;
+    @FXML
+    @ActionTrigger("highlighter")
+    private Label highlighter;
+    @FXML
     private JFXListView<Label> sideList;
 
     /**
@@ -88,15 +98,19 @@ public class SideMenuController {
         FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
         sideList.propagateMouseEventsToParent();
         sideList.getSelectionModel().selectedItemProperty().addListener((o, oldVal, newVal) -> {
-            if (newVal != null) {
-                try {
-                    contentFlowHandler.handle(newVal.getId());
-                } catch (VetoException exc) {
-                    exc.printStackTrace();
-                } catch (FlowException exc) {
-                    exc.printStackTrace();
-                }
-            }
+            new Thread(()->{
+                Platform.runLater(()->{
+                    if (newVal != null) {
+                        try {
+                            contentFlowHandler.handle(newVal.getId());
+                        } catch (VetoException exc) {
+                            exc.printStackTrace();
+                        } catch (FlowException exc) {
+                            exc.printStackTrace();
+                        }
+                    }
+                });
+            }).start();
         });
         Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
         bindNodeToController(button, ButtonController.class, contentFlow, contentFlowHandler);
@@ -111,12 +125,15 @@ public class SideMenuController {
         bindNodeToController(slider, SliderController.class, contentFlow, contentFlowHandler);
         bindNodeToController(spinner, SpinnerController.class, contentFlow, contentFlowHandler);
         bindNodeToController(textfield, TextFieldController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(highlighter, HighlighterController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(chipview, ChipViewController.class, contentFlow, contentFlowHandler);
         bindNodeToController(togglebutton, ToggleButtonController.class, contentFlow, contentFlowHandler);
         bindNodeToController(popup, PopupController.class, contentFlow, contentFlowHandler);
         bindNodeToController(svgLoader, SVGLoaderController.class, contentFlow, contentFlowHandler);
         bindNodeToController(pickers, PickersController.class, contentFlow, contentFlowHandler);
         bindNodeToController(masonry, MasonryPaneController.class, contentFlow, contentFlowHandler);
         bindNodeToController(scrollpane, ScrollPaneController.class, contentFlow, contentFlowHandler);
+        bindNodeToController(nodesList, NodesListController.class, contentFlow, contentFlowHandler);
     }
 
     private void bindNodeToController(Node node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {

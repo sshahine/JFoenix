@@ -5,10 +5,9 @@
 <?import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition?>
 <?import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
     <VBox maxWidth="400" maxHeight="400">
@@ -16,14 +15,14 @@
         <HBox spacing="20" style="-fx-padding: 0 0 0 50;">
             <JFXRippler position="BACK" styleClass="icons-rippler">
                 <StackPane style="-fx-padding: 10;">
-                    <FontAwesomeIconView glyphName="STAR" size="2em"
-                                         styleClass="icon"/>
+                     <FontIcon iconLiteral="fas-star" iconSize="24"
+                               styleClass="icon"/>
                 </StackPane>
             </JFXRippler>
 
             <JFXRippler position="BACK" styleClass="icons-rippler1">
                 <StackPane style="-fx-padding: 10;">
-                    <FontAwesomeIconView glyphName="HEART" size="2em"
+                     <FontIcon iconLiteral="fas-heart" iconSize="24"
                                          styleClass="icon"/>
                 </StackPane>
             </JFXRippler>
@@ -54,15 +53,13 @@
                 <JFXBadge fx:id="badge1" position="TOP_RIGHT" text="1"
                           styleClass="icons-badge">
                     <StackPane style="-fx-padding: 10;">
-                        <FontAwesomeIconView glyphName="STAR" size="2em"
+                         <FontIcon iconLiteral="fas-star" iconSize="24"
                                              styleClass="icon"/>
                     </StackPane>
                 </JFXBadge>
             </children>
         </HBox>
     </VBox>
-
-    <JFXSnackbar fx:id="snackbar" prefWidth="300"/>
 </StackPane>
 
 

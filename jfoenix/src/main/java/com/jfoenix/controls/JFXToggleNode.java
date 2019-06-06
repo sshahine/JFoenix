@@ -19,13 +19,13 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.skins.JFXToggleNodeSkin;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.ColorConverter;
 import javafx.beans.DefaultProperty;
 import javafx.css.*;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
+import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
@@ -55,6 +55,16 @@ public class JFXToggleNode extends ToggleButton {
         initialize();
     }
 
+    public JFXToggleNode(String text) {
+        super(text);
+        initialize();
+    }
+
+    public JFXToggleNode(Node graphic) {
+        super("", graphic);
+        initialize();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -67,6 +77,13 @@ public class JFXToggleNode extends ToggleButton {
         this.getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFoenixResources.load("css/controls/jfx-toggle-node.css").toExternalForm();
+    }
 
     /***************************************************************************
      *                                                                         *
@@ -147,6 +164,42 @@ public class JFXToggleNode extends ToggleButton {
     }
 
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXToggleNode.this,
+        "disableVisualFocus",
+        false);
+
+    /**
+     * Setting this property disables this {@link JFXToggleNode} from showing keyboard focus.
+     *
+     * @return A property that will disable visual focus if true and enable it if false.
+     */
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    /**
+     * Indicates whether or not this {@link JFXToggleNode} will show focus when it receives keyboard focus.
+     *
+     * @return False if this {@link JFXToggleNode} will show visual focus and true if it will not.
+     */
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    /**
+     * Setting this to true will disable this {@link JFXToggleNode} from showing focus when it receives keyboard focus.
+     *
+     * @param disabled True to disable visual focus and false to enable it.
+     */
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
+
+
     private static class StyleableProperties {
         private static final CssMetaData<JFXToggleNode, Color> SELECTED_COLOR =
             new CssMetaData<JFXToggleNode, Color>("-jfx-toggle-color",
@@ -190,33 +243,39 @@ public class JFXToggleNode extends ToggleButton {
                 }
             };
 
+        private static final CssMetaData<JFXToggleNode, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXToggleNode, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXToggleNode control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXToggleNode control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
+
+
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
+                new ArrayList<>(ToggleButton.getClassCssMetaData());
             Collections.addAll(styleables,
                 SELECTED_COLOR,
                 UNSELECTED_COLOR,
-                DISABLE_ANIMATION
+                DISABLE_ANIMATION,
+                DISABLE_VISUAL_FOCUS
             );
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(Labeled.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {

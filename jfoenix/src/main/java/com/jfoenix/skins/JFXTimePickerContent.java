@@ -19,6 +19,7 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.animation.*;
 import javafx.beans.property.*;
@@ -110,12 +111,14 @@ public class JFXTimePickerContent extends VBox {
             if (newVal == TimeUnit.HOURS) {
                 angle.set(Math.toDegrees(2 * Math.PI / 12));
                 int tmp = Integer.parseInt(selectedHourLabel.getText());
-                if (tmp == 0 || tmp > 12) {
-                    hoursContent.getChildren().get(0).setVisible(false);
-                    hoursContent.getChildren().get(1).setVisible(true);
-                } else {
-                    hoursContent.getChildren().get(1).setVisible(false);
-                    hoursContent.getChildren().get(0).setVisible(true);
+                if (is24HourView) {
+                    if (tmp == 0 || tmp > 12) {
+                        hoursContent.getChildren().get(0).setVisible(false);
+                        hoursContent.getChildren().get(1).setVisible(true);
+                    } else {
+                        hoursContent.getChildren().get(1).setVisible(false);
+                        hoursContent.getChildren().get(0).setVisible(true);
+                    }
                 }
                 pointerRotate.set(_24HourHoursPointerRotate);
                 _24HourPointerRotate.set(_24HourHoursPointerRotate);
@@ -135,6 +138,11 @@ public class JFXTimePickerContent extends VBox {
                 updateValue();
             });
         }
+    }
+
+    @Override
+    public String getUserAgentStylesheet() {
+        return JFoenixResources.load("css/controls/jfx-time-picker.css").toExternalForm();
     }
 
     protected BorderPane createContentPane(LocalTime time, boolean _24HourView) {
@@ -200,7 +208,7 @@ public class JFXTimePickerContent extends VBox {
     protected StackPane createHeaderPane(LocalTime time, boolean _24HourView) {
         int hour = time.getHour();
 
-        selectedHourLabel.setText((hour % (_24HourView ? 24 : 12) == 0 ? (_24HourView ? 0 : 12) : hour % (_24HourView ? 24 : 12)) + "");
+        selectedHourLabel.setText(String.valueOf(hour % (_24HourView ? 24 : 12) == 0 ? (_24HourView ? 0 : 12) : hour % (_24HourView ? 24 : 12)));
         selectedHourLabel.getStyleClass().add(SPINNER_LABEL);
         selectedHourLabel.setTextFill(Color.WHITE);
         selectedHourLabel.setFont(Font.font(ROBOTO, FontWeight.BOLD, 42));
@@ -209,7 +217,7 @@ public class JFXTimePickerContent extends VBox {
         selectedHourLabel.setAlignment(Pos.CENTER_RIGHT);
         timeLabel.set(selectedHourLabel);
 
-        selectedMinLabel.setText(unitConverter.toString(time.getMinute()) + "");
+        selectedMinLabel.setText(String.valueOf(unitConverter.toString(time.getMinute())));
         selectedMinLabel.getStyleClass().add(SPINNER_LABEL);
         selectedMinLabel.setTextFill(fadedColor);
         selectedMinLabel.setFont(Font.font(ROBOTO, FontWeight.BOLD, 42));
@@ -442,7 +450,7 @@ public class JFXTimePickerContent extends VBox {
         for (int i = 0; i < 12; i++) {
             StackPane labelContainer = new StackPane();
             int val = ((i + 3) * 5) % 60;
-            Label label = new Label(unitConverter.toString(val) + "");
+            Label label = new Label(String.valueOf(unitConverter.toString(val)));
             label.setFont(Font.font(ROBOTO, FontWeight.BOLD, 12));
             // init label color
             label.setTextFill(val == time.getMinute() ?
@@ -482,7 +490,11 @@ public class JFXTimePickerContent extends VBox {
 
     void init() {
         calendarPlaceHolder.setOpacity(1);
-        selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        if(unit.get() == TimeUnit.HOURS){
+            selectedHourLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        }else{
+            selectedMinLabel.setTextFill(Color.rgb(255, 255, 255, 0.87));
+        }
     }
 
     private void swapLabelsColor(Label lbl1, Label lbl2) {

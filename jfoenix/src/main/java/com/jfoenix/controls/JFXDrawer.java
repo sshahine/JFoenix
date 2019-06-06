@@ -19,30 +19,35 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
+import com.jfoenix.cache.CachePolicy;
 import com.jfoenix.controls.events.JFXDrawerEvent;
-import com.jfoenix.transitions.CachedTransition;
-import javafx.animation.Animation.Status;
-import javafx.animation.*;
+import com.jfoenix.transitions.JFXAnimationTimer;
+import com.jfoenix.transitions.JFXDrawerKeyValue;
+import com.jfoenix.transitions.JFXKeyFrame;
+import com.jfoenix.transitions.JFXKeyValue;
+import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WritableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * JFXDrawer is material design implementation of drawer.
@@ -58,6 +63,11 @@ import java.util.ArrayList;
  */
 public class JFXDrawer extends StackPane {
 
+    // TODO: convert to Control instead of Pane
+
+    /**
+     * Defines the directions that a {@link JFXDrawer} can originate from.
+     */
     public enum DrawerDirection {
         LEFT(1), RIGHT(-1), TOP(1), BOTTOM(-1);
         private double numVal;
@@ -71,70 +81,97 @@ public class JFXDrawer extends StackPane {
         }
     }
 
+    // used to add custom user animation to drawer animation
+    private List<JFXKeyValue<?>> animatedValues = new ArrayList<>();
+    private HashMap<WritableValue<?>, JFXDrawerKeyValue<?>> initValues = new HashMap<>();
+    private HashMap<WritableValue<?>, Supplier<?>> currentValue = new HashMap<>();
+
+    // nodes
     private StackPane overlayPane = new StackPane();
     StackPane sidePane = new StackPane();
     private StackPane content = new StackPane();
-    private Transition drawerTransition;
-    //	private Transition outTransition;
-    private Transition partialTransition;
+    private StackPane contentHolder = new StackPane();
+    private Region paddingPane = new Region();
+
+    // animation
     private Duration holdTime = Duration.seconds(0.2);
     private PauseTransition holdTimer = new PauseTransition(holdTime);
-
     private double initOffset = 30;
     private DoubleProperty initTranslate = new SimpleDoubleProperty();
-    private BooleanProperty overLayVisible = new SimpleBooleanProperty(true);
+
     private double activeOffset = 20;
     private double startMouse = -1;
     private double startTranslate = -1;
     private double startSize = -1;
-    private DoubleProperty translateProperty = sidePane.translateXProperty();
-    private boolean resizable = false;
+    private double contentMinSize = -1;
+
+    // used to trigger the drawer events
     private boolean openCalled = false;
     private boolean closeCalled = true;
 
+    // side pane size properties
+    private DoubleProperty translateProperty = sidePane.translateXProperty();
     private DoubleProperty defaultSizeProperty = new SimpleDoubleProperty();
-    private ObjectProperty<DoubleProperty> maxSizeProperty =
-        new SimpleObjectProperty<>(sidePane.maxWidthProperty());
-    private ObjectProperty<DoubleProperty> minSizeProperty =
-        new SimpleObjectProperty<>(sidePane.minWidthProperty());
-    private ObjectProperty<DoubleProperty> prefSizeProperty =
-        new SimpleObjectProperty<>(sidePane.prefWidthProperty());
-    private ObjectProperty<ReadOnlyDoubleProperty> sizeProperty =
-        new SimpleObjectProperty<>(sidePane.widthProperty());
-    private ObjectProperty<ReadOnlyDoubleProperty> parentSizeProperty =
-        new SimpleObjectProperty<>();
-    private ObjectProperty<Node> boundedNode = new SimpleObjectProperty<>();
+    private DoubleProperty maxSizeProperty = sidePane.maxWidthProperty();
+    private DoubleProperty prefSizeProperty = sidePane.prefWidthProperty();
+    private ReadOnlyDoubleProperty sizeProperty = sidePane.widthProperty();
 
-    private SimpleObjectProperty<DrawerDirection> directionProperty = new SimpleObjectProperty<>(
-        DrawerDirection.LEFT);
+    // this is used to allow resizing the content of the drawer
+    private DoubleProperty paddingSizeProperty = paddingPane.minWidthProperty();
+
+    /***************************************************************************
+     *                                                                         *
+     * Animations                                                                *
+     *                                                                         *
+     **************************************************************************/
+
+    // used to hold the new translation value during the animation
+    private double translateTo = 0;
+    // used (only if mini drawer) to hold the new size value during animation of mini drawer
+    private double resizeTo = 0;
+
+    private DoubleBinding initTranslateBinding;
+
+    // used to cache the drawer size
+    private double tempDrawerSize = getDefaultDrawerSize();
+
+    private Duration duration;
+    private JFXAnimationTimer translateTimer;
+
+    public JFXDrawer() {
+        this(Duration.millis(420));
+    }
 
     /**
-     * creates empy drawer node
+     * creates empty drawer node
      */
-    public JFXDrawer() {
+    public JFXDrawer(Duration duration) {
         initialize();
+        this.duration = duration;
+        translateTimer = createDrawerAnimation(duration);
+        contentHolder.setPickOnBounds(false);
+        addEventHandler(JFXDrawerEvent.CLOSED, handler -> Platform.runLater(() -> getCachePolicy().restore(contentHolder)));
 
         overlayPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.1),
             CornerRadii.EMPTY,
             Insets.EMPTY)));
         overlayPane.getStyleClass().add("jfx-drawer-overlay-pane");
         overlayPane.setOpacity(0);
+        overlayPane.setMouseTransparent(true);
 
         sidePane.getStyleClass().add("jfx-drawer-side-pane");
         sidePane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255, 1),
             CornerRadii.EMPTY,
             Insets.EMPTY)));
         sidePane.setPickOnBounds(false);
-        // causes performance issue when animating the drawer
 
-        this.getChildren().add(content);
+        translateTimer.setCacheNodes(sidePane);
 
         // add listeners
-        overlayPane.setOnMouseClicked((e) -> close());
         initListeners();
-
         //  init size value
         setDefaultDrawerSize(100);
+        getChildren().setAll(contentHolder, overlayPane, sidePane);
     }
 
     private void initialize() {
@@ -142,21 +179,50 @@ public class JFXDrawer extends StackPane {
     }
 
     private void initListeners() {
-        updateDirection(directionProperty.get());
-        initTranslate.bind(Bindings.createDoubleBinding(() ->
+        initTranslateBinding = Bindings.createDoubleBinding(() ->
                 -1 * directionProperty.get().doubleValue() * defaultSizeProperty.getValue()
                 - initOffset * directionProperty.get().doubleValue(),
-            defaultSizeProperty, directionProperty));
+            defaultSizeProperty, directionProperty);
+
+        updateDirection(getDirection());
+
+        initTranslate.bind(initTranslateBinding);
 
         // add listeners to update drawer properties
-        overLayVisibleProperty().addListener((o, oldVal, newVal) -> {
-            overlayPane.setStyle(!newVal ? "-fx-background-color : transparent;" : "");
-            overlayPane.setMouseTransparent(!newVal);
-            overlayPane.setPickOnBounds(newVal);
+        overLayVisibleProperty().addListener(observable -> {
+            final boolean overLayVisible = isOverLayVisible();
+            overlayPane.setStyle(!overLayVisible ? "-fx-background-color : transparent;" : "");
+            overlayPane.setPickOnBounds(overLayVisible);
         });
 
-        directionProperty.addListener((o, oldVal, newVal) -> updateDirection(newVal));
-        initTranslate.addListener((o, oldVal, newVal) -> updateDrawerAnimation(newVal.doubleValue()));
+        directionProperty.addListener(observable -> updateDirection(directionProperty.get()));
+        initTranslate.addListener(observable -> updateDrawerAnimation(initTranslate.get()));
+
+        // add opening/closing action listeners
+        translateProperty.addListener((o, oldVal, newVal) -> {
+            if (!openCalled && closeCalled
+                && directionProperty.get().doubleValue() * newVal.doubleValue() >
+                   directionProperty.get().doubleValue() * initTranslate.get() / 2) {
+                openCalled = true;
+                closeCalled = false;
+                fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENING));
+            }
+        });
+        translateProperty.addListener((o, oldVal, newVal) -> {
+            if (openCalled && !closeCalled
+                && directionProperty.get().doubleValue() * newVal.doubleValue() <
+                   directionProperty.get().doubleValue() * initTranslate.get() / 2) {
+                closeCalled = true;
+                openCalled = false;
+                fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSING));
+            }
+        });
+
+        overlayPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> close());
+
+        sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragHandler);
+        sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+        sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
 
         // content listener for mouse hold on a side
         this.content.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
@@ -168,59 +234,29 @@ public class JFXDrawer extends StackPane {
                         valid++;
                     }
                 }
-                if (directionProperty.get() == DrawerDirection.RIGHT) {
+                DrawerDirection direction = getDirection();
+                if (direction == DrawerDirection.RIGHT) {
                     size = content.getWidth();
-                } else if (directionProperty.get() == DrawerDirection.BOTTOM) {
+                } else if (direction == DrawerDirection.BOTTOM) {
                     size = content.getHeight();
                 }
-
                 double eventPoint = 0;
-                if (directionProperty.get() == DrawerDirection.RIGHT
-                    || directionProperty.get() == DrawerDirection.LEFT) {
+                if (direction == DrawerDirection.RIGHT
+                    || direction == DrawerDirection.LEFT) {
                     eventPoint = e.getX();
                 } else {
                     eventPoint = e.getY();
                 }
 
-                if (size + directionProperty.get().doubleValue() * eventPoint < activeOffset
-                    && (content.getCursor() == Cursor.DEFAULT || content.getCursor() == null)
-                    && valid == 0) {
+                if (size + direction.doubleValue() * eventPoint < activeOffset
+                    && (content.getCursor() == null || content.getCursor() == Cursor.DEFAULT)
+                    && valid == 0
+                    && !isOpened()) {
                     holdTimer.play();
                     e.consume();
                 }
             }
         });
-
-        // mouse drag handler
-        translateProperty.addListener((o, oldVal, newVal) -> {
-            double opValue = 1 - newVal.doubleValue() / initTranslate.doubleValue();
-            overlayPane.setOpacity(opValue);
-        });
-
-        // add opening/closing action listeners
-        translateProperty.addListener((o, oldVal, newVal) -> {
-            if (!openCalled && closeCalled
-                && directionProperty.get().doubleValue() * newVal.doubleValue() >
-                   directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
-                openCalled = true;
-                closeCalled = false;
-                onDrawerOpeningProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENING));
-            }
-        });
-        translateProperty.addListener((o, oldVal, newVal) -> {
-            if (openCalled && !closeCalled
-                && directionProperty.get().doubleValue() * newVal.doubleValue() <
-                   directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
-                closeCalled = true;
-                openCalled = false;
-                onDrawerClosingProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSING));
-            }
-        });
-
-
-        this.sidePane.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDragHandler);
-        this.sidePane.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-        this.sidePane.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
 
         this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> {
             holdTimer.stop();
@@ -228,146 +264,194 @@ public class JFXDrawer extends StackPane {
         });
 
         holdTimer.setOnFinished(e -> {
-            if (!this.getChildren().contains(overlayPane)) {
-                this.getChildren().add(overlayPane);
-            }
-            if (!this.getChildren().contains(sidePane)) {
-                this.getChildren().add(sidePane);
-            }
-            partialTransition = new DrawerPartialTransition(initTranslate.doubleValue(),
-                initTranslate.doubleValue() + initOffset * directionProperty
-                    .get()
-                    .doubleValue() + activeOffset * directionProperty.get()
-                    .doubleValue());
-            partialTransition.setOnFinished((event) -> {
-                this.content.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseDragHandler);
-                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-                this.content.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event event) {
-                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-                        JFXDrawer.this.content.removeEventHandler(MouseEvent.MOUSE_RELEASED, this);
-                    }
-                });
-            });
-            partialTransition.play();
+            translateTo = initTranslate.get()
+                          + initOffset * directionProperty.get().doubleValue()
+                          + activeOffset * directionProperty.get().doubleValue();
+            overlayPane.setMouseTransparent(!isOverLayVisible());
+            translateTimer.setOnFinished(null);
+            getCachePolicy().cache(contentHolder);
+            translateTimer.start();
         });
     }
 
+    private JFXAnimationTimer createDrawerAnimation(Duration duration) {
+        return new JFXAnimationTimer(
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> overlayPane.opacityProperty())
+                    .setEndValueSupplier(() -> !hasMiniSize() ? 1 - translateTo / initTranslate.get() : (resizeTo == getMiniDrawerSize() ? 0 : 1))
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> translateProperty)
+                    .setEndValueSupplier(() -> !hasMiniSize() ? translateTo : 0)
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> prefSizeProperty)
+                    .setEndValueSupplier(() -> getDefaultDrawerSize())
+                    .setAnimateCondition(() -> !hasMiniSize() && translateTo == initTranslate.get())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> maxSizeProperty)
+                    .setEndValueSupplier(() -> getDefaultDrawerSize())
+                    .setAnimateCondition(() -> !hasMiniSize() && translateTo == initTranslate.get())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            // open animation
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> prefSizeProperty)
+                    .setEndValueSupplier(() -> tempDrawerSize)
+                    .setAnimateCondition(() -> translateTo == 0 && tempDrawerSize > getDefaultDrawerSize() && !hasMiniSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> maxSizeProperty)
+                    .setEndValueSupplier(() -> tempDrawerSize)
+                    .setAnimateCondition(() -> translateTo == 0 && tempDrawerSize > getDefaultDrawerSize() && !hasMiniSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> prefSizeProperty)
+                    .setEndValueSupplier(() -> getMiniDrawerSize())
+                    .setAnimateCondition(() -> hasMiniSize() && resizeTo <= getMiniDrawerSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> maxSizeProperty)
+                    .setEndValueSupplier(() -> getMiniDrawerSize())
+                    .setAnimateCondition(() -> hasMiniSize() && resizeTo <= getMiniDrawerSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            // open animation
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> prefSizeProperty)
+                    .setEndValueSupplier(() -> getDefaultDrawerSize())
+                    .setAnimateCondition(() -> hasMiniSize() && resizeTo > getMiniDrawerSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> maxSizeProperty)
+                    .setEndValueSupplier(() -> getDefaultDrawerSize())
+                    .setAnimateCondition(() -> hasMiniSize() && resizeTo > getMiniDrawerSize())
+                    .setInterpolator(Interpolator.EASE_BOTH).build()),
+            // padding animation
+            new JFXKeyFrame(duration,
+                JFXKeyValue.builder()
+                    .setTargetSupplier(() -> paddingSizeProperty)
+                    .setEndValueSupplier(this::computePaddingSize)
+                    .setAnimateCondition(() -> isResizeContent())
+                    .setInterpolator(Interpolator.EASE_BOTH).build())
 
-    ChangeListener<? super Node> widthListener = (o, oldVal, newVal) -> {
-        if (newVal != null && newVal instanceof Region) {
-            parentSizeProperty.set(((Region) newVal).widthProperty());
-        }
-    };
-    ChangeListener<? super Node> heightListener = (o, oldVal, newVal) -> {
-        if (newVal != null && newVal instanceof Region) {
-            parentSizeProperty.set(((Region) newVal).heightProperty());
-        }
-    };
-    ChangeListener<? super Scene> sceneWidthListener = (o, oldVal, newVal) -> {
-        if (newVal != null && this.getParent() == null) {
-            parentSizeProperty.set(newVal.widthProperty());
-        }
-    };
-    ChangeListener<? super Scene> sceneHeightListener = (o, oldVal, newVal) -> {
-        if (newVal != null && this.getParent() == null) {
-            parentSizeProperty.set(newVal.heightProperty());
-        }
-    };
+        );
+    }
 
     /**
-     * this method will change the drawer behavior according to its direction
+     * This method will change the drawer behavior according to the argument direction.
      *
-     * @param dir
+     * @param dir - The direction that the drawer will enter the screen from.
      */
     private void updateDirection(DrawerDirection dir) {
-        maxSizeProperty.get().set(-1);
-        prefSizeProperty.get().set(-1);
+        maxSizeProperty.set(-1);
+        prefSizeProperty.set(-1);
+        // reset old translation
+        translateProperty.set(0);
 
-        if (dir == DrawerDirection.LEFT) {
-            // change the pane position
-            StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
-            // reset old translation
-            translateProperty.set(0);
+        // update properties
+        if (dir == DrawerDirection.LEFT || dir == DrawerDirection.RIGHT) {
             // set the new translation property
             translateProperty = sidePane.translateXProperty();
             // change the size property
-            maxSizeProperty.set(sidePane.maxWidthProperty());
-            minSizeProperty.set(sidePane.minWidthProperty());
-            prefSizeProperty.set(sidePane.prefWidthProperty());
-            sizeProperty.set(sidePane.widthProperty());
-            this.boundedNodeProperty().removeListener(heightListener);
-            this.boundedNodeProperty().addListener(widthListener);
-            if (getBoundedNode() == null) {
-                this.boundedNodeProperty().bind(this.parentProperty());
-            }
-            this.sceneProperty().removeListener(sceneHeightListener);
-            this.sceneProperty().removeListener(sceneWidthListener);
-            this.sceneProperty().addListener(sceneWidthListener);
+            maxSizeProperty = sidePane.maxWidthProperty();
+            prefSizeProperty = sidePane.prefWidthProperty();
+            sizeProperty = sidePane.widthProperty();
+            paddingSizeProperty = paddingPane.minWidthProperty();
+        } else if (dir == DrawerDirection.TOP || dir == DrawerDirection.BOTTOM) {
+            // set the new translation property
+            translateProperty = sidePane.translateYProperty();
+            // change the size property
+            maxSizeProperty = sidePane.maxHeightProperty();
+            prefSizeProperty = sidePane.prefHeightProperty();
+            sizeProperty = sidePane.heightProperty();
+            paddingSizeProperty = paddingPane.minHeightProperty();
+        }
+        // update pane alignment
+        if (dir == DrawerDirection.LEFT) {
+            StackPane.setAlignment(sidePane, Pos.CENTER_LEFT);
         } else if (dir == DrawerDirection.RIGHT) {
             StackPane.setAlignment(sidePane, Pos.CENTER_RIGHT);
-            translateProperty.set(0);
-            translateProperty = sidePane.translateXProperty();
-            maxSizeProperty.set(sidePane.maxWidthProperty());
-            minSizeProperty.set(sidePane.minWidthProperty());
-            prefSizeProperty.set(sidePane.prefWidthProperty());
-            sizeProperty.set(sidePane.widthProperty());
-            this.boundedNodeProperty().removeListener(heightListener);
-            this.boundedNodeProperty().addListener(widthListener);
-            if (getBoundedNode() == null) {
-                this.boundedNodeProperty().bind(this.parentProperty());
-            }
-            this.sceneProperty().removeListener(sceneHeightListener);
-            this.sceneProperty().removeListener(sceneWidthListener);
-            this.sceneProperty().addListener(sceneWidthListener);
         } else if (dir == DrawerDirection.TOP) {
             StackPane.setAlignment(sidePane, Pos.TOP_CENTER);
-            translateProperty.set(0);
-            translateProperty = sidePane.translateYProperty();
-            maxSizeProperty.set(sidePane.maxHeightProperty());
-            minSizeProperty.set(sidePane.minHeightProperty());
-            prefSizeProperty.set(sidePane.prefHeightProperty());
-            sizeProperty.set(sidePane.heightProperty());
-            this.boundedNodeProperty().removeListener(widthListener);
-            this.boundedNodeProperty().addListener(heightListener);
-            if (getBoundedNode() == null) {
-                this.boundedNodeProperty().bind(this.parentProperty());
-            }
-            this.sceneProperty().removeListener(sceneHeightListener);
-            this.sceneProperty().removeListener(sceneWidthListener);
-            this.sceneProperty().addListener(sceneHeightListener);
         } else if (dir == DrawerDirection.BOTTOM) {
             StackPane.setAlignment(sidePane, Pos.BOTTOM_CENTER);
-            translateProperty.set(0);
-            translateProperty = sidePane.translateYProperty();
-            maxSizeProperty.set(sidePane.maxHeightProperty());
-            minSizeProperty.set(sidePane.minHeightProperty());
-            prefSizeProperty.set(sidePane.prefHeightProperty());
-            sizeProperty.set(sidePane.heightProperty());
-            this.boundedNodeProperty().removeListener(widthListener);
-            this.boundedNodeProperty().addListener(heightListener);
-            if (getBoundedNode() == null) {
-                this.boundedNodeProperty().bind(this.parentProperty());
-            }
-            this.sceneProperty().removeListener(sceneHeightListener);
-            this.sceneProperty().removeListener(sceneWidthListener);
-            this.sceneProperty().addListener(sceneHeightListener);
         }
-        setDefaultDrawerSize(defaultSizeProperty.get());
-        updateDrawerAnimation(initTranslate.doubleValue());
+
+        setDefaultDrawerSize(getDefaultDrawerSize());
+        updateDrawerAnimation(initTranslate.get());
+        updateContent();
+        setMiniDrawerSize(getMiniDrawerSize());
     }
 
     private void updateDrawerAnimation(double translation) {
-        drawerTransition = new DrawerTransition(translation, 0);
         translateProperty.set(translation);
+        translateTo = translation;
     }
+
+    private double computePaddingSize() {
+        if (!isResizeContent()) {
+            return 0;
+        }
+        if (hasMiniSize()) {
+            return resizeTo;
+        } else if (translateTo == 0 && tempDrawerSize > getDefaultDrawerSize()) {
+            return tempDrawerSize;
+        } else if (translateTo == 0) {
+            return getDefaultDrawerSize();
+        } else if (translateTo == initTranslate.get()) {
+            return 0;
+        } else {
+            return getDefaultDrawerSize() + getDirection().doubleValue() * translateTo;
+        }
+    }
+
 
     /***************************************************************************
      *                                                                         *
      * Public API                                                              *
      *                                                                         *
      **************************************************************************/
+
+    private DoubleProperty miniDrawerSize = new SimpleDoubleProperty(-1);
+
+    public double getMiniDrawerSize() {
+        return miniDrawerSize.get();
+    }
+
+    /**
+     * set mini drawer mode (the drawer will be animated by changing the size instead
+     * of translation).You can disable this mode, by setting the size value <= 0
+     *
+     * @param size value
+     */
+    public void setMiniDrawerSize(double size) {
+        this.miniDrawerSize.set(size);
+        if (size > 0) {
+            updateSize(size);
+            initTranslate.unbind();
+            initTranslate.set(0);
+            paddingSizeProperty.set(size);
+        } else {
+            updateSize(getDefaultDrawerSize());
+            initTranslate.bind(initTranslateBinding);
+            paddingSizeProperty.set(0);
+        }
+        resizeTo = size;
+    }
+
+    private boolean hasMiniSize() {
+        return getMiniDrawerSize() > 0;
+    }
 
     private ArrayList<Callback<Void, Boolean>> callBacks = new ArrayList<>();
 
@@ -385,152 +469,135 @@ public class JFXDrawer extends StackPane {
      * @param callback
      */
     void bringToFront(Callback<Void, Void> callback) {
-
         EventHandler<? super MouseEvent> eventFilter = Event::consume;
-        final boolean bindSize = prefSizeProperty.get().isBound();
-        prefSizeProperty.get().unbind();
-        maxSizeProperty.get().unbind();
+        final boolean fillSize = prefSizeProperty.get() == USE_COMPUTED_SIZE;
         // disable mouse events
         this.addEventFilter(MouseEvent.ANY, eventFilter);
 
-        EventHandler<ActionEvent> drawerDrawer = (finish) -> {
+        Runnable onFinished = () -> {
             callback.call(null);
-
-            if (isTransitionStopped(this.drawerTransition) && translateProperty.get() != 0) {
-                drawerTransition.setRate(1);
-                if (tempDrawerSize > getDefaultDrawerSize()) {
-                    ParallelTransition parallelTransition = new ParallelTransition(
-                        new InDrawerSizeTransition(),
-                        new DrawerTransition(translateProperty.get(), 0));
-                    parallelTransition.setOnFinished((finish1) -> {
-                        if (bindSize) {
-                            prefSizeProperty.get().bind(parentSizeProperty.get());
-                            maxSizeProperty.get().bind(parentSizeProperty.get());
-                        }
-                    });
-                    parallelTransition.play();
-                } else {
-                    EventHandler<ActionEvent> oldFinishHandler = this.drawerTransition.getOnFinished();
-                    this.drawerTransition.setOnFinished((finish1) -> {
-                        if (bindSize) {
-                            prefSizeProperty.get().bind(parentSizeProperty.get());
-                            maxSizeProperty.get().bind(parentSizeProperty.get());
-                        }
-                        this.drawerTransition.setOnFinished(oldFinishHandler);
-                    });
-                    this.drawerTransition.play();
+            translateTo = 0;
+            translateTimer.setOnFinished(() -> {
+                if (fillSize) {
+                    prefSizeProperty.set(USE_COMPUTED_SIZE);
+                    maxSizeProperty.set(USE_COMPUTED_SIZE);
                 }
-            }
-            // enable mouse events
-            this.removeEventFilter(MouseEvent.ANY, eventFilter);
+                // enable mouse events
+                this.removeEventFilter(MouseEvent.ANY, eventFilter);
+            });
+            getCachePolicy().cache(contentHolder);
+            translateTimer.start();
         };
 
-        if (sizeProperty.get().get() > getDefaultDrawerSize()) {
-            tempDrawerSize = sizeProperty.get().get();
-            ParallelTransition parallelTransition = new ParallelTransition(
-                new OutDrawerSizeTransition(),
-                new DrawerTransition(translateProperty.get(), initTranslate.doubleValue()));
-            parallelTransition.setOnFinished(drawerDrawer);
-            parallelTransition.play();
+        if (sizeProperty.get() > getDefaultDrawerSize()) {
+            tempDrawerSize = sizeProperty.get();
         } else {
-            if (isTransitionStopped(drawerTransition) && translateProperty.get() == 0) {
-                drawerTransition.setRate(-1);
-                drawerTransition.setOnFinished(drawerDrawer);
-                drawerTransition.play();
-            }
             tempDrawerSize = getDefaultDrawerSize();
+        }
+        translateTo = initTranslate.get();
+        translateTimer.setOnFinished(onFinished);
+        getCachePolicy().cache(contentHolder);
+        translateTimer.start();
+    }
+
+    /**
+     * This indicates whether or not the drawer is completely shown.
+     *
+     * @return True if the drawer is totally visible and not transitioning, otherwise false.
+     */
+    public boolean isOpened() {
+        if (hasMiniSize()) {
+            return resizeTo == getDefaultDrawerSize() || prefSizeProperty.get() >= getDefaultDrawerSize();
+        }
+        return (translateTo == 0 || translateProperty.get() == 0) && !translateTimer.isRunning();
+    }
+
+    /**
+     * This indicates whether or not the drawer is in the process of being shown.
+     *
+     * @return True if the drawer is transitioning from closed to open, otherwise false.
+     */
+    public boolean isOpening() {
+        boolean condition = hasMiniSize() ? resizeTo == getDefaultDrawerSize() : translateTo == 0;
+        return condition && translateTimer.isRunning();
+    }
+
+    /**
+     * This indicates whether or not the drawer is in the process of being hidden.
+     *
+     * @return True if the drawer is transitioning from open to closed, otherwise false.
+     */
+    public boolean isClosing() {
+        boolean condition = hasMiniSize() ? resizeTo == getMiniDrawerSize() : translateTo == initTranslate.get();
+        return condition && translateTimer.isRunning();
+    }
+
+    /**
+     * This indicates whether or not the drawer is completely hidden.
+     *
+     * @return True if the drawer is hidden and not in the process of transitioning, otherwise false.
+     */
+    public boolean isClosed() {
+        if (hasMiniSize()) {
+            return resizeTo == getMiniDrawerSize();
+        }
+        return translateTo == initTranslate.get() && !translateTimer.isRunning();
+    }
+
+    /**
+     * Toggles the drawer between open and closed. The drawer will be closed if it is shown or transitioning between
+     * closed and open. Likewise, it will be opened if it is open or transitioning from open to closed.
+     */
+    public void toggle() {
+        if (isOpened() || isOpening()) {
+            close();
+        } else {
+            open();
         }
     }
 
     /**
-     * this method indicates whether the drawer is shown or not
-     *
-     * @return true if he drawer is totally visible else false
-     */
-    public boolean isShown() {
-        return isTransitionStopped(drawerTransition) && translateProperty.get() == 0;
-    }
-
-    public boolean isShowing() {
-        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() > 0)
-               || (partialTransition instanceof DrawerPartialTransitionDraw
-                   && isRunningTransition(partialTransition));
-    }
-
-    private boolean isRunningTransition(Transition transition) {
-        return transition.getStatus() == Status.RUNNING;
-    }
-
-    public boolean isHiding() {
-        return (isRunningTransition(drawerTransition) && this.drawerTransition.getRate() < 0)
-               || (partialTransition instanceof DrawerPartialTransitionHide
-                   && isRunningTransition(partialTransition));
-    }
-
-    public boolean isHidden() {
-        return !this.getChildren().contains(this.overlayPane);
-    }
-
-    /**
-     * toggle the drawer on
+     * Starts the animation to transition this drawer to open.
      */
     public void open() {
-        if (partialTransition == null || isTransitionStopped(partialTransition)) {
-            drawerTransition.setRate(1);
-            this.drawerTransition.setOnFinished((finish) -> onDrawerOpenedProperty.get()
-                .handle(new JFXDrawerEvent(
-                    JFXDrawerEvent.OPENED)));
-            if (isTransitionStopped(drawerTransition)) {
-                if (isHidden()) {
-                    this.drawerTransition.playFromStart();
-                } else {
-                    this.drawerTransition.play();
-                }
-            }
-        } else {
-            partialOpen();
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
         }
-    }
-
-    private boolean isTransitionStopped(Transition transition) {
-        return transition.getStatus() == Status.STOPPED;
+        translateTo = 0;
+        resizeTo = getDefaultDrawerSize();
+        overlayPane.setMouseTransparent(!isOverLayVisible());
+        translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
+        getCachePolicy().cache(contentHolder);
+        translateTimer.reverseAndContinue();
     }
 
     /**
-     * toggle the drawer off
+     * Starts the animation to transition this drawer to closed.
      */
     public void close() {
-        // unbind properties as the drawer size might be bound to stage size
-        maxSizeProperty.get().unbind();
-        prefSizeProperty.get().unbind();
+        translateTimer.setOnFinished(() -> {
+            overlayPane.setMouseTransparent(true);
+            fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
+        });
 
-        if (sizeProperty.get().get() > getDefaultDrawerSize()) {
-            tempDrawerSize = prefSizeProperty.get().get();
-            ParallelTransition parallelTransition = new ParallelTransition(
-                new OutDrawerSizeTransition(),
-                new DrawerTransition(translateProperty.get(), initTranslate.doubleValue()));
-            parallelTransition.setOnFinished((finish) -> {
-                onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
-            });
-            parallelTransition.play();
-        } else {
-            if (partialTransition == null || isTransitionStopped(partialTransition)) {
-                drawerTransition.setRate(-1);
-                drawerTransition.setOnFinished((finish) -> onDrawerClosedProperty.get()
-                    .handle(new JFXDrawerEvent(
-                        JFXDrawerEvent.CLOSED)));
-                if (isTransitionStopped(drawerTransition)) {
-                    if (isShown()) {
-                        this.drawerTransition.playFrom(this.drawerTransition.getCycleDuration());
-                    } else {
-                        this.drawerTransition.play();
-                    }
+        if (hasMiniSize()) {
+            if (resizeTo != getMiniDrawerSize()) {
+                resizeTo = getMiniDrawerSize();
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
                 }
-            } else {
-                partialClose();
             }
-            tempDrawerSize = getDefaultDrawerSize();
+        } else {
+            updateTempDrawerSize();
+            if (translateTo != initTranslate.get()) {
+                translateTo = initTranslate.get();
+                for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+                    currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+                }
+            }
         }
+        getCachePolicy().cache(contentHolder);
+        translateTimer.reverseAndContinue();
     }
 
     /***************************************************************************
@@ -548,22 +615,73 @@ public class JFXDrawer extends StackPane {
     }
 
     public ObservableList<Node> getContent() {
+        if (contentHolder.getChildren().isEmpty()) {
+            updateContent();
+        }
         return content.getChildren();
     }
 
     public void setContent(Node... content) {
         this.content.getChildren().setAll(content);
+        if (contentHolder.getChildren().isEmpty()) {
+            updateContent();
+        }
     }
+
+    private void updateContent() {
+        paddingPane.setPrefSize(0, 0);
+        paddingPane.setMinSize(0, 0);
+        Node contentNode = content;
+        switch (getDirection()) {
+            case TOP:
+                contentNode = new VBox(paddingPane, content);
+                VBox.setVgrow(content, Priority.ALWAYS);
+                break;
+            case BOTTOM:
+                contentNode = new VBox(content, paddingPane);
+                VBox.setVgrow(content, Priority.ALWAYS);
+                break;
+            case LEFT:
+                contentNode = new HBox(paddingPane, content);
+                HBox.setHgrow(content, Priority.ALWAYS);
+                break;
+            case RIGHT:
+                contentNode = new HBox(content, paddingPane);
+                HBox.setHgrow(content, Priority.ALWAYS);
+                break;
+        }
+        contentNode.setPickOnBounds(false);
+        if (isOpened()) {
+            paddingSizeProperty.set(computePaddingSize());
+        }
+        contentHolder.getChildren().setAll(contentNode);
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * public properties                                                       *
+     *                                                                         *
+     **************************************************************************/
 
     public double getDefaultDrawerSize() {
         return defaultSizeProperty.get();
     }
 
-    public void setDefaultDrawerSize(double drawerWidth) {
-        defaultSizeProperty.set(drawerWidth);
-        maxSizeProperty.get().set(drawerWidth);
-        prefSizeProperty.get().set(drawerWidth);
+    public void setDefaultDrawerSize(double size) {
+        defaultSizeProperty.set(size);
+        if (getMiniDrawerSize() < 0) {
+            updateSize(size);
+        }
     }
+
+    private void updateSize(double size) {
+        maxSizeProperty.set(size);
+        prefSizeProperty.set(size);
+    }
+
+
+    private SimpleObjectProperty<DrawerDirection> directionProperty =
+        new SimpleObjectProperty<>(DrawerDirection.LEFT);
 
     public DrawerDirection getDirection() {
         return directionProperty.get();
@@ -577,6 +695,24 @@ public class JFXDrawer extends StackPane {
         this.directionProperty.set(direction);
     }
 
+
+    private SimpleObjectProperty<CachePolicy> cachePolicy = new SimpleObjectProperty<>(CachePolicy.NONE);
+
+    public CachePolicy getCachePolicy() {
+        return cachePolicy.get() == null ? CachePolicy.NONE : cachePolicy.get();
+    }
+
+    public SimpleObjectProperty<CachePolicy> cachePolicyProperty() {
+        return cachePolicy;
+    }
+
+    public void setCachePolicy(CachePolicy cachePolicy) {
+        this.cachePolicy.set(cachePolicy);
+    }
+
+
+    private BooleanProperty overLayVisible = new SimpleBooleanProperty(true);
+
     public final BooleanProperty overLayVisibleProperty() {
         return this.overLayVisible;
     }
@@ -589,6 +725,9 @@ public class JFXDrawer extends StackPane {
         this.overLayVisibleProperty().set(overLayVisible);
     }
 
+
+    private boolean resizable = false;
+
     public boolean isResizableOnDrag() {
         return resizable;
     }
@@ -597,19 +736,18 @@ public class JFXDrawer extends StackPane {
         this.resizable = resizable;
     }
 
-    public final ObjectProperty<Node> boundedNodeProperty() {
-        return this.boundedNode;
+
+    private boolean resizeContent = false;
+
+    public boolean isResizeContent() {
+        return resizeContent;
     }
 
-    public final Node getBoundedNode() {
-        return this.boundedNodeProperty().get();
+    public void setResizeContent(boolean resizeContent) {
+        this.resizeContent = resizeContent;
+        // animate content size
+        translateTimer.reverseAndContinue();
     }
-
-    public final void setBoundedNode(final Node boundedNode) {
-        this.boundedNodeProperty().unbind();
-        this.boundedNodeProperty().set(boundedNode);
-    }
-
 
     /***************************************************************************
      *                                                                         *
@@ -617,61 +755,124 @@ public class JFXDrawer extends StackPane {
      *                                                                         *
      **************************************************************************/
 
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosedProperty =
-        new SimpleObjectProperty<>((closed) -> {
-        });
-
-    public void setOnDrawerClosed(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerClosedProperty.set(handler);
+    public EventHandler<JFXDrawerEvent> getOnDrawerClosed() {
+        return onDrawerClosedProperty().get();
     }
 
-    public void getOnDrawerClosed(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerClosedProperty.get();
+    public ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerClosedProperty() {
+        return onDrawerClosed;
     }
 
-    /**
-     * Defines a function to be called when the drawer is closing.
-     */
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerClosingProperty =
-        new SimpleObjectProperty<>((closing) -> {
-        });
-
-    public void setOnDrawerClosing(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerClosingProperty.set(handler);
+    public void setOnDrawerClosed(EventHandler<JFXDrawerEvent> onDrawerClosed) {
+        onDrawerClosedProperty().set(onDrawerClosed);
     }
 
-    public void getOnDrawerClosing(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerClosingProperty.get();
+    private ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerClosed = new ObjectPropertyBase<EventHandler<JFXDrawerEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDrawerEvent.CLOSED, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return JFXDrawer.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onClosed";
+        }
+    };
+
+
+    public EventHandler<JFXDrawerEvent> getOnDrawerClosing() {
+        return onDrawerClosing.get();
     }
 
-
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpenedProperty =
-        new SimpleObjectProperty<>((opened) -> {
-        });
-
-    public void setOnDrawerOpened(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerOpenedProperty.set(handler);
+    public ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerClosingProperty() {
+        return onDrawerClosing;
     }
 
-    public void getOnDrawerOpened(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerOpenedProperty.get();
+    public void setOnDrawerClosing(EventHandler<JFXDrawerEvent> onDrawerClosing) {
+        this.onDrawerClosing.set(onDrawerClosing);
     }
 
-    /**
-     * Defines a function to be called when the drawer is opening.
-     */
-    private ObjectProperty<EventHandler<? super JFXDrawerEvent>> onDrawerOpeningProperty =
-        new SimpleObjectProperty<>((opening) -> {
-        });
+    private ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerClosing = new ObjectPropertyBase<EventHandler<JFXDrawerEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDrawerEvent.CLOSING, get());
+        }
 
-    public void setOnDrawerOpening(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerOpeningProperty.set(handler);
+        @Override
+        public Object getBean() {
+            return JFXDrawer.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onClosing";
+        }
+    };
+
+
+    public EventHandler<JFXDrawerEvent> getOnDrawerOpened() {
+        return onDrawerOpened.get();
     }
 
-    public void getOnDrawerOpening(EventHandler<? super JFXDrawerEvent> handler) {
-        onDrawerOpeningProperty.get();
+    public ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerOpenedProperty() {
+        return onDrawerOpened;
     }
 
+    public void setOnDrawerOpened(EventHandler<JFXDrawerEvent> onDrawerOpened) {
+        this.onDrawerOpened.set(onDrawerOpened);
+    }
+
+    private ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerOpened = new ObjectPropertyBase<EventHandler<JFXDrawerEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDrawerEvent.OPENED, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return JFXDrawer.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onOpened";
+        }
+    };
+
+
+    public EventHandler<JFXDrawerEvent> getOnDrawerOpening() {
+        return onDrawerOpening.get();
+    }
+
+    public ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerOpeningProperty() {
+        return onDrawerOpening;
+    }
+
+    public void setOnDrawerOpening(EventHandler<JFXDrawerEvent> onDrawerOpening) {
+        this.onDrawerOpening.set(onDrawerOpening);
+    }
+
+    private ObjectProperty<EventHandler<JFXDrawerEvent>> onDrawerOpening = new ObjectPropertyBase<EventHandler<JFXDrawerEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(JFXDrawerEvent.OPENING, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return JFXDrawer.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onOpening";
+        }
+    };
 
     /***************************************************************************
      *                                                                         *
@@ -682,92 +883,114 @@ public class JFXDrawer extends StackPane {
     private EventHandler<MouseEvent> mouseDragHandler = (mouseEvent) -> {
         if (!mouseEvent.isConsumed()) {
             mouseEvent.consume();
-            double size = 0;
-            Bounds sceneBounds = content.localToScene(content.getLayoutBounds());
-            if (directionProperty.get() == DrawerDirection.RIGHT) {
-                size = sceneBounds.getMinX() + sceneBounds.getWidth();
-            } else if (directionProperty.get() == DrawerDirection.BOTTOM) {
-                size = sceneBounds.getMinY() + sceneBounds.getHeight();
-            }
 
             if (startSize == -1) {
-                startSize = sizeProperty.get().get();
+                startSize = sizeProperty.get();
             }
 
-            double eventPoint = 0;
-            if (directionProperty.get() == DrawerDirection.RIGHT
-                || directionProperty.get() == DrawerDirection.LEFT) {
+            double eventPoint;
+            double directionValue = getDirection().doubleValue();
+
+            if (getDirection() == DrawerDirection.RIGHT
+                || getDirection() == DrawerDirection.LEFT) {
                 eventPoint = mouseEvent.getSceneX();
             } else {
                 eventPoint = mouseEvent.getSceneY();
             }
 
-            if (((size + (directionProperty.get().doubleValue() * eventPoint)) >= activeOffset)
-                && (partialTransition != null)) {
-                partialTransition = null;
-            } else if (partialTransition == null) {
-                double currentTranslate;
-                if (startMouse < 0) {
-                    currentTranslate = initTranslate.doubleValue()
-                                       + directionProperty.get().doubleValue() * initOffset
-                                       + directionProperty.get().doubleValue()
-                                         * (size + directionProperty.get().doubleValue()
-                                                   * eventPoint);
-                } else {
-                    currentTranslate = directionProperty.get().doubleValue()
-                                       * (startTranslate + directionProperty.get().doubleValue()
-                                                           * (eventPoint - startMouse));
-                }
+            double mouseDiff = startTranslate + eventPoint - startMouse;
+            final double sizeLimit = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? getWidth() : getHeight();
 
-                if (directionProperty.get().doubleValue() * currentTranslate <= 0) {
-                    // the drawer is hidden
-                    if (resizable) {
-                        maxSizeProperty.get().unbind();
-                        prefSizeProperty.get().unbind();
-                        if ((startSize - getDefaultDrawerSize())
-                            + directionProperty.get().doubleValue() * currentTranslate > 0) {
-                            // change the side drawer size if dragging from hidden
-                            maxSizeProperty.get()
-                                .set(startSize + directionProperty.get().doubleValue() * currentTranslate);
-                            prefSizeProperty.get()
-                                .set(startSize + directionProperty.get().doubleValue() * currentTranslate);
-                        } else {
-                            // if the side drawer is not fully shown perform translation to show it , and set its default size
-                            maxSizeProperty.get().set(defaultSizeProperty.get());
-                            maxSizeProperty.get().set(defaultSizeProperty.get());
-                            translateProperty.set(directionProperty.get().doubleValue()
-                                                  * ((startSize - getDefaultDrawerSize())
-                                                     + directionProperty.get().doubleValue()
-                                                       * currentTranslate));
+            if (directionValue * mouseDiff <= 0) {
+                // drawer close drag
+                if (resizable || hasMiniSize()) {
+                    double drawerMinSize = hasMiniSize() ? getMiniDrawerSize() : getDefaultDrawerSize();
+                    final double newSize = startSize + directionValue * mouseDiff;
+                    if (newSize > drawerMinSize) {
+                        // change the side drawer size if dragging from hidden
+                        maxSizeProperty.set(newSize);
+                        prefSizeProperty.set(newSize);
+                        double opacity = hasMiniSize() ? (newSize - getMiniDrawerSize()) / (getDefaultDrawerSize() - getMiniDrawerSize()) : (1 - translateProperty.get() / initTranslate.get());
+                        opacity = opacity > 1 ? 1 : opacity;
+                        opacity = opacity < 0 ? 0 : opacity;
+                        overlayPane.setOpacity(opacity);
+                        // update user custom animation
+                        for (JFXKeyValue<?> value : animatedValues) {
+                            if (value.isValid()) {
+                                final WritableValue<?> target = value.getTarget();
+                                final JFXDrawerKeyValue<?> initValue = initValues.get(target);
+                                ((WritableValue) target).setValue(value.getInterpolator()
+                                    .interpolate(initValue.getOpenValueSupplier().get(), initValue.getCloseValueSupplier().get(), 1 - opacity));
+                            }
+                        }
+                        if (isResizeContent()) {
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
                         }
                     } else {
-                        translateProperty.set(currentTranslate);
-                    }
-                } else {
-                    // the drawer is already shown
-                    if (resizable) {
-                        if (startSize + directionProperty.get()
-                                            .doubleValue() * currentTranslate <= parentSizeProperty.get().get()) {
-                            // change the side drawer size after being shown
-                            maxSizeProperty.get().unbind();
-                            prefSizeProperty.get().unbind();
-                            maxSizeProperty.get()
-                                .set(startSize + directionProperty.get().doubleValue() * currentTranslate);
-                            prefSizeProperty.get()
-                                .set(startSize + directionProperty.get().doubleValue() * currentTranslate);
-                        } else {
-                            // bind the drawer size to its parent
-                            maxSizeProperty.get().bind(parentSizeProperty.get());
-                            prefSizeProperty.get().bind(parentSizeProperty.get());
+                        // animate <- when resize is finished
+                        // if the side drawer is not fully shown perform translation to show it , and set its default size
+                        maxSizeProperty.set(drawerMinSize);
+                        double translation = hasMiniSize() ? 0 : directionValue * (startSize - getDefaultDrawerSize()) + mouseDiff;
+                        translateProperty.set(translation);
+                        double opacity = hasMiniSize() ? (newSize - getMiniDrawerSize()) / (getDefaultDrawerSize() - getMiniDrawerSize()) : (1 - translateProperty.get() / initTranslate.get());
+                        opacity = opacity > 1 ? 1 : opacity;
+                        opacity = opacity < 0 ? 0 : opacity;
+                        overlayPane.setOpacity(opacity);
+                        if (isResizeContent()) {
+                            paddingSizeProperty.set(drawerMinSize + directionValue * translation);
                         }
                     }
-                    translateProperty.set(0);
+                } else {
+                    // animate translation <-
+                    translateProperty.set(mouseDiff);
+                    overlayPane.setOpacity(1 - translateProperty.get() / initTranslate.get());
+                    if (isResizeContent()) {
+                        paddingSizeProperty.set(getDefaultDrawerSize() + directionValue * mouseDiff);
+                    }
+                }
+            } else {
+                // drawer open drag
+                if (resizable || hasMiniSize()) {
+                    double newSize = startSize + directionValue * mouseDiff;
+                    if (newSize <= sizeLimit) {
+                        // change the side drawer size after being shown
+                        newSize = resizable ? newSize : (newSize < getDefaultDrawerSize() ? newSize : getDefaultDrawerSize());
+                        maxSizeProperty.set(newSize);
+                        prefSizeProperty.set(newSize);
+                        double opacity = hasMiniSize() ? (newSize - getMiniDrawerSize()) / (getDefaultDrawerSize() - getMiniDrawerSize()) : (1 - translateProperty.get() / initTranslate.get());
+                        opacity = opacity > 1 ? 1 : opacity;
+                        opacity = opacity < 0 ? 0 : opacity;
+                        overlayPane.setOpacity(opacity);
+                        // update user custom animation
+                        for (JFXKeyValue<?> value : animatedValues) {
+                            if (value.isValid()) {
+                                final WritableValue<?> target = value.getTarget();
+                                final JFXDrawerKeyValue<?> initValue = initValues.get(target);
+                                ((WritableValue) target).setValue(value.getInterpolator()
+                                    .interpolate(initValue.getCloseValueSupplier().get(), initValue.getOpenValueSupplier().get(), opacity));
+                            }
+                        }
+                        if (isResizeContent()) {
+                            paddingSizeProperty.set(Math.min(newSize, sizeLimit - contentMinSize));
+                        }
+                    } else if (resizable) {
+                        // bind the drawer size to its parent
+                        maxSizeProperty.set(Region.USE_COMPUTED_SIZE);
+                        prefSizeProperty.set(Region.USE_COMPUTED_SIZE);
+                    }
+                }
+                translateProperty.set(0);
+                if (!hasMiniSize()) {
+                    overlayPane.setOpacity(1 - translateProperty.get() / initTranslate.get());
                 }
             }
         }
     };
 
+
     private EventHandler<MouseEvent> mousePressedHandler = (mouseEvent) -> {
+        translateTimer.setOnFinished(null);
+        translateTimer.stop();
         if (directionProperty.get() == DrawerDirection.RIGHT
             || directionProperty.get() == DrawerDirection.LEFT) {
             startMouse = mouseEvent.getSceneX();
@@ -775,148 +998,111 @@ public class JFXDrawer extends StackPane {
             startMouse = mouseEvent.getSceneY();
         }
         startTranslate = translateProperty.get();
-        startSize = sizeProperty.get().get();
-
+        startSize = sizeProperty.get();
+        contentMinSize = -1;
+        if (isResizeContent()) {
+            contentMinSize = getDirection() == DrawerDirection.LEFT || getDirection() == DrawerDirection.RIGHT ? content.minWidth(-1) : content.minHeight(-1);
+        }
     };
 
     private EventHandler<MouseEvent> mouseReleasedHandler = (mouseEvent) -> {
-        if (directionProperty.get().doubleValue() * translateProperty.get()
-            > directionProperty.get().doubleValue() * initTranslate.doubleValue() / 2) {
-            // show side pane
-            partialOpen();
-        } else {
-            // hide the sidePane
-            partialClose();
+        final double direction = directionProperty.get().doubleValue();
+
+        if (prefSizeProperty.get() != USE_COMPUTED_SIZE) {
+            tryPartialAnimation(direction);
+            updateTempDrawerSize();
         }
         // reset drawer animation properties
         startMouse = -1;
         startTranslate = -1;
-        startSize = sizeProperty.get().get();
+        startSize = sizeProperty.get();
     };
 
-    private void partialClose() {
-        if (partialTransition != null) {
-            partialTransition.stop();
+    private void updateTempDrawerSize() {
+        if (sizeProperty.get() > getDefaultDrawerSize()) {
+            tempDrawerSize = prefSizeProperty.get();
+        } else {
+            tempDrawerSize = getDefaultDrawerSize();
         }
-        partialTransition = new DrawerPartialTransitionHide(translateProperty.get(),
-            initTranslate.doubleValue());
-        partialTransition.setOnFinished((event) -> {
-            this.getChildren().remove(overlayPane);
-            this.getChildren().remove(sidePane);
-            translateProperty.set(initTranslate.doubleValue());
-            onDrawerClosedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
+    }
+
+    private void tryPartialAnimation(double direction) {
+        if (hasMiniSize()) {
+            if (prefSizeProperty.get() > (getMiniDrawerSize() + getDefaultDrawerSize()) / 2 && prefSizeProperty.get() < getDefaultDrawerSize()) {
+                // show side pane
+                partialOpen();
+            } else if (prefSizeProperty.get() <= (getMiniDrawerSize() + getDefaultDrawerSize()) / 2) {
+                // hide the sidePane
+                partialClose();
+            } else if (prefSizeProperty.get() >= getDefaultDrawerSize()) {
+                resizeTo = getDefaultDrawerSize();
+                overlayPane.setMouseTransparent(!isOverLayVisible());
+            }
+        } else {
+            if (direction * translateProperty.get() > direction * initTranslate.get() / 2) {
+                if (translateProperty.get() != 0.0) {
+                    // show side pane
+                    partialOpen();
+                }
+            } else if (translateProperty.get() != initTranslate.get()) {
+                // hide the sidePane
+                partialClose();
+            }
+        }
+    }
+
+    private void partialClose() {
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getCloseValueSupplier());
+        }
+        translateTo = initTranslate.get();
+        resizeTo = getMiniDrawerSize();
+        translateTimer.setOnFinished(() -> {
+            overlayPane.setMouseTransparent(true);
+            fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSED));
         });
-        partialTransition.play();
+        getCachePolicy().cache(contentHolder);
+        translateTimer.start();
     }
 
     private void partialOpen() {
-        if (partialTransition != null) {
-            partialTransition.stop();
+        for (Map.Entry<WritableValue<?>, JFXDrawerKeyValue<?>> entry : initValues.entrySet()) {
+            currentValue.put(entry.getKey(), entry.getValue().getOpenValueSupplier());
         }
-        partialTransition = new DrawerPartialTransitionDraw(translateProperty.get(), 0);
-        partialTransition.setOnFinished((event) -> {
-            translateProperty.set(0);
-            onDrawerOpenedProperty.get().handle(new JFXDrawerEvent(JFXDrawerEvent.OPENED));
-        });
-        partialTransition.play();
+        translateTo = 0;
+        resizeTo = tempDrawerSize = getDefaultDrawerSize();
+        overlayPane.setMouseTransparent(!isOverLayVisible());
+        translateTimer.setOnFinished(() -> fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENED)));
+        getCachePolicy().cache(contentHolder);
+        translateTimer.start();
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Animations                                                                *
-     *                                                                         *
-     **************************************************************************/
-
-    private double tempDrawerSize = getDefaultDrawerSize();
-
-    private class OutDrawerSizeTransition extends CachedTransition {
-        public OutDrawerSizeTransition() {
-            super(sidePane, new Timeline(new KeyFrame(Duration.millis(1000),
-                new KeyValue(prefSizeProperty.get(),
-                    getDefaultDrawerSize(),
-                    Interpolator.EASE_BOTH),
-                new KeyValue(maxSizeProperty.get(),
-                    getDefaultDrawerSize(),
-                    Interpolator.EASE_BOTH)))
-            );
-            setCycleDuration(Duration.seconds(0.5));
-            setDelay(Duration.seconds(0));
-        }
+    // TODO:ENHANCE: user should be able to remove values
+    public <T> void addAnimatedKeyValue(Node node, JFXDrawerKeyValue... values) {//WritableValue<T> target, Supplier<T> openValue, Supplier<T> closeValue, Supplier<Boolean> validCondition) {
+        addAnimatedKeyValue(node, Arrays.asList(values));
     }
 
-    private class InDrawerSizeTransition extends CachedTransition {
-        public InDrawerSizeTransition() {
-            super(sidePane, new Timeline(
-                new KeyFrame(Duration.millis(0),
-                    new KeyValue(maxSizeProperty.get(), getDefaultDrawerSize(), Interpolator.EASE_BOTH),
-                    new KeyValue(prefSizeProperty.get(), getDefaultDrawerSize(), Interpolator.EASE_BOTH)),
-                new KeyFrame(Duration.millis(1000),
-                    new KeyValue(maxSizeProperty.get(), tempDrawerSize, Interpolator.EASE_BOTH),
-                    new KeyValue(prefSizeProperty.get(), tempDrawerSize, Interpolator.EASE_BOTH)
-                )));
-            setCycleDuration(Duration.seconds(0.5));
-            setDelay(Duration.seconds(0));
+    public void addAnimatedKeyValue(Node node, List<JFXDrawerKeyValue<?>> values) {
+        Collection<JFXKeyValue<?>> modifiedValues = new ArrayList<>();
+        for (JFXDrawerKeyValue value : values) {
+            JFXKeyValue modifiedValue = JFXKeyValue.builder()
+                .setEndValueSupplier(() -> currentValue.get(value.getTarget()).get())
+                .setAnimateCondition(() -> node.getScene() != null && value.isValid())
+                .setTargetSupplier(() -> value.getTarget())
+                .setInterpolator(value.getInterpolator()).build();
+            modifiedValues.add(modifiedValue);
+            currentValue.put(value.getTarget(), isClosed() ? value.getCloseValueSupplier() : value.getOpenValueSupplier());
+            initValues.put(value.getTarget(), value);
+        }
+        animatedValues.addAll(modifiedValues);
+        final JFXKeyFrame keyFrame = new JFXKeyFrame(duration, modifiedValues.toArray(new JFXKeyValue[0]));
+        try {
+            translateTimer.addKeyFrame(keyFrame);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-
-    private class DrawerTransition extends CachedTransition {
-        public DrawerTransition(double start, double end) {
-            super(sidePane, new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(translateProperty, start, Interpolator.EASE_BOTH)),
-                new KeyFrame(Duration.millis(1000), new KeyValue(translateProperty, end, Interpolator.EASE_BOTH))
-            )/*, new CacheMomento(overlayPane)*/);
-            //  TODO: add this in later java version, as currently
-            //  Region is not rendered correctly when node cache is enabled
-            //  and this issue will be fixed later.
-            setCycleDuration(Duration.seconds(0.5));
-            setDelay(Duration.seconds(0));
-        }
-
-        @Override
-        protected void starting() {
-            super.starting();
-            if (this.getRate() > 0) {
-                if (!JFXDrawer.this.getChildren().contains(overlayPane)) {
-                    JFXDrawer.this.getChildren().add(overlayPane);
-                }
-                if (!JFXDrawer.this.getChildren().contains(sidePane)) {
-                    JFXDrawer.this.getChildren().add(sidePane);
-                }
-            }
-        }
-
-        @Override
-        protected void stopping() {
-            super.stopping();
-            if (this.getRate() < 0) {
-                JFXDrawer.this.getChildren().remove(overlayPane);
-                JFXDrawer.this.getChildren().remove(sidePane);
-            }
-        }
-    }
-
-    private class DrawerPartialTransition extends CachedTransition {
-        public DrawerPartialTransition(double start, double end) {
-            super(sidePane, new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(translateProperty, start, Interpolator.EASE_BOTH)),
-                new KeyFrame(Duration.millis(600), new KeyValue(translateProperty, end, Interpolator.EASE_BOTH))));
-            setCycleDuration(Duration.seconds(0.5));
-            setDelay(Duration.seconds(0));
-        }
-    }
-
-    private class DrawerPartialTransitionDraw extends DrawerPartialTransition {
-        public DrawerPartialTransitionDraw(double start, double end) {
-            super(start, end);
-        }
-    }
-
-    private class DrawerPartialTransitionHide extends DrawerPartialTransition {
-        public DrawerPartialTransitionHide(double start, double end) {
-            super(start, end);
-        }
-    }
 
     /***************************************************************************
      *                                                                         *
@@ -932,5 +1118,11 @@ public class JFXDrawer extends StackPane {
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-drawer";
 
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-drawer.css").toExternalForm();
+
+    @Override
+    public String getUserAgentStylesheet() {
+        return USER_AGENT_STYLESHEET;
+    }
 }
 

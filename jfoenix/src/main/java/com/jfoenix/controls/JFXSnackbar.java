@@ -19,285 +19,319 @@
 
 package com.jfoenix.controls;
 
-import com.jfoenix.controls.JFXButton.ButtonType;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
+import javafx.beans.value.WeakChangeListener;
+import javafx.css.PseudoClass;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @see <a href= "http://www.google.com/design/spec/components/snackbars-toasts.html#"> Snackbars & toasts</a>
+ * "Snackbars provide brief messages about app processes at the bottom of the screen"
+ * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
  * <p>
- * The use of a javafx Popup or PopupContainer for notifications would seem intuitive but Popups are displayed in their
- * own dedicated windows and alligning the popup window and handling window on top layering is more trouble then it is
- * worth.
+ * To show a snackbar you need to
+ * <ol>
+ * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+ * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+ * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+ * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+ * method} works as intended.</li></ul>
+ * </li>
+ * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+ * but any arbitrary {@link Node} will do.</li>
+ * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+ * duration.</li>
+ * </ol>
+ * <p>
+ * Finally, with all those things prepared, show your snackbar using
+ * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+ * <p>
+ * It's most convenient to create functions to do most of this (creating the layout and event) with the default
+ * settings; that way all you need to do to show a snackbar is specify the message or just the message and the duration.
+ *
+ * @see <a href="https://material.io/design/components/snackbars.html#"> The Material Design Snackbar</a>
  */
-public class JFXSnackbar extends StackPane {
+public class JFXSnackbar extends Group {
 
-    private Label toast;
-    private JFXButton action;
+    private static final String DEFAULT_STYLE_CLASS = "jfx-snackbar";
 
     private Pane snackbarContainer;
-    private Group popup;
-    private ChangeListener<? super Number> sizeListener;
+    private ChangeListener<? super Number> sizeListener = (o, oldVal, newVal) -> refreshPopup();
+    private WeakChangeListener<? super Number> weakSizeListener = new WeakChangeListener<>(sizeListener);
 
     private AtomicBoolean processingQueue = new AtomicBoolean(false);
     private ConcurrentLinkedQueue<SnackbarEvent> eventQueue = new ConcurrentLinkedQueue<>();
-    private StackPane actionContainer;
+    private ConcurrentHashMap.KeySetView<Object, Boolean> eventsSet = ConcurrentHashMap.newKeySet();
 
-    Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
+    private Interpolator easeInterpolator = Interpolator.SPLINE(0.250, 0.100, 0.250, 1.000);
 
+    private Pane content;
+    private PseudoClass activePseudoClass = null;
+    private PauseTransition pauseTransition;
+
+    /**
+     * This constructor assumes that you will eventually call the {@link #registerSnackbarContainer(Pane)} method before
+     * calling the {@link #enqueue(SnackbarEvent)} method. Otherwise, how will the snackbar know where to show itself?
+     * <p><p>
+     * "Snackbars provide brief messages about app processes at the bottom of the screen"
+     * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
+     * <p>
+     * To show a snackbar you need to
+     * <ol>
+     * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+     * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+     * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+     * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+     * method} works as intended.</li></ul>
+     * </li>
+     * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+     * but any arbitrary {@link Node} will do.</li>
+     * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+     * duration.</li>
+     * </ol>
+     * <p>
+     * Finally, with all those things prepared, show your snackbar using
+     * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+     * <p>
+     */
     public JFXSnackbar() {
         this(null);
     }
 
+    /**
+     * "Snackbars provide brief messages about app processes at the bottom of the screen"
+     * (<a href="https://material.io/design/components/snackbars.html#">Material Design Guidelines</a>).
+     * <p>
+     * To show a snackbar you need to
+     * <ol>
+     * <li>Have a {@link Pane} (snackbarContainer) to show the snackbar on top of. Register it in {@link
+     * #JFXSnackbar(Pane) the JFXSnackbar constructor} or using the {@link #registerSnackbarContainer(Pane)} method.</li>
+     * <li>Have or create a {@link JFXSnackbar}.<ul><li>Having one snackbar where you pass all your {@link
+     * JFXSnackbar.SnackbarEvent SnackbarEvents} will ensure that the {@link JFXSnackbar#enqueue(SnackbarEvent) enqueue
+     * method} works as intended.</li></ul>
+     * </li>
+     * <li>Have something to show in the snackbar. A {@link JFXSnackbarLayout} is nice and pretty,
+     * but any arbitrary {@link Node} will do.</li>
+     * <li>Create a {@link JFXSnackbar.SnackbarEvent SnackbarEvent} specifying the contents and the
+     * duration.</li>
+     * </ol>
+     * <p>
+     * Finally, with all those things prepared, show your snackbar using
+     * {@link JFXSnackbar#enqueue(SnackbarEvent) snackbar.enqueue(snackbarEvent);}.
+     * <p>
+     *
+     * @param snackbarContainer where the snackbar will appear. Using a single snackbar instead of many, will ensure that
+     *                          the {@link #enqueue(SnackbarEvent)} method works correctly.
+     */
     public JFXSnackbar(Pane snackbarContainer) {
-
-        BorderPane bPane = new BorderPane();
-        toast = new Label();
-        toast.setMinWidth(Control.USE_PREF_SIZE);
-        toast.getStyleClass().add("jfx-snackbar-toast");
-        toast.setWrapText(true);
-        StackPane toastContainer = new StackPane(toast);
-        toastContainer.setPadding(new Insets(20));
-        bPane.setLeft(toastContainer);
-
-        action = new JFXButton();
-        action.setMinWidth(Control.USE_PREF_SIZE);
-        action.setButtonType(ButtonType.FLAT);
-        action.getStyleClass().add("jfx-snackbar-action");
-
-        // actions will be added upon showing the snackbar if needed
-        actionContainer = new StackPane(action);
-        actionContainer.setPadding(new Insets(0, 10, 0, 0));
-        bPane.setRight(actionContainer);
-
-        toast.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> {
-            if (this.getPrefWidth() == -1) {
-                return this.getPrefWidth();
-            }
-            double actionWidth = actionContainer.isVisible() ? actionContainer.getWidth() : 0.0;
-            return this.prefWidthProperty().get() - actionWidth;
-        }, this.prefWidthProperty(), actionContainer.widthProperty(), actionContainer.visibleProperty()));
-
-        //bind the content's height and width from this snackbar allowing the content's dimensions to be set externally
-        bPane.prefWidthProperty().bind(this.prefWidthProperty());
-
-        final BorderPane content = bPane;
-
+        initialize();
+        content = new StackPane();
         content.getStyleClass().add("jfx-snackbar-content");
-        //setting a shadow enlarges the snackbar height leaving a gap below it
-        //JFXDepthManager.setDepth(content, 4);
-
         //wrap the content in a group so that the content is managed inside its own container
         //but the group is not managed in the snackbarContainer so it does not affect any layout calculations
-        popup = new Group();
-        popup.getChildren().add(content);
-        popup.setManaged(false);
-        popup.setVisible(false);
-        popup.idProperty().bind(this.idProperty());
-        this.getStyleClass().addListener((ListChangeListener<String>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    popup.getStyleClass().addAll(c.getAddedSubList());
-                }
-                if (c.wasRemoved()) {
-                    popup.getStyleClass().removeAll(c.getRemoved());
-                }
-            }
-        });
-        sizeListener = (o, oldVal, newVal) -> {
-            refreshPopup();
-        };
+        getChildren().add(content);
+        setManaged(false);
+        setVisible(false);
 
         // register the container before resizing it
         registerSnackbarContainer(snackbarContainer);
 
         // resize the popup if its layout has been changed
-        popup.layoutBoundsProperty().addListener((o, oldVal, newVal) -> refreshPopup());
+        layoutBoundsProperty().addListener((o, oldVal, newVal) -> refreshPopup());
 
         addEventHandler(SnackbarEvent.SNACKBAR, e -> enqueue(e));
-
-        //This control actually orchestrates the popup logic and is never visibly displayed.
-        this.setVisible(false);
-        this.setManaged(false);
-
     }
 
-    /***************************************************************************
-     * * Setters / Getters * *
-     **************************************************************************/
+    private void initialize() {
+        this.getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Setters / Getters
+    ///////////////////////////////////////////////////////////////////////////
 
     public Pane getPopupContainer() {
         return snackbarContainer;
     }
 
+    public void setPrefWidth(double width) {
+        content.setPrefWidth(width);
+    }
 
-    /***************************************************************************
-     * * Public API * *
-     **************************************************************************/
+    public double getPrefWidth() {
+        return content.getPrefWidth();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Public API
+    ///////////////////////////////////////////////////////////////////////////
 
     public void registerSnackbarContainer(Pane snackbarContainer) {
-
         if (snackbarContainer != null) {
             if (this.snackbarContainer != null) {
                 //since listeners are added the container should be properly registered/unregistered
                 throw new IllegalArgumentException("Snackbar Container already set");
             }
-
             this.snackbarContainer = snackbarContainer;
-            this.snackbarContainer.getChildren().add(popup);
-            this.snackbarContainer.heightProperty().addListener(sizeListener);
-            this.snackbarContainer.widthProperty().addListener(sizeListener);
+            this.snackbarContainer.getChildren().add(this);
+            this.snackbarContainer.heightProperty().addListener(weakSizeListener);
+            this.snackbarContainer.widthProperty().addListener(weakSizeListener);
         }
-
     }
 
     public void unregisterSnackbarContainer(Pane snackbarContainer) {
-
         if (snackbarContainer != null) {
             if (this.snackbarContainer == null) {
                 throw new IllegalArgumentException("Snackbar Container not set");
             }
-
-            this.snackbarContainer.getChildren().remove(popup);
-            this.snackbarContainer.heightProperty().removeListener(sizeListener);
-            this.snackbarContainer.widthProperty().removeListener(sizeListener);
+            this.snackbarContainer.getChildren().remove(this);
+            this.snackbarContainer.heightProperty().removeListener(weakSizeListener);
+            this.snackbarContainer.widthProperty().removeListener(weakSizeListener);
             this.snackbarContainer = null;
         }
     }
 
-    public void show(String toastMessage, long timeout) {
-        this.show(toastMessage, null, timeout, null);
-    }
-
-    public void show(String message, String actionText, EventHandler<? super MouseEvent> actionHandler) {
-        this.show(message, actionText, -1, actionHandler);
-    }
-
-    public void show(String message, String actionText, long timeout, EventHandler<? super MouseEvent> actionHandler) {
-        toast.setText(message);
-        if (actionText != null && !actionText.isEmpty()) {
-            action.setVisible(true);
-            actionContainer.setVisible(true);
-            actionContainer.setManaged(true);
-            // to force updating the layout bounds
-            action.setText("");
-            action.setText(actionText);
-            action.setOnMouseClicked(actionHandler);
-        } else {
-            actionContainer.setVisible(false);
-            actionContainer.setManaged(false);
-            action.setVisible(false);
+    private void show(SnackbarEvent event) {
+        content.getChildren().setAll(event.getContent());
+        openAnimation = getTimeline(event.getTimeout());
+        if (event.getPseudoClass() != null) {
+            activePseudoClass = event.getPseudoClass();
+            content.pseudoClassStateChanged(activePseudoClass, true);
         }
-        Timeline animation = getTimeline(timeout);
-        animation.play();
+        openAnimation.play();
     }
 
+    private Timeline openAnimation = null;
 
-    private Timeline getTimeline(long timeout) {
+    private Timeline getTimeline(Duration timeout) {
         Timeline animation;
-        if (timeout <= 0) {
-            animation = new Timeline(
-                new KeyFrame(
-                    Duration.ZERO,
-                    e -> popup.toBack(),
-                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
-                ),
-                new KeyFrame(
-                    Duration.millis(10),
-                    e -> popup.toFront(),
-                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
-                ),
-                new KeyFrame(Duration.millis(300),
-                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-                )
-            );
-            animation.setCycleCount(1);
-        } else {
-            animation = new Timeline(
-                new KeyFrame(
-                    Duration.ZERO,
-                    (e) -> popup.toBack(),
-                    new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                    new KeyValue(popup.translateYProperty(), popup.getLayoutBounds().getHeight(), easeInterpolator),
-                    new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
-                ),
-                new KeyFrame(
-                    Duration.millis(10),
-                    (e) -> popup.toFront(),
-                    new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
-                ),
-                new KeyFrame(Duration.millis(300),
-                    new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                    new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-                ),
-                new KeyFrame(Duration.millis(timeout / 2))
-            );
-            animation.setAutoReverse(true);
-            animation.setCycleCount(2);
-            animation.setOnFinished((e) -> processSnackbars());
+        animation = new Timeline(
+            new KeyFrame(
+                Duration.ZERO,
+                e -> this.toBack(),
+                new KeyValue(this.visibleProperty(), false, Interpolator.EASE_BOTH),
+                new KeyValue(this.translateYProperty(), this.getLayoutBounds().getHeight(), easeInterpolator),
+                new KeyValue(this.opacityProperty(), 0, easeInterpolator)
+            ),
+            new KeyFrame(
+                Duration.millis(10),
+                e -> this.toFront(),
+                new KeyValue(this.visibleProperty(), true, Interpolator.EASE_BOTH)
+            ),
+            new KeyFrame(Duration.millis(300),
+                new KeyValue(this.opacityProperty(), 1, easeInterpolator),
+                new KeyValue(this.translateYProperty(), 0, easeInterpolator)
+            )
+        );
+        animation.setCycleCount(1);
+        pauseTransition = Duration.INDEFINITE.equals(timeout) ? null : new PauseTransition(timeout);
+        if (pauseTransition != null) {
+            animation.setOnFinished(finish -> {
+                pauseTransition.setOnFinished(done -> {
+                    pauseTransition = null;
+                    eventsSet.remove(currentEvent);
+                    currentEvent = eventQueue.peek();
+                    close();
+                });
+                pauseTransition.play();
+            });
         }
         return animation;
     }
 
     public void close() {
-        Timeline animation = new Timeline(
-            new KeyFrame(
-                Duration.ZERO,
-                e -> popup.toFront(),
-                new KeyValue(popup.opacityProperty(), 1, easeInterpolator),
-                new KeyValue(popup.translateYProperty(), 0, easeInterpolator)
-            ),
-            new KeyFrame(
-                Duration.millis(290),
-                new KeyValue(popup.visibleProperty(), true, Interpolator.EASE_BOTH)
-            ),
-            new KeyFrame(Duration.millis(300),
-                e -> popup.toBack(),
-                new KeyValue(popup.visibleProperty(), false, Interpolator.EASE_BOTH),
-                new KeyValue(popup.translateYProperty(),
-                    popup.getLayoutBounds().getHeight(),
-                    easeInterpolator),
-                new KeyValue(popup.opacityProperty(), 0, easeInterpolator)
-            )
-        );
-        animation.setCycleCount(1);
-        animation.setOnFinished(e -> processSnackbars());
-        animation.play();
+        if (openAnimation != null) {
+            openAnimation.stop();
+        }
+        if (this.isVisible()) {
+            Timeline closeAnimation = new Timeline(
+                new KeyFrame(
+                    Duration.ZERO,
+                    e -> this.toFront(),
+                    new KeyValue(this.opacityProperty(), 1, easeInterpolator),
+                    new KeyValue(this.translateYProperty(), 0, easeInterpolator)
+                ),
+                new KeyFrame(
+                    Duration.millis(290),
+                    new KeyValue(this.visibleProperty(), true, Interpolator.EASE_BOTH)
+                ),
+                new KeyFrame(Duration.millis(300),
+                    e -> this.toBack(),
+                    new KeyValue(this.visibleProperty(), false, Interpolator.EASE_BOTH),
+                    new KeyValue(this.translateYProperty(),
+                        this.getLayoutBounds().getHeight(),
+                        easeInterpolator),
+                    new KeyValue(this.opacityProperty(), 0, easeInterpolator)
+                )
+            );
+            closeAnimation.setCycleCount(1);
+            closeAnimation.setOnFinished(e -> {
+                resetPseudoClass();
+                processSnackbar();
+            });
+            closeAnimation.play();
+        }
     }
 
-    private void processSnackbars() {
-        SnackbarEvent qevent = eventQueue.poll();
-        if (qevent != null) {
-            if (qevent.isPersistent()) {
-                show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-            } else {
-                show(qevent.getMessage(), qevent.getActionText(), qevent.getTimeout(), qevent.getActionHandler());
+    private SnackbarEvent currentEvent = null;
+
+    public SnackbarEvent getCurrentEvent() {
+        return currentEvent;
+    }
+
+    /**
+     * Shows {@link SnackbarEvent SnackbarEvents} one by one. The next event will be shown after the current event's duration.
+     *
+     * @param event the {@link SnackbarEvent event} to put in the queue.
+     */
+    public void enqueue(SnackbarEvent event) {
+        synchronized (this) {
+            if (!eventsSet.contains(event)) {
+                eventsSet.add(event);
+                eventQueue.offer(event);
+            } else if (currentEvent == event && pauseTransition != null) {
+                pauseTransition.playFromStart();
             }
+        }
+        if (processingQueue.compareAndSet(false, true)) {
+            Platform.runLater(() -> {
+                currentEvent = eventQueue.poll();
+                if (currentEvent != null) {
+                    show(currentEvent);
+                }
+            });
+        }
+    }
+
+    private void resetPseudoClass() {
+        if (activePseudoClass != null) {
+            content.pseudoClassStateChanged(activePseudoClass, false);
+            activePseudoClass = null;
+        }
+    }
+
+    private void processSnackbar() {
+        currentEvent = eventQueue.poll();
+        if (currentEvent != null) {
+            eventsSet.remove(currentEvent);
+            show(currentEvent);
         } else {
             //The enqueue method and this listener should be executed sequentially on the FX Thread so there
             //should not be a race condition
@@ -305,77 +339,99 @@ public class JFXSnackbar extends StackPane {
         }
     }
 
-
-    public void refreshPopup() {
-        Bounds contentBound = popup.getLayoutBounds();
+    private void refreshPopup() {
+        Bounds contentBound = this.getLayoutBounds();
         double offsetX = Math.ceil(snackbarContainer.getWidth() / 2) - Math.ceil(contentBound.getWidth() / 2);
         double offsetY = snackbarContainer.getHeight() - contentBound.getHeight();
-        popup.setLayoutX(offsetX);
-        popup.setLayoutY(offsetY);
+        this.setLayoutX(offsetX);
+        this.setLayoutY(offsetY);
 
     }
 
-    public void enqueue(SnackbarEvent event) {
-        eventQueue.add(event);
-        if (processingQueue.compareAndSet(false, true)) {
-            Platform.runLater(() -> {
-                SnackbarEvent qevent = eventQueue.poll();
-                if (qevent != null) {
-                    if (qevent.isPersistent()) {
-                        show(qevent.getMessage(), qevent.getActionText(), qevent.getActionHandler());
-                    } else {
-                        show(qevent.getMessage(),
-                            qevent.getActionText(),
-                            qevent.getTimeout(),
-                            qevent.getActionHandler());
-                    }
-                }
-            });
-        }
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Event API
+    ///////////////////////////////////////////////////////////////////////////
 
-
-    /***************************************************************************
-     * * Event API * *
-     **************************************************************************/
-
+    /**
+     * Specifies <em>what</em> and <em>how long</em> to show a {@link JFXSnackbar}.
+     * <p>
+     * The <em>what</em> can be any arbitrary {@link Node}; the {@link JFXSnackbarLayout} is a great choice.
+     * <p>
+     * The <em>how long</em> is specified in the form of a {@link javafx.util.Duration javafx.util.Duration}, not to be
+     * confused with the {@link java.time.Duration}.
+     */
     public static class SnackbarEvent extends Event {
+
         public static final EventType<SnackbarEvent> SNACKBAR = new EventType<>(Event.ANY, "SNACKBAR");
 
-        private final String message;
-        private final String actionText;
-        private final long timeout;
-        private final boolean persistent;
-        private final EventHandler<? super MouseEvent> actionHandler;
+        /**
+         * The amount of time the snackbar will show for, if not otherwise specified.
+         * <p>
+         * It's 1.5 seconds.
+         */
+        public static Duration DEFAULT_DURATION = Duration.seconds(1.5);
 
-        public SnackbarEvent(String message) {
-            this(message, null, 3000, false, null);
+        private final Node content;
+        private final PseudoClass pseudoClass;
+        private final Duration timeout;
 
+        /**
+         * Creates a {@link SnackbarEvent} with the {@link #DEFAULT_DURATION default duration} and no pseudoClass.
+         *
+         * @param content what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         */
+        public SnackbarEvent(Node content) {
+            this(content, DEFAULT_DURATION, null);
         }
 
-        public SnackbarEvent(String message, String actionText, long timeout, boolean persistent, EventHandler<? super MouseEvent> actionHandler) {
+        /**
+         * Creates a {@link SnackbarEvent} with the {@link #DEFAULT_DURATION default duration}; you specify the contents and
+         * pseudoClass.
+         *
+         * @param content     what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param pseudoClass
+         */
+        public SnackbarEvent(Node content, PseudoClass pseudoClass) {
+            this(content, DEFAULT_DURATION, pseudoClass);
+        }
+
+        /**
+         * Creates a SnackbarEvent with no pseudoClass; you specify the contents and duration.
+         * pseudoClass.
+         *
+         * @param content what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param timeout the amount of time you want the snackbar to show for.
+         */
+        public SnackbarEvent(Node content, Duration timeout) {
+            this(content, timeout, null);
+        }
+
+        /**
+         * Creates a SnackbarEvent; you specify the contents, duration and pseudoClass.
+         * <p>
+         * If you don't need so much customization, try one of the other constructors.
+         *
+         * @param content     what you want shown in the snackbar; a {@link JFXSnackbarLayout} is a great choice.
+         * @param timeout     the amount of time you want the snackbar to show for.
+         * @param pseudoClass
+         */
+        public SnackbarEvent(Node content, Duration timeout, PseudoClass pseudoClass) {
             super(SNACKBAR);
-            this.message = message;
-            this.actionText = actionText;
-            this.timeout = timeout < 1 ? 3000 : timeout;
-            this.actionHandler = actionHandler;
-            this.persistent = persistent;
+            this.content = content;
+            this.pseudoClass = pseudoClass;
+            this.timeout = timeout;
         }
 
-        public String getMessage() {
-            return message;
+        public Node getContent() {
+            return content;
         }
 
-        public String getActionText() {
-            return actionText;
+        public PseudoClass getPseudoClass() {
+            return pseudoClass;
         }
 
-        public long getTimeout() {
+        public Duration getTimeout() {
             return timeout;
-        }
-
-        public EventHandler<? super MouseEvent> getActionHandler() {
-            return actionHandler;
         }
 
         @Override
@@ -384,7 +440,7 @@ public class JFXSnackbar extends StackPane {
         }
 
         public boolean isPersistent() {
-            return persistent;
+            return Duration.INDEFINITE.equals(getTimeout());
         }
     }
 }

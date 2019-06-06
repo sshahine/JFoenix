@@ -4,6 +4,7 @@
 
 .root {
     -fx-font-family: "Roboto";
+    -fx-font-smoothing-type: gray;
 }
 
 .side-menu {
@@ -55,27 +56,8 @@
     -fx-font-size: 14.0px;
 }
 
-.jfx-dialog-layout {
-    -fx-padding: 24.0px 24.0px 16.0px 24.0px;
-    -fx-text-fill: rgba(0.0, 0.0, 0.0, 0.87);
-}
-
-.jfx-layout-heading {
+.jfx-layout-heading .label {
     -fx-font-size: 20.0px;
-    -fx-font-weight: BOLD;
-    -fx-alignment: center-left;
-    -fx-padding: 5.0 0.0 5.0 0.0;
-}
-
-.jfx-layout-body .label {
-    -fx-font-size: 14.0px;
-    -fx-pref-width: 400.0px;
-    -fx-wrap-text: true;
-}
-
-.jfx-layout-actions {
-    -fx-padding: 10.0px 0.0 0.0 0.0;
-    -fx-alignment: center-right;
 }
 
 .dialog-accept {
@@ -283,15 +265,16 @@
     -fx-fill: black;
 }
 
-.jfx-slider:disabled {
-    -fx-opacity: 0.4;
-}
-
 /*******************************************************
 *                           						   *
 * For the main demo sliders 						   *
 *                          							   *
 *******************************************************/
+
+.jfx-slider-colored {
+    -jfx-default-thumb: #5264AE;
+    -jfx-default-track: #212121;
+}
 
 .jfx-slider-style {
     -jfx-indicator-position: right;
@@ -305,6 +288,10 @@
     -fx-background-color: #ff5252;
     -fx-pref-height: 5px;
     -fx-pref-width: 5px;
+}
+
+.jfx-slider-style .animated-thumb {
+    -fx-background-color: darkorange;
 }
 
 .jfx-slider-style .sliderValue {
@@ -382,11 +369,6 @@
     -fx-pref-width: 500.0;
 }
 
-.jfx-progress-bar > .track, .jfx-progress-bar > .bar {
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-}
-
 .jfx-progress-bar > .track {
     -fx-background-color: #E0E0E0;
 }
@@ -396,7 +378,11 @@
 }
 
 .custom-jfx-progress-bar > .bar {
-    -fx-background-color: rgb(255.0, 128.0, 0.0);
+    -fx-background-color: #ff8000;
+}
+
+.custom-jfx-progress-bar > .secondary-bar {
+    -fx-background-color: rgba(255, 135, 21, 0.18);
 }
 
 .custom-jfx-progress-bar-stroke > .bar {
@@ -578,6 +564,7 @@
 
 .custom-jfx-toggle-button-red {
     -jfx-toggle-color: red;
+    -jfx-toggle-line-color: #ff8782;
 }
 
 .toggle-label {
@@ -586,28 +573,25 @@
 
 .toggle-icon1 .icon {
     -fx-fill: #4285F4;
-    -fx-padding: 20.0;
 }
 
 .toggle-icon1 {
     -fx-pref-width: 80px;
     -fx-background-radius: 80px;
     -fx-pref-height: 80px;
-    -fx-background-color: transparent;
     -jfx-toggle-color: rgba(66.0, 133.0, 244.0, 0.29885056614875793);
     -jfx-untoggle-color: transparent;
 }
 
 .toggle-icon1 .jfx-rippler {
     -jfx-rippler-fill: rgba(66.0, 133.0, 244.0, 0.29885056614875793);
-    -jfx-mask-type: CIRCLE;
 }
 
-.toggle-icon2, .toggle-icon3 {
+.toggle-icon2,
+.toggle-icon3 {
     -fx-pref-width: 50px;
     -fx-background-radius: 50px;
     -fx-pref-height: 50px;
-    -fx-background-color: transparent;
 }
 
 .toggle-icon3 {
@@ -621,17 +605,14 @@
 
 .toggle-icon2 .jfx-rippler {
     -jfx-rippler-fill: RED;
-    -jfx-mask-type: CIRCLE;
 }
 
 .toggle-icon3 .icon {
     -fx-fill: rgb(204.0, 204.0, 51.0);
-    -fx-padding: 10.0;
 }
 
 .toggle-icon3 .jfx-rippler {
     -jfx-rippler-fill: #0F9D58;
-    -jfx-mask-type: CIRCLE;
 }
 
 /*******************************************************************************
@@ -640,16 +621,15 @@
 *                                                                              *
 *******************************************************************************/
 
-.jfx-spinner > .arc {
+.jfx-spinner .arc {
     -fx-stroke-width: 3.0;
-    -fx-fill: transparent;
 }
 
 .first-spinner {
     -jfx-radius: 20;
 }
 
-.first-spinner > .arc {
+.first-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -657,7 +637,7 @@
     -jfx-radius: 30;
 }
 
-.second-spinner > .arc {
+.second-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -665,7 +645,7 @@
     -jfx-radius: 40;
 }
 
-.third-spinner > .arc {
+.third-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -673,7 +653,7 @@
     -jfx-radius: 50;
 }
 
-.fourth-spinner > .arc {
+.fourth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -681,7 +661,7 @@
     -jfx-radius: 60;
 }
 
-.fifth-spinner > .arc {
+.fifth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -689,7 +669,7 @@
     -jfx-radius: 70;
 }
 
-.sixth-spinner > .arc {
+.sixth-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -697,7 +677,7 @@
     -jfx-radius: 80;
 }
 
-.seventh-spinner > .arc {
+.seventh-spinner .arc {
     -fx-stroke-width: 5.0;
 }
 
@@ -705,24 +685,32 @@
     -fx-stroke: #4285f4;
 }
 
+.blue-spinner .track {
+    -fx-stroke: #d0d0d0;
+}
+
 .red-spinner .arc {
     -fx-stroke: #db4437;
 }
 
 .green-spinner .arc {
-    -fx-stroke: #f4b400;
-}
-
-.yellow-spinner .arc {
     -fx-stroke: #0F9D58;
 }
 
-.materialDesign-purple .arc {
+.yellow-spinner .arc {
+    -fx-stroke: #f4b400;
+}
+
+.materialDesign-purple:indeterminate .arc {
     -fx-stroke: #ab47bc;
 }
 
 .materialDesign-blue .arc {
     -fx-stroke: #2962ff;
+}
+
+.materialDesign-blue .percentage {
+    -fx-fill: #ab47bc;
 }
 
 .materialDesign-cyan .arc {
@@ -731,6 +719,10 @@
 
 .materialDesign-green .arc {
     -fx-stroke: #00c853;
+}
+
+.materialDesign-green .text {
+    visibility: false;
 }
 
 .materialDesign-yellow .arc {
@@ -797,6 +789,17 @@
 .jfx-decorator .resize-border {
     -fx-border-color: -fx-decorator-color;
     -fx-border-width: 0 4 4 4;
+}
+
+.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
+    -fx-fill: WHITE;
+    -fx-font-size: 16;
+}
+
+.jfx-decorator .jfx-decorator-title-container .jfx-svg-glyph {
+    -fx-shape: "M512 682c-128.024-99.309-255.626-199.040-384-298l384-298 384 298c-128.375 98.958-255.974 198.693-384 298zM512 792l314-246 70 54-384 298-384-298 70-54z";
+    -jfx-size: 15;
+    -fx-background-color: WHITE;
 }
 
 /*******************************************************************************
@@ -900,8 +903,8 @@
     -fx-font-size: 1.0em;
 }
 
-.tree-table-row-group {
-    -fx-background-color: rgba(230, 230, 230);
+.tree-table-row-cell:grouped {
+    -fx-background-color: rgb(230, 230, 230);
 }
 
 .tree-table-view .menu-item:focused {
@@ -1007,4 +1010,65 @@
 
 .jfx-scroll-pane .condensed-header {
     -fx-background-image: url("../bg4.jpg");
+}
+
+/*******************************************************************************
+*                                                                              *
+* Pickers                                                                      *
+*                                                                              *
+*******************************************************************************/
+
+.custom-color-picker {
+    -jfx-default-color: #3f51b5;
+}
+
+.jfx-date-picker > .jfx-text-field,
+.jfx-time-picker > .jfx-text-field {
+    -jfx-focus-color: -jfx-default-color;
+}
+
+.jfx-chip-view {
+    -fx-background-color: WHITE;
+    -fx-padding: 16;
+}
+
+.jfx-chip-view .chips-pane > .text-area {
+    -fx-padding: 8 0 8 0;
+}
+
+.jfx-chip-view .chips-pane .jfx-chip .chip-icon {
+    -jfx-size: 20;
+    -fx-background-color: #3f51b5;
+}
+
+.jfx-chip-view .chips-pane .jfx-chip .heart {
+    -jfx-size: 20;
+    -fx-background-color: #D34336;
+}
+
+.jfx-chips-popup {
+    -jfx-cell-limit: 3;
+}
+
+.jfx-chips-popup .autocomplete-list {
+    -fx-fixed-cell-size: 32;
+    -fx-background-insets: 0.0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.26), 5, 0.06, -1, 2);
+}
+
+.jfx-chips-popup .autocomplete-list .jfx-list-cell {
+    -fx-text-fill: rgba(0, 0, 0, .87);
+}
+
+/*******************************************************************************
+*                                                                              *
+* Tooltip                                                                      *
+*                                                                              *
+*******************************************************************************/
+
+.jfx-tooltip {
+    -fx-background-color: #6C6C6C;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12;
+    -fx-padding: 8;
 }

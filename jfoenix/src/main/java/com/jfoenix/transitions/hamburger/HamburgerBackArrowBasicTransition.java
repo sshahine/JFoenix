@@ -21,7 +21,11 @@ package com.jfoenix.transitions.hamburger;
 
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.CachedTransition;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
@@ -59,27 +63,27 @@ public class HamburgerBackArrowBasicTransition extends CachedTransition implemen
             .getMinY();
 
         double hypotenuse = Math.sqrt(Math.pow(burgerHeight / 2 - burger.getChildren()
-            .get(0)
-            .getLayoutBounds()
-            .getHeight() / 2, 2) + Math.pow(burgerWidth / 2,
+                                                                      .get(0)
+                                                                      .getLayoutBounds()
+                                                                      .getHeight() / 2, 2) + Math.pow(burgerWidth / 2,
             2));
         double angle = Math.toDegrees(Math.asin((burgerHeight / 2 - burger.getChildren()
-            .get(0)
-            .getLayoutBounds()
-            .getHeight() / 2) / hypotenuse));
+                                                                        .get(0)
+                                                                        .getLayoutBounds()
+                                                                        .getHeight() / 2) / hypotenuse));
 
         double burgerDiagonal = Math.sqrt(Math.pow(burger.getChildren().get(0).getLayoutBounds().getHeight(),
             2) + Math.pow(burger.getChildren()
-            .get(0)
-            .getBoundsInParent()
-            .getWidth() / 2, 2));
+                              .get(0)
+                              .getBoundsInParent()
+                              .getWidth() / 2, 2));
         double theta = (90 - angle) + Math.toDegrees(Math.atan((burger.getChildren()
-            .get(0)
-            .getLayoutBounds()
-            .getHeight()) / (burger.getChildren()
-            .get(0)
-            .getBoundsInParent()
-            .getWidth() / 2)));
+                                                                    .get(0)
+                                                                    .getLayoutBounds()
+                                                                    .getHeight()) / (burger.getChildren()
+                                                                                         .get(0)
+                                                                                         .getBoundsInParent()
+                                                                                         .getWidth() / 2)));
         double hOffset = Math.cos(Math.toRadians(theta)) * burgerDiagonal / 2;
         double transY = burger.getChildren().get(0).getLayoutBounds().getHeight() / 2 + burger.getSpacing() - hOffset;
         double transX = burgerWidth / 2 - Math.sin(Math.toRadians(theta)) * (burgerDiagonal / 2);
@@ -92,7 +96,6 @@ public class HamburgerBackArrowBasicTransition extends CachedTransition implemen
                 new KeyValue(burger.getChildren().get(0).translateYProperty(), 0, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(0).translateXProperty(), 0, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(0).scaleXProperty(), 1, Interpolator.EASE_BOTH),
-
                 new KeyValue(burger.getChildren().get(2).rotateProperty(), 0, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(2).translateYProperty(), 0, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(2).translateXProperty(), 0, Interpolator.EASE_BOTH),
@@ -103,18 +106,11 @@ public class HamburgerBackArrowBasicTransition extends CachedTransition implemen
                 new KeyValue(burger.rotateProperty(), 0, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(0).rotateProperty(), -angle, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(0).translateYProperty(), transY, Interpolator.EASE_BOTH),
-                new KeyValue(burger.getChildren().get(0).translateXProperty(),
-                    -transX,
-                    Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(0).translateXProperty(), -transX, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(0).scaleXProperty(), 0.5, Interpolator.EASE_BOTH),
-
                 new KeyValue(burger.getChildren().get(2).rotateProperty(), angle, Interpolator.EASE_BOTH),
-                new KeyValue(burger.getChildren().get(2).translateYProperty(),
-                    -transY,
-                    Interpolator.EASE_BOTH),
-                new KeyValue(burger.getChildren().get(2).translateXProperty(),
-                    -transX,
-                    Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(2).translateYProperty(), -transY, Interpolator.EASE_BOTH),
+                new KeyValue(burger.getChildren().get(2).translateXProperty(), -transX, Interpolator.EASE_BOTH),
                 new KeyValue(burger.getChildren().get(2).scaleXProperty(), 0.5, Interpolator.EASE_BOTH)
             )
         );

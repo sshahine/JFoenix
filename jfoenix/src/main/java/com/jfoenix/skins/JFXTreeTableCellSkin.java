@@ -19,96 +19,69 @@
 
 package com.jfoenix.skins;
 
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.behavior.JFXTreeTableCellBehavior;
-import com.sun.javafx.scene.control.behavior.TreeTableCellBehavior;
-import com.sun.javafx.scene.control.skin.TableCellSkinBase;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.scene.control.*;
+import com.jfoenix.controls.cells.editors.base.JFXTreeTableCell;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.sun.javafx.scene.control.skin.TreeTableCellSkin;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 
 /**
  * @author Shadi Shaheen
  * @version 1.0
  * @since 2016-03-09
  */
-public class JFXTreeTableCellSkin<S, T> extends TableCellSkinBase<TreeTableCell<S, T>, TreeTableCellBehavior<S, T>> {
-
-    private final TreeTableColumn<S, T> tableColumn;
+public class JFXTreeTableCellSkin<S, T>  extends TreeTableCellSkin<S, T> {
 
     public JFXTreeTableCellSkin(TreeTableCell<S, T> treeTableCell) {
-        super(treeTableCell, new JFXTreeTableCellBehavior<>(treeTableCell));
-        tableColumn = treeTableCell.getTableColumn();
-        super.init(treeTableCell);
+        super(treeTableCell);
     }
 
     @Override
-    protected BooleanProperty columnVisibleProperty() {
-        return tableColumn.visibleProperty();
+    protected void updateChildren() {
+        super.updateChildren();
+        updateDisclosureNode();
+    }
+
+    private void updateDisclosureNode() {
+        Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
+        if (disclosureNode != null) {
+            TreeItem<S> item = getSkinnable().getTreeTableRow().getTreeItem();
+            final S value = item == null ? null : item.getValue();
+            boolean disclosureVisible = value != null
+                                        && !item.isLeaf()
+                                        && value instanceof RecursiveTreeObject
+                                        && ((RecursiveTreeObject) value).getGroupedColumn() == getSkinnable().getTableColumn();
+            disclosureNode.setVisible(disclosureVisible);
+            if (!disclosureVisible) {
+                getChildren().remove(disclosureNode);
+            } else if (disclosureNode.getParent() == null) {
+                getChildren().add(disclosureNode);
+                disclosureNode.toFront();
+            } else {
+                disclosureNode.toBack();
+            }
+            if (disclosureNode.getScene() != null) {
+                disclosureNode.applyCss();
+            }
+        }
     }
 
     @Override
-    protected ReadOnlyDoubleProperty columnWidthProperty() {
-        return tableColumn.widthProperty();
+    protected void layoutChildren(double x, double y, double w, double h) {
+        updateDisclosureNode();
+        double disclosureWidth = 0;
+        Node disclosureNode = ((JFXTreeTableCell<S, T>) getSkinnable()).getDisclosureNode();
+        if (disclosureNode.isVisible()) {
+            Pos alignment = getSkinnable().getAlignment();
+            alignment = alignment == null ? Pos.CENTER_LEFT : alignment;
+            layoutInArea(disclosureNode, x + 8, y, w, h, 0, Insets.EMPTY, false, false, HPos.LEFT, VPos.CENTER);
+            disclosureWidth = disclosureNode.getLayoutBounds().getWidth() + 18;
+        }
+        super.layoutChildren(x + disclosureWidth, y, w - disclosureWidth, h);
     }
-
-    // compute the padding of disclosure node
-    @Override
-    protected double leftLabelPadding() {
-        double leftPadding = super.leftLabelPadding();
-        final double height = getCellSize();
-        TreeTableColumn<S, T> tableColumn = getSkinnable().getTableColumn();
-        if (tableColumn == null) {
-            return leftPadding;
-        }
-        TreeTableView<S> treeTable = getSkinnable().getTreeTableView();
-        if (treeTable == null) {
-            return leftPadding;
-        }
-        int columnIndex = treeTable.getVisibleLeafIndex(tableColumn);
-
-        TreeTableColumn<S, ?> treeColumn = treeTable.getTreeColumn();
-        if (!(treeTable instanceof JFXTreeTableView)) {
-            if ((treeColumn == null && columnIndex != 0) || (treeColumn != null && !tableColumn.equals(treeColumn))) {
-                return leftPadding;
-            }
-        }
-
-        TreeTableRow<S> treeTableRow = getSkinnable().getTreeTableRow();
-        if (treeTableRow == null) {
-            return leftPadding;
-        }
-        TreeItem<S> treeItem = getSkinnable().getTreeTableRow().getTreeItem();
-        if (treeItem == null) {
-            return leftPadding;
-        }
-
-        // getTreeItemLevel ignore the group nodes level
-        treeColumn = treeTable.getTreeColumn() == null ? treeTable.getVisibleLeafColumn(0) : treeTable.getTreeColumn();
-        if (tableColumn == treeColumn) {
-            int nodeLevel = treeTable.getTreeItemLevel(treeItem);
-            if (!treeTable.isShowRoot()) {
-                nodeLevel--;
-            }
-            double indentPerLevel = 10;
-            if (treeTableRow.getSkin() instanceof JFXTreeTableRowSkin) {
-                indentPerLevel = ((JFXTreeTableRowSkin<?>) treeTableRow.getSkin()).getIndentationPerLevel();
-            }
-            leftPadding += nodeLevel * indentPerLevel;
-        }
-
-        if (tableColumn == treeColumn || ((JFXTreeTableColumn<S, T>) tableColumn).isGrouped()) {
-            // add in the width of the disclosure node
-            if (JFXTreeTableRowSkin.disclosureWidthMap != null && JFXTreeTableRowSkin.disclosureWidthMap.containsKey(
-                treeTable)) {
-                leftPadding += JFXTreeTableRowSkin.disclosureWidthMap.get(treeTable);
-            }
-        }
-        // adding in the width of the graphic on the tree item
-        leftPadding += treeItem.getGraphic() == null ? 0 : treeItem.getGraphic().prefWidth(height);
-
-        return leftPadding;
-    }
-
 }

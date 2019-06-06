@@ -19,15 +19,15 @@
 
 package com.jfoenix.controls;
 
+import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.converters.ButtonTypeConverter;
 import com.jfoenix.skins.JFXButtonSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Paint;
 
@@ -89,6 +89,14 @@ public class JFXButton extends Button {
         return new JFXButtonSkin(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserAgentStylesheet() {
+        return USER_AGENT_STYLESHEET;
+    }
+
 
     /***************************************************************************
      *                                                                         *
@@ -134,7 +142,7 @@ public class JFXButton extends Button {
      * this control.
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-button";
-
+    private static final String USER_AGENT_STYLESHEET = JFoenixResources.load("css/controls/jfx-button.css").toExternalForm();
 
     public enum ButtonType {FLAT, RAISED}
 
@@ -161,6 +169,38 @@ public class JFXButton extends Button {
         this.buttonType.set(type);
     }
 
+    /**
+     * Disable the visual indicator for focus
+     */
+    private StyleableBooleanProperty disableVisualFocus = new SimpleStyleableBooleanProperty(StyleableProperties.DISABLE_VISUAL_FOCUS,
+        JFXButton.this,
+        "disableVisualFocus",
+        false);
+
+    /**
+     * Setting this property disables this {@link JFXButton} from showing keyboard focus.
+     * @return A property that will disable visual focus if true and enable it if false.
+     */
+    public final StyleableBooleanProperty disableVisualFocusProperty() {
+        return this.disableVisualFocus;
+    }
+
+    /**
+     * Indicates whether or not this {@link JFXButton} will show focus when it receives keyboard focus.
+     * @return False if this {@link JFXButton} will show visual focus and true if it will not.
+     */
+    public final Boolean isDisableVisualFocus() {
+        return disableVisualFocus != null && this.disableVisualFocusProperty().get();
+    }
+
+    /**
+     * Setting this to true will disable this {@link JFXButton} from showing focus when it receives keyboard focus.
+     * @param disabled True to disable visual focus and false to enable it.
+     */
+    public final void setDisableVisualFocus(final Boolean disabled) {
+        this.disableVisualFocusProperty().set(disabled);
+    }
+
     private static class StyleableProperties {
         private static final CssMetaData<JFXButton, ButtonType> BUTTON_TYPE =
             new CssMetaData<JFXButton, ButtonType>("-jfx-button-type",
@@ -176,31 +216,33 @@ public class JFXButton extends Button {
                 }
             };
 
+        private static final CssMetaData<JFXButton, Boolean> DISABLE_VISUAL_FOCUS =
+            new CssMetaData<JFXButton, Boolean>("-jfx-disable-visual-focus",
+                BooleanConverter.getInstance(), false) {
+                @Override
+                public boolean isSettable(JFXButton control) {
+                    return control.disableVisualFocus == null || !control.disableVisualFocus.isBound();
+                }
+
+                @Override
+                public StyleableBooleanProperty getStyleableProperty(JFXButton control) {
+                    return control.disableVisualFocusProperty();
+                }
+            };
+
         private static final List<CssMetaData<? extends Styleable, ?>> CHILD_STYLEABLES;
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            Collections.addAll(styleables,
-                BUTTON_TYPE
-            );
+                new ArrayList<>(Button.getClassCssMetaData());
+            Collections.addAll(styleables, BUTTON_TYPE,DISABLE_VISUAL_FOCUS);
             CHILD_STYLEABLES = Collections.unmodifiableList(styleables);
         }
     }
 
-    // inherit the styleable properties from parent
-    private List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
-
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        if (STYLEABLES == null) {
-            final List<CssMetaData<? extends Styleable, ?>> styleables =
-                new ArrayList<>(Control.getClassCssMetaData());
-            styleables.addAll(getClassCssMetaData());
-            styleables.addAll(Labeled.getClassCssMetaData());
-            STYLEABLES = Collections.unmodifiableList(styleables);
-        }
-        return STYLEABLES;
+        return getClassCssMetaData();
     }
 
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
