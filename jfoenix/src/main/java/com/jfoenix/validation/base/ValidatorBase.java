@@ -45,6 +45,7 @@ public abstract class ValidatorBase extends Parent {
     /**
      * When using {@code Tooltip.install(node, tooltip)}, the given tooltip is stored in the Node's properties
      * under this key.
+     *
      * @see Tooltip#install(Node, Tooltip)
      */
     private static final String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
@@ -77,11 +78,9 @@ public abstract class ValidatorBase extends Parent {
         errorTooltip.getStyleClass().add(ERROR_TOOLTIP_STYLE_CLASS);
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Methods                                                                 *
-     *                                                                         *
-     **************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // Methods
+    ///////////////////////////////////////////////////////////////////////////
 
     private void parentChanged() {
         updateSrcControl();
@@ -178,18 +177,38 @@ public abstract class ValidatorBase extends Parent {
     }
 
 
-    /***** hasErrors *****/
+    /**
+     * Tells whether the validator is "passing" or not.
+     * <p>
+     * In a validator's implementation of {@link #eval()}, if the value the validator is checking is invalid, it should
+     * set this to <em>true</em>. If the value is <em>valid</em>, it should set this to <em>false</em>.
+     * <p>
+     * When <em>hasErrors</em> is true, the validator will automatically apply the {@link #PSEUDO_CLASS_ERROR :error}
+     * pseudoclass to the {@link #srcControl}; the {@link #srcControl} will also have a {@link Tooltip} containing the
+     * {@link #message} applied to it (see {@link #errorTooltip}).
+     */
     protected ReadOnlyBooleanWrapper hasErrors = new ReadOnlyBooleanWrapper(false);
 
+    /**
+     * @see #hasErrors
+     */
     public boolean getHasErrors() {
         return hasErrors.get();
     }
 
+    /**
+     * @see #hasErrors
+     */
     public ReadOnlyBooleanProperty hasErrorsProperty() {
         return hasErrors.getReadOnlyProperty();
     }
 
-    /***** Message *****/
+    /**
+     * The error message to display when the validator is <em>not</em> "passing."
+     * <p>
+     * When {@link #hasErrors} is true, this message is displayed near the {@link #srcControl} (usually below);
+     * it's also displayed in a {@link Tooltip} applied to the {@link #srcControl} (see {@link #errorTooltip}).
+     */
     protected SimpleStringProperty message = new SimpleStringProperty() {
         @Override
         protected void invalidated() {
@@ -197,14 +216,21 @@ public abstract class ValidatorBase extends Parent {
         }
     };
 
+    /**
+     * @see #message
+     */
     public void setMessage(String msg) {
         this.message.set(msg);
     }
-
+    /**
+     * @see #message
+     */
     public String getMessage() {
         return this.message.get();
     }
-
+    /**
+     * @see #message
+     */
     public StringProperty messageProperty() {
         return this.message;
     }
