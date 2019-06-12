@@ -19,6 +19,8 @@
 
 package com.jfoenix.validation.base;
 
+import com.jfoenix.validation.RegexValidator;
+import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.beans.property.*;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
@@ -70,11 +72,21 @@ public abstract class ValidatorBase extends Parent {
      */
     private Tooltip errorTooltip = null;
 
+    /**
+     * @see #ValidatorBase()
+     * @param message will be set as the validator's {@link #message}.
+     */
     public ValidatorBase(String message) {
         this();
         this.setMessage(message);
     }
 
+    /**
+     * When creating a new validator you need to define the validation condition by implementing {@link #eval()}.
+     * <p>
+     * For examples of how you might implement it, see {@link RequiredFieldValidator} and
+     * {@link RegexValidator}.
+     */
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
         errorTooltip = new Tooltip();
