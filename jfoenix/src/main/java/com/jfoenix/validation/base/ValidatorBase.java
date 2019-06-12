@@ -140,23 +140,37 @@ public abstract class ValidatorBase extends Parent {
     // Properties
     ///////////////////////////////////////////////////////////////////////////
 
-    /***** srcControl *****/
+    /**
+     * The {@link Control}/{@link Node} that the validator is checking the value of.
+     *
+     * Supports {@link Node}s because not all things that need validating are {@link Control}s.
+     */
     protected SimpleObjectProperty<Node> srcControl = new SimpleObjectProperty<>();
 
+    /**
+     * @see #srcControl
+     */
     public void setSrcControl(Node srcControl) {
         this.srcControl.set(srcControl);
     }
 
+    /**
+     * @see #srcControl
+     */
     public Node getSrcControl() {
         return this.srcControl.get();
     }
 
+    /**
+     * @see #srcControl
+     */
     public ObjectProperty<Node> srcControlProperty() {
         return this.srcControl;
     }
 
 
     /***** src *****/
+    // TODO: 6/11/2019 Describe what this is for and when someone should set/override it.
     protected SimpleStringProperty src = new SimpleStringProperty() {
         @Override
         protected void invalidated() {
@@ -164,14 +178,23 @@ public abstract class ValidatorBase extends Parent {
         }
     };
 
+    /**
+     * @see #src
+     */
     public void setSrc(String src) {
         this.src.set(src);
     }
 
+    /**
+     * @see #src
+     */
     public String getSrc() {
         return this.src.get();
     }
 
+    /**
+     * @see #src
+     */
     public StringProperty srcProperty() {
         return this.src;
     }
@@ -202,6 +225,7 @@ public abstract class ValidatorBase extends Parent {
     public ReadOnlyBooleanProperty hasErrorsProperty() {
         return hasErrors.getReadOnlyProperty();
     }
+
 
     /**
      * The error message to display when the validator is <em>not</em> "passing."
@@ -234,6 +258,7 @@ public abstract class ValidatorBase extends Parent {
     public StringProperty messageProperty() {
         return this.message;
     }
+
 
     /***** Icon *****/
     protected SimpleObjectProperty<Supplier<Node>> iconSupplier = new SimpleObjectProperty<Supplier<Node>>() {
