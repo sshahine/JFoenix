@@ -73,8 +73,8 @@ public abstract class ValidatorBase extends Parent {
     private Tooltip errorTooltip = null;
 
     /**
-     * @see #ValidatorBase()
      * @param message will be set as the validator's {@link #message}.
+     * @see #ValidatorBase()
      */
     public ValidatorBase(String message) {
         this();
@@ -132,6 +132,9 @@ public abstract class ValidatorBase extends Parent {
      * <p>
      * If the validator isn't "passing" the {@link #PSEUDO_CLASS_ERROR :error} pseudoclass is applied to the
      * {@link #srcControl}.
+     * <p>
+     * Applies the {@link #PSEUDO_CLASS_ERROR :error} pseudo class and the {@link #errorTooltip} to
+     * the {@link #srcControl}.
      */
     protected void onEval() {
         Node control = getSrcControl();
@@ -145,6 +148,13 @@ public abstract class ValidatorBase extends Parent {
                 }
                 errorTooltip.setText(getMessage());
                 ((Control) control).setTooltip(errorTooltip);
+            } else {
+                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
+                if (installedTooltip != null && !installedTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS)) {
+                    savedTooltip = installedTooltip;
+                }
+
+                Tooltip.install(control, errorTooltip);
             }
         } else {
             if (control instanceof Control) {
@@ -153,9 +163,16 @@ public abstract class ValidatorBase extends Parent {
                     || (controlTooltip == null && savedTooltip != null)) {
                     ((Control) control).setTooltip(savedTooltip);
                 }
-                savedTooltip = null;
+            } else {
+                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
+                if ((installedTooltip != null && installedTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS))
+                    || (installedTooltip == null && savedTooltip != null)) {
+                    Tooltip.install(control, savedTooltip);
+                }
             }
-            control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
+
+            savedTooltip = null; // Forget about saved tooltip
+            control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false); // Deactivate pseudo class
         }
     }
 
