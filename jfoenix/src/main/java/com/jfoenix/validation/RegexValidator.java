@@ -63,7 +63,9 @@ public class RegexValidator extends ValidatorBase {
 
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
-        if (regexPatternCompiled.matcher(textField.getText()).matches()) {
+        String text = (textField.getText() == null) ? "" : textField.getText(); // Treat null like empty string
+
+        if (regexPatternCompiled.matcher(text).matches()) {
             hasErrors.set(false);
         } else {
             hasErrors.set(true);
