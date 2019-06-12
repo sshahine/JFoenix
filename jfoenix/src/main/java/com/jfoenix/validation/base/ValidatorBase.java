@@ -42,7 +42,28 @@ public abstract class ValidatorBase extends Parent {
      */
     public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 
-    private Tooltip tooltip = null;
+    /**
+     * When using {@code Tooltip.install(node, tooltip)}, the given tooltip is stored in the Node's properties
+     * under this key.
+     * @see Tooltip#install(Node, Tooltip)
+     */
+    private static final String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
+
+    /**
+     * Used to determine if a given tooltip is our {@link #errorTooltip} or not.
+     */
+    public static final String ERROR_TOOLTIP_STYLE_CLASS = "error-tooltip";
+
+    /**
+     * If the {@link #srcControl} has a tooltip, it's saved here so that we can replace it with a tooltip
+     * containing the validator's error message ({@link #errorTooltip}).
+     */
+    private Tooltip savedTooltip = null;
+
+    /**
+     * If the validator {@link #hasErrors}, then we'll show the validator's {@link #message} in this tooltip on the
+     * {@link #srcControl}.
+     */
     private Tooltip errorTooltip = null;
 
     public ValidatorBase(String message) {
@@ -53,7 +74,7 @@ public abstract class ValidatorBase extends Parent {
     public ValidatorBase() {
         parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
         errorTooltip = new Tooltip();
-        errorTooltip.getStyleClass().add("error-tooltip");
+        errorTooltip.getStyleClass().add(ERROR_TOOLTIP_STYLE_CLASS);
     }
 
     /***************************************************************************
@@ -97,8 +118,8 @@ public abstract class ValidatorBase extends Parent {
 
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
-                if (controlTooltip != null && !controlTooltip.getStyleClass().contains("error-tooltip")) {
-                    tooltip = ((Control) control).getTooltip();
+                if (controlTooltip != null && !controlTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS)) {
+                    savedTooltip = ((Control) control).getTooltip();
                 }
                 errorTooltip.setText(getMessage());
                 ((Control) control).setTooltip(errorTooltip);
@@ -106,21 +127,19 @@ public abstract class ValidatorBase extends Parent {
         } else {
             if (control instanceof Control) {
                 Tooltip controlTooltip = ((Control) control).getTooltip();
-                if ((controlTooltip != null && controlTooltip.getStyleClass().contains("error-tooltip"))
-                    || (controlTooltip == null && tooltip != null)) {
-                    ((Control) control).setTooltip(tooltip);
+                if ((controlTooltip != null && controlTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS))
+                    || (controlTooltip == null && savedTooltip != null)) {
+                    ((Control) control).setTooltip(savedTooltip);
                 }
-                tooltip = null;
+                savedTooltip = null;
             }
             control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false);
         }
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Properties                                                              *
-     *                                                                         *
-     **************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // Properties
+    ///////////////////////////////////////////////////////////////////////////
 
     /***** srcControl *****/
     protected SimpleObjectProperty<Node> srcControl = new SimpleObjectProperty<>();
