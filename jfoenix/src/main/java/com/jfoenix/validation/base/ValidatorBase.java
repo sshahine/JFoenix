@@ -38,7 +38,10 @@ import java.util.function.Supplier;
 public abstract class ValidatorBase extends Parent {
 
     /**
-     * this style class will be activated when a validation error occurs
+     * This {@link PseudoClass} will be activated when a validation error occurs.
+     * <p>
+     * Some components have default styling for this pseudo class. See {@code jfx-text-field.css}
+     * and {@code jfx-combo-box.css} for examples.
      */
     public static final PseudoClass PSEUDO_CLASS_ERROR = PseudoClass.getPseudoClass("error");
 
@@ -95,7 +98,9 @@ public abstract class ValidatorBase extends Parent {
     }
 
     /**
-     * will validate the source control
+     * Will validate the source control.
+     * <p>
+     * Calls {@link #eval()} and then {@link #onEval()}.
      */
     public void validate() {
         eval();
@@ -103,12 +108,18 @@ public abstract class ValidatorBase extends Parent {
     }
 
     /**
-     * will evaluate the validation condition once calling validate method
+     * Should evaluate the validation condition and set {@link #hasErrors} to true or false. It should
+     * be true when the value is invalid (it has errors) and false when the value is valid (no errors).
+     * <p>
+     * This method is fired once {@link #validate()} is called.
      */
     protected abstract void eval();
 
     /**
-     * this method will update the source control after evaluating the validation condition
+     * This method will update the source control after evaluating the validation condition (see {@link #eval()}).
+     * <p>
+     * If the validator isn't "passing" the {@link #PSEUDO_CLASS_ERROR :error} pseudoclass is applied to the
+     * {@link #srcControl}.
      */
     protected void onEval() {
         Node control = getSrcControl();
@@ -142,7 +153,7 @@ public abstract class ValidatorBase extends Parent {
 
     /**
      * The {@link Control}/{@link Node} that the validator is checking the value of.
-     *
+     * <p>
      * Supports {@link Node}s because not all things that need validating are {@link Control}s.
      */
     protected SimpleObjectProperty<Node> srcControl = new SimpleObjectProperty<>();
@@ -246,12 +257,14 @@ public abstract class ValidatorBase extends Parent {
     public void setMessage(String msg) {
         this.message.set(msg);
     }
+
     /**
      * @see #message
      */
     public String getMessage() {
         return this.message.get();
     }
+
     /**
      * @see #message
      */
