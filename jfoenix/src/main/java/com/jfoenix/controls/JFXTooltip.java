@@ -140,7 +140,15 @@ public class JFXTooltip extends Tooltip {
      * {@inheritDoc}
      */
     public JFXTooltip() {
-        init();
+        this(null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public JFXTooltip(String text, Pos pos) {
+        this(text);
+        setPos(pos);
     }
 
     /**
@@ -273,8 +281,8 @@ public class JFXTooltip extends Tooltip {
             // tooltip was not showing compute its anchors and show it
             Window parent = ownerNode.getScene().getWindow();
             final Bounds origin = ownerNode.localToScene(ownerNode.getBoundsInLocal());
-            anchorX = parent.getX() + origin.getMinX() + getHPosForNode(ownerNode);
-            anchorY = parent.getY() + origin.getMinY() + getVPosForNode(ownerNode);
+            anchorX = parent.getX() + origin.getMinX() + ownerNode.getScene().getX() + getHPosForNode(ownerNode);
+            anchorY = parent.getY() + origin.getMinY() + ownerNode.getScene().getY() + getVPosForNode(ownerNode);
             super.show(ownerNode, anchorX, anchorY);
         }
     }

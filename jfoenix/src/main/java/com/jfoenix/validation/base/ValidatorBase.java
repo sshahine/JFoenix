@@ -19,15 +19,23 @@
 
 package com.jfoenix.validation.base;
 
+import com.jfoenix.controls.JFXTooltip;
 import com.jfoenix.validation.RegexValidator;
 import com.jfoenix.validation.RequiredFieldValidator;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -37,7 +45,7 @@ import java.util.function.Supplier;
  * @version 1.0
  * @since 2016-03-09
  */
-public abstract class ValidatorBase extends Parent {
+public abstract class ValidatorBase {
 
     /**
      * This {@link PseudoClass} will be activated when a validation error occurs.
@@ -56,21 +64,24 @@ public abstract class ValidatorBase extends Parent {
     private static final String TOOLTIP_PROP_KEY = "javafx.scene.control.Tooltip";
 
     /**
-     * Used to determine if a given tooltip is our {@link #errorTooltip} or not.
+     * Default error tooltip style class
      */
     public static final String ERROR_TOOLTIP_STYLE_CLASS = "error-tooltip";
 
     /**
-     * If the {@link #srcControl} has a tooltip, it's saved here so that we can replace it with a tooltip
-     * containing the validator's error message ({@link #errorTooltip}).
+     * Key used to stash control tooltip upon validation
      */
-    private Tooltip savedTooltip = null;
+    private static final String TEMP_TOOLTIP_KEY = "stashed-tootlip";
 
     /**
-     * If the validator {@link #hasErrors}, then we'll show the validator's {@link #message} in this tooltip on the
-     * {@link #srcControl}.
+     * supported tooltips keys
      */
-    private Tooltip errorTooltip = null;
+    private static final Set<String> supportedTooltipKeys = new HashSet<>(
+        Arrays.asList(
+            "javafx.scene.control.Tooltip",
+            "jfoenix-tooltip"
+        )
+    );
 
     /**
      * @param message will be set as the validator's {@link #message}.
@@ -88,26 +99,12 @@ public abstract class ValidatorBase extends Parent {
      * {@link RegexValidator}.
      */
     public ValidatorBase() {
-        parentProperty().addListener((o, oldVal, newVal) -> parentChanged());
-        errorTooltip = new Tooltip();
-        errorTooltip.getStyleClass().add(ERROR_TOOLTIP_STYLE_CLASS);
+
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Methods
     ///////////////////////////////////////////////////////////////////////////
-
-    private void parentChanged() {
-        updateSrcControl();
-    }
-
-    private void updateSrcControl() {
-        Parent parent = getParent();
-        if (parent != null) {
-            Node control = parent.lookup(getSrc());
-            srcControl.set(control);
-        }
-    }
 
     /**
      * Will validate the source control.
@@ -133,46 +130,83 @@ public abstract class ValidatorBase extends Parent {
      * If the validator isn't "passing" the {@link #PSEUDO_CLASS_ERROR :error} pseudoclass is applied to the
      * {@link #srcControl}.
      * <p>
-     * Applies the {@link #PSEUDO_CLASS_ERROR :error} pseudo class and the {@link #errorTooltip} to
+     * Applies the {@link #PSEUDO_CLASS_ERROR :error} pseudo class and the errorTooltip to
      * the {@link #srcControl}.
      */
     protected void onEval() {
         Node control = getSrcControl();
-        if (hasErrors.get()) {
-            control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, true);
+        boolean invalid = hasErrors.get();
+        control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, invalid);
+        Tooltip activeTooltip = getActiveTooltip(control);
+        if (invalid) {
+            Tooltip errorTooltip = errorTooltipSupplier.get();
+            errorTooltip.getStyleClass().add(ERROR_TOOLTIP_STYLE_CLASS);
+            errorTooltip.setText(getMessage());
+            install(control, activeTooltip, errorTooltip);
+        } else {
+            Tooltip orgTooltip = (Tooltip) control.getProperties().remove(TEMP_TOOLTIP_KEY);
+            install(control, activeTooltip, orgTooltip);
+        }
+    }
 
-            if (control instanceof Control) {
-                Tooltip controlTooltip = ((Control) control).getTooltip();
-                if (controlTooltip != null && !controlTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS)) {
-                    savedTooltip = ((Control) control).getTooltip();
+    private final Tooltip getActiveTooltip(Node node) {
+        Tooltip tooltip = null;
+        for (String key : supportedTooltipKeys) {
+            tooltip = (Tooltip) node.getProperties().get(key);
+            if (tooltip != null) {
+                break;
+            }
+        }
+        return tooltip;
+    }
+
+    private void install(Node node, Tooltip oldVal, Tooltip newVal) {
+        // stash old tooltip if it's not error tooltip
+        if (oldVal != null && !oldVal.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS)) {
+            node.getProperties().put(TEMP_TOOLTIP_KEY, oldVal);
+        }
+        if (node instanceof Control) {
+            // uninstall
+            if (oldVal != null) {
+                if (oldVal instanceof JFXTooltip) {
+                    JFXTooltip.uninstall(node);
                 }
-                errorTooltip.setText(getMessage());
-                ((Control) control).setTooltip(errorTooltip);
+                if (newVal == null || !(newVal instanceof JFXTooltip)) {
+                    ((Control) node).setTooltip(newVal);
+                    return;
+                }
+                if (newVal instanceof JFXTooltip) {
+                    ((Control) node).setTooltip(null);
+                }
+            }
+            // install
+            if (newVal instanceof JFXTooltip) {
+                install(node, newVal);
             } else {
-                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
-                if (installedTooltip != null && !installedTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS)) {
-                    savedTooltip = installedTooltip;
-                }
-
-                Tooltip.install(control, errorTooltip);
+                ((Control) node).setTooltip(newVal);
             }
         } else {
-            if (control instanceof Control) {
-                Tooltip controlTooltip = ((Control) control).getTooltip();
-                if ((controlTooltip != null && controlTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS))
-                    || (controlTooltip == null && savedTooltip != null)) {
-                    ((Control) control).setTooltip(savedTooltip);
-                }
-            } else {
-                Tooltip installedTooltip = (Tooltip) control.getProperties().get(TOOLTIP_PROP_KEY);
-                if ((installedTooltip != null && installedTooltip.getStyleClass().contains(ERROR_TOOLTIP_STYLE_CLASS))
-                    || (installedTooltip == null && savedTooltip != null)) {
-                    Tooltip.install(control, savedTooltip);
-                }
-            }
+            uninstall(node, oldVal);
+            install(node, newVal);
+        }
+    }
 
-            savedTooltip = null; // Forget about saved tooltip
-            control.pseudoClassStateChanged(PSEUDO_CLASS_ERROR, false); // Deactivate pseudo class
+    private void uninstall(Node node, Tooltip tooltip) {
+        if (tooltip instanceof JFXTooltip) {
+            JFXTooltip.uninstall(node);
+        } else {
+            Tooltip.uninstall(node, tooltip);
+        }
+    }
+
+    private void install(Node node, Tooltip tooltip) {
+        if (tooltip == null) {
+            return;
+        }
+        if (tooltip instanceof JFXTooltip) {
+            JFXTooltip.install(node, (JFXTooltip) tooltip);
+        } else {
+            Tooltip.install(node, tooltip);
         }
     }
 
@@ -208,38 +242,6 @@ public abstract class ValidatorBase extends Parent {
         return this.srcControl;
     }
 
-
-    /***** src *****/
-    // TODO: 6/11/2019 Describe what this is for and when someone should set/override it.
-    protected SimpleStringProperty src = new SimpleStringProperty() {
-        @Override
-        protected void invalidated() {
-            updateSrcControl();
-        }
-    };
-
-    /**
-     * @see #src
-     */
-    public void setSrc(String src) {
-        this.src.set(src);
-    }
-
-    /**
-     * @see #src
-     */
-    public String getSrc() {
-        return this.src.get();
-    }
-
-    /**
-     * @see #src
-     */
-    public StringProperty srcProperty() {
-        return this.src;
-    }
-
-
     /**
      * Tells whether the validator is "passing" or not.
      * <p>
@@ -248,7 +250,7 @@ public abstract class ValidatorBase extends Parent {
      * <p>
      * When <em>hasErrors</em> is true, the validator will automatically apply the {@link #PSEUDO_CLASS_ERROR :error}
      * pseudoclass to the {@link #srcControl}; the {@link #srcControl} will also have a {@link Tooltip} containing the
-     * {@link #message} applied to it (see {@link #errorTooltip}).
+     * {@link #message} applied to it.
      */
     protected ReadOnlyBooleanWrapper hasErrors = new ReadOnlyBooleanWrapper(false);
 
@@ -266,19 +268,23 @@ public abstract class ValidatorBase extends Parent {
         return hasErrors.getReadOnlyProperty();
     }
 
+    private Supplier<Tooltip> errorTooltipSupplier = () -> new Tooltip();
+
+    public Supplier<Tooltip> getErrorTooltipSupplier() {
+        return errorTooltipSupplier;
+    }
+
+    public void setErrorTooltipSupplier(Supplier<Tooltip> errorTooltipSupplier) {
+        this.errorTooltipSupplier = errorTooltipSupplier;
+    }
 
     /**
      * The error message to display when the validator is <em>not</em> "passing."
      * <p>
      * When {@link #hasErrors} is true, this message is displayed near the {@link #srcControl} (usually below);
-     * it's also displayed in a {@link Tooltip} applied to the {@link #srcControl} (see {@link #errorTooltip}).
+     * it's also displayed in a {@link Tooltip} applied to the {@link #srcControl}.
      */
-    protected SimpleStringProperty message = new SimpleStringProperty() {
-        @Override
-        protected void invalidated() {
-            updateSrcControl();
-        }
-    };
+    protected SimpleStringProperty message = new SimpleStringProperty();
 
     /**
      * @see #message
@@ -303,12 +309,7 @@ public abstract class ValidatorBase extends Parent {
 
 
     /***** Icon *****/
-    protected SimpleObjectProperty<Supplier<Node>> iconSupplier = new SimpleObjectProperty<Supplier<Node>>() {
-        @Override
-        protected void invalidated() {
-            updateSrcControl();
-        }
-    };
+    protected SimpleObjectProperty<Supplier<Node>> iconSupplier = new SimpleObjectProperty<Supplier<Node>>();
 
     public void setIconSupplier(Supplier<Node> icon) {
         this.iconSupplier.set(icon);
@@ -322,6 +323,11 @@ public abstract class ValidatorBase extends Parent {
         return iconSupplier.get();
     }
 
+    /**
+     * allow setting icon in FXML
+     *
+     * @param icon
+     */
     public void setIcon(Node icon) {
         iconSupplier.set(() -> icon);
     }
