@@ -34,6 +34,7 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -80,6 +81,7 @@ public class JFXCheckBoxSkin extends LabeledSkinBase<JFXCheckBox, ButtonBehavior
         indeterminateMark.setScaleY(0);
 
         mark.getStyleClass().setAll("mark");
+        mark.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         mark.setOpacity(0);
         mark.setScaleX(0);
         mark.setScaleY(0);
