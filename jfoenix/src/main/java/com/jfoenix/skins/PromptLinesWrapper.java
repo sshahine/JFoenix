@@ -31,6 +31,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -181,6 +182,7 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
                     .setInterpolator(Interpolator.EASE_BOTH).build())
         );
 
+        promptContainer.getStyleClass().add("prompt-container");
         promptContainer.setManaged(false);
         promptContainer.setMouseTransparent(true);
 
