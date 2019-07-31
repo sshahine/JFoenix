@@ -139,7 +139,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     @Override
     protected Node getPopupContent() {
         if (popupContent == null) {
-            popupContent = new JFXColorPalette((ColorPicker) getSkinnable());
+            popupContent = new JFXColorPalette((JFXColorPicker) getSkinnable());
             popupContent.setPopupControl(getPopup());
         }
         return popupContent;

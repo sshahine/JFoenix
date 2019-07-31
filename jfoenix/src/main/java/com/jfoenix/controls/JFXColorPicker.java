@@ -87,6 +87,16 @@ public class JFXColorPicker extends ColorPicker {
      */
     private static final String DEFAULT_STYLE_CLASS = "jfx-color-picker";
 
+    private double[] preDefinedColors = null;
+
+    public double[] getPreDefinedColors() {
+        return preDefinedColors;
+    }
+
+    public void setPreDefinedColors(double[] preDefinedColors) {
+        this.preDefinedColors = preDefinedColors;
+    }
+
     /**
      * disable animation on button action
      */

@@ -20,8 +20,8 @@
 package com.jfoenix.skins;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXColorPicker;
 import com.jfoenix.utils.JFXNodeUtils;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
@@ -32,14 +32,23 @@ import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PopupControl;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -59,7 +68,7 @@ class JFXColorPalette extends Region {
     final JFXButton customColorLink = new JFXButton("Custom Color");
     JFXCustomColorPickerDialog customColorDialog = null;
 
-    private ColorPicker colorPicker;
+    private JFXColorPicker colorPicker;
     private final GridPane customColorGrid = new GridPane();
     private final Label customColorLabel = new Label("Recent Colors");
 
@@ -72,7 +81,7 @@ class JFXColorPalette extends Region {
 
     private final ColorSquare hoverSquare = new ColorSquare();
 
-    public JFXColorPalette(final ColorPicker colorPicker) {
+    public JFXColorPalette(final JFXColorPicker colorPicker) {
         getStyleClass().add("color-palette-region");
         this.colorPicker = colorPicker;
         colorPickerGrid = new JFXColorGrid();
@@ -122,7 +131,10 @@ class JFXColorPalette extends Region {
             BorderStrokeStyle.SOLID,
             CornerRadii.EMPTY,
             BorderWidths.DEFAULT)));
-        paletteBox.getChildren().addAll(colorPickerGrid, customColorLabel, customColorGrid, customColorLink);
+        paletteBox.getChildren().addAll(colorPickerGrid);
+        if (colorPicker.getPreDefinedColors() == null) {
+            paletteBox.getChildren().addAll(customColorLabel, customColorGrid, customColorLink);
+        }
 
         hoverSquare.setMouseTransparent(true);
         hoverSquare.getStyleClass().addAll("hover-square");
@@ -167,7 +179,7 @@ class JFXColorPalette extends Region {
 
         hoverSquare.setLayoutX(snapPosition(x) - xAdjust);
         hoverSquare.setLayoutY(snapPosition(y) - focusedSquare.getHeight() / 2.0 + (hoverSquare.getScaleY() == 1.0 ? 0 : focusedSquare
-            .getHeight() / 4.0));
+                                                                                                                             .getHeight() / 4.0));
     }
 
     private void buildCustomColors() {
@@ -322,6 +334,8 @@ class JFXColorPalette extends Region {
     class JFXColorGrid extends GridPane {
 
         private final List<ColorSquare> squares;
+        final int NUM_OF_COLORS;
+        final int NUM_OF_ROWS;
 
         public JFXColorGrid() {
             getStyleClass().add("color-picker-grid");
@@ -329,11 +343,15 @@ class JFXColorPalette extends Region {
             int columnIndex = 0;
             int rowIndex = 0;
             squares = FXCollections.observableArrayList();
-            final int numColors = RAW_VALUES.length / 3;
+            double[] limitedColors = colorPicker.getPreDefinedColors();
+            limitedColors = limitedColors == null ? RAW_VALUES : limitedColors;
+            NUM_OF_COLORS = limitedColors.length / 3;
+            NUM_OF_ROWS = (int) Math.ceil((double)NUM_OF_COLORS / (double)NUM_OF_COLUMNS);
+            final int numColors = limitedColors.length / 3;
             Color[] colors = new Color[numColors];
             for (int i = 0; i < numColors; i++) {
-                colors[i] = new Color(RAW_VALUES[i * 3] / 255,
-                    RAW_VALUES[(i * 3) + 1] / 255, RAW_VALUES[(i * 3) + 2] / 255,
+                colors[i] = new Color(limitedColors[i * 3] / 255,
+                    limitedColors[(i * 3) + 1] / 255, limitedColors[(i * 3) + 2] / 255,
                     1.0);
                 ColorSquare cs = new ColorSquare(colors[i], i);
                 squares.add(cs);
@@ -609,9 +627,6 @@ class JFXColorPalette extends Region {
         78, 52, 46,
         62, 39, 35,
     };
-
-    private static final int NUM_OF_COLORS = RAW_VALUES.length / 3;
-    private static final int NUM_OF_ROWS = NUM_OF_COLORS / NUM_OF_COLUMNS;
 
     private static int clamp(int min, int value, int max) {
         if (value < min) {
