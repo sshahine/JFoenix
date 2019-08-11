@@ -14,7 +14,7 @@ import javafx.scene.control.TextInputControl;
  */
 public class StringLengthValidator extends ValidatorBase{
 
-    int StringLengh;
+    int StringLength;
 
     /**
      * Basic constructor with Default message this way:
@@ -24,7 +24,7 @@ public class StringLengthValidator extends ValidatorBase{
      */
     public StringLengthValidator(int StringLengh) {
         super("Max length is " + StringLengh +" character(s) ");
-        this.StringLengh = StringLengh;
+        this.StringLength = StringLengh;
     }
     
     
@@ -39,7 +39,7 @@ public class StringLengthValidator extends ValidatorBase{
      */
     public StringLengthValidator(int StringLength,String message) {
     
-        this.StringLengh = StringLength;
+        this.StringLength = StringLength;
         setMessage(message + StringLength);                        
     }
     /**
@@ -52,8 +52,17 @@ public class StringLengthValidator extends ValidatorBase{
      */
     public StringLengthValidator(String message,int StringLength){        
         super(message);
-        this.StringLengh = StringLength;
+        this.StringLength = StringLength;
         
+    }
+    
+        
+    public void changeStringLength(int newLength){
+        this.StringLength = newLength;
+    }
+
+    public int getStringLength() {
+        return StringLength;
     }
     
     
@@ -75,7 +84,7 @@ public class StringLengthValidator extends ValidatorBase{
             try {
                 hasErrors.set(false);
                 if (!text.isEmpty()) {
-                    if(text.length()>StringLengh){
+                    if(text.length()>StringLength){
                         throw new Exception("String length exceded.");
                     }
                 }
