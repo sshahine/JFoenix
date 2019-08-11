@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package validaciondecampo;
+package validations;
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.scene.control.TextInputControl;
 /**
@@ -18,13 +18,13 @@ public class StringLengthValidator extends ValidatorBase{
 
     /**
      * Basic constructor with Default message this way:
-     * "Max length is " + StringLengh +" character(s) "
+ "Max length is " + StringLength +" character(s) "
      * @param StringLengh 
      * Length of the string in the input field to validate.
      */
     public StringLengthValidator(int StringLengh) {
         super("Max length is " + StringLengh +" character(s) ");
-        this.StringLength = StringLengh;
+        this.StringLength = StringLengh+1;
     }
     
     
@@ -39,7 +39,7 @@ public class StringLengthValidator extends ValidatorBase{
      */
     public StringLengthValidator(int StringLength,String message) {
     
-        this.StringLength = StringLength;
+        this.StringLength = StringLength+1;
         setMessage(message + StringLength);                        
     }
     /**
@@ -52,17 +52,16 @@ public class StringLengthValidator extends ValidatorBase{
      */
     public StringLengthValidator(String message,int StringLength){        
         super(message);
-        this.StringLength = StringLength;
+        this.StringLength = StringLength+1;
         
     }
-    
         
     public void changeStringLength(int newLength){
-        this.StringLength = newLength;
+        this.StringLength = newLength+1;
     }
 
     public int getStringLength() {
-        return StringLength;
+        return StringLength-1;
     }
     
     
@@ -80,18 +79,18 @@ public class StringLengthValidator extends ValidatorBase{
 
     private void evalTextInputField() {
         TextInputControl textField = (TextInputControl) srcControl.get();
-            String text = textField.getText();
-            try {
-                hasErrors.set(false);
-                if (!text.isEmpty()) {
-                    if(text.length()>StringLength){
-                        throw new Exception("String length exceded.");
-                    }
-                }
-            } catch (Exception e) {
-                hasErrors.set(true);
-            }
+        String text = textField.getText();
+        hasErrors.set(false);
+        
+        if (!text.isEmpty()) {
+            if(text.length()>=StringLength-1){
+              hasErrors.set(true);
+            //  textField.textProperty().set(text.substring(0, 19));
 
+            }
+        }
+             
+            
     }
     
 }
