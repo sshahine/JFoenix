@@ -83,7 +83,7 @@ public class StringLengthValidator extends ValidatorBase{
         hasErrors.set(false);
         
         if (!text.isEmpty()) {
-            if(text.length()>=StringLength-1){
+            if(text.length()>StringLength-1){
               hasErrors.set(true);
             //  textField.textProperty().set(text.substring(0, 19));
 
