@@ -86,28 +86,37 @@ repositories {
 }
 ```
 Reference the repository from this location using:
-```groovy
-dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.8' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.8' // Java 9
-}
-```
+* Java 9+
+    ```groovy
+    dependencies {
+        compile 'com.jfoenix:jfoenix:9.0.8'
+    }
+    ```
+* Java 8
+    ```groovy
+    dependencies {
+        compile 'com.jfoenix:jfoenix:8.0.8'
+    }
+    ```
 
 ## Maven
 ### How to Include In Maven Project
-```xml
-<dependency>
-    <groupId>com.jfoenix</groupId>
-    <artifactId>jfoenix</artifactId>
-    <version>9.0.8</version>
-</dependency>
-
-<dependency>
-    <groupId>com.jfoenix</groupId>
-    <artifactId>jfoenix</artifactId>
-    <version>8.0.8</version>
-</dependency>
-```
+* Java 9+
+    ```xml
+    <dependency>
+        <groupId>com.jfoenix</groupId>
+        <artifactId>jfoenix</artifactId>
+        <version>9.0.8</version>
+    </dependency>
+    ```
+* Java 8
+    ```xml
+    <dependency>
+        <groupId>com.jfoenix</groupId>
+        <artifactId>jfoenix</artifactId>
+        <version>8.0.8</version>
+    </dependency>
+    ```
 # Components
 <details><summary><i>JFXButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a></summary><p>
 
