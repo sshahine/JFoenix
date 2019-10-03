@@ -23,12 +23,15 @@ jar {
             'Specification-Version': project.version,
             'Implementation-Title': project.name,
             'Implementation-Version': project.version,
+            'Permissions': 'all-permissions',
+            'Trusted-Library': true,
+            'Codebase': '*'
         )
     }
 }
 
 def pomConfig = {
-	resolveStrategy = Closure.DELEGATE_FIRST
+    resolveStrategy = Closure.DELEGATE_FIRST
     name project.name
     description project.project_description
     url project.project_url
@@ -43,37 +46,37 @@ def pomConfig = {
     scm {
         url project.project_scm
     }
-    developers {    
-    	developer {
+    developers {
+        developer {
             id 'sshahine'
-            name 'Shadi Shaheen'                
-            roles{role 'Project Lead'}               
+            name 'Shadi Shaheen'
+            roles { role 'Project Lead' }
         }
         developer {
             id 'belias'
-            name 'Bachir Elias'                
-            roles{role 'Developer'}               
+            name 'Bachir Elias'
+            roles { role 'Developer' }
         }
         developer {
             id 'mhelou'
-            name 'Marwan Helou'                
-            roles{role 'Head of Framework Development'}               
+            name 'Marwan Helou'
+            roles { role 'Head of Framework Development' }
         }
         developer {
             id 'gmoubarak'
-            name 'Gerard Moubarak'                
-            roles{role 'Head of IT Section'}               
-        }        
+            name 'Gerard Moubarak'
+            roles { role 'Head of IT Section' }
+        }
         developer {
             id 'rjreije'
-            name 'Rayan Jreije'                
-            roles{role 'Project Manager'}               
+            name 'Rayan Jreije'
+            roles { role 'Project Manager' }
         }
     }
 }
 
 // sign all artifacts
-task signJars (type : Sign, dependsOn: [jar, javadocJar, sourcesJar, retroSourcesJar]) {
+task signJars(type: Sign, dependsOn: [jar, javadocJar, sourcesJar, retroSourcesJar]) {
     sign configurations.archives
 }
 // sign pom
@@ -82,9 +85,9 @@ task signPom(type: Sign) {
 }
 // defining which tasks should be called
 if (project.ext.pomFile.exists()) {
-    task preparePublication (dependsOn : [signJars, signPom])
+    task preparePublication(dependsOn: [signJars, signPom])
 } else {
-    task preparePublication (dependsOn : signJars)
+    task preparePublication(dependsOn: signJars)
 }
 // extract signatures and add classifier and extension to them
 def getSignatureFiles = {
@@ -94,15 +97,15 @@ def getSignatureFiles = {
     def signedRetrolambda = allFiles.find { it.name.contains('-retrolambda') }
     def signedJar = (allFiles - [signedSources, signedJavadoc, signedRetrolambda])[0]
     return [
-            [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
-            [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
-            [archive: signedRetrolambda, classifier: 'retrolambda', extension: 'jar.asc'],
-            [archive: signedJar,     classifier: null,      extension: 'jar.asc']
+        [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
+        [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
+        [archive: signedRetrolambda, classifier: 'retrolambda', extension: 'jar.asc'],
+        [archive: signedJar, classifier: null, extension: 'jar.asc']
     ]
 }
 // extract pom signature
 def getPomSignature = {
-    return project.tasks.signPom.signatureFiles.collect{it}[0]
+    return project.tasks.signPom.signatureFiles.collect { it }[0]
 }
 
 signing {
@@ -111,23 +114,23 @@ signing {
 
 publishing {
     publications {
-	    gpgJars(MavenPublication) {
-            getSignatureFiles().each {signature ->
-                artifact (signature.archive) {
+        gpgJars(MavenPublication) {
+            getSignatureFiles().each { signature ->
+                artifact(signature.archive) {
                     classifier = signature.classifier
-                    extension  = signature.extension
+                    extension = signature.extension
                 }
             }
         }
         if (project.ext.pomFile.exists()) {
             gpgPom(MavenPublication) {
-                artifact (getPomSignature()) {
+                artifact(getPomSignature()) {
                     classifier = null
-                    extension  = 'pom.asc'
+                    extension = 'pom.asc'
                 }
             }
         }
-    
+
         mavenJava(MavenPublication) {
             from components.java
             artifact sourcesJar
@@ -135,28 +138,28 @@ publishing {
             artifact retroSourcesJar
             pom.withXml {
                 asNode().children().last() + pomConfig
-                 if (!project.ext.pomFile.exists()) {
-                    writeTo (project.ext.pomFile)
+                if (!project.ext.pomFile.exists()) {
+                    writeTo(project.ext.pomFile)
                 }
             }
         }
     }
     repositories {
-    	maven {
-		    if (project.ext.pomFile.exists()) {
-		        credentials {
-		            username project.username
-		            password project.password
-		  		}
-		  		if(project.version.endsWith('-SNAPSHOT')) {
-		            url "https://oss.sonatype.org/content/repositories/snapshots"
-		        } else {
-		            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-		        } 
-		    } else {
-		        url project.local_deploy
-		    }
-	    }
+        maven {
+            if (project.ext.pomFile.exists()) {
+                credentials {
+                    username project.username
+                    password project.password
+                }
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url "https://oss.sonatype.org/content/repositories/snapshots"
+                } else {
+                    url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                }
+            } else {
+                url project.local_deploy
+            }
+        }
     }
 }
 
@@ -173,7 +176,7 @@ bintray {
         name = project.name
         desc = project.project_description
         licenses = ['Apache Version 2.0']
-        labels = ['javafx','material design']
+        labels = ['javafx', 'material design']
         websiteUrl = project.project_url
         issueTrackerUrl = project.project_issues
         vcsUrl = project.project_scm
