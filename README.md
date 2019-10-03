@@ -1,7 +1,7 @@
 [![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
-[![][sonardebt img]][sonardebt]
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jfoenixadmin_JFoenix&metric=alert_status)](https://sonarcloud.io/dashboard?id=jfoenixadmin_JFoenix)
 [![][gitter img]][gitter]
 [![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
@@ -217,12 +217,6 @@ Reference the repository from this location using:
 
 [mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
-
-[sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
-[sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root
-
-[sonardebt]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
-[sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
 
 [CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
 [CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=shield
