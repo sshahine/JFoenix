@@ -14,11 +14,11 @@ configurations {
     pom
 }
 dependencies {
-	dalvikSDK 'org.javafxports:dalvik-sdk:8.60.9@zip'
- 	compile fileTree(dir: "$buildDir/dalvik-sdk/rt/lib/ext/jfxrt.jar", include: 'jfxrt.jar')
+    dalvikSDK 'org.javafxports:dalvik-sdk:8.60.9@zip'
+    compile fileTree(dir: "$buildDir/dalvik-sdk/rt/lib/ext/jfxrt.jar", include: 'jfxrt.jar')
 }
 task extractDalvik(type: Copy) {
-    from { configurations.dalvikSDK.collect { zipTree(it) }}
+    from { configurations.dalvikSDK.collect { zipTree(it) } }
     into "$buildDir/"
 }
 compileJava.dependsOn extractDalvik
@@ -31,10 +31,10 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-task retroSourcesJar(type: Jar){
-	String str = sourceSets.main.output.classesDir;
-	sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"
-   	group 'Build'
+task retroSourcesJar(type: Jar) {
+    String str = sourceSets.main.output.classesDir;
+    sourceSets.main.output.classesDir = "$buildDir/retrolambda/main"
+    group 'Build'
     description 'JFoenix compiled using retro-lambda'
     classifier 'retrolambda'
     from sourceSets.main.output
@@ -45,19 +45,19 @@ task retroSourcesJar(type: Jar){
 javadoc {
     excludes = ['**/*.html', 'META-INF/**']
 
-    options.use         = true
-    options.splitIndex  = true
-    options.encoding    = 'UTF-8'
-    options.author      = true
-    options.version     = true
+    options.use = true
+    options.splitIndex = true
+    options.encoding = 'UTF-8'
+    options.author = true
+    options.version = true
     options.windowTitle = "$project.name $project.version API"
-    options.docTitle    = "$project.name $project.version API"
-    options.links       = ['http://docs.oracle.com/javase/8/docs/api/',
-                           'http://docs.oracle.com/javase/8/javafx/api/']
+    options.docTitle = "$project.name $project.version API"
+    options.links = ['http://docs.oracle.com/javase/8/docs/api/',
+                     'http://docs.oracle.com/javase/8/javafx/api/']
 }
 
 task myJavadocs(type: Javadoc) {
-  source = sourceSets.main.allJava
+    source = sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar) {
@@ -90,7 +90,12 @@ jar {
         name = 'JFoenix'
         instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.8'
         instruction 'Bundle-Description', 'JavaFX Material Design Library'
+        instruction 'Import-Package', '!com.sun.*,!javafx.*, *'
+        instruction 'Export-Package', '!com.jfoenix.android.*, *'
+        attributes(
+            'Permissions': 'all-permissions',
+            'Trusted-Library': true,
+            'Codebase': '*'
+        )
     }
 }
-
-
