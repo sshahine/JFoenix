@@ -1,0 +1,15 @@
+language: java
+
+dist: trusty
+
+jdk:
+- oraclejdk8
+
+addons:
+    sonarcloud:
+        organization: "jfoenixadmin"
+        token:
+            secure: "**************************"
+
+script:
+- ./gradlew sonarqube
