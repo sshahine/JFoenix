@@ -1,5 +1,5 @@
 [![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
-[![][CircleCI img]][CircleCI]
+[![][TravisCI img]][TravisCI]
 [![][mavenbadge img]][mavenbadge]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jfoenixadmin_JFoenix&metric=alert_status)](https://sonarcloud.io/dashboard?id=jfoenixadmin_JFoenix)
 [![][gitter img]][gitter]
@@ -218,8 +218,8 @@ Reference the repository from this location using:
 [mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
 
-[CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
-[CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=shield
+[TravisCI]:https://travis-ci.org/jfoenixadmin/JFoenix
+[TravisCI img]:https://travis-ci.org/jfoenixadmin/JFoenix.svg?branch=master
 
 [gitter]:https://gitter.im/JFoenix/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [gitter img]:https://badges.gitter.im/JFoenix/Lobby.svg
