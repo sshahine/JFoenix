@@ -1,0 +1,22 @@
+apply plugin: 'com.github.spotbugs'
+
+spotbugs {
+    toolVersion = '4.0.0-beta'
+    ignoreFailures = true
+    effort = 'max'
+    reportLevel = 'low'
+    excludeFilter = rootProject.file('config/spotbugs-exclude.xml')
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugsTest.enabled = false
+
+dependencies {
+    spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.6'
+}

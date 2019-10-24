@@ -1,5 +1,9 @@
 package demos.gui.main;
 
+import static io.datafx.controller.flow.container.ContainerAnimations.SWIPE_LEFT;
+
+import javax.annotation.PostConstruct;
+
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
@@ -8,6 +12,7 @@ import com.jfoenix.controls.JFXPopup.PopupHPosition;
 import com.jfoenix.controls.JFXPopup.PopupVPosition;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTooltip;
+
 import demos.datafx.ExtendedAnimatedFlowContainer;
 import demos.gui.sidemenu.SideMenuController;
 import demos.gui.uicomponents.ButtonController;
@@ -23,10 +28,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
-import javax.annotation.PostConstruct;
-
-import static io.datafx.controller.flow.container.ContainerAnimations.SWIPE_LEFT;
 
 @ViewController(value = "/fxml/Main.fxml", title = "Material Design Example")
 public final class MainController {

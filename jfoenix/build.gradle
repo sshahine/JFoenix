@@ -1,15 +1,43 @@
-apply plugin: 'osgi'
+apply plugin: 'biz.aQute.bnd.builder'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java-library'
+apply plugin: 'org.openjfx.javafxplugin'
 
 apply from: rootProject.file('gradle/license.gradle')
 
+javafx {
+  version = '11.0.2'
+  modules = [ 'javafx.controls', 'javafx.graphics' ]
+}
+
+compileJava {
+    inputs.property('moduleName', moduleName)
+    options.compilerArgs += [
+            '--add-exports=javafx.graphics/com.sun.javafx.scene=com.jfoenix',
+            '--add-exports=javafx.graphics/com.sun.javafx.scene.text=com.jfoenix',
+            '--add-exports=javafx.graphics/com.sun.javafx.geom=com.jfoenix',
+            '--add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix',
+            '--add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix',
+            '--add-exports=javafx.graphics/com.sun.javafx.scene.traversal=com.jfoenix',
+            '--add-exports=javafx.controls/com.sun.javafx.scene.control=com.jfoenix',
+            '--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix',
+            '--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=com.jfoenix',
+            '--add-exports=javafx.base/com.sun.javafx.binding=com.jfoenix',
+            '--add-exports=javafx.base/com.sun.javafx.event=com.jfoenix'
+    ]
+}
+
 // pom file name
 ext {
-    ext.moduleName = 'com.jfoenix'
+    moduleName = 'com.jfoenix'
     pomFilePath = "${project.projectDir}/tmp/pom.xml"
     pomFile = file(pomFilePath)
 }
+
+group = 'com.jfoenix'
+version = '9.0.10'
+
+
 configurations {
     pom
 }
@@ -35,29 +63,12 @@ javadoc {
                      'http://docs.oracle.com/javase/9/javafx/api/']
 }
 
-task myJavadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-    options.addMultilineStringsOption("-add-exports")
-        .setValue(["javafx.base/com.sun.javafx.event=com.jfoenix",
-                   "javafx.base/com.sun.javafx.binding=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.scene=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.scene.text=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.stage=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.geom=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.util=com.jfoenix",
-                   "javafx.graphics/com.sun.javafx.scene.traversal=com.jfoenix",
-                   "javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
-                   "javafx.controls/com.sun.javafx.scene.control.inputmap=com.jfoenix",
-                   "javafx.controls/com.sun.javafx.scene.control=com.jfoenix"])
-}
-
 task javadocJar(type: Jar) {
     group 'Build'
     description 'An archive of the javadoc'
     classifier 'javadoc'
     from javadoc.destinationDir
 }
-javadocJar.dependsOn myJavadocs
 
 // execute jar tasks
 jar.finalizedBy sourcesJar
@@ -76,9 +87,9 @@ artifacts {
 jar {
     exclude('com/jfoenix/android/**')
 
-    manifest {
-        name = 'JFoenix'
-        instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.9'
-        instruction 'Bundle-Description', 'JavaFX Material Design Library'
-    }
+    bnd ('Bundle-Name': 'JFoenix',
+      //  'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.9',
+        'Bundle-Description': 'JavaFX Material Design Library'
+    )
 }
+

@@ -7,12 +7,18 @@ buildscript {
 
 plugins {
     id 'com.jfrog.bintray' version '1.7.3' apply false
-    id 'com.github.ben-manes.versions' version '0.15.0' apply false
-    id 'me.tatarka.retrolambda' version '3.7.0' apply false
-    id 'com.github.hierynomus.license' version '0.14.0' apply false
-    id 'net.nemerosa.versioning' version '2.6.1' apply false
-    id 'org.sonarqube' version '2.5'
+    id 'com.github.ben-manes.versions' version '0.27.0' apply false
+    id 'me.tatarka.retrolambda' version '3.7.1' apply false
+    id 'com.github.hierynomus.license' version '0.15.0' apply false
+    id 'net.nemerosa.versioning' version '2.8.2' apply false
+    id 'org.sonarqube' version '2.8'
+    id 'com.github.spotbugs' version '2.0.0' apply false
+    id 'biz.aQute.bnd' version '4.2.0' apply false
+    id 'org.openjfx.javafxplugin' version '0.0.8' apply false
+    id 'maven-publish'
 }
+
+ext.moduleName = 'com.jfoenix'
 
 subprojects {
     afterEvaluate {
@@ -27,8 +33,8 @@ subprojects {
             maven { url 'http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2' }
         }
 
-        sourceCompatibility = 1.9
-        targetCompatibility = 1.9
+        sourceCompatibility = 11
+        targetCompatibility = 11
 
         tasks.withType(JavaCompile) {
             options.incremental = true
@@ -50,45 +56,9 @@ subprojects {
 
         apply from: rootProject.file('gradle/code-coverage.gradle')
         apply from: rootProject.file('gradle/checkstyle.gradle')
-        apply from: rootProject.file('gradle/findbugs.gradle')
-        apply from: rootProject.file('gradle/javafx.gradle')
+        apply from: rootProject.file('gradle/spotbugs.gradle')
+//        apply from: rootProject.file('gradle/javafx.gradle')
 
-        compileJava {
-            inputs.property("moduleName", moduleName)
-            doFirst {
-                options.compilerArgs += [
-                    '--module-path', classpath.asPath,
-                    // For various usages of TraversalEngine
-                    "--add-exports=javafx.graphics/com.sun.javafx.scene=com.jfoenix",
-                    "--add-exports=javafx.graphics/com.sun.javafx.scene.text=com.jfoenix",
-                    "--add-exports=javafx.graphics/com.sun.javafx.geom=com.jfoenix",
-                    "--add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix",
-                    "--add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix",
-                    "--add-exports=javafx.graphics/com.sun.javafx.scene.traversal=com.jfoenix",
-
-                    // For various behaviors across controls
-                    "--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix",
-                    "--add-exports=javafx.controls/com.sun.javafx.scene.control=com.jfoenix",
-                    "--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=com.jfoenix",
-                    "--add-exports=javafx.base/com.sun.javafx.binding=com.jfoenix",
-                    // For ReadOnlyUnbackedObservableList across files
-//                    "--add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED",
-                    // For InputMap used in behavior classes
-//                    "--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=ALL-UNNAMED",
-                    // For EventHandlerManager across files
-                    "--add-exports=javafx.base/com.sun.javafx.event=com.jfoenix",
-                    "--add-exports=javafx.base/com.sun.javafx.event=com.jfoenix",
-                    // For MappingChange, NonIterableChange across files
-//                    "--add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED",
-                    // For VersionInfo in VersionChecker
-//                    "--add-exports=javafx.base/com.sun.javafx.runtime=ALL-UNNAMED",
-                    // For WebPage in SVGLoader
-//                    "--add-exports=javafx.web/com.sun.webkit=ALL-UNNAMED"
-//                    "--add-modules=java.se.ee"
-                ]
-                classpath = files()
-            }
-        }
 
         compileTestJava {
             inputs.property("moduleName", moduleName)
