@@ -58,6 +58,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
 * <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application.
+* <a href="https://github.com/AmrDeveloper/Sparkler">Sparkler</a> A Cross platform API request builder
 
 # Build
 To build JFoenix, execute the following command:
