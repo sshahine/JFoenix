@@ -169,8 +169,8 @@ public class JFXTooltip extends Tooltip {
             animation.setOnFinished(null);
         });
         eventHandlerManager.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
-            setAnchorX(getUpdatedAnchorX());
-            setAnchorY(getUpdatedAnchorY());
+            setAnchorX(getUpdatedAnchorX(getAnchorX()));
+            setAnchorY(getUpdatedAnchorY(getAnchorY()));
             animation.reverseAndContinue();
         });
     }
@@ -217,26 +217,26 @@ public class JFXTooltip extends Tooltip {
         this.margin = margin;
     }
 
-    private double getUpdatedAnchorY() {
+    private double getUpdatedAnchorY(double anchor) {
         switch (pos.getVpos()) {
             case CENTER:
-                return getAnchorY() - getHeight() / 2;
+                return anchor - getHeight() / 2;
             case TOP:
             case BASELINE:
-                return getAnchorY() - getHeight();
+                return anchor - getHeight();
             default:
-                return getAnchorY();
+                return anchor;
         }
     }
 
-    private double getUpdatedAnchorX() {
+    private double getUpdatedAnchorX(double anchor) {
         switch (pos.getHpos()) {
             case CENTER:
-                return getAnchorX() - getWidth() / 2;
+                return anchor - getWidth() / 2;
             case LEFT:
-                return getAnchorX() - getWidth();
+                return anchor - getWidth();
             default:
-                return getAnchorX();
+                return anchor;
         }
     }
 
@@ -268,46 +268,92 @@ public class JFXTooltip extends Tooltip {
 
     /**
      * {@inheritDoc}
+     * this method ignores anchorX, anchorY. It shows the tooltip according
+     * to tooltip {@link JFXTooltip#pos} field
+     * <p>
+     * NOTE: if you want to manually show the tooltip on forced local anchors
+     * you can use {@link JFXTooltip#showOnAnchors(Node, double, double)} method.
      */
     @Override
     public void show(Node ownerNode, double anchorX, double anchorY) {
         // if tooltip hide animation still running, then hide method is not called yet
         // thus only reverse the animation to show the tooltip again
         hiding = false;
+        final Bounds sceneBounds = ownerNode.localToScene(ownerNode.getBoundsInLocal());
         if (isShowing()) {
             animation.setOnFinished(null);
             animation.reverseAndContinue();
+            anchorX = ownerX(ownerNode, sceneBounds) + getHPosForNode(sceneBounds);
+            anchorY = ownerY(ownerNode, sceneBounds) + getVPosForNode(sceneBounds);
+            setAnchorY(getUpdatedAnchorY(anchorY));
+            setAnchorX(getUpdatedAnchorX(anchorX));
         } else {
             // tooltip was not showing compute its anchors and show it
-            Window parent = ownerNode.getScene().getWindow();
-            final Bounds origin = ownerNode.localToScene(ownerNode.getBoundsInLocal());
-            anchorX = parent.getX() + origin.getMinX() + ownerNode.getScene().getX() + getHPosForNode(ownerNode);
-            anchorY = parent.getY() + origin.getMinY() + ownerNode.getScene().getY() + getVPosForNode(ownerNode);
+            anchorX = ownerX(ownerNode, sceneBounds) + getHPosForNode(sceneBounds);
+            anchorY = ownerY(ownerNode, sceneBounds) + getVPosForNode(sceneBounds);
             super.show(ownerNode, anchorX, anchorY);
         }
     }
 
-    private double getHPosForNode(Node node) {
+    /**
+     * @param ownerNode
+     * @param sceneBounds is the owner node scene Bounds
+     * @return anchorX that represents the local minX of owner node
+     */
+    private double ownerX(Node ownerNode, Bounds sceneBounds) {
+        Window parent = ownerNode.getScene().getWindow();
+        return parent.getX() + sceneBounds.getMinX() + ownerNode.getScene().getX();
+    }
+
+    /**
+     * @param ownerNode
+     * @param sceneBounds is the owner node scene Bounds
+     * @return anchorY that represents the local minY of owner node
+     */
+    private double ownerY(Node ownerNode, Bounds sceneBounds) {
+        Window parent = ownerNode.getScene().getWindow();
+        return parent.getY() + sceneBounds.getMinY() + ownerNode.getScene().getY();
+    }
+
+
+    public void showOnAnchors(Node ownerNode, double anchorX, double anchorY) {
+        hiding = false;
+        final Bounds sceneBounds = ownerNode.localToScene(ownerNode.getBoundsInLocal());
+        if (isShowing()) {
+            animation.setOnFinished(null);
+            animation.reverseAndContinue();
+            anchorX += ownerX(ownerNode, sceneBounds);
+            anchorY += ownerY(ownerNode, sceneBounds);
+            setAnchorX(getUpdatedAnchorX(anchorX));
+            setAnchorY(getUpdatedAnchorY(anchorY));
+        } else {
+            anchorX += ownerX(ownerNode, sceneBounds);
+            anchorY += ownerY(ownerNode, sceneBounds);
+            super.show(ownerNode, anchorX, anchorY);
+        }
+    }
+
+    private double getHPosForNode(Bounds sceneBounds) {
         double hx = -margin;
         switch (pos.getHpos()) {
             case CENTER:
-                hx = (node.getBoundsInParent().getWidth() / 2);
+                hx = (sceneBounds.getWidth() / 2);
                 break;
             case RIGHT:
-                hx = node.getBoundsInParent().getWidth() + margin;
+                hx = sceneBounds.getWidth() + margin;
                 break;
         }
         return hx;
     }
 
-    private double getVPosForNode(Node node) {
+    private double getVPosForNode(Bounds sceneBounds) {
         double vy = -margin;
         switch (pos.getVpos()) {
             case CENTER:
-                vy = (node.getBoundsInParent().getHeight() / 2);
+                vy = (sceneBounds.getHeight() / 2);
                 break;
             case BOTTOM:
-                vy = node.getBoundsInParent().getHeight() + margin;
+                vy = sceneBounds.getHeight() + margin;
                 break;
         }
         return vy;
