@@ -46,19 +46,20 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
 * <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
 * <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
-* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
-* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
+* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software
+* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager
 * <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
 * <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
-* <a href="https://github.com/silentsoft/actlist">Actlist</a> An utility platform to execute your desire things.
-* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java.
-* <a href="https://github.com/Shehanka/RentLio">RentLio</a> Vehicle Reservation System with RMI Technology.
-* <a href="https://github.com/ianspryn/Magis">Magis</a> A Computer Aided Instruction Program.
+* <a href="https://github.com/silentsoft/actlist">Actlist</a> An utility platform to execute your desire things
+* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java
+* <a href="https://github.com/Shehanka/RentLio">RentLio</a> Vehicle Reservation System with RMI Technology
+* <a href="https://github.com/ianspryn/Magis">Magis</a> A Computer Aided Instruction Program
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
-* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application.
+* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application
 * <a href="https://github.com/AmrDeveloper/Sparkler">Sparkler</a> A Cross platform API request builder
+* <a href="https://github.com/dubbadhar/gramophy">Gramophy</a> Ad-free, Opensource, YouTube Music Player/Downloader
 
 # Build
 To build JFoenix, execute the following command:
