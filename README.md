@@ -25,7 +25,7 @@
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
-Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
+Feel free to create a pull request for adding a link to your project in JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
 If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
