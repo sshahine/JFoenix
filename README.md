@@ -61,6 +61,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/AmrDeveloper/Sparkler">Sparkler</a> A Cross platform API request builder
 * <a href="https://github.com/GikuMironica/ExploreHub">ExploreHub</a> An event booking application
 * <a href="https://github.com/dubbadhar/gramophy">Gramophy</a> Ad-free, Opensource, YouTube Music Player/Downloader
+* [JabRef](https://www.jabref.org/) An opensource (scientific) Reference Manager, mostly used in the LaTeX world
 
 # Build
 To build JFoenix, execute the following command:
