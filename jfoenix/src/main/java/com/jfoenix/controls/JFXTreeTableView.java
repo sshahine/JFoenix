@@ -226,13 +226,15 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                 if (originalRoot == null) {
                     originalRoot = getRoot();
                 }
+                List<TreeTableColumn<S, ?>> toBeAdded = new ArrayList<>();
                 for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) {
                     if (groupOrder.contains(treeTableColumn)) {
                         continue;
                     }
+                    toBeAdded.add(treeTableColumn);
                     groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
                 }
-                groupOrder.addAll(treeTableColumns);
+                groupOrder.addAll(toBeAdded);
                 // update table ui
                 buildGroupedRoot(groups, null, 0);
             } catch (Exception e) {
@@ -248,7 +250,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         for (TreeTableColumn<S, ?> treeTableColumn : groupColumns) {
             groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
         }
-        groupOrder.addAll(groupColumns);
+        groupOrder.setAll(groupColumns);
         // update table ui
         buildGroupedRoot(groups, null, 0);
     }
@@ -264,9 +266,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             lock.lock();
             if (groupOrder.size() > 0) {
                 groupOrder.removeAll(treeTableColumns);
-                List<TreeTableColumn<S, ?>> grouped = new ArrayList<>();
-                grouped.addAll(groupOrder);
-                groupOrder.clear();
+                List<TreeTableColumn<S, ?>> grouped = new ArrayList<>(groupOrder);
                 JFXUtilities.runInFXAndWait(() -> {
                     ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
                     sortOrder.addAll(getSortOrder());
