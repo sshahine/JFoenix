@@ -340,6 +340,9 @@ public class JFXSnackbar extends Group {
     }
 
     private void refreshPopup() {
+        if (snackbarContainer == null) {
+            return;
+        }
         Bounds contentBound = this.getLayoutBounds();
         double offsetX = Math.ceil(snackbarContainer.getWidth() / 2) - Math.ceil(contentBound.getWidth() / 2);
         double offsetY = snackbarContainer.getHeight() - contentBound.getHeight();
