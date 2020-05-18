@@ -53,8 +53,8 @@ public class JFXTextFieldSkin<T extends TextField & IFXLabelFloatControl> extend
         textPane = (Pane) this.getChildren().get(0);
 
         // get parent fields
-        reflectionFieldConsumer("textNode", field -> textNode = (Node) field.get(this));
-        reflectionFieldConsumer("textTranslateX", field -> textTranslateX = (DoubleProperty) field.get(this));
+        textNode = (Node) textPane.getChildren().get(1);
+        textTranslateX = textNode.layoutXProperty();
 
         linesWrapper = new PromptLinesWrapper<T>(
             textField,
