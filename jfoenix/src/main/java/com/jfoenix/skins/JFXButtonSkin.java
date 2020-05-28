@@ -25,7 +25,11 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.CachedTransition;
 import com.jfoenix.utils.JFXNodeUtils;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.skin.ButtonSkin;
@@ -73,9 +77,9 @@ public class JFXButtonSkin extends ButtonSkin {
         // add listeners to the button and bind properties
         button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> playClickAnimation(1));
 //        button.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> playClickAnimation(-1));
-        button.addEventFilter(MouseEvent.MOUSE_PRESSED, e-> mousePressed = true);
-        button.addEventFilter(MouseEvent.MOUSE_RELEASED, e-> mousePressed = false);
-        button.addEventFilter(MouseEvent.MOUSE_DRAGGED, e-> mousePressed = false);
+        button.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> mousePressed = true);
+        button.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> mousePressed = false);
+        button.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> mousePressed = false);
 
         button.ripplerFillProperty().addListener((o, oldVal, newVal) -> buttonRippler.setRipplerFill(newVal));
 
@@ -96,23 +100,18 @@ public class JFXButtonSkin extends ButtonSkin {
 
         // show focused state
         button.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if(!button.disableVisualFocusProperty().get()){
-                if (newVal){
-                    if (!getSkinnable().isPressed()){
+            if (!button.disableVisualFocusProperty().get()) {
+                if (newVal) {
+                    if (!getSkinnable().isPressed()) {
                         buttonRippler.setOverlayVisible(true);
                     }
-                } else{
+                } else {
                     buttonRippler.setOverlayVisible(false);
                 }
             }
         });
 
         button.buttonTypeProperty().addListener((o, oldVal, newVal) -> updateButtonType(newVal));
-
-		/*
-         * disable action when clicking on the button shadow
-		 */
-        button.setPickOnBounds(false);
 
         updateButtonType(button.getButtonType());
 
@@ -122,12 +121,14 @@ public class JFXButtonSkin extends ButtonSkin {
     @Override
     protected void updateChildren() {
         super.updateChildren();
-        if(buttonRippler!=null)
+        if (buttonRippler != null) {
             getChildren().add(0, buttonRippler);
+        }
         for (int i = 1; i < getChildren().size(); i++) {
             final Node child = getChildren().get(i);
-            if(child instanceof Text)
+            if (child instanceof Text) {
                 child.setMouseTransparent(true);
+            }
         }
     }
 
@@ -169,16 +170,21 @@ public class JFXButtonSkin extends ButtonSkin {
             case RAISED:
                 JFXDepthManager.setDepth(getSkinnable(), 2);
                 clickedAnimation = new ButtonClickTransition(getSkinnable(), (DropShadow) getSkinnable().getEffect());
+                /*
+                 * disable action when clicking on the button shadow
+                 */
+                getSkinnable().setPickOnBounds(false);
                 break;
             default:
                 getSkinnable().setEffect(null);
+                getSkinnable().setPickOnBounds(true);
                 break;
         }
     }
 
     private void playClickAnimation(double rate) {
         if (clickedAnimation != null) {
-            if(!clickedAnimation.getCurrentTime().equals(clickedAnimation.getCycleDuration()) || rate != 1){
+            if (!clickedAnimation.getCurrentTime().equals(clickedAnimation.getCycleDuration()) || rate != 1) {
                 clickedAnimation.setRate(rate);
                 clickedAnimation.play();
             }

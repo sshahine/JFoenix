@@ -20,9 +20,18 @@
 package com.jfoenix.controls;
 
 import com.jfoenix.svg.SVGGlyph;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,7 +40,18 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -130,8 +150,8 @@ public class JFXDecorator extends VBox {
                 contentPlaceHolder.getStyleClass().remove("resize-border");
                 /*
                  *  note the border property MUST NOT be bound to another property
-				 *  when going full screen mode, thus the binding will be lost if exisited
-				 */
+                 *  when going full screen mode, thus the binding will be lost if exisited
+                 */
                 contentPlaceHolder.borderProperty().unbind();
                 contentPlaceHolder.setBorder(Border.EMPTY);
                 if (windowDecoratorAnimation != null) {
@@ -334,7 +354,7 @@ public class JFXDecorator extends VBox {
         graphicTextContainer.setAlignment(Pos.CENTER_LEFT);
         graphicTextContainer.setPickOnBounds(false);
         HBox.setHgrow(graphicTextContainer, Priority.ALWAYS);
-        HBox.setMargin(graphicContainer, new Insets(0, 8 , 0, 8));
+        HBox.setMargin(graphicContainer, new Insets(0, 8, 0, 8));
 
         buttonsContainer.getChildren().setAll(graphicTextContainer);
         buttonsContainer.getChildren().addAll(btns);
@@ -347,7 +367,8 @@ public class JFXDecorator extends VBox {
         buttonsContainer.setMinWidth(180);
         contentPlaceHolder.getStyleClass().add("jfx-decorator-content-container");
         contentPlaceHolder.setMinSize(0, 0);
-        contentPlaceHolder.getChildren().add(node);
+        StackPane clippedContainer = new StackPane(node);
+        contentPlaceHolder.getChildren().add(clippedContainer);
         ((Region) node).setMinSize(0, 0);
         VBox.setVgrow(contentPlaceHolder, Priority.ALWAYS);
         contentPlaceHolder.getStyleClass().add("resize-border");
@@ -358,9 +379,9 @@ public class JFXDecorator extends VBox {
         // BINDING
 
         Rectangle clip = new Rectangle();
-        clip.widthProperty().bind(((Region) node).widthProperty());
-        clip.heightProperty().bind(((Region) node).heightProperty());
-        node.setClip(clip);
+        clip.widthProperty().bind(clippedContainer.widthProperty());
+        clip.heightProperty().bind(clippedContainer.heightProperty());
+        clippedContainer.setClip(clip);
         this.getChildren().addAll(buttonsContainer, contentPlaceHolder);
     }
 
@@ -407,9 +428,9 @@ public class JFXDecorator extends VBox {
         if (!mouseEvent.isPrimaryButtonDown() || (xOffset == -1 && yOffset == -1)) {
             return;
         }
-            /*
-             * Long press generates drag event!
-			 */
+        /*
+         * Long press generates drag event!
+         */
         if (primaryStage.isFullScreen() || mouseEvent.isStillSincePress() || primaryStage.isMaximized() || maximized) {
             return;
         }
@@ -609,7 +630,6 @@ public class JFXDecorator extends VBox {
      * <p>
      * To change it to something else, use <pre>
      *     {@code jfxDecorator.titleProperty().unbind();}</pre> first.
-     *
      */
     public StringProperty titleProperty() {
         return title;
@@ -621,7 +641,6 @@ public class JFXDecorator extends VBox {
      * <p>
      * By default, this title property is bound to the {@code primaryStage}'s title property-so merely setting the
      * {@code primaryStage}'s title, will set the {@code JFXDecorator}'s title.
-     *
      */
     public void setTitle(String title) {
         this.title.unbind();

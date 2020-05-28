@@ -139,7 +139,7 @@ public class JFXColorPickerSkin extends JFXGenericPickerSkin<Color> {
     @Override
     protected Node getPopupContent() {
         if (popupContent == null) {
-            popupContent = new JFXColorPalette((ColorPicker) getSkinnable());
+            popupContent = new JFXColorPalette((JFXColorPicker) getSkinnable());
         }
         return popupContent;
     }

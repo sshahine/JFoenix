@@ -135,7 +135,7 @@ public class JFXCheckBoxOldSkin extends CheckBoxSkin {
         final CheckBox checkBox = getSkinnable();
         boxWidth = snapSize(container.prefWidth(-1));
         boxHeight = snapSize(container.prefHeight(-1));
-        final double computeWidth = Math.min(checkBox.prefWidth(-1), checkBox.minWidth(-1)) + labelOffset + 2 * padding;
+        final double computeWidth = Math.max(checkBox.prefWidth(-1), checkBox.minWidth(-1)) + labelOffset + 2 * padding;
         final double labelWidth = Math.min(computeWidth - boxWidth, w - snapSize(boxWidth)) + labelOffset + 2 * padding;
         final double labelHeight = Math.min(checkBox.prefHeight(labelWidth), h);
         maxHeight = Math.max(boxHeight, labelHeight);

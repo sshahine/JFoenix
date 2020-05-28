@@ -45,7 +45,7 @@ public class JFXTreeTableRow<T> extends TreeTableRow<T> {
         });
     }
 
-    private boolean isGroupItem(T item) {
+    protected boolean isGroupItem(T item) {
         return item != null && item instanceof RecursiveTreeObject
                && item.getClass() == RecursiveTreeObject.class;
     }

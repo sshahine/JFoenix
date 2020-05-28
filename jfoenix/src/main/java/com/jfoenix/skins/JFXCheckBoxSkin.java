@@ -32,6 +32,7 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -79,6 +80,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         indeterminateMark.setScaleY(0);
 
         mark.getStyleClass().setAll("mark");
+        mark.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         mark.setOpacity(0);
         mark.setScaleX(0);
         mark.setScaleY(0);
@@ -190,7 +192,7 @@ public class JFXCheckBoxSkin extends CheckBoxSkin {
         final CheckBox checkBox = getSkinnable();
         final double boxWidth = snapSize(box.prefWidth(-1));
         final double boxHeight = snapSize(box.prefHeight(-1));
-        final double computeWidth = Math.min(checkBox.prefWidth(-1), checkBox.minWidth(-1));
+        final double computeWidth = Math.max(checkBox.prefWidth(-1), checkBox.minWidth(-1));
         final double labelWidth = Math.min(computeWidth - boxWidth, w - snapSize(boxWidth)) + labelOffset;
         final double labelHeight = Math.min(checkBox.prefHeight(labelWidth), h);
         final double maxHeight = Math.max(boxHeight, labelHeight);

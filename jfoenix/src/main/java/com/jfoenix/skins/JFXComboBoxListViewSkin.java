@@ -155,7 +155,6 @@ public class JFXComboBoxListViewSkin<T> extends ComboBoxListViewSkin<T> {
             return;
         }
         promptText = new Text();
-        StackPane.setAlignment(promptText, Pos.CENTER_LEFT);
         // create my custom pane for the prompt node
         promptText.textProperty().bind(getSkinnable().promptTextProperty());
         promptText.fillProperty().bind(linesWrapper.animatedPromptTextFill);

@@ -80,5 +80,12 @@ jar {
         name = 'JFoenix'
         instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.9'
         instruction 'Bundle-Description', 'JavaFX Material Design Library'
+        instruction 'Import-Package', '!com.sun.*,!javafx.*, *'
+        instruction 'Export-Package', '!com.jfoenix.android.*, *'
+        attributes(
+            'Permissions': 'all-permissions',
+            'Trusted-Library': true,
+            'Codebase': '*'
+        )
     }
 }

@@ -23,6 +23,9 @@ jar {
             'Specification-Version': project.version,
             'Implementation-Title': project.name,
             'Implementation-Version': project.version,
+            'Permissions': 'all-permissions',
+            'Trusted-Library': true,
+            'Codebase': '*'
         )
     }
 }

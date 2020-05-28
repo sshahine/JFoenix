@@ -31,7 +31,15 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -41,12 +49,24 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -119,6 +139,25 @@ public class JFXDrawer extends StackPane {
     // this is used to allow resizing the content of the drawer
     private DoubleProperty paddingSizeProperty = paddingPane.minWidthProperty();
 
+    private SimpleObjectProperty<DrawerDirection> directionProperty =
+        new SimpleObjectProperty<>(DrawerDirection.LEFT);
+
+    // add opening/closing action listeners
+    final ChangeListener<Number> translateChangeListener = (o, oldVal, newVal) -> {
+        if (!openCalled && closeCalled
+            && directionProperty.get().doubleValue() * newVal.doubleValue() >
+               directionProperty.get().doubleValue() * initTranslate.get() / 2) {
+            openCalled = true;
+            closeCalled = false;
+            fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENING));
+        } else if (openCalled && !closeCalled
+                   && directionProperty.get().doubleValue() * newVal.doubleValue() <
+                      directionProperty.get().doubleValue() * initTranslate.get() / 2) {
+            closeCalled = true;
+            openCalled = false;
+            fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSING));
+        }
+    };
     /***************************************************************************
      *                                                                         *
      * Animations                                                                *
@@ -198,25 +237,7 @@ public class JFXDrawer extends StackPane {
         directionProperty.addListener(observable -> updateDirection(directionProperty.get()));
         initTranslate.addListener(observable -> updateDrawerAnimation(initTranslate.get()));
 
-        // add opening/closing action listeners
-        translateProperty.addListener((o, oldVal, newVal) -> {
-            if (!openCalled && closeCalled
-                && directionProperty.get().doubleValue() * newVal.doubleValue() >
-                   directionProperty.get().doubleValue() * initTranslate.get() / 2) {
-                openCalled = true;
-                closeCalled = false;
-                fireEvent(new JFXDrawerEvent(JFXDrawerEvent.OPENING));
-            }
-        });
-        translateProperty.addListener((o, oldVal, newVal) -> {
-            if (openCalled && !closeCalled
-                && directionProperty.get().doubleValue() * newVal.doubleValue() <
-                   directionProperty.get().doubleValue() * initTranslate.get() / 2) {
-                closeCalled = true;
-                openCalled = false;
-                fireEvent(new JFXDrawerEvent(JFXDrawerEvent.CLOSING));
-            }
-        });
+        translateProperty.addListener(translateChangeListener);
 
         overlayPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> close());
 
@@ -361,7 +382,9 @@ public class JFXDrawer extends StackPane {
         // update properties
         if (dir == DrawerDirection.LEFT || dir == DrawerDirection.RIGHT) {
             // set the new translation property
+            translateProperty.removeListener(translateChangeListener);
             translateProperty = sidePane.translateXProperty();
+            translateProperty.addListener(translateChangeListener);
             // change the size property
             maxSizeProperty = sidePane.maxWidthProperty();
             prefSizeProperty = sidePane.prefWidthProperty();
@@ -369,7 +392,9 @@ public class JFXDrawer extends StackPane {
             paddingSizeProperty = paddingPane.minWidthProperty();
         } else if (dir == DrawerDirection.TOP || dir == DrawerDirection.BOTTOM) {
             // set the new translation property
+            translateProperty.removeListener(translateChangeListener);
             translateProperty = sidePane.translateYProperty();
+            translateProperty.addListener(translateChangeListener);
             // change the size property
             maxSizeProperty = sidePane.maxHeightProperty();
             prefSizeProperty = sidePane.prefHeightProperty();
@@ -679,9 +704,6 @@ public class JFXDrawer extends StackPane {
         prefSizeProperty.set(size);
     }
 
-
-    private SimpleObjectProperty<DrawerDirection> directionProperty =
-        new SimpleObjectProperty<>(DrawerDirection.LEFT);
 
     public DrawerDirection getDirection() {
         return directionProperty.get();

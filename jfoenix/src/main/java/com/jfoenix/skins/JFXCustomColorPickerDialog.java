@@ -78,7 +78,7 @@ public class JFXCustomColorPickerDialog extends StackPane {
 
         // create JFX Decorator
         pickerDecorator = new JFXDecorator(dialog, this, false, false, false);
-        pickerDecorator.setOnCloseButtonAction(() -> close());
+        pickerDecorator.setOnCloseButtonAction(() -> updateColor());
         pickerDecorator.setPickOnBounds(false);
         customScene = new Scene(pickerDecorator, Color.TRANSPARENT);
         if(owner!=null) {
@@ -282,15 +282,19 @@ public class JFXCustomColorPickerDialog extends StackPane {
                     close();
                     break;
                 case ENTER:
-                    close();
-                    this.customColorProperty.set(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()));
-                    this.onSave.run();
+                    updateColor();
                     break;
                 default:
                     break;
             }
         };
         dialog.addEventHandler(KeyEvent.ANY, keyEventListener);
+    }
+
+    private void updateColor() {
+        close();
+        this.customColorProperty.set(curvedColorPicker.getColor(curvedColorPicker.getSelectedIndex()));
+        this.onSave.run();
     }
 
     private void updateColorFromUserInput(String colorWebString) {

@@ -47,6 +47,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
@@ -119,7 +120,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             if (getRoot() != null) {
                 setCurrentItemsCount(count(getRoot()));
             }
-            if(!internalSetRoot) {
+            if (!internalSetRoot) {
                 originalRoot = getRoot();
                 reGroup();
             }
@@ -198,6 +199,16 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
     // lock is used to force mutual exclusion while group/ungroup operation
     private final Lock lock = new ReentrantLock(true);
 
+    BiConsumer<Object, RecursiveTreeObject> groupedRootConsumer = null;
+
+    public BiConsumer<Object, RecursiveTreeObject> getGroupedRootConsumer() {
+        return groupedRootConsumer;
+    }
+
+    public void setGroupedRootConsumer(BiConsumer<Object, RecursiveTreeObject> groupedRootConsumer) {
+        this.groupedRootConsumer = groupedRootConsumer;
+    }
+
     /**
      * this is a blocking method so it should not be called from the ui thread,
      * it will regroup the tree table view
@@ -215,13 +226,15 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                 if (originalRoot == null) {
                     originalRoot = getRoot();
                 }
+                List<TreeTableColumn<S, ?>> toBeAdded = new ArrayList<>();
                 for (TreeTableColumn<S, ?> treeTableColumn : treeTableColumns) {
                     if (groupOrder.contains(treeTableColumn)) {
                         continue;
                     }
+                    toBeAdded.add(treeTableColumn);
                     groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
                 }
-                groupOrder.addAll(treeTableColumns);
+                groupOrder.addAll(toBeAdded);
                 // update table ui
                 buildGroupedRoot(groups, null, 0);
             } catch (Exception e) {
@@ -237,7 +250,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
         for (TreeTableColumn<S, ?> treeTableColumn : groupColumns) {
             groups = group(treeTableColumn, groups, null, (RecursiveTreeItem<S>) originalRoot);
         }
-        groupOrder.addAll(groupColumns);
+        groupOrder.setAll(groupColumns);
         // update table ui
         buildGroupedRoot(groups, null, 0);
     }
@@ -253,9 +266,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
             lock.lock();
             if (groupOrder.size() > 0) {
                 groupOrder.removeAll(treeTableColumns);
-                List<TreeTableColumn<S, ?>> grouped = new ArrayList<>();
-                grouped.addAll(groupOrder);
-                groupOrder.clear();
+                List<TreeTableColumn<S, ?>> grouped = new ArrayList<>(groupOrder);
                 JFXUtilities.runInFXAndWait(() -> {
                     ArrayList<TreeTableColumn<S, ?>> sortOrder = new ArrayList<>();
                     sortOrder.addAll(getSortOrder());
@@ -318,7 +329,7 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
      * this method is used to update tree items and set the new root
      * after grouping the data model
      */
-    private void buildGroupedRoot(Map<?,?> groupedItems, RecursiveTreeItem parent, int groupIndex) {
+    private void buildGroupedRoot(Map<?, ?> groupedItems, RecursiveTreeItem parent, int groupIndex) {
         boolean setRoot = false;
         if (parent == null) {
             parent = new RecursiveTreeItem<>(new RecursiveTreeObject(), RecursiveTreeObject::getChildren);
@@ -346,6 +357,10 @@ public class JFXTreeTableView<S extends RecursiveTreeObject<S>> extends TreeTabl
                 node.getChildren().addAll((List) children);
             } else if (children instanceof Map) {
                 buildGroupedRoot((Map) children, node, groupIndex + 1);
+            }
+            groupItem.setChildren(node.getChildren());
+            if (groupedRootConsumer != null) {
+                groupedRootConsumer.accept(key, groupItem);
             }
         }
 

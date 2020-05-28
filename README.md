@@ -1,7 +1,7 @@
 [![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
-[![][sonardebt img]][sonardebt]
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jfoenixadmin_JFoenix&metric=alert_status)](https://sonarcloud.io/dashboard?id=jfoenixadmin_JFoenix)
 [![][gitter img]][gitter]
 [![Backers on Open Collective](https://opencollective.com/JFoenix/backers/badge.svg)](#backers) 
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
@@ -25,7 +25,7 @@
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
-Feel free to submit your project info to the following <a href="mailto:developers@jfoenix.com" target="_top">email</a>, to be posted on JFoenix github.
+Feel free to create a pull request for adding a link to your project in JFoenix github.
 * One more thing, all contributions are appreciated. Don't hesitate to add your own contributions to JFoenix :)
 
 If you like JFoenix :) and want to support this project, you can become a backer on <a href="https://www.patreon.com/shadishaheen">Patreon</a> or <a href="https://opencollective.com/jfoenix">Open Collective</a>.
@@ -46,17 +46,22 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/bkenn/KFoenix">KFoenix</a>
 * <a href="https://github.com/SeynalKim/JavaFXCalendar">JavaFXCalendar</a>
 * <a href="https://bitbucket.org/NiNi94/oop16-jlearn/src/master/">JLearn</a> A Juicy Learning app
-* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software.
-* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager.
+* <a href="https://github.com/rohan23chhabra/p2p">P2P</a> A peer to peer software
+* <a href="https://github.com/DropSnorz/OwlPlug">OwlPlug</a> An Audio plugin manager
 * <a href="https://github.com/RubbaBoy/MSPaintIDE">MS Paint IDE</a> Programming in MS Paint
 * <a href="https://github.com/fl0wo/TradingFX">TradingFX</a> BitCoin value monitor in real time
-* <a href="https://github.com/silentsoft/actlist">Actlist</a> An utility platform to execute your desire things.
-* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java.
-* <a href="https://github.com/Shehanka/RentLio">RentLio</a> Vehicle Reservation System with RMI Technology.
+* <a href="https://github.com/silentsoft/actlist">Actlist</a> An utility platform to execute your desire things
+* <a href="https://github.com/Giulianini/Jestures">Jestures</a> A simple framework for gesture recognition in Java
+* <a href="https://github.com/Shehanka/RentLio">RentLio</a> Vehicle Reservation System with RMI Technology
+* <a href="https://github.com/ianspryn/Magis">Magis</a> A Computer Aided Instruction Program
 * Other small projects <a href="https://github.com/mayuso/JMarkPad">JMarkPad</a>,
 <a href="https://github.com/naeemkhan12/CurrencyConverter.git">Currency Converter</a>,
 <a href="https://github.com/Anikeshpatel/ColorCode-Pro">ColorCode Pro</a>
-* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application.
+* <a href="https://github.com/ykrasik/gamedex">GameDex</a> A digital game collection management application
+* <a href="https://github.com/AmrDeveloper/Sparkler">Sparkler</a> A Cross platform API request builder
+* <a href="https://github.com/GikuMironica/ExploreHub">ExploreHub</a> An event booking application
+* <a href="https://github.com/dubbadhar/gramophy">Gramophy</a> Ad-free, Opensource, YouTube Music Player/Downloader
+* [JabRef](https://www.jabref.org/) An opensource (scientific) Reference Manager, mostly used in the LaTeX world
 
 # Build
 To build JFoenix, execute the following command:
@@ -85,28 +90,37 @@ repositories {
 }
 ```
 Reference the repository from this location using:
-```groovy
-dependencies {
-    compile 'com.jfoenix:jfoenix:8.0.8' // Java 8
-    compile 'com.jfoenix:jfoenix:9.0.8' // Java 9
-}
-```
+* Java 9+
+    ```groovy
+    dependencies {
+        compile 'com.jfoenix:jfoenix:9.0.8'
+    }
+    ```
+* Java 8
+    ```groovy
+    dependencies {
+        compile 'com.jfoenix:jfoenix:8.0.8'
+    }
+    ```
 
 ## Maven
 ### How to Include In Maven Project
-```xml
-<dependency>
-    <groupId>com.jfoenix</groupId>
-    <artifactId>jfoenix</artifactId>
-    <version>9.0.8</version>
-</dependency>
-
-<dependency>
-    <groupId>com.jfoenix</groupId>
-    <artifactId>jfoenix</artifactId>
-    <version>8.0.8</version>
-</dependency>
-```
+* Java 9+
+    ```xml
+    <dependency>
+        <groupId>com.jfoenix</groupId>
+        <artifactId>jfoenix</artifactId>
+        <version>9.0.8</version>
+    </dependency>
+    ```
+* Java 8
+    ```xml
+    <dependency>
+        <groupId>com.jfoenix</groupId>
+        <artifactId>jfoenix</artifactId>
+        <version>8.0.8</version>
+    </dependency>
+    ```
 # Components
 <details><summary><i>JFXButton </i><a href="https://github.com/jfoenixadmin/JFoenix/wiki/Button"><b>Usage</b></a></summary><p>
 
@@ -207,12 +221,6 @@ dependencies {
 
 [mavenbadge]:https://search.maven.org/search?q=g:com.jfoenix%20AND%20a:jfoenix&core=gav
 [mavenbadge img]:https://maven-badges.herokuapp.com/maven-central/com.jfoenix/jfoenix/badge.svg
-
-[sonar]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
-[sonar img]:https://sonarqube.com/api/badges/gate?key=com.jfoenix:jfoenix-root
-
-[sonardebt]:https://sonarqube.com/dashboard?id=com.jfoenix%3Ajfoenix-root
-[sonardebt img]:https://sonarqube.com/api/badges/measure?key=com.jfoenix:jfoenix-root&metric=sqale_debt_ratio
 
 [CircleCI]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master
 [CircleCI img]:https://circleci.com/gh/jfoenixadmin/JFoenix/tree/master.svg?style=shield
