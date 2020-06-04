@@ -19,6 +19,7 @@
 
 module com.jfoenix{
     requires javafx.controls;
+    requires javafx.graphics;
     requires java.logging;
     requires java.xml;
     requires jdk.unsupported;
@@ -46,5 +47,28 @@ module com.jfoenix{
     opens com.jfoenix.assets.css;
     opens com.jfoenix.assets.css.controls;
     opens com.jfoenix.assets.font.roboto;
-
 }
+
+// compile exports
+// --add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix
+// --add-exports=javafx.base/com.sun.javafx.binding=com.jfoenix
+// --add-exports=javafx.base/com.sun.javafx.event=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.stage=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.scene=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.geom=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.scene.text=com.jfoenix
+// --add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.scene.traversal=com.jfoenix
+// --add-exports=javafx.controls/com.sun.javafx.scene.control=com.jfoenix
+// --add-exports=javafx.graphics/com.sun.javafx.util=com.jfoenix
+
+// VM args
+// --module-path %PATH_TO_FX" --add-modules javafx.controls,javafx.fxml,javafx.graphics
+// runtime exports
+// --add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
+// --add-exports=javafx.base/com.sun.javafx.binding=ALL-UNNAMED
+// --add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED
+// --add-exports=javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED
+// --add-exports=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED
+// --add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
+// --add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED
