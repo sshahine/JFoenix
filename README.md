@@ -19,9 +19,9 @@
 </p>
 
 * [JFoenix Site](http://www.jfoenix.com)
-* JFoenix for Java 9 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/9.0.8/jfoenix-9.0.8.jar) (9.x.x)
-* JFoenix for Java 8 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.8/jfoenix-8.0.8.jar) (8.x.x)
-* JFoenix for Android - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.8/jfoenix-8.0.8-retrolambda.jar)
+* JFoenix for Java 9 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/9.0.10/jfoenix-9.0.10.jar) (9.x.x)
+* JFoenix for Java 8 - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.10/jfoenix-8.0.10.jar) (8.x.x)
+* JFoenix for Android - [download jar](https://search.maven.org/remotecontent?filepath=com/jfoenix/jfoenix/8.0.10/jfoenix-8.0.10-retrolambda.jar)
 * Released builds are available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7CJFoenix)
 
 # Using JFoenix already?
@@ -62,6 +62,8 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/GikuMironica/ExploreHub">ExploreHub</a> An event booking application
 * <a href="https://github.com/dubbadhar/gramophy">Gramophy</a> Ad-free, Opensource, YouTube Music Player/Downloader
 * [JabRef](https://www.jabref.org/) An opensource (scientific) Reference Manager, mostly used in the LaTeX world
+* <a href="https://github.com/greyovo/OnlyViewer">OnlyViewer</a> A pure picture viewer with some practical features
+* <a href="https://github.com/Patresss/AutomationBoot">Automation Boot</a> An application for process automation
 
 # Build
 To build JFoenix, execute the following command:
