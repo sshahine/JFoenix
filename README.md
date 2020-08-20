@@ -95,13 +95,13 @@ Reference the repository from this location using:
 * Java 9+
     ```groovy
     dependencies {
-        compile 'com.jfoenix:jfoenix:9.0.8'
+        compile 'com.jfoenix:jfoenix:9.0.10'
     }
     ```
 * Java 8
     ```groovy
     dependencies {
-        compile 'com.jfoenix:jfoenix:8.0.8'
+        compile 'com.jfoenix:jfoenix:8.0.10'
     }
     ```
 
