@@ -21,15 +21,19 @@ package com.jfoenix.controls;
 
 import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.base.IFXLabelFloatControl;
-import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.css.*;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Skin;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -47,6 +51,11 @@ import java.util.List;
 public class JFXPasswordField extends PasswordField implements IFXLabelFloatControl {
 
     /**
+     * Default ciphertext display
+     */
+    private BooleanProperty maskTextProperty=new SimpleBooleanProperty(true);
+
+    /**
      * {@inheritDoc}
      */
     public JFXPasswordField() {
@@ -58,7 +67,41 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
      */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXTextFieldSkin<>(this);
+        return new JFXPasswordFieldSkin<>(this);
+    }
+
+
+    /**
+     * Transfers the currently selected range in the text to the clipboard,
+     * removing the current selection.
+     */
+    @Override
+    public void cut() {
+        if (this.isMaskTextProperty()) {
+            // No-op
+            return;
+        }
+        copy();
+        IndexRange selection = getSelection();
+        deleteText(selection.getStart(), selection.getEnd());
+    }
+
+    /**
+     * Transfers the currently selected range in the text to the clipboard,
+     * leaving the current selection.
+     */
+    @Override
+    public void copy() {
+        if (this.isMaskTextProperty()) {
+            // No-op
+            return;
+        }
+        final String selectedText = getSelectedText();
+        if (selectedText.length() > 0) {
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(selectedText);
+            Clipboard.getSystemClipboard().setContent(content);
+        }
     }
 
     private void initialize() {
@@ -115,6 +158,14 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
     @Override
     public void resetValidation() {
         validationControl.resetValidation();
+    }
+
+    public boolean isMaskTextProperty() {
+        return maskTextProperty.get();
+    }
+
+    public BooleanProperty maskTextPropertyProperty() {
+        return maskTextProperty;
     }
 
     /***************************************************************************
@@ -226,8 +277,42 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
         this.disableAnimationProperty().set(disabled);
     }
 
+    /**
+     * the default color used in the data picker content
+     */
+    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(JFXPasswordField.StyleableProperties.DEFAULT_COLOR,
+        JFXPasswordField.this,
+        "defaultColor",
+        Color.valueOf(
+            "#009688"));
+
+    public Paint getDefaultColor() {
+        return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
+    }
+
+    public StyleableObjectProperty<Paint> defaultColorProperty() {
+        return this.defaultColor;
+    }
+
+    public void setDefaultColor(Paint color) {
+        this.defaultColor.set(color);
+    }
 
     private static class StyleableProperties {
+        private static final CssMetaData<JFXPasswordField, Paint> DEFAULT_COLOR = new CssMetaData<JFXPasswordField, Paint>(
+            "-jfx-default-color",
+            PaintConverter.getInstance(), Color.valueOf("#009688")) {
+            @Override
+            public boolean isSettable(JFXPasswordField control) {
+                return control.defaultColor == null || !control.defaultColor.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Paint> getStyleableProperty(JFXPasswordField control) {
+                return control.defaultColorProperty();
+            }
+        };
+
         private static final CssMetaData<JFXPasswordField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXPasswordField, Paint>(
             "-jfx-unfocus-color",
             PaintConverter.getInstance(),
