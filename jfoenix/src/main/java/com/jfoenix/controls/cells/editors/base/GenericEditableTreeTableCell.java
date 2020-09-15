@@ -232,7 +232,7 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
      * @param forward true gets the column to the right, false the column to the left of the current column
      * @return
      */
-    private void editNext(boolean forward) {
+    protected void editNext(boolean forward) {
         List<TreeTableColumn<S, ?>> columns = new ArrayList<>();
         for (TreeTableColumn<S, ?> column : getTreeTableView().getColumns()) {
             columns.addAll(getLeaves(column));

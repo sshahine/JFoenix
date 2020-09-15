@@ -208,7 +208,7 @@ public class GenericEditableTableCell<S, T> extends TableCell<S, T> {
      * @param forward true gets the column to the right, false the column to the left of the current column
      * @return
      */
-    private void editNext(boolean forward) {
+    protected void editNext(boolean forward) {
         List<TableColumn<S, ?>> columns = new ArrayList<>();
         for (TableColumn<S, ?> column : getTableView().getColumns()) {
             columns.addAll(getLeaves(column));
