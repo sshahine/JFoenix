@@ -53,7 +53,7 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
     /**
      * Default ciphertext display
      */
-    private BooleanProperty maskTextProperty=new SimpleBooleanProperty(true);
+    private BooleanProperty mask = new SimpleBooleanProperty(true);
 
     /**
      * {@inheritDoc}
@@ -77,7 +77,7 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
      */
     @Override
     public void cut() {
-        if (this.isMaskTextProperty()) {
+        if (this.getMask()) {
             // No-op
             return;
         }
@@ -92,7 +92,7 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
      */
     @Override
     public void copy() {
-        if (this.isMaskTextProperty()) {
+        if (this.getMask()) {
             // No-op
             return;
         }
@@ -160,12 +160,16 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
         validationControl.resetValidation();
     }
 
-    public boolean isMaskTextProperty() {
-        return maskTextProperty.get();
+    public boolean getMask() {
+        return mask.get();
     }
 
-    public BooleanProperty maskTextPropertyProperty() {
-        return maskTextProperty;
+    public BooleanProperty maskProperty() {
+        return mask;
+    }
+
+    public void setMask(boolean mask) {
+        this.mask.set(mask);
     }
 
     /***************************************************************************
@@ -277,42 +281,7 @@ public class JFXPasswordField extends PasswordField implements IFXLabelFloatCont
         this.disableAnimationProperty().set(disabled);
     }
 
-    /**
-     * the default color used in the data picker content
-     */
-    private StyleableObjectProperty<Paint> defaultColor = new SimpleStyleableObjectProperty<>(JFXPasswordField.StyleableProperties.DEFAULT_COLOR,
-        JFXPasswordField.this,
-        "defaultColor",
-        Color.valueOf(
-            "#009688"));
-
-    public Paint getDefaultColor() {
-        return defaultColor == null ? Color.valueOf("#009688") : defaultColor.get();
-    }
-
-    public StyleableObjectProperty<Paint> defaultColorProperty() {
-        return this.defaultColor;
-    }
-
-    public void setDefaultColor(Paint color) {
-        this.defaultColor.set(color);
-    }
-
     private static class StyleableProperties {
-        private static final CssMetaData<JFXPasswordField, Paint> DEFAULT_COLOR = new CssMetaData<JFXPasswordField, Paint>(
-            "-jfx-default-color",
-            PaintConverter.getInstance(), Color.valueOf("#009688")) {
-            @Override
-            public boolean isSettable(JFXPasswordField control) {
-                return control.defaultColor == null || !control.defaultColor.isBound();
-            }
-
-            @Override
-            public StyleableProperty<Paint> getStyleableProperty(JFXPasswordField control) {
-                return control.defaultColorProperty();
-            }
-        };
-
         private static final CssMetaData<JFXPasswordField, Paint> UNFOCUS_COLOR = new CssMetaData<JFXPasswordField, Paint>(
             "-jfx-unfocus-color",
             PaintConverter.getInstance(),
