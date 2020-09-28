@@ -19,11 +19,13 @@
 
 package com.jfoenix.skins;
 
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.base.IFXLabelFloatControl;
 import com.jfoenix.transitions.JFXAnimationTimer;
 import com.jfoenix.transitions.JFXKeyFrame;
 import com.jfoenix.transitions.JFXKeyValue;
 import javafx.animation.Interpolator;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
@@ -31,7 +33,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableValue;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -42,6 +43,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -127,8 +129,10 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
             control.requestLayout();
         });
 
-        final Supplier<WritableValue<Number>> promptTargetSupplier =
+        final Supplier<WritableValue<Number>> promptTargetYSupplier =
             () -> promptTextSupplier.get() == null ? null : promptTextSupplier.get().translateYProperty();
+        final Supplier<WritableValue<Number>> promptTargetXSupplier =
+            () -> promptTextSupplier.get() == null ? null : promptTextSupplier.get().translateXProperty();
 
         focusTimer = new JFXAnimationTimer(
             new JFXKeyFrame(Duration.millis(1),
@@ -150,7 +154,12 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
                     .setInterpolator(Interpolator.EASE_BOTH)
                     .setAnimateCondition(() -> control.isFocused() && control.isLabelFloat()).build(),
                 JFXKeyValue.builder()
-                    .setTargetSupplier(promptTargetSupplier)
+                    .setTargetSupplier(promptTargetXSupplier)
+                    .setEndValueSupplier(() -> clip.getX())
+                    .setAnimateCondition(() -> control.isLabelFloat())
+                    .setInterpolator(Interpolator.EASE_BOTH).build(),
+                JFXKeyValue.builder()
+                    .setTargetSupplier(promptTargetYSupplier)
                     .setEndValueSupplier(() -> -contentHeight)
                     .setAnimateCondition(() -> control.isLabelFloat())
                     .setInterpolator(Interpolator.EASE_BOTH).build(),
@@ -165,11 +174,14 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
                     .setAnimateCondition(() -> control.isLabelFloat())
                     .setInterpolator(Interpolator.EASE_BOTH).build())
         );
-
         unfocusTimer = new JFXAnimationTimer(
             new JFXKeyFrame(Duration.millis(160),
                 JFXKeyValue.builder()
-                    .setTargetSupplier(promptTargetSupplier)
+                    .setTargetSupplier(promptTargetXSupplier)
+                    .setEndValue(0)
+                    .setInterpolator(Interpolator.EASE_BOTH).build(),
+                JFXKeyValue.builder()
+                    .setTargetSupplier(promptTargetYSupplier)
                     .setEndValue(0)
                     .setInterpolator(Interpolator.EASE_BOTH).build(),
                 JFXKeyValue.builder()
@@ -189,7 +201,21 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         // clip prompt container
         clip.setSmooth(false);
         clip.setX(0);
-        clip.widthProperty().bind(promptContainer.widthProperty());
+        if (control instanceof JFXTextField) {
+            final InvalidationListener leadingListener = obs -> {
+                final Node leading = ((JFXTextField) control).getLeadingGraphic();
+                if (leading == null) {
+                    clip.xProperty().unbind();
+                    clip.setX(0);
+                } else {
+                    clip.xProperty().bind(((Region) leading).widthProperty().negate());
+                }
+            };
+            ((JFXTextField) control).leadingGraphicProperty().addListener(leadingListener);
+            leadingListener.invalidated(null);
+        }
+
+        clip.widthProperty().bind(promptContainer.widthProperty().add(clip.xProperty().negate()));
         promptContainer.setClip(clip);
 
         focusTimer.setOnFinished(() -> animating = false);
@@ -321,6 +347,9 @@ public class PromptLinesWrapper<T extends Control & IFXLabelFloatControl> {
         clip.setHeight(controlHeight + contentHeight);
         focusedLine.resizeRelocate(x, controlHeight, w, focusedLine.prefHeight(-1));
         line.resizeRelocate(x, controlHeight, w, line.prefHeight(-1));
+    }
+
+    public void layoutPrompt(double x, double y, double w, double h) {
         promptContainer.resizeRelocate(x, y, w, h);
         scale.setPivotX(w / 2);
     }

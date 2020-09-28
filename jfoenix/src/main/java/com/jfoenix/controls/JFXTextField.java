@@ -25,9 +25,18 @@ import com.jfoenix.skins.JFXTextFieldSkin;
 import com.jfoenix.validation.base.ValidatorBase;
 import com.sun.javafx.css.converters.BooleanConverter;
 import com.sun.javafx.css.converters.PaintConverter;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.css.*;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -122,6 +131,40 @@ public class JFXTextField extends TextField implements IFXLabelFloatControl {
     @Override
     public void resetValidation() {
         validationControl.resetValidation();
+    }
+
+    /**
+     * An optional leading icon for the TextField
+     */
+    private ObjectProperty<Node> leadingGraphic = new SimpleObjectProperty<>();
+
+    public Node getLeadingGraphic() {
+        return leadingGraphic.get();
+    }
+
+    public ObjectProperty<Node> leadingGraphicProperty() {
+        return leadingGraphic;
+    }
+
+    public void setLeadingGraphic(Node leadingGraphic) {
+        this.leadingGraphic.set(leadingGraphic);
+    }
+
+    /**
+     * An optional trailing icon for the TextField
+     */
+    private ObjectProperty<Node> trailingGraphic = new SimpleObjectProperty<>();
+
+    public Node getTrailingGraphic() {
+        return trailingGraphic.get();
+    }
+
+    public ObjectProperty<Node> trailingGraphicProperty() {
+        return trailingGraphic;
+    }
+
+    public void setTrailingGraphic(Node trailingGraphic) {
+        this.trailingGraphic.set(trailingGraphic);
     }
 
     /***************************************************************************

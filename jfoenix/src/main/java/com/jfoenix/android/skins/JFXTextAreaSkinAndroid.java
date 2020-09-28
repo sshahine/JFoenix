@@ -104,6 +104,7 @@ public class JFXTextAreaSkinAndroid extends TextAreaSkinAndroid {
 
         final double height = getSkinnable().getHeight();
         linesWrapper.layoutLines(x, y, w, h, height, promptText == null ? 0 : promptText.getLayoutBounds().getHeight() + 3);
+        linesWrapper.layoutPrompt(x, y, w, h);
         errorContainer.layoutPane(x, height + linesWrapper.focusedLine.getHeight(), w, h);
         linesWrapper.updateLabelFloatLayout();
 

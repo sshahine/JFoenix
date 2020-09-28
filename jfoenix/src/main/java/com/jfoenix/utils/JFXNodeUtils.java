@@ -19,6 +19,8 @@
 
 package com.jfoenix.utils;
 
+import com.sun.javafx.collections.UnmodifiableListSet;
+import com.sun.javafx.scene.traversal.Direction;
 import javafx.animation.PauseTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +28,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -34,7 +38,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -45,6 +54,12 @@ import java.util.function.Consumer;
  */
 public class JFXNodeUtils {
 
+    public static final EventHandler<KeyEvent> TRAVERSE_HANDLER = event -> {
+        if (event.getCode() == KeyCode.TAB) {
+            event.consume();
+            ((Region) event.getTarget()).impl_traverse(event.isShiftDown() ? Direction.PREVIOUS : Direction.NEXT);
+        }
+    };
 
     public static void updateBackground(Background newBackground, Region nodeToUpdate) {
         updateBackground(newBackground, nodeToUpdate, Color.BLACK);
@@ -161,4 +176,21 @@ public class JFXNodeUtils {
     private static class Wrapper<T> {
         T content;
     }
+
+    public static <T> Set<T> getAllChildren(Node root, Class<T> childClass) {
+        final List<T> selectedChildren = new ArrayList<>();
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node head = queue.poll();
+            if (childClass.isInstance(head)) {
+                selectedChildren.add((T) head);
+            } else if (Region.class.isInstance(head)) {
+                ((Region) head).getChildrenUnmodifiable().forEach(queue::offer);
+            }
+        }
+        return new UnmodifiableListSet<>(selectedChildren);
+    }
+
+
 }
