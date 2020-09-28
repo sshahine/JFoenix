@@ -95,13 +95,13 @@ Reference the repository from this location using:
 * Java 9+
     ```groovy
     dependencies {
-        compile 'com.jfoenix:jfoenix:9.0.8'
+        compile 'com.jfoenix:jfoenix:9.0.10'
     }
     ```
 * Java 8
     ```groovy
     dependencies {
-        compile 'com.jfoenix:jfoenix:8.0.8'
+        compile 'com.jfoenix:jfoenix:8.0.10'
     }
     ```
 
@@ -112,7 +112,7 @@ Reference the repository from this location using:
     <dependency>
         <groupId>com.jfoenix</groupId>
         <artifactId>jfoenix</artifactId>
-        <version>9.0.8</version>
+        <version>9.0.10</version>
     </dependency>
     ```
 * Java 8
@@ -120,7 +120,7 @@ Reference the repository from this location using:
     <dependency>
         <groupId>com.jfoenix</groupId>
         <artifactId>jfoenix</artifactId>
-        <version>8.0.8</version>
+        <version>8.0.10</version>
     </dependency>
     ```
 # Components

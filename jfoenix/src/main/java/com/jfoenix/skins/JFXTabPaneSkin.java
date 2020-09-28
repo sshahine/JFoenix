@@ -1056,10 +1056,9 @@ public class JFXTabPaneSkin extends BehaviorSkinBase<TabPane, TabPaneBehavior> {
         }
 
         private boolean showCloseButton() {
-            return tab.isClosable() &&
-                   (getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.ALL_TABS));
-//                   ||
-//                    getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.SELECTED_TAB) && tab.isSelected());
+            boolean allTabsPolicy = getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.ALL_TABS);
+            boolean selectedTabPolicy = getSkinnable().getTabClosingPolicy().equals(TabPane.TabClosingPolicy.SELECTED_TAB) && tab.isSelected();
+            return (tab.isClosable() && (allTabsPolicy || selectedTabPolicy));
         }
 
         private void removeListeners() {
