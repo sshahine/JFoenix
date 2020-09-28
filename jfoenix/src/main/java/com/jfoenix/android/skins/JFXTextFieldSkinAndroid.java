@@ -28,6 +28,7 @@ import com.jfoenix.utils.JFXNodeUtils;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 import com.sun.javafx.scene.control.skin.TextFieldSkinAndroid;
 import javafx.beans.property.DoubleProperty;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyEvent;
@@ -162,7 +163,10 @@ public class JFXTextFieldSkinAndroid<T extends JFXTextField & IFXLabelFloatContr
             graphic.setManaged(false);
             // add tab events handler as there is a bug in javafx traversing engine
             Set<Control> controls = JFXNodeUtils.getAllChildren(graphic, Control.class);
-            controls.forEach(control -> control.addEventHandler(KeyEvent.KEY_PRESSED, JFXNodeUtils.TRAVERSE_HANDLER));
+            controls.forEach(control -> {
+                control.addEventHandler(KeyEvent.KEY_PRESSED, JFXNodeUtils.TRAVERSE_HANDLER);
+                control.addEventHandler(KeyEvent.KEY_TYPED, Event::consume);
+            });
             getChildren().add(graphic);
         }
     }

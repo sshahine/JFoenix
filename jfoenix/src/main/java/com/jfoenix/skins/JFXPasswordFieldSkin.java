@@ -7,9 +7,9 @@ import javafx.css.PseudoClass;
 
 public class JFXPasswordFieldSkin extends JFXTextFieldSkin<JFXPasswordField> {
 
-    private final PseudoClass PSEUDO_MASKED = PseudoClass.getPseudoClass("masked");
+    private final PseudoClass PSEUDO_UNMASKED = PseudoClass.getPseudoClass("unmasked");
     private final InvalidationListener invalidationListener = observable ->
-        getSkinnable().pseudoClassStateChanged(PSEUDO_MASKED, ((JFXPasswordField) getSkinnable()).isMaskedText());
+        getSkinnable().pseudoClassStateChanged(PSEUDO_UNMASKED, !((JFXPasswordField) getSkinnable()).isMaskedText());
 
     private final WeakInvalidationListener maskedListener = new WeakInvalidationListener(invalidationListener);
 
