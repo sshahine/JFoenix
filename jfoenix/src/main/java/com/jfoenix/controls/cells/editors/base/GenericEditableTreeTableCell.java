@@ -240,29 +240,37 @@ public class GenericEditableTreeTableCell<S, T> extends JFXTreeTableCell<S, T> {
         //There is no other column that supports editing.
         int index = getIndex();
         int nextIndex = columns.indexOf(getTableColumn());
-        if (forward) {
-            nextIndex++;
-            if (nextIndex > columns.size() - 1) {
-                nextIndex = 0;
-                index += stepFunction.apply(index, 1);
-            }
-        } else {
-            nextIndex--;
-            if (nextIndex < 0) {
-                nextIndex = columns.size() - 1;
-                index += stepFunction.apply(index, -1);
-            }
-        }
 
-        if (columns.size() < 2 && index == getIndex()) {
-            return;
-        }
+        TreeTableColumn<S, ?> nextColumn;
+        do {
+            if (forward) {
+                nextIndex++;
+                if (nextIndex > columns.size() - 1) {
+                    nextIndex = 0;
+                    index += stepFunction.apply(index, 1);
+                }
+            } else {
+                nextIndex--;
+                if (nextIndex < 0) {
+                    nextIndex = columns.size() - 1;
+                    index += stepFunction.apply(index, -1);
+                }
+            }
 
-        TreeTableColumn<S, ?> nextColumn = columns.get(nextIndex);
+            if (columns.size() < 2 && index == getIndex()) {
+                return;
+            }
+            nextColumn = columns.get(nextIndex);
+        } while (!isValidEdit(index, nextColumn));
+
         if (nextColumn != null) {
             getTreeTableView().edit(index, nextColumn);
             getTreeTableView().scrollToColumn(nextColumn);
         }
+    }
+
+    protected boolean isValidEdit(int row, TreeTableColumn<S, ?> column) {
+        return true;
     }
 
 
