@@ -37,9 +37,9 @@ public class JFXKeyFrame {
     private Set<JFXKeyValue<?>> keyValues = new CopyOnWriteArraySet<>();
     private Supplier<Boolean> animateCondition = null;
 
-    public JFXKeyFrame(Duration duration, JFXKeyValue... keyValues) {
+    public JFXKeyFrame(Duration duration, JFXKeyValue<?>... keyValues) {
         this.duration = duration;
-        for (final JFXKeyValue keyValue : keyValues) {
+        for (final JFXKeyValue<?> keyValue : keyValues) {
             if (keyValue != null) {
                 this.keyValues.add(keyValue);
             }
@@ -79,8 +79,8 @@ public class JFXKeyFrame {
             return this;
         }
 
-        public Builder setKeyValues(JFXKeyValue... keyValues) {
-            for (final JFXKeyValue keyValue : keyValues) {
+        public Builder setKeyValues(JFXKeyValue<?>... keyValues) {
+            for (final JFXKeyValue<?> keyValue : keyValues) {
                 if (keyValue != null) {
                     this.keyValues.add(keyValue);
                 }
