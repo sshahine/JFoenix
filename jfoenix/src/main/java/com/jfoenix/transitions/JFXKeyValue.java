@@ -60,7 +60,7 @@ public class JFXKeyValue<T> {
     }
 
     public boolean isValid() {
-        return animateCondition == null ? true : animateCondition.get();
+        return animateCondition == null || animateCondition.get();
     }
 
 
