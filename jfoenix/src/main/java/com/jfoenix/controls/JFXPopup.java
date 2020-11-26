@@ -140,7 +140,7 @@ public class JFXPopup extends PopupControl {
             Window parent = node.getScene().getWindow();
             final Point2D origin = node.localToScene(0, 0);
             final double anchorX = parent.getX() + origin.getX()
-                + node.getScene().getX() + (hAlign == PopupHPosition.RIGHT ? ((Region) node).getWidth() : 0);
+                + node.getScene().getX() + (hAlign == PopupHPosition.LEFT ? ((Region) node).getWidth() : 0);
             final double anchorY = parent.getY() + origin.getY()
                 + node.getScene()
                       .getY() + (vAlign == PopupVPosition.BOTTOM ? ((Region) node).getHeight() : 0);
