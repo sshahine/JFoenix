@@ -40,6 +40,7 @@ module com.jfoenix{
 
     exports com.jfoenix.controls.datamodels.treetable;
     exports com.jfoenix.controls.events;
+    exports com.jfoenix.controls.base;
     exports com.jfoenix.controls.cells.editors;
     exports com.jfoenix.controls.cells.editors.base;
     exports com.jfoenix.animation.alert;
