@@ -101,8 +101,7 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
         // register listeners
         registerChangeListener(control.indeterminateProperty(), obs -> initialize());
         registerChangeListener(control.progressProperty(), obs -> updateProgress());
-        registerChangeListener(control.visibleProperty(), obs->updateAnimation());
-        registerChangeListener(control.parentProperty(), obs->updateAnimation());
+        registerChangeListener(NodeHelper.treeShowingProperty(control), obs->updateAnimation());
         registerChangeListener(control.sceneProperty(), obs->updateAnimation());
     }
 
@@ -162,12 +161,10 @@ public class JFXSpinnerSkin extends SkinBase<JFXSpinner> {
 
     private void updateAnimation() {
         ProgressIndicator control = getSkinnable();
-        final boolean isTreeVisible = control.isVisible() &&
-                                      control.getParent() != null &&
-                                      control.getScene() != null;
+        final boolean isTreeShowing = NodeHelper.isTreeShowing(control) && control.getScene() != null;
         if (timeline != null) {
-            pauseTimeline(!isTreeVisible);
-        } else if (isTreeVisible) {
+            pauseTimeline(!isTreeShowing);
+        } else if (isTreeShowing) {
             createTransition();
         }
     }
