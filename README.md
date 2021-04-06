@@ -66,6 +66,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/Patresss/AutomationBoot">Automation Boot</a> An application for process automation
 * <a href="https://github.com/DevTony101/JFXGithubClient">JFXGithubClient</a> A JavaFX Github desktop client
 * <a href="https://github.com/MJVL/UniObfuscator">UniObfuscator</a> A Java obfuscator
+* <a href="https://github.com/Propo41/ePatient">ePatient</a> A patient-management system
 
 # Build
 To build JFoenix, execute the following command:
