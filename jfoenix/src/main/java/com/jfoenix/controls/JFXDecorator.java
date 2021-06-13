@@ -581,6 +581,15 @@ public class JFXDecorator extends VBox {
     public final void setCustomMaximize(final boolean customMaximize) {
         this.customMaximizeProperty().set(customMaximize);
     }
+    
+    /**
+     * the currrent custom maximized state
+     *
+     * @return whether the window is maximized or not
+     */
+    public final boolean isMaximized() {
+        return this.maximized;
+    }
 
     /**
      * @param maximized
