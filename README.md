@@ -67,6 +67,8 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/DevTony101/JFXGithubClient">JFXGithubClient</a> A JavaFX Github desktop client
 * <a href="https://github.com/MJVL/UniObfuscator">UniObfuscator</a> A Java obfuscator
 * <a href="https://github.com/Propo41/ePatient">ePatient</a> A patient-management system
+* <a href="https://github.com/crschnick/pdx_unlimiter">Pdx-Unlimiter</a> A toolbox for Paradox Grand Strategy games
+
 
 # Build
 To build JFoenix, execute the following command:
