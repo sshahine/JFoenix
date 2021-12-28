@@ -1,4 +1,4 @@
-[![HitCount](http://hits.dwyl.io/jfoenixadmin/JFoenix.svg)](http://hits.dwyl.io/jfoenixadmin/JFoenix)
+[![HitCount](https://hits.dwyl.com/sshahine/JFoenix.svg?style=flat)](https://hits.dwyl.com/jfoenixadmin/JFoenix)
 [![][CircleCI img]][CircleCI]
 [![][mavenbadge img]][mavenbadge]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jfoenixadmin_JFoenix&metric=alert_status)](https://sonarcloud.io/dashboard?id=jfoenixadmin_JFoenix)
