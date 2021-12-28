@@ -7,6 +7,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/network)
 [![GitHub issues](https://img.shields.io/github/issues/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/issues)
 [![GitHub license](https://img.shields.io/github/license/jfoenixadmin/JFoenix.svg)](https://github.com/jfoenixadmin/JFoenix/blob/master/LICENSE)
+[![Maintainability](https://cloud.quality-gate.com/dashboard/api/badge?projectName=jfoenixadmin_JFoenix&branchName=master)](https://cloud.quality-gate.com/dashboard/branches/307373#overview)
 ---
 
 <h1 align="center">
