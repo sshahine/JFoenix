@@ -1,0 +1,70 @@
+.jfx-notification-bar {
+    -fx-background-color: TRANSPARENT;
+}
+
+.jfx-notification-bar > .pane {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 11, 0.0, 0, 3);
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.jfx-notification-bar > .pane > .viewport {
+    -fx-background-color: TRANSPARENT;
+}
+
+.jfx-notification-template {
+    -fx-background-color: WHITE;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 18 20 10 20;
+    -fx-spacing: 15;
+    -fx-pref-width: 380;
+}
+
+.jfx-notification-template .jfx-notification-header {
+    -fx-alignment: center-left;
+    -fx-spacing: 8;
+}
+
+.jfx-notification-template .jfx-notification-header .label-header {
+    -fx-text-fill: #757575;
+    -fx-font-size: 15;
+    -fx-font-family: "Roboto Medium";
+}
+
+.jfx-notification-template .jfx-notification-header .jfx-rippler {
+    -jfx-rippler-fill: WHITE;
+    -fx-cursor: hand;
+}
+
+.jfx-notification-template .jfx-notification-header .jfx-rippler .box-close {
+    -fx-alignment: center;
+}
+
+.jfx-notification-template .jfx-notification-header .jfx-rippler .box-close > .graphic {
+    -fx-background-color: #424242;
+    -fx-scale-shape: false;
+    -fx-padding: 4.5 4.5 4.5 4.5;
+}
+
+.jfx-notification-template .jfx-notification-header .jfx-rippler .box-close > .graphic {
+    -fx-shape: "M395.992,296.758l1.794-1.794l7.292,7.292l-1.795,1.794 L395.992,296.758z M403.256,294.992l1.794,1.794l-7.292,7.292l-1.794-1.795 L403.256,294.992z";
+}
+
+.jfx-notification-template .jfx-notification-body .simple-body {
+    -fx-spacing: 5;
+}
+
+.jfx-notification-template .jfx-notification-body .label-sub-title {
+    -fx-text-fill: #424242;
+    -fx-font-size: 16;
+    -fx-font-family: "Roboto Bold";
+    -fx-wrap-text: true;
+}
+
+.jfx-notification-template .jfx-notification-body .label-message {
+    -fx-text-fill: #616161;
+    -fx-font-size: 14;
+    -fx-font-family: "Roboto Medium";
+}

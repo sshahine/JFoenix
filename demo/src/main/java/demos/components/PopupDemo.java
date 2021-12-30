@@ -39,6 +39,7 @@ public class PopupDemo extends Application {
         main.getChildren().add(container);
 
         JFXPopup popup = new JFXPopup(list);
+
         rippler.setOnMouseClicked(e -> popup.show(rippler, PopupVPosition.TOP, PopupHPosition.LEFT));
 
         final Scene scene = new Scene(main, 800, 800);
