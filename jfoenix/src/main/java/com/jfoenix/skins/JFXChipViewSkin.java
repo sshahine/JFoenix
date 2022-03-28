@@ -50,6 +50,7 @@ import javafx.stage.Window;
 import javafx.util.StringConverter;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * JFXChipArea is the material design implementation of chip Input.
@@ -73,6 +74,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
     private boolean editorOnNewLine = true;
     private double availableWidth;
     private double requiredWidth;
+    private final AtomicInteger mMangedChildrenSize = new AtomicInteger(0);
 
     private final ListChangeListener<T> chipsChangeListeners = change -> {
         while (change.next()) {
@@ -135,7 +137,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             createChip(item);
         }
         control.getChips().addListener(new WeakListChangeListener<>(chipsChangeListeners));
-        
+
     }
 
     @Override
@@ -223,7 +225,7 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
                 autoCompletePopup.show(editor);
             }
         });
-        
+
         editor.promptTextProperty().bind(control.promptTextProperty());
         root.getChildren().add(editor);
 
@@ -338,6 +340,8 @@ public class JFXChipViewSkin<T> extends SkinBase<JFXChipView<T>> {
             final List<Node> managedChildren = getManagedChildren();
             final int mangedChildrenSize = managedChildren.size();
             if (mangedChildrenSize > 0) {
+                if (mMangedChildrenSize.get() == mangedChildrenSize) return;
+                mMangedChildrenSize.set(mangedChildrenSize);
                 Region lastChild = (Region) managedChildren.get(mangedChildrenSize - 1);
                 double contentHeight = lastChild.getHeight() + lastChild.getLayoutY();
                 availableWidth = insideWidth - lastChild.getBoundsInParent().getMaxX();
