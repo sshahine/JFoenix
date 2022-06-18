@@ -32,6 +32,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 
 # Projects using JFoenix
 * <a href="http://bcozy.org">BCozy</a>
+* <a href="https://github.com/frostybee/bee-image-gallery">Bee's Gallery</a> An application for managing images. 
 * <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * <a href="https://github.com/badarshahzad/Jfx-Browser">JFX-Browser</a>
