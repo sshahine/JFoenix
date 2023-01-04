@@ -83,8 +83,12 @@ class JFXColorPalette extends Region {
 
     private final ColorSquare hoverSquare = new ColorSquare();
 
-    public JFXColorPalette(final JFXColorPicker colorPicker) {
+    public JFXColorPalette(final JFXColorPicker colorPicker, final String customColorText, final String recentColorsText) {
         getStyleClass().add("color-palette-region");
+
+        this.customColorLink.setText(customColorText);
+        this.customColorLabel.setText(recentColorsText);
+
         this.colorPicker = colorPicker;
         colorPickerGrid = new JFXColorGrid();
         colorPickerGrid.getChildren().get(0).requestFocus();
