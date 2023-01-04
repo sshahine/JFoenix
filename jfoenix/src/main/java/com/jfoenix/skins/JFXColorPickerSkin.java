@@ -62,13 +62,19 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     private Label displayNode;
     private JFXClippedPane colorBox;
     private JFXColorPalette popupContent;
+
+    private String customColorText = "Custom Color";
+    private String recentColorsText = "Recent Colors";
     StyleableBooleanProperty colorLabelVisible = new SimpleStyleableBooleanProperty(StyleableProperties.COLOR_LABEL_VISIBLE,
         JFXColorPickerSkin.this,
         "colorLabelVisible",
         true);
 
-    public JFXColorPickerSkin(final ColorPicker colorPicker) {
+    public JFXColorPickerSkin(final ColorPicker colorPicker, final String customColorText, final String recentColorsText) {
         super(colorPicker, new JFXColorPickerBehavior(colorPicker));
+
+        this.customColorText = customColorText;
+        this.recentColorsText = recentColorsText;
 
         // create displayNode
         displayNode = new Label("");
@@ -141,7 +147,7 @@ public class JFXColorPickerSkin extends ComboBoxPopupControl<Color> {
     @Override
     protected Node getPopupContent() {
         if (popupContent == null) {
-            popupContent = new JFXColorPalette((JFXColorPicker) getSkinnable());
+            popupContent = new JFXColorPalette((JFXColorPicker) getSkinnable(), this.customColorText, this.recentColorsText);
             popupContent.setPopupControl(getPopup());
         }
         return popupContent;
