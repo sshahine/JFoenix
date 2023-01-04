@@ -44,6 +44,8 @@ import java.util.List;
  * @since 2016-03-09
  */
 public class JFXColorPicker extends ColorPicker {
+    private String customColorText = "Custom Color";
+    private String recentColorsText = "Recent Colors";
 
     /**
      * {@inheritDoc}
@@ -63,9 +65,26 @@ public class JFXColorPicker extends ColorPicker {
     /**
      * {@inheritDoc}
      */
+    public JFXColorPicker(String customColorText, String recentColorsText) {
+        initialize();
+        this.setCustomColorText(customColorText);
+        this.setRecentColorsText(recentColorsText);
+    }
+
+    public void setCustomColorText(String customColorText) {
+        this.customColorText = customColorText;
+    }
+
+    public void setRecentColorsText(String recentColorsText) {
+        this.recentColorsText = recentColorsText;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new JFXColorPickerSkin(this);
+        return new JFXColorPickerSkin(this, this.customColorText, this.recentColorsText);
     }
 
     /**
