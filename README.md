@@ -35,7 +35,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/ThijsZijdel/Corendon-LostLuggage">Corendon LostLuggage</a>
 * <a href="https://github.com/afsalashyana/Library-Assistant">Library Assistant</a>
 * <a href="https://github.com/badarshahzad/Jfx-Browser">JFX-Browser</a>
-* <a href="https://github.com/huanghongxun/HMCL">HMCL</a> - Hello Minecraft! Launcher 
+* <a href="https://github.com/HMCL-dev/HMCL">HMCL</a> - Hello Minecraft! Launcher 
 * By <a href="https://github.com/anongrp">Anongrp</a> in several projects: 
 <a href="https://github.com/anongrp/Phony">Phony</a>,
 <a href="https://github.com/anongrp/ThunderGet">ThunderGet</a>,
