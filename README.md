@@ -69,6 +69,7 @@ If you like JFoenix :) and want to support this project, you can become a backer
 * <a href="https://github.com/Propo41/ePatient">ePatient</a> A patient-management system
 * <a href="https://github.com/crschnick/pdx_unlimiter">Pdx-Unlimiter</a> A toolbox for Paradox Grand Strategy games
 * <a href="https://gitlab.com/grrfe/CassettePlayer">CassettePlayer</a> A fully featured JavaFX music player
+* <a href="https://github.com/besessener/CloudThrash">CloudThrash</a> Distributed Performance Testing with Graphite, Grafana and Java Gatling
 
 # Build
 To build JFoenix, execute the following command:
